@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.flags.add("-flto -ffat-lto-objects")
-#    autotools.autoreconf("-vfi")
+    autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
                          --enable-xlib \
                          --disable-drm \
