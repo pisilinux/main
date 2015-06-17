@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>kde5-kxmlgui</Name>
+        <Homepage>http://www.kde.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Framework for managing menu and toolbar actions</Summary>
+        <Description>Kxmlgui provides a framework for managing menu and toolbar actions in an abstract way.</Description>
+        <Archive sha1sum="85079d3cc29b6843ed39ac491acc3ce25d01e100" type="tarxz">http://download.kde.org/stable/frameworks/5.10/kxmlgui-5.10.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+	    <Dependency>python3</Dependency>
+	    <Dependency>extra-cmake-modules</Dependency>
+        </BuildDependencies>
+	<Patches>
+	    <Patch level="1">session-restore.patch</Patch>
+	  </Patches>
+    </Source>
+
+    <Package>
+        <Name>kde5-kxmlgui</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base</Dependency>    
+	    <Dependency>kde5-attica</Dependency>
+	    <Dependency>kde5-kcoreaddons</Dependency>
+	    <Dependency>kde5-kconfig</Dependency>
+	    <Dependency>kde5-kconfigwidgets</Dependency>
+	    <Dependency>kde5-kglobalaccel</Dependency>
+	    <Dependency>kde5-ki18n</Dependency>
+	    <Dependency>kde5-kiconthemes</Dependency>
+	    <Dependency>kde5-kitemviews</Dependency>
+	    <Dependency>kde5-ktextwidgets</Dependency>
+	    <Dependency>kde5-kwidgetsaddons</Dependency>
+	    <Dependency>kde5-kwindowsystem</Dependency>
+        </RuntimeDependencies>
+        <Files>
+	    <Path fileType="config">/etc</Path>
+            <Path fileType="data">/usr/share</Path>
+	    <Path fileType="localedata">/usr/share/locale</Path>
+	    <Path fileType="library">/usr/lib/qt5</Path>
+	    <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>kde5-kxmlgui-devel</Name>
+	<Summary>Development files for kxmlgui</Summary>
+        <RuntimeDependencies>
+	    <Dependency>qt5-base-devel</Dependency>	    
+	    <Dependency release="current">kde5-kxmlgui</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+	    <Path fileType="config">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2015-05-31</Date>
+            <Version>5.10.0</Version>
+            <Comment>First Release.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>                
+    </History>
+</PISI>

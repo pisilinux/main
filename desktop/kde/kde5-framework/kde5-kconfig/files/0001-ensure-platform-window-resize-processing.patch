@@ -1,0 +1,42 @@
+From 06632ddebeefa97594c19fc4ede5b89ed263b917 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20L=C3=BCbking?= <thomas.luebking@gmail.com>
+Date: Sat, 2 Aug 2014 12:25:00 +0200
+Subject: [PATCH] ensure platform window resize processing
+
+---
+ src/gui/kwindowconfig.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/gui/kwindowconfig.cpp b/src/gui/kwindowconfig.cpp
+index c3cefb7..a906cd5 100644
+--- a/src/gui/kwindowconfig.cpp
++++ b/src/gui/kwindowconfig.cpp
+@@ -21,6 +21,7 @@
+ 
+ #include "kwindowconfig.h"
+ 
++#include <QCoreApplication>
+ #include <QScreen>
+ #include <QWindow>
+ 
+@@ -63,6 +64,7 @@ void KWindowConfig::restoreWindowSize(QWindow *window, const KConfigGroup &confi
+     if (!window) {
+         return;
+     }
++    window->create(); // ensure the platform window is created before attempting the resize
+ 
+     const QRect desk = window->screen()->geometry();
+ 
+@@ -80,6 +82,9 @@ void KWindowConfig::restoreWindowSize(QWindow *window, const KConfigGroup &confi
+ 
+     // If window is maximized set maximized state and in all case set the size
+     window->resize(width, height);
++    // restoring the size will often happen before event processing
++    // -> force processing now to have the platform window pick the new size
++    QCoreApplication::processEvents();
+     if (isMaximized) {
+         window->setWindowState(Qt::WindowMaximized);
+     }
+-- 
+2.0.3
+
