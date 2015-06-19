@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libxcb</Name>
+        <Homepage>http://xcb.freedesktop.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>The X protocol C-language Binding (XCB)</Summary>
+        <Description>The X protocol C-language Binding (XCB) is a replacement for Xlib featuring a small footprint, latency hiding, direct access to the protocol, improved threading support, and extensibility.</Description>
+        <Archive sha1sum="8343b417d7eeb2a2c6b6c4a87a03a4fd0fc65c46" type="tarbz2">http://xcb.freedesktop.org/dist/libxcb-1.11.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>libXau-devel</Dependency>
+            <Dependency>libXdmcp-devel</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>util-macros</Dependency>
+            <Dependency versionFrom="1.11">xcb-proto</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">libxcb-1.1-no-pthread-stubs.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libxcb</Name>
+        <RuntimeDependencies>
+            <Dependency>libXau</Dependency>
+            <Dependency>libXdmcp</Dependency>
+            <Dependency>glibc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libxcb-devel</Name>
+        <Summary>Development files for libxcb</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libxcb</Dependency>
+            <Dependency>libXau-devel</Dependency>
+            <Dependency>libXdmcp-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/xcb</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/usr/lib/pkgconfig/pthread-stubs.pc" permission="0644" owner="root">pthread-stubs.pc</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>libxcb-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libxcb</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libXau-32bit</Dependency>
+            <Dependency>libXdmcp-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">libxcb</Dependency>
+            <Dependency>libXau-32bit</Dependency>
+            <Dependency>libXdmcp-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="6">
+            <Date>2015-05-22</Date>
+            <Version>1.11</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-05-11</Date>
+            <Version>1.10</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-03-07</Date>
+            <Version>1.10</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-10-08</Date>
+            <Version>1.9.1</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-07-28</Date>
+            <Version>1.9.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-11-18</Date>
+            <Version>1.9</Version>
+            <Comment>First release</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
