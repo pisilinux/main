@@ -1,0 +1,34 @@
+diff -up nss/tests/dbtests/dbtests.sh.646045 nss/tests/dbtests/dbtests.sh
+--- nss/tests/dbtests/dbtests.sh.646045	2013-04-04 13:31:55.000000000 -0700
++++ nss/tests/dbtests/dbtests.sh	2013-04-04 15:57:46.298127149 -0700
+@@ -168,6 +168,9 @@ dbtest_main()
+         cat $RONLY_DIR/* > /dev/null
+     fi
+ 
++    # skipping the next two tests when user is root,
++    # otherwise they would fail due to rooty powers
++    if [[ $EUID -ne 0 ]] then
+     ${BINDIR}/dbtest -d $RONLY_DIR
+     ret=$?
+     if [ $ret -ne 46 ]; then
+@@ -175,6 +178,10 @@ dbtest_main()
+     else
+       html_passed "Dbtest r/w didn't work in an readonly dir $ret" 
+     fi
++    else
++      html_passed "Skipping Dbtest r/w in a readonly dir because user is root" 
++    fi
++    if [[ $EUID -ne 0 ]] then
+     ${BINDIR}/certutil -D -n "TestUser" -d .
+     ret=$?
+     if [ $ret -ne 255 ]; then
+@@ -182,6 +189,9 @@ dbtest_main()
+     else
+         html_passed "Certutil didn't work in an readonly dir $ret"
+     fi
++    else
++      html_passed "Skipping Certutil delete cert in an readonly directory test because user is root" 
++    fi
+     
+     Echo "test opening the database ronly in a readonly directory"
+ 
