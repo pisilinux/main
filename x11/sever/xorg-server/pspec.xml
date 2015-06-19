@@ -1,0 +1,390 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>xorg-server</Name>
+        <Homepage>http://www.x.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <Summary>X.Org X Server</Summary>
+        <Description>X server is the main application that allows a graphical interface.</Description>
+        <Archive sha1sum="490118810a54e91c8814245c99d6285caf4985dd" type="tarbz2">mirrors://xorg/individual/xserver/xorg-server-1.17.1.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>font-util</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>libdmx-devel</Dependency>
+            <Dependency>libdrm-devel</Dependency>
+            <Dependency>libgcrypt-devel</Dependency>
+            <Dependency>libpciaccess-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXaw-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>libXfont-devel</Dependency>
+            <Dependency>libXi-devel</Dependency>
+            <Dependency>libxkbfile-devel</Dependency>
+            <Dependency>libXmu-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
+            <Dependency>libXrender-devel</Dependency>
+            <Dependency>libXres-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
+            <Dependency>libXtst-devel</Dependency>
+            <Dependency>libXv-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>pixman-devel</Dependency>
+            <Dependency>xorg-app</Dependency>
+            <Dependency>nettle-devel</Dependency>
+            <Dependency>libepoxy-devel</Dependency>
+            <Dependency>xcb-util-devel</Dependency>
+            <Dependency>xcb-util-image-devel</Dependency>
+            <Dependency>xcb-util-wm-devel</Dependency>
+            <Dependency>xcb-util-keysyms-devel</Dependency>
+            <Dependency>xcb-util-renderutil-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">xorg-server-1.17.1-add_prime_support-1.patch</Patch>
+            <Patch level="1">default-module-path.patch</Patch>
+            <Patch level="1">ubuntu/001_fedora_extramodes.patch</Patch>
+            <Patch level="1">ubuntu/03_static-nettle.diff</Patch>
+            <Patch level="1">ubuntu/05_Revert-Unload-submodules.diff</Patch>
+            <Patch level="1">ubuntu/105_nvidia_fglrx_autodetect.patch</Patch>
+            <Patch level="1">ubuntu/10_Include-missing-selection-h.diff</Patch>
+            <Patch level="1">ubuntu/188_default_primary_to_first_busid.patch</Patch>
+            <Patch level="1">ubuntu/226_fall_back_to_autoconfiguration.patch</Patch>
+            <Patch level="1">ubuntu/227_null_ptr_midispcur.patch</Patch>
+            <Patch level="1">ubuntu/include-selection-h.patch</Patch>
+            <Patch level="1">ubuntu/no-nv.patch</Patch>
+            <Patch level="1">ubuntu/xf86-inactive-gpuscreen.patch</Patch>
+            <Patch level="1">ubuntu/xfree86-no-xv-for-gpuscreens.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>xorg-server-common</Name>
+        <IsA>data</IsA>
+        <Summary>Common files for X servers</Summary>
+        <Files>
+            <Path fileType="data">/etc/X11/fontpath.d</Path>
+            <Path fileType="data">/etc/dbus-1</Path>
+            <Path fileType="data">/usr/lib/xorg/protocol.txt</Path>
+            <Path fileType="data">/var/lib/xkb</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man/man1/Xserver.1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>xorg-server</Name>
+       <Replaces>
+            <Package>xorg-video-modesetting</Package>
+            <Package>glamor-egl</Package>
+        </Replaces>
+        <IsA>app:console</IsA>
+        <RuntimeDependencies>
+            <Dependency>mesa</Dependency>
+            <Dependency>libdrm</Dependency>
+            <Dependency>pixman</Dependency>
+            <Dependency>libXfont</Dependency>
+            <Dependency>libunwind</Dependency>
+            <Dependency>libpciaccess</Dependency>
+            <Dependency>libxshmfence</Dependency>
+            <Dependency>libepoxy</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/X11/xorg.conf.d</Path>
+            <Path fileType="executable">/usr/bin/X</Path>
+            <Path fileType="executable">/usr/bin/Xorg</Path>
+            <Path fileType="executable">/usr/bin/cvt</Path>
+            <Path fileType="executable">/usr/bin/gtf</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="library">/usr/lib/xorg</Path>
+            <Path fileType="data">/usr/share/X11/DriversDB</Path>
+            <Path fileType="data">/usr/share/X11/pci</Path>
+            <Path fileType="data">/usr/share/X11/xorg.conf.d</Path>
+            <Path fileType="man">/usr/share/man/man1/Xorg.1</Path>
+            <Path fileType="man">/usr/share/man/man1/cvt.1</Path>
+            <Path fileType="man">/usr/share/man/man1/gtf.1</Path>
+            <Path fileType="man">/usr/share/man/man4/exa.4</Path>
+            <Path fileType="man">/usr/share/man/man4/modesetting.4</Path>
+            <Path fileType="man">/usr/share/man/man4/fbdevhw.4</Path>
+            <Path fileType="man">/usr/share/man/man5/xorg.conf.5</Path>
+            <Path fileType="man">/usr/share/man/man5/xorg.conf.d.5</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0755" target="/usr/libexec/xorg-save-xkb-config.sh">xorg-save-xkb-config.sh</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/X11/DriversDB">DriversDB</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/X11/xorg.conf.d/10-quirks.conf">fedora/10-quirks.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>xorg-server-xdmx</Name>
+        <IsA>app:console</IsA>
+        <Summary>Distributed Multihead X Server</Summary>
+        <RuntimeDependencies>
+            <Dependency>xorg-server-common</Dependency>
+            <Dependency>libXi</Dependency>
+            <Dependency>libXt</Dependency>
+            <Dependency>libXmu</Dependency>
+            <Dependency>libdmx</Dependency>
+            <Dependency>libXaw</Dependency>
+            <Dependency>pixman</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libXfont</Dependency>
+            <Dependency>libXfixes</Dependency>
+            <Dependency>libXrender</Dependency>
+            <Dependency>libunwind</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/*dmx*</Path>
+            <Path fileType="man">/usr/share/man/man1/*dmx*</Path>
+        </Files>
+    </Package>
+  
+    <Package>
+        <Name>xorg-server-xwayland</Name>
+        <IsA>app:console</IsA>
+        <Summary>Run X clients under wayland</Summary>
+        <RuntimeDependencies>
+            <Dependency>mesa</Dependency>
+            <Dependency>pixman</Dependency>
+            <Dependency>libdrm</Dependency>
+            <Dependency>libXfont</Dependency>
+            <Dependency>libepoxy</Dependency>
+            <Dependency>libxshmfence</Dependency>
+            <Dependency>wayland-client</Dependency>
+            <Dependency>xorg-server-common</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/Xwayland</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>xorg-server-xephyr</Name>
+        <IsA>app:console</IsA>
+        <Summary>Nested X Server</Summary>
+        <RuntimeDependencies>
+            <Dependency>xorg-server-common</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>xcb-util</Dependency>
+            <Dependency>libunwind</Dependency>
+            <Dependency>pixman</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libXfont</Dependency>
+            <Dependency>libepoxy</Dependency>
+            <Dependency>xcb-util-wm</Dependency>
+            <Dependency>libxshmfence</Dependency>
+            <Dependency>xcb-util-image</Dependency>
+            <Dependency>xcb-util-keysyms</Dependency>
+            <Dependency>xcb-util-renderutil</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/Xephyr</Path>
+            <Path fileType="man">/usr/share/man/man1/Xephyr.1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>xorg-server-xvfb</Name>
+        <!-- xvfb-run is GPLv2 -->
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>Virtual Framebuffer X Server</Summary>
+        <RuntimeDependencies>
+            <Dependency>xorg-server-common</Dependency>
+            <Dependency>libXfont</Dependency>
+            <Dependency>pixman</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>libunwind</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/[Xx]vfb*</Path>
+            <Path fileType="man">/usr/share/man/man1/Xvfb.1</Path>
+        </Files>
+        <AdditionalFiles>
+            <!-- xvfb-run script from http://svn.exactcode.de/t2/trunk/package/xorg/xorg-server/xvfb-run.sh -->
+            <AdditionalFile owner="root" permission="0755" target="/usr/bin/xvfb-run">xvfb-run.sh</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>xorg-server-xnest</Name>
+        <Summary>A nested X server that runs as an X application</Summary>
+        <RuntimeDependencies>
+            <Dependency>libXfont</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libunwind</Dependency>
+            <Dependency>pixman</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/Xnest</Path>
+            <Path fileType="man">/usr/share/man/man1/Xnest.1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>xorg-server-devel</Name>
+        <IsA>data</IsA>
+        <IsA>library</IsA>
+        <Summary>Headers and libraries for X server driver development</Summary>
+        <RuntimeDependencies>
+            <Dependency relase="current">xorg-server</Dependency>
+            <Dependency>libpciaccess-devel</Dependency>
+            <Dependency>pixman-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/xorg</Path>
+            <Path fileType="library">/usr/lib/libxf86config.a</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+        </Files>
+    </Package>
+
+    <History>
+      <Update release="20">
+            <Date>2015-05-17</Date>
+            <Version>1.17.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+      </Update>
+      <Update release="19">
+            <Date>2015-02-06</Date>
+            <Version>1.16.3</Version>
+            <Comment>Release xorg-server-xnest</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="18">
+            <Date>2015-01-20</Date>
+            <Version>1.16.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="17">
+            <Date>2014-08-31</Date>
+            <Version>1.16.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="16">
+            <Date>2014-06-27</Date>
+            <Version>1.15.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Vedat Demir</Name>
+            <Email>vedat@pisilinux.org</Email>
+        </Update>
+        <Update release="15">
+            <Date>2014-05-16</Date>
+            <Version>1.15.1</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="14">
+            <Date>2014-04-15</Date>
+            <Version>1.15.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="13">
+            <Date>2014-04-13</Date>
+            <Version>1.15.0</Version>
+            <Comment>Release bump,update driversdb</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="12">
+            <Date>2014-03-07</Date>
+            <Version>1.15.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="11">
+            <Date>2014-02-02</Date>
+            <Version>1.14.2</Version>
+            <Comment>Rebuild Unused</Comment>
+            <Name>Varol Maksutoğlu</Name>
+            <Email>waroi@pisilinux.org</Email>
+        </Update>
+        <Update release="10">
+            <Date>2013-11-06</Date>
+            <Version>1.14.2</Version>
+            <Comment>Fix deps.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="9">
+            <Date>2013-09-11</Date>
+            <Version>1.14.2</Version>
+            <Comment>Update driversDB</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="8">
+            <Date>2013-08-25</Date>
+            <Version>1.14.2</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2013-07-28</Date>
+            <Version>1.14.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2013-07-27</Date>
+            <Version>1.14.1</Version>
+            <Comment>Dep Fixed, rebuild</Comment>
+            <Name>Osman Erkan</Name>
+            <Email>osman.erkan@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-06-21</Date>
+            <Version>1.14.1</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-05-29</Date>
+            <Version>1.14.1</Version>
+            <Comment>build for xorg 1.14</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-04-18</Date>
+            <Version>1.14.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-02-05</Date>
+            <Version>1.13.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-09-25</Date>
+            <Version>1.13.0</Version>
+            <Comment>First release</Comment>
+            <Name>Erdem Artan</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
