@@ -1,0 +1,255 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pulseaudio</Name>
+        <Homepage>http://pulseaudio.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <License>GPLv2</License>
+        <License>BSD</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>A networked sound server with an advanced plugin system</Summary>
+        <Description>pulseaudio is a sound server for POSIX and Win32 systems. It allows you to do advanced operations on your sound data as it passes between your application and your hardware.</Description>
+             <Archive sha1sum="3607d523fb270d9b68463de30f5d9e17957f1088" type="tarxz">http://freedesktop.org/software/pulseaudio/releases/pulseaudio-6.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>orc-devel</Dependency>
+            <Dependency>sbc-devel</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>xcb-proto</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>lirc-devel</Dependency>
+            <Dependency>gconf-devel</Dependency>
+            <Dependency>avahi-devel</Dependency>
+            <Dependency>speex-devel</Dependency>
+            <Dependency>libSM-devel</Dependency>
+            <Dependency>libtdb-devel</Dependency>
+            <Dependency>libICE-devel</Dependency>
+            <Dependency>libXtst-devel</Dependency>
+            <Dependency>xcb-util-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>bluez-libs-devel</Dependency>
+            <Dependency>libsndfile-devel</Dependency>
+            <Dependency>libasyncns-devel</Dependency>
+            <Dependency>libatomic_ops-devel</Dependency>
+            <Dependency>libsamplerate-devel</Dependency>
+            <Dependency>libasyncns-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>pulseaudio-libs</Name>
+        <Summary>Libraries for PulseAudio clients</Summary>
+        <RuntimeDependencies>
+            <Dependency>orc</Dependency>
+            <Dependency>sbc</Dependency>
+            <Dependency>lirc</Dependency>
+            <Dependency>fftw3</Dependency>
+            <Dependency>libSM</Dependency>
+            <Dependency>speex</Dependency>
+            <Dependency>libICE</Dependency>
+            <Dependency>libXtst</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>avahi-libs</Dependency>
+            <Dependency>libasyncns</Dependency>
+            <Dependency>libsndfile</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/pa*</Path>
+            <Path fileType="config">/etc/pulse/client.conf</Path>
+            <Path fileType="library">/usr/lib/libpulse.so</Path>
+            <Path fileType="library">/usr/lib/libpulse.so*</Path>
+            <Path fileType="library">/usr/lib/libpulse-simple.so</Path>
+            <Path fileType="library">/usr/lib/libpulse-simple.so*</Path>
+            <Path fileType="library">/usr/lib/pulseaudio/libpulsecommon-*</Path>
+            <Path fileType="library">/usr/lib/libpulse-mainloop-glib.so</Path>
+            <Path fileType="library">/usr/lib/libpulse-mainloop-glib.so*</Path>
+            <Path fileType="library">/usr/lib/pulseaudio/libpulsedsp.*</Path>
+	    <Path fileType="library">/usr/lib/pulse/modules</Path>
+	    <Path fileType="library">/usr/lib/udev/rules.d</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pulseaudio-libs-devel</Name>
+        <Summary>Development files for pulseaudio-libs</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">pulseaudio-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+            <Path fileType="data">/usr/share/vala/vapi</Path>
+            <Path fileType="data">/usr/lib/cmake/PulseAudio</Path>
+        </Files>
+    </Package>
+    <Package>
+        <Name>pulseaudio-docs</Name>
+        <Summary>doxygen generated API documentation for PulseAudio</Summary>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/pulseaudio/html</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pulseaudio</Name>
+        <RuntimeDependencies>
+            <Dependency>orc</Dependency>
+            <Dependency>speex</Dependency>
+            <Dependency>libtdb</Dependency>
+            <Dependency>libsndfile</Dependency>
+            <Dependency release="current">pulseaudio-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/pulseaudio</Path>
+            <Path fileType="executable">/usr/bin/qpaeq</Path>
+            <Path fileType="executable">/usr/bin/start-pulseaudio-kde</Path>
+            <Path fileType="executable">/usr/bin/esdcompat</Path>
+            <Path fileType="executable">/usr/bin/start-pulseaudio-x11</Path>
+            <Path fileType="executable">/usr/lib/pm-utils/sleep.d</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="library">/usr/lib/pulse-5.0/modules</Path>
+            <Path fileType="library">/usr/lib/libpulsecore-*.so</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/pulseaudio.conf</Path>
+            <Path fileType="data">/lib/udev/rules.d</Path>
+            <Path fileType="data">/usr/share/pulseaudio/alsa-mixer</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="data">/var/lib/pulse</Path>
+            <Path fileType="data">/run/pulse</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/pulseaudio.conf">pulseaudio.conf</AdditionalFile>
+            <!-- 
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/02PulseAudio">02PulseAudio</AdditionalFile>
+            -->
+            <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/pulseaudio">pisilinux/pulseaudio.sysconfig</AdditionalFile>
+            
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/scalable/apps/pulseaudio.svg">mandriva/pulseaudio.svg</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/scalable/devices/audio-backend-pulseaudio.svg">mandriva/pulseaudio.svg</AdditionalFile>
+
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/16x16/apps/pulseaudio.png">mandriva/pulseaudio16.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/22x22/apps/pulseaudio.png">mandriva/pulseaudio22.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/32x32/apps/pulseaudio.png">mandriva/pulseaudio32.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/48x48/apps/pulseaudio.png">mandriva/pulseaudio48.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/64x64/apps/pulseaudio.png">mandriva/pulseaudio64.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/128x128/apps/pulseaudio.png">mandriva/pulseaudio128.png</AdditionalFile>
+
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/16x16/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio16.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/22x22/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio22.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/32x32/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio32.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/48x48/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio48.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/64x64/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio64.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/128x128/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio128.png</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <!-- For ownerships and permissions of /var/{run,lib}/pulse -->
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>pulseaudio-gconf</Name>
+        <Summary>GConf configuration backend for the PulseAudio sound server</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">pulseaudio-libs</Dependency>
+            <Dependency>gconf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/pulse-2.1/modules/module-gconf.so</Path>
+            <Path fileType="executable">/usr/libexec/pulse/gconf-helper</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pulseaudio-libs-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for pulseaudio-libs</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>json-c-32bit</Dependency>
+            <Dependency>dbus-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>speex-32bit</Dependency>
+            <Dependency>libcap-32bit</Dependency>
+            <Dependency>libsndfile-32bit</Dependency>
+            <Dependency>libtool-ltdl-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">pulseaudio-libs</Dependency>
+            <Dependency>dbus-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>libsndfile-32bit</Dependency>
+            <Dependency>json-c-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="8">
+            <Date>2015-02-20</Date>
+            <Version>6.0</Version>
+            <Comment>Version bump. Dep fixed</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+        <Update release="7">
+            <Date>2014-07-25</Date>
+            <Version>5.0</Version>
+            <Comment>Rebuild for smplayer</Comment>
+            <Name>Vedat Demir</Name>
+            <Email>vedat@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-05-12</Date>
+            <Version>5.0</Version>
+            <Comment>version bump</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-02-14</Date>
+            <Version>4.0</Version>
+            <Comment>add git version</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-01-11</Date>
+            <Version>4.0</Version>
+            <Comment>Add tmpfiles.con; add updates from git.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-07-06</Date>
+            <Version>4.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-04-16</Date>
+            <Version>3.99</Version>
+            <Comment>Version bump</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-12-18</Date>
+            <Version>3.0</Version>
+            <Comment>First release</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
