@@ -8,7 +8,8 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DPHONON_BUILD_PHONON4QT5=ON \
+                     -DCMAKE_INSTALL_LIBDIR=/usr/lib/qt5")
 
 def build():
     kde5.make()
@@ -16,4 +17,4 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("README.md", "COPYING", "COPYING.LIB", "AUTHORS")
+    pisitools.dodoc("AUTHORS", "COPYING*")
