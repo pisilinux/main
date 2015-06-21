@@ -3,6 +3,6 @@
 from pisi.version import Version
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
-    if update-mime-database usr/share/mime > /dev/null
+    os.system("/usr/bin/update-mime-database /usr/share/mime")
 
 
