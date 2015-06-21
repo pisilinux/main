@@ -12,7 +12,7 @@ PIDFILE = "/run/cups/cupsd.pid"
 @synchronized
 def start():
     # FIXME: After avahi before hal
-    startDependencies("avahi")
+    # startDependencies("avahi")
 
     # Load ppdev and lp drivers if wanted
     if config.get("LOAD_LP_MODULE") == "yes":

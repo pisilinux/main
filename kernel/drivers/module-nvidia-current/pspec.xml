@@ -1,0 +1,408 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>module-nvidia-current</Name>
+        <Homepage>http://www.nvidia.com</Homepage>
+        <Packager>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Packager>
+        <License>NVIDIA</License>
+        <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
+        <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
+        <Archive sha1sum="d15907ed7527f3590407a340a2882e5a9600a81d" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86/349.16/NVIDIA-Linux-x86-349.16.run</Archive>
+        <Archive sha1sum="7d842a02a672547996002c866418cde917d821a0" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86_64/349.16/NVIDIA-Linux-x86_64-349.16.run</Archive>
+        <BuildDependencies>
+            <Dependency version="4.0.5">kernel-module-headers</Dependency>
+            <Dependency>libX11-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>module-nvidia-current</Name>
+        <IsA>driver</IsA>
+        <Summary>Kernel module for current NVIDIA graphics driver releases</Summary>
+        <RuntimeDependencies>
+            <Dependency version="4.0.5">kernel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library" permanent="true">/lib/modules</Path>
+        </Files>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia-current</Name>
+        <IsA>driver</IsA>
+        <PartOf>x11.driver</PartOf>
+        <RuntimeDependencies>
+            <Dependency>libXext</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>xorg-server</Dependency>
+            <Dependency version="current">module-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/etc/OpenCL</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia-current-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for xorg-video-nvidia-current</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libvdpau-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>zlib-32bit</Dependency>
+	    <Dependency>mesa-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency release="current">xorg-video-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/share/nvidia-current/32bit-ld.so.conf</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package-emul32.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <History>
+         <Update release="44">
+            <Date>2015-06-16</Date>
+            <Version>349.16</Version>
+            <Comment>Rebuild for kernel 3.19.8</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+         <Update release="43">
+            <Date>2015-05-22</Date>
+            <Version>349.16</Version>
+            <Comment>Rebuild for kernel 3.19.8</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+         <Update release="42">
+            <Date>2015-05-05</Date>
+            <Version>349.16</Version>
+            <Comment>Rebuild for kernel 3.19.6</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+         <Update release="41">
+            <Date>2015-04-24</Date>
+            <Version>349.16</Version>
+            <Comment>Rebuild for kernel 3.19.5</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+         <Update release="40">
+            <Date>2015-04-16</Date>
+            <Version>349.16</Version>
+            <Comment>Rebuild for kernel 3.19.4</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+        <Update release="39">
+            <Date>2015-04-02</Date>
+            <Version>349.12</Version>
+            <Comment>Rebuild for kernel 3.19.3</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+         <Update release="38">
+            <Date>2015-03-31</Date>
+            <Version>349.12</Version>
+            <Comment>Version bump</Comment>
+            <Name>Stefan Gronewold</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+         <Update release="37">
+            <Date>2015-03-08</Date>
+            <Version>346.47</Version>
+            <Comment>Version bump, Rebuild for kernel 3.19.1</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+         <Update release="36">
+            <Date>2015-03-01</Date>
+            <Version>346.35</Version>
+            <Comment>Rebuild for kernel 3.19.0</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+         <Update release="35">
+            <Date>2015-01-31</Date>
+            <Version>346.35</Version>
+            <Comment>Rebuild for kernel 3.18.3</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+          <Update release="34">
+            <Date>2015-01-22</Date>
+            <Version>346.35</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold (groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="34">
+            <Date>2015-01-09</Date>
+            <Version>346.22</Version>
+            <Comment>Rebuild for kernel 3.18.1</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+        <Update release="33">
+            <Date>2014-11-29</Date>
+            <Version>343.22</Version>
+            <Comment>Rebuild for kernel 3.17.4</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="32">
+            <Date>2014-10-19</Date>
+            <Version>343.22</Version>
+            <Comment>Version bump, conform kernel 3.17.1</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="31">
+            <Date>2014-09-21</Date>
+            <Version>343.13</Version>
+            <Comment>Version bump and added symlink for bumblebee</Comment>
+            <Name>Mathias Freire</Name>
+            <Email>mathiasfreire45@gmail.com</Email>
+        </Update>
+        <Update release="30">
+            <Date>2014-09-03</Date>
+            <Version>340.32</Version>
+            <Comment>Version bump, conform kernel 3.16.1</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="29">
+            <Date>2014-07-24</Date>
+            <Version>340.24</Version>
+            <Comment>Version bump for kernel 3.15.6</Comment>
+            <Name>Vedat Demir</Name>
+            <Email>vedat@pisilinux.org</Email>
+        </Update>
+        <Update release="28">
+            <Date>2014-06-15</Date>
+            <Version>340.17</Version>
+            <Comment>Version bump for kernel 3.15.0</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="27">
+            <Date>2014-05-29</Date>
+            <Version>337.19</Version>
+            <Comment>Version bump for kernel 3.14.4.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="26">
+            <Date>2014-05-02</Date>
+            <Version>337.12</Version>
+            <Comment>Version bump for kernel 3.14.2.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="25">
+            <Date>2014-04-15</Date>
+            <Version>334.21</Version>
+            <Comment>Rebuild for kernel 3.13.10.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="24">
+            <Date>2014-03-29</Date>
+            <Version>334.21</Version>
+            <Comment>Rebuild for 3.13.6</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="23">
+            <Date>2014-03-10</Date>
+            <Version>334.21</Version>
+            <Comment>Change module name. Remove module-nvidia-current-userspace</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="22">
+            <Date>2014-03-07</Date>
+            <Version>334.21</Version>
+            <Comment>Version bump</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="21">
+            <Date>2014-03-01</Date>
+            <Version>334.16</Version>
+            <Comment>version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="20">
+            <Date>2014-01-15</Date>
+            <Version>331.38</Version>
+            <Comment>version bump</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="19">
+            <Date>2013-12-17</Date>
+            <Version>331.20</Version>
+            <Comment>Rebuild for 3.12.5</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="18">
+            <Date>2013-12-12</Date>
+            <Version>331.20</Version>
+            <Comment>Rebuild for 3.12.5</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="17">
+            <Date>2013-11-23</Date>
+            <Version>331.20</Version>
+            <Comment>Rebuild for 3.10.20</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="16">
+            <Date>2013-11-21</Date>
+            <Version>331.20</Version>
+            <Comment>Version bump</Comment>
+            <Name>Richard de Bruin</Name>
+            <Email>richdb@pisilinux.org</Email>
+        </Update>
+        <Update release="15">
+            <Date>2013-11-05</Date>
+            <Version>325.15</Version>
+            <Comment>Rebuild for 3.10.18</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="14">
+            <Date>2013-09-28</Date>
+            <Version>325.15</Version>
+            <Comment>3.10.15</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="13">
+            <Date>2013-09-28</Date>
+            <Version>325.15</Version>
+            <Comment>3.10.13</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="12">
+            <Date>2013-09-18</Date>
+            <Version>325.15</Version>
+            <Comment>3.10.12</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="11">
+            <Date>2013-08-20</Date>
+            <Version>325.15</Version>
+            <Comment>3.10.10</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="10">
+            <Date>2013-08-20</Date>
+            <Version>325.15</Version>
+            <Comment>3.10.9</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="9">
+            <Date>2013-08-20</Date>
+            <Version>325.15</Version>
+            <Comment>Version bump</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="8">
+            <Date>2013-08-12</Date>
+            <Version>319.32</Version>
+            <Comment>rebuld for kernel 3.10.6</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2013-08-11</Date>
+            <Version>319.32</Version>
+            <Comment>rebuld for kernel 3.10.5</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2013-07-05</Date>
+            <Version>319.32</Version>
+            <Comment>Version bump</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-06-05</Date>
+            <Version>319.17</Version>
+            <Comment>Kernel 3.8.13</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-05-26</Date>
+            <Version>319.17</Version>
+            <Comment>Kernel 3.9.3</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-05-12</Date>
+            <Version>319.17</Version>
+            <Comment>Version bump</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-03-06</Date>
+            <Version>313.26</Version>
+            <Comment>Version bump</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2013-02-19</Date>
+            <Version>310.32</Version>
+            <Comment>First release</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

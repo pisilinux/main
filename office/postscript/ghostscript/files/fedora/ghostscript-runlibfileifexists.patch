@@ -1,0 +1,52 @@
+diff -up ghostscript-9.12/Resource/Init/gs_fonts.ps.runlibfileifexists ghostscript-9.12/Resource/Init/gs_fonts.ps
+--- ghostscript-9.12/Resource/Init/gs_fonts.ps.runlibfileifexists	2014-03-25 08:52:16.000000000 +0000
++++ ghostscript-9.12/Resource/Init/gs_fonts.ps	2014-03-26 12:01:48.248748767 +0000
+@@ -95,10 +95,19 @@ userdict /Fontmap .FontDirectory maxleng
+                 % stack: dict file fontname filename|aliasname
+       1 index type /stringtype eq
+       1 index type /nametype eq and 1 index xcheck and
+-      1 index /run eq 2 index /.runlibfile eq or and {
++      1 index /run eq 2 index /.runlibfile eq 3 index /.runlibfileifexists eq or or and {
+                 % This is an inclusion entry.
+-        pop findlibfile { exch pop } { file } ifelse
+-        2 index exch .readFontmap pop
++        0 index /.runlibfileifexists eq {
++          pop findlibfile {
++            exch pop
++            2 index exch .readFontmap pop
++          } {
++            pop
++          } ifelse
++        } {
++          pop findlibfile { exch pop } { file } ifelse
++          2 index exch .readFontmap pop
++        } ifelse
+       } {
+                 % This is a real entry.
+                 % Read and pop tokens until a semicolon.
+diff -up ghostscript-9.12/Resource/Init/gs_init.ps.runlibfileifexists ghostscript-9.12/Resource/Init/gs_init.ps
+--- ghostscript-9.12/Resource/Init/gs_init.ps.runlibfileifexists	2014-03-25 08:52:16.000000000 +0000
++++ ghostscript-9.12/Resource/Init/gs_init.ps	2014-03-26 12:01:48.248748767 +0000
+@@ -681,6 +681,14 @@ systemdict /internaldict dup .makeintern
+            { /undefinedfilename signalerror }
+           ifelse
+         } bind def
++/runlibfileifexists
++        {		% We don't want to bind 'run' into this procedure,
++                        % since run may get redefined.
++          findlibfile
++           { exch pop /run .systemvar exec }
++           { pop }
++          ifelse
++        } bind def
+ /selectdevice
+         { finddevice setdevice .setdefaultscreen } bind def
+ /signalerror		% <object> <errorname> signalerror -
+@@ -849,6 +857,7 @@ userdict /.currentresourcefile //null pu
+         } bind def
+ % Temporarily substitute it for the real runlibfile.
+ /.runlibfile /runlibfile load def
++/.runlibfileifexists /runlibfileifexists load def
+ /runlibfile /runlibfile0 load def
+ 
+ % Create the error handling machinery.
