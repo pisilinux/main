@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>kde5-kitemmodels</Name>
+        <Name>kpty</Name>
         <Homepage>http://www.kde.org</Homepage>
         <Packager>
             <Name>Pisi Linux Admins</Name>
@@ -10,19 +10,24 @@
         </Packager>
         <License>LGPLv2</License>
         <IsA>library</IsA>
-        <Summary>Set of item models extending the Qt model-view framework</Summary>
-        <Description>KItemModels provides a set of item models extending the Qt model-view framework.</Description>
-        <Archive sha1sum="713f25e88750dc65f94269b86f9cb0315c3aa30a" type="tarxz">http://download.kde.org/stable/frameworks/5.10/kitemmodels-5.10.0.tar.xz</Archive>
+        <Summary>Libraries for pseudo terminal devices</Summary>
+        <Description>Kpty provides primitives to interface with pseudo terminal devices as well as a KProcess derived class for running child processes and communicating with them using kpty.</Description>
+        <Archive sha1sum="d402020ec466db4ca166fd924a628f69cf275f71" type="tarxz">http://download.kde.org/stable/frameworks/5.11/kpty-5.11.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
+	    <Dependency>python3</Dependency>
 	    <Dependency>extra-cmake-modules</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>kde5-kitemmodels</Name>
+        <Name>kpty</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
+	    <Dependency>utempter</Dependency>
+	    <Dependency>libgcc</Dependency>
+	    <Dependency>kcoreaddons</Dependency>
+	    <Dependency>ki18n</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/share</Path>
@@ -34,11 +39,14 @@
     </Package>
     
     <Package>
-        <Name>kde5-kitemmodels-devel</Name>
-	<Summary>Development files for kitemmodels</Summary>
+        <Name>kpty-devel</Name>
+	<Summary>Development files for kpty</Summary>
         <RuntimeDependencies>
 	    <Dependency>qt5-base-devel</Dependency>
-            <Dependency release="current">kde5-kitemmodels</Dependency>
+	    <Dependency>utempter-devel</Dependency>
+	    <Dependency>kcoreaddons-devel</Dependency>
+	    <Dependency>ki18n-devel</Dependency>
+            <Dependency release="current">kpty</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -48,12 +56,19 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2015-06-24</Date>
+            <Version>5.11.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2015-05-30</Date>
             <Version>5.10.0</Version>
             <Comment>First Release.</Comment>
             <Name>Stefan Gronewold(groni)</Name>
             <Email>groni@pisilinux.org</Email>
-        </Update>                
+        </Update>               
     </History>
 </PISI>
