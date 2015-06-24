@@ -1,6 +1,184 @@
 <PISI>
     <SpecFile>
         <Source>
+            <Name>jbigkit</Name>
+            <Homepage>http://www.cl.cam.ac.uk/~mgk25/jbigkit/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <IsA>app:console</IsA>
+            <PartOf>multimedia.graphics</PartOf>
+            <Summary xml:lang="en">A portable library of compression and decompression functions</Summary>
+            <Summary xml:lang="tr">Taşınabilir bir sıkıştırma kitaplığı</Summary>
+            <Description xml:lang="en">JBIG-KIT implements a highly effective data compression algorithm for bi-level high-resolution images such as fax pages or scanned documents.</Description>
+            <Description xml:lang="tr">jbigkit, faks sayfaları ve taranmış belgeler gibi yüksek çözünürlüklü görüntüler için, yüksek performanslı bir sıkıştırma kitaplığıdır.</Description>
+            <Archive type="targz" sha1sum="cfb7d3121f02a74bfb229217858a0d149b6589ef">http://www.cl.cam.ac.uk/~mgk25/download/jbigkit-2.0.tar.gz</Archive>
+            <Patches>
+                <Patch level="1">jbigkit-2.0-shared.diff</Patch>
+            </Patches>
+            <SourceURI>multimedia/graphics/jbigkit/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>jbigkit</Name>
+            <Files>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>jbigkit-devel</Name>
+            <Summary xml:lang="en">Development files for jbigkit</Summary>
+            <Summary xml:lang="tr">jbigkit için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="3">jbigkit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="3">
+                <Date>2014-05-19</Date>
+                <Version>2.0</Version>
+                <Comment>Release bump.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2014-01-27</Date>
+                <Version>2.0</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2010-10-12</Date>
+                <Version>2.0</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>jasper</Name>
+            <Homepage>http://www.ece.uvic.ca/~mdadams/jasper</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <IsA>app:console</IsA>
+            <IsA>library</IsA>
+            <PartOf>multimedia.graphics</PartOf>
+            <Summary xml:lang="en">Software implementation of JPEG-2000 Part 1</Summary>
+            <Summary xml:lang="tr">JasPer JPEG-2000 Part-1 codec standardı üzerinde konumlandırılmış bir yazılım</Summary>
+            <Description xml:lang="en">JasPer is a software-based implementation of the codec specified in the JPEG-2000 Part-1 standard (ISO/IEC 15444-1:2000).</Description>
+            <Archive type="zip" sha1sum="9c5735f773922e580bf98c7c7dfda9bbed4c5191">http://www.ece.uvic.ca/~mdadams/jasper/software/jasper-1.900.1.zip</Archive>
+            <BuildDependencies>
+                <Dependency>freeglut-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>mesa-glu-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch compressionType="bz2" level="1">jasper-1.900.1-fixes-20081208.patch.bz2</Patch>
+            </Patches>
+            <SourceURI>multimedia/graphics/jasper/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>jasper</Name>
+            <RuntimeDependencies>
+                <Dependency>freeglut</Dependency>
+                <Dependency>mesa</Dependency>
+                <Dependency>mesa-glu</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>jasper-docs</Name>
+            <RuntimeDependencies>
+                <Dependency>jasper</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>jasper-devel</Name>
+            <Summary xml:lang="en">Development files for jasper</Summary>
+            <Summary xml:lang="tr">jasper için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">jasper</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>jasper-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for jasper</Summary>
+            <Summary xml:lang="tr">jasper için 32-bit paylaşımlı kitaplıklar</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>mesa-32bit</Dependency>
+                <Dependency>freeglut-32bit</Dependency>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="4">jasper</Dependency>
+                <Dependency>mesa-32bit</Dependency>
+                <Dependency>freeglut-32bit</Dependency>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-05-21</Date>
+                <Version>1.900.1</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-02-20</Date>
+                <Version>1.900.1</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-08-17</Date>
+                <Version>1.900.1</Version>
+                <Comment>Release bump.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2011-07-07</Date>
+                <Version>1.900.1</Version>
+                <Comment>First release</Comment>
+                <Name>Anıl Özbek</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libmng</Name>
             <Homepage>http://www.libmng.com/</Homepage>
             <Packager>
@@ -85,6 +263,100 @@
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>lcms2</Name>
+            <Homepage>http://www.littlecms.com</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <IsA>app:console</IsA>
+            <IsA>library</IsA>
+            <PartOf>multimedia.graphics</PartOf>
+            <Summary xml:lang="en">A color management library.</Summary>
+            <Description xml:lang="en">Little cms is a color management library. Implements fast transforms between ICC profiles. It is focused on speed, and is portable across several platforms.</Description>
+            <Archive type="targz" sha1sum="b0ecee5cb8391338e6c281d1c11dcae2bc22a5d2">http://sourceforge.net/projects/lcms/files/lcms/2.6/lcms2-2.6.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency>tiff-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>multimedia/graphics/lcms2/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>lcms2</Name>
+            <RuntimeDependencies>
+                <Dependency>libjpeg-turbo</Dependency>
+                <Dependency>tiff</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share/lcms/</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>lcms2-devel</Name>
+            <Summary xml:lang="en">Development files for lcms2</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">lcms2</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+                <Path fileType="library">/usr/lib32/pkgconfig</Path>
+                <Path fileType="header">/usr/include</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>lcms2-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for lcms2</Summary>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>tiff-32bit</Dependency>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="4">lcms2</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-05-15</Date>
+                <Version>2.6</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-01-29</Date>
+                <Version>2.5</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-02</Date>
+                <Version>2.5</Version>
+                <Comment>Version bump</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-10-31</Date>
+                <Version>2.3</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libjpeg-turbo</Name>
             <Homepage>http://www.libjpeg-turbo.org/</Homepage>
             <Packager>
@@ -134,7 +406,11 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">32-bit shared libraries for jpeg</Summary>
             <PartOf>emul32</PartOf>
             <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>glibc-32bit</Dependency>
+            </BuildDependencies>
             <RuntimeDependencies>
+                <Dependency>glibc-32bit</Dependency>
                 <Dependency release="5">libjpeg-turbo</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -178,6 +454,67 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Version>1.2.1</Version>
                 <Comment>First Release</Comment>
                 <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>libdmtx</Name>
+            <Homepage>http://www.libdmtx.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2+</License>
+            <IsA>library</IsA>
+            <PartOf>multimedia.graphics</PartOf>
+            <Summary xml:lang="en">A Library for working with Data Matrix 2D bar-codes</Summary>
+            <Summary xml:lang="tr">Data Matrix 2D barkodlarıyla çalışmak için kitaplık</Summary>
+            <Description xml:lang="en">libdmtx is an open source software for reading and writing Data Matrix 2D bar-codes on Linux, Unix, OS X, Windows and mobile devices.</Description>
+            <Description xml:lang="tr">libdmtx, Linux, Unix, OS X, Windows ve mobil işletim sistemlerinde Data Matrix 2D barkodlarını okumak ve yazmak için kullanılan açık kaynaklı bir kitaplıktır.</Description>
+            <Archive type="targz" sha1sum="7a353da736cf37e8730e2c22aca4629035aeadcd">http://sourceforge.net/projects/libdmtx/files/libdmtx/0.7.4/libdmtx-0.7.4.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>imagemagick-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>multimedia/graphics/libdmtx/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libdmtx</Name>
+            <RuntimeDependencies>
+                <Dependency>imagemagick</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libdmtx-devel</Name>
+            <Summary xml:lang="en">Development files for libdmtx</Summary>
+            <Summary xml:lang="tr">libdmtx için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="2">libdmtx</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="2">
+                <Date>2015-06-05</Date>
+                <Version>0.7.4</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2011-08-09</Date>
+                <Version>0.7.4</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
                 <Email>admins@pisilinux.org</Email>
             </Update>
         </History>
@@ -355,8 +692,8 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <RuntimeDependencies>
                 <Dependency release="4">tiff</Dependency>
                 <Dependency>libjpeg-turbo-32bit</Dependency>
-                <Dependency>xz-32bit</Dependency>
-                <Dependency>zlib-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib32</Path>
@@ -3968,6 +4305,577 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>qrencode</Name>
+            <Homepage>http://fukuchi.org/works/qrencode/index.en.html</Homepage>
+            <Packager>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <IsA>library</IsA>
+            <PartOf>programming.misc</PartOf>
+            <Summary xml:lang="en">A C library for encoding data in a QR code symbol</Summary>
+            <Summary xml:lang="tr">QR kod sembolüne veri gömmek için bir kitaplık</Summary>
+            <Description xml:lang="en">qrencode is a C library for encoding data in a QR Code symbol, a kind of 2D symbology that can be scanned by handy terminals such as a mobile phone with CCD. The capacity of QR Code is up to 7000 digits or 4000 characters, and is highly robust.</Description>
+            <Description xml:lang="tr">qrencode, cep telefonları gibi mobil cihazlar tarafından kolaylıkla taranabilen, 2 boyutlu bir sembol olan QR kod içerisinde veri gömmek için kullanılan bir kitaplıktır.</Description>
+            <Archive type="targz" sha1sum="644054a76c8b593acb66a8c8b7dcf1b987c3d0b2">http://fukuchi.org/works/qrencode/qrencode-3.4.4.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>libsdl-devel</Dependency>
+                <Dependency>m4</Dependency>
+            </BuildDependencies>
+            <SourceURI>programming/misc/qrencode/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>qrencode</Name>
+            <RuntimeDependencies>
+                <Dependency>libpng</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="library">/usr/bin/qrencode</Path>
+                <Path fileType="man">/usr/share/man/man1</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>qrencode-devel</Name>
+            <Summary xml:lang="en">Development files for qrencode</Summary>
+            <Summary xml:lang="tr">qrencode için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="3">qrencode</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="3">
+                <Date>2015-02-22</Date>
+                <Version>3.4.4</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="2">
+                <Date>2015-02-22</Date>
+                <Version>3.3.1</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-04-05</Date>
+                <Version>3.3.1</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>poppler-data</Name>
+            <Homepage>http://poppler.freedesktop.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <License>BSD</License>
+            <IsA>data</IsA>
+            <PartOf>office.postscript</PartOf>
+            <Summary xml:lang="en">Poppler encoding files</Summary>
+            <Summary xml:lang="tr">Poppler kodlama dosyaları</Summary>
+            <Description xml:lang="en">poppler-data consists of encoding files for poppler. When installed, the encoding files enables poppler to correctly render CJK and Cyrillic properly.</Description>
+            <Description xml:lang="tr">poppler-data, poppler için CJK ve Kiril harflerini düzgünce gösterebilmek için gerekli kodlama dosyalarını içerir.</Description>
+            <Archive type="targz" sha1sum="556a5bebd0eb743e0d91819ba11fd79947d8c674">http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz</Archive>
+            <SourceURI>office/postscript/poppler-data/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>poppler-data</Name>
+            <Files>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="data">/usr/share/poppler</Path>
+                <Path fileType="data">/usr/share/pkgconfig</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="5">
+                <Date>2015-03-05</Date>
+                <Version>0.4.7</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-05-25</Date>
+                <Version>0.4.6</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-03-10</Date>
+                <Version>0.4.6</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Varol Maksutoğlu</Name>
+                <Email>waroi@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-04-17</Date>
+                <Version>0.4.6</Version>
+                <Comment>Version bump</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-09-12</Date>
+                <Version>0.4.5</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>ghostscript</Name>
+            <Homepage>http://www.ghostscript.com</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv3+</License>
+            <IsA>library</IsA>
+            <PartOf>office.postscript</PartOf>
+            <Summary xml:lang="en">A PostScript interpreter and renderer</Summary>
+            <Summary xml:lang="tr">Bir PostScript yorumlayıcısı ve üreticisi</Summary>
+            <Description xml:lang="en">ghostscript is a set of software that provides a PostScript interpreter, a set of C procedures and an interpreter for PDF files. ghostscript is normally used to display PostScript files and to print PostScript files to non-PostScript printers.</Description>
+            <Description xml:lang="tr">ghostscript, PostScript yorumlayıcısı, C kitaplığı ve PDF yorumlayıcısı içeren bir yazılım paketidir. ghostscript, PostScript dosyalarının görüntülenmesi ve PostScript olmayan yazıcılardan PostScript dosyalarının çıktılarının alınması için kullanılmaktadır.</Description>
+            <Archive type="tarbz2" sha1sum="19f01538d33b9623bc6653d96ea4ec891f14a9d3">http://downloads.ghostscript.com/public/ghostscript-9.15.tar.bz2</Archive>
+            <BuildDependencies>
+                <Dependency>tiff-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libSM-devel</Dependency>
+                <Dependency>freetype-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency releaseFrom="2">lcms2-devel</Dependency>
+                <Dependency>libXt-devel</Dependency>
+                <Dependency>libpng-devel</Dependency>
+                <Dependency>libpaper-devel</Dependency>
+                <Dependency>fontconfig-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">ubuntu/02_gs-man-fix-for-debian.patch</Patch>
+                <Patch level="1">fedora/ghostscript-Fontmap.local.patch</Patch>
+                <Patch level="1">fedora/ghostscript-gdevcups-debug-uninit.patch</Patch>
+                <Patch level="1">fedora/ghostscript-iccprofiles-initdir.patch</Patch>
+                <Patch level="1">fedora/ghostscript-multilib.patch</Patch>
+                <Patch level="1">fedora/ghostscript-noopt.patch</Patch>
+                <Patch level="1">fedora/ghostscript-runlibfileifexists.patch</Patch>
+                <Patch level="1">fedora/ghostscript-scripts.patch</Patch>
+                <Patch level="1">fedora/ghostscript-sys-zlib.patch</Patch>
+                <Patch level="1">fedora/ghostscript-icc-missing-check.patch</Patch>
+                <Patch level="1">fedora/ghostscript-wrf-snprintf.patch</Patch>
+                <Patch level="1">fedora/ghostscript-gs694154.patch</Patch>
+            </Patches>
+            <SourceURI>office/postscript/ghostscript/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>ghostscript</Name>
+            <RuntimeDependencies>
+                <Dependency>zlib</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>libpng</Dependency>
+                <Dependency>freetype</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+                <Dependency>tiff</Dependency>
+                <Dependency releaseFrom="2">lcms2</Dependency>
+                <Dependency>libXt</Dependency>
+                <Dependency>libpaper</Dependency>
+                <Dependency>fontconfig</Dependency>
+                <Dependency>poppler-data</Dependency>
+                <Dependency>gnu-gs-fonts-std</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="data">/usr/share/cups</Path>
+                <Path fileType="data">/usr/share/ghostscript</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>ghostscript-docs</Name>
+            <Summary xml:lang="en">Documentation for ghostscript</Summary>
+            <Summary xml:lang="tr">ghostscript için çeşitli belgeler</Summary>
+            <Files>
+                <Path fileType="doc">/usr/share/doc/ghostscript/html</Path>
+                <Path fileType="doc">/usr/share/doc/ghostscript/examples</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>ghostscript-devel</Name>
+            <Summary xml:lang="en">Development files for ghostscript</Summary>
+            <Summary xml:lang="tr">ghostscript için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">ghostscript</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin/ijs-config</Path>
+                <Path fileType="header">/usr/include/ghostscript</Path>
+                <Path fileType="header">/usr/include/ijs</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>ghostscript-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for ghostscript</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+                <Dependency>zlib-32bit</Dependency>
+                <Dependency>tiff-32bit</Dependency>
+                <Dependency>lcms2-32bit</Dependency>
+                <Dependency>libXt-32bit</Dependency>
+                <Dependency>libXext-32bit</Dependency>
+                <Dependency>libX11-32bit</Dependency>
+                <Dependency>libpng-32bit</Dependency>
+                <Dependency>libidn-32bit</Dependency>
+                <Dependency>freetype-32bit</Dependency>
+                <Dependency>fontconfig-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="6">ghostscript</Dependency>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+                <Dependency>zlib-32bit</Dependency>
+                <Dependency>tiff-32bit</Dependency>
+                <Dependency>lcms2-32bit</Dependency>
+                <Dependency>libXt-32bit</Dependency>
+                <Dependency>libX11-32bit</Dependency>
+                <Dependency>libpng-32bit</Dependency>
+                <Dependency>freetype-32bit</Dependency>
+                <Dependency>fontconfig-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="6">
+                <Date>2015-03-04</Date>
+                <Version>9.15</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2014-05-20</Date>
+                <Version>9.14</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-09-21</Date>
+                <Version>9.10</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Aydın Demirel</Name>
+                <Email>aydin.demirel@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-06-27</Date>
+                <Version>9.07</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-01-22</Date>
+                <Version>9.06</Version>
+                <Comment>Add emul32, fix dependencies</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-09-12</Date>
+                <Version>9.06</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>poppler</Name>
+            <Homepage>http://poppler.freedesktop.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>office.postscript</PartOf>
+            <Summary xml:lang="en">PDF rendering library</Summary>
+            <Summary xml:lang="tr">Xpdf koduna dayanan bir PDF kitaplığı</Summary>
+            <Summary xml:lang="pl">Biblioteka renderująca PDF</Summary>
+            <Description xml:lang="fr">Poppler est une librairie de rendu PDF basée sur le code source de xpdf-3.0.</Description>
+            <Description xml:lang="en">poppler is a PDF rendering library based on xpdf.</Description>
+            <Description xml:lang="tr">Poppler, xpdf koduna dayanan bir PDF hazırlama kitaplığıdır.</Description>
+            <Description xml:lang="pl">Wspólna biblioteka renderująca PDF do integrowania oglądania PDF w aplikacjach desktopowych (oparta na kodzie xpdf-3.0).</Description>
+            <Archive type="tarxz" sha1sum="d0b5545f0e5f0104eb141d356003c0b571601d6f">http://poppler.freedesktop.org/poppler-0.31.0.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>qt-devel</Dependency>
+                <Dependency>lcms2-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency>gtk2-devel</Dependency>
+                <Dependency>cairo-devel</Dependency>
+                <Dependency>libpng-devel</Dependency>
+                <Dependency>openjpeg-devel</Dependency>
+                <Dependency>tiff-devel</Dependency>
+                <Dependency>fontconfig-devel</Dependency>
+                <Dependency>gdk-pixbuf-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>office/postscript/poppler/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>poppler</Name>
+            <RuntimeDependencies>
+                <Dependency>lcms2</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+                <Dependency>libpng</Dependency>
+                <Dependency>openjpeg</Dependency>
+                <Dependency>tiff</Dependency>
+                <Dependency>fontconfig</Dependency>
+                <Dependency>poppler-data</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-utils</Name>
+            <Summary xml:lang="en">Command line utilities for converting PDF files</Summary>
+            <Summary xml:lang="tr">PDF dönüşüm araçları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler</Dependency>
+                <Dependency>cairo</Dependency>
+                <Dependency>lcms2</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="man">/usr/share/man/man1</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-qt</Name>
+            <Summary xml:lang="en">Qt wrapper for poppler</Summary>
+            <Summary xml:lang="tr">Poppler için Qt bağlayıcısı</Summary>
+            <RuntimeDependencies>
+                <Dependency>qt</Dependency>
+                <Dependency release="8">poppler</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/libpoppler-qt4.so*</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-qt-devel</Name>
+            <Summary xml:lang="en">Development files for poppler-qt</Summary>
+            <Summary xml:lang="tr">poppler-qt için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler-qt</Dependency>
+                <Dependency release="8">poppler-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="data">/usr/lib/pkgconfig/poppler-qt4.pc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-cpp</Name>
+            <Summary xml:lang="en">Pure C++ wrapper for poppler</Summary>
+            <Summary xml:lang="tr">Poppler için C++ bağlayıcısı</Summary>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/libpoppler-cpp.so*</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-cpp-devel</Name>
+            <Summary xml:lang="en">Development files for poppler-cpp</Summary>
+            <Summary xml:lang="tr">poppler-cpp için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler-cpp</Dependency>
+                <Dependency release="8">poppler-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/pkgconfig/poppler-cpp.pc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-glib</Name>
+            <Summary xml:lang="en">Glib wrapper for poppler</Summary>
+            <Summary xml:lang="tr">Poppler için Glib bağlayıcısı</Summary>
+            <RuntimeDependencies>
+                <Dependency>cairo</Dependency>
+                <Dependency>gdk-pixbuf</Dependency>
+                <Dependency release="8">poppler</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/libpoppler-glib.so*</Path>
+                <Path fileType="library">/usr/lib/girepository-1.0/Poppler-0.18.typelib</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-glib-devel</Name>
+            <Summary xml:lang="en">Development files for poppler-glib</Summary>
+            <Summary xml:lang="tr">poppler-glib için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency>gtk2-devel</Dependency>
+                <Dependency>cairo-devel</Dependency>
+                <Dependency>gdk-pixbuf-devel</Dependency>
+                <Dependency release="8">poppler-glib</Dependency>
+                <Dependency release="8">poppler-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/pkgconfig/poppler-glib.pc</Path>
+                <Path fileType="library">/usr/lib/pkgconfig/poppler-cairo.pc</Path>
+                <Path fileType="data">/usr/share/gir-1.0/Poppler-0.18.gir</Path>
+                <Path fileType="data">/usr/lib32/pkgconfig/poppler-glib.pc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-devel</Name>
+            <Summary xml:lang="en">Development files for poppler</Summary>
+            <Summary xml:lang="tr">poppler için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="data">/usr/lib32/pkgconfig/poppler.pc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for poppler</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>lcms2-32bit</Dependency>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+                <Dependency>libpng-32bit</Dependency>
+                <Dependency>openjpeg-32bit</Dependency>
+                <Dependency>tiff-32bit</Dependency>
+                <Dependency>freetype-32bit</Dependency>
+                <Dependency>fontconfig-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler</Dependency>
+                <Dependency>lcms2-32bit</Dependency>
+                <Dependency>libjpeg-turbo-32bit</Dependency>
+                <Dependency>libpng-32bit</Dependency>
+                <Dependency>openjpeg-32bit</Dependency>
+                <Dependency>tiff-32bit</Dependency>
+                <Dependency>freetype-32bit</Dependency>
+                <Dependency>fontconfig-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32/libpoppler.so*</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>poppler-glib-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for poppler-glib</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>glib2-32bit</Dependency>
+                <Dependency>cairo-32bit</Dependency>
+                <Dependency>freetype-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="8">poppler-32bit</Dependency>
+                <Dependency>glib2-32bit</Dependency>
+                <Dependency>cairo-32bit</Dependency>
+                <Dependency>freetype-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32/libpoppler-glib.so*</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="8">
+                <Date>2015-03-04</Date>
+                <Version>0.31.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="7">
+                <Date>2014-05-25</Date>
+                <Version>0.26.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="6">
+                <Date>2014-01-27</Date>
+                <Version>0.24.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2013-10-10</Date>
+                <Version>0.24.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-07-28</Date>
+                <Version>0.22.5</Version>
+                <Comment>Move pc files to devel pack, fix pc files for emul32.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-07-01</Date>
+                <Version>0.22.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2012-04-17</Date>
+                <Version>0.22.3</Version>
+                <Comment>Version bump</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-10-18</Date>
+                <Version>0.20.5</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>postgresql</Name>
             <Homepage>http://www.postgresql.org/</Homepage>
             <Packager>
@@ -4456,6 +5364,168 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>mit-kerberos</Name>
+            <Homepage>http://web.mit.edu/kerberos/www/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>as-is</License>
+            <IsA>library</IsA>
+            <IsA>app:console</IsA>
+            <PartOf>server.auth</PartOf>
+            <Summary xml:lang="en">MIT Kerberos Library</Summary>
+            <Summary xml:lang="tr">MIT Kerberos kütüphanesi</Summary>
+            <Description xml:lang="en">Kerberos is a network authentication protocol. It is designed to provide strong authentication for client/server applications by using secret-key cryptography.</Description>
+            <Description xml:lang="tr">Kerberos bir ağ doğrulama protokolüdür. Sunucu/istemci uygulamalarında, gizli anahtar kriptoloji teknolojisini kullanarak, güçlü bir doğrulama sağlar.</Description>
+            <Archive type="targz" sha1sum="6342e29980210c32dee3563dfb0728b4b9592381">http://source.pisilinux.org/1.0/krb5-1.13.1.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>keyutils</Dependency>
+                <Dependency>openssl-devel</Dependency>
+                <Dependency>e2fsprogs-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="0">krb5-config_LDFLAGS.patch</Patch>
+                <Patch level="0">rebuild-configure-scripts.patch</Patch>
+                <Patch level="0">fix-python-detection.patch</Patch>
+            </Patches>
+            <SourceURI>server/auth/mit-kerberos/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>mit-kerberos</Name>
+            <RuntimeDependencies>
+                <Dependency>keyutils</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>e2fsprogs</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="config">/etc</Path>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="executable">/usr/sbin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="data">/var/lib</Path>
+                <Path fileType="info">/usr/share/info</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/etc/krb5.conf" permission="0644" owner="root">krb5.conf</AdditionalFile>
+                <AdditionalFile target="/etc/kdc.conf" permission="0644" owner="root">kdc.conf</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <History>
+            <Update release="6">
+                <Date>2015-04-23</Date>
+                <Version>1.13.1</Version>
+                <Comment>Version bump,fix deps.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="5">
+                <Date>2014-12-13</Date>
+                <Version>1.13</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-05-17</Date>
+                <Version>1.12.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-01-22</Date>
+                <Version>1.11.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-02-20</Date>
+                <Version>1.11</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-09-27</Date>
+                <Version>1.10.3</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>keyutils</Name>
+            <Homepage>http://people.redhat.com/~dhowells/keyutils/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2+</License>
+            <License>LGPLv2+</License>
+            <IsA>library</IsA>
+            <IsA>app:console</IsA>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">Linux key management utilities</Summary>
+            <Summary xml:lang="tr">Linux anahtar yönetim araçları</Summary>
+            <Description xml:lang="en">keyutils contains utilities to control the kernel key management facility and to provide a mechanism by which the kernel call back to userspace to get a key instantiated.</Description>
+            <Description xml:lang="tr">keyutils, Linux çekirdeğindeki anahtar yönetim kolaylıklarını denetlemek ve çekirdek ile kullanıcı uzayı arasında iletişim kurmak için gereken araçları içerir.</Description>
+            <Archive type="tarbz2" sha1sum="cf040adebe25eb466760f34752f4100fd5acb5e7">http://people.redhat.com/~dhowells/keyutils/keyutils-1.5.9.tar.bz2</Archive>
+            <SourceURI>util/crypt/keyutils/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>keyutils</Name>
+            <Files>
+                <Path fileType="config">/etc</Path>
+                <Path fileType="executable">/bin</Path>
+                <Path fileType="executable">/sbin</Path>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="library">/lib</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="data">/usr/share/keyutils</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-05-22</Date>
+                <Version>1.5.9</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-04-03</Date>
+                <Version>1.5.9</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-10-13</Date>
+                <Version>1.5.8</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2010-10-12</Date>
+                <Version>1.5.5</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>nss</Name>
             <Homepage>http://www.mozilla.org/projects/security/pki/nss/</Homepage>
             <Packager>
@@ -4628,316 +5698,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>libX11</Name>
-            <Homepage>http://www.x.org/</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>MIT</License>
-            <IsA>library</IsA>
-            <PartOf>system</PartOf>
-            <Summary xml:lang="fr">Librairie X11 de X.Org.</Summary>
-            <Summary xml:lang="en">X.Org X11 library</Summary>
-            <Summary xml:lang="tr">X.Org X11 kitaplığı</Summary>
-            <Summary xml:lang="de">X.Org X11 Bibliothek</Summary>
-            <Description xml:lang="en">Core X11 protocol client library.</Description>
-            <Archive type="tarbz2" sha1sum="6f2aadf8346ee00b7419bd338461c6986e274733">mirrors://xorg/individual/lib/libX11-1.6.3.tar.bz2</Archive>
-            <BuildDependencies>
-                <Dependency>libxcb-devel</Dependency>
-                <Dependency>xorg-proto</Dependency>
-                <Dependency>util-macros</Dependency>
-                <Dependency>xtrans</Dependency>
-            </BuildDependencies>
-            <SourceURI>system/base/libX11/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>libX11</Name>
-            <RuntimeDependencies>
-                <Dependency>libxcb</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib/libX11*</Path>
-                <Path fileType="data">/usr/lib/X11</Path>
-                <Path fileType="data">/usr/share/X11</Path>
-                <Path fileType="doc">/usr/share/doc/libX11</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libX11-devel</Name>
-            <Summary xml:lang="en">Development files for X11 library</Summary>
-            <Summary xml:lang="tr">libX11 için geliştirme dosyaları</Summary>
-            <RuntimeDependencies>
-                <Dependency release="7">libX11</Dependency>
-                <Dependency>libxcb-devel</Dependency>
-                <Dependency>xorg-proto</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include/X11</Path>
-                <Path fileType="data">/usr/lib/pkgconfig</Path>
-                <Path fileType="data">/usr/lib32/pkgconfig</Path>
-                <Path fileType="man">/usr/share/man</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libX11-32bit</Name>
-            <Summary xml:lang="en">32-bit shared libraries for libX11</Summary>
-            <Summary xml:lang="tr">libX11 için 32-bit paylaşımlı kitaplıklar</Summary>
-            <PartOf>emul32</PartOf>
-            <BuildType>emul32</BuildType>
-            <BuildDependencies>
-                <Dependency>libxcb-32bit</Dependency>
-                <Dependency>glibc-32bit</Dependency>
-            </BuildDependencies>
-            <RuntimeDependencies>
-                <Dependency release="7">libX11</Dependency>
-                <Dependency>libxcb-32bit</Dependency>
-                <Dependency>glibc-32bit</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib32</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="7">
-                <Date>2015-05-22</Date>
-                <Version>1.6.3</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Ertuğrul Erata</Name>
-                <Email>ertugrulerata@gmail.com</Email>
-            </Update>
-            <Update release="6">
-                <Date>2014-05-11</Date>
-                <Version>1.6.2</Version>
-                <Comment>Release bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2013-10-07</Date>
-                <Version>1.6.2</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2013-09-12</Date>
-                <Version>1.6.2</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-07-30</Date>
-                <Version>1.6.1</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-06-21</Date>
-                <Version>1.6.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-11-24</Date>
-                <Version>1.5.0</Version>
-                <Comment>First release</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>gperf</Name>
-            <Homepage>http://www.gnu.org/software/gperf/gperf.html</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:console</IsA>
-            <PartOf>system</PartOf>
-            <Summary xml:lang="en">A perfect hash function generator</Summary>
-            <Summary xml:lang="tr">Mükemmel hash üreticisi</Summary>
-            <Description xml:lang="en">gperf is a perfect hash function generator. For a given list of strings, it produces a hash function and hash table, in form of C or C++ code, for looking up a value depending on the input string. The hash function is perfect, which means that the hash table has no collisions, and the hash table lookup needs a single string comparison only.</Description>
-            <Description xml:lang="tr">gperf mükemmel hash fonksiyonu üretecidir. Verilen bir katar listesi için C ve C++ kodu biçiminde bir hash fonksiyonu ve hash tablosu üretir.</Description>
-            <Description xml:lang="es">GNU gperf es un generador de perfect hash. Produce una función hash y una tabla hash a base de una lista de cadenas, en forma de código C o C++ , para revisar valores dependiendo de una cadena de entrada. La función de hash es perfecta, lo que quiere decir que no hay colisiones en la tabla de hash, y para la búsqueda en la tabla hash se necesita solamente una comparación.</Description>
-            <Archive type="targz" sha1sum="e32d4aff8f0c730c9a56554377b2c6d82d0951b8">mirrors://gnu/gperf/gperf-3.0.4.tar.gz</Archive>
-            <SourceURI>system/base/gperf/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>gperf</Name>
-            <RuntimeDependencies>
-                <Dependency>libgcc</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="info">/usr/share/info</Path>
-                <Path fileType="man">/usr/share/man</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="4">
-                <Date>2014-05-11</Date>
-                <Version>3.0.4</Version>
-                <Comment>Release bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-10-24</Date>
-                <Version>3.0.4</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Ertuğrul Erata</Name>
-                <Email>ertugrulerata@gmail.com</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-07-26</Date>
-                <Version>3.0.4</Version>
-                <Comment>Fix dep,release bump.</Comment>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-08-23</Date>
-                <Version>3.0.4</Version>
-                <Comment>First release</Comment>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>libxcb</Name>
-            <Homepage>http://xcb.freedesktop.org/</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>MIT</License>
-            <IsA>library</IsA>
-            <PartOf>system</PartOf>
-            <Summary xml:lang="en">The X protocol C-language Binding (XCB)</Summary>
-            <Summary xml:lang="tr">X protokolü için C dili bağlayıcısı (XCB)</Summary>
-            <Description xml:lang="en">The X protocol C-language Binding (XCB) is a replacement for Xlib featuring a small footprint, latency hiding, direct access to the protocol, improved threading support, and extensibility.</Description>
-            <Archive type="tarbz2" sha1sum="8343b417d7eeb2a2c6b6c4a87a03a4fd0fc65c46">http://xcb.freedesktop.org/dist/libxcb-1.11.tar.bz2</Archive>
-            <BuildDependencies>
-                <Dependency>libXau-devel</Dependency>
-                <Dependency>libXdmcp-devel</Dependency>
-                <Dependency>libxslt</Dependency>
-                <Dependency>util-macros</Dependency>
-                <Dependency versionFrom="1.11">xcb-proto</Dependency>
-            </BuildDependencies>
-            <Patches>
-                <Patch level="1">libxcb-1.1-no-pthread-stubs.patch</Patch>
-            </Patches>
-            <SourceURI>system/base/libxcb/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>libxcb</Name>
-            <RuntimeDependencies>
-                <Dependency>libXau</Dependency>
-                <Dependency>libXdmcp</Dependency>
-                <Dependency>glibc</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="man">/usr/share/man</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libxcb-devel</Name>
-            <Summary xml:lang="en">Development files for libxcb</Summary>
-            <Summary xml:lang="tr">libxcb için geliştirme dosyaları</Summary>
-            <RuntimeDependencies>
-                <Dependency release="6">libxcb</Dependency>
-                <Dependency>libXau-devel</Dependency>
-                <Dependency>libXdmcp-devel</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include/xcb</Path>
-                <Path fileType="data">/usr/lib/pkgconfig</Path>
-                <Path fileType="data">/usr/lib32/pkgconfig</Path>
-            </Files>
-            <AdditionalFiles>
-                <AdditionalFile target="/usr/lib/pkgconfig/pthread-stubs.pc" permission="0644" owner="root">pthread-stubs.pc</AdditionalFile>
-            </AdditionalFiles>
-        </Package>
-        <Package>
-            <Name>libxcb-32bit</Name>
-            <Summary xml:lang="en">32-bit shared libraries for libxcb</Summary>
-            <Summary xml:lang="tr">libxcb için 32-bit paylaşımlı kitaplıklar</Summary>
-            <PartOf>emul32</PartOf>
-            <BuildType>emul32</BuildType>
-            <BuildDependencies>
-                <Dependency>libXau-32bit</Dependency>
-                <Dependency>libXdmcp-32bit</Dependency>
-                <Dependency>glibc-32bit</Dependency>
-            </BuildDependencies>
-            <RuntimeDependencies>
-                <Dependency release="6">libxcb</Dependency>
-                <Dependency>libXau-32bit</Dependency>
-                <Dependency>libXdmcp-32bit</Dependency>
-                <Dependency>glibc-32bit</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib32</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="6">
-                <Date>2015-05-22</Date>
-                <Version>1.11</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2014-05-11</Date>
-                <Version>1.10</Version>
-                <Comment>Release bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2014-03-07</Date>
-                <Version>1.10</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-10-08</Date>
-                <Version>1.9.1</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-07-28</Date>
-                <Version>1.9.1</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-11-18</Date>
-                <Version>1.9</Version>
-                <Comment>First release</Comment>
-                <Name>Erdinç Gültekin</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
             <Name>libSM</Name>
             <Homepage>http://www.x.org/</Homepage>
             <Packager>
@@ -4955,13 +5715,17 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Archive type="tarbz2" sha1sum="e6d5dab6828dfd296e564518d2ed0a349a25a714">mirrors://xorg/individual/lib/libSM-1.2.2.tar.bz2</Archive>
             <BuildDependencies>
                 <Dependency>libICE-devel</Dependency>
-                <Dependency>libuuid-devel</Dependency>
+                <Dependency>libutil-linux-devel</Dependency>
+                <Dependency>util-macros</Dependency>
+                <Dependency>xorg-proto</Dependency>
+                <Dependency>xtrans</Dependency>
             </BuildDependencies>
             <SourceURI>x11/library/libSM/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>libSM</Name>
             <RuntimeDependencies>
+                <Dependency>libutil-linux</Dependency>
                 <Dependency>libICE</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -4992,12 +5756,14 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>emul32</PartOf>
             <BuildType>emul32</BuildType>
             <BuildDependencies>
+                <Dependency>glibc-32bit</Dependency>
                 <Dependency>libICE-32bit</Dependency>
-                <Dependency>libuuid-32bit</Dependency>
+                <Dependency>libutil-linux-32bit</Dependency>
             </BuildDependencies>
             <RuntimeDependencies>
+                <Dependency>glibc-32bit</Dependency>
                 <Dependency>libICE-32bit</Dependency>
-                <Dependency>libuuid-32bit</Dependency>
+                <Dependency>libutil-linux-32bit</Dependency>
                 <Dependency release="7">libSM</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -6084,6 +6850,126 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>libXt</Name>
+            <Homepage>http://www.x.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <IsA>library</IsA>
+            <PartOf>x11.library</PartOf>
+            <Summary xml:lang="fr">Librairie Xt de X.Org</Summary>
+            <Summary xml:lang="en">X.Org Xt library</Summary>
+            <Summary xml:lang="tr">X.Org Xt kitaplığı</Summary>
+            <Summary xml:lang="de">X.Org Xt Bibliothek</Summary>
+            <Description xml:lang="en">LibXt provides the X Toolkit Intrinsics, an abstract widget library upon which other toolkits are based. Xt is the basis for many toolkits, including the Athena widgets (Xaw), and LessTif.</Description>
+            <Archive type="tarbz2" sha1sum="0111c316d83fb7e830c517128150094cb0a48ae7">mirrors://xorg/individual/lib/libXt-1.1.4.tar.bz2</Archive>
+            <BuildDependencies>
+                <Dependency>libICE-devel</Dependency>
+                <Dependency>libSM-devel</Dependency>
+                <Dependency>xorg-proto</Dependency>
+                <Dependency>libX11-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>x11/library/libXt/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libXt</Name>
+            <RuntimeDependencies>
+                <Dependency>libICE</Dependency>
+                <Dependency>libSM</Dependency>
+                <Dependency>libX11</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share/X11</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libXt-devel</Name>
+            <Summary xml:lang="en">Development files for libXt</Summary>
+            <Summary xml:lang="tr">libXt için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">libXt</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include/X11</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="data">/usr/lib32/pkgconfig</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libXt-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for libXt</Summary>
+            <Summary xml:lang="tr">libXt için 32-bit paylaşımlı kitaplıklar</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>glibc-32bit</Dependency>
+                <Dependency>libX11-32bit</Dependency>
+                <Dependency>libSM-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency>glibc-32bit</Dependency>
+                <Dependency release="6">libXt</Dependency>
+                <Dependency>libX11-32bit</Dependency>
+                <Dependency>libSM-32bit</Dependency>
+                <Dependency>libICE-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="6">
+                <Date>2014-05-16</Date>
+                <Version>1.1.4</Version>
+                <Comment>Release bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2013-10-07</Date>
+                <Version>1.1.4</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-08-25</Date>
+                <Version>1.1.4</Version>
+                <Comment>Release bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-07-30</Date>
+                <Version>1.1.4</Version>
+                <Comment>Rebuild</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-06-21</Date>
+                <Version>1.1.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-06-01</Date>
+                <Version>1.1.3</Version>
+                <Comment>First release</Comment>
+                <Name>Erdem Artan</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libXtst</Name>
             <Homepage>http://www.x.org/</Homepage>
             <Packager>
@@ -6110,6 +6996,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>libXtst</Name>
             <RuntimeDependencies>
                 <Dependency>libXext</Dependency>
+                <Dependency>libX11</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib</Path>
@@ -6127,10 +7014,12 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>libXext-32bit</Dependency>
                 <Dependency>libXi-32bit</Dependency>
                 <Dependency>libX11-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
             </BuildDependencies>
             <RuntimeDependencies>
                 <Dependency>libX11-32bit</Dependency>
                 <Dependency>libXext-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
                 <Dependency release="6">libXtst</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -7119,6 +8008,10 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Archive type="tarbz2" sha1sum="3c3a857a117ce48a1947a16860056e77cd494fdf">mirrors://xorg/individual/lib/libICE-1.0.9.tar.bz2</Archive>
             <BuildDependencies>
                 <Dependency>libbsd-devel</Dependency>
+                <Dependency>util-macros</Dependency>
+                <Dependency>xorg-proto</Dependency>
+                <Dependency>xtrans</Dependency>
+                <Dependency>libxslt</Dependency>
             </BuildDependencies>
             <SourceURI>x11/library/libICE/pspec.xml</SourceURI>
         </Source>
@@ -7151,7 +8044,11 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">libICE için 32-bit paylaşımlı kitaplıklar</Summary>
             <PartOf>emul32</PartOf>
             <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>glibc-32bit</Dependency>
+            </BuildDependencies>
             <RuntimeDependencies>
+                <Dependency>glibc-32bit</Dependency>
                 <Dependency release="5">libICE</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -8509,6 +9406,241 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>libpaper</Name>
+            <Homepage>http://packages.debian.org/unstable/source/libpaper</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>hardware.printer</PartOf>
+            <Summary xml:lang="en">Library for handling paper characteristics</Summary>
+            <Summary xml:lang="tr">Kağıt özelliklerini düzenlemek için kitaplık</Summary>
+            <Description xml:lang="en">Libpaper is a programming library for handling paper characteristics.</Description>
+            <Description xml:lang="tr">libpaper, kağıt özelliklerini düzenlemek için bir programlama kitaplığıdır.</Description>
+            <Description xml:lang="es">Libpaper es una librería de programación para manejar características de papel.</Description>
+            <Archive type="targz" sha1sum="6927f75d126373d32d89751d2a7fe3e99cc9b4a1">http://ftp.debian.org/debian/pool/main/libp/libpaper/libpaper_1.1.24.tar.gz</Archive>
+            <Patches>
+                <Patch level="1">libpaper-1.1.23-debianbug475683.patch</Patch>
+                <Patch level="1">libpaper-useglibcfallback.patch</Patch>
+            </Patches>
+            <SourceURI>hardware/printer/libpaper/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libpaper</Name>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="executable">/usr/sbin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="config">/etc/</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="localedata">/usr/share/locale</Path>
+            </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/etc/papersize" permission="0644" owner="root">papersize</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <Package>
+            <Name>libpaper-devel</Name>
+            <Summary xml:lang="en">Development files for libpaper</Summary>
+            <Summary xml:lang="tr">libpaper için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="2">libpaper</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="2">
+                <Date>2014-05-21</Date>
+                <Version>1.1.24</Version>
+                <Comment>rebuild</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="1">
+                <Date>2010-10-13</Date>
+                <Version>1.1.24</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>cups-filters</Name>
+            <Homepage>http://www.openprinting.org</Homepage>
+            <Packager>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <License>GPLv3</License>
+            <License>GPLv2+</License>
+            <License>GPLv3+</License>
+            <License>LGPLv2+</License>
+            <License>MIT</License>
+            <IsA>data</IsA>
+            <IsA>library</IsA>
+            <IsA>app:console</IsA>
+            <PartOf>hardware.printer</PartOf>
+            <Summary xml:lang="en">OpenPrinting CUPS filters and backends</Summary>
+            <Description xml:lang="en">Contains backends, filters, and other software that was once part of the core CUPS distribution but is no longer maintained by Apple Inc. In addition it contains additional filters developed independently of Apple, especially filters for the PDF-centric printing workflow introduced by OpenPrinting.</Description>
+            <Archive type="tarxz" sha1sum="ddd0386be361f72ad2e8f7851753dc89016ff7be">http://www.openprinting.org/download/cups-filters/cups-filters-1.0.66.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>cups-devel</Dependency>
+                <Dependency>tiff-devel</Dependency>
+                <Dependency>ghostscript</Dependency>
+                <Dependency>lcms2-devel</Dependency>
+                <Dependency>gnutls-devel</Dependency>
+                <Dependency>mit-kerberos</Dependency>
+                <Dependency>fontconfig-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency versionFrom="5.1.2">qpdf-devel</Dependency>
+                <Dependency releaseFrom="6">ghostscript-devel</Dependency>
+                <Dependency versionFrom="0.31.0">poppler-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>hardware/printer/cups-filters/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>cups-filters</Name>
+            <RuntimeDependencies>
+                <Dependency>cups</Dependency>
+                <Dependency>tiff</Dependency>
+                <Dependency>lcms2</Dependency>
+                <Dependency>gnutls</Dependency>
+                <Dependency>fontconfig</Dependency>
+                <Dependency>foomatic-db</Dependency>
+                <Dependency>mit-kerberos</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+                <Dependency versionFrom="5.1.2">qpdf</Dependency>
+                <Dependency releaseFrom="6">ghostscript</Dependency>
+                <Dependency versionFrom="0.31.0">poppler</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="data">/usr/share/ppd</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="data">/usr/share/cups</Path>
+                <Path fileType="config">/etc/cups/cups-browsed.conf</Path>
+                <Path fileType="config">/etc/fonts/conf.d/99pdftoopvp.conf</Path>
+            </Files>
+            <Conflicts>
+                <Package releaseTo="4">cups</Package>
+                <Package>foomatic-filters</Package>
+            </Conflicts>
+            <Replaces>
+                <Package>foomatic-filters</Package>
+            </Replaces>
+        </Package>
+        <Package>
+            <Name>cups-filters-devel</Name>
+            <Summary xml:lang="en">Development files for cups-filters</Summary>
+            <Summary xml:lang="tr">Cups-filters için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="12">cups-filters</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="12">
+                <Date>2015-03-08</Date>
+                <Version>1.0.66</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="11">
+                <Date>2015-02-15</Date>
+                <Version>1.0.65</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Hakan Yıldız</Name>
+                <Email>hknyldz93@gmail.com</Email>
+            </Update>
+            <Update release="10">
+                <Date>2014-09-25</Date>
+                <Version>1.0.58</Version>
+                <Comment>Verison bump.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="9">
+                <Date>2014-05-17</Date>
+                <Version>1.0.53</Version>
+                <Comment>Verison bump.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="8">
+                <Date>2014-02-05</Date>
+                <Version>1.0.44</Version>
+                <Comment>Rebuild to replace foomatic-filters.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="7">
+                <Date>2014-01-28</Date>
+                <Version>1.0.44</Version>
+                <Comment>rebuild for unused and runtime dep.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="6">
+                <Date>2014-01-18</Date>
+                <Version>1.0.44</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2013-11-02</Date>
+                <Version>1.0.41</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-10-16</Date>
+                <Version>1.0.40</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-10-10</Date>
+                <Version>1.0.39</Version>
+                <Comment>Cersion bump,rebuil for new poppler.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-28</Date>
+                <Version>1.0.35</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2013-07-01</Date>
+                <Version>1.0.35</Version>
+                <Comment>First release.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>cups</Name>
             <Homepage>http://www.cups.org/</Homepage>
             <Packager>
@@ -8529,8 +9661,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>zlib-devel</Dependency>
                 <Dependency>libusb-devel</Dependency>
                 <Dependency>libgcc</Dependency>
-                <Dependency>avahi-devel</Dependency>
-                <Dependency>cups-filters</Dependency>
                 <Dependency>mit-kerberos</Dependency>
                 <Dependency>libpaper-devel</Dependency>
             </BuildDependencies>
@@ -8561,7 +9691,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>libusb</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>libpaper</Dependency>
-                <Dependency>avahi-libs</Dependency>
                 <Dependency>mit-kerberos</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -8621,6 +9750,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>glibc-32bit</Dependency>
                 <Dependency>zlib-32bit</Dependency>
                 <Dependency>openssl-32bit</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency release="14">cups</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -8910,6 +10040,49 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Comment>First release</Comment>
                 <Name>Marcin Bojara</Name>
                 <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>gnu-gs-fonts-std</Name>
+            <Homepage>http://www.ghostscript.com</Homepage>
+            <Packager>
+                <Name>Sezai Yeniay</Name>
+                <Email>sezaiyeniay@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>data</IsA>
+            <PartOf>desktop.font</PartOf>
+            <Summary xml:lang="en">Ghostscript standard fonts</Summary>
+            <Summary xml:lang="tr">Ghostscript standard yazıtipleri</Summary>
+            <Description xml:lang="fr">Ces fontes ont été construites à partir des fontes URW distribuées avec ghostcript. Il n&apos;y AUCUN changemen dans leur partie latine.</Description>
+            <Description xml:lang="en">gnu-gs-fonts-std contains fonts that were made from the free URW fonts distributed with ghostcript. There are no changes in the latin part of them.</Description>
+            <Description xml:lang="tr">Bu yazıtipleri ghostscript ile birlikte dağıtılan özgür URW yazıtiplerinden türetilmiştir. Latin bölümünde hiçbir değişiklik yapılmamıştır.</Description>
+            <Archive type="targz" sha1sum="2a7198e8178b2e7dba87cb5794da515200b568f5">mirrors://sourceforge/ghostscript/ghostscript-fonts-std-8.11.tar.gz</Archive>
+            <SourceURI>desktop/font/gnu-gs-fonts-std/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>gnu-gs-fonts-std</Name>
+            <Files>
+                <Path fileType="data">/usr/share/fonts/default/ghostscript</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="2">
+                <Date>2014-02-23</Date>
+                <Version>8.11</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-09-20</Date>
+                <Version>8.11</Version>
+                <Comment>First release</Comment>
+                <Name>Sezai Yeniay</Name>
+                <Email>sezaiyeniay@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -12564,9 +13737,9 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <License>LGPLv2</License>
             <IsA>library</IsA>
             <PartOf>unknown</PartOf>
-            <Summary xml:lang="en">Framework which lets applications perform actions as a privileged user</Summary>
+            <Summary xml:lang="en">Abstraction to system policy and authentication features</Summary>
             <Description xml:lang="en">Framework which lets applications perform actions as a privileged user</Description>
-            <Archive type="tarxz" sha1sum="6e8645a32b80e8cdf52cbfae126d8cef35feb67c">http://download.kde.org/stable/frameworks/5.10/kauth-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="9740d238ca209eb43e48aaa0bf375a8c9a3e3100">http://download.kde.org/stable/frameworks/5.11/kauth-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
@@ -12593,7 +13766,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-kauth-devel</Name>
             <Summary xml:lang="en">Development files for kauth</Summary>
             <RuntimeDependencies>
-                <Dependency release="1">kde5-kauth</Dependency>
+                <Dependency release="2">kde5-kauth</Dependency>
                 <Dependency>kde5-kcoreaddons-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -12603,6 +13776,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -12747,7 +13927,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">KDE5 desktop widgets</Summary>
             <Description xml:lang="en">KdeWidgetsAddons is a framework contains addon widgets and shared libraries for applications using Qt5-Widgets.</Description>
-            <Archive type="tarxz" sha1sum="3f5a3f7061ab4f5dd52e4822e8af72b946a94189">http://download.kde.org/stable/frameworks/5.10/kwidgetsaddons-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="db63cdc24ad85217d1adddaa3a347297a76d4668">http://download.kde.org/stable/frameworks/5.11/kwidgetsaddons-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
@@ -12773,7 +13953,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kwidgetsaddons</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kwidgetsaddons</Dependency>
+                <Dependency release="2">kde5-kwidgetsaddons</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -12782,6 +13962,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -12924,15 +14111,15 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>extra-cmake-modules</Name>
             <Homepage>http://www.kde.org</Homepage>
             <Packager>
-                <Name>Idris Kalp</Name>
-                <Email>idriskalp@gmail.com</Email>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admin@gmail.com</Email>
             </Packager>
             <License>LGPLv2</License>
             <IsA>library</IsA>
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Extra cmake modules for KDE5</Summary>
             <Description xml:lang="en">Extra cmake modules KDE5</Description>
-            <Archive type="tarxz" sha1sum="3ad6dd4cbf92d6b2285a2cf5f42d60b41a270729">http://download.kde.org/stable/frameworks/5.10/extra-cmake-modules-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="5c541b28d59de6ef29522282c23a0afc7356d3c7">http://download.kde.org/stable/frameworks/5.11/extra-cmake-modules-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>python-sphinx</Dependency>
             </BuildDependencies>
@@ -12941,39 +14128,18 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
         <Package>
             <Name>extra-cmake-modules</Name>
             <Files>
-                <Path fileType="library">/usr/lib</Path>
                 <Path fileType="data">/usr/share</Path>
+                <Path fileType="library">/usr/lib</Path>
                 <Path fileType="man">/usr/share/man/man7</Path>
             </Files>
         </Package>
         <History>
-            <Update release="4">
-                <Date>2015-05-29</Date>
-                <Version>5.10.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2015-05-20</Date>
-                <Version>5.9.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2015-02-23</Date>
-                <Version>1.7.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
             <Update release="1">
-                <Date>2014-09-20</Date>
-                <Version>1.2.1</Version>
-                <Comment>First release</Comment>
-                <Name>Idris Kalp</Name>
-                <Email>idriskalp@gmail.com</Email>
+                <Date>2015-06-20</Date>
+                <Version>5.11.0</Version>
+                <Comment>First Release.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -13066,12 +14232,18 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">KDE5 document generator</Summary>
             <Description xml:lang="en">kdoctools is an application aims to generate documents from DocBook.</Description>
-            <Archive type="tarxz" sha1sum="27d0bf5a8280eb22f48444bda691327e9d71bcdf">http://download.kde.org/stable/frameworks/5.10/kdoctools-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="69068070f29374eef12ab5f9ae261c9cc3c705b5">http://download.kde.org/stable/frameworks/5.11/kdoctools-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>perl-URI</Dependency>
                 <Dependency>python</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>docbook-xml</Dependency>
+                <Dependency>docbook-xsl</Dependency>
+                <Dependency>docbook-sgml4_5</Dependency>
                 <Dependency>kde5-ki18n-devel</Dependency>
+                <Dependency>kde5-karchive-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/kde5-framework/kde5-kdoctools/pspec.xml</SourceURI>
@@ -13080,9 +14252,9 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-kdoctools</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
+                <Dependency>libxml2</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>libxslt</Dependency>
-                <Dependency>docbook-xsl</Dependency>
-                <Dependency>docbook-xml</Dependency>
                 <Dependency>kde5-karchive</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -13100,8 +14272,10 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kdoctools</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kdoctools</Dependency>
+                <Dependency release="2">kde5-kdoctools</Dependency>
                 <Dependency>kde5-karchive-devel</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libxml2-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -13110,6 +14284,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -13395,9 +14576,12 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Qt 5 addon providing access to numerous types of archives</Summary>
             <Description xml:lang="en">KArchive provides classes for easy reading, creation and manipulation of &quot;archive&quot; formats like ZIP and TAR.</Description>
-            <Archive type="tarxz" sha1sum="a38c1561432c39bb93b3f9564e497b46cab4b0cd">http://download.kde.org/stable/frameworks/5.10/karchive-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="46f526bded55772c4f9e60bb7fc1891c73479bf2">http://download.kde.org/stable/frameworks/5.11/karchive-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>xz-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>bzip2</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/kde5-framework/kde5-karchive/pspec.xml</SourceURI>
@@ -13419,7 +14603,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for karchive</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-karchive</Dependency>
+                <Dependency release="2">kde5-karchive</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -13428,6 +14612,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-20</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -14027,7 +15218,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Addon with auto completion widgets and classes</Summary>
             <Description xml:lang="en">KCompletion provides widgets with advanced completion support as well as a lower-level completion class which can be used with your own widgets.</Description>
-            <Archive type="tarxz" sha1sum="9cc59e3ce6ee96ff907ca2bb22d08da83afda4be">http://download.kde.org/stable/frameworks/5.10/kcompletion-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="dff3d665ed3248ffca31a67b7743bf9185a5b8db">http://download.kde.org/stable/frameworks/5.11/kcompletion-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
@@ -14056,7 +15247,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kcompletion</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kcompletion</Dependency>
+                <Dependency release="2">kde5-kcompletion</Dependency>
                 <Dependency>kde5-kwidgetsaddons-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -14066,6 +15257,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -14089,10 +15287,18 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">KDE5 window manager access framework</Summary>
             <Description xml:lang="en">KWindowSystem provides information about the state of the window manager and allows asking the window manager to change the using a more high-level interface than the NETWinInfo/NETRootInfo low-level classes.</Description>
-            <Archive type="tarxz" sha1sum="4b2a8b28317989f6f24ddec9b3abe38351932ab5">http://download.kde.org/stable/frameworks/5.10/kwindowsystem-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="4b4077d0cb1ad1f58e92093155e004e4e77801fd">http://download.kde.org/stable/frameworks/5.11/kwindowsystem-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libxcb-devel</Dependency>
+                <Dependency>libXrender-devel</Dependency>
+                <Dependency>libXfixes-devel</Dependency>
+                <Dependency>xcb-util-devel</Dependency>
+                <Dependency>xcb-util-keysyms-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/kde5-framework/kde5-kwindowsystem/pspec.xml</SourceURI>
@@ -14101,6 +15307,9 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-kwindowsystem</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libxcb</Dependency>
                 <Dependency>qt5-x11extras</Dependency>
                 <Dependency>libXfixes</Dependency>
                 <Dependency>xcb-util-keysyms</Dependency>
@@ -14123,7 +15332,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>libXfixes-devel</Dependency>
                 <Dependency>xcb-util-devel</Dependency>
                 <Dependency>xcb-util-keysyms-devel</Dependency>
-                <Dependency release="1">kde5-kwindowsystem</Dependency>
+                <Dependency release="2">kde5-kwindowsystem</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -14132,6 +15341,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-23</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -14209,7 +15425,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Plugins allowing Qt applications to access further types of images</Summary>
             <Description xml:lang="en">KDE5 KCodecs provide a collection of methods to manipulate strings using various encodings.</Description>
-            <Archive type="tarxz" sha1sum="7fd9352b1a434077ca2cd537c9d5de19f4f9824c">http://download.kde.org/stable/frameworks/5.10/kcodecs-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="b950224621d9787c5b253c620bd3c29ca5b6844c">http://download.kde.org/stable/frameworks/5.11/kcodecs-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
@@ -14235,7 +15451,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kcodecs</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kcodecs</Dependency>
+                <Dependency release="2">kde5-kcodecs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -14244,6 +15460,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -14461,10 +15684,10 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">KDE Gettext-based UI text internationalization.</Summary>
             <Description xml:lang="en">KI18n provides functionality for internationalizing user interface text in applications, based on the GNU Gettext translation system.</Description>
-            <Archive type="tarxz" sha1sum="a8b1021be261d10de39f2a37bed278f159098705">http://download.kde.org/stable/frameworks/5.10/ki18n-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="0c4751ebc1f3c488f3e95622acf9311e367b7402">http://download.kde.org/stable/frameworks/5.11/ki18n-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>python</Dependency>
+                <Dependency>python3</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/kde5-framework/kde5-ki18n/pspec.xml</SourceURI>
@@ -14481,13 +15704,14 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Path fileType="library">/usr/lib/qt5</Path>
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="man">/usr/share/man</Path>
             </Files>
         </Package>
         <Package>
             <Name>kde5-ki18n-devel</Name>
             <Summary xml:lang="en">Development files for kde5-ki18n</Summary>
             <RuntimeDependencies>
-                <Dependency release="1">kde5-ki18n</Dependency>
+                <Dependency release="2">kde5-ki18n</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -14496,6 +15720,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -14520,16 +15751,12 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Advanced configuration system for KDE Frameworks 5</Summary>
             <Description xml:lang="en">Kconfig provides advanced libraries and tools for accessing configuration files.</Description>
-            <Archive type="tarxz" sha1sum="d949466ac50c290e4425cc17f7841d753ba4bc60">http://download.kde.org/stable/frameworks/5.10/kconfig-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="270e5e006816d59ca3f742bc2392c95a21c2f221">http://download.kde.org/stable/frameworks/5.11/kconfig-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
-            <Patches>
-                <Patch level="1">0001-ensure-platform-window-resize-processing.patch</Patch>
-                <Patch level="1">session-restore.patch</Patch>
-            </Patches>
             <SourceURI>desktop/kde/kde5-framework/kde5-kconfig/pspec.xml</SourceURI>
         </Source>
         <Package>
@@ -14551,7 +15778,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kde5-kconfig</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kconfig</Dependency>
+                <Dependency release="2">kde5-kconfig</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -14560,6 +15787,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -14888,10 +16122,12 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">KDE5 hardware integration framework</Summary>
             <Description xml:lang="en">Solid is a device integration framework.It provides a way of querying and interacting with hardware independently of the underlying operating system.</Description>
-            <Archive type="tarxz" sha1sum="42136192e1c34aca23baa9c6c2b50edb2259205b">http://download.kde.org/stable/frameworks/5.10/solid-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="9236a4e999f5e64b2bb3a2b3ec81be057ce278e3">http://download.kde.org/stable/frameworks/5.11/solid-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>libudev-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>qt5-declarative</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/kde5-framework/kde5-solid/pspec.xml</SourceURI>
@@ -14900,7 +16136,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-solid</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
-                <Dependency>qt5-declarative</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="data">/usr/share</Path>
@@ -14916,7 +16151,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for solid</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-solid</Dependency>
+                <Dependency release="2">kde5-solid</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -14925,6 +16160,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-23</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-31</Date>
                 <Version>5.10.0</Version>
@@ -14947,7 +16189,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">KDE5 Frameworks API documentation tools.</Summary>
             <Description xml:lang="en">KDE5 Frameworks API documentation tools.</Description>
-            <Archive type="tarxz" sha1sum="12d033918357d410c7565661d617fed1c53048b2">http://download.kde.org/stable/frameworks/5.10/kapidox-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="cfed53fa73bed77061d25f3b40402c87098203e9">http://download.kde.org/stable/frameworks/5.11/kapidox-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>python-Jinja2</Dependency>
                 <Dependency>python-PyYAML</Dependency>
@@ -14965,11 +16207,17 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="data">/usr/share</Path>
-                <Path fileType="localedata">/usr/share/locale</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-20</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -15133,10 +16381,11 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Kconfig widgets</Summary>
             <Description xml:lang="en">KDE5-KConfigWidgets provides easy-to-use classes to create configuration dialogs, as well as a set of widgets which uses KConfig to store their settings.</Description>
-            <Archive type="tarxz" sha1sum="bab9c9dedf45e86f9bf60b5575781fd12715a7d9">http://download.kde.org/stable/frameworks/5.10/kconfigwidgets-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="c3f49dc863f232591208e9df04c8e137b30ba685">http://download.kde.org/stable/frameworks/5.11/kconfigwidgets-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>kde5-ki18n-devel</Dependency>
                 <Dependency>kde5-kdoctools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
@@ -15168,14 +16417,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-kconfigwidgets-devel</Name>
             <Summary xml:lang="en">Development files for kconfigwidgets</Summary>
             <RuntimeDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kconfigwidgets</Dependency>
-                <Dependency>kde5-kauth-devel</Dependency>
-                <Dependency>kde5-kcodecs-devel</Dependency>
-                <Dependency>kde5-kconfig-devel</Dependency>
-                <Dependency>kde5-kguiaddons-devel</Dependency>
-                <Dependency>kde5-ki18n-devel</Dependency>
-                <Dependency>kde5-kwidgetsaddons-devel</Dependency>
+                <Dependency release="2">kde5-kconfigwidgets</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -15184,6 +16426,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -15206,7 +16455,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Open Collaboration Service client library, based on Qt 5</Summary>
             <Description xml:lang="en">Attica is a library to access Open Collaboration Service servers, based on Qt 5.</Description>
-            <Archive type="tarxz" sha1sum="0931f3484fdb41c5322ed80dac7f56dd1854073c">http://download.kde.org/stable/frameworks/5.10/attica-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="4163f0b581c16202ca4e134dec6e2069e832ebfd">http://download.kde.org/stable/frameworks/5.11/attica-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
@@ -15230,7 +16479,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for attica5</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="2">kde5-attica</Dependency>
+                <Dependency release="3">kde5-attica</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -15239,19 +16488,19 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="3">
+                <Date>2015-06-20</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="2">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
                 <Email>groni@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2014-09-20</Date>
-                <Version>5.2.0</Version>
-                <Comment>First release</Comment>
-                <Name>Idris Kalp</Name>
-                <Email>idriskalp@gmail.com</Email>
             </Update>
         </History>
     </SpecFile>
@@ -15330,7 +16579,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Utilities for core application functionality and accessing the OS</Summary>
             <Description xml:lang="en">KCoreAddons provides classes built on top of QtCore to perform various tasks such as manipulating mime types, autosaving files, creating backup files, generating random sequences, performing text manipulations such as macro replacement, accessing user information and many more.</Description>
-            <Archive type="tarxz" sha1sum="2df5ef5e710c902d16a860c733b7bdba6c19cae1">http://download.kde.org/stable/frameworks/5.10/kcoreaddons-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="4191f62eb1747de24dee1e92898a985fd1c1a94c">http://download.kde.org/stable/frameworks/5.11/kcoreaddons-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
@@ -15358,15 +16607,25 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kcoreaddons</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kcoreaddons</Dependency>
+                <Dependency release="2">kde5-kcoreaddons</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
                 <Path fileType="data">/usr/lib/cmake</Path>
                 <Path fileType="config">/usr/lib/pkgconfig</Path>
             </Files>
+            <Provides>
+                <COMAR script="package.py">System.Package</COMAR>
+            </Provides>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -15390,7 +16649,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Extra modules for Qt-DBus</Summary>
             <Description xml:lang="en">KDE5-KDBusAddons provides convenience classes on top of QtDBus, as well as an API to create KDED modules.</Description>
-            <Archive type="tarxz" sha1sum="010a7d272f8c8c3b917027677cadc70632372c4c">http://download.kde.org/stable/frameworks/5.10/kdbusaddons-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="3afe097162ec6beda589a1dc1abf892ad6729ffb">http://download.kde.org/stable/frameworks/5.11/kdbusaddons-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
@@ -15418,7 +16677,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for kdbusaddons</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="1">kde5-kdbusaddons</Dependency>
+                <Dependency release="2">kde5-kdbusaddons</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -15427,6 +16686,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -15572,10 +16838,11 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">Framework that lets applications manage user installable packages of non-binary assets</Summary>
             <Description xml:lang="en">KPackage is dependent on the Smart package manager.</Description>
             <Description xml:lang="tr">KPackage is dependent on the Smart package manager.</Description>
-            <Archive type="tarxz" sha1sum="2989b40c32d4b713bf088a71b0bc7d2c8e4955b8">http://download.kde.org/stable/frameworks/5.10/kpackage-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="151aa58865b12d016ad78c7bd0567e2cd02403dd">http://download.kde.org/stable/frameworks/5.11/kpackage-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>kde5-kdoctools-devel</Dependency>
@@ -15586,6 +16853,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-kpackage</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>kde5-kconfig</Dependency>
                 <Dependency>kde5-ki18n</Dependency>
                 <Dependency>kde5-kcoreaddons</Dependency>
@@ -15595,13 +16863,32 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="library">/usr/lib/qt5</Path>
                 <Path fileType="library">/usr/lib</Path>
-                <Path fileType="header">/usr/include/</Path>
                 <Path fileType="data">/usr/share</Path>
                 <Path fileType="localedata">/usr/share/locale</Path>
                 <Path fileType="man">/usr/share/man/man1</Path>
             </Files>
         </Package>
+        <Package>
+            <Name>kpackage-devel</Name>
+            <Summary xml:lang="en">Development files for kpackage</Summary>
+            <RuntimeDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency release="2">kde5-kpackage</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/cmake</Path>
+                <Path fileType="config">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-23</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-31</Date>
                 <Version>5.10.0</Version>
@@ -15624,7 +16911,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>unknown</PartOf>
             <Summary xml:lang="en">Utilities for graphical user interfaces</Summary>
             <Description xml:lang="en">The KDE GUI addons provide utilities for graphical user interfaces in the areas of colors, fonts, text, images, keyboard input. Development files.</Description>
-            <Archive type="tarxz" sha1sum="40d42c5b8404005e9b5ab23a8b37e568a35904c6">http://download.kde.org/stable/frameworks/5.10/kguiaddons-5.10.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="1444a735827d295cf0dfb6bc08a3b72518d97e0e">http://download.kde.org/stable/frameworks/5.11/kguiaddons-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
@@ -15638,8 +16925,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>qt5-x11extras</Dependency>
             </RuntimeDependencies>
             <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="localedata">/usr/share/locale</Path>
                 <Path fileType="library">/usr/lib/qt5</Path>
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
@@ -15649,7 +16934,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>kde5-kguiaddons-devel</Name>
             <Summary xml:lang="en">Development files for kguiaddons</Summary>
             <RuntimeDependencies>
-                <Dependency release="1">kde5-kguiaddons</Dependency>
+                <Dependency release="2">kde5-kguiaddons</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -15658,6 +16943,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2015-06-21</Date>
+                <Version>5.11.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2015-05-30</Date>
                 <Version>5.10.0</Version>
@@ -15722,6 +17014,234 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Comment>First Release.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
                 <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>qt5-phonon-backend-gstreamer</Name>
+            <Homepage>http://phonon.kde.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2+</License>
+            <IsA>library</IsA>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">GStreamer qt5-phonon backend</Summary>
+            <Description xml:lang="en">Phonon is the Qt multimedia API, which provides a task-oriented abstraction layer for capturing, mixing, processing, and playing audio and video content. phonon-backend-gstreamer contains the GStreamer backend for Phonon.</Description>
+            <Archive type="tarxz" sha1sum="9998ba3a002af09e1ba4072508d1813af1d1e5be">mirrors://kde/stable/phonon/phonon-backend-gstreamer/4.8.2/src/phonon-backend-gstreamer-4.8.2.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-phonon-devel</Dependency>
+                <Dependency>automoc4</Dependency>
+                <Dependency>gstreamer-devel</Dependency>
+                <Dependency>gstreamer-next-devel</Dependency>
+                <Dependency>gst-plugins-base-devel</Dependency>
+                <Dependency>gst-plugins-base-next-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/kde5-phonon/qt5-phonon-backend-gstreamer/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>qt5-phonon-backend-gstreamer</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-phonon</Dependency>
+                <Dependency>mesa</Dependency>
+                <Dependency>gstreamer</Dependency>
+                <Dependency>gstreamer-next</Dependency>
+                <Dependency>gst-plugins-base-next</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="library">/usr/lib/qt5</Path>
+                <Path fileType="data">/usr/share</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-02-23</Date>
+                <Version>4.8.2</Version>
+                <Comment>First Release.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>qt5-phonon-backend-vlc</Name>
+            <Homepage>http://gitorious.org/phonon/phonon-vlc</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <IsA>library</IsA>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">VLC Backend for qt5-phonon</Summary>
+            <Description xml:lang="en">phonon-backend-vlc allows Phonon (the KDE media library) to use VLC for audio and video playback.</Description>
+            <Archive type="tarxz" sha1sum="bc7d57d3ecce0293b77b88eba94d091741d33e78">mirrors://kde/stable/phonon/phonon-backend-vlc/0.8.2/src/phonon-backend-vlc-0.8.2.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>automoc4</Dependency>
+                <Dependency>qt5-phonon-devel</Dependency>
+                <Dependency>pulseaudio</Dependency>
+                <Dependency>vlc-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/kde5-phonon/qt5-phonon-backend-vlc/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>qt5-phonon-backend-vlc</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-phonon</Dependency>
+                <Dependency>vlc-libs</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="library">/usr/lib/qt5</Path>
+                <Path fileType="data">/usr/share/kde4/services</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-02-23</Date>
+                <Version>0.8.2</Version>
+                <Comment>First Release.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>qt5-phonon</Name>
+            <Homepage>http://phonon.kde.org</Homepage>
+            <Packager>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <IsA>library</IsA>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">Cross platform multimedia API for KDE4 using QT5</Summary>
+            <Description xml:lang="en">Phonon was created as a solution to several problems with multimedia commonly faced by Unix desktops, especially KDE 3&apos;s outdated multimedia framework aRts. Phonon itself is not a multimedia framework, but interfaces with existing frameworks such as GStreamer or Xine via backends.</Description>
+            <Archive type="tarxz" sha1sum="aac5dc44ae4821e6165c6735b9c6063dd111ac03">mirrors://kde/stable/phonon/4.8.3/src/phonon-4.8.3.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>automoc4</Dependency>
+                <Dependency>alsa-lib-devel</Dependency>
+                <Dependency>gst-plugins-base-devel</Dependency>
+                <Dependency>pulseaudio-libs-devel</Dependency>
+                <Dependency>gstreamer-devel</Dependency>
+                <Dependency>xine-lib-devel</Dependency>
+                <Dependency>libqzeitgeist-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/kde5-phonon/qt5-phonon/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>qt5-phonon</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-tools</Dependency>
+                <Dependency>pulseaudio-libs</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/libphonon*</Path>
+                <Path fileType="library">/usr/lib/qt5</Path>
+                <Path fileType="data">/usr/share/dbus-1</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>qt5-phonon-devel</Name>
+            <Summary xml:lang="en">Development files for phonon-qt5</Summary>
+            <RuntimeDependencies>
+                <Dependency release="1">qt5-phonon</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="data">/usr/lib/cmake</Path>
+                <Path fileType="data">/usr/share/phonon4qt5</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-02-23</Date>
+                <Version>4.8.3</Version>
+                <Comment>First Release</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>prison-qt5</Name>
+            <Homepage>http://www.kde.org</Homepage>
+            <Packager>
+                <Name>Vedat Demir</Name>
+                <Email>vedat@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <IsA>library</IsA>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">A barcode API to produce QRCode barcodes and DataMatrix barcode</Summary>
+            <Description xml:lang="en">A barcode API to produce QRCode barcodes and DataMatrix barcode.</Description>
+            <Archive type="tarxz" sha1sum="b8109f077dcb326d97c17405753d3b8c33818d9b">https://dl.dropboxusercontent.com/s/50f2g48bhmvyg9d/prison.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>python3</Dependency>
+                <Dependency>mesa-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/kde5-addon/prison-qt5/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>prison-qt5</Name>
+            <RuntimeDependencies>
+                <Dependency>qt</Dependency>
+                <Dependency>mesa</Dependency>
+                <Dependency>libdmtx</Dependency>
+                <Dependency>qrencode</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+            <Conflicts>
+                <Package>prison</Package>
+            </Conflicts>
+            <Replaces>
+                <Package>prison</Package>
+            </Replaces>
+        </Package>
+        <Package>
+            <Name>prison-qt5-devel</Name>
+            <Summary xml:lang="en">Development files for libepoxy</Summary>
+            <RuntimeDependencies>
+                <Dependency release="1">prison-qt5</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="config">/usr/lib/pkgconfig</Path>
+            </Files>
+            <Conflicts>
+                <Package>prison-devel</Package>
+            </Conflicts>
+            <Replaces>
+                <Package>prison-devel</Package>
+            </Replaces>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-06-05</Date>
+                <Version>1.3</Version>
+                <Comment>First release</Comment>
+                <Name>Vedat Demir</Name>
+                <Email>vedat@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -15915,203 +17435,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>qrencode</Name>
-            <Homepage>http://fukuchi.org/works/qrencode/index.en.html</Homepage>
-            <Packager>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Packager>
-            <License>LGPLv2.1</License>
-            <IsA>library</IsA>
-            <PartOf>unknown</PartOf>
-            <Summary xml:lang="en">A C library for encoding data in a QR code symbol</Summary>
-            <Summary xml:lang="tr">QR kod sembolüne veri gömmek için bir kitaplık</Summary>
-            <Description xml:lang="en">qrencode is a C library for encoding data in a QR Code symbol, a kind of 2D symbology that can be scanned by handy terminals such as a mobile phone with CCD. The capacity of QR Code is up to 7000 digits or 4000 characters, and is highly robust.</Description>
-            <Description xml:lang="tr">qrencode, cep telefonları gibi mobil cihazlar tarafından kolaylıkla taranabilen, 2 boyutlu bir sembol olan QR kod içerisinde veri gömmek için kullanılan bir kitaplıktır.</Description>
-            <Archive type="targz" sha1sum="644054a76c8b593acb66a8c8b7dcf1b987c3d0b2">http://fukuchi.org/works/qrencode/qrencode-3.4.4.tar.gz</Archive>
-            <BuildDependencies>
-                <Dependency>libsdl-devel</Dependency>
-                <Dependency>m4</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/kde5-dependencies/qrencode/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>qrencode</Name>
-            <RuntimeDependencies>
-                <Dependency>libpng</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="library">/usr/bin/qrencode</Path>
-                <Path fileType="man">/usr/share/man/man1</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>qrencode-devel</Name>
-            <Summary xml:lang="en">Development files for qrencode</Summary>
-            <Summary xml:lang="tr">qrencode için geliştirme dosyaları</Summary>
-            <RuntimeDependencies>
-                <Dependency release="3">qrencode</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="data">/usr/lib/pkgconfig</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="3">
-                <Date>2015-02-22</Date>
-                <Version>3.4.4</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Ertuğrul Erata</Name>
-                <Email>ertugrulerata@gmail.com</Email>
-            </Update>
-            <Update release="2">
-                <Date>2015-02-22</Date>
-                <Version>3.3.1</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Ertuğrul Erata</Name>
-                <Email>ertugrulerata@gmail.com</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-04-05</Date>
-                <Version>3.3.1</Version>
-                <Comment>First release</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>prison-qt5</Name>
-            <Homepage>http://www.kde.org</Homepage>
-            <Packager>
-                <Name>Vedat Demir</Name>
-                <Email>vedat@pisilinux.org</Email>
-            </Packager>
-            <License>MIT</License>
-            <IsA>library</IsA>
-            <PartOf>unknown</PartOf>
-            <Summary xml:lang="en">A barcode API to produce QRCode barcodes and DataMatrix barcode</Summary>
-            <Description xml:lang="en">A barcode API to produce QRCode barcodes and DataMatrix barcode.</Description>
-            <Archive type="tarxz" sha1sum="b8109f077dcb326d97c17405753d3b8c33818d9b">https://dl.dropboxusercontent.com/s/50f2g48bhmvyg9d/prison.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>python3</Dependency>
-                <Dependency>mesa-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/kde5-dependencies/prison-qt5/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>prison-qt5</Name>
-            <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>mesa</Dependency>
-                <Dependency>libdmtx</Dependency>
-                <Dependency>qrencode</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-            <Conflicts>
-                <Package>prison</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>prison</Package>
-            </Replaces>
-        </Package>
-        <Package>
-            <Name>prison-qt5-devel</Name>
-            <Summary xml:lang="en">Development files for libepoxy</Summary>
-            <RuntimeDependencies>
-                <Dependency release="1">prison-qt5</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="config">/usr/lib/pkgconfig</Path>
-            </Files>
-            <Conflicts>
-                <Package>prison-devel</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>prison-devel</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2015-06-05</Date>
-                <Version>1.3</Version>
-                <Comment>First release</Comment>
-                <Name>Vedat Demir</Name>
-                <Email>vedat@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>libdmtx</Name>
-            <Homepage>http://www.libdmtx.org</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>LGPLv2+</License>
-            <IsA>library</IsA>
-            <PartOf>unknown</PartOf>
-            <Summary xml:lang="en">A Library for working with Data Matrix 2D bar-codes</Summary>
-            <Summary xml:lang="tr">Data Matrix 2D barkodlarıyla çalışmak için kitaplık</Summary>
-            <Description xml:lang="en">libdmtx is an open source software for reading and writing Data Matrix 2D bar-codes on Linux, Unix, OS X, Windows and mobile devices.</Description>
-            <Description xml:lang="tr">libdmtx, Linux, Unix, OS X, Windows ve mobil işletim sistemlerinde Data Matrix 2D barkodlarını okumak ve yazmak için kullanılan açık kaynaklı bir kitaplıktır.</Description>
-            <Archive type="targz" sha1sum="7a353da736cf37e8730e2c22aca4629035aeadcd">http://sourceforge.net/projects/libdmtx/files/libdmtx/0.7.4/libdmtx-0.7.4.tar.gz</Archive>
-            <BuildDependencies>
-                <Dependency>imagemagick-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/kde5-dependencies/libdmtx/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>libdmtx</Name>
-            <RuntimeDependencies>
-                <Dependency>imagemagick</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libdmtx-devel</Name>
-            <Summary xml:lang="en">Development files for libdmtx</Summary>
-            <Summary xml:lang="tr">libdmtx için geliştirme dosyaları</Summary>
-            <RuntimeDependencies>
-                <Dependency release="2">libdmtx</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="data">/usr/lib/pkgconfig</Path>
-                <Path fileType="man">/usr/share/man/man3</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="2">
-                <Date>2015-06-05</Date>
-                <Version>0.7.4</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2011-08-09</Date>
-                <Version>0.7.4</Version>
-                <Comment>First release</Comment>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
             <Name>kde5-kdebaseapps</Name>
             <Homepage>http://www.kde.org</Homepage>
             <Packager>
@@ -16224,6 +17547,261 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Version>0.12</Version>
                 <Comment>First release</Comment>
                 <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>gtk2</Name>
+            <Homepage>http://www.gtk.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">The GIMP Toolkit version 2</Summary>
+            <Summary xml:lang="tr">GTK grafik arayüz kitaplığı versiyon 2</Summary>
+            <Description xml:lang="fr">GTK+ est une boîte à outil multi-plateforme servant à créer des interfaces graphiques. Offrant un ensemble complet de widgets (objets graphiques), GTK+ convient aussi bien pour les petits projets que pour les suites complètes d&apos;applications.</Description>
+            <Description xml:lang="en">GTK+ is a multi-platform toolkit for creating graphical user interfaces. Offering a complete set of widgets, GTK+ is suitable for projects ranging from small one-off projects to complete application suites.</Description>
+            <Description xml:lang="tr">GTK+, grafik kullanıcı arayüzü oluşturma amaçlı araçlardan oluşur. GTK+ hem küçük, hem de büyük uygulamalar için ideal olan, eksiksiz bir araçtır.</Description>
+            <Archive type="tarxz" sha1sum="0aa5a1d93f740cc1bbd9c6342dd54f082ee2eca3">mirrors://gnome/gtk+/2.24/gtk+-2.24.23.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>cups-devel</Dependency>
+                <Dependency>libXi-devel</Dependency>
+                <Dependency>cairo-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libXrandr-devel</Dependency>
+                <Dependency>libXfixes-devel</Dependency>
+                <Dependency>libXrender-devel</Dependency>
+                <Dependency>libXdamage-devel</Dependency>
+                <Dependency>libXcursor-devel</Dependency>
+                <Dependency>fontconfig-devel</Dependency>
+                <Dependency>libXinerama-devel</Dependency>
+                <Dependency>libXcomposite-devel</Dependency>
+                <Dependency>atk-devel</Dependency>
+                <Dependency>pango-devel</Dependency>
+                <Dependency>gdk-pixbuf-devel</Dependency>
+                <Dependency>gobject-introspection-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">xid-collision-debug.patch</Patch>
+                <Patch level="1">fedora/system-python.patch</Patch>
+                <Patch level="1">fedora/icon-padding.patch</Patch>
+                <Patch level="1">fedora/tooltip-positioning.patch</Patch>
+                <Patch level="1">fedora/window-dragging.patch</Patch>
+            </Patches>
+            <SourceURI>desktop/toolkit/gnome/gtk2/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>gtk2</Name>
+            <RuntimeDependencies>
+                <Dependency>cups</Dependency>
+                <Dependency>libXi</Dependency>
+                <Dependency>cairo</Dependency>
+                <Dependency>libXext</Dependency>
+                <Dependency>libXrandr</Dependency>
+                <Dependency>libXfixes</Dependency>
+                <Dependency>libXrender</Dependency>
+                <Dependency>libXdamage</Dependency>
+                <Dependency>libXcursor</Dependency>
+                <Dependency>fontconfig</Dependency>
+                <Dependency>libXinerama</Dependency>
+                <Dependency>libXcomposite</Dependency>
+                <Dependency>atk</Dependency>
+                <Dependency>pango</Dependency>
+                <Dependency>gdk-pixbuf</Dependency>
+                <Dependency>dejavu-fonts</Dependency>
+                <Dependency>gtk-theme-mediterranean</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="config">/etc</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="data">/usr/share/themes</Path>
+                <Path fileType="data">/usr/share/gtk-2.0</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="localedata">/usr/share/locale</Path>
+            </Files>
+            <Provides>
+                <COMAR script="pakhandler.py">System.PackageHandler</COMAR>
+            </Provides>
+            <AdditionalFiles>
+                <AdditionalFile target="/usr/share/gtk-2.0/gtkrc" permission="0644" owner="root">gtkrc</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <Package>
+            <Name>gtk2-demo</Name>
+            <Summary xml:lang="en">GTK demo application</Summary>
+            <Summary xml:lang="tr">GTK demo uyulaması</Summary>
+            <IsA>app:gui</IsA>
+            <RuntimeDependencies>
+                <Dependency release="10">gtk2</Dependency>
+                <Dependency>cairo</Dependency>
+                <Dependency>pango</Dependency>
+                <Dependency>gdk-pixbuf</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin/gtk-demo</Path>
+                <Path fileType="data">/usr/share/gtk-2.0/demo</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>gtk2-docs</Name>
+            <Summary xml:lang="en">GTK reference documents</Summary>
+            <Summary xml:lang="tr">GTK referans dökümanları</Summary>
+            <IsA>data:doc</IsA>
+            <Files>
+                <Path fileType="data">/usr/share/gtk-doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>gtk2-devel</Name>
+            <Summary xml:lang="en">Development files for gtk2</Summary>
+            <Summary xml:lang="tr">gtk2 için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="10">gtk2</Dependency>
+                <Dependency>atk-devel</Dependency>
+                <Dependency>pango-devel</Dependency>
+                <Dependency>cairo-devel</Dependency>
+                <Dependency>gdk-pixbuf-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+                <Path fileType="library">/usr/lib32/pkgconfig</Path>
+                <Path fileType="data">/usr/share/aclocal</Path>
+                <Path fileType="data">/usr/share/gir-1.0</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>gtk2-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for gtk2</Summary>
+            <Summary xml:lang="tr">gtk2 için 32-bit paylaşımlı kitaplıklar</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>_emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>cairo-32bit</Dependency>
+                <Dependency>cups-32bit</Dependency>
+                <Dependency>fontconfig-32bit</Dependency>
+                <Dependency>pango-32bit</Dependency>
+                <Dependency>glib2-32bit</Dependency>
+                <Dependency>atk-32bit</Dependency>
+                <Dependency>libX11-32bit</Dependency>
+                <Dependency>gdk-pixbuf-32bit</Dependency>
+                <Dependency>libXcomposite-32bit</Dependency>
+                <Dependency>libXcursor-32bit</Dependency>
+                <Dependency>libXdamage-32bit</Dependency>
+                <Dependency>libXext-32bit</Dependency>
+                <Dependency>libXfixes-32bit</Dependency>
+                <Dependency>libXi-32bit</Dependency>
+                <Dependency>libXinerama-32bit</Dependency>
+                <Dependency>libXrandr-32bit</Dependency>
+                <Dependency>libXrender-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="10">gtk2</Dependency>
+                <Dependency>cairo-32bit</Dependency>
+                <Dependency>pango-32bit</Dependency>
+                <Dependency>glib2-32bit</Dependency>
+                <Dependency>atk-32bit</Dependency>
+                <Dependency>libX11-32bit</Dependency>
+                <Dependency>cups-32bit</Dependency>
+                <Dependency>fontconfig-32bit</Dependency>
+                <Dependency>gdk-pixbuf-32bit</Dependency>
+                <Dependency>libXcomposite-32bit</Dependency>
+                <Dependency>libXcursor-32bit</Dependency>
+                <Dependency>libXdamage-32bit</Dependency>
+                <Dependency>libXext-32bit</Dependency>
+                <Dependency>libXfixes-32bit</Dependency>
+                <Dependency>libXi-32bit</Dependency>
+                <Dependency>libXinerama-32bit</Dependency>
+                <Dependency>libXrandr-32bit</Dependency>
+                <Dependency>libXrender-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin/*-32bit</Path>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="10">
+                <Date>2014-05-17</Date>
+                <Version>2.24.23</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="9">
+                <Date>2014-04-06</Date>
+                <Version>2.24.22</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="8">
+                <Date>2014-02-06</Date>
+                <Version>2.24.22</Version>
+                <Comment>Set proper settings to gtkrc, change location of gtkrc.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="7">
+                <Date>2013-10-21</Date>
+                <Version>2.24.22</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="6">
+                <Date>2013-09-05</Date>
+                <Version>2.24.21</Version>
+                <Comment>Minor version bump, cleanup.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2013-09-05</Date>
+                <Version>2.24.20</Version>
+                <Comment>Add missing method and fix pakhandler.py</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-07-06</Date>
+                <Version>2.24.20</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-04-20</Date>
+                <Version>2.24.17</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-02-23</Date>
+                <Version>2.24.16</Version>
+                <Comment>Version bump, add new cppflags, enhancements.</Comment>
+                <Name>Erdinç Gültekin</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-01-23</Date>
+                <Version>2.24.14</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-09-25</Date>
+                <Version>2.24.13</Version>
+                <Comment>First release</Comment>
+                <Name>Erdem Artan</Name>
                 <Email>admins@pisilinux.org</Email>
             </Update>
         </History>
@@ -17207,7 +18785,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>desktop-file-utils</Dependency>
                 <Dependency>fontconfig-devel</Dependency>
-                <Dependency>geoclue-devel</Dependency>
                 <Dependency>gperf</Dependency>
                 <Dependency>gst-plugins-base-devel</Dependency>
                 <Dependency>gstreamer-devel</Dependency>
@@ -17224,7 +18801,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>libxcb-devel</Dependency>
                 <Dependency>libXcomposite-devel</Dependency>
                 <Dependency>libxkbcommon-devel</Dependency>
-                <Dependency>libxslt-devel</Dependency>
+                <Dependency>libxslt</Dependency>
                 <Dependency>mesa-devel</Dependency>
                 <Dependency>libmtdev-devel</Dependency>
                 <Dependency>nss-devel</Dependency>
@@ -18134,261 +19711,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>gtk2</Name>
-            <Homepage>http://www.gtk.org</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>LGPLv2.1</License>
-            <PartOf>unknown</PartOf>
-            <Summary xml:lang="en">The GIMP Toolkit version 2</Summary>
-            <Summary xml:lang="tr">GTK grafik arayüz kitaplığı versiyon 2</Summary>
-            <Description xml:lang="fr">GTK+ est une boîte à outil multi-plateforme servant à créer des interfaces graphiques. Offrant un ensemble complet de widgets (objets graphiques), GTK+ convient aussi bien pour les petits projets que pour les suites complètes d&apos;applications.</Description>
-            <Description xml:lang="en">GTK+ is a multi-platform toolkit for creating graphical user interfaces. Offering a complete set of widgets, GTK+ is suitable for projects ranging from small one-off projects to complete application suites.</Description>
-            <Description xml:lang="tr">GTK+, grafik kullanıcı arayüzü oluşturma amaçlı araçlardan oluşur. GTK+ hem küçük, hem de büyük uygulamalar için ideal olan, eksiksiz bir araçtır.</Description>
-            <Archive type="tarxz" sha1sum="0aa5a1d93f740cc1bbd9c6342dd54f082ee2eca3">mirrors://gnome/gtk+/2.24/gtk+-2.24.23.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>cups-devel</Dependency>
-                <Dependency>libXi-devel</Dependency>
-                <Dependency>cairo-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency>libXrandr-devel</Dependency>
-                <Dependency>libXfixes-devel</Dependency>
-                <Dependency>libXrender-devel</Dependency>
-                <Dependency>libXdamage-devel</Dependency>
-                <Dependency>libXcursor-devel</Dependency>
-                <Dependency>fontconfig-devel</Dependency>
-                <Dependency>libXinerama-devel</Dependency>
-                <Dependency>libXcomposite-devel</Dependency>
-                <Dependency>atk-devel</Dependency>
-                <Dependency>pango-devel</Dependency>
-                <Dependency>gdk-pixbuf-devel</Dependency>
-                <Dependency>gobject-introspection-devel</Dependency>
-            </BuildDependencies>
-            <Patches>
-                <Patch level="1">xid-collision-debug.patch</Patch>
-                <Patch level="1">fedora/system-python.patch</Patch>
-                <Patch level="1">fedora/icon-padding.patch</Patch>
-                <Patch level="1">fedora/tooltip-positioning.patch</Patch>
-                <Patch level="1">fedora/window-dragging.patch</Patch>
-            </Patches>
-            <SourceURI>desktop/toolkit/gtk/gtk2/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>gtk2</Name>
-            <RuntimeDependencies>
-                <Dependency>cups</Dependency>
-                <Dependency>libXi</Dependency>
-                <Dependency>cairo</Dependency>
-                <Dependency>libXext</Dependency>
-                <Dependency>libXrandr</Dependency>
-                <Dependency>libXfixes</Dependency>
-                <Dependency>libXrender</Dependency>
-                <Dependency>libXdamage</Dependency>
-                <Dependency>libXcursor</Dependency>
-                <Dependency>fontconfig</Dependency>
-                <Dependency>libXinerama</Dependency>
-                <Dependency>libXcomposite</Dependency>
-                <Dependency>atk</Dependency>
-                <Dependency>pango</Dependency>
-                <Dependency>gdk-pixbuf</Dependency>
-                <Dependency>dejavu-fonts</Dependency>
-                <Dependency>gtk-theme-mediterranean</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="config">/etc</Path>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="data">/usr/share/themes</Path>
-                <Path fileType="data">/usr/share/gtk-2.0</Path>
-                <Path fileType="man">/usr/share/man</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="localedata">/usr/share/locale</Path>
-            </Files>
-            <Provides>
-                <COMAR script="pakhandler.py">System.PackageHandler</COMAR>
-            </Provides>
-            <AdditionalFiles>
-                <AdditionalFile target="/usr/share/gtk-2.0/gtkrc" permission="0644" owner="root">gtkrc</AdditionalFile>
-            </AdditionalFiles>
-        </Package>
-        <Package>
-            <Name>gtk2-demo</Name>
-            <Summary xml:lang="en">GTK demo application</Summary>
-            <Summary xml:lang="tr">GTK demo uyulaması</Summary>
-            <IsA>app:gui</IsA>
-            <RuntimeDependencies>
-                <Dependency release="10">gtk2</Dependency>
-                <Dependency>cairo</Dependency>
-                <Dependency>pango</Dependency>
-                <Dependency>gdk-pixbuf</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/bin/gtk-demo</Path>
-                <Path fileType="data">/usr/share/gtk-2.0/demo</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>gtk2-docs</Name>
-            <Summary xml:lang="en">GTK reference documents</Summary>
-            <Summary xml:lang="tr">GTK referans dökümanları</Summary>
-            <IsA>data:doc</IsA>
-            <Files>
-                <Path fileType="data">/usr/share/gtk-doc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>gtk2-devel</Name>
-            <Summary xml:lang="en">Development files for gtk2</Summary>
-            <Summary xml:lang="tr">gtk2 için geliştirme dosyaları</Summary>
-            <RuntimeDependencies>
-                <Dependency release="10">gtk2</Dependency>
-                <Dependency>atk-devel</Dependency>
-                <Dependency>pango-devel</Dependency>
-                <Dependency>cairo-devel</Dependency>
-                <Dependency>gdk-pixbuf-devel</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="library">/usr/lib/pkgconfig</Path>
-                <Path fileType="library">/usr/lib32/pkgconfig</Path>
-                <Path fileType="data">/usr/share/aclocal</Path>
-                <Path fileType="data">/usr/share/gir-1.0</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>gtk2-32bit</Name>
-            <Summary xml:lang="en">32-bit shared libraries for gtk2</Summary>
-            <Summary xml:lang="tr">gtk2 için 32-bit paylaşımlı kitaplıklar</Summary>
-            <PartOf>emul32</PartOf>
-            <BuildType>_emul32</BuildType>
-            <BuildDependencies>
-                <Dependency>cairo-32bit</Dependency>
-                <Dependency>cups-32bit</Dependency>
-                <Dependency>fontconfig-32bit</Dependency>
-                <Dependency>pango-32bit</Dependency>
-                <Dependency>glib2-32bit</Dependency>
-                <Dependency>atk-32bit</Dependency>
-                <Dependency>libX11-32bit</Dependency>
-                <Dependency>gdk-pixbuf-32bit</Dependency>
-                <Dependency>libXcomposite-32bit</Dependency>
-                <Dependency>libXcursor-32bit</Dependency>
-                <Dependency>libXdamage-32bit</Dependency>
-                <Dependency>libXext-32bit</Dependency>
-                <Dependency>libXfixes-32bit</Dependency>
-                <Dependency>libXi-32bit</Dependency>
-                <Dependency>libXinerama-32bit</Dependency>
-                <Dependency>libXrandr-32bit</Dependency>
-                <Dependency>libXrender-32bit</Dependency>
-            </BuildDependencies>
-            <RuntimeDependencies>
-                <Dependency release="10">gtk2</Dependency>
-                <Dependency>cairo-32bit</Dependency>
-                <Dependency>pango-32bit</Dependency>
-                <Dependency>glib2-32bit</Dependency>
-                <Dependency>atk-32bit</Dependency>
-                <Dependency>libX11-32bit</Dependency>
-                <Dependency>cups-32bit</Dependency>
-                <Dependency>fontconfig-32bit</Dependency>
-                <Dependency>gdk-pixbuf-32bit</Dependency>
-                <Dependency>libXcomposite-32bit</Dependency>
-                <Dependency>libXcursor-32bit</Dependency>
-                <Dependency>libXdamage-32bit</Dependency>
-                <Dependency>libXext-32bit</Dependency>
-                <Dependency>libXfixes-32bit</Dependency>
-                <Dependency>libXi-32bit</Dependency>
-                <Dependency>libXinerama-32bit</Dependency>
-                <Dependency>libXrandr-32bit</Dependency>
-                <Dependency>libXrender-32bit</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/bin/*-32bit</Path>
-                <Path fileType="library">/usr/lib32</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="10">
-                <Date>2014-05-17</Date>
-                <Version>2.24.23</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Alihan Öztürk</Name>
-                <Email>alihan@pisilinux.org</Email>
-            </Update>
-            <Update release="9">
-                <Date>2014-04-06</Date>
-                <Version>2.24.22</Version>
-                <Comment>Rebuild</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="8">
-                <Date>2014-02-06</Date>
-                <Version>2.24.22</Version>
-                <Comment>Set proper settings to gtkrc, change location of gtkrc.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="7">
-                <Date>2013-10-21</Date>
-                <Version>2.24.22</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="6">
-                <Date>2013-09-05</Date>
-                <Version>2.24.21</Version>
-                <Comment>Minor version bump, cleanup.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2013-09-05</Date>
-                <Version>2.24.20</Version>
-                <Comment>Add missing method and fix pakhandler.py</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2013-07-06</Date>
-                <Version>2.24.20</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-04-20</Date>
-                <Version>2.24.17</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-02-23</Date>
-                <Version>2.24.16</Version>
-                <Comment>Version bump, add new cppflags, enhancements.</Comment>
-                <Name>Erdinç Gültekin</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-01-23</Date>
-                <Version>2.24.14</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-09-25</Date>
-                <Version>2.24.13</Version>
-                <Comment>First release</Comment>
-                <Name>Erdem Artan</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
             <Name>at-spi2-core</Name>
             <Homepage>http://www.linuxfoundation.org/collaborate/workgroups/accessibility</Homepage>
             <Packager>
@@ -18406,6 +19728,10 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <BuildDependencies>
                 <Dependency>libXtst-devel</Dependency>
                 <Dependency>libXi-devel</Dependency>
+                <Dependency>gettext-devel</Dependency>
+                <Dependency>dbus-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
+                <Dependency>intltool</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/misc/at-spi2-core/pspec.xml</SourceURI>
         </Source>
@@ -18413,6 +19739,9 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>at-spi2-core</Name>
             <RuntimeDependencies>
                 <Dependency>libXtst</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>dbus</Dependency>
+                <Dependency>glib2</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc</Path>
@@ -18433,13 +19762,16 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <BuildDependencies>
                 <Dependency>dbus-32bit</Dependency>
                 <Dependency>glib2-32bit</Dependency>
+                <Dependency>libXi-32bit</Dependency>
                 <Dependency>libX11-32bit</Dependency>
                 <Dependency>libXtst-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
             </BuildDependencies>
             <RuntimeDependencies>
                 <Dependency>dbus-32bit</Dependency>
                 <Dependency>glib2-32bit</Dependency>
                 <Dependency>libX11-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib32</Path>
@@ -18451,6 +19783,8 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">at-spi2-core için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
                 <Dependency release="11">at-spi2-core</Dependency>
+                <Dependency>dbus-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -18553,10 +19887,16 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">Masaüstü menü girdilerini yönetmek için komut satırı araçları</Summary>
             <Description xml:lang="en">desktop files are used to describe an application for inclusion in GNOME or KDE menus. This package contains desktop-file-validate which checks whether a .desktop file complies with the specification and desktop-file-install which installs a desktop file to the standard directory, optionally fixing it up in the process.</Description>
             <Archive type="tarxz" sha1sum="5412232434ba8726358be4f59520c8adb1c58732">http://freedesktop.org/software/desktop-file-utils/releases/desktop-file-utils-0.21.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>glib2-devel</Dependency>
+            </BuildDependencies>
             <SourceURI>desktop/misc/desktop-file-utils/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>desktop-file-utils</Name>
+            <RuntimeDependencies>
+                <Dependency>glib2</Dependency>
+            </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
