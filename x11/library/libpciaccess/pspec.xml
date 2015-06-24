@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>libXrender</Name>
+        <Name>libpciaccess</Name>
         <Homepage>http://www.x.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
@@ -10,21 +10,16 @@
         </Packager>
         <License>MIT</License>
         <IsA>library</IsA>
-        <Summary>X.Org Xrender library</Summary>
-        <Description>The X Rendering Extension (Render) introduces digital image composition as the foundation of a new rendering model within the X Window System. Rendering geometric figures is accomplished by client-side tesselation into either triangles or trapezoids.</Description>
-        <Archive sha1sum="0f5c843410029944bd06e19366db4932cf5944fa" type="tarbz2">mirrors://xorg/individual/lib/libXrender-0.9.8.tar.bz2</Archive>
+        <Summary>X.Org PCI access library</Summary>
+        <Description>libpciaccess is the Xorg library for portable PCI access routines across multiple operating systems.</Description>
+        <Archive sha1sum="99e791fe20924b9da29bf7c7ed9438739c4f2930" type="tarbz2">mirrors://xorg/individual/lib/libpciaccess-0.13.4.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>libX11-devel</Dependency>
-            <Dependency>xorg-proto</Dependency>
             <Dependency>util-macros</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>libXrender</Name>
-        <RuntimeDependencies>
-            <Dependency>libX11</Dependency>
-        </RuntimeDependencies>
+        <Name>libpciaccess</Name>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -32,33 +27,29 @@
     </Package>
 
     <Package>
-        <Name>libXrender-devel</Name>
-        <Summary>Development files for libXrender</Summary>
+        <Name>libpciaccess-devel</Name>
+        <Summary>Development files for libpciaccess</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">libXrender</Dependency>
-            <Dependency>libX11-devel</Dependency>
+            <Dependency release="current">libpciaccess</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="header">/usr/include/X11</Path>
+            <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
             <Path fileType="data">/usr/lib32/pkgconfig</Path>
-            <Path fileType="doc">/usr/share/doc/libXrender/libXrender.txt</Path>
         </Files>
     </Package>
 
     <Package>
-        <Name>libXrender-32bit</Name>
+        <Name>libpciaccess-32bit</Name>
         <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for libXrender</Summary>
+        <Summary>32-bit shared libraries for libpciaccess</Summary>
         <BuildType>emul32</BuildType>
-        <BuildDependencies>
+	<BuildDependencies>
             <Dependency>glibc-32bit</Dependency>
-            <Dependency>libX11-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
-            <Dependency release="current">libXrender</Dependency>
             <Dependency>glibc-32bit</Dependency>
-            <Dependency>libX11-32bit</Dependency>
+            <Dependency release="current">libpciaccess</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
@@ -66,40 +57,54 @@
     </Package>
 
     <History>
-        <Update release="5">
-            <Date>2014-05-16</Date>
-            <Version>0.9.8</Version>
-            <Comment>Release bump.</Comment>
-            <Name>Marcin Bojara</Name>
-            <Email>marcin@pisilinux.org</Email>
-        </Update>
-        <Update release="4">
-            <Date>2013-10-07</Date>
-            <Version>0.9.8</Version>
-            <Comment>Rebuild.</Comment>
-            <Name>Serdar Soytetir</Name>
-            <Email>kaptan@pisilinux.org</Email>
-        </Update>
-        <Update release="3">
-            <Date>2013-08-25</Date>
-            <Version>0.9.8</Version>
-            <Comment>Release bump.</Comment>
-            <Name>Marcin Bojara</Name>
-            <Email>marcin@pisilinux.org</Email>
-        </Update>
-        <Update release="2">
-            <Date>2013-06-21</Date>
-            <Version>0.9.8</Version>
+        <Update release="7">
+            <Date>2015-05-05</Date>
+            <Version>0.13.4</Version>
             <Comment>Version bump.</Comment>
             <Name>Marcin Bojara</Name>
             <Email>marcin@pisilinux.org</Email>
         </Update>
+        <Update release="6">
+            <Date>2014-05-16</Date>
+            <Version>0.13.2</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-10-07</Date>
+            <Version>0.13.2</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-08-25</Date>
+            <Version>0.13.2</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-07-21</Date>
+            <Version>0.13.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-06-01</Date>
+            <Version>0.13.1</Version>
+            <Comment>rebuild</Comment>
+            <Name>Erdinc Gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
         <Update release="1">
-            <Date>2012-06-01</Date>
-            <Version>0.9.7</Version>
+            <Date>2012-11-22</Date>
+            <Version>0.13.1</Version>
             <Comment>First release</Comment>
-            <Name>Erdem Artan</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
         </Update>
     </History>
 </PISI>
