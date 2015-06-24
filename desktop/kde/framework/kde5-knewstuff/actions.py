@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DHTML_INSTAL_DIR=/usr/share/doc/kdelibs4support/html")
+    kde5.configure()
 
 def build():
     kde5.make()
