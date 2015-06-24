@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>kde5-kdelibs4-support</Name>
+        <Name>kde5-plasma-framework</Name>
         <Homepage>http://www.kde.org</Homepage>
         <Packager>
             <Name>Pisi Linux Admins</Name>
@@ -11,73 +11,65 @@
         <License>LGPLv2</License>
         <IsA>library</IsA>
 	<IsA>app:console</IsA>
-        <Summary>Code and utilities to ease the transition to KDE Frameworks 5</Summary>
-        <Description>KDELibs4Support provides libraries to port KDE4 programs to QT5/KDE5</Description>
-        <Archive sha1sum="77b7e031c72627cd2e66166751d833a857af302e" type="tarxz">http://download.kde.org/stable/frameworks/5.10/portingAids/kdelibs4support-5.10.0.tar.xz</Archive>
+        <Summary>Plasma library and runtime components based upon KDE Frameworks 5 and Qt5</Summary>
+        <Description>Plasma library and runtime components based upon KF5 and Qt5</Description>
+        <Archive sha1sum="30e3296cef0ac4918db341758a3fa3f13e7fe7bd" type="tarxz">http://download.kde.org/stable/frameworks/5.10/plasma-framework-5.10.0.tar.xz</Archive>
         <BuildDependencies>
         <Dependency>qt5-base-devel</Dependency>
-        <Dependency>perl-URI</Dependency>
-        <Dependency>qt5-tools-devel</Dependency>
-	<Dependency>libSM-devel</Dependency>
-	<Dependency>docbook-xml</Dependency>
-	<Dependency>openssl-devel</Dependency>
-	<Dependency>intltool</Dependency>
+	    <Dependency>qt5-tools-devel</Dependency>
 	    <Dependency>kde5-kdoctools-devel</Dependency>
-	    <Dependency>NetworkManager-devel</Dependency>	    
+	    <Dependency>libxcb-devel</Dependency>
 	    <Dependency>extra-cmake-modules</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>kde5-kdelibs4-support</Name>
+        <Name>kde5-plasma-framework</Name>
         <RuntimeDependencies>
-        <Dependency>qt5-base</Dependency>
-	    <Dependency>libICE</Dependency>
+            <Dependency>qt5-base</Dependency>
 	    <Dependency>qt5-svg</Dependency>
+	    <Dependency>qt5-script</Dependency>
 	    <Dependency>qt5-x11extras</Dependency>
-        <Dependency>libSM</Dependency>
-        <Dependency>kde5-kauth</Dependency>
-	    <Dependency>kde5-solid</Dependency>
-	    <Dependency>kde5-kcodecs</Dependency>
-	    <Dependency>kde5-kcoreaddons</Dependency>
-	    <Dependency>kde5-kjobwidgets</Dependency>
-	    <Dependency>kde5-kcompletion</Dependency>
+	    <Dependency>qt5-declarative</Dependency>
+            <Dependency>mesa</Dependency>	    
+	    <Dependency>kde5-kactivities</Dependency>
+	    <Dependency>kde5-knotifications</Dependency>
+	    <Dependency>kde5-kpackage</Dependency>
+	    <Dependency>kde5-karchive</Dependency>
 	    <Dependency>kde5-kconfig</Dependency>
 	    <Dependency>kde5-kconfigwidgets</Dependency>
-	    <Dependency>kde5-kcrash</Dependency>
+	    <Dependency>kde5-kcoreaddons</Dependency>
 	    <Dependency>kde5-kdbusaddons</Dependency>
+	    <Dependency>kde5-kdeclarative</Dependency>
+	    <Dependency>kde5-kdoctools</Dependency>
 	    <Dependency>kde5-kglobalaccel</Dependency>	   
 	    <Dependency>kde5-kguiaddons</Dependency>
 	    <Dependency>kde5-ki18n</Dependency>
 	    <Dependency>kde5-kiconthemes</Dependency>
 	    <Dependency>kde5-kio</Dependency>
-	    <Dependency>kde5-kitemviews</Dependency>
-	    <Dependency>kde5-knotifications</Dependency>
 	    <Dependency>kde5-kparts</Dependency>
 	    <Dependency>kde5-kservice</Dependency>
-	    <Dependency>kde5-ktextwidgets</Dependency>
+	    <Dependency>kde5-kwindowsystem</Dependency>
 	    <Dependency>kde5-kxmlgui</Dependency>
-        <Dependency>kde5-kwindowsystem</Dependency>
-        <Dependency>kde5-kwidgetsaddons</Dependency>
         </RuntimeDependencies>
         <Files>
-	    <Path fileType="config">/etc</Path>
-        <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/usr/share</Path>
 	    <Path fileType="localedata">/usr/share/locale</Path>
 	    <Path fileType="executable">/usr/bin</Path>
 	    <Path fileType="library">/usr/lib/qt5</Path>
 	    <Path fileType="library">/usr/lib</Path>
-        <Path fileType="doc">/usr/share/doc</Path>
-	    <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
     
     <Package>
-        <Name>kde5-kdelibs4-support-devel</Name>
-	<Summary>Development files for kdelibs4-support</Summary>
+        <Name>kde5-plasma-framework-devel</Name>
+	<Summary>Development files for plasma-framework</Summary>
         <RuntimeDependencies>
 	    <Dependency>qt5-base-devel</Dependency>
-            <Dependency release="current">kde5-kdelibs4-support</Dependency>
+            <Dependency>mesa-devel</Dependency>	
+            <Dependency release="current">kde5-plasma-framework</Dependency>
+	    <Dependency>kde5-kservice-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -87,13 +79,6 @@
     </Package>
 
     <History>
-        <Update release="2">
-            <Date>2015-06-23</Date>
-            <Version>5.10.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Stefan Gronewold(groni)</Name>
-            <Email>groni@pisilinux.org</Email>
-        </Update>
         <Update release="1">
             <Date>2015-06-01</Date>
             <Version>5.10.0</Version>
