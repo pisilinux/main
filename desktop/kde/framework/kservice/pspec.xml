@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>kde5-kpty</Name>
+        <Name>kservice</Name>
         <Homepage>http://www.kde.org</Homepage>
         <Packager>
             <Name>Pisi Linux Admins</Name>
@@ -10,42 +10,48 @@
         </Packager>
         <License>LGPLv2</License>
         <IsA>library</IsA>
-        <Summary>Libraries for pseudo terminal devices</Summary>
-        <Description>Kpty provides primitives to interface with pseudo terminal devices as well as a KProcess derived class for running child processes and communicating with them using kpty.</Description>
-        <Archive sha1sum="28719ef0f3fb3634d2335255e2fc2e9f7a4a778d" type="tarxz">http://download.kde.org/stable/frameworks/5.10/kpty-5.10.0.tar.xz</Archive>
+	<IsA>app:console</IsA>
+        <Summary>KDE5 Desktop Services</Summary>
+        <Description>Kservice Provides a plugin framework for handling desktop services. Services can be applications or libraries. They can be bound to MIME types or handled by application specific code.</Description>
+        <Archive sha1sum="cfefce85aa61461c55be64de7bac5f3f3bed654a" type="tarxz">http://download.kde.org/stable/frameworks/5.11/kservice-5.11.0.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>	    
 	    <Dependency>python3</Dependency>
+	    <Dependency>kdoctools-devel</Dependency>
 	    <Dependency>extra-cmake-modules</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>kde5-kpty</Name>
+        <Name>kservice</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
-	    <Dependency>utempter</Dependency>
-	    <Dependency>kde5-kcoreaddons</Dependency>
-	    <Dependency>kde5-ki18n</Dependency>
+	    <Dependency>libgcc</Dependency>
+	    <Dependency>kconfig</Dependency>
+	    <Dependency>kcoreaddons</Dependency>
+	    <Dependency>kcrash</Dependency>
+	    <Dependency>kdbusaddons</Dependency>
+	    <Dependency>ki18n</Dependency>
         </RuntimeDependencies>
         <Files>
+	    <Path fileType="config">/etc</Path>
             <Path fileType="data">/usr/share</Path>
 	    <Path fileType="localedata">/usr/share/locale</Path>
+	    <Path fileType="executable">/usr/bin</Path>
 	    <Path fileType="library">/usr/lib/qt5</Path>
 	    <Path fileType="library">/usr/lib</Path>
+	    <Path fileType="man">/usr/share/man</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
     
     <Package>
-        <Name>kde5-kpty-devel</Name>
-	<Summary>Development files for kpty</Summary>
+        <Name>kservice-devel</Name>
+	<Summary>Development files for kservice</Summary>
         <RuntimeDependencies>
 	    <Dependency>qt5-base-devel</Dependency>
-	    <Dependency>utempter-devel</Dependency>
-	    <Dependency>kde5-kcoreaddons-devel</Dependency>
-	    <Dependency>kde5-ki18n-devel</Dependency>
-            <Dependency release="current">kde5-kpty</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency release="current">kservice</Dependency>	    
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -55,12 +61,19 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2015-06-24</Date>
+            <Version>5.11.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2015-05-30</Date>
             <Version>5.10.0</Version>
             <Comment>First Release.</Comment>
             <Name>Stefan Gronewold(groni)</Name>
             <Email>groni@pisilinux.org</Email>
-        </Update>               
+        </Update>                
     </History>
 </PISI>

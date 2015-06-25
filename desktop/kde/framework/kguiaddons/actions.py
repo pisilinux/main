@@ -10,8 +10,6 @@ from pisi.actionsapi import cmaketools
 def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-                          -DQML_INSTALL_DIR=lib/qt5/qml \
-                          -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
                           -DLIB_INSTALL_DIR=lib \
                           -DBUILD_TESTING=OFF")
 
@@ -21,4 +19,4 @@ def build():
 def install():
     cmaketools.install()
     
-    pisitools.dodoc("README.md","COPYING.LIB", "TODO")
+    pisitools.dodoc("README.md", "COPYING.LIB", "COPYING")
