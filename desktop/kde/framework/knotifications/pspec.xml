@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>kcompletion</Name>
+        <Name>knotifications</Name>
         <Homepage>http://www.kde.org</Homepage>
         <Packager>
             <Name>Pisi Linux Admins</Name>
@@ -10,29 +10,37 @@
         </Packager>
         <License>LGPLv2</License>
         <IsA>library</IsA>
-	<IsA>app:console</IsA>
-        <Summary>Addon with auto completion widgets and classes</Summary>
-        <Description>KCompletion provides widgets with advanced completion support as well as a lower-level completion class which can be used with your own widgets.</Description>
-        <Archive sha1sum="dff3d665ed3248ffca31a67b7743bf9185a5b8db" type="tarxz">http://download.kde.org/stable/frameworks/5.11/kcompletion-5.11.0.tar.xz</Archive>
+        <Summary>KDE5 Desktop notifications</Summary>
+        <Description>KNotification is used to notify the user of an event. It covers feedback and persistent events.</Description>
+        <Archive sha1sum="add56e8945eb987742e07bd624426e3bc7ff3bd1" type="tarxz">http://download.kde.org/stable/frameworks/5.11/knotifications-5.11.0.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>qt5-base-devel</Dependency>	    
-	    <Dependency>qt5-tools-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-tools-devel</Dependency>
+	    <Dependency>python3</Dependency>
 	    <Dependency>extra-cmake-modules</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>kcompletion</Name>
+        <Name>knotifications</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
+            <Dependency>qt5-phonon</Dependency>
+	    <Dependency>qt5-libdbusmenu</Dependency>
 	    <Dependency>libgcc</Dependency>
+	    <Dependency>libX11</Dependency>
+	    <Dependency>libXtst</Dependency>
+	    <Dependency>qt5-x11extras</Dependency>
 	    <Dependency>kconfig</Dependency>
-	    <Dependency>kwidgetsaddons</Dependency>
+	    <Dependency>kcodecs</Dependency>
+	    <Dependency>kcoreaddons</Dependency>
+	    <Dependency>kiconthemes</Dependency>
+	    <Dependency>kservice</Dependency>
+	    <Dependency>kwindowsystem</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/share</Path>
 	    <Path fileType="localedata">/usr/share/locale</Path>
-	    <Path fileType="executable">/usr/bin</Path>
 	    <Path fileType="library">/usr/lib/qt5</Path>
 	    <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -40,12 +48,11 @@
     </Package>
     
     <Package>
-        <Name>kcompletion-devel</Name>
-	<Summary>Development files for kcompletion</Summary>
+        <Name>knotifications-devel</Name>
+	<Summary>Development files for knotifications</Summary>
         <RuntimeDependencies>
-	    <Dependency>qt5-base-devel</Dependency>	 
-            <Dependency release="current">kcompletion</Dependency>
-	    <Dependency>kwidgetsaddons-devel</Dependency>
+	    <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">knotifications</Dependency>	    
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -56,14 +63,14 @@
 
     <History>
         <Update release="2">
-            <Date>2015-06-21</Date>
+            <Date>2015-06-25</Date>
             <Version>5.11.0</Version>
             <Comment>Version bump.</Comment>
             <Name>Stefan Gronewold(groni)</Name>
             <Email>groni@pisilinux.org</Email>
         </Update>
         <Update release="1">
-            <Date>2015-05-30</Date>
+            <Date>2015-05-31</Date>
             <Version>5.10.0</Version>
             <Comment>First Release.</Comment>
             <Name>Stefan Gronewold(groni)</Name>
