@@ -22,6 +22,7 @@
             <Dependency>ncurses-devel</Dependency>
             <Dependency>ocaml</Dependency>
             <Dependency>libffi-devel</Dependency>
+            <Dependency>groff</Dependency>
             <Dependency>libedit-devel</Dependency>
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
             <Dependency>binutils</Dependency>
@@ -38,6 +39,9 @@
         <IsA>library</IsA>
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>ncurses</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -59,6 +63,13 @@
     <Package>
         <Name>llvm-libs</Name>
         <IsA>library</IsA>
+        <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>libffi</Dependency>
+            <Dependency>libedit</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>ncurses</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/llvm/libLLVM-3*</Path>
             <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
@@ -98,7 +109,9 @@
         <Summary>A C language family front-end for LLVM</Summary>
         <Description>The goal of the Clang project is to create a new C, C++, Objective C and Objective C++ front-end for the LLVM compiler.</Description>
         <RuntimeDependencies>
-            <Dependency release="current">llvm</Dependency>
+            <Dependency release="current">llvm-libs</Dependency>
+	    <Dependency>libgcc</Dependency>
+	    <Dependency>ncurses</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/clang*</Path>
@@ -143,6 +156,9 @@
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">llvm</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libedit</Dependency>
+            <Dependency>ncurses-32bit</Dependency>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>libffi-32bit</Dependency>
         </RuntimeDependencies>
