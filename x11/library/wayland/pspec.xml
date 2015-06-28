@@ -13,10 +13,17 @@
         <Summary>Wayland Compositor Infrastructure</Summary>
         <Description>Wayland is a protocol for a compositor to talk to its clients as well as a C library implementation of that protocol.</Description>
         <Archive sha1sum="a731201534dcf6ec76a1184411724376cbf1acb6" type="tarxz">http://wayland.freedesktop.org/releases/wayland-1.7.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>libffi-devel</Dependency>
+            <Dependency>expat-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>wayland</Name>
+        <RuntimeDependencies>
+            <Dependency>expat</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="doc">/usr/share/doc/</Path>
@@ -81,10 +88,14 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libffi-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+            <Dependency>expat-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">wayland</Dependency>
+            <Dependency>expat-32bit</Dependency>
             <Dependency>libffi-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
