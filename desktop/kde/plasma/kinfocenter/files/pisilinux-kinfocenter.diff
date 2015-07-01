@@ -1,0 +1,91 @@
+diff --git a/Modules/infosummary/infosum.cpp b/Modules/infosummary/infosum.cpp
+index e58beb0..02f000c 100644
+--- a/Modules/infosummary/infosum.cpp
++++ b/Modules/infosummary/infosum.cpp
+@@ -61,12 +61,12 @@ void InfoSumPlugin::createDisplay()
+ void InfoSumPlugin::createOsBox()
+ {  
+   DefaultBoxWidget *osWidget = new DefaultBoxWidget();
+-  osWidget->setIcon(QIcon::fromTheme(QStringLiteral("kde")));
++  osWidget->setIcon(QIcon::fromTheme(QStringLiteral("PisiLinux")));
+   osWidget->setLabelTitles(i18n("OS Version"),i18n("KDE Plasma Version"), i18n("Hostname"));
+   
+   OsDepInfo *osInfo = new OsDepInfo();
+   
+-  osWidget->setLabelOne(osInfo->osVersion());
++  osWidget->setLabelOne(osInfo->osVersion()+'\n'+osInfo->distroName());
+   osWidget->setLabelTwo(QString(PLASMA_VERSION_STRING));
+   osWidget->setLabelThree(osInfo->hostName());
+   osWidget->setWhatsThis(i18nc("OS whats this","This shows information about your Operating System"));
+diff --git a/Modules/infosummary/osdepinfo.cpp b/Modules/infosummary/osdepinfo.cpp
+index 34afecc..8b7043f 100644
+--- a/Modules/infosummary/osdepinfo.cpp
++++ b/Modules/infosummary/osdepinfo.cpp
+@@ -37,6 +37,11 @@ const QString OsDepInfo::osVersion()
+   return m_osVersion;
+ }
+ 
++const QString OsDepInfo::distroName()
++{
++   return m_distroName;
++}
++
+ #if defined(Q_OS_UNIX)
+   #include "osdepinfo_unix.cpp"
+ #else
+@@ -50,6 +55,7 @@ void OsDepInfo::setDepInfo()
+ {
+   m_osVersion.clear();
+   m_hostName.clear();
++  m_distroName.clear();
+ }
+ 
+ #endif // Q_OS_UNIX
+diff --git a/Modules/infosummary/osdepinfo.h b/Modules/infosummary/osdepinfo.h
+index 3452e8b..564a86c 100644
+--- a/Modules/infosummary/osdepinfo.h
++++ b/Modules/infosummary/osdepinfo.h
+@@ -32,12 +32,14 @@ class OsDepInfo
+     
+     const QString hostName();
+     const QString osVersion();
++    const QString distroName();
+     
+   private:
+     void setDepInfo();
+     
+     QString m_hostName;
+     QString m_osVersion;
++    QString m_distroName;
+ };
+ 
+ #endif //OSDEPINFO
+diff --git a/Modules/infosummary/osdepinfo_unix.cpp b/Modules/infosummary/osdepinfo_unix.cpp
+index d237337..3971945 100644
+--- a/Modules/infosummary/osdepinfo_unix.cpp
++++ b/Modules/infosummary/osdepinfo_unix.cpp
+@@ -23,6 +23,18 @@
+ #include "osdepinfo.h"
+ 
+ #include <sys/utsname.h>
++#include <KConfig>
++#include <KConfigGroup>
++#include <QString>
++
++QString getDistro()
++{
++     KConfig osRelease( "/etc/os-release", KConfig::SimpleConfig );
++     KConfigGroup osR( &osRelease, "" );
++     QString pretty = osR.readEntry("PRETTY_NAME");
++     pretty.remove('"');
++     return(pretty);
++}
+ 
+ void OsDepInfo::setDepInfo() 
+ {
+@@ -31,4 +43,5 @@ void OsDepInfo::setDepInfo()
+   
+   m_osVersion = QString(unixInfo.sysname) + ' ' + QString(unixInfo.release);
+   m_hostName = QString(unixInfo.nodename);
++  m_distroName = getDistro();
+ }
