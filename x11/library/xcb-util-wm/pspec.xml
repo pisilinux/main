@@ -13,10 +13,17 @@
         <Summary>A number of libraries which sit on top of libxcb</Summary>
         <Description>The xcb-util-wm module provides a number of libraries which sit on top of libxcb, the core X protocol library, and some of the extension libraries.</Description>
         <Archive sha1sum="7006c52b961c123355320bfc30477cdf90c8bbb7" type="tarbz2">http://xcb.freedesktop.org/dist/xcb-util-wm-0.4.1.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>util-macros</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>xcb-util-wm</Name>
+        <RuntimeDependencies>
+            <Dependency>libxcb</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -43,10 +50,12 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libxcb-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">xcb-util-wm</Dependency>
             <Dependency>libxcb-32bit</Dependency>
+	    <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
