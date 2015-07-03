@@ -13,8 +13,11 @@
         <Summary>International Components for Unicode</Summary>
         <Description>ICU is a mature, widely used set of C/C++ and Java libraries for Unicode support, software internationalization and globalization (i18n/g11n). This package contains the C/C++ libraries.</Description>
         <!-- CAUTION! This package has a great potential to break API/ABI in minor version bumps, check for a file like:
-        http://source.icu-project.org/repos/icu/icu/tags/release-4-2/APIChangeReport.html -->
-        <Archive sha1sum="8c752490bbf31cea26e20246430cee67d48abe34" type="targz">http://download.icu-project.org/files/icu4c/54.1/icu4c-54_1-src.tgz</Archive>
+        http://source.icu-project.org/repos/icu/icu/tags/release-55-1/APIChangeReport.html -->
+        <Archive sha1sum="3bb301c11be0e239c653e8aa2925c53f6f4dc88d" type="targz">http://download.icu-project.org/files/icu4c/55.1/icu4c-55_1-src.tgz</Archive>
+        <BuildDependencies>
+            <Dependency>libgcc</Dependency>
+        </BuildDependencies>
         <Patches>
         <!--Patch level="3">icu.8198.revert.icu5431.patch</Patch-->
         </Patches>
@@ -22,6 +25,9 @@
 
     <Package>
         <Name>icu4c</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/sbin</Path>
@@ -52,8 +58,14 @@
         <PartOf>emul32</PartOf>
         <Summary>32-bit shared libraries for icu4c</Summary>
         <BuildType>_emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">icu4c</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32/libicu*</Path>
@@ -62,6 +74,13 @@
     </Package>
 
     <History>
+         <Update release="8">
+            <Date>2015-07-03</Date>
+            <Version>55.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="7">
             <Date>2015-01-22</Date>
             <Version>54.1</Version>
