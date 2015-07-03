@@ -21,7 +21,7 @@ def setup():
                          --with-pam \
                          --with-libxml \
                          --with-libxslt \
-                         --with-ldap \
+                         --without-ldap \
                          --enable-integer-datetimes \
                          --enable-thread-safety \
                          --enable-depend \
