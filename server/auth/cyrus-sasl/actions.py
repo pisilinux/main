@@ -32,7 +32,7 @@ def setup():
                          --with-plugindir=/usr/lib/sasl2 \
                          --with-dbpath=/etc/sasl2/sasldb2 \
                          --with-pam \
-                         --with-ldap \
+                         --without-ldap \
                          --with-openssl \
                          --with-dblib=gdbm \
                          --with-gss_impl=mit \
@@ -46,7 +46,7 @@ def setup():
                          --enable-login \
                          --enable-ntlm \
                          --enable-plain \
-                         --enable-ldapdb \
+                         --disable-ldapdb \
                          --enable-checkapop \
                          --enable-alwaystrue \
                          --disable-java \
@@ -57,6 +57,9 @@ def setup():
                          --disable-passdss \
                          --disable-macos-framework \
                          --disable-static")
+    
+    # for remove unused
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make("-j1")
