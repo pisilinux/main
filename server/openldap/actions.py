@@ -51,7 +51,7 @@ def setup():
                --enable-proctitle \
                --enable-overlays=mod \
                --with-pic \
-               --with-cyrus-sasl \
+               --without-cyrus-sasl \
                --with-threads \
                --without-fetch \
                --enable-crypt \
