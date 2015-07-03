@@ -63,7 +63,7 @@ def setup():
                --localstatedir=/var/lib"
 
     if get.buildTYPE() == "emul32":
-        options += " --prefix=/emul32 \
+        options =  " --prefix=/emul32 \
                      --libdir=/usr/lib32 \
                      --libexecdir=/emul32/libexec \
                      --disable-bdb \

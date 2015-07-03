@@ -50,7 +50,8 @@
         <Summary>Command-line ldap client commands (ldapsearch, ldapadd etc..)</Summary>
         <RuntimeDependencies>
             <Dependency>nss</Dependency>
-            <!--Dependency>cyrus-sasl</Dependency-->
+            <Dependency>nspr</Dependency>
+            <Dependency>cyrus-sasl</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc/openldap/ldap.conf*</Path>
@@ -68,6 +69,10 @@
         <Summary>OpenLDAP server slapd and releated tools</Summary>
         <Description>OpenLDAP server slapd, additional backends, configuration files, schema definitions required for operation, and database maintenance tools</Description>
         <RuntimeDependencies>
+            <Dependency>db</Dependency>
+            <Dependency>perl</Dependency>
+            <Dependency>tcp-wrappers</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
             <Dependency>nss</Dependency>
             <Dependency>cyrus-sasl</Dependency>
             <Dependency>openldap-client</Dependency>
@@ -103,9 +108,11 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>openssl-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>libtool-ltdl-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>openssl-32bit</Dependency>
             <Dependency release="current">openldap-client</Dependency>
         </RuntimeDependencies>
