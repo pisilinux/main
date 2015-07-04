@@ -11,17 +11,19 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.flags.add("-flto -ffat-lto-objects")
-    autotools.autoreconf("-vfi")
+#    autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
-	                     --enable-xlib \
+                         --enable-xlib \
+                         --disable-drm \
+                         --enable-xml \
                          --enable-ft \
-	                     --enable-ps \
-                         --enable-pdf \
-	                     --enable-svg \
-	                     --enable-tee \
-	                     --enable-gl \
-	                     --enable-gobject \
-	                     --disable-gtk-doc")
+                         --disable-ps \
+                         --disable-pdf \
+                         --disable-svg \
+                         --enable-tee \
+                         --enable-gl \
+                         --enable-gobject \
+                         --disable-gtk-doc")
 
     pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
     pisitools.dosed("libtool", "^(runpath_var=)LD_RUN_PATH", "\\1DIE_RPATH_DIE")
