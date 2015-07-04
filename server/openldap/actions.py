@@ -51,8 +51,8 @@ def setup():
                --enable-proctitle \
                --enable-overlays=mod \
                --with-pic \
-               --without-cyrus-sasl \
                --with-threads \
+               --with-cyrus-sasl \
                --without-fetch \
                --enable-crypt \
                --enable-ipv6 \
@@ -63,7 +63,7 @@ def setup():
                --localstatedir=/var/lib"
 
     if get.buildTYPE() == "emul32":
-        options += " --prefix=/emul32 \
+        options =  " --prefix=/emul32 \
                      --libdir=/usr/lib32 \
                      --libexecdir=/emul32/libexec \
                      --disable-bdb \
@@ -71,13 +71,14 @@ def setup():
                      --disable-wrappers \
                      --disable-spasswd \
                      --disable-perl \
-                     --with-tls \
+                     --without-tls \
                      --without-cyrus-sasl"
     else: options += " --with-tls=moznss"
 
     shelltools.export("AUTOMAKE", "/bin/true")
     autotools.autoreconf("-fi")
     autotools.configure(options)
+    
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
