@@ -13,11 +13,18 @@
         <Summary>A number of libraries which sit on top of libxcb</Summary>
         <Description>The xcb-util-renderutil module provides a number of libraries which sit on top of libxcb, the core X protocol library, and some of the extension libraries.</Description>
         <Archive sha1sum="cb533b1d039f833f070e7d6398c221a31d30d5e2" type="tarbz2">http://xcb.freedesktop.org/dist/xcb-util-renderutil-0.3.9.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>util-macros</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>xcb-util-renderutil</Name>
-        <Files>
+        <RuntimeDependencies>
+            <Dependency>libxcb</Dependency>
+        </RuntimeDependencies>
+	<Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
@@ -42,10 +49,11 @@
         <Summary>32-bit shared libraries for xcb-util-renderutil</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
+	    <Dependency>glibc-32bit</Dependency>
             <Dependency>libxcb-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
-            <Dependency>xcb-util</Dependency>
+	    <Dependency>glibc-32bit</Dependency>
             <Dependency>libxcb-32bit</Dependency>
         </RuntimeDependencies>
         <Files>

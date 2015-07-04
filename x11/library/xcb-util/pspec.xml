@@ -13,10 +13,17 @@
         <Summary>A number of libraries which sit on top of libxcb</Summary>
         <Description>The xcb-util module provides a number of libraries which sit on top of libxcb, the core X protocol library, and some of the extension libraries.</Description>
         <Archive sha1sum="02060d8e2e70838fc41cd3a27c7f2909090d8c20" type="tarbz2">http://xcb.freedesktop.org/dist/xcb-util-0.3.9.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>util-macros</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>xcb-util</Name>
+        <RuntimeDependencies>
+            <Dependency>libxcb</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -43,10 +50,12 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libxcb-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">xcb-util</Dependency>
             <Dependency>libxcb-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>

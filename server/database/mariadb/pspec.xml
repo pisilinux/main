@@ -12,10 +12,18 @@
         <IsA>app:console</IsA>
         <Summary>MariaDB is a drop-in replacement for MySQL</Summary>
         <Description>MariaDB strives to be the logical choice for database professionals looking for a robust, scalable, and reliable SQL server.</Description>
-        <Archive sha1sum="240253b3ee21dea5e2f501778e8ee72b32a5d052" type="targz">ftp://ftp.ulak.net.tr/pub/MariaDB/mariadb-10.0.17/source/mariadb-10.0.17.tar.gz</Archive>
+        <Archive sha1sum="e005c8dc2b2e4b0b3215f8bbb9b0b43726c7cf6a" type="targz">ftp://ftp.ulak.net.tr/pub/MariaDB/mariadb-10.0.20/source/mariadb-10.0.20.tar.gz</Archive>
         <BuildDependencies>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>libevent-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>libpcre-devel</Dependency>
             <Dependency>libaio-devel</Dependency>
             <Dependency>unixODBC-devel</Dependency>
+            <Dependency>cmake</Dependency>
         </BuildDependencies>
         <Patches>
         </Patches>
@@ -27,6 +35,11 @@
         <IsA>library</IsA>
         <Summary>The shared libraries required for MariaDB clients</Summary>
         <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpcre</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>openssl</Dependency>
             <Dependency>libaio</Dependency>
             <Dependency>unixODBC</Dependency>
         </RuntimeDependencies>
@@ -73,6 +86,11 @@
         <RuntimeDependencies>
             <Dependency version="current">mariadb-lib</Dependency>
             <Dependency>libaio</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpcre</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>openssl</Dependency>
         </RuntimeDependencies>
         <Replaces>
             <Package>mysql-client</Package>
@@ -89,7 +107,9 @@
         <RuntimeDependencies>
             <Dependency version="current">mariadb-lib</Dependency>
             <Dependency version="current">mariadb-client</Dependency>
-            <Dependency>libaio</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>openssl</Dependency>
         </RuntimeDependencies>
         <Replaces>
             <Package>mysql-server</Package>
@@ -150,6 +170,13 @@
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2015-07-03</Date>
+            <Version>10.0.20</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2015-01-25</Date>
             <Version>10.0.17</Version>

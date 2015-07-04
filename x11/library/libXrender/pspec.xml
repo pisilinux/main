@@ -13,10 +13,18 @@
         <Summary>X.Org Xrender library</Summary>
         <Description>The X Rendering Extension (Render) introduces digital image composition as the foundation of a new rendering model within the X Window System. Rendering geometric figures is accomplished by client-side tesselation into either triangles or trapezoids.</Description>
         <Archive sha1sum="0f5c843410029944bd06e19366db4932cf5944fa" type="tarbz2">mirrors://xorg/individual/lib/libXrender-0.9.8.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>xorg-proto</Dependency>
+            <Dependency>util-macros</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>libXrender</Name>
+        <RuntimeDependencies>
+            <Dependency>libX11</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -28,6 +36,7 @@
         <Summary>Development files for libXrender</Summary>
         <RuntimeDependencies>
             <Dependency release="current">libXrender</Dependency>
+            <Dependency>libX11-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/X11</Path>
@@ -43,10 +52,12 @@
         <Summary>32-bit shared libraries for libXrender</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">libXrender</Dependency>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
         </RuntimeDependencies>
         <Files>

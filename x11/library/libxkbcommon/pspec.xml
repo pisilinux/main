@@ -13,10 +13,17 @@
         <Summary>Library to convert evdev keycodes to keysyms</Summary>
         <Description>Library to convert evdev keycodes to keysyms</Description>
         <Archive sha1sum="1307210814f6771383a542981f2dbe29c80f91b4" type="targz">https://github.com/xkbcommon/libxkbcommon/archive/xkbcommon-0.5.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>util-macros</Dependency>
+	    <Dependency>libxcb-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>libxkbcommon</Name>
+        <RuntimeDependencies>
+            <Dependency>libxcb</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="doc">/usr/share/doc/libxkbcommon/</Path>
             <Path fileType="library">/usr/lib/lib*.so*</Path>
@@ -41,9 +48,14 @@
         <PartOf>emul32</PartOf>
         <Summary>32-bit shared libraries for libxkbcommon</Summary>
         <BuildType>emul32</BuildType>
+        <BuildDependencies>
+	    <Dependency>libxcb-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">libxkbcommon</Dependency>
             <Dependency>libxcb-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>

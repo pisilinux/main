@@ -1,0 +1,114 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libtalloc</Name>
+        <Homepage>http://talloc.samba.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv3+</License>
+        <IsA>library</IsA>
+        <Summary>Hierarchical pool based memory allocator</Summary>
+        <Description>libtalloc is a library which implements a hierarchical allocator with destructors which is the core memory allocator in samba.</Description>
+        <Archive sha1sum="a02ffe90c3dd31fbe14ecaa79912437bdf7295c1" type="targz">http://www.samba.org/ftp/talloc/talloc-2.1.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>docbook-xsl</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>python-devel</Dependency>
+            <Dependency>attr-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libtalloc</Name>
+        <RuntimeDependencies>
+            <Dependency>python</Dependency>
+            <Dependency>attr</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libtalloc-devel</Name>
+        <Summary>Development files for libtalloc</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libtalloc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="man">/usr/share/man/man3</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libtalloc-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libtalloc</Summary>
+        <BuildType>emul32</BuildType>
+         <BuildDependencies>
+            <Dependency>glibc-32bit</Dependency>
+            <Dependency>attr-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>glibc-32bit</Dependency>
+            <Dependency>attr-32bit</Dependency>
+            <Dependency release="current">libtalloc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="6">
+            <Date>2015-06-28</Date>
+            <Version>2.1.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-05-22</Date>
+            <Version>2.1.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvarice@gmail.com</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-04-23</Date>
+            <Version>2.1.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2014-03-09</Date>
+            <Version>2.0.8</Version>
+            <Comment>Rebuild for buildhost</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-07-07</Date>
+            <Version>2.0.8</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-09-25</Date>
+            <Version>2.0.7</Version>
+            <Comment>First release</Comment>
+            <Name>Erdem Artan</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

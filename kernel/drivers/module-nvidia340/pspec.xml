@@ -1,0 +1,176 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>module-nvidia340</Name>
+        <Homepage>http://www.nvidia.com</Homepage>
+        <Packager>
+            <Name>Pisi Linux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>NVIDIA</License>
+        <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
+        <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
+        <Archive sha1sum="1335af174324f5c752388110e65c3c51beea729b" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86/340.76/NVIDIA-Linux-x86-340.76.run</Archive>
+        <Archive sha1sum="369554b46b43f082a38c6fcce096265a66e97483" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86_64/340.76/NVIDIA-Linux-x86_64-340.76.run</Archive>
+        <BuildDependencies>
+            <Dependency version="3.19.8">kernel-module-headers</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>module-nvidia340</Name>
+        <IsA>driver</IsA>
+        <Summary>Kernel module for NVIDIA driver 340.xx releases</Summary>
+        <RuntimeDependencies>
+            <Dependency version="3.19.8">kernel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library" permanent="true">/lib/modules</Path>
+        </Files>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia340</Name>
+        <IsA>driver</IsA>
+        <PartOf>x11.driver</PartOf>
+        <RuntimeDependencies>
+            <Dependency>libXext</Dependency>
+            <Dependency>xorg-server</Dependency>
+            <Dependency version="current">module-nvidia340</Dependency>
+        </RuntimeDependencies>
+        <Conflicts>
+            <Package>xorg-video-nvidia-current</Package>
+            <Package>xorg-video-nvidia304</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="data">/etc/OpenCL</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia340-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for xorg-video-nvidia340</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libvdpau-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+            <Dependency release="current">xorg-video-nvidia340</Dependency>
+        </RuntimeDependencies>
+        <Conflicts>
+            <Package>xorg-video-nvidia-current-32bit</Package>
+            <Package>xorg-video-nvidia304-32bit</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/share/nvidia-current/32bit-ld.so.conf</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package-emul32.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <History>
+       <Update release="10">
+            <Date>2015-05-22</Date>
+            <Version>340.76</Version>
+            <Comment>Rebuild for kernel 3.19.8</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+      <Update release="9">
+            <Date>2015-05-05</Date>
+            <Version>340.76</Version>
+            <Comment>Rebuild for kernel 3.19.6</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+      <Update release="8">
+            <Date>2015-04-24</Date>
+            <Version>340.76</Version>
+            <Comment>Rebuild for kernel 3.19.5</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+      <Update release="7">
+            <Date>2015-04-16</Date>
+            <Version>340.76</Version>
+            <Comment>Rebuild for kernel 3.19.4</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+      <Update release="6">
+            <Date>2015-04-02</Date>
+            <Version>340.76</Version>
+            <Comment>Rebuid for kernel 3.19.3</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+      <Update release="5">
+            <Date>2015-03-08</Date>
+            <Version>340.76</Version>
+            <Comment>Rebuild for kernel 3.19.1</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+       <Update release="5">
+            <Date>2015-03-01</Date>
+            <Version>340.76</Version>
+            <Comment>Version bump, Rebuild for kernel 3.19.0</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+       <Update release="4">
+            <Date>2015-01-31</Date>
+            <Version>340.76</Version>
+            <Comment>Version bump, Rebuild for kernel 3.18.3</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+      </Update>
+      <Update release="3">
+            <Date>2015-01-13</Date>
+            <Version>340.65</Version>
+            <Comment>version bump</Comment>
+            <Name>Stefan Gronewold (groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2014-12-08</Date>
+            <Version>340.58</Version>
+            <Comment>Rebuild for kernel 3.17.4</Comment>
+            <Name>Stefan Gronewold (groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2014-11-13</Date>
+            <Version>340.58</Version>
+            <Comment>First Release</Comment>
+            <Name>Stefan Gronewold (groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

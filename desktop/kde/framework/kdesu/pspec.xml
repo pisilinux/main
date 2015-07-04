@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>kdesu</Name>
+        <Homepage>http://www.kde.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <IsA>library</IsA>
+	<IsA>app:console</IsA>
+        <Summary>User interface for running shell commands with root privileges</Summary>
+        <Description>kdesu provides functionality for building GUI front ends for (password asking) console mode programs.</Description>
+        <Archive sha1sum="0a2c50f53588a6ed340f95226154c45ef0ba5569" type="tarxz">http://download.kde.org/stable/frameworks/5.11/kdesu-5.11.0.tar.xz</Archive>
+        <BuildDependencies>
+        <Dependency>qt5-base-devel</Dependency>    
+	    <Dependency>python3</Dependency>
+	    <Dependency>extra-cmake-modules</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>kdesu</Name>
+        <RuntimeDependencies>
+        <Dependency>qt5-base</Dependency>	    
+	    <Dependency>kcoreaddons</Dependency>
+	    <Dependency>kpty</Dependency>
+	    <Dependency>kservice</Dependency>
+	    <Dependency>ki18n</Dependency>
+	    <Dependency>kconfig</Dependency>
+	    <Dependency>libgcc</Dependency>
+	    <Dependency>libX11</Dependency>
+        </RuntimeDependencies>
+        <Files>
+        <Path fileType="localedata">/usr/share/locale</Path>
+	    <Path fileType="library">/usr/lib/qt5</Path>
+	    <Path fileType="library">/usr/lib</Path>
+	    <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>kdesu-devel</Name>
+	<Summary>Development files for kdesu</Summary>
+        <RuntimeDependencies>
+	    <Dependency>qt5-base-devel</Dependency> 
+        <Dependency release="current">kdesu</Dependency>	    
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+	    <Path fileType="config">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="2">
+            <Date>2015-06-25</Date>
+            <Version>5.11.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2015-06-01</Date>
+            <Version>5.10.0</Version>
+            <Comment>First Release.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>               
+    </History>
+</PISI>

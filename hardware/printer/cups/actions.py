@@ -32,7 +32,6 @@ def setup():
                --enable-libpaper \
                --enable-libusb=yes \
                --enable-debug \
-               --enable-avahi \
                --enable-gssapi \
                --enable-dbus \
                --enable-pam=yes \
@@ -56,7 +55,6 @@ def setup():
     if get.buildTYPE() == "emul32":
         options += '  \
                      --enable-libusb=no \
-                     --disable-avahi \
                      --disable-dnssd \
                      --disable-gssapi \
                      --disable-dbus \
