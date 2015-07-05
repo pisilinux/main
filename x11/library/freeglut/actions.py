@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     options = "\-DCMAKE_BUILD_TYPE=Release \
+                -DFREEGLUT_BUILD_DEMOS=OFF \
               "
 
     if get.buildTYPE() == "emul32":
@@ -18,7 +19,7 @@ def setup():
         shelltools.export("CFLAGS", "-m32")
         shelltools.export("CXXFLAGS", "-m32")
 
-        options += "-DCMAKE_INSTALL_LIBDIR=lib32 \
+        options += "-DCMAKE_INSTALL_LIBDIR=lib32 -DFREEGLUT_BUILD_DEMOS=OFF \
                    "
 
     elif get.ARCH() == "x86_64":
