@@ -1,0 +1,284 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>udev</Name>
+        <Homepage>http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>Linux dynamic and persistent device naming support</Summary>
+        <Description>udev allows Linux users to have a dynamic /dev directory and it provides the ability to have persistent device names.</Description>
+        <Archive sha1sum="3436d5829876010e0747b6bf6e7dcbe365e2e5ef" type="tarxz">http://www.freedesktop.org/software/systemd/systemd-214.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>gperf</Dependency>
+            <Dependency>acl-devel</Dependency>
+            <Dependency>libkmod-devel</Dependency>
+            <Dependency>libblkid-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>udev</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">libudev</Dependency>
+            <Dependency>acl</Dependency>
+            <Dependency>libkmod</Dependency>
+            <Dependency>libblkid</Dependency>
+            <Dependency>util-linux</Dependency> <!-- Only for a /sbin/blkid call from a rules file -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/bin</Path>
+            <Path fileType="executable">/sbin</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="executable">/lib/udev</Path>
+            <Path fileType="library">/lib</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/udev.conf</Path>
+            <Path fileType="data">/run/udev</Path>
+            <Path fileType="data">/lib/systemd</Path>
+            <Path fileType="data">/etc/udev/rules.d</Path>
+            <Path fileType="data">/lib/udev/rules.d</Path>
+            <Path fileType="data">/usr/share/dbus-1/services</Path>
+            <Path fileType="data">/usr/share/bash-completion/completions</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/udev.conf">tmpfiles.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <!-- FIXME: This may need a rework -->
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>udev-devel</Name>
+        <PartOf>system.devel</PartOf>
+        <Summary>Development files for udev</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">udev</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/systemd/sd-daemon.h</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig/libsystemd-daemon.pc</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/libsystemd-daemon.pc</Path>
+            <Path fileType="data">/usr/share/pkgconfig/udev.pc</Path> <!-- check this path usr/share/pkgconfig -->
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libudev</Name>
+        <Summary>Dynamic library to access udev device information</Summary>
+        <Conflicts>
+            <Package releaseTo="3">udev</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="library">/usr/lib/libudev*</Path>
+            <Path fileType="library">/lib/libudev*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libudev-devel</Name>
+        <PartOf>system.devel</PartOf>
+        <Summary>Development files for libudev</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">udev</Dependency>
+            <Dependency release="current">libudev</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/libudev.h</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/libudev.pc</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig/libudev.pc</Path>
+            <Path fileType="data">/usr/share/gtk-doc/html/libudev</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgudev1</Name>
+        <Summary>Libraries for adding libudev support to applications that use glib</Summary>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>libudev</Dependency>
+        </RuntimeDependencies>>
+        <Files>
+            <Path fileType="library">/usr/lib/libgudev*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgudev1-devel</Name>
+        <PartOf>system.devel</PartOf>
+        <Summary>Development files for libgudev1</Summary>
+        <RuntimeDependencies>
+            <Dependency>libudev-devel</Dependency>
+            <Dependency release="current">libgudev1</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/gudev-1.0</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/gudev-1.0*</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig/gudev-1.0*</Path>
+            <Path fileType="data">/usr/share/gir-1.0/GUdev-1.0.gir</Path>
+            <Path fileType="doc">/usr/share/gtk-doc/html/gudev</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libudev-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libudev</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libkmod-32bit</Dependency>
+            <Dependency>libblkid-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">libudev</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/libudev*</Path>
+            <Path fileType="library">/lib32/libudev*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgudev1-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libgudev1</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>glib2-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">libgudev1</Dependency>
+            <Dependency release="current">libudev-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/libgudev*</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="16">
+            <Date>2014-07-01</Date>
+            <Version>214</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="15">
+            <Date>2014-05-11</Date>
+            <Version>212</Version>
+            <Comment>Add upstream patches.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="14">
+            <Date>2014-03-28</Date>
+            <Version>212</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="13">
+            <Date>2014-03-12</Date>
+            <Version>211</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="12">
+            <Date>2014-03-07</Date>
+            <Version>210</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="11">
+            <Date>2014-02-26</Date>
+            <Version>210</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="10">
+            <Date>2014-02-20</Date>
+            <Version>209</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="9">
+            <Date>2014-01-11</Date>
+            <Version>208</Version>
+            <Comment>Add tmpfiles.conf, git updates.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="8">
+            <Date>2013-10-30</Date>
+            <Version>208</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2013-09-10</Date>
+            <Version>206</Version>
+            <Comment>Add /run/udev directory.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2013-08-13</Date>
+            <Version>206</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-07-28</Date>
+            <Version>204</Version>
+            <Comment>Fix pc files for emul32.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-06-13</Date>
+            <Version>204</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-03-30</Date>
+            <Version>200</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-01-24</Date>
+            <Version>197</Version>
+            <Comment>Version bump, add emul32</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-10-11</Date>
+            <Version>194</Version>
+            <Comment>First release</Comment>
+            <Name>Erdem Artan</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
