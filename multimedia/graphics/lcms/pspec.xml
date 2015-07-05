@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>lcms</Name>
+        <Homepage>http://www.littlecms.com/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>A lightweight, speed optimized color management engine</Summary>
+        <Description>LittleCMS intends to be a small-footprint, speed optimized color management engine in open source form.</Description>
+        <!-- sourceforge keeps old files too
+        <Archive sha1sum="d5b075ccffc0068015f74f78e4bc39138bcfe2d4" type="targz">http://www.littlecms.com/lcms-1.19.tar.gz</Archive>
+        -->
+        <Archive sha1sum="d5b075ccffc0068015f74f78e4bc39138bcfe2d4" type="targz">mirrors://sourceforge/project/lcms/lcms/1.19/lcms-1.19.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>CVE-2009-0793.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>lcms</Name>
+        <RuntimeDependencies>
+            <Dependency>tiff</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/lcms</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>lcms-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">lcms</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib32/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>lcms-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for lcms</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>tiff-32bit</Dependency>
+            <Dependency>libjpeg-turbo-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">lcms</Dependency>
+            <Dependency>tiff-32bit</Dependency>
+            <Dependency>libjpeg-turbo-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="2">
+            <Date>2014-05-19</Date>
+            <Version>1.19</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2011-05-04</Date>
+            <Version>1.19</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
