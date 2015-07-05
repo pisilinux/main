@@ -17,9 +17,9 @@ def setup():
                          --disable-drm \
                          --enable-xml \
                          --enable-ft \
-                         --disable-ps \
-                         --disable-pdf \
-                         --disable-svg \
+                         --enable-ps \
+                         --enable-pdf \
+                         --enable-svg \
                          --enable-tee \
                          --enable-gl \
                          --enable-gobject \
