@@ -18,7 +18,6 @@ def setup():
                          --enable-gif \
                          --enable-freetype \
                          --enable-multi \
-                         --enable-sysfs \
                          --disable-sdl \
                          --disable-multi \
                          --disable-debug \
