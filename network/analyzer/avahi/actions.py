@@ -28,6 +28,7 @@ def setup():
                          --enable-gobject \
                          --enable-introspection \
                          --disable-mono \
+                         --disable-python \
                          --enable-gtk3 \
                          --enable-compat-howl \
                          --enable-compat-libdns_sd \
@@ -61,3 +62,4 @@ def install():
     pisitools.dodoc("docs/AUTHORS", "docs/README", "docs/TODO")
 
     pisitools.removeDir("var/run")
+    pisitools.removeDir("/usr/lib/avahi")

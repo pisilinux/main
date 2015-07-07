@@ -16,11 +16,16 @@
         <BuildDependencies>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
-            <!--not mono <Dependency>mono-devel</Dependency>
-            <Dependency>gtk-sharp-devel</Dependency>-->
             <Dependency>libcap-devel</Dependency>
             <Dependency>libdaemon-devel</Dependency>
-            <Dependency>python-gtk-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>libepoxy-devel</Dependency>
+            <Dependency>at-spi2-core-devel</Dependency>
+            <Dependency>gdbm-devel</Dependency>
+            <Dependency>intltool</Dependency>
+            <!--Dependency>python-gtk-devel</Dependency>-->
+            <!--not mono <Dependency>mono-devel</Dependency>
+            <Dependency>gtk-sharp-devel</Dependency>-->
         </BuildDependencies>
         <Patches>
             <Patch level="1">avahi-0.6.31-no-deprecations.patch</Patch>
@@ -31,6 +36,7 @@
         <Name>avahi-glib</Name>
         <Summary>Libraries for easy use of avahi from glib applications</Summary>
         <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
             <Dependency release="current">avahi</Dependency>
             <Dependency release="current">avahi-libs</Dependency>
         </RuntimeDependencies>
@@ -99,7 +105,9 @@
         <Name>avahi-ui</Name>
         <Summary>Gtk user interface library for Avahi</Summary>
         <RuntimeDependencies>
+            <Dependency>gdbm</Dependency>
             <Dependency>gtk2</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency release="current">avahi-libs</Dependency>
             <Dependency release="current">avahi-glib</Dependency>
             <Dependency>atk</Dependency>
@@ -132,6 +140,8 @@
         <Name>avahi-ui-gtk3</Name>
         <Summary>Gtk3 user interface library for Avahi</Summary>
         <RuntimeDependencies>
+            <Dependency>gdbm</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>gtk3</Dependency>
             <Dependency release="current">avahi-libs</Dependency>
             <Dependency release="current">avahi-glib</Dependency>
@@ -165,7 +175,8 @@
         <Summary>UI tools for mDNS browsing</Summary>
         <RuntimeDependencies>
             <Dependency>gtk3</Dependency>
-            <Dependency>python-gtk</Dependency>
+            <Dependency>glib2</Dependency>
+	    <!--<Dependency>python-gtk</Dependency>-->
             <Dependency release="current">avahi</Dependency>
             <Dependency release="current">avahi-ui</Dependency>
             <Dependency release="current">avahi-glib</Dependency>
@@ -241,6 +252,9 @@
     <Package>
         <Name>avahi-libs</Name>
         <Summary>Libraries needed to run programs that use avahi</Summary>
+        <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libavahi-common.so*</Path>
             <Path fileType="library">/usr/lib/libavahi-client.so*</Path>
@@ -250,6 +264,9 @@
     <Package>
         <Name>avahi</Name>
         <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>expat</Dependency>
+            <Dependency>libcap</Dependency>
             <Dependency>libdaemon</Dependency>
             <Dependency release="current">avahi-libs</Dependency>
         </RuntimeDependencies>
@@ -317,6 +334,7 @@
         <Name>avahi-tools</Name>
         <Summary>Command line tools for mDNS browsing and publishing</Summary>
         <RuntimeDependencies>
+            <Dependency>gdbm</Dependency>
             <Dependency release="current">avahi</Dependency>
             <Dependency release="current">avahi-libs</Dependency>
         </RuntimeDependencies>
