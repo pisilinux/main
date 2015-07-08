@@ -23,8 +23,8 @@
             <Dependency>doxygen</Dependency>
             <Dependency>xcb-proto</Dependency>
             <Dependency>gtk2-devel</Dependency>
-            <Dependency>lirc-devel</Dependency>
-            <Dependency>gconf-devel</Dependency>
+            <!--<Dependency>lirc-devel</Dependency> our dep libtfdi need boost-->
+            <!--Dependency>gconf-devel</Dependency>2-->
             <Dependency>avahi-devel</Dependency>
             <Dependency>speex-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
@@ -33,12 +33,14 @@
             <Dependency>libXtst-devel</Dependency>
             <Dependency>xcb-util-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
-            <Dependency>bluez-libs-devel</Dependency>
             <Dependency>libsndfile-devel</Dependency>
             <Dependency>libasyncns-devel</Dependency>
             <Dependency>libatomic_ops-devel</Dependency>
-            <Dependency>libsamplerate-devel</Dependency>
-            <Dependency>libasyncns-devel</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>libcap-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -46,9 +48,17 @@
         <Name>pulseaudio-libs</Name>
         <Summary>Libraries for PulseAudio clients</Summary>
         <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>json-c</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libxcb</Dependency>
+            <Dependency>eudev</Dependency>
+	    <!--<Dependency release="current">pulseaudio</Dependency>is wrong-->
+            <Dependency>libtool-ltdl</Dependency>
             <Dependency>orc</Dependency>
             <Dependency>sbc</Dependency>
-            <Dependency>lirc</Dependency>
+            <!--Dependency>lirc</Dependency-->
             <Dependency>fftw3</Dependency>
             <Dependency>libSM</Dependency>
             <Dependency>speex</Dependency>
@@ -58,6 +68,7 @@
             <Dependency>avahi-libs</Dependency>
             <Dependency>libasyncns</Dependency>
             <Dependency>libsndfile</Dependency>
+            <Dependency>bluez</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/pa*</Path>
@@ -100,6 +111,10 @@
     <Package>
         <Name>pulseaudio</Name>
         <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
             <Dependency>orc</Dependency>
             <Dependency>speex</Dependency>
             <Dependency>libtdb</Dependency>
@@ -155,7 +170,7 @@
         </Provides>
     </Package>
 
-    <Package>
+    <!--<Package>
         <Name>pulseaudio-gconf</Name>
         <Summary>GConf configuration backend for the PulseAudio sound server</Summary>
         <RuntimeDependencies>
@@ -166,7 +181,7 @@
             <Path fileType="library">/usr/lib/pulse-2.1/modules/module-gconf.so</Path>
             <Path fileType="executable">/usr/libexec/pulse/gconf-helper</Path>
         </Files>
-    </Package>
+     </Package>-->
 
     <Package>
         <Name>pulseaudio-libs-32bit</Name>
@@ -181,6 +196,7 @@
             <Dependency>libcap-32bit</Dependency>
             <Dependency>libsndfile-32bit</Dependency>
             <Dependency>libtool-ltdl-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">pulseaudio-libs</Dependency>
@@ -188,6 +204,7 @@
             <Dependency>glib2-32bit</Dependency>
             <Dependency>libsndfile-32bit</Dependency>
             <Dependency>json-c-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
