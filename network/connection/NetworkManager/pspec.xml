@@ -1,0 +1,213 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>NetworkManager</Name>
+        <Homepage>http://projects.gnome.org/NetworkManager</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2+</License>
+        <IsA>app:console</IsA>
+        <Summary>Network connection manager powered by D-Bus and UDEV</Summary>
+        <Description>NetworkManager attempts to keep an active network connection available at all times.</Description>
+        <Archive sha1sum="e6183286935dd87a4885f187e533729a6d6a8e79" type="tarxz">https://download.gnome.org/sources/NetworkManager/1.0/NetworkManager-1.0.2.tar.xz</Archive>
+        <AdditionalFiles>
+            <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
+        </AdditionalFiles>
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>dhclient</Dependency>
+            <Dependency>ppp-devel</Dependency>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>newt-devel</Dependency>
+            <Dependency>nspr-devel</Dependency>
+            <Dependency>libnl-devel</Dependency>
+            <Dependency>libsoup-devel</Dependency>
+            <Dependency>bluez-libs-devel</Dependency>
+            <Dependency>iptables-devel</Dependency>
+            <Dependency>wpa_supplicant</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
+            <Dependency>gobject-introspection</Dependency>
+            <Dependency>libndp-devel</Dependency>
+            <Dependency>libmm-glib-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>libuuid-devel</Dependency>
+            <Dependency>libgudev1-devel</Dependency>
+            <Dependency versionFrom="0.9.2">ConsoleKit-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+	  <Patch>0001-dns-Fix-falling-back-in-the-resolv.conf-methods.patch</Patch>
+	  <Patch>disable_set_hostname.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>NetworkManager</Name>
+        <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>nspr</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>polkit</Dependency>
+            <Dependency>readline</Dependency>
+            <Dependency>dbus-glib</Dependency>
+            <Dependency>libuuid</Dependency>
+            <Dependency>libgudev1</Dependency>
+            <Dependency>nss</Dependency>
+            <Dependency>newt</Dependency>
+            <Dependency>ppp</Dependency>
+            <Dependency>libnl</Dependency>
+            <Dependency>libsoup</Dependency>
+            <Dependency>bluez-libs</Dependency>
+            <Dependency>iproute2</Dependency>
+            <Dependency>iptables</Dependency>
+            <Dependency>libmm-glib</Dependency>
+            <Dependency>ModemManager</Dependency>
+            <Dependency>avahi-autoipd</Dependency>
+            <Dependency>wpa_supplicant</Dependency>
+            <Dependency>libndp</Dependency>
+            <Dependency versionFrom="0.9.2">ConsoleKit</Dependency>
+            <Dependency>mobile-broadband-provider-info</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/etc/dbus-1</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/lib/udev</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="data">/lib/udev/rules.d</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="data">/run/NetworkManager</Path>
+            <Path fileType="data">/lib/systemd/system</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/var/lib/NetworkManager</Path>
+            <Path fileType="data">/etc/NetworkManager/system-connections</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/NetworkManager.conf</Path>
+            <Path fileType="config">/etc/polkit-1/localauthority/10-vendor.d</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/NetworkManager">NetworkManager.confd</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/NetworkManager.conf">tmpfiles.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/NetworkManager/NetworkManager.conf">NetworkManager.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/sbin/migrate-comar-network-profiles">migrate-comar-network-profiles</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/polkit-1/localauthority/10-vendor.d/01-org.freedesktop.NetworkManager.settings.modify.system.pkla">gentoo/01-org.freedesktop.NetworkManager.settings.modify.system.pkla</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/polkit-1/rules.d/10-vendor.d/01-org.freedesktop.ModemManager1.rules">01-org.freedesktop.ModemManager1.rules</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/polkit-1/rules.d/10-vendor.d/01-org.freedesktop.NetworkManager.settings.modify.system.rules">01-org.freedesktop.NetworkManager.settings.modify.system.rules</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>NetworkManager-devel</Name>
+        <Summary>Development files for NetworkManager</Summary>
+        <RuntimeDependencies>
+            <Dependency>dbus-glib-devel</Dependency>
+            <Dependency release="current">NetworkManager</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="10">
+            <Date>2015-06-14</Date>
+            <Version>1.0.2</Version>
+            <Comment>fixed missing dep and added rules files</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+        <Update release="9">
+            <Date>2015-05-14</Date>
+            <Version>1.0.2</Version>
+            <Comment>Version bump.</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Vedat Demir</Name>
+            <Email>vedat@pisilinux.org</Email>
+        </Update>
+        <Update release="8">
+            <Date>2015-01-07</Date>
+            <Version>1.0</Version>
+            <Comment>Version bump.</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2014-05-17</Date>
+            <Version>0.9.8.10</Version>
+            <Comment>Version bump.</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Vedat Demir</Name>
+            <Email>vedat@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-01-10</Date>
+            <Version>0.9.8.8</Version>
+            <Comment>Version bump. Add tmpfiles.conf</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-09-08</Date>
+            <Version>0.9.8.2</Version>
+            <Comment>/var/run => /run</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-07-27</Date>
+            <Version>0.9.8.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-02-21</Date>
+            <Version>0.9.8.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-01-23</Date>
+            <Version>0.9.7.995</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2013-01-13</Date>
+            <Version>0.9.6.4</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
