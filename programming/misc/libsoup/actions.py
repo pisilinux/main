@@ -14,12 +14,14 @@ def setup():
                 --disable-static \
                 --without-apache-httpd \
                 --without-apache-module-dir \
+                --disable-tls-check \
               "
+ 
     if get.buildTYPE() == "_emul32":
         options += " --libdir=/usr/lib32 \
                      --bindir=/_emul32/bin \
-                     --sbindir=/_emul32/sbin \
-                     --disable-tls-check"
+                     --sbindir=/_emul32/sbin"
+
                      
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
