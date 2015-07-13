@@ -8767,6 +8767,63 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>glib-networking</Name>
+            <Homepage>http://git.gnome.org/browse/glib-networking/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2+</License>
+            <IsA>library</IsA>
+            <PartOf>network.library</PartOf>
+            <Summary xml:lang="en">Network-related giomodules for glib</Summary>
+            <Summary xml:lang="pl">Moduły GIO dotyczące sieci do glib</Summary>
+            <Description xml:lang="en">This package contains various network related extensions for the GIO library.</Description>
+            <Description xml:lang="pl">Pakiet zawiera różne rozszerzenia dotyczące sieci do biblioteki GIO.</Description>
+            <Archive type="tarxz" sha1sum="02e4eb212dd5a322ca726802c714dd4e5a143a74">mirrors://gnome/glib-networking/2.38/glib-networking-2.38.2.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>gnutls-devel</Dependency>
+                <Dependency>p11-kit-devel</Dependency>
+                <Dependency>ca-certificates</Dependency>
+                <Dependency>intltool</Dependency>
+                <Dependency>glib2-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>network/library/glib-networking/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>glib-networking</Name>
+            <RuntimeDependencies>
+                <Dependency>gnutls</Dependency>
+                <Dependency>p11-kit</Dependency>
+                <Dependency>glib2</Dependency>
+                <Dependency>ca-certificates</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/gio/modules</Path>
+                <Path fileType="executable">/usr/libexec</Path>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="doc">/usr/share/doc/glib-networking</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="2">
+                <Date>2014-03-30</Date>
+                <Version>2.38.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2013-01-27</Date>
+                <Version>2.34.2</Version>
+                <Comment>First release.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libasyncns</Name>
             <Homepage>http://0pointer.de/lennart/projects/libasyncns</Homepage>
             <Packager>
@@ -10227,16 +10284,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Description xml:lang="tr">libsoup, GNOME için HTTP istemci / sunucu kitaplığıdır.</Description>
             <Archive type="tarxz" sha1sum="8bd422bd5d19b5e2630bbb35dfb06354b1d56442">mirrors://gnome/libsoup/2.50/libsoup-2.50.0.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency>gtk-doc</Dependency>
-                <Dependency>tls-devel</Dependency>
-                <Dependency>gconf-devel</Dependency>
-                <Dependency>gnutls-devel</Dependency>
-                <Dependency>glib-networking</Dependency>
                 <Dependency>libgcrypt-devel</Dependency>
-                <Dependency>libgnome-keyring-devel</Dependency>
+                <Dependency>gtk-doc</Dependency>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>libxml2-devel</Dependency>
                 <Dependency>sqlite-devel</Dependency>
+                <Dependency>intltool</Dependency>
+                <Dependency>gettext-devel</Dependency>
             </BuildDependencies>
             <SourceURI>programming/misc/libsoup/pspec.xml</SourceURI>
         </Source>
@@ -10246,6 +10300,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>glib2</Dependency>
                 <Dependency>libxml2</Dependency>
                 <Dependency>sqlite</Dependency>
+                <Dependency>glib-networking</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib</Path>
@@ -10257,6 +10312,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
         <Package>
             <Name>libsoup-gnome</Name>
             <RuntimeDependencies>
+                <Dependency>glib2</Dependency>
                 <Dependency>libsoup</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -14072,6 +14128,451 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>p11-kit</Name>
+            <Homepage>http://p11-glue.freedesktop.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>BSD</License>
+            <IsA>library</IsA>
+            <PartOf>util.crypt</PartOf>
+            <Summary xml:lang="en">Library to work with PKCS#11 modules</Summary>
+            <Summary xml:lang="pl">Biblioteka i moduł proxy do właściwego wczytywania i współdzielenia modułów PKCS #11</Summary>
+            <Description xml:lang="en">The p11-kit package Provides a way to load and enumerate PKCS #11 (a Cryptographic Token Interface Standard) modules.</Description>
+            <Description xml:lang="pl">p11-kit zapewnia możliwość ładowania i numeracji modułów PKCS #11 (a Cryptographic Token Interface Standard).</Description>
+            <Archive type="targz" sha1sum="b91c26cf4270ef8223c105016ea0eab581403af4">http://p11-glue.freedesktop.org/releases/p11-kit-0.23.1.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency versionFrom="4.4">libtasn1-devel</Dependency>
+                <Dependency>libffi-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>util/crypt/p11-kit/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>p11-kit</Name>
+            <RuntimeDependencies>
+                <Dependency versionFrom="4.4">libtasn1</Dependency>
+                <Dependency>libffi</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="doc">/usr/share/gtk-doc</Path>
+                <Path fileType="doc">/usr/share/p11-kit</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="config">/etc/pkcs11</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>p11-kit-devel</Name>
+            <Summary xml:lang="en">p11-kit için geliştirme dosyaları</Summary>
+            <Summary xml:lang="tr">p11-kit için geliştirme dosyaları.</Summary>
+            <Summary xml:lang="pl">Pliki nagłówkowe do biplioteki p11-kit.</Summary>
+            <RuntimeDependencies>
+                <Dependency release="9">p11-kit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="data">/usr/lib32/pkgconfig</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>p11-kit-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for p11-kit</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency versionFrom="4.4">libtasn1-32bit</Dependency>
+                <Dependency>libffi-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="9">p11-kit</Dependency>
+                <Dependency>libffi-32bit</Dependency>
+                <Dependency>libtasn1-32bit</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="9">
+                <Date>2015-04-28</Date>
+                <Version>0.23.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="8">
+                <Date>2014-12-13</Date>
+                <Version>0.22.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="7">
+                <Date>2014-05-24</Date>
+                <Version>0.20.2</Version>
+                <Comment>Rebuild for gcc.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="6">
+                <Date>2014-04-20</Date>
+                <Version>0.20.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2013-10-26</Date>
+                <Version>0.20.1</Version>
+                <Comment>Version bump</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-07-31</Date>
+                <Version>0.19.3</Version>
+                <Comment>version bump</Comment>
+                <Name>Erdinç Gültekin</Name>
+                <Email>erdincgultekin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-07-26</Date>
+                <Version>0.15.2</Version>
+                <Comment>Move pc files to devel pack,rebuild.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-02-23</Date>
+                <Version>0.15.2</Version>
+                <Comment>Version bump</Comment>
+                <Name>Ertan Güven</Name>
+                <Email>ertan@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-11-02</Date>
+                <Version>0.14</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>gnutls</Name>
+            <Homepage>http://www.gnutls.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>util.crypt</PartOf>
+            <Summary xml:lang="en">GNU TLS Library</Summary>
+            <Summary xml:lang="tr">GNU TLS Kütüphanesi</Summary>
+            <Summary xml:lang="pl">Biblioteka GNU TLS (Transport Layer Security)</Summary>
+            <Description xml:lang="fr">GnuTLS est un projet dont l&apos;objectif est de développer une librairie fournissant une couche de sécurité au dessus d&apos;une couche de transport fiable. Actuellement la librairie GnuTLS implémente les standards proposés par le groupe de travail TLs de l&apos;IETF.</Description>
+            <Description xml:lang="en">gnutls is a project that aims to develop a library which provides a secure layer, over a reliable transport layer. Currently the GnuTLS library implements the proposed standards by the IETF&apos;s TLS working group.</Description>
+            <Description xml:lang="tr">GnuTLS, erişilebilir bir gönderim katmanı üzerinde güvenli katman oluşturmayı amaçlayan  bir projedir. GnuTLS kütüphanesi halen IETF TLS çalışma grubunun öngördüğü standartları uygulamaya geçirmektedir.</Description>
+            <Description xml:lang="es">GnuTLS es un proyecto que apunta al desarrollo de una librería, que facilite una capa segura, a través de una capa de transporte fiable. Actualmente la librería GnuTLS implementa los estándares propuestos del grupo de trabajo de TLS de IETF.</Description>
+            <Description xml:lang="pl">GnuTLS to projekt mający na celu stworzenie biblioteki udostępniającej powłokę bezpieczeństwa ponad powłoką transportową (np. TCP/IP). Aktualnie biblioteka gnuTLS implementuje standardy proponowane przez grupę roboczą IETF TLS.</Description>
+            <Archive type="tarxz" sha1sum="26076d3366e34991997ff02b052d5ea6a21bbcbd">http://mirror.tje.me.uk/pub/mirrors/ftp.gnupg.org/gnutls/v3.3/gnutls-3.3.16.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>gc-devel</Dependency>
+                <Dependency>gmp-devel</Dependency>
+                <Dependency>nettle-devel</Dependency>
+                <Dependency>autogen-devel</Dependency>
+                <Dependency>p11-kit-devel</Dependency>
+                <Dependency>libidn-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency versionFrom="3.4">libtasn1-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>util/crypt/gnutls/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>gnutls</Name>
+            <RuntimeDependencies>
+                <Dependency>zlib</Dependency>
+                <Dependency>libidn</Dependency>
+                <Dependency>gmp</Dependency>
+                <Dependency>nettle</Dependency>
+                <Dependency>autogen</Dependency>
+                <Dependency>p11-kit</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency versionFrom="3.4">libtasn1</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="executable">/usr/bin</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>gnutls-devel</Name>
+            <Summary xml:lang="en">Development files for gnutls</Summary>
+            <Summary xml:lang="tr">gnutls için geliştirme dosyaları</Summary>
+            <Summary xml:lang="pl">Pliki nagłówkowe do gnutls.</Summary>
+            <RuntimeDependencies>
+                <Dependency>nettle-devel</Dependency>
+                <Dependency>p11-kit-devel</Dependency>
+                <Dependency>libtasn1-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency release="12">gnutls</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+                <Path fileType="library">/usr/lib32/pkgconfig</Path>
+                <Path fileType="data">/usr/share/info/gnutls*</Path>
+                <Path fileType="executable">/usr/bin/libgnutls*-config</Path>
+            </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/usr/bin/libgnutls-config" permission="0755" owner="root">libgnutls-config</AdditionalFile>
+                <AdditionalFile target="/usr/bin/libgnutls-extra-config" permission="0755" owner="root">libgnutls-config</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <Package>
+            <Name>gnutls-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for gnutls</Summary>
+            <Summary xml:lang="tr">gnutls için 32-bit paylaşımlı kitaplıklar</Summary>
+            <Summary xml:lang="pl">32-bitowe biblioteki GnuTLS.</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>gmp-32bit</Dependency>
+                <Dependency>zlib-32bit</Dependency>
+                <Dependency>libidn-32bit</Dependency>
+                <Dependency>nettle-32bit</Dependency>
+                <Dependency>p11-kit-32bit</Dependency>
+                <Dependency>libtasn1-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency>libgcc</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+                <Dependency>gmp-32bit</Dependency>
+                <Dependency>zlib-32bit</Dependency>
+                <Dependency>nettle-32bit</Dependency>
+                <Dependency>p11-kit-32bit</Dependency>
+                <Dependency>libtasn1-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="12">
+                <Date>2015-07-13</Date>
+                <Version>3.3.16</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="11">
+                <Date>2015-05-20</Date>
+                <Version>3.3.15</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="10">
+                <Date>2014-12-13</Date>
+                <Version>3.3.11</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="9">
+                <Date>2014-07-06</Date>
+                <Version>3.3.5</Version>
+                <Comment>Version bump and security update(CVE-2014-3466)</Comment>
+                <Name>Vedat Demir</Name>
+                <Email>vedat@pisilinux.org</Email>
+            </Update>
+            <Update release="8">
+                <Date>2014-05-24</Date>
+                <Version>3.3.2</Version>
+                <Comment>Rebuild for gcc.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="7">
+                <Date>2014-05-21</Date>
+                <Version>3.3.2</Version>
+                <Comment>Version bump, rm unneed deps.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="6">
+                <Date>2014-04-20</Date>
+                <Version>3.3.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2014-01-06</Date>
+                <Version>3.2.5</Version>
+                <Comment>Rebuild to fix stripping.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-10-27</Date>
+                <Version>3.2.5</Version>
+                <Comment>Version bump, clean up, enable tests.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-07-30</Date>
+                <Version>3.1.9</Version>
+                <Comment>Rebuild</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-03-04</Date>
+                <Version>3.1.9</Version>
+                <Comment>Version bump</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-11-02</Date>
+                <Version>3.1.3</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>libtasn1</Name>
+            <Homepage>http://www.gnutls.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>util.crypt</PartOf>
+            <Summary xml:lang="en">ASN.1 library used in GNUTLS</Summary>
+            <Summary xml:lang="tr">GNUTLS için kullanılan ASN.1 kütüphanesi</Summary>
+            <Description xml:lang="en">libtasn1 is the ASN.1 library which provides ASN.1 structures parsing capabilities for use with GNUTLS.</Description>
+            <Description xml:lang="tr">libtasn1, ASN.1 yapılarının ayrıştırılmasını sağlayan ve GNUTLS içerisinde kullanılan ASN.1 kütüphanesidir.</Description>
+            <Archive type="targz" sha1sum="7d648928729ffd38de84fac8b94d3ae0558de472">http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.5.tar.gz</Archive>
+            <SourceURI>util/crypt/libtasn1/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libtasn1</Name>
+            <Files>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="executable">/usr/bin</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libtasn1-devel</Name>
+            <Summary xml:lang="en">Development files for libtasn1</Summary>
+            <Summary xml:lang="tr">libtasn1 için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="9">libtasn1</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="data">/usr/lib32/pkgconfig</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libtasn1-32bit</Name>
+            <Summary xml:lang="en">32-bit shared libraries for libtasn1</Summary>
+            <Summary xml:lang="tr">libtasn1 için 32bit kütüphanesi</Summary>
+            <PartOf>emul32</PartOf>
+            <BuildType>emul32</BuildType>
+            <BuildDependencies>
+                <Dependency>glibc-32bit</Dependency>
+            </BuildDependencies>
+            <RuntimeDependencies>
+                <Dependency release="9">libtasn1</Dependency>
+                <Dependency>glibc-32bit</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib32/</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="9">
+                <Date>2015-07-13</Date>
+                <Version>4.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="8">
+                <Date>2015-04-28</Date>
+                <Version>4.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="7">
+                <Date>2014-10-31</Date>
+                <Version>4.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="6">
+                <Date>2014-05-24</Date>
+                <Version>3.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-04-20</Date>
+                <Version>3.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-03-09</Date>
+                <Version>3.3</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-27</Date>
+                <Version>3.3</Version>
+                <Comment>Move pc files to devel pack, rebuild + v.bump</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-10-18</Date>
+                <Version>2.14</Version>
+                <Comment>First release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>nss</Name>
             <Homepage>http://www.mozilla.org/projects/security/pki/nss/</Homepage>
             <Packager>
@@ -14246,6 +14747,77 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>nano</Name>
+            <Homepage>http://www.nano-editor.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv3</License>
+            <IsA>app:console</IsA>
+            <PartOf>editor</PartOf>
+            <Summary xml:lang="en">GNU GPL&apos;d Pico clone with more functionality</Summary>
+            <Summary xml:lang="tr">Konsol ortamında kullanabileceğiniz bir metin düzenleyicidir.</Summary>
+            <Description xml:lang="fr">Nano est un petit éditeur libre et convivial qui a pour but de remplacer Pico, l&apos;éditeur par défaut inclus dans le paquet non-libre Pine. Plutôt que juste copier l&apos;apparence et le ressenti de Pico, nan implémente également certaines fonctionnalité manquantes (ou désactivées par défaut), tel que &quot;rechercher et remplacer&quot; ou &quot;allez à la ligne numéro&quot;.</Description>
+            <Description xml:lang="en">Nano is a small, free and friendly editor which aims to replace Pico, the default editor included in the non-free Pine package. Rather than just copying Pico&apos;s look and feel, nano also implements some missing (or disabled by default) features in Pico, such as &quot;search and replace&quot; and &quot;go to line number&quot;.</Description>
+            <Description xml:lang="tr">Nano özgür olmayan Pine paketinin içindeki metin düzenleme programı olan Pico&apos;nun yerine geçme hedefini güden küçük, özgür ve kullanışlı bir metin düzenleme programıdır. Pico&apos;nun görünüşünü ve işlevini kopyalamaktan çok, Nano aynı zamanda &quot;ara ve değiştir&quot; ve &quot;satır numarasına git&quot; gibi Pico&apos;da olmayan (veya ön tanımlı olarak kapalı) bazı özellikleri sunar.</Description>
+            <Archive type="targz" sha1sum="7ee64425238abb89b7db9721b9ee09ec262f6bb2">http://www.nano-editor.org/dist/v2.3/nano-2.3.5.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>ncurses-devel</Dependency>
+                <Dependency>gettext-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>editor/nano/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>nano</Name>
+            <RuntimeDependencies>
+                <Dependency>ncurses</Dependency>
+                <Dependency>file</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="config">/etc</Path>
+                <Path fileType="localedata">/usr/share/locale</Path>
+                <Path fileType="doc">/usr/share/doc/nano</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="info">/usr/share/info</Path>
+                <Path fileType="data">/usr/share/nano</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="executable">/bin</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-07-11</Date>
+                <Version>2.3.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Vedat Demir</Name>
+                <Email>vedat@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-05-11</Date>
+                <Version>2.3.1</Version>
+                <Comment>Release bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-26</Date>
+                <Version>2.3.1</Version>
+                <Comment>Fix dep, release bump.</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2011-06-27</Date>
+                <Version>2.3.1</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>ConsoleKit2</Name>
             <Homepage>http://freedesktop.org/Software/Hal</Homepage>
             <Packager>
@@ -14257,17 +14829,20 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>system.auth</PartOf>
             <Summary xml:lang="en">A framework for defining and tracking users, login sessions, and seats</Summary>
             <Description xml:lang="en">ConsoleKit is a system daemon for tracking what users are logged into the system and how they interact with the computer (e.g. which keyboard and mouse they use).</Description>
-            <Archive type="tarbz2" sha1sum="290ba7883455bbff4dabe7d7a5d7744ff5ff7682">https://github.com/ConsoleKit2/ConsoleKit2/releases/download/0.9.4/ConsoleKit2-0.9.4.tar.bz2</Archive>
+            <Archive type="tarbz2" sha1sum="7da8ee17604050844027022e5600d297942530eb">https://github.com/ConsoleKit2/ConsoleKit2/releases/download/0.9.5/ConsoleKit2-0.9.5.tar.bz2</Archive>
             <BuildDependencies>
                 <Dependency>acl-devel</Dependency>
                 <Dependency>pam-devel</Dependency>
                 <Dependency>dbus-devel</Dependency>
-                <Dependency>udev-devel</Dependency>
+                <Dependency>eudev-devel</Dependency>
                 <Dependency>zlib-devel</Dependency>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
                 <Dependency>polkit-devel</Dependency>
                 <Dependency>dbus-glib-devel</Dependency>
+                <Dependency>libxslt</Dependency>
+                <Dependency>xmlto</Dependency>
+                <Dependency>util-linux</Dependency>
             </BuildDependencies>
             <SourceURI>system/auth/ConsoleKit/pspec.xml</SourceURI>
         </Source>
@@ -14281,7 +14856,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>glib2</Dependency>
                 <Dependency>libX11</Dependency>
                 <Dependency>polkit</Dependency>
-                <Dependency>libudev</Dependency>
+                <Dependency>eudev</Dependency>
                 <Dependency>dbus-glib</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -14312,7 +14887,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">ConsoleKit için geliştirme dosyaları</Summary>
             <PartOf>system.devel</PartOf>
             <RuntimeDependencies>
-                <Dependency release="10">ConsoleKit</Dependency>
+                <Dependency release="11">ConsoleKit</Dependency>
                 <Dependency>dbus-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -14321,6 +14896,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="11">
+                <Date>2015-07-13</Date>
+                <Version>0.9.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
             <Update release="10">
                 <Date>2015-06-16</Date>
                 <Version>0.9.4</Version>
@@ -14389,289 +14971,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Version>0.4.5</Version>
                 <Comment>First release</Comment>
                 <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>udev</Name>
-            <Homepage>http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:console</IsA>
-            <PartOf>system.base</PartOf>
-            <Summary xml:lang="en">Linux dynamic and persistent device naming support</Summary>
-            <Summary xml:lang="tr">Linux dinamik ve sürekli aygıt isimlendirme desteği (kernel dışındaki devfs)</Summary>
-            <Description xml:lang="fr">udev permet aux utilisateurs Linux d&apos;avoir un répertoire /dev dynamique et donne la possibilité d&apos;avoir des noms de périphériques persistants.</Description>
-            <Description xml:lang="en">udev allows Linux users to have a dynamic /dev directory and it provides the ability to have persistent device names.</Description>
-            <Description xml:lang="tr">udev linux kullanıcılarının dinamik /dev dizinine sahip olmalarına olanek verir ve tutarlı cihaz isimleri almasını sağlar.</Description>
-            <Description xml:lang="de">udev ermöglicht Linux Benutzern ein dynamisches /dev Verzeichnis und beständige Gerätenamen</Description>
-            <Archive type="tarxz" sha1sum="3436d5829876010e0747b6bf6e7dcbe365e2e5ef">http://www.freedesktop.org/software/systemd/systemd-214.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>glib2</Dependency>
-                <Dependency>gperf</Dependency>
-                <Dependency>acl-devel</Dependency>
-                <Dependency>libkmod-devel</Dependency>
-                <Dependency>libblkid-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>system/base/udev/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>udev</Name>
-            <RuntimeDependencies>
-                <Dependency release="16">libudev</Dependency>
-                <Dependency>acl</Dependency>
-                <Dependency>libkmod</Dependency>
-                <Dependency>libblkid</Dependency>
-                <Dependency>util-linux</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/bin</Path>
-                <Path fileType="executable">/sbin</Path>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="executable">/usr/sbin</Path>
-                <Path fileType="executable">/lib/udev</Path>
-                <Path fileType="library">/lib</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="config">/etc</Path>
-                <Path fileType="config">/usr/lib/tmpfiles.d/udev.conf</Path>
-                <Path fileType="data">/run/udev</Path>
-                <Path fileType="data">/lib/systemd</Path>
-                <Path fileType="data">/etc/udev/rules.d</Path>
-                <Path fileType="data">/lib/udev/rules.d</Path>
-                <Path fileType="data">/usr/share/dbus-1/services</Path>
-                <Path fileType="data">/usr/share/bash-completion/completions</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="man">/usr/share/man</Path>
-            </Files>
-            <Provides>
-                <COMAR script="package.py">System.Package</COMAR>
-            </Provides>
-            <AdditionalFiles>
-                <AdditionalFile target="/usr/lib/tmpfiles.d/udev.conf" permission="0644" owner="root">tmpfiles.conf</AdditionalFile>
-            </AdditionalFiles>
-        </Package>
-        <Package>
-            <Name>udev-devel</Name>
-            <Summary xml:lang="en">Development files for udev</Summary>
-            <PartOf>system.devel</PartOf>
-            <RuntimeDependencies>
-                <Dependency release="16">udev</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include/systemd/sd-daemon.h</Path>
-                <Path fileType="data">/usr/lib32/pkgconfig/libsystemd-daemon.pc</Path>
-                <Path fileType="data">/usr/lib/pkgconfig/libsystemd-daemon.pc</Path>
-                <Path fileType="data">/usr/share/pkgconfig/udev.pc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libudev</Name>
-            <Summary xml:lang="en">Dynamic library to access udev device information</Summary>
-            <Summary xml:lang="tr">udev aygıt bilgilerini sunan kitaplık</Summary>
-            <Files>
-                <Path fileType="library">/usr/lib/libudev*</Path>
-                <Path fileType="library">/lib/libudev*</Path>
-            </Files>
-            <Conflicts>
-                <Package releaseTo="3">udev</Package>
-            </Conflicts>
-        </Package>
-        <Package>
-            <Name>libudev-devel</Name>
-            <Summary xml:lang="en">Development files for libudev</Summary>
-            <Summary xml:lang="tr">libudev için geliştirme dosyaları</Summary>
-            <PartOf>system.devel</PartOf>
-            <RuntimeDependencies>
-                <Dependency release="16">udev</Dependency>
-                <Dependency release="16">libudev</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include/libudev.h</Path>
-                <Path fileType="data">/usr/lib/pkgconfig/libudev.pc</Path>
-                <Path fileType="data">/usr/lib32/pkgconfig/libudev.pc</Path>
-                <Path fileType="data">/usr/share/gtk-doc/html/libudev</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libgudev1</Name>
-            <Summary xml:lang="en">Libraries for adding libudev support to applications that use glib</Summary>
-            <Summary xml:lang="tr">glib kullanan uygulamalara libudev desteği eklemek için kullanılan kitaplık</Summary>
-            <RuntimeDependencies>
-                <Dependency>glib2</Dependency>
-                <Dependency>libudev</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib/libgudev*</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libgudev1-devel</Name>
-            <Summary xml:lang="en">Development files for libgudev1</Summary>
-            <Summary xml:lang="tr">libgudev1 için geliştirme dosyaları</Summary>
-            <PartOf>system.devel</PartOf>
-            <RuntimeDependencies>
-                <Dependency>libudev-devel</Dependency>
-                <Dependency release="16">libgudev1</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include/gudev-1.0</Path>
-                <Path fileType="data">/usr/lib/pkgconfig/gudev-1.0*</Path>
-                <Path fileType="data">/usr/lib32/pkgconfig/gudev-1.0*</Path>
-                <Path fileType="data">/usr/share/gir-1.0/GUdev-1.0.gir</Path>
-                <Path fileType="doc">/usr/share/gtk-doc/html/gudev</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libudev-32bit</Name>
-            <Summary xml:lang="en">32-bit shared libraries for libudev</Summary>
-            <Summary xml:lang="tr">udev için 32-bit paylaşımlı kitaplıklar</Summary>
-            <PartOf>emul32</PartOf>
-            <BuildType>emul32</BuildType>
-            <BuildDependencies>
-                <Dependency>libkmod-32bit</Dependency>
-                <Dependency>libblkid-32bit</Dependency>
-            </BuildDependencies>
-            <RuntimeDependencies>
-                <Dependency release="16">libudev</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib32/libudev*</Path>
-                <Path fileType="library">/lib32/libudev*</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>libgudev1-32bit</Name>
-            <Summary xml:lang="en">32-bit shared libraries for libgudev1</Summary>
-            <PartOf>emul32</PartOf>
-            <BuildType>emul32</BuildType>
-            <BuildDependencies>
-                <Dependency>glib2-32bit</Dependency>
-            </BuildDependencies>
-            <RuntimeDependencies>
-                <Dependency release="16">libgudev1</Dependency>
-                <Dependency release="16">libudev-32bit</Dependency>
-                <Dependency>glib2-32bit</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib32/libgudev*</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="16">
-                <Date>2014-07-01</Date>
-                <Version>214</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="15">
-                <Date>2014-05-11</Date>
-                <Version>212</Version>
-                <Comment>Add upstream patches.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="14">
-                <Date>2014-03-28</Date>
-                <Version>212</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="13">
-                <Date>2014-03-12</Date>
-                <Version>211</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="12">
-                <Date>2014-03-07</Date>
-                <Version>210</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="11">
-                <Date>2014-02-26</Date>
-                <Version>210</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="10">
-                <Date>2014-02-20</Date>
-                <Version>209</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="9">
-                <Date>2014-01-11</Date>
-                <Version>208</Version>
-                <Comment>Add tmpfiles.conf, git updates.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="8">
-                <Date>2013-10-30</Date>
-                <Version>208</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="7">
-                <Date>2013-09-10</Date>
-                <Version>206</Version>
-                <Comment>Add /run/udev directory.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="6">
-                <Date>2013-08-13</Date>
-                <Version>206</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2013-07-28</Date>
-                <Version>204</Version>
-                <Comment>Fix pc files for emul32.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2013-06-13</Date>
-                <Version>204</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-03-30</Date>
-                <Version>200</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-01-24</Date>
-                <Version>197</Version>
-                <Comment>Version bump, add emul32</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-10-11</Date>
-                <Version>194</Version>
-                <Comment>First release</Comment>
-                <Name>Erdem Artan</Name>
                 <Email>admins@pisilinux.org</Email>
             </Update>
         </History>
