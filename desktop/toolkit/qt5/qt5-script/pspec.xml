@@ -14,30 +14,35 @@
         <Archive sha1sum="91ca6d9c6a017ed47d9c731867a03c5be1f3ea88" type="tarxz">http://download.qt.io/official_releases/qt/5.4/5.4.2/submodules/qtscript-opensource-src-5.4.2.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>libgcc</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>qt5-script</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="library">/usr/lib/qt5</Path>
             <Path fileType="library">/usr/share/licenses</Path>
         </Files>
-        <RuntimeDependencies>
-            <Dependency>qt5-base</Dependency>
-        </RuntimeDependencies>
+
     </Package>
 
     <Package>
         <Name>qt5-script-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">qt5-script</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
             <Path fileType="headers">/usr/include/qt5</Path>
         </Files>
-        <RuntimeDependencies>
-            <Dependency>qt5-base-devel</Dependency>
-        </RuntimeDependencies>
     </Package>
 
     <History>

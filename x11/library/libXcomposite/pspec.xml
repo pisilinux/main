@@ -14,12 +14,17 @@
         <Description>libXcomposite is the X Composite library. Compositing allows modification of the window system's base elements like window borders, window buttons and window titlebars.</Description>
         <Archive sha1sum="75fd0b996e56e12db1d84e9b63549c5c3f2631ca" type="tarbz2">mirrors://xorg/individual/lib/libXcomposite-0.4.4.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+	    <Dependency>libXfixes-devel</Dependency>
+            <Dependency>util-macros</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>libXcomposite</Name>
+        <RuntimeDependencies>
+            <Dependency>libX11</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -48,10 +53,12 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libX11-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">libXcomposite</Dependency>
             <Dependency>libX11-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>

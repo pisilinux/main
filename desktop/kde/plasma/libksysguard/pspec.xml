@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libksysguard</Name>
+        <Homepage>http://www.kde.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <IsA>library</IsA>
+	<IsA>app:console</IsA>
+        <Summary>Task management and system monitoring library</Summary>
+        <Description>Task management and system monitoring library</Description>
+        <Archive sha1sum="062ba33ebf09a41afe30ced2ef3e5552f0378806" type="tarxz">http://download.kde.org/stable/plasma/5.3.2/libksysguard-5.3.2.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>python3</Dependency>
+            <Dependency>kdoctools-devel</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>            
+	    <Dependency>extra-cmake-modules</Dependency>	    
+        </BuildDependencies>        
+        <Patches>
+	  <!--<Patch level="1">libksysguard_kauth.diff</Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libksysguard</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>libXres</Dependency>
+            <Dependency>qt5-webkit</Dependency>
+            <Dependency>qt5-x11extras</Dependency>
+            <Dependency>kwindowsystem</Dependency>
+            <Dependency>kconfigwidgets</Dependency>
+            <Dependency>kwidgetsaddons</Dependency>
+	    <Dependency>kconfig</Dependency>
+	    <Dependency>kauth</Dependency>
+	    <Dependency>kcoreaddons</Dependency>
+	    <Dependency>kdelibs4-support</Dependency>
+	    <Dependency>ki18n</Dependency>
+	    <Dependency>plasma-framework</Dependency>	
+        </RuntimeDependencies>
+        <Files>
+	    <Path fileType="config">/etc</Path>
+            <Path fileType="data">/usr/share</Path>
+	    <Path fileType="localedata">/usr/share/locale</Path>
+	    <Path fileType="library">/usr/lib/qt5</Path>
+	    <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <Replaces>
+          <Package>kde-workspace</Package>
+        </Replaces>
+        <Conflicts>
+          <Package>kde-workspace</Package>
+        </Conflicts>  
+    </Package>
+    
+    <Package>
+        <Name>libksysguard-devel</Name>
+	<Summary>Development files for libksysguard</Summary>
+        <RuntimeDependencies>
+	    <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">libksysguard</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+	    <Path fileType="config">/usr/lib/pkgconfig</Path>
+        </Files>                
+        <Replaces>
+          <Package>kde-workspace-devel</Package>
+        </Replaces>
+        <Conflicts>
+          <Package>kde-workspace-devel</Package>
+        </Conflicts> 
+    </Package>
+
+    <History>
+        <Update release="2">
+            <Date>2015-07-01</Date>
+            <Version>5.3.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2015-06-12</Date>
+            <Version>5.3.1</Version>
+            <Comment>First Release.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>                
+    </History>
+</PISI>
