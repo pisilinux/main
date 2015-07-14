@@ -11,7 +11,7 @@
         <License>MIT</License>
         <Summary>X.Org X Server</Summary>
         <Description>X server is the main application that allows a graphical interface.</Description>
-        <Archive sha1sum="490118810a54e91c8814245c99d6285caf4985dd" type="tarbz2">mirrors://xorg/individual/xserver/xorg-server-1.17.1.tar.bz2</Archive>
+        <Archive sha1sum="56ac29a82b99bcf4c7ba2fca41a44cfa18748262" type="tarbz2">mirrors://xorg/individual/xserver/xorg-server-1.17.2.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>font-util</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
@@ -43,8 +43,17 @@
             <Dependency>xcb-util-wm-devel</Dependency>
             <Dependency>xcb-util-keysyms-devel</Dependency>
             <Dependency>xcb-util-renderutil-devel</Dependency>
+            <Dependency>util-macros</Dependency>
+            <Dependency>xtrans</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>libunwind-devel</Dependency>
+            <Dependency>libXau-devel</Dependency>
         </BuildDependencies>
         <Patches>
+            <Patch level="1">0001-dix-Add-unaccelerated-valuators-to-the-ValuatorMask.patch</Patch>
+            <Patch level="1">0002-dix-hook-up-the-unaccelerated-valuator-masks.patch</Patch>
+            <Patch>autoconfig-sis.patch</Patch>
             <Patch level="1">xorg-server-1.17.1-add_prime_support-1.patch</Patch>
             <Patch level="1">default-module-path.patch</Patch>
             <Patch level="1">ubuntu/001_fedora_extramodes.patch</Patch>
@@ -84,6 +93,9 @@
         </Replaces>
         <IsA>app:console</IsA>
         <RuntimeDependencies>
+            <Dependency>libXau</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>libXdmcp</Dependency>
             <Dependency>mesa</Dependency>
             <Dependency>libdrm</Dependency>
             <Dependency>pixman</Dependency>
@@ -149,6 +161,9 @@
         <IsA>app:console</IsA>
         <Summary>Run X clients under wayland</Summary>
         <RuntimeDependencies>
+            <Dependency>libXau</Dependency>
+            <Dependency>libXdmcp</Dependency>
+            <Dependency>libunwind</Dependency>
             <Dependency>mesa</Dependency>
             <Dependency>pixman</Dependency>
             <Dependency>libdrm</Dependency>
@@ -168,6 +183,10 @@
         <IsA>app:console</IsA>
         <Summary>Nested X Server</Summary>
         <RuntimeDependencies>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXau</Dependency>
+            <Dependency>libxcb</Dependency>
+            <Dependency>libXdmcp</Dependency>
             <Dependency>xorg-server-common</Dependency>
             <Dependency>mesa</Dependency>
             <Dependency>xcb-util</Dependency>
@@ -195,6 +214,8 @@
         <IsA>app:console</IsA>
         <Summary>Virtual Framebuffer X Server</Summary>
         <RuntimeDependencies>
+            <Dependency>libXau</Dependency>
+            <Dependency>libXdmcp</Dependency>
             <Dependency>xorg-server-common</Dependency>
             <Dependency>libXfont</Dependency>
             <Dependency>pixman</Dependency>
@@ -215,6 +236,9 @@
         <Name>xorg-server-xnest</Name>
         <Summary>A nested X server that runs as an X application</Summary>
         <RuntimeDependencies>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXau</Dependency>
+            <Dependency>libXdmcp</Dependency>
             <Dependency>libXfont</Dependency>
             <Dependency>libXext</Dependency>
             <Dependency>libunwind</Dependency>
@@ -246,6 +270,13 @@
     </Package>
 
     <History>
+        <Update release="21">
+            <Date>2015-07-14</Date>
+            <Version>1.17.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
       <Update release="20">
             <Date>2015-05-17</Date>
             <Version>1.17.1</Version>

@@ -10,9 +10,8 @@ from pisi.actionsapi import get
 
 def setup():
 #    shelltools.chmod("hw/vnc/symlink-vnc.sh")
-
-   
     autotools.autoreconf("-fi")
+
     autotools.configure("--enable-install-libxf86config \
                          --disable-systemd-logind \
                          --enable-aiglx \
@@ -28,7 +27,7 @@ def setup():
                          --disable-config-hal \
                          --enable-xfree86-utils \
                          --enable-xorg \
-                         --enable-dmx \
+                         --disable-dmx \
                          --enable-xvfb \
                          --enable-xnest \
                          --enable-kdrive \
