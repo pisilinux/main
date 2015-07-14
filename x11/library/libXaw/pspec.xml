@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>libXmu</Name>
+        <Name>libXaw</Name>
         <Homepage>http://www.x.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
@@ -10,24 +10,29 @@
         </Packager>
         <License>MIT</License>
         <IsA>library</IsA>
-        <Summary>X.Org Xmu library</Summary>
-        <Description>libXmu provides a set of miscellaneous utility convenience functions for X libraries to use.</Description>
-        <Archive sha1sum="7e6aeef726743d21aa272c424e7d7996e92599eb" type="tarbz2">mirrors://xorg/individual/lib/libXmu-1.1.2.tar.bz2</Archive>
+        <Summary>X Athena Widgets Library</Summary>
+        <Description>Xaw is a widget set based on the X Toolkit Intrinsics (Xt) Library.</Description>
+        <Archive sha1sum="6919476379accaf21f2331004e5cfa7939a6786b" type="tarbz2">mirrors://xorg/individual/lib/libXaw-1.0.12.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>util-macros</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXmu-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
             <Dependency>libXt-devel</Dependency>
+            <Dependency>util-macros</Dependency>
             <Dependency>libICE-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
-            <Dependency>libXext-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>libXmu</Name>
+        <Name>libXaw</Name>
         <RuntimeDependencies>
-            <Dependency>libXt</Dependency>
-	    <Dependency>libX11</Dependency>
+            <Dependency>libX11</Dependency>
             <Dependency>libXext</Dependency>
+            <Dependency>libXmu</Dependency>
+            <Dependency>libXpm</Dependency>
+            <Dependency>libXt</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
@@ -36,36 +41,44 @@
     </Package>
 
     <Package>
-        <Name>libXmu-devel</Name>
-        <Summary>Development files for libXmu</Summary>
+        <Name>libXaw-devel</Name>
+        <Summary>Development files for libXaw</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">libXmu</Dependency>
-            <Dependency>libXt-devel</Dependency>
+            <Dependency release="current">libXaw</Dependency>
             <Dependency>libXext-devel</Dependency>
+            <Dependency>libXmu-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/X11</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
             <Path fileType="data">/usr/lib32/pkgconfig</Path>
+            <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
 
     <Package>
-        <Name>libXmu-32bit</Name>
+        <Name>libXaw-32bit</Name>
         <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for libXmu</Summary>
+        <Summary>32-bit shared libraries for libSM</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
-            <Dependency>libXt-32bit</Dependency>
             <Dependency>libXext-32bit</Dependency>
+            <Dependency>libXmu-32bit</Dependency>
+            <Dependency>libXpm-32bit</Dependency>
+            <Dependency>libXt-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
             <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
-            <Dependency release="current">libXmu</Dependency>
-            <Dependency>glibc-32bit</Dependency>
+            <Dependency release="current">libXaw</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libXmu-32bit</Dependency>
+            <Dependency>libXpm-32bit</Dependency>
             <Dependency>libXt-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
-            <Dependency>libXext-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
@@ -75,59 +88,59 @@
     <History>
         <Update release="8">
             <Date>2014-05-16</Date>
-            <Version>1.1.2</Version>
+            <Version>1.0.12</Version>
             <Comment>Release bump.</Comment>
             <Name>Marcin Bojara</Name>
             <Email>marcin@pisilinux.org</Email>
         </Update>
         <Update release="7">
             <Date>2014-03-07</Date>
-            <Version>1.1.2</Version>
+            <Version>1.0.12</Version>
             <Comment>Version bump.</Comment>
             <Name>Yusuf Aydemir</Name>
             <Email>yusuf.aydemir@pisilinux.org</Email>
         </Update>
         <Update release="6">
             <Date>2013-10-07</Date>
-            <Version>1.1.1</Version>
-            <Comment>Revert back to 1.1.1.</Comment>
+            <Version>1.0.11</Version>
+            <Comment>Revert back to 1.0.11.</Comment>
             <Name>Serdar Soytetir</Name>
             <Email>kaptan@pisilinux.org</Email>
         </Update>
         <Update release="5">
             <Date>2013-09-12</Date>
-            <Version>1.1.2</Version>
+            <Version>1.0.12</Version>
             <Comment>Version bump.</Comment>
             <Name>Marcin Bojara</Name>
             <Email>marcin@pisilinux.org</Email>
         </Update>
         <Update release="4">
             <Date>2013-08-25</Date>
-            <Version>1.1.1</Version>
+            <Version>1.0.11</Version>
             <Comment>Release bump.</Comment>
             <Name>Marcin Bojara</Name>
             <Email>marcin@pisilinux.org</Email>
         </Update>
         <Update release="3">
             <Date>2013-07-27</Date>
-            <Version>1.1.1</Version>
+            <Version>1.0.11</Version>
             <Comment>Move pc files to devel pack, rebuild</Comment>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Update>
         <Update release="2">
             <Date>2013-07-27</Date>
-            <Version>1.1.1</Version>
+            <Version>1.0.11</Version>
             <Comment>Move .pc files to devel package</Comment>
             <Name>Fatih Turgel</Name>
             <Email>hitaf@pisilinux.org</Email>
         </Update>
         <Update release="1">
-            <Date>2012-06-01</Date>
-            <Version>1.1.1</Version>
+            <Date>2012-11-22</Date>
+            <Version>1.0.11</Version>
             <Comment>First release</Comment>
-            <Name>Erdem Artan</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
         </Update>
     </History>
 </PISI>
