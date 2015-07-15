@@ -56,8 +56,8 @@ def install():
     pisitools.dodir("/pub/scm")
 
     # emacs support
-    autotools.install("-C contrib/emacs")
-    pisitools.insinto("/usr/share/doc/emacs-git", "contrib/emacs/README")
+    #autotools.install("-C contrib/emacs")
+    #pisitools.insinto("/usr/share/doc/emacs-git", "contrib/emacs/README")
 
     # Some docs
     pisitools.dodoc("README", "COPYING", "Documentation/SubmittingPatches")
