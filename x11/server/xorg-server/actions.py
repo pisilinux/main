@@ -27,7 +27,7 @@ def setup():
                          --disable-config-hal \
                          --enable-xfree86-utils \
                          --enable-xorg \
-                         --disable-dmx \
+                         --enable-dmx \
                          --enable-xvfb \
                          --enable-xnest \
                          --enable-kdrive \
