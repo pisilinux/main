@@ -1,0 +1,143 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libva</Name>
+        <Homepage>http://www.freedesktop.org/wiki/Software/vaapi</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>Video Acceleration (VA) API for Linux</Summary>
+        <Description>libva is a library providing the VA API video acceleration API.</Description>
+        <Archive sha1sum="b315a86fcd3bd1e073e2c1b62416550885cd7420" type="tarbz2">http://www.freedesktop.org/software/vaapi/releases/libva/libva-1.5.1.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>libdrm-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libva</Name>
+        <RuntimeDependencies>
+            <Dependency>libX11</Dependency>  
+            <Dependency>libdrm</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libXfixes</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>wayland-client</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libva-devel</Name>
+        <Summary>Development files for libva</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libva</Dependency>
+            <Dependency>wayland-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libva-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libva</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libdrm-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libXfixes-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">libva</Dependency>
+            <Dependency>libdrm-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libXfixes-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+      <Update release="8">
+            <Date>2015-05-10</Date>
+            <Version>1.5.1</Version>
+            <Comment>Version bump</Comment>
+            <Name>Burak Ertürk</Name>
+            <Email>burakerturk@pisilinux.org</Email>
+      </Update>
+      <Update release="7">
+            <Date>2015-01-21</Date>
+            <Version>1.5.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-05-16</Date>
+            <Version>1.3.1</Version>
+            <Comment>Version bump</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-04-23</Date>
+            <Version>1.3.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-02-20</Date>
+            <Version>1.2.1</Version>
+            <Comment>Rebuild Unused</Comment>
+            <Name>Varol Maksutoğlu</Name>
+            <Email>waroi@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-10-07</Date>
+            <Version>1.2.1</Version>
+            <Comment>Version bump, clean actions.py.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-08-25</Date>
+            <Version>1.1.0</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-10-10</Date>
+            <Version>1.1.0</Version>
+            <Comment>First release</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
