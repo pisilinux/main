@@ -11,13 +11,15 @@ from pisi.actionsapi import get
 WorkDir="rsync-%s" % get.srcVERSION().replace('_','')
 
 def setup():
-    autotools.configure("--without-included-zlib")
+    autotools.configure("--without-included-zlib \
+                         --with-included-popt=no \
+                         --disable-debug")
 
 def build():
     autotools.make()
 
-def check():
-    autotools.make("check")
+#def check():
+#    autotools.make("test")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
