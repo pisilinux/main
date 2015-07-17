@@ -6154,10 +6154,22 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Description xml:lang="en">rsync is a tool to keep local copies of remote files in sync (i.e. make sure local files are exact copies of remote files).</Description>
             <Description xml:lang="tr">rsync, uzaktaki dosyaları senkronize tutan bir dosya transfer uygulamasıdır.</Description>
             <Archive type="targz" sha1sum="c84faba04f721d393feccfa0476bfeed9b5b5250">http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>acl-devel</Dependency>
+                <Dependency>attr-devel</Dependency>
+                <Dependency>popt-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+            </BuildDependencies>
             <SourceURI>network/share/rsync/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>rsync</Name>
+            <RuntimeDependencies>
+                <Dependency>acl</Dependency>
+                <Dependency>attr</Dependency>
+                <Dependency>popt</Dependency>
+                <Dependency>zlib</Dependency>
+            </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
@@ -6862,7 +6874,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </AdditionalFiles>
             <BuildDependencies>
                 <Dependency>intltool</Dependency>
-                <Dependency>dhclient</Dependency>
                 <Dependency>ppp-devel</Dependency>
                 <Dependency>nss-devel</Dependency>
                 <Dependency>newt-devel</Dependency>
@@ -6899,8 +6910,8 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>polkit</Dependency>
                 <Dependency>readline</Dependency>
                 <Dependency>dbus-glib</Dependency>
-                <Dependency>libuuid</Dependency>
-                <Dependency>libgudev1</Dependency>
+                <Dependency>libutil-linux</Dependency>
+                <Dependency>eudev</Dependency>
                 <Dependency>nss</Dependency>
                 <Dependency>newt</Dependency>
                 <Dependency>ppp</Dependency>
@@ -7333,7 +7344,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>gdk-pixbuf</Dependency>
                 <Dependency>NetworkManager</Dependency>
                 <Dependency>at-spi2-core</Dependency>
-                <Dependency>gnome-bluetooth</Dependency>
                 <Dependency>dbus</Dependency>
                 <Dependency>glib2</Dependency>
                 <Dependency>dbus-glib</Dependency>
@@ -11013,7 +11023,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>xorg-app</Dependency>
                 <Dependency>libXpm-devel</Dependency>
                 <Dependency>ncurses-devel</Dependency>
-                <Dependency>libx11-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
             </BuildDependencies>
             <Patches>
                 <Patch>16colors.txt.diff</Patch>
@@ -11034,7 +11044,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>xorg-app</Dependency>
                 <Dependency>libXpm</Dependency>
                 <Dependency>ncurses</Dependency>
-                <Dependency>libx11</Dependency>
+                <Dependency>libX11</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
@@ -11083,6 +11093,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Description xml:lang="tr">Vte paketi, terminal emülatörleri için termcap uygulama dosyası içerir.</Description>
             <Archive type="tarxz" sha1sum="b0af0701ef9d6c7ede9c578366b12a70ac47ab66">mirrors://gnome/vte/0.28/vte-0.28.2.tar.xz</Archive>
             <BuildDependencies>
+                <Dependency>gobject-introspection-devel</Dependency>
                 <Dependency>fontconfig-devel</Dependency>
                 <Dependency>gtk2-devel</Dependency>
                 <Dependency>pango-devel</Dependency>
@@ -11107,6 +11118,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>vte</Name>
             <IsA>library</IsA>
             <RuntimeDependencies>
+                <Dependency>gobject-introspection</Dependency>
                 <Dependency>gtk2</Dependency>
                 <Dependency>atk</Dependency>
                 <Dependency>cairo</Dependency>
@@ -46395,6 +46407,8 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">GIT protokolü hizmeti</Summary>
             <IsA>service</IsA>
             <RuntimeDependencies>
+                <Dependency>zlib</Dependency>
+                <Dependency>libpcre</Dependency>
                 <Dependency version="2.4.4">git</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -46423,38 +46437,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Files>
                 <Path fileType="library">/usr/lib/perl5</Path>
                 <Path fileType="man">/usr/share/man/man3/Git.3pm</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>git-svn</Name>
-            <Summary xml:lang="en">Git tools for importing Subversion repositories</Summary>
-            <Summary xml:lang="tr">Subversion depolarıyla etkileşmek için gerekli Git araçları</Summary>
-            <IsA>app:console</IsA>
-            <RuntimeDependencies>
-                <Dependency version="2.4.4">git</Dependency>
-                <Dependency>subversion</Dependency>
-                <Dependency>perl-Term-ReadKey</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/libexec/git-core/*svn*</Path>
-                <Path fileType="man">/usr/share/man/man1/*svn*.1*</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>git-cvs</Name>
-            <Summary xml:lang="en">Git tools for importing CVS repositories</Summary>
-            <Summary xml:lang="tr">CVS depolarıyla etkileşmek için gerekli Git araçları</Summary>
-            <IsA>app:console</IsA>
-            <RuntimeDependencies>
-                <Dependency version="2.4.4">git</Dependency>
-                <Dependency>cvs</Dependency>
-                <Dependency>cvsps</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/libexec/git-core/*cvs*</Path>
-                <Path fileType="executable">/usr/bin/git-cvsserver</Path>
-                <Path fileType="man">/usr/share/man/man1/*cvs*.1*</Path>
-                <Path fileType="man">/usr/share/man/man7/*cvs*.7*</Path>
             </Files>
         </Package>
         <Package>
