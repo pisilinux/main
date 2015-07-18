@@ -9,6 +9,9 @@ from pisi.actionsapi import pisitools
 
 def setup():
     autotools.configure()
+    
+    # for remove unused
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
