@@ -13,17 +13,11 @@ def setup():
     shelltools.makedirs("%s/build" %get.workDIR())
 
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -DKACTIVITIES_ENABLE_EXCEPTIONS=OFF \
-                          -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-                          -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
-                          -DQML_INSTALL_DIR=lib/qt5/qml \
+                          -DCMAKE_INSTALL_PREFIX=/usr \
                           -DLIB_INSTALL_DIR=lib \
-                          -DSYSCONF_INSTALL_DIR=/etc \
+                          -DQML_INSTALL_DIR=lib/qt5/qml \
                           -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-                          -DLOCALE_INSTALL_DIR=/usr/share/locale \
                           -DBUILD_TESTING=OFF")
-
 def build():
     cmaketools.make()
 
