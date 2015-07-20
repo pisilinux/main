@@ -10,7 +10,8 @@ from pisi.actionsapi import shelltools
 
 def setup():
     shelltools.system("./bootstrap.sh --with-toolset=gcc --with-icu --with-python=/usr/bin/python2.7 --prefix=%s/usr" % get.installDIR())
-    shelltools.echo("project-config.jam","using mpi ;")
+    #shelltools.echo("project-config.jam","using mpi ;")
+    #shelltools.echo("project-config.jam","--without-mpi ;")
 
 def build():
     shelltools.system("./b2 \
