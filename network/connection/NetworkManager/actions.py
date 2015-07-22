@@ -47,6 +47,8 @@ def setup():
                          --with-resolvconf=/etc/resolv.default.conf \
                          --with-iptables=/usr/sbin/iptables \
                          --with-dnsmasq=/usr/sbin/dnsmasq \
+                         --with-systemdsystemunitdir=no \
+                         --with-nmtui \
                          --localstatedir=/var \
                          --sysconfdir=/etc \
                          --libexecdir=/usr/lib/NetworkManager \
