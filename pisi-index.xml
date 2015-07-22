@@ -4821,7 +4821,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>gobject-introspection-devel</Dependency>
                 <Dependency>libxml2-devel</Dependency>
                 <Dependency>ghostscript-devel</Dependency>
-                <Dependency>clutter</Dependency>
             </BuildDependencies>
             <SourceURI>multimedia/video/gstreamer-next/pspec.xml</SourceURI>
         </Source>
@@ -8597,7 +8596,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">D-Bus üzerinden yapılandırmaya izin veren, gelişmiş bir ağ yönetim altyapısı</Summary>
             <Description xml:lang="en">NetworkManager attempts to keep an active network connection available at all times.</Description>
             <Description xml:lang="tr">NetworkManager, etkin bir bağlantı kurmak ve onu sürekli ayakta tutmak üzere tasarlanmış, D-Bus ve UDEV teknolojilerini kullanan bir ağ yönetim altyapısıdır.</Description>
-            <Archive type="tarxz" sha1sum="e6183286935dd87a4885f187e533729a6d6a8e79">https://download.gnome.org/sources/NetworkManager/1.0/NetworkManager-1.0.2.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="bb12da39651f1477278ba4f2d5d0fac17a99bb61">https://download.gnome.org/sources/NetworkManager/1.0/NetworkManager-1.0.4.tar.xz</Archive>
             <AdditionalFiles>
                 <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
             </AdditionalFiles>
@@ -8625,7 +8624,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency versionFrom="0.9.2">ConsoleKit-devel</Dependency>
             </BuildDependencies>
             <Patches>
-                <Patch>0001-dns-Fix-falling-back-in-the-resolv.conf-methods.patch</Patch>
                 <Patch>disable_set_hostname.patch</Patch>
             </Patches>
             <SourceURI>network/connection/NetworkManager/pspec.xml</SourceURI>
@@ -8696,7 +8694,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <RuntimeDependencies>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>dbus-glib-devel</Dependency>
-                <Dependency release="10">NetworkManager</Dependency>
+                <Dependency release="11">NetworkManager</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -8704,6 +8702,16 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="11">
+                <Date>2015-07-22</Date>
+                <Version>1.0.4</Version>
+                <Comment>fixed missing dep and added rules files</Comment>
+                <Name>Ayhan Yalçınsoy</Name>
+                <Email>ayhanyalcinsoy@pisilinux.org</Email>
+                <Requires>
+                    <Action package="NetworkManager">systemRestart</Action>
+                </Requires>
+            </Update>
             <Update release="10">
                 <Date>2015-06-14</Date>
                 <Version>1.0.2</Version>
@@ -9089,7 +9097,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">NetworkManager için güçlü bir grafik arayüzü</Summary>
             <Description xml:lang="en">network-manager-applet is a powerful graphical frontend to NetworkManager.</Description>
             <Description xml:lang="tr">network-manager-applet, NetworkManager için GTK+ arayüz kitaplığı kullanılarak yazılmış güçlü bir arayüzdür.</Description>
-            <Archive type="tarxz" sha1sum="4f932632fe4ac7d0ee67d4fd9746078307ebf667">http://ftp.gnome.org/mirror/gnome.org/sources/network-manager-applet/1.0/network-manager-applet-1.0.2.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="9d486a6fa5a600fab5510a06cad77a6cbd745d8f">http://ftp.gnome.org/mirror/gnome.org/sources/network-manager-applet/1.0/network-manager-applet-1.0.4.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>gtk2-devel</Dependency>
                 <Dependency>gtk3-devel</Dependency>
@@ -9107,6 +9115,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>dbus-glib-devel</Dependency>
                 <Dependency>atk-devel</Dependency>
                 <Dependency>eudev-devel</Dependency>
+                <Dependency>intltool</Dependency>
             </BuildDependencies>
             <SourceURI>network/connection/network-manager-applet/pspec.xml</SourceURI>
         </Source>
@@ -9150,8 +9159,9 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">network-manager-applet için geliştirme dosyaları</Summary>
             <Summary xml:lang="tr">network-manager-applet için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="12">network-manager-applet</Dependency>
+                <Dependency release="13">network-manager-applet</Dependency>
                 <Dependency>NetworkManager-devel</Dependency>
+                <Dependency>dbus-glib-devel</Dependency>
                 <Dependency>gtk3-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -9160,6 +9170,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="13">
+                <Date>2015-07-22</Date>
+                <Version>1.0.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ayhan Yalçınsoy</Name>
+                <Email>ayhanyalcinsoy@pisilinux.org</Email>
+            </Update>
             <Update release="12">
                 <Date>2015-06-13</Date>
                 <Version>1.0.2</Version>
@@ -9959,6 +9976,111 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>iputils</Name>
+            <Homepage>http://www.linux-ipv6.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>BSD</License>
+            <IsA>app:console</IsA>
+            <PartOf>network.misc</PartOf>
+            <Summary xml:lang="en">Network monitoring tools including ping and ping6</Summary>
+            <Summary xml:lang="tr">ping ve ping6 uygulamalarını da içeren ağ izleme araçları</Summary>
+            <Description xml:lang="fr">Iputils contient les outils de surveillance réseau incluant ping et ping6.</Description>
+            <Description xml:lang="en">iputils contains network monitoring tools including ping and ping6.</Description>
+            <Description xml:lang="tr">Iputils, ping ve ping6 gibi ağ izleme araçlarını içeren bir pakettir.</Description>
+            <Archive type="tarbz2" sha1sum="4d56d8c75d6a5d58f052e4056e975f01ebab9ba9">http://www.skbuff.net/iputils/iputils-s20121221.tar.bz2</Archive>
+            <AdditionalFiles>
+                <AdditionalFile target="ifenslave.c">ifenslave/ifenslave.c</AdditionalFile>
+            </AdditionalFiles>
+            <BuildDependencies>
+                <Dependency>openssl-devel</Dependency>
+                <Dependency>libidn-devel</Dependency>
+                <Dependency>gnutls-devel</Dependency>
+                <Dependency>libcap-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">021109-uclibc-no-ether_ntohost.patch</Patch>
+                <Patch level="1">iputils-20121221-printf-size.patch</Patch>
+                <Patch level="1">iputils-20121221-owl-pingsock.diff</Patch>
+                <Patch level="1">iputils-20121221-openssl.patch</Patch>
+                <Patch level="1">iputils-20121221-makefile.patch</Patch>
+                <Patch level="1">iputils-20121221-crypto-build.patch</Patch>
+                <Patch level="0">iputils-20100418-so_mark.patch</Patch>
+                <Patch level="1">iputils-20071127-nonroot-floodping.patch</Patch>
+                <Patch level="1">iputils-20071127-kernel-ifaddr.patch</Patch>
+                <Patch level="1">fedora/iputils-20020124-countermeasures.patch</Patch>
+                <Patch level="1">fedora/iputils-20020927-ping-subint.patch</Patch>
+                <Patch level="1">fedora/iputils-20070202-traffic_class.patch</Patch>
+                <Patch level="1">fedora/iputils-20100418-convtoint.patch</Patch>
+                <Patch level="1">docs.patch</Patch>
+            </Patches>
+            <SourceURI>network/misc/iputils/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>iputils</Name>
+            <RuntimeDependencies>
+                <Dependency>libcap</Dependency>
+                <Dependency>gnutls</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/bin</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="executable">/usr/sbin</Path>
+                <Path fileType="executable">/sbin</Path>
+                <Path fileType="data">/lib/systemd/system</Path>
+                <Path fileType="config">/etc/conf.d/rdisc</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/usr/share/man/man8/arping.8" permission="0644" owner="root">man/arping.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/clockdiff.8" permission="0644" owner="root">man/clockdiff.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/ping.8" permission="0644" owner="root">man/ping.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/rarpd.8" permission="0644" owner="root">man/rarpd.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/rdisc.8" permission="0644" owner="root">man/rdisc.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/tracepath.8" permission="0644" owner="root">man/tracepath.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/traceroute6.8" permission="0644" owner="root">man/traceroute6.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/man/man8/ifenslave.8" permission="0644" owner="root">ifenslave/ifenslave.8</AdditionalFile>
+                <AdditionalFile target="/usr/share/doc/iputils/README.bonding" permission="0644" owner="root">ifenslave/README.bonding</AdditionalFile>
+                <AdditionalFile target="/etc/conf.d/rdisc" permission="0644" owner="root">fedora/rdisc.sysconfig</AdditionalFile>
+                <AdditionalFile target="/lib/systemd/system/rdisc.service" permission="0644" owner="root">fedora/rdisc.service</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-05-11</Date>
+                <Version>20121221</Version>
+                <Comment>Release bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-07-26</Date>
+                <Version>20121221</Version>
+                <Comment>Fix dep, release bump.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-01-14</Date>
+                <Version>20121221</Version>
+                <Comment>New release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-08-23</Date>
+                <Version>20101006</Version>
+                <Comment>First release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libasyncns</Name>
             <Homepage>http://0pointer.de/lennart/projects/libasyncns</Homepage>
             <Packager>
@@ -10055,7 +10177,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">geoclue için geliştirme dosyaları</Summary>
             <Summary xml:lang="tr">geoclue için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="5">geoclue</Dependency>
+                <Dependency release="6">geoclue</Dependency>
                 <Dependency>dbus-glib-devel</Dependency>
                 <Dependency>libxml2-devel</Dependency>
             </RuntimeDependencies>
@@ -10065,6 +10187,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="6">
+                <Date>2015-07-22</Date>
+                <Version>0.12.99</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Ayhan Yalçınsoy</Name>
+                <Email>ayhanyalcinsoy@pisilinux.org</Email>
+            </Update>
             <Update release="5">
                 <Date>2015-07-18</Date>
                 <Version>0.12.99</Version>
@@ -13373,6 +13502,84 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Comment>First release</Comment>
                 <Name>Erdinç Gültekin</Name>
                 <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>python-lxml</Name>
+            <Homepage>http://codespeak.net/lxml</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <License>BSD</License>
+            <IsA>library</IsA>
+            <PartOf>programming.language.python</PartOf>
+            <Summary xml:lang="en">lxml is the most feature-rich and easy-to-use library</Summary>
+            <Summary xml:lang="tr">Zengin içerikli ve kolay kullanımlı bir kütüphane.</Summary>
+            <Description xml:lang="en">lxml is the most feature-rich and easy-to-use library for working with XML and HTML in the Python language.</Description>
+            <Description xml:lang="tr">Python dilinde xml ve html ile çalışmak için, zengin içerikli ve kolay kullanımlı bir kütüphane.</Description>
+            <Archive type="targz" sha1sum="7a6e92f8ca482aab79835e1c9cd8410400792cd9">http://lxml.de/files/lxml-3.3.5.tgz</Archive>
+            <BuildDependencies>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>python-devel</Dependency>
+                <Dependency>cython</Dependency>
+                <Dependency>libxslt-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>programming/language/python/python-lxml/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>python-lxml</Name>
+            <RuntimeDependencies>
+                <Dependency>libxslt</Dependency>
+                <Dependency>libxml2</Dependency>
+                <Dependency>python</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>python-lxml-docs</Name>
+            <Summary xml:lang="en">API documentation of python-lxml</Summary>
+            <Summary xml:lang="tr">python-lxml paketine ait API belgeleri</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">python-lxml</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-07-05</Date>
+                <Version>3.3.5</Version>
+                <Comment>Version bump</Comment>
+                <Name>Vedat Demir</Name>
+                <Email>vedat@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-11-07</Date>
+                <Version>3.2.4</Version>
+                <Comment>Version bump</Comment>
+                <Name>Burak Fazıl Ertürk</Name>
+                <Email>burakerturk@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-28</Date>
+                <Version>3.0.1</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>Osman Erkan</Name>
+                <Email>osman.erkan@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-10-24</Date>
+                <Version>3.0.1</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -20482,8 +20689,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>zlib-devel</Dependency>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
-                <Dependency>polkit-devel</Dependency>
-                <Dependency>dbus-glib-devel</Dependency>
+                <Dependency versionFrom="0.113">polkit-devel</Dependency>
                 <Dependency>libxslt</Dependency>
                 <Dependency>xmlto</Dependency>
                 <Dependency>util-linux</Dependency>
@@ -20501,7 +20707,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Dependency>libX11</Dependency>
                 <Dependency>polkit</Dependency>
                 <Dependency>eudev</Dependency>
-                <Dependency>dbus-glib</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc</Path>
@@ -20541,7 +20746,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
         </Package>
         <History>
             <Update release="11">
-                <Date>2015-07-13</Date>
+                <Date>2015-07-20</Date>
                 <Version>0.9.5</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Ertuğrul Erata</Name>
@@ -33612,6 +33817,70 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>dosfstools</Name>
+            <Homepage>http://www.daniel-baumann.ch/software/dosfstools/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv3</License>
+            <IsA>app:console</IsA>
+            <PartOf>hardware.disk</PartOf>
+            <Summary xml:lang="en">Tools to create and check DOS and VFAT filesystems</Summary>
+            <Summary xml:lang="tr">DOS dosya sistemi oluşturmaya ve kontrol etmeye yarayan komutlar</Summary>
+            <Description xml:lang="en">The dosfstools package includes the DOS and VFAT filesystem utilities like mkdosfs, mkfs.msdos, mkfs.vfat, dosfsck, dosfslabel. You can create and check MS-DOS FAT filesystems on hard drives or on floppies</Description>
+            <Description xml:lang="tr">Dosfstools paketi, mkdosfs, mkfs.msdos, mkfs.vfat, dosfsck, dosfslabel gibi, DOS ve VFAT dosyasistemleri yaratmaya ve kontrol etmeye yarayan araçları içerir.</Description>
+            <Archive type="tarxz" sha1sum="1385f707b7ff93cb521e8158e60276c531c1b0a6">http://daniel-baumann.ch/files/software/dosfstools/dosfstools-3.0.26.tar.xz</Archive>
+            <SourceURI>hardware/disk/dosfstools/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>dosfstools</Name>
+            <Files>
+                <Path fileType="executable">/sbin</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="5">
+                <Date>2014-04-03</Date>
+                <Version>3.0.26</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-01-18</Date>
+                <Version>3.0.25</Version>
+                <Comment>Version bump</Comment>
+                <Name>Richard de Bruin</Name>
+                <Email>richdb@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-10-21</Date>
+                <Version>3.0.23</Version>
+                <Comment>Version bump</Comment>
+                <Name>Richard de Bruin</Name>
+                <Email>richdb@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-06-13</Date>
+                <Version>3.0.20</Version>
+                <Comment>Version bump</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-11-13</Date>
+                <Version>3.0.13</Version>
+                <Comment>First release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>btrfs-progs</Name>
             <Homepage>http://btrfs.wiki.kernel.org</Homepage>
             <Packager>
@@ -34436,6 +34705,43 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>unicode-ucd</Name>
+            <Homepage>http://www.unicode.org/ucd</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <PartOf>desktop.font</PartOf>
+            <Summary xml:lang="en">Unicode Character Database</Summary>
+            <Summary xml:lang="tr">Unicode Karakter Veritabanı</Summary>
+            <Description xml:lang="en">The Unicode Character Database (UCD) consists of a number of data files listing Unicode character properties and related data. It also includes data files containing test data for conformance to several important Unicode algorithms.</Description>
+            <Description xml:lang="tr">Unicode karakter veritabanı, unicode karakter özelliklerini ve bilgilerini içeren birkaç veri dosyasından oluşur.</Description>
+            <Archive type="zip" sha1sum="7372920a0f06f47ecb3185e70344e954e3f8a779">http://www.unicode.org/Public/zipped/6.3.0/UCD.zip</Archive>
+            <SourceURI>desktop/font/unicode-ucd/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>unicode-ucd</Name>
+            <Files>
+                <Path fileType="data">/usr/share/unicode/ucd</Path>
+                <Path fileType="data">/usr/share/doc</Path>
+            </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/usr/share/doc/unicode-ucd/copyright.html" permission="0644" owner="root">copyright.html</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2014-01-27</Date>
+                <Version>6.3.0</Version>
+                <Comment>First release</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>gnu-gs-fonts-std</Name>
             <Homepage>http://www.ghostscript.com</Homepage>
             <Packager>
@@ -34894,132 +35200,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
                 <Comment>First release</Comment>
                 <Name>PisiLinux Community</Name>
                 <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>cogl</Name>
-            <Homepage>http://developer.gnome.org/cogl</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>LGPLv2.1</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.gnome.base</PartOf>
-            <Summary xml:lang="en">A low level OpenGL abstraction library</Summary>
-            <Description xml:lang="en">Cogl is a low level OpenGL abstraction library developed for (and part of) Clutter.</Description>
-            <Archive type="tarxz" sha1sum="46a0bfca30c440ad4b6a7b07ed7aa3e643d57401">mirrors://gnome/cogl/1.20/cogl-1.20.0.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>mesa-devel</Dependency>
-                <Dependency>libdrm-devel</Dependency>
-                <Dependency>pango-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency>libXrandr-devel</Dependency>
-                <Dependency>libXdamage-devel</Dependency>
-                <Dependency>libXcomposite-devel</Dependency>
-                <Dependency>gdk-pixbuf-devel</Dependency>
-                <Dependency>gobject-introspection-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/gnome/base/cogl/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>cogl</Name>
-            <RuntimeDependencies>
-                <Dependency>mesa</Dependency>
-                <Dependency>cairo</Dependency>
-                <Dependency>pango</Dependency>
-                <Dependency>libXext</Dependency>
-                <Dependency>libXfixes</Dependency>
-                <Dependency>libXrandr</Dependency>
-                <Dependency>gdk-pixbuf</Dependency>
-                <Dependency>libXdamage</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="localedata">/usr/share/locale</Path>
-                <Path fileType="man">/usr/share/man</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="data">/usr/share</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>cogl-devel</Name>
-            <Summary xml:lang="tr">cogl için geliştirme dosyaları.</Summary>
-            <RuntimeDependencies>
-                <Dependency>mesa-devel</Dependency>
-                <Dependency>cairo-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency>libXfixes-devel</Dependency>
-                <Dependency>libXrandr-devel</Dependency>
-                <Dependency>gdk-pixbuf-devel</Dependency>
-                <Dependency>libXdamage-devel</Dependency>
-                <Dependency>libXcomposite-devel</Dependency>
-                <Dependency release="8">cogl</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="data">/usr/lib/pkgconfig</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="8">
-                <Date>2015-04-18</Date>
-                <Version>1.20.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="7">
-                <Date>2014-06-14</Date>
-                <Version>1.18.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Alihan Öztürk</Name>
-                <Email>alihan@pisilinux.org</Email>
-            </Update>
-            <Update release="6">
-                <Date>2013-10-11</Date>
-                <Version>1.16.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2013-07-31</Date>
-                <Version>1.14.0</Version>
-                <Comment>Rebuild, fix deps.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2013-06-15</Date>
-                <Version>1.14.0</Version>
-                <Comment>Rebuild with new configure args</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-05-11</Date>
-                <Version>1.14.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-04-23</Date>
-                <Version>1.12.0</Version>
-                <Comment>Dep fixed</Comment>
-                <Name>Osman Erkan</Name>
-                <Email>osman.erkan@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-10-24</Date>
-                <Version>1.12.0</Version>
-                <Comment>First release</Comment>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -44420,174 +44600,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>clutter</Name>
-            <Homepage>http://www.clutter-project.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>LGPLv2.1</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.toolkit.clutter</PartOf>
-            <Summary xml:lang="en">OpenGL GUI toolkit</Summary>
-            <Summary xml:lang="tr">OpenGL grafik arabirim kitaplığı</Summary>
-            <Description xml:lang="en">clutter is an open source software library for creating fast, visually rich graphical user interfaces. The most obvious example of potential usage is in media center type applications.</Description>
-            <Description xml:lang="tr">clutter görsel olarak zengin ve hızlı grafik arabirimler oluşturmak için hazırlanmış bir açık kodlu kitaplıktır. Kullanım alanlarına en belirgin örnek olarak çoklu ortam yazılımları gösterilebilir.</Description>
-            <Archive type="tarxz" sha1sum="1665008f6c44a19d6aab23aa73cb19f85cafdfd2">mirrors://gnome/clutter/1.22/clutter-1.22.4.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>gtk3-devel</Dependency>
-                <Dependency>libXi-devel</Dependency>
-                <Dependency>libinput-devel</Dependency>
-                <Dependency>cogl-devel</Dependency>
-                <Dependency>gobject-introspection-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/toolkit/clutter/clutter/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>clutter</Name>
-            <RuntimeDependencies>
-                <Dependency>atk</Dependency>
-                <Dependency>cogl</Dependency>
-                <Dependency>gtk3</Dependency>
-                <Dependency>cairo</Dependency>
-                <Dependency>libXi</Dependency>
-                <Dependency>pango</Dependency>
-                <Dependency>libinput</Dependency>
-                <Dependency>json-glib</Dependency>
-                <Dependency>fontconfig</Dependency>
-                <Dependency>libXdamage</Dependency>
-                <Dependency>libxkbcommon</Dependency>
-                <Dependency>libXcomposite</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib/girepository-1.0</Path>
-                <Path fileType="library">/usr/lib/libclutter*</Path>
-                <Path fileType="doc">/usr/share/doc/clutter</Path>
-                <Path fileType="doc">/usr/share/gtk-doc</Path>
-                <Path fileType="data">/usr/share/gir-1.0</Path>
-                <Path fileType="localedata">/usr/share/locale/</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>clutter-devel</Name>
-            <Summary xml:lang="en">clutter için geliştirme dosyaları.</Summary>
-            <Summary xml:lang="tr">clutter için geliştirme dosyaları.</Summary>
-            <RuntimeDependencies>
-                <Dependency>clutter</Dependency>
-                <Dependency>atk-devel</Dependency>
-                <Dependency>gtk3-devel</Dependency>
-                <Dependency>cogl-devel</Dependency>
-                <Dependency>pango-devel</Dependency>
-                <Dependency>libXi-devel</Dependency>
-                <Dependency>cairo-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency>json-glib-devel</Dependency>
-                <Dependency>libXdamage-devel</Dependency>
-                <Dependency>libXcomposite-devel</Dependency>
-                <Dependency>libinput-devel</Dependency>
-                <Dependency>libxkbcommon-devel</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="library">/usr/lib/pkgconfig</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="13">
-                <Date>2015-07-21</Date>
-                <Version>1.22.4</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Ayhan Yalçınsoy</Name>
-                <Email>ayhanyalcinsoy@pisilinux.org</Email>
-            </Update>
-            <Update release="12">
-                <Date>2015-04-18</Date>
-                <Version>1.22.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="11">
-                <Date>2015-02-16</Date>
-                <Version>1.20.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Hakan Yıldız</Name>
-                <Email>hknyldz93@gmail.com</Email>
-            </Update>
-            <Update release="10">
-                <Date>2014-10-26</Date>
-                <Version>1.18.2</Version>
-                <Comment>rebuild for patch</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="9">
-                <Date>2014-05-27</Date>
-                <Version>1.18.2</Version>
-                <Comment>Verison bump.</Comment>
-                <Name>Alihan Öztürk</Name>
-                <Email>alihan@pisilinux.org</Email>
-            </Update>
-            <Update release="8">
-                <Date>2013-10-22</Date>
-                <Version>1.16.0</Version>
-                <Comment>Unused fix.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="7">
-                <Date>2013-10-11</Date>
-                <Version>1.16.0</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="6">
-                <Date>2013-07-23</Date>
-                <Version>1.14.4</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2013-06-16</Date>
-                <Version>1.14.2</Version>
-                <Comment>Split package</Comment>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2013-06-15</Date>
-                <Version>1.14.2</Version>
-                <Comment>Rebuild with new configure args</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-05-11</Date>
-                <Version>1.14.2</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-01-25</Date>
-                <Version>1.13.4</Version>
-                <Comment>Güncellendi.</Comment>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-12-17</Date>
-                <Version>1.12.2</Version>
-                <Comment>First release</Comment>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
             <Name>newt</Name>
             <Homepage>https://fedorahosted.org/newt/</Homepage>
             <Packager>
@@ -48602,102 +48614,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Update release="1">
                 <Date>2012-12-22</Date>
                 <Version>2.34.1</Version>
-                <Comment>First release</Comment>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>orbit2</Name>
-            <Homepage>http://www.gnome.org/</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <License>LGPLv2</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.gnome2</PartOf>
-            <Summary xml:lang="en">High-performance CORBA ORB</Summary>
-            <Summary xml:lang="tr">Yüksek performanslı CORBA ORB</Summary>
-            <Description xml:lang="en">Orbit2 allows to communication between two programs objects.</Description>
-            <Description xml:lang="tr">Orbit2 iki program nesneleri arasındaki iletişimi sağlar.</Description>
-            <Archive type="tarbz2" sha1sum="e7c26aa4b82c146b3ec08d490e3469b4913e4e2f">mirrors://gnome/ORBit2/2.14/ORBit2-2.14.19.tar.bz2</Archive>
-            <BuildDependencies>
-                <Dependency>libIDL-devel</Dependency>
-                <Dependency>glib2-devel</Dependency>
-            </BuildDependencies>
-            <Patches>
-                <Patch level="1">fedora/ORBit2-allow-deprecated.patch</Patch>
-            </Patches>
-            <SourceURI>desktop/gnome2/orbit2/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>orbit2</Name>
-            <RuntimeDependencies>
-                <Dependency>libIDL</Dependency>
-                <Dependency>glib2</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="data">/usr/share/idl</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>orbit2-devel</Name>
-            <Summary xml:lang="en">Development files for orbit2</Summary>
-            <Summary xml:lang="tr">orbit2 için geliştirme dosyaları</Summary>
-            <RuntimeDependencies>
-                <Dependency release="4">orbit2</Dependency>
-                <Dependency>libIDL-devel</Dependency>
-                <Dependency>glib2-devel</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="executable">/usr/bin/orbit2-config</Path>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="library">/usr/lib/*.a</Path>
-                <Path fileType="library">/usr/lib/pkgconfig</Path>
-                <Path fileType="data">/usr/share/aclocal</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>orbit2-docs</Name>
-            <Summary xml:lang="en">ORBit2 reference documents</Summary>
-            <Summary xml:lang="tr">Orbit2 referans dökümanları</Summary>
-            <IsA>data:doc</IsA>
-            <Files>
-                <Path fileType="doc">/usr/share/gtk-doc</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="4">
-                <Date>2014-05-21</Date>
-                <Version>2.14.19</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Kamil Atlı</Name>
-                <Email>suvarice@gmail.com</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-10-29</Date>
-                <Version>2.14.19</Version>
-                <Comment>Rebuild.</Comment>
-                <Name>Yusuf Aydemir</Name>
-                <Email>yusuf.aydemir@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-08-26</Date>
-                <Version>2.14.19</Version>
-                <Comment>Release bump.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2010-12-22</Date>
-                <Version>2.14.19</Version>
                 <Comment>First release</Comment>
                 <Name>PisiLinux Community</Name>
                 <Email>admins@pisilinux.org</Email>
