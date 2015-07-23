@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>a52dec</Name>
+        <Homepage>http://liba52.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>DVD ATSC A/52 streams decoder library</Summary>
+        <Description>liba52 is a free library for decoding ATSC A/52 streams. The A/52 standard is used in a variety of applications, including digital television and DVD. It is also known as AC-3.</Description>
+        <Archive sha1sum="79b33bd8d89dad7436f85b9154ad35667aa37321" type="targz">http://liba52.sourceforge.net/files/a52dec-0.7.4.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>glibc-devel</Dependency>
+            <Dependency>djbfft-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">a52dec-0.7.4-build.patch</Patch>
+            <Patch>use-djbfft.patch</Patch>
+            <Patch level="1">constant.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>a52dec</Name>
+        <RuntimeDependencies>
+            <Dependency>djbfft</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>a52dec-devel</Name>
+        <Summary>Development files for a52dec</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">a52dec</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="3">
+            <Date>2014-05-20</Date>
+            <Version>0.7.4</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2014-01-31</Date>
+            <Version>0.7.4</Version>
+            <Comment>some fixes and rebuild</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2010-10-12</Date>
+            <Version>0.7.4</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
