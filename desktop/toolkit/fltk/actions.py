@@ -44,7 +44,10 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    autotools.install("-C documentation")
+    
     autotools.rawInstall("DESTDIR=%s -C fluid" % get.installDIR(), "install-linux")
-
+    
+    if get.buildTYPE() == "emul32": return
+    
+    autotools.install("-C documentation")
     pisitools.dodoc("ANNOUNCEMENT", "CHANGES", "COPYING", "CREDITS", "README")
