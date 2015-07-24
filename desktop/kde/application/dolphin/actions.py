@@ -5,11 +5,13 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import kde5
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
-def setup():    
-    kde5.configure("-DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d")
+#WorkDir = "kde-baseapps-15.04.2/dolphin"
+
+def setup():
+    kde5.configure()
 
 def build():
     kde5.make()
@@ -17,4 +19,4 @@ def build():
 def install():
     kde5.install()
 
-    #pisitools.dodoc("README.md", "COPYING.LIB")
+    pisitools.dodoc("COPYING", "README", "AUTHORS", "COPYING.DOC")
