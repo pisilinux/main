@@ -15,6 +15,8 @@ def setup():
     shelltools.system("./bootstrap")
     autotools.configure("--enable-shared \
                          --disable-static")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
