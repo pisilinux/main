@@ -9402,6 +9402,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Archive type="targz" sha1sum="4a3db5ea527856145844556e0ee349f45ed4cbc7">http://download.savannah.nongnu.org/releases/openexr/openexr-2.1.0.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency versionFrom="2.0.1">ilmbase-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
             </BuildDependencies>
             <SourceURI>multimedia/misc/openexr/pspec.xml</SourceURI>
         </Source>
@@ -9409,6 +9410,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>openexr</Name>
             <RuntimeDependencies>
                 <Dependency versionFrom="2.0.1">ilmbase</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>openexr-libs</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -9421,6 +9423,8 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">OpenEXR çalışma zamanı kitaplıkları</Summary>
             <RuntimeDependencies>
                 <Dependency>ilmbase</Dependency>
+                <Dependency>zlib</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/lib*</Path>
@@ -16921,6 +16925,57 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>python-six</Name>
+            <Homepage>http://pypi.python.org/pypi/six/</Homepage>
+            <Packager>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <IsA>app:console</IsA>
+            <PartOf>programming.language.python</PartOf>
+            <Summary xml:lang="en">Python 2 and 3 compatibility utilities.</Summary>
+            <Summary xml:lang="tr">Python2 ve python3 uyumluluk programı.</Summary>
+            <Description xml:lang="en">python-six provides simple utilities for wrapping over differences between Python 2 and Python 3.</Description>
+            <Description xml:lang="tr">python-six, python2 ile python3 arasındaki farklılıkların aşılmasına yardımcı olan basit araçlar sağlar.</Description>
+            <Archive type="targz" sha1sum="d168e6d01f0900875c6ecebc97da72d0fda31129">http://pypi.python.org/packages/source/s/six/six-1.9.0.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>python3</Dependency>
+            </BuildDependencies>
+            <SourceURI>programming/language/python/python-six/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>python-six</Name>
+            <Files>
+                <Path fileType="library">/usr/lib/python2*</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>python3-six</Name>
+            <Files>
+                <Path fileType="library">/usr/lib/python3*</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="2">
+                <Date>2015-07-24</Date>
+                <Version>1.9.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="1">
+                <Date>2014-05-31</Date>
+                <Version>1.6.1</Version>
+                <Comment>First release</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>python-beaker</Name>
             <Homepage>http://beaker.groovie.org/</Homepage>
             <Packager>
@@ -17035,7 +17090,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="tr">Jinja2, sadece python ile yazılmış bir şablon üreteci olan Jinja&apos;nın yeniden yazılmış bir versiyonudur. Django benzeri XML-olmayan bir sözdizimi sağlar ve şablonları derleyip çalıştırılabilir python programları haline getirir. Temel olarak Django şablonları ve python kodunun birleşimi bir programdır.</Description>
             <Archive type="targz" sha1sum="1ce4c8bc722444ec3e77ef9db76faebbd17a40d8">https://pypi.python.org/packages/source/J/Jinja2/Jinja2-2.7.2.tar.gz</Archive>
             <BuildDependencies>
-                <Dependency>python-sphinx</Dependency>
                 <Dependency>python-MarkupSafe</Dependency>
             </BuildDependencies>
             <Patches>
@@ -17174,23 +17228,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">Python için döküman üreticisi. HTML, Latex gibi çıktılar üretebiliyor</Summary>
             <Description xml:lang="en">It&apos;s a very common documentation generator especially using for python based documentation.It can generate HTML or PDF, Ps outputs with Latex output support.</Description>
             <Description xml:lang="tr">Özellikle python için hazırlanan dökümanları yorumlamak için kullanılan yaygın bir döoküman üreticisi. Başta HTML olmak üzere Latex ile birlikte PDF, Ps gibi doküman çıktıları üretebiliyor.</Description>
-            <Archive type="targz" sha1sum="448cdb89d96c85993e01fe793ce7786494cbcda7">https://pypi.python.org/packages/source/S/Sphinx/Sphinx-1.3.1.tar.gz</Archive>
+            <Archive type="targz" sha1sum="c2288193166ee1f276b5f35a960e1d1e49aa74d4">https://pypi.python.org/packages/source/S/Sphinx/Sphinx-1.3.1.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>docutils</Dependency>
                 <Dependency>python-Pygments</Dependency>
+                <Dependency>python-six</Dependency>
                 <Dependency>python-Jinja2</Dependency>
             </BuildDependencies>
-            <Patches>
-                <Patch level="1">remove_docutils.patch</Patch>
-            </Patches>
             <SourceURI>programming/language/python/python-sphinx/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>python-sphinx</Name>
             <RuntimeDependencies>
-                <Dependency>docutils</Dependency>
                 <Dependency>python-Pygments</Dependency>
-                <Dependency>python-Jinja2</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
@@ -17805,6 +17855,95 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Comment>First release</Comment>
                 <Name>Pisi Linux Admins</Name>
                 <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>python3</Name>
+            <Homepage>http://www.python.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>custom</License>
+            <PartOf>programming.language</PartOf>
+            <Summary xml:lang="en">Next generation of the python high-level scripting language</Summary>
+            <Description xml:lang="en">Next generation of the python high-level scripting language</Description>
+            <Archive type="tarxz" sha1sum="143e098efe7ee7bec8a4904ec4b322f28a067a03">http://www.python.org/ftp/python/3.4.1/Python-3.4.1.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>valgrind</Dependency>
+                <Dependency>tcltk-devel</Dependency>
+                <Dependency>xz-devel</Dependency>
+                <Dependency>gdbm-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>bzip2</Dependency>
+                <Dependency>expat-devel</Dependency>
+                <Dependency>libffi-devel</Dependency>
+                <Dependency>sqlite-devel</Dependency>
+                <Dependency>ncurses-devel</Dependency>
+                <Dependency>openssl-devel</Dependency>
+                <Dependency>readline-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">Python-3.1.1-rpath.patch</Patch>
+            </Patches>
+            <SourceURI>programming/language/python3/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>python3</Name>
+            <RuntimeDependencies>
+                <Dependency>tcl</Dependency>
+                <Dependency>tcltk</Dependency>
+                <Dependency>xz</Dependency>
+                <Dependency>gdbm</Dependency>
+                <Dependency>zlib</Dependency>
+                <Dependency>bzip2</Dependency>
+                <Dependency>expat</Dependency>
+                <Dependency>libffi</Dependency>
+                <Dependency>sqlite</Dependency>
+                <Dependency>ncurses</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>readline</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable" permanent="0">/usr/bin/*</Path>
+                <Path fileType="header" permanent="0">/usr/include/python3.4m/*</Path>
+                <Path fileType="library" permanent="0">/usr/lib/pkgconfig/*</Path>
+                <Path fileType="library" permanent="0">/usr/lib/python3.4/*</Path>
+                <Path fileType="library" permanent="0">/usr/lib/*</Path>
+                <Path fileType="man" permanent="0">/usr/share/man/man1/*</Path>
+                <Path fileType="doc" permanent="0">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-05-26</Date>
+                <Version>3.4.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-09-09</Date>
+                <Version>3.3.0</Version>
+                <Comment>V.Bump</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-08-17</Date>
+                <Version>3.3.0</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-11-11</Date>
+                <Version>3.3.0</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -20615,6 +20754,64 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>docbook-sgml4_5</Name>
+            <Homepage>http://www.docbook.org/sgml/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>X11</License>
+            <IsA>data</IsA>
+            <PartOf>office.docbook</PartOf>
+            <Summary xml:lang="en">Docbook SGML DTD 4.5</Summary>
+            <Summary xml:lang="tr">Docbook SGML DTD 4.5</Summary>
+            <Description xml:lang="en">Contains Docbook SGML DTD version 4.5.</Description>
+            <Description xml:lang="tr">Docbook SGML DTD sürüm 4.5 belgelerini içerir.</Description>
+            <Archive type="zip" sha1sum="5efeb22936ea30cdaf88053337de7966dfda02bd">http://www.docbook.org/sgml/4.5/docbook-4.5.zip</Archive>
+            <Patches>
+                <Patch>catalog.patch</Patch>
+            </Patches>
+            <SourceURI>office/docbook/docbook-sgml4_5/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>docbook-sgml4_5</Name>
+            <RuntimeDependencies>
+                <Dependency>sgml-common</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="doc">/usr/share/doc/docbook-sgml4_5</Path>
+                <Path fileType="data">/usr/share</Path>
+            </Files>
+            <Provides>
+                <COMAR script="package.py">System.Package</COMAR>
+            </Provides>
+        </Package>
+        <History>
+            <Update release="3">
+                <Date>2014-05-18</Date>
+                <Version>4.5</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2014-01-22</Date>
+                <Version>4.5</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2007-02-23</Date>
+                <Version>4.5</Version>
+                <Comment>First release</Comment>
+                <Name>Eren Türkay</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>asciidoc</Name>
             <Homepage>http://www.methods.co.nz/asciidoc/</Homepage>
             <Packager>
@@ -21197,6 +21394,56 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>docutils</Name>
+            <Homepage>http://docutils.sourceforge.net</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>public-domain</License>
+            <IsA>library</IsA>
+            <PartOf>office.misc</PartOf>
+            <Summary xml:lang="en">A library for processing plaintext documentation</Summary>
+            <Summary xml:lang="tr">Düz yazı belgelendirme işleme için kütüphane</Summary>
+            <Description xml:lang="en">A library for processing plaintext documentation into useful formats, such as HTML, XML, and LaTeX.</Description>
+            <Description xml:lang="es">Librería para procesamiento de texto plano para conversión a formatos útiles como HTML, XML, y LaTeX.</Description>
+            <Archive type="targz" sha1sum="3894ebcbcbf8aa54ce7c3d2c8f05460544912d67">mirrors://sourceforge/docutils/docutils-0.11.tar.gz</Archive>
+            <SourceURI>office/misc/docutils/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>docutils</Name>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="3">
+                <Date>2014-02-26</Date>
+                <Version>0.11</Version>
+                <Comment>Rebuild for python 2.7.6</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2014-01-22</Date>
+                <Version>0.11</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2010-10-13</Date>
+                <Version>0.7</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>doxygen</Name>
             <Homepage>http://www.doxygen.org/</Homepage>
             <Packager>
@@ -21641,6 +21888,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Source>
         <Package>
             <Name>ilmbase</Name>
+            <RuntimeDependencies>
+                <Dependency>libgcc</Dependency>
+            </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
@@ -21652,8 +21902,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">ilmbase için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
                 <Dependency release="3">ilmbase</Dependency>
-                <Dependency>mesa-glu-devel</Dependency>
-                <Dependency>mesa-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -38312,7 +38560,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">Herhangi bir uygulamayı paketleyip çalıştırmak için hafif kontenyer</Summary>
             <Description xml:lang="en">An open platform for distributed applications for developers and sysadmins</Description>
             <Description xml:lang="tr">Geliştirici ve Sistem Yöneticileri için açık ve dağıtık platform</Description>
-            <Archive type="targz" sha1sum="e638f39c6081de7b0903ed09096300bdbb1d5aa0">https://github.com/docker/docker/archive/v1.7.0.tar.gz</Archive>
+            <Archive type="targz" sha1sum="93a7dffdc434af3ba38104a1d3ae445212ae8c0d">https://github.com/docker/docker/archive/v1.7.1.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>git</Dependency>
                 <Dependency>golang</Dependency>
@@ -38337,7 +38585,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Files>
                 <Path fileType="config">/etc</Path>
                 <Path fileType="executable">/usr/bin/</Path>
-                <Path fileType="library">/usr/libexec/docker</Path>
+                <Path fileType="library">/usr/lib/docker</Path>
                 <Path fileType="data">/usr/share/</Path>
             </Files>
             <Provides>
@@ -38351,6 +38599,13 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </AdditionalFiles>
         </Package>
         <History>
+            <Update release="5">
+                <Date>2015-07-24</Date>
+                <Version>1.7.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
             <Update release="4">
                 <Date>2015-06-24</Date>
                 <Version>1.7.0</Version>
@@ -39707,6 +39962,74 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Comment>First release</Comment>
                 <Name>PisiLinux Community</Name>
                 <Email>namso-01qhotmail.it</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>media-player-info</Name>
+            <Homepage>http://cgit.freedesktop.org/media-player-info</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>BSD</License>
+            <PartOf>hardware</PartOf>
+            <Summary xml:lang="en">Media player capability database</Summary>
+            <Summary xml:lang="tr">Medya oynatıcısı yetenek veritabanı</Summary>
+            <Description xml:lang="en">media-player-info is a repository of data files describing media player capabilities. These files contain information about the directory layout to use to add music to these devices, about the supported file formats, etc.</Description>
+            <Description xml:lang="tr">media-player-info, ortam oynatıcılarının yeteneklerini tanımlayan bir dosya demetidir. Bu dosyalar bu aygıtların hangi dizinlerine müzik dosyaları koyulması gerektiğini, hangi dosya biçimlerinin desteklendiğini tanımlar.</Description>
+            <Archive type="targz" sha1sum="4f0b94b0e456b8427168ce7414ea725d98daa984">http://www.freedesktop.org/software/media-player-info/media-player-info-22.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>eudev-devel</Dependency>
+                <Dependency>python3</Dependency>
+            </BuildDependencies>
+            <SourceURI>hardware/info/media-player-info/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>media-player-info</Name>
+            <Files>
+                <Path fileType="data">/lib/udev/rules.d</Path>
+                <Path fileType="data">/lib/udev</Path>
+                <Path fileType="data">/usr/share/media-player-info</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="5">
+                <Date>2015-02-16</Date>
+                <Version>22</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Hakan Yıldız</Name>
+                <Email>hknyldz93@gmail.com</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-07-05</Date>
+                <Version>21</Version>
+                <Comment>Version bump</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-05-25</Date>
+                <Version>19</Version>
+                <Comment>Version bump</Comment>
+                <Name>Serdar Soytetir</Name>
+                <Email>kaptan@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-02-20</Date>
+                <Version>17</Version>
+                <Comment>Version bump</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2011-10-05</Date>
+                <Version>15</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -41707,7 +42030,17 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
                 <Dependency>boost-devel</Dependency>
+                <Dependency>kdbusaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>qt5-sql-postgresql</Dependency>
+                <Dependency>qt5-sql-mysql</Dependency>
+                <Dependency>qt5-sql-sqlite</Dependency>
+                <Dependency>qt5-sql-odbc</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <Patches>
                 <Patch level="1">build-source.patch</Patch>
@@ -41723,14 +42056,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kconfig</Dependency>
                 <Dependency>kconfigwidgets</Dependency>
                 <Dependency>kcoreaddons</Dependency>
-                <Dependency>kcmutils</Dependency>
                 <Dependency>kdeclarative</Dependency>
                 <Dependency>kdbusaddons</Dependency>
                 <Dependency>ki18n</Dependency>
-                <Dependency>kio</Dependency>
                 <Dependency>kglobalaccel</Dependency>
                 <Dependency>kservice</Dependency>
-                <Dependency>kxmlgui</Dependency>
                 <Dependency>kwindowsystem</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -41797,7 +42127,18 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libcap-devel</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>kcrash-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kio-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kinit/pspec.xml</SourceURI>
         </Source>
@@ -41813,7 +42154,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kconfig</Dependency>
                 <Dependency>kdoctools</Dependency>
                 <Dependency>ki18n</Dependency>
-                <Dependency>kio</Dependency>
                 <Dependency>kservice</Dependency>
                 <Dependency>kwindowsystem</Dependency>
             </RuntimeDependencies>
@@ -41871,14 +42211,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="en">The KDE GUI addons provide utilities for graphical user interfaces in the areas of colors, fonts, text, images, keyboard input. Development files.</Description>
             <Archive type="tarxz" sha1sum="1444a735827d295cf0dfb6bc08a3b72518d97e0e">http://download.kde.org/stable/frameworks/5.11/kguiaddons-5.11.0.tar.xz</Archive>
             <BuildDependencies>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libxcb-devel</Dependency>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kguiaddons/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>kguiaddons</Name>
             <RuntimeDependencies>
+                <Dependency>libX11</Dependency>
                 <Dependency>qt5-base</Dependency>
                 <Dependency>qt5-x11extras</Dependency>
             </RuntimeDependencies>
@@ -41934,6 +42279,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/attica/pspec.xml</SourceURI>
         </Source>
@@ -41997,7 +42343,10 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>polkit-qt-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kauth/pspec.xml</SourceURI>
         </Source>
@@ -42007,6 +42356,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base</Dependency>
                 <Dependency>polkit-qt</Dependency>
                 <Dependency>kcoreaddons</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc</Path>
@@ -42066,6 +42416,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>zlib-devel</Dependency>
                 <Dependency>bzip2</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/karchive/pspec.xml</SourceURI>
         </Source>
@@ -42076,6 +42427,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>xz</Dependency>
                 <Dependency>zlib</Dependency>
                 <Dependency>bzip2</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="data">/usr/share</Path>
@@ -42134,6 +42486,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kconfig/pspec.xml</SourceURI>
         </Source>
@@ -42297,7 +42650,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>hunspell-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/sonnet/pspec.xml</SourceURI>
         </Source>
@@ -42306,7 +42661,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
                 <Dependency>libgcc</Dependency>
-                <Dependency>aspell</Dependency>
                 <Dependency>hunspell</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -42375,6 +42729,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>xcb-util-devel</Dependency>
                 <Dependency>xcb-util-keysyms-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kwindowsystem/pspec.xml</SourceURI>
         </Source>
@@ -42447,7 +42802,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="en">Extra cmake modules KDE5</Description>
             <Archive type="tarxz" sha1sum="5c541b28d59de6ef29522282c23a0afc7356d3c7">http://download.kde.org/stable/frameworks/5.11/extra-cmake-modules-5.11.0.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency>python-sphinx</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/extra-cmake-modules/pspec.xml</SourceURI>
         </Source>
@@ -42485,7 +42840,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="e9366bf4df213820b98ef9eec220b549546e0970">http://download.kde.org/stable/frameworks/5.11/kdeclarative-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>libepoxy-devel</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>kpackage-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kglobalaccel-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kdeclarative/pspec.xml</SourceURI>
         </Source>
@@ -42503,7 +42870,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kglobalaccel</Dependency>
                 <Dependency>ki18n</Dependency>
                 <Dependency>kiconthemes</Dependency>
-                <Dependency>kio</Dependency>
                 <Dependency>kwidgetsaddons</Dependency>
                 <Dependency>kwindowsystem</Dependency>
             </RuntimeDependencies>
@@ -42564,7 +42930,18 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libxcb-devel</Dependency>
+                <Dependency>kcrash-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kdbusaddons-devel</Dependency>
+                <Dependency>xcb-util-keysyms-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kglobalaccel/pspec.xml</SourceURI>
         </Source>
@@ -42574,7 +42951,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>libxcb</Dependency>
-                <Dependency>ki18n</Dependency>
                 <Dependency>kcrash</Dependency>
                 <Dependency>kconfig</Dependency>
                 <Dependency>qt5-x11extras</Dependency>
@@ -42638,10 +43014,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>karchive-devel</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
+                <Dependency>docbook-sgml4_5</Dependency>
+                <Dependency>docbook-xml</Dependency>
+                <Dependency>docbook-xsl</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kpackage/pspec.xml</SourceURI>
         </Source>
@@ -42649,8 +43034,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>kpackage</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>libX11</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>kconfig</Dependency>
                 <Dependency>ki18n</Dependency>
@@ -42712,9 +43095,14 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="en">KJobWIdgets provides widgets for showing progress of asynchronous jobs.</Description>
             <Archive type="tarxz" sha1sum="2953b5b98a340cb023a601e400663159c89867c8">http://download.kde.org/stable/frameworks/5.11/kjobwidgets-5.11.0.tar.xz</Archive>
             <BuildDependencies>
+                <Dependency>libX11-devel</Dependency>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kjobwidgets/pspec.xml</SourceURI>
         </Source>
@@ -42782,7 +43170,10 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="5bac294ff1088996af8fb90283ddc313cd6622a0">http://download.kde.org/stable/frameworks/5.11/kimageformats-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>openexr-devel</Dependency>
+                <Dependency>ilmbase-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kimageformats/pspec.xml</SourceURI>
         </Source>
@@ -42820,6 +43211,69 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>bluez-qt</Name>
+            <Homepage>http://www.kde.org</Homepage>
+            <Packager>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>desktop.kde.framework</PartOf>
+            <Summary xml:lang="en">Qt wrapper for KDE 5 Bluez DBus API</Summary>
+            <Description xml:lang="en">Qt wrapper for KDE 5 DBus API.</Description>
+            <Archive type="tarxz" sha1sum="c897f80c8400101b28be3f9ad1250a8c03cd6901">http://download.kde.org/stable/plasma/5.3.2/bluez-qt-5.3.2.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/framework/bluez-qt/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>bluez-qt</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-declarative</Dependency>
+                <Dependency>libgcc</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/qt5</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>bluez-qt-devel</Name>
+            <Summary xml:lang="en">Development files for bluez-qt</Summary>
+            <RuntimeDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency release="2">bluez-qt</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/cmake</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="2">
+                <Date>2015-07-01</Date>
+                <Version>5.3.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2015-06-06</Date>
+                <Version>5.3.1</Version>
+                <Comment>First Release.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>kwallet</Name>
             <Homepage>http://www.kde.org</Homepage>
             <Packager>
@@ -42836,7 +43290,18 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>libgcrypt-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kdbusaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>knotifications-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kwallet/pspec.xml</SourceURI>
         </Source>
@@ -42927,7 +43392,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kcompletion</Dependency>
                 <Dependency>kitemviews</Dependency>
                 <Dependency>karchive</Dependency>
-                <Dependency>kf5-attica</Dependency>
+                <Dependency>attica</Dependency>
                 <Dependency>kconfig</Dependency>
                 <Dependency>kcoreaddons</Dependency>
                 <Dependency>kcmutils</Dependency>
@@ -42997,6 +43462,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kdbusaddons/pspec.xml</SourceURI>
         </Source>
@@ -43224,8 +43690,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="0c4751ebc1f3c488f3e95622acf9311e367b7402">http://download.kde.org/stable/frameworks/5.11/ki18n-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>python3</Dependency>
+                <Dependency>qt5-script-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/ki18n/pspec.xml</SourceURI>
         </Source>
@@ -43291,6 +43758,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kplotting/pspec.xml</SourceURI>
         </Source>
@@ -43423,9 +43891,13 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="be7fdf5b1012c73fca00e71c7e9251bb29556a87">http://download.kde.org/stable/frameworks/5.11/kcrash-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kcrash/pspec.xml</SourceURI>
         </Source>
@@ -43570,7 +44042,15 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kcrash-devel</Dependency>
+                <Dependency>kdbusaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>docbook-xml</Dependency>
+                <Dependency>docbook-xsl</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kservice/pspec.xml</SourceURI>
         </Source>
@@ -43601,7 +44081,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="en">Development files for kservice</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>boost-devel</Dependency>
                 <Dependency release="2">kservice</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -43644,6 +44123,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kitemmodels/pspec.xml</SourceURI>
         </Source>
@@ -43651,6 +44131,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>kitemmodels</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="data">/usr/share</Path>
@@ -43707,7 +44188,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>qt5-sql-postgresql</Dependency>
+                <Dependency>qt5-sql-mysql</Dependency>
+                <Dependency>qt5-sql-sqlite</Dependency>
+                <Dependency>qt5-sql-odbc</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kitemviews-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kpeople/pspec.xml</SourceURI>
         </Source>
@@ -43928,12 +44421,14 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>python</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>libxml2-devel</Dependency>
+                <Dependency>libxslt-devel</Dependency>
                 <Dependency>docbook-xml</Dependency>
                 <Dependency>docbook-xsl</Dependency>
                 <Dependency>docbook-sgml4_5</Dependency>
                 <Dependency>ki18n-devel</Dependency>
                 <Dependency>karchive-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kdoctools/pspec.xml</SourceURI>
         </Source>
@@ -44007,7 +44502,20 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kcompletion-devel</Dependency>
+                <Dependency>kcodecs-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>sonnet-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/ktextwidgets/pspec.xml</SourceURI>
         </Source>
@@ -44151,8 +44659,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="df2bb93cb72dfb6b125169e95acb6919f05ac664">http://download.kde.org/stable/frameworks/5.11/networkmanager-qt-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>NetworkManager-devel</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/networkmanager-qt/pspec.xml</SourceURI>
         </Source>
@@ -44296,6 +44805,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>libgcc</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kitemviews/pspec.xml</SourceURI>
         </Source>
@@ -44360,7 +44870,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>utempter-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kpty/pspec.xml</SourceURI>
         </Source>
@@ -44432,7 +44946,10 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kcompletion/pspec.xml</SourceURI>
         </Source>
@@ -44501,11 +45018,14 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="8f5abb78d2b8b5a62c60e9b17a88d3345db1f5e9">http://download.kde.org/stable/frameworks/5.11/kidletime-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libXScrnSaver-devel</Dependency>
                 <Dependency>libgcc</Dependency>
                 <Dependency>libxcb-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
-                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kidletime/pspec.xml</SourceURI>
         </Source>
@@ -44574,6 +45094,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kcodecs/pspec.xml</SourceURI>
         </Source>
@@ -44639,6 +45160,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kwidgetsaddons/pspec.xml</SourceURI>
         </Source>
@@ -44646,6 +45168,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>kwidgetsaddons</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="data">/usr/share</Path>
@@ -44705,18 +45228,26 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
                 <Dependency>ki18n-devel</Dependency>
-                <Dependency>kdoctools-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kcodecs-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kguiaddons-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>docbook-xml</Dependency>
+                <Dependency>docbook-xsl</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kconfigwidgets/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>kconfigwidgets</Name>
             <RuntimeDependencies>
+                <Dependency>libgcc</Dependency>
                 <Dependency>qt5-base</Dependency>
                 <Dependency>kauth</Dependency>
                 <Dependency>kcodecs</Dependency>
-                <Dependency>kdoctools</Dependency>
                 <Dependency>kconfig</Dependency>
                 <Dependency>kcoreaddons</Dependency>
                 <Dependency>kguiaddons</Dependency>
@@ -44781,6 +45312,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>python-PyYAML</Dependency>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kapidox/pspec.xml</SourceURI>
         </Source>
@@ -44833,6 +45365,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>avahi-devel</Dependency>
                 <Dependency>avahi-compat-libdns_sd-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kdnssd/pspec.xml</SourceURI>
         </Source>
@@ -44898,13 +45431,23 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>qt5-svg-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kcodecs-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kitemviews-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kiconthemes/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>kiconthemes</Name>
             <RuntimeDependencies>
+                <Dependency>libgcc</Dependency>
                 <Dependency>qt5-base</Dependency>
                 <Dependency>qt5-svg</Dependency>
                 <Dependency>kconfigwidgets</Dependency>
@@ -45117,6 +45660,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>ModemManager-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/modemmanager-qt/pspec.xml</SourceURI>
         </Source>
@@ -45136,7 +45680,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Files>
         </Package>
         <Package>
-            <Name>modemmanger-qt-devel</Name>
+            <Name>modemmanager-qt-devel</Name>
             <Summary xml:lang="en">Development files for kde5-modemmanger-qt</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
@@ -45183,6 +45727,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/threadweaver/pspec.xml</SourceURI>
         </Source>
@@ -45245,10 +45790,12 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="9236a4e999f5e64b2bb3a2b3ec81be057ce278e3">http://download.kde.org/stable/frameworks/5.11/solid-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>libudev-devel</Dependency>
+                <Dependency>eudev-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
-                <Dependency>qt5-declarative</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>media-player-info</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/solid/pspec.xml</SourceURI>
         </Source>
@@ -45256,7 +45803,10 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>solid</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
-                <Dependency>libudev</Dependency>
+                <Dependency>qt5-declarative</Dependency>
+                <Dependency>media-player-info</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>eudev</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="data">/usr/share</Path>
@@ -45314,7 +45864,23 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>attica-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kcodecs-devel</Dependency>
+                <Dependency>sonnet-devel</Dependency>
+                <Dependency>kglobalaccel-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kitemviews-devel</Dependency>
+                <Dependency>ktextwidgets-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kxmlgui/pspec.xml</SourceURI>
         </Source>
@@ -45391,6 +45957,32 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="8a20f17d613b5ddfca363d71797bf64ffca4a264">http://download.kde.org/stable/frameworks/5.11/kio-5.11.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>acl-devel</Dependency>
+                <Dependency>attr-devel</Dependency>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>mit-kerberos</Dependency>
+                <Dependency>libxslt</Dependency>
+                <Dependency>qt5-script</Dependency>
+                <Dependency>qt5-x11extras</Dependency>
+                <Dependency>karchive</Dependency>
+                <Dependency>kconfig</Dependency>
+                <Dependency>kcodecs</Dependency>
+                <Dependency>kbookmarks</Dependency>
+                <Dependency>kcompletion</Dependency>
+                <Dependency>kconfigwidgets</Dependency>
+                <Dependency>kcoreaddons</Dependency>
+                <Dependency>kdbusaddons</Dependency>
+                <Dependency>ki18n</Dependency>
+                <Dependency>kiconthemes</Dependency>
+                <Dependency>kitemviews</Dependency>
+                <Dependency>kjobwidgets</Dependency>
+                <Dependency>kservice</Dependency>
+                <Dependency>ktextwidgets</Dependency>
+                <Dependency>kwallet</Dependency>
+                <Dependency>kwidgetsaddons</Dependency>
+                <Dependency>kwindowsystem</Dependency>
+                <Dependency>kxmlgui</Dependency>
+                <Dependency>solid</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
@@ -45559,7 +46151,16 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kcodecs-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kxmlgui-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kbookmarks/pspec.xml</SourceURI>
         </Source>
@@ -45634,6 +46235,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>shared-mime-info</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kcoreaddons/pspec.xml</SourceURI>
         </Source>
@@ -45641,7 +46243,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>kcoreaddons</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
-                <Dependency>gamin</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>shared-mime-info</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -45703,7 +46305,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>python3</Dependency>
+                <Dependency>ki18n-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/framework/kunitconversion/pspec.xml</SourceURI>
         </Source>
@@ -45762,7 +46366,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Packager>
             <License>LGPLv2+</License>
             <IsA>library</IsA>
-            <PartOf>unknown</PartOf>
+            <PartOf>desktop.kde.phonon</PartOf>
             <Summary xml:lang="en">GStreamer qt5-phonon backend</Summary>
             <Description xml:lang="en">Phonon is the Qt multimedia API, which provides a task-oriented abstraction layer for capturing, mixing, processing, and playing audio and video content. phonon-backend-gstreamer contains the GStreamer backend for Phonon.</Description>
             <Archive type="tarxz" sha1sum="9998ba3a002af09e1ba4072508d1813af1d1e5be">mirrors://kde/stable/phonon/phonon-backend-gstreamer/4.8.2/src/phonon-backend-gstreamer-4.8.2.tar.xz</Archive>
@@ -45814,7 +46418,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Packager>
             <License>LGPLv2.1</License>
             <IsA>library</IsA>
-            <PartOf>unknown</PartOf>
+            <PartOf>desktop.kde.phonon</PartOf>
             <Summary xml:lang="en">VLC Backend for qt5-phonon</Summary>
             <Description xml:lang="en">phonon-backend-vlc allows Phonon (the KDE media library) to use VLC for audio and video playback.</Description>
             <Archive type="tarxz" sha1sum="bc7d57d3ecce0293b77b88eba94d091741d33e78">mirrors://kde/stable/phonon/phonon-backend-vlc/0.8.2/src/phonon-backend-vlc-0.8.2.tar.xz</Archive>
@@ -45861,18 +46465,16 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Packager>
             <License>LGPLv2.1</License>
             <IsA>library</IsA>
-            <PartOf>unknown</PartOf>
+            <PartOf>desktop.kde.phonon</PartOf>
             <Summary xml:lang="en">Cross platform multimedia API for KDE4 using QT5</Summary>
             <Description xml:lang="en">Phonon was created as a solution to several problems with multimedia commonly faced by Unix desktops, especially KDE 3&apos;s outdated multimedia framework aRts. Phonon itself is not a multimedia framework, but interfaces with existing frameworks such as GStreamer or Xine via backends.</Description>
             <Archive type="tarxz" sha1sum="aac5dc44ae4821e6165c6735b9c6063dd111ac03">mirrors://kde/stable/phonon/4.8.3/src/phonon-4.8.3.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>automoc4</Dependency>
                 <Dependency>alsa-lib-devel</Dependency>
                 <Dependency>gst-plugins-base-devel</Dependency>
                 <Dependency>pulseaudio-libs-devel</Dependency>
                 <Dependency>gstreamer-devel</Dependency>
-                <Dependency>xine-lib-devel</Dependency>
                 <Dependency>libqzeitgeist-devel</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/phonon/qt5-phonon/pspec.xml</SourceURI>
@@ -47047,68 +47649,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Update>
             <Update release="1">
                 <Date>2015-05-29</Date>
-                <Version>5.3.1</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>bluez-qt</Name>
-            <Homepage>http://www.kde.org</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.kde.plasma</PartOf>
-            <Summary xml:lang="en">Qt wrapper for KDE 5 Bluez DBus API</Summary>
-            <Description xml:lang="en">Qt wrapper for KDE 5 DBus API.</Description>
-            <Archive type="tarxz" sha1sum="c897f80c8400101b28be3f9ad1250a8c03cd6901">http://download.kde.org/stable/plasma/5.3.2/bluez-qt-5.3.2.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency>extra-cmake-modules</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/plasma/bluez-qt/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>bluez-qt</Name>
-            <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
-                <Dependency>qt5-declarative</Dependency>
-                <Dependency>libgcc</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="library">/usr/lib/qt5</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>bluez-qt-devel</Name>
-            <Summary xml:lang="en">Development files for bluez-qt</Summary>
-            <RuntimeDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency release="2">bluez-qt</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="data">/usr/lib/cmake</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="2">
-                <Date>2015-07-01</Date>
-                <Version>5.3.2</Version>
-                <Comment>Version bump.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2015-06-06</Date>
                 <Version>5.3.1</Version>
                 <Comment>First Release.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
@@ -49856,6 +50396,66 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>dolphin-plugins</Name>
+            <Homepage>http://www.kde.org/</Homepage>
+            <Packager>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">Extra dolphin plugins</Summary>
+            <Summary xml:lang="tr">Dolphin eklentileri.</Summary>
+            <Description xml:lang="en">This package contains plugins that offer integration in Dolphin with the following version control systems:</Description>
+            <Description xml:lang="tr">Dolphin için VCS (Version Control System) eklentileri.</Description>
+            <Archive type="targz" sha1sum="8a70299fba04d7e0829fb416b4df0903e60168fb">http://download1479.mediafire.com/719l4swr5iyg/ochhwkga7gprc5p/dolphin-plugins.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>kdoctools-devel</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/application/dolphin-plugins/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>dolphin-plugins</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>dolphin</Dependency>
+                <Dependency>kio</Dependency>
+                <Dependency>ki18n</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>kconfig</Dependency>
+                <Dependency>kxmlgui</Dependency>
+                <Dependency>kcompletion</Dependency>
+                <Dependency>kcoreaddons</Dependency>
+                <Dependency>ktextwidgets</Dependency>
+                <Dependency>kdelibs4-support</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+            <Conflicts>
+                <Package>kdesdk</Package>
+            </Conflicts>
+            <Replaces>
+                <Package>kdesdk</Package>
+            </Replaces>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-07-24</Date>
+                <Version>15.04.3</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>kf5-konsole</Name>
             <Homepage>https://projects.kde.org/projects/kde/applications/dolphin</Homepage>
             <Packager>
@@ -49912,6 +50512,88 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Update release="2">
                 <Date>2015-06-05</Date>
                 <Version>15.04.2</Version>
+                <Comment>First Release.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>dolphin</Name>
+            <Homepage>https://projects.kde.org/projects/kde/applications/dolphin</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <PartOf>unknown</PartOf>
+            <Summary xml:lang="en">KDE File Manager</Summary>
+            <Description xml:lang="en">Dolphin is the File Manager for KDE.</Description>
+            <Archive type="targz" sha1sum="cc03888079c6d384a88e706901fd619f96411859">http://download1337.mediafire.com/daea2zyyh9tg/jmirgk5o1myd5ma/dolphin.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>kdoctools-devel</Dependency>
+                <Dependency>python3</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/kde/application/dolphin/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>dolphin</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>kactivities</Dependency>
+                <Dependency>knewstuff</Dependency>
+                <Dependency>ktexteditor</Dependency>
+                <Dependency>kio-extras</Dependency>
+                <Dependency>baloo-widgets</Dependency>
+                <Dependency>kio</Dependency>
+                <Dependency>ki18n</Dependency>
+                <Dependency>solid</Dependency>
+                <Dependency>kparts</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>kcodecs</Dependency>
+                <Dependency>kconfig</Dependency>
+                <Dependency>kxmlgui</Dependency>
+                <Dependency>kcmutils</Dependency>
+                <Dependency>kservice</Dependency>
+                <Dependency>baloo</Dependency>
+                <Dependency>kbookmarks</Dependency>
+                <Dependency>kitemviews</Dependency>
+                <Dependency>qt5-phonon</Dependency>
+                <Dependency>kcompletion</Dependency>
+                <Dependency>kcoreaddons</Dependency>
+                <Dependency>kdbusaddons</Dependency>
+                <Dependency>kiconthemes</Dependency>
+                <Dependency>kjobwidgets</Dependency>
+                <Dependency>ktextwidgets</Dependency>
+                <Dependency>kwindowsystem</Dependency>
+                <Dependency>kconfigwidgets</Dependency>
+                <Dependency>knotifications</Dependency>
+                <Dependency>kwidgetsaddons</Dependency>
+                <Dependency>kfilemetadata</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>dolphin-devel</Name>
+            <RuntimeDependencies>
+                <Dependency>dolphin</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/include</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-07-23</Date>
+                <Version>14.12</Version>
                 <Comment>First Release.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
                 <Email>groni@pisilinux.org</Email>
@@ -50435,7 +51117,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Qt Quick is a free software application framework developed and maintained by the Qt Project within the Qt framework.</Summary>
             <Summary xml:lang="tr">Qt4 uyumluluğu için Qt Declarative sunar</Summary>
             <Description xml:lang="en">Qt Quick is a free software application framework developed and maintained by the Qt Project within the Qt framework. It provides a way of building custom, highly dynamic user interfaces with fluid transitions and effects, which are becoming more common especially in mobile devices.</Description>
@@ -50504,7 +51186,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides access to sensor hardware and motion gesture recognition</Summary>
             <Summary xml:lang="tr">Donanım ve hareket algılama sensörüne erişim sağlar</Summary>
             <Description xml:lang="en">Provides access to sensor hardware and motion gesture recognition</Description>
@@ -50567,7 +51249,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides WebSocket communication compliant with RFC 6455</Summary>
             <Summary xml:lang="tr">RFC 6455 ile yumuşak WebSocket iletişimi sağlar</Summary>
             <Description xml:lang="en">Provides WebSocket communication compliant with RFC 6455</Description>
@@ -50628,7 +51310,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Classes for making Qt applications scriptable. Provided for Qt 4.x compatibility</Summary>
             <Summary xml:lang="tr">Çalıştırılabilir Qt uygulamaları oluşturmak için sınıflar. Qt 4.x için uyumluluk sağlar</Summary>
             <Description xml:lang="en">Classes for making Qt applications scriptable. Provided for Qt 4.x compatibility</Description>
@@ -50691,7 +51373,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides access to hardware and virtual serial ports</Summary>
             <Summary xml:lang="tr">Donanım ve sanal seri portlara erişim sağlar</Summary>
             <Description xml:lang="en">Provides access to hardware and virtual serial ports</Description>
@@ -50755,7 +51437,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides access to Bluetooth hardware</Summary>
             <Summary xml:lang="tr">Bluetooth donanımlarına bağlantı sağlar</Summary>
             <Description xml:lang="en">Provides access to Bluetooth hardware</Description>
@@ -50821,7 +51503,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">A cross-platform application and UI framework (Translations)</Summary>
             <Summary xml:lang="tr">Qt bir çok platformda çalışabilen ve grafiksel kullanıcı arayüzü (GUI) oluşturmaya yarayan bir araç takımıdır(Çeviriler)</Summary>
             <Description xml:lang="en">A cross-platform application and UI framework (Translations)</Description>
@@ -50869,7 +51551,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Classes for a WebKit2 based implementation and a new QML API</Summary>
             <Summary xml:lang="tr">WebKit2 tabanlı uygulama ve yeni QML API için sınıflar</Summary>
             <Description xml:lang="en">Classes for a WebKit2 based implementation and a new QML API</Description>
@@ -50981,7 +51663,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Reusable Qt Quick based UI controls to create classic desktop-style user interfaces</Summary>
             <Summary xml:lang="tr">Klasik masaüstü biçimli kullanıcı arayüzleri oluşturmak için yeniden kullanılabilir Qt Quick tabanlı UI kontrolleri</Summary>
             <Description xml:lang="en">Reusable Qt Quick based UI controls to create classic desktop-style user interfaces</Description>
@@ -51032,7 +51714,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides APIs for Wayland</Summary>
             <Summary xml:lang="tr">Wayland için API&apos;ler sağlar</Summary>
             <Description xml:lang="en">Provides APIs for Wayland</Description>
@@ -51116,7 +51798,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Plugins for additional image formats: TIFF, MNG, TGA, WBMP</Summary>
             <Summary xml:lang="tr">İlave resim biçimleri için eklentiler: TIFF, MNG, TGA, WBMP</Summary>
             <Description xml:lang="en">Plugins for additional image formats: TIFF, MNG, TGA, WBMP</Description>
@@ -51175,7 +51857,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Classes for QML and JavaScript languages</Summary>
             <Summary xml:lang="tr">QML ve JavaScript dilleri için sınıflar</Summary>
             <Description xml:lang="en">Classes for QML and JavaScript languages</Description>
@@ -51210,6 +51892,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">qt5-declarative için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency release="2">qt5-declarative</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/pkgconfig</Path>
@@ -51242,7 +51925,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Support for XPath, XQuery, XSLT and XML schema validation</Summary>
             <Summary xml:lang="tr">XPath, XQuery, XSLT ve XML şema doğrulama için destek sağlar</Summary>
             <Description xml:lang="en">Support for XPath, XQuery, XSLT and XML schema validation</Description>
@@ -51304,7 +51987,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Graphical effects for use with Qt Quick 2</Summary>
             <Summary xml:lang="tr">Qt Quick2 ile kullanım için grafiksel efektler</Summary>
             <Description xml:lang="en">Graphical effects for use with Qt Quick 2</Description>
@@ -51357,7 +52040,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">A cross-platform application and UI framework (Documentation)</Summary>
             <Summary xml:lang="tr">Qt bir çok platformda çalışabilen ve grafiksel kullanıcı arayüzü (GUI) oluşturmaya yarayan bir araç takımıdır(Belgelendirme)</Summary>
             <Description xml:lang="en">A cross-platform application and UI framework (Documentation)</Description>
@@ -51411,7 +52094,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Cross platform application and UI framework</Summary>
             <Summary xml:lang="tr">Qt5 araç takımı, sürüm 5</Summary>
             <Description xml:lang="fr">Qt est une boîte à outils graphique multi-plateforme.</Description>
@@ -51671,7 +52354,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Qt5 - AccountService addon</Summary>
             <Description xml:lang="en">Qt5 - AccountService addon</Description>
             <Archive type="targz" sha1sum="aa27c60eec6c4973625aab3341cf81f2b2f28c08">https://github.com/hawaii-desktop/qtaccountsservice/archive/v0.1.2.tar.gz</Archive>
@@ -51727,7 +52410,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">A Backend-as-a-Service solution to ease the backend development for connected and data-driven application</Summary>
             <Summary xml:lang="tr">Bağlı ve veritabanlı uygulamlar için arka uç geliştirmeyi kolaylaştıran bir sevice çözümü</Summary>
             <Description xml:lang="en">A Backend-as-a-Service solution to ease the backend development for connected and data-driven application</Description>
@@ -51792,7 +52475,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides access to position, satellite and area monitoring classes</Summary>
             <Summary xml:lang="tr">Konum, uydu ve alan izleme sınıflarına erişim sağlar</Summary>
             <Description xml:lang="en">Provides access to position, satellite and area monitoring classes</Description>
@@ -51859,7 +52542,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides access to QObject or QML objects from HTML clients for seamless integration of Qt applications with HTML/JavaScript clients</Summary>
             <Summary xml:lang="tr">HTML/JavaScript istemcileri ile Qt uygulamalarının tam uyumu için HTML istemcilerinden QML veya QObject nesnelerine erişim sağlar</Summary>
             <Description xml:lang="en">Provides access to QObject or QML objects from HTML clients for seamless integration of Qt applications with HTML/JavaScript clients</Description>
@@ -51921,7 +52604,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Classes for displaying the contents of SVG files</Summary>
             <Summary xml:lang="tr">SVG dosyalarının içeriğini görüntüleme için sınıflar</Summary>
             <Description xml:lang="en">Classes for displaying the contents of SVG files</Description>
@@ -51952,6 +52635,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">qt5-svg için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency release="2">qt5-svg</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/pkgconfig</Path>
@@ -51977,6 +52661,64 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>polkit-qt</Name>
+            <Homepage>http://www.lxde.org</Homepage>
+            <Packager>
+                <Name>Ayhan Yalçınsoy</Name>
+                <Email>ayhanyalcinsoy@pisilinux.org</Email>
+            </Packager>
+            <License>GPL2</License>
+            <IsA>app:gui</IsA>
+            <PartOf>desktop.toolkit.qt5</PartOf>
+            <Summary xml:lang="en">A library that allows developers to access PolicyKit API with a nice Qt-style API</Summary>
+            <Description xml:lang="en">A library that allows developers to access PolicyKit API with a nice Qt-style API</Description>
+            <Archive type="tarbz2" sha1sum="042b8a42e88bd578c27600e9b70c4e142a39da91">http://source.pisilinux.org/1.0/polkit-qt-1-0.112.0.tar.bz2</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
+                <Dependency>polkit-devel</Dependency>
+                <Dependency>cmake</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch>systembus-usage.patch</Patch>
+            </Patches>
+            <SourceURI>desktop/toolkit/qt5/polkit-qt/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>polkit-qt</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>glib2</Dependency>
+                <Dependency>polkit</Dependency>
+                <Dependency>libgcc</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="library">/usr/lib</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>polkit-qt-devel</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+                <Path fileType="headers">/usr/include/polkit-qt5-1</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2015-05-13</Date>
+                <Version>0.112</Version>
+                <Comment>First Release</Comment>
+                <Name>Ayhan Yalçınsoy</Name>
+                <Email>ayhanyalcinsoy@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>qt5-x11extras</Name>
             <Homepage>http://qt.digia.com/</Homepage>
             <Packager>
@@ -51984,7 +52726,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides platform-specific APIs for X11</Summary>
             <Summary xml:lang="tr">X11 için platforma özgü API&apos;ler sağlar</Summary>
             <Description xml:lang="en">Provides platform-specific APIs for X11</Description>
@@ -52011,6 +52753,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>qt5-x11extras-devel</Name>
             <Summary xml:lang="tr">qt5-x11extras için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
+                <Dependency>qt5-x11extras</Dependency>
                 <Dependency>qt5-base-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -52044,7 +52787,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Settings API with change notifications for Qt</Summary>
             <Summary xml:lang="tr">Settings API with change notifications for Qt</Summary>
             <Description xml:lang="en">Settings API with change notifications for Qt</Description>
@@ -52105,7 +52848,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Classes for audio, video, radio and camera functionality</Summary>
             <Summary xml:lang="tr">Ses, video, radyo ve kamera işlevsellikleri için sınıflar</Summary>
             <Description xml:lang="en">Classes for audio, video, radio and camera functionality</Description>
@@ -52177,7 +52920,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">Provides support for web applications using the Chromium browser project</Summary>
             <Summary xml:lang="tr">Chromium tarayıcı projelerini kullanan web uygulamaları için destek sağlar</Summary>
             <Description xml:lang="en">Provides support for web applications using the Chromium browser project</Description>
@@ -52311,7 +53054,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Email>ayhanyalcinsoy@pisilinux.org</Email>
             </Packager>
             <License>LGPLv2.1-linking-exception</License>
-            <PartOf>qt5</PartOf>
+            <PartOf>desktop.toolkit.qt5</PartOf>
             <Summary xml:lang="en">A cross-platform application and UI framework (Development Tools, QtHelp)</Summary>
             <Summary xml:lang="tr">Qt bir çok platformda çalışabilen ve grafiksel kullanıcı arayüzü (GUI) çatısı (Geliştirme Araçları, Qt Yardım).</Summary>
             <Description xml:lang="en">A cross-platform application and UI framework (Development Tools, QtHelp)</Description>
@@ -53901,6 +54644,109 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Update release="1">
                 <Date>2012-11-23</Date>
                 <Version>1.12.8</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>shared-mime-info</Name>
+            <Homepage>http://freedesktop.org/wiki/Software/shared-mime-info</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>app:console</IsA>
+            <IsA>data</IsA>
+            <PartOf>desktop.misc</PartOf>
+            <Summary xml:lang="en">The shared MIME info database</Summary>
+            <Summary xml:lang="tr">Paylaşımlı MIME veritabanı tanımlamaları</Summary>
+            <Description xml:lang="fr">shared-mim-info est un paquet contenant un grand nombre de types MIME communs, créés en fusionnant les bases de données KDE et GNOME existantes et en les convertissant au nouveau format, ainsi qu&apos;un logiciel pour mettre à jour cette base en fonction des spécifications de share-mime-info.</Description>
+            <Description xml:lang="en">shared-mime-info is a package containing a large number of common MIME types, created by converting the existing KDE and GNOME databases to the new format and merging them together, and software for updating the database based on the share-mime-info specification.</Description>
+            <Description xml:lang="tr">Bu pakette büyük miktarda dosya türü bilgisi bulunur. Bu bilgiler mevcut KDE ve GNOME veritabanlarının yeni biçime dönüştürülerek birleştirilmesinden oluşmuştur. Ayrıca, pakette bu veritabanını güncelleyen bir uygulama da bulunmaktadır.</Description>
+            <Archive type="tarxz" sha1sum="f7a3881acca3df1d9757d670e99d2d56ac9f7bca">http://freedesktop.org/~hadess/shared-mime-info-1.4.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
+                <Dependency>intltool</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">shared-mime-info-xz.patch</Patch>
+            </Patches>
+            <SourceURI>desktop/misc/shared-mime-info/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>shared-mime-info</Name>
+            <RuntimeDependencies>
+                <Dependency>libxml2</Dependency>
+                <Dependency>glib2</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="data">/etc/X11/Xsession.d</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="data">/usr/share/applications</Path>
+                <Path fileType="data">/usr/share/mime</Path>
+                <Path fileType="data">/usr/share/pkgconfig</Path>
+                <Path fileType="localedata">/usr/share/locale/</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+            <Provides>
+                <COMAR script="pakhandler.py">System.PackageHandler</COMAR>
+                <COMAR script="package.py">System.Package</COMAR>
+            </Provides>
+            <AdditionalFiles>
+                <AdditionalFile target="/etc/X11/Xsession.d/30-update-mime-database.sh" permission="0644" owner="root">update-mime-database.sh</AdditionalFile>
+                <AdditionalFile target="/usr/share/applications/defaults.list" permission="0644" owner="root">defaults.list</AdditionalFile>
+                <AdditionalFile target="/usr/share/applications/mimeapps.list" permission="0644" owner="root">mimeapps.list</AdditionalFile>
+                <AdditionalFile target="/usr/share/applications/file-roller-defaults.list" permission="0644" owner="root">file-roller-defaults.list</AdditionalFile>
+                <AdditionalFile target="/usr/share/applications/shotwell-viewer-defaults.list" permission="0644" owner="root">shotwell-viewer-defaults.list</AdditionalFile>
+                <AdditionalFile target="/usr/share/applications/totem-defaults.list" permission="0644" owner="root">totem-defaults.list</AdditionalFile>
+                <AdditionalFile target="/usr/share/mime/packages/mimetypefixes.xml" permission="0644" owner="root">mimetypefixes.xml</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <History>
+            <Update release="6">
+                <Date>2015-02-16</Date>
+                <Version>1.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Hakan Yıldız</Name>
+                <Email>hknyldz93@gmail.com</Email>
+            </Update>
+            <Update release="5">
+                <Date>2014-11-07</Date>
+                <Version>1.3</Version>
+                <Comment>Fix ISO images appearing as .txt files in Dolphin</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-05-24</Date>
+                <Version>1.3</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-09-05</Date>
+                <Version>1.1</Version>
+                <Comment>Add missing method to pakhandler.py</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-11</Date>
+                <Version>1.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-10-13</Date>
+                <Version>1.0</Version>
                 <Comment>First release</Comment>
                 <Name>Marcin Bojara</Name>
                 <Email>marcin@pisilinux.org</Email>
@@ -55589,6 +56435,39 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </Component>
     <Component>
         <Name>desktop.kde.base</Name>
+        <LocalName xml:lang="en">FIXME</LocalName>
+        <Summary xml:lang="en">FIXME</Summary>
+        <Description xml:lang="en">FIXME</Description>
+        <Group>kde.desktop</Group>
+        <Maintainer>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Maintainer>
+    </Component>
+    <Component>
+        <Name>desktop.kde.framework</Name>
+        <LocalName xml:lang="en">FIXME</LocalName>
+        <Summary xml:lang="en">FIXME</Summary>
+        <Description xml:lang="en">FIXME</Description>
+        <Group>kde.desktop</Group>
+        <Maintainer>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Maintainer>
+    </Component>
+    <Component>
+        <Name>desktop.kde.application</Name>
+        <LocalName xml:lang="en">FIXME</LocalName>
+        <Summary xml:lang="en">FIXME</Summary>
+        <Description xml:lang="en">FIXME</Description>
+        <Group>kde.desktop</Group>
+        <Maintainer>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Maintainer>
+    </Component>
+    <Component>
+        <Name>desktop.kde.plasma</Name>
         <LocalName xml:lang="en">FIXME</LocalName>
         <Summary xml:lang="en">FIXME</Summary>
         <Description xml:lang="en">FIXME</Description>
