@@ -10,14 +10,16 @@
         </Packager>
         <License>LGPLv2</License>
         <IsA>library</IsA>
-	<IsA>app:console</IsA>
+        <IsA>app:console</IsA>
         <Summary>XML-RPC client library for KDE</Summary>
         <Description>This library contains simple XML-RPC Client support. It is used mainly by the egroupware module of kdepim, but is a complete client and is quite easy to use. Only one interface is exposed to the world, kxmlrpcclient/client.h and of that interface, you only need to use 3 methods: setUrl, setUserAgent and call.</Description>
         <Archive sha1sum="3c5a1f2b0678cae6daad26698675b331b422d6b1" type="tarxz">http://download.kde.org/stable/frameworks/5.11/kxmlrpcclient-5.11.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
+            <Dependency>kauth-devel</Dependency>
+            <Dependency>kio-devel</Dependency>
             <Dependency>extra-cmake-modules</Dependency>
-            <Dependency>python3</Dependency>            
+            <Dependency>cmake</Dependency>            
         </BuildDependencies>
     </Source>
 
@@ -25,28 +27,31 @@
         <Name>kxmlrpcclient</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
-	    <Dependency>libgcc</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>ki18n</Dependency>
             <Dependency>kcoreaddons</Dependency>
             <Dependency>kio</Dependency>
         </RuntimeDependencies>
         <Files>
-	    <Path fileType="config">/etc</Path>
+            <Path fileType="config">/etc</Path>
             <Path fileType="data">/usr/share</Path>
-	    <Path fileType="localedata">/usr/share/locale</Path>
-	    <Path fileType="executable">/usr/bin</Path>
-	    <Path fileType="library">/usr/lib/qt5</Path>
-	    <Path fileType="library">/usr/lib</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/qt5</Path>
+            <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>	    
         </Files>
     </Package>
     
     <Package>
         <Name>kxmlrpcclient-devel</Name>
-	<Summary>Development files for kdelibs4-support</Summary>
+        <Summary>Development files for kdelibs4-support</Summary>
         <RuntimeDependencies>
-	    <Dependency>qt5-base-devel</Dependency>
             <Dependency release="current">kxmlrpcclient</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>ki18n-devel</Dependency>
+            <Dependency>kcoreaddons-devel</Dependency>
+            <Dependency>kio-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
