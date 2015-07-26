@@ -13,7 +13,7 @@ def setup():
                           -DSYSCONF_INSTALL_DIR=/etc \
                           -DLIBEXEC_INSTALL_DIR=lib \
                           -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+                          -DPYTHON_EXECUTABLE=/usr/bin/python \
                           -DLIB_INSTALL_DIR=lib \
                           -DBUILD_TESTING=OFF")
 
