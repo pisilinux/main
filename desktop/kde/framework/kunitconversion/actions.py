@@ -13,7 +13,7 @@ def setup():
                           -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
                           -DLIB_INSTALL_DIR=lib \
                           -DPLUGIN_INSTALL_DIR=/usr/lib/qt5/plugins \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+                          -DPYTHON_EXECUTABLE=/usr/bin/python \
                           -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
                           -DBUILD_TESTING=OFF")
 
