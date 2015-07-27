@@ -14,7 +14,7 @@ def setup():
                           -DQML_INSTALL_DIR=lib/qt5/qml \
                           -DLIB_INSTALL_DIR=lib \
                           -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+                          -DPYTHON_EXECUTABLE=/usr/bin/python \
                           -DLOCALE_INSTALL_DIR=/usr/share/locale \
                           -DBUILD_TESTING=OFF")
 
