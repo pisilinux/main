@@ -15,18 +15,21 @@ def setup():
                --disable-poppler-qt \
                --disable-gtk-doc-html \
                --disable-zlib \
+               --enable-libcurl \
                --disable-gtk-test \
-               --enable-poppler-qt4 \
+               --disable-poppler-qt4 \
                --enable-cairo-output \
                --enable-xpdf-headers \
                --enable-libjpeg \
-               --enable-libopenjpeg"
+               --disable-libopenjpeg"
 
     if get.buildTYPE() == "emul32":
-        options += " --libdir=/usr/lib32 \
+        options = " --libdir=/usr/lib32 \
+                     --disable-libcurl \
                      --disable-utils \
                      --disable-gtk-test \
                      --disable-poppler-cpp \
+                     --disable-libopenjpeg \
                      --disable-poppler-qt4"
 
     autotools.configure(options)
