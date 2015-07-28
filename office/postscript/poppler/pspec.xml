@@ -12,18 +12,19 @@
         <IsA>library</IsA>
         <Summary>PDF rendering library</Summary>
         <Description>poppler is a PDF rendering library based on xpdf.</Description>
-        <Archive sha1sum="d0b5545f0e5f0104eb141d356003c0b571601d6f" type="tarxz">http://poppler.freedesktop.org/poppler-0.31.0.tar.xz</Archive>
+        <Archive sha1sum="f204cb6a57730971ef561732a269e7bafc8e8476" type="tarxz">http://poppler.freedesktop.org/poppler-0.34.0.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>qt-devel</Dependency>
             <Dependency>lcms2-devel</Dependency>
-            <Dependency>libjpeg-turbo-devel</Dependency>
-            <Dependency>gtk2-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
             <Dependency>libpng-devel</Dependency>
-            <Dependency>openjpeg-devel</Dependency>
             <Dependency>tiff-devel</Dependency>
             <Dependency>fontconfig-devel</Dependency>
-            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>openjpeg-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -31,10 +32,13 @@
         <Name>poppler</Name>
         <RuntimeDependencies>
             <Dependency>lcms2</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>libpng</Dependency>
-            <Dependency>openjpeg</Dependency>
             <Dependency>tiff</Dependency>
+            <Dependency>openjpeg</Dependency>
             <Dependency>fontconfig</Dependency>
             <Dependency>poppler-data</Dependency>
         </RuntimeDependencies>
@@ -51,6 +55,8 @@
             <Dependency release="current">poppler</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>lcms2</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -59,33 +65,35 @@
     </Package>
 
     <Package>
-        <Name>poppler-qt</Name>
+        <Name>poppler-qt5</Name>
         <Summary>Qt wrapper for poppler</Summary>
         <RuntimeDependencies>
-            <Dependency>qt</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/libpoppler-qt4.so*</Path>
+            <Path fileType="library">/usr/lib/libpoppler-qt5.so*</Path>
         </Files>
     </Package>
 
     <Package>
-        <Name>poppler-qt-devel</Name>
+        <Name>poppler-qt5-devel</Name>
         <Summary>Development files for poppler-qt</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">poppler-qt</Dependency>
+            <Dependency release="current">poppler-qt5</Dependency>
             <Dependency release="current">poppler-devel</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/usr/lib/pkgconfig/poppler-qt4.pc</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/poppler-qt5.pc</Path>
         </Files>
-    </Package>
+     </Package>
 
     <Package>
         <Name>poppler-cpp</Name>
         <Summary>Pure C++ wrapper for poppler</Summary>
         <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
             <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -109,8 +117,10 @@
         <Name>poppler-glib</Name>
         <Summary>Glib wrapper for poppler</Summary>
         <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
             <Dependency>cairo</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -125,7 +135,6 @@
         <RuntimeDependencies>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
-            <Dependency>gdk-pixbuf-devel</Dependency>
             <Dependency release="current">poppler-glib</Dependency>
             <Dependency release="current">poppler-devel</Dependency>
         </RuntimeDependencies>
@@ -159,13 +168,15 @@
             <Dependency>lcms2-32bit</Dependency>
             <Dependency>libjpeg-turbo-32bit</Dependency>
             <Dependency>libpng-32bit</Dependency>
-            <Dependency>openjpeg-32bit</Dependency>
             <Dependency>tiff-32bit</Dependency>
             <Dependency>freetype-32bit</Dependency>
             <Dependency>fontconfig-32bit</Dependency>
+	    <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">poppler</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>lcms2-32bit</Dependency>
             <Dependency>libjpeg-turbo-32bit</Dependency>
             <Dependency>libpng-32bit</Dependency>
@@ -188,9 +199,12 @@
             <Dependency>glib2-32bit</Dependency>
             <Dependency>cairo-32bit</Dependency>
             <Dependency>freetype-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">poppler-32bit</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>glib2-32bit</Dependency>
             <Dependency>cairo-32bit</Dependency>
             <Dependency>freetype-32bit</Dependency>
@@ -201,6 +215,13 @@
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2015-07-28</Date>
+            <Version>0.34.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2015-03-04</Date>
             <Version>0.31.0</Version>
