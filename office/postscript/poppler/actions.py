@@ -21,7 +21,7 @@ def setup():
                --enable-cairo-output \
                --enable-xpdf-headers \
                --enable-libjpeg \
-               --disable-libopenjpeg"
+               --enable-libopenjpeg=openjpeg1"
 
     if get.buildTYPE() == "emul32":
         options = " --libdir=/usr/lib32 \
@@ -30,7 +30,7 @@ def setup():
                      --disable-gtk-test \
                      --disable-poppler-cpp \
                      --disable-libopenjpeg \
-                     --disable-poppler-qt4"
+                     --disable-poppler-qt5"
 
     autotools.configure(options)
 
