@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DPhonon4Qt5_DIR=/usr/lib/qt5/cmake/phonon4qt5")
 
 def build():
     kde5.make()

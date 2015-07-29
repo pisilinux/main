@@ -9,10 +9,13 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    kde5.configure("-DPHONON_BUILD_PHONON4QT5=ON \
+    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_SKIP_RPATH=ON \
+                    -DCMAKE_INSTALL_PREFIX=/usr \
                     -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON \
                     -DPHONON_BUILD_PHONON4QT5=ON \
-                    -DCMAKE_INSTALL_LIBDIR=/usr/lib/qt5")
+                    -D__KDE_HAVE_GCC_VISIBILITY=NO \
+                    -DCMAKE_INSTALL_LIBDIR=lib")
 
 def build():
     kde5.make()
