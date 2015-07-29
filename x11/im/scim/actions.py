@@ -15,15 +15,18 @@ def setup():
     shelltools.system("intltoolize --force")
     autotools.configure("\
                          --with-x \
+                         --with-qt5-moc=/usr/lib/qt5/bin/moc \
+                         --with-gtk-version=2,3 \
                          --disable-static \
                          --enable-ld-version-script \
                          --x-includes=/usr/include/X11 \
                          --x-libraries=/usr/lib \
                          --disable-clutter-immodule \
-                        ") 
+                        ")
                          #--disable-panel-gtk \
                          #--disable-setup-ui")
-                       
+                         # no gtk3 support in scim-anthy
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
