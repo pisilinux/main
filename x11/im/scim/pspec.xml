@@ -18,9 +18,10 @@
             <AdditionalFile permission="0644" target="configs/global">scim-system-global</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
-            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
             <Dependency>libXt-devel</Dependency>
             <Dependency>intltool</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <Patch level="1">scim-1.4.14-compile.patch</Patch>
@@ -38,7 +39,10 @@
         <Summary>Core of SCIM for users</Summary>
         <RuntimeDependencies>
             <Dependency>libX11</Dependency>
-            <Dependency>gtk2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>scim-libs</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
         </RuntimeDependencies>
@@ -62,7 +66,11 @@
         <RuntimeDependencies>
             <Dependency>pango</Dependency>
             <Dependency>libX11</Dependency>
-            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libscim-*</Path>
@@ -85,10 +93,24 @@
     </Package>
 
     <Package>
+        <Name>scim-immodule-gtk3</Name>
+        <Summary>IM Module for GTK3 applications</Summary>
+        <RuntimeDependencies>
+            <Dependency>gtk3</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/gtk-3.0</Path>
+        </Files>
+    </Package>
+
+    <Package>
         <Name>scim-immodule-gtk2</Name>
         <Summary>IM Module for GTK2 applications</Summary>
         <RuntimeDependencies>
             <Dependency>gtk2</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>pango</Dependency>
         </RuntimeDependencies>
         <Files>

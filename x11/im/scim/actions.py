@@ -25,7 +25,6 @@ def setup():
                         ")
                          #--disable-panel-gtk \
                          #--disable-setup-ui")
-                         # no gtk3 support in scim-anthy
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
