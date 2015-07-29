@@ -17,7 +17,6 @@ def setup():
                --disable-silent-rules \
                --disable-schemas-compile \
                --enable-introspection \
-               --enable-gtk2-dependency \
                --disable-papi \
                --disable-wayland-backend \
               "
@@ -59,3 +58,4 @@ def install():
         for binaries in ["gtk-query-immodules-3.0"]:
             pisitools.domove("/_emul32/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
         pisitools.removeDir("/_emul32")
+    pisitools.rename("/usr/bin/gtk-update-icon-cache", "gtk3-update-icon-cache")
