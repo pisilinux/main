@@ -15,8 +15,6 @@ def setup():
     shelltools.system("intltoolize --force")
     autotools.configure("\
                          --with-x \
-                         --with-qt5-moc=/usr/lib/qt5/bin/moc \
-                         --with-gtk-version=2,3 \
                          --disable-static \
                          --enable-ld-version-script \
                          --x-includes=/usr/include/X11 \
@@ -35,8 +33,8 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     #Remove scim-setup related stuff
-    pisitools.removeDir("/usr/share/pixmaps")
-    pisitools.removeDir("/usr/share/applications")
-    pisitools.removeDir("/usr/share/control-center-2.0")
+    #pisitools.removeDir("/usr/share/pixmaps")
+    #pisitools.removeDir("/usr/share/applications")
+    #pisitools.removeDir("/usr/share/control-center-2.0")
 
     pisitools.dodoc("AUTHORS", "NEWS", "README*", "TODO", "THANKS")
