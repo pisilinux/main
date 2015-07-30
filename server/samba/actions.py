@@ -58,3 +58,6 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     pisitools.dosym("samba-4.0/libsmbclient.h", "/usr/include/libsmbclient.h")
+    
+    # remove unneeded files
+    pisitools.removeDir("/usr/share/ctdb-tests")
