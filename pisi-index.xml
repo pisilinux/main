@@ -19165,20 +19165,20 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">DBusMenu spesifikasyonunun Qt gerçeklemesi</Summary>
             <Description xml:lang="en">libdbusmenu-qt library provides a Qt implementation of the DBusMenu spec.</Description>
             <Description xml:lang="tr">libdbusmenu-qt kitaplığı DBusMenu spesifikasyonunun Qt gerçeklemesini sağlar.</Description>
-            <Archive type="tarbz2" sha1sum="308cc53a4a1f2db40f8ffbcfc71e987a4839ec45">https://launchpad.net/libdbusmenu-qt/trunk/0.9.2/+download/libdbusmenu-qt-0.9.2.tar.bz2</Archive>
+            <Archive type="targz" sha1sum="b24d7a063de3344d4f2dfc3560c840d3fc0051b4">http://archive.ubuntu.com/ubuntu/pool/main/libd/libdbusmenu-qt/libdbusmenu-qt_0.9.3+15.10.20150604.orig.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>libqjson-devel</Dependency>
-                <Dependency>qt-devel</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>doxygen</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
-            <Patches>
-                <Patch level="1">add-qt-library-dir.diff</Patch>
-            </Patches>
             <SourceURI>programming/misc/libdbusmenu-qt/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>libdbusmenu-qt</Name>
             <RuntimeDependencies>
-                <Dependency>qt</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib</Path>
@@ -19190,7 +19190,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="en">Development files for libdbusmenu-qt</Summary>
             <Summary xml:lang="tr">libdbusmenu-qt için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="4">libdbusmenu-qt</Dependency>
+                <Dependency release="5">libdbusmenu-qt</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -19198,6 +19199,13 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Files>
         </Package>
         <History>
+            <Update release="5">
+                <Date>2015-07-28</Date>
+                <Version>0.9.3_20150604</Version>
+                <Comment>rebuild</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
             <Update release="4">
                 <Date>2014-05-25</Date>
                 <Version>0.9.2</Version>
@@ -19311,6 +19319,93 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Comment>First release</Comment>
                 <Name>Pisi Linux Admins</Name>
                 <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>libqjson</Name>
+            <Homepage>http://qjson.sourceforge.net</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <IsA>library</IsA>
+            <PartOf>programming.misc</PartOf>
+            <Summary xml:lang="en">Qt-based library that maps JSON data to QVariant objects</Summary>
+            <Summary xml:lang="tr">Qt tabanlı bu kitaplığı JSON data haritalarını QVariant nesnelere dönüştürür</Summary>
+            <Summary xml:lang="pl">Implementacja Qt formatu JSON</Summary>
+            <Description xml:lang="en">libqjson, (JavaScript Object Notation) is a lightweight data-interchange format. It can represents integer, real number, string, an ordered sequence of value, and a collection of name/value pairs.</Description>
+            <Description xml:lang="tr">libqjson, (JavaScript Object Notation) bir veri değişim biçimidir. JSON haritalarını QVariant nesnelere dönüştürür..</Description>
+            <Archive type="targz" sha1sum="6da58fc0309d19a1b30ed2321b84a86b7c3dd947">http://source.pisilinux.org/1.0/qjson-0.82_d0f62e65.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>cmake</Dependency>
+            </BuildDependencies>
+            <SourceURI>programming/misc/libqjson/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libqjson</Name>
+            <RuntimeDependencies>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>libgcc</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libqjson-devel</Name>
+            <Summary xml:lang="en">Development files for libqjson</Summary>
+            <Summary xml:lang="tr">libqjson için geliştirme dosyaları</Summary>
+            <Summary xml:lang="pl">Pliki nagłówkowe do libqjson</Summary>
+            <RuntimeDependencies>
+                <Dependency release="5">libqjson</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include/qjson</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="data">/usr/lib/cmake/qjson</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="5">
+                <Date>2015-07-28</Date>
+                <Version>0.82_p1</Version>
+                <Comment>use git version</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-05-30</Date>
+                <Version>0.8.1</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-03-09</Date>
+                <Version>0.8.1</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-28</Date>
+                <Version>0.8.1</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2013-01-08</Date>
+                <Version>0.8.1</Version>
+                <Comment>First release</Comment>
+                <Name>Idris Kalp</Name>
+                <Email>yaralikurt15@hotmail.com</Email>
             </Update>
         </History>
     </SpecFile>
@@ -22422,7 +22517,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="targz" sha1sum="c15f7f3a97995decf62cc964956fc1e374ecd78c">mirrors://sourceforge/qalculate/libqalculate-0.9.7.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>cln-devel</Dependency>
-                <Dependency>gmp</Dependency>
+                <Dependency>gmp-devel</Dependency>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
+                <Dependency>gettext-devel</Dependency>
+                <Dependency>intltool</Dependency>
             </BuildDependencies>
             <Patches>
                 <Patch level="1">libqalculate-0.9.6-check-fix.patch</Patch>
@@ -22434,7 +22533,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>libqalculate</Name>
             <RuntimeDependencies>
                 <Dependency>cln</Dependency>
-                <Dependency>gmp</Dependency>
+                <Dependency>libxml2</Dependency>
+                <Dependency>glib2</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
@@ -22451,6 +22552,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <RuntimeDependencies>
                 <Dependency release="3">libqalculate</Dependency>
                 <Dependency>cln-devel</Dependency>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -22698,9 +22801,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">Sayılar için bir C++ sınıf kütüphanesi</Summary>
             <Description xml:lang="en">cln is a library for efficient computations with all kinds of numbers in arbitrary precision.</Description>
             <Description xml:lang="tr">cln, her türlü hassaslıktaki sayılarla hızlı hesaplamalar yapmak için tasarlanmış bir kütüphanedir.</Description>
-            <Archive type="tarbz2" sha1sum="11c56780eb83ed54f2ad1ecef7f0dc0f609c426d">http://www.ginac.de/CLN/cln-1.3.3.tar.bz2</Archive>
+            <Archive type="tarbz2" sha1sum="76f73071236ead72ba5c9ee892f29ca24e557b8c">http://www.ginac.de/CLN/cln-1.3.4.tar.bz2</Archive>
             <BuildDependencies>
-                <Dependency>gmp</Dependency>
+                <Dependency>gmp-devel</Dependency>
             </BuildDependencies>
             <SourceURI>science/mathematics/cln/pspec.xml</SourceURI>
         </Source>
@@ -22708,6 +22811,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>cln</Name>
             <RuntimeDependencies>
                 <Dependency>gmp</Dependency>
+                <Dependency>libgcc</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
@@ -22722,7 +22826,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="en">Development files for cln</Summary>
             <Summary xml:lang="tr">cln için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="3">cln</Dependency>
+                <Dependency release="4">cln</Dependency>
+                <Dependency>gmp-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -22730,6 +22835,13 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Files>
         </Package>
         <History>
+            <Update release="4">
+                <Date>2015-07-29</Date>
+                <Version>1.3.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
             <Update release="3">
                 <Date>2014-06-14</Date>
                 <Version>1.3.3</Version>
@@ -48719,6 +48831,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>gstreamer-devel</Dependency>
                 <Dependency>cmake</Dependency>
             </BuildDependencies>
+            <Patches>
+                <Patch>qt-5.4.2.patch</Patch>
+            </Patches>
             <SourceURI>desktop/kde/phonon/qt5-phonon/pspec.xml</SourceURI>
         </Source>
         <Package>
@@ -49203,7 +49318,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>xorg-server-devel</Dependency>
                 <Dependency>xorg-input-evdev-devel</Dependency>
                 <Dependency>xorg-input-synaptics-devel</Dependency>
+                <Dependency>plasma-workspace-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/plasma-desktop/pspec.xml</SourceURI>
         </Source>
@@ -49281,12 +49398,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
-            <Conflicts>
-                <Package>kcm-touchpad-frameworks, kdebase-workspace</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kcm-touchpad-frameworks</Package>
-            </Replaces>
         </Package>
         <History>
             <Update release="4">
@@ -49322,114 +49433,126 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="en">The KDE5 Plasma Workspace Components</Description>
             <Archive type="tarxz" sha1sum="07f6f48fd624fbf6e4442d4cd081496aa3285bc4">http://download.kde.org/stable/plasma/5.3.2/plasma-workspace-5.3.2.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>baloo-devel</Dependency>
+                <Dependency>kactivities-devel</Dependency>
+                <Dependency>kde-cli-tools</Dependency>
+                <Dependency>kdelibs4-support-devel</Dependency>
+                <Dependency>kdesignerplugin</Dependency>
+                <Dependency>kdesu-devel</Dependency>
+                <Dependency>kdewebkit-devel</Dependency>
+                <Dependency>kdoctools-devel</Dependency>
+                <Dependency>kemoticons-devel</Dependency>
+                <Dependency>kio-devel</Dependency>
+                <Dependency>kitemmodels-devel</Dependency>
+                <Dependency>kjs-devel</Dependency>
+                <Dependency>kjsembed-devel</Dependency>
+                <Dependency>knotifyconfig-devel</Dependency>
+                <Dependency>krunner-devel</Dependency>
+                <Dependency>ktexteditor-devel</Dependency>
+                <Dependency>kunitconversion-devel</Dependency>
+                <Dependency>kwayland-devel</Dependency>
+                <Dependency>kwin-devel</Dependency>
+                <Dependency>kxmlrpcclient-devel</Dependency>
+                <Dependency>libdbusmenu-qt-devel</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>libkscreen-devel</Dependency>
                 <Dependency>libksysguard-devel</Dependency>
                 <Dependency>libqalculate-devel</Dependency>
-                <Dependency>gpsd-devel</Dependency>
-                <Dependency>kwayland</Dependency>
-                <Dependency>baloo-devel</Dependency>
-                <Dependency>extra-cmake-modules</Dependency>
-                <Dependency>kdelibs4-support-devel</Dependency>
-                <Dependency>kdoctools-devel</Dependency>
-                <Dependency>krunner-devel</Dependency>
-                <Dependency>kwin-devel</Dependency>
-                <Dependency>libXcursor-devel</Dependency>
-                <Dependency>libXrender-devel</Dependency>
-                <Dependency>xorg-util</Dependency>
-                <Dependency>xcb-util-keysyms-devel</Dependency>
-                <Dependency>xcb-util-image-devel</Dependency>
-                <Dependency>xcb-util-renderutil-devel</Dependency>
-                <Dependency>networkmanager-qt-devel</Dependency>
-                <Dependency>kxmlrpcclient-devel</Dependency>
-                <Dependency>kio-devel</Dependency>
-                <Dependency>kjs-devel</Dependency>
-                <Dependency>pam</Dependency>
-                <Dependency>zlib-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
                 <Dependency>libXau-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libxcb-devel</Dependency>
-                <Dependency>kactivities-devel</Dependency>
+                <Dependency>libXcursor-devel</Dependency>
+                <Dependency>libXi-devel</Dependency>
+                <Dependency>libXrender-devel</Dependency>
+                <Dependency>NetworkManager-devel</Dependency>
+                <Dependency>networkmanager-qt-devel</Dependency>
+                <Dependency>pam-devel</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-sql-mysql</Dependency>
+                <Dependency>qt5-sql-odbc</Dependency>
+                <Dependency>qt5-sql-postgresql</Dependency>
+                <Dependency>qt5-sql-sqlite</Dependency>
+                <Dependency>xcb-util-image-devel</Dependency>
+                <Dependency>xcb-util-keysyms-devel</Dependency>
+                <Dependency>xcb-util-renderutil-devel</Dependency>
+                <Dependency>xorg-util</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>docbook-xsl</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/plasma-workspace/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>plasma-workspace</Name>
             <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
-                <Dependency>qt5-tools</Dependency>
-                <Dependency>cln</Dependency>
-                <Dependency>kio</Dependency>
-                <Dependency>kjs</Dependency>
-                <Dependency>pam</Dependency>
-                <Dependency>zlib</Dependency>
-                <Dependency>libX11</Dependency>
-                <Dependency>libXau</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>libxcb</Dependency>
-                <Dependency>kactivities</Dependency>
-                <Dependency>gpsd</Dependency>
-                <Dependency>libSM</Dependency>
-                <Dependency>libXi</Dependency>
-                <Dependency>libICE</Dependency>
-                <Dependency>kio</Dependency>
-                <Dependency>kjs</Dependency>
-                <Dependency>libXfixes</Dependency>
                 <Dependency>baloo</Dependency>
+                <Dependency>cln</Dependency>
+                <Dependency>kactivities</Dependency>
                 <Dependency>kauth</Dependency>
-                <Dependency>kdesu</Dependency>
-                <Dependency>ki18n</Dependency>
-                <Dependency>solid</Dependency>
-                <Dependency>qt5-script</Dependency>
-                <Dependency>qt5-phonon</Dependency>
-                <Dependency>qt5-webkit</Dependency>
-                <Dependency>kcrash</Dependency>
-                <Dependency>kconfig</Dependency>
-                <Dependency>kwallet</Dependency>
-                <Dependency>kxmlgui</Dependency>
-                <Dependency>kpackage</Dependency>
-                <Dependency>kservice</Dependency>
-                <Dependency>qt5-x11extras</Dependency>
-                <Dependency>kdewebkit</Dependency>
-                <Dependency>kidletime</Dependency>
-                <Dependency>wayland-client</Dependency>
-                <Dependency>wayland-server</Dependency>
                 <Dependency>kbookmarks</Dependency>
-                <Dependency>kguiaddons</Dependency>
-                <Dependency>kitemviews</Dependency>
-                <Dependency>qt5-declarative</Dependency>
-                <Dependency>qt5-libdbusmenu</Dependency>
                 <Dependency>kcompletion</Dependency>
-                <Dependency>kcoreaddons</Dependency>
-                <Dependency>kdbusaddons</Dependency>
-                <Dependency>kiconthemes</Dependency>
-                <Dependency>kjobwidgets</Dependency>
-                <Dependency>kdeclarative</Dependency>
-                <Dependency>kglobalaccel</Dependency>
-                <Dependency>ktextwidgets</Dependency>
-                <Dependency>kwindowsystem</Dependency>
-                <Dependency>kxmlrpcclient</Dependency>
+                <Dependency>kconfig</Dependency>
                 <Dependency>kconfigwidgets</Dependency>
-                <Dependency>knotifications</Dependency>
-                <Dependency>kwidgetsaddons</Dependency>
-                <Dependency>plasma-framework</Dependency>
+                <Dependency>kcoreaddons</Dependency>
+                <Dependency>kcrash</Dependency>
+                <Dependency>kdbusaddons</Dependency>
+                <Dependency>kdeclarative</Dependency>
                 <Dependency>kde-cli-tools</Dependency>
+                <Dependency>kdelibs4-support</Dependency>
+                <Dependency>kdesu</Dependency>
+                <Dependency>kdewebkit</Dependency>
+                <Dependency>kglobalaccel</Dependency>
+                <Dependency>kguiaddons</Dependency>
+                <Dependency>ki18n</Dependency>
+                <Dependency>kiconthemes</Dependency>
+                <Dependency>kidletime</Dependency>
+                <Dependency>kio</Dependency>
+                <Dependency>kitemviews</Dependency>
+                <Dependency>kjobwidgets</Dependency>
+                <Dependency>kjs</Dependency>
                 <Dependency>kjsembed</Dependency>
                 <Dependency>knewstuff</Dependency>
+                <Dependency>knotifications</Dependency>
                 <Dependency>knotifyconfig</Dependency>
+                <Dependency>kpackage</Dependency>
+                <Dependency>krunner</Dependency>
+                <Dependency>kservice</Dependency>
                 <Dependency>ktexteditor</Dependency>
+                <Dependency>ktextwidgets</Dependency>
+                <Dependency>kwallet</Dependency>
                 <Dependency>kwayland</Dependency>
+                <Dependency>kwidgetsaddons</Dependency>
+                <Dependency>kwindowsystem</Dependency>
+                <Dependency>kxmlgui</Dependency>
+                <Dependency>kxmlrpcclient</Dependency>
+                <Dependency>libdbusmenu-qt</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libICE</Dependency>
                 <Dependency>libkscreen</Dependency>
                 <Dependency>libksysguard</Dependency>
                 <Dependency>libqalculate</Dependency>
-                <Dependency>krunner</Dependency>
-                <Dependency>libksysguard</Dependency>
-                <Dependency>kdelibs4-support</Dependency>
-                <Dependency>networkmanager-qt</Dependency>
+                <Dependency>libSM</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>libXau</Dependency>
+                <Dependency>libxcb</Dependency>
+                <Dependency>libXfixes</Dependency>
+                <Dependency>libXi</Dependency>
                 <Dependency>libXrender</Dependency>
+                <Dependency>networkmanager-qt</Dependency>
+                <Dependency>pam</Dependency>
+                <Dependency>plasma-framework</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-declarative</Dependency>
+                <Dependency>qt5-phonon</Dependency>
+                <Dependency>qt5-script</Dependency>
+                <Dependency>qt5-webkit</Dependency>
+                <Dependency>qt5-x11extras</Dependency>
+                <Dependency>solid</Dependency>
+                <Dependency>wayland-client</Dependency>
+                <Dependency>wayland-server</Dependency>
                 <Dependency>xcb-util-keysyms</Dependency>
+                <Dependency>zlib</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc/pam.d</Path>
@@ -49443,31 +49566,83 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace</Package>
-            </Replaces>
         </Package>
         <Package>
             <Name>plasma-workspace-devel</Name>
             <Summary xml:lang="en">Development files for kde5 plasma-workspace</Summary>
             <RuntimeDependencies>
-                <Dependency>qt5-base-devel</Dependency>
                 <Dependency release="2">plasma-workspace</Dependency>
+                <Dependency>baloo-devel</Dependency>
+                <Dependency>cln-devel</Dependency>
+                <Dependency>kactivities-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kbookmarks-devel</Dependency>
+                <Dependency>kcompletion-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kcrash-devel</Dependency>
+                <Dependency>kdbusaddons-devel</Dependency>
+                <Dependency>kdeclarative-devel</Dependency>
+                <Dependency>kde-cli-tools</Dependency>
+                <Dependency>kdelibs4-support-devel</Dependency>
+                <Dependency>kdesu-devel</Dependency>
+                <Dependency>kdewebkit</Dependency>
+                <Dependency>kglobalaccel-devel</Dependency>
+                <Dependency>kguiaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kidletime-devel</Dependency>
+                <Dependency>kio-devel</Dependency>
+                <Dependency>kitemviews-devel</Dependency>
+                <Dependency>kjobwidgets-devel</Dependency>
+                <Dependency>kjs-devel</Dependency>
+                <Dependency>kjsembed-devel</Dependency>
+                <Dependency>knewstuff</Dependency>
+                <Dependency>knotifications-devel</Dependency>
+                <Dependency>knotifyconfig-devel</Dependency>
+                <Dependency>kpackage-devel</Dependency>
+                <Dependency>krunner-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>ktexteditor-devel</Dependency>
+                <Dependency>ktextwidgets-devel</Dependency>
+                <Dependency>kwallet-devel</Dependency>
+                <Dependency>kwayland-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
+                <Dependency>kxmlgui-devel</Dependency>
+                <Dependency>kxmlrpcclient-devel</Dependency>
+                <Dependency>libdbusmenu-qt-devel</Dependency>
+                <Dependency>libICE-devel</Dependency>
+                <Dependency>libkscreen-devel</Dependency>
+                <Dependency>libksysguard-devel</Dependency>
+                <Dependency>libqalculate-devel</Dependency>
+                <Dependency>libSM-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libXau-devel</Dependency>
+                <Dependency>libxcb-devel</Dependency>
+                <Dependency>libXfixes-devel</Dependency>
+                <Dependency>libXi-devel</Dependency>
+                <Dependency>libXrender-devel</Dependency>
+                <Dependency>networkmanager-qt-devel</Dependency>
+                <Dependency>pam-devel</Dependency>
+                <Dependency>plasma-framework-devel</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>qt5-phonon-devel</Dependency>
+                <Dependency>qt5-script-devel</Dependency>
+                <Dependency>qt5-webkit-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>solid-devel</Dependency>
+                <Dependency>wayland-devel</Dependency>
+                <Dependency>xcb-util-keysyms-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
                 <Path fileType="data">/usr/lib/cmake</Path>
                 <Path fileType="config">/usr/lib/pkgconfig</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace-devel</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace-devel</Package>
-            </Replaces>
             <AdditionalFiles>
                 <AdditionalFile target="/etc/pam.d/kde" permission="0644" owner="root">kde.pam</AdditionalFile>
             </AdditionalFiles>
@@ -49767,12 +49942,15 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="062ba33ebf09a41afe30ced2ef3e5552f0378806">http://download.kde.org/stable/plasma/5.3.2/libksysguard-5.3.2.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>python3</Dependency>
+                <Dependency>qt5-script-devel</Dependency>
+                <Dependency>qt5-webkit-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libX11-devel</Dependency>
+                <Dependency>libXres-devel</Dependency>
                 <Dependency>zlib-devel</Dependency>
+                <Dependency>plasma-framework-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/libksysguard/pspec.xml</SourceURI>
         </Source>
@@ -49780,8 +49958,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>libksysguard</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libX11</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>zlib</Dependency>
                 <Dependency>libXres</Dependency>
                 <Dependency>qt5-webkit</Dependency>
@@ -49792,8 +49970,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kconfig</Dependency>
                 <Dependency>kauth</Dependency>
                 <Dependency>kcoreaddons</Dependency>
-                <Dependency>kdelibs4-support</Dependency>
                 <Dependency>ki18n</Dependency>
+                <Dependency>kdelibs4-support</Dependency>
                 <Dependency>plasma-framework</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -49804,31 +49982,31 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace</Package>
-            </Replaces>
         </Package>
         <Package>
             <Name>libksysguard-devel</Name>
             <Summary xml:lang="en">Development files for libksysguard</Summary>
             <RuntimeDependencies>
-                <Dependency>qt5-base-devel</Dependency>
                 <Dependency release="2">libksysguard</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>libXres-devel</Dependency>
+                <Dependency>qt5-webkit-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
                 <Path fileType="data">/usr/lib/cmake</Path>
                 <Path fileType="config">/usr/lib/pkgconfig</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace-devel</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace-devel</Package>
-            </Replaces>
         </Package>
         <History>
             <Update release="2">
@@ -49866,11 +50044,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
                 <Dependency>kidletime-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libxcb-devel</Dependency>
                 <Dependency>eudev-devel</Dependency>
                 <Dependency>plasma-workspace-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/powerdevil/pspec.xml</SourceURI>
         </Source>
@@ -50132,14 +50310,12 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="en">KDE hotkey daemon module allows you to configure custom keyboard shortcuts and mouse gestures.</Description>
             <Archive type="tarxz" sha1sum="37c2c4282d3c8d5a0bf8aed1aa614f62783f5929">http://download.kde.org/stable/plasma/5.3.2/khotkeys-5.3.2.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency>python3</Dependency>
-                <Dependency>kdoctools-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libX11-devel</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>kdoctools-devel</Dependency>
                 <Dependency>kconfig-devel</Dependency>
                 <Dependency>kservice-devel</Dependency>
-                <Dependency>qt5-x11extras-devel</Dependency>
                 <Dependency>kcompletion-devel</Dependency>
                 <Dependency>kcoreaddons-devel</Dependency>
                 <Dependency>ktextwidgets-devel</Dependency>
@@ -50155,8 +50331,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kxmlgui-devel</Dependency>
                 <Dependency>plasma-framework-devel</Dependency>
                 <Dependency>plasma-workspace-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/khotkeys/pspec.xml</SourceURI>
         </Source>
@@ -50194,12 +50370,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace</Package>
-            </Replaces>
         </Package>
         <History>
             <Update release="2">
@@ -50244,6 +50414,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>libXcursor-devel</Dependency>
                 <Dependency>libXrandr-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/libkscreen/pspec.xml</SourceURI>
         </Source>
@@ -50265,7 +50436,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>libkscreen-devel</Name>
             <Summary xml:lang="en">Development files for libkscreen</Summary>
             <RuntimeDependencies>
+                <Dependency>libxcb-devel</Dependency>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
                 <Dependency release="2">libkscreen</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -50572,9 +50745,27 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
-                <Dependency>libgcc</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kcompletion-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kdbusaddons-devel</Dependency>
+                <Dependency>kdelibs4-support-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kio-devel</Dependency>
+                <Dependency>kxmlgui-devel</Dependency>
+                <Dependency>sonnet-devel</Dependency>
+                <Dependency>kdesignerplugin</Dependency>
+                <Dependency>kitemmodels-devel</Dependency>
+                <Dependency>kinit-devel</Dependency>
+                <Dependency>kunitconversion-devel</Dependency>
+                <Dependency>kemoticons-devel</Dependency>
+                <Dependency>docbook-xsl</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
-                <Dependency>python3</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/kmenuedit/pspec.xml</SourceURI>
         </Source>
@@ -50735,17 +50926,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="d2d75aef18fbb77b26c2a641ab70d0937497ce39">http://download.kde.org/stable/plasma/5.3.2/kwayland-5.3.2.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>wayland-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/kwayland/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>kwayland</Name>
             <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
                 <Dependency>libgcc</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>mesa</Dependency>
                 <Dependency>wayland-client</Dependency>
                 <Dependency>wayland-server</Dependency>
             </RuntimeDependencies>
@@ -50758,6 +50951,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Name>kwayland-devel</Name>
             <RuntimeDependencies>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>wayland-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
                 <Dependency release="3">kwayland</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -50924,19 +51119,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Description xml:lang="en">KWin is the window manager of the K desktop environment.</Description>
             <Archive type="tarxz" sha1sum="721e7c348a273f4ea79e819992c7262f32844951">http://download.kde.org/stable/plasma/5.3.2/kwin-5.3.2.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency>qt5-tools-devel</Dependency>
-                <Dependency>qt5-multimedia-devel</Dependency>
-                <Dependency>kwayland</Dependency>
-                <Dependency>kdecorations-devel</Dependency>
-                <Dependency>qt5-script-devel</Dependency>
-                <Dependency>qt5-x11extras-devel</Dependency>
-                <Dependency>qt5-declarative-devel</Dependency>
-                <Dependency>kiconthemes-devel</Dependency>
-                <Dependency>kauth-devel</Dependency>
-                <Dependency>libXxf86vm-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
                 <Dependency>kactivities-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
                 <Dependency>kcmutils-devel</Dependency>
                 <Dependency>kcompletion-devel</Dependency>
                 <Dependency>kconfig-devel</Dependency>
@@ -50944,50 +51128,53 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kcoreaddons-devel</Dependency>
                 <Dependency>kcrash-devel</Dependency>
                 <Dependency>kdeclarative-devel</Dependency>
+                <Dependency>kdecorations-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
                 <Dependency>kglobalaccel-devel</Dependency>
                 <Dependency>ki18n-devel</Dependency>
-                <Dependency>kinit</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kinit-devel</Dependency>
                 <Dependency>kio-devel</Dependency>
                 <Dependency>knewstuff-devel</Dependency>
                 <Dependency>knotifications-devel</Dependency>
                 <Dependency>kservice-devel</Dependency>
+                <Dependency>kwayland-devel</Dependency>
                 <Dependency>kwidgetsaddons-devel</Dependency>
                 <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>kxmlgui-devel</Dependency>
-                <Dependency>plasma-framework-devel</Dependency>
-                <Dependency>mesa-devel</Dependency>
+                <Dependency>libepoxy-devel</Dependency>
                 <Dependency>libICE-devel</Dependency>
                 <Dependency>libSM-devel</Dependency>
-                <Dependency>wayland-devel</Dependency>
-                <Dependency>wayland-client</Dependency>
-                <Dependency>wayland-cursor</Dependency>
-                <Dependency>libxkbcommon-devel</Dependency>
-                <Dependency>xcb-util-keysyms-devel</Dependency>
-                <Dependency>xcb-util-image-devel</Dependency>
-                <Dependency>libXcursor-devel</Dependency>
-                <Dependency>libepoxy-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libX11-devel</Dependency>
                 <Dependency>libxcb-devel</Dependency>
+                <Dependency>libXcursor-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libxkbcommon-devel</Dependency>
+                <Dependency>libXxf86vm-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>plasma-framework-devel</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>qt5-multimedia-devel</Dependency>
+                <Dependency>qt5-script-devel</Dependency>
+                <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>wayland-client</Dependency>
+                <Dependency>wayland-cursor</Dependency>
+                <Dependency>wayland-devel</Dependency>
+                <Dependency>xcb-util-image-devel</Dependency>
+                <Dependency>xcb-util-keysyms-devel</Dependency>
+                <Dependency>docbook-xsl</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/kwin/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>kwin</Name>
             <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>libX11</Dependency>
-                <Dependency>libxcb</Dependency>
-                <Dependency>qt5-script</Dependency>
-                <Dependency>kwayland</Dependency>
-                <Dependency>kdecorations</Dependency>
-                <Dependency>qt5-x11extras</Dependency>
-                <Dependency>qt5-declarative</Dependency>
-                <Dependency>kiconthemes</Dependency>
-                <Dependency>kauth</Dependency>
                 <Dependency>kactivities</Dependency>
+                <Dependency>kauth</Dependency>
                 <Dependency>kcmutils</Dependency>
                 <Dependency>kcompletion</Dependency>
                 <Dependency>kconfig</Dependency>
@@ -50995,24 +51182,35 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kcoreaddons</Dependency>
                 <Dependency>kcrash</Dependency>
                 <Dependency>kdeclarative</Dependency>
+                <Dependency>kdecorations</Dependency>
                 <Dependency>kglobalaccel</Dependency>
                 <Dependency>ki18n</Dependency>
+                <Dependency>kiconthemes</Dependency>
                 <Dependency>kio</Dependency>
                 <Dependency>knewstuff</Dependency>
                 <Dependency>knotifications</Dependency>
                 <Dependency>kservice</Dependency>
+                <Dependency>kwayland</Dependency>
                 <Dependency>kwidgetsaddons</Dependency>
                 <Dependency>kwindowsystem</Dependency>
                 <Dependency>kxmlgui</Dependency>
-                <Dependency>plasma-framework</Dependency>
-                <Dependency>mesa</Dependency>
+                <Dependency>libepoxy</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>libICE</Dependency>
                 <Dependency>libSM</Dependency>
-                <Dependency>wayland-cursor</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>libxcb</Dependency>
                 <Dependency>libxkbcommon</Dependency>
-                <Dependency>xcb-util-keysyms</Dependency>
+                <Dependency>mesa</Dependency>
+                <Dependency>plasma-framework</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-declarative</Dependency>
+                <Dependency>qt5-script</Dependency>
+                <Dependency>qt5-x11extras</Dependency>
+                <Dependency>wayland-cursor</Dependency>
+                <Dependency>wayland-client</Dependency>
                 <Dependency>xcb-util-image</Dependency>
-                <Dependency>libepoxy</Dependency>
+                <Dependency>xcb-util-keysyms</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc</Path>
@@ -51023,31 +51221,58 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace</Package>
-            </Replaces>
         </Package>
         <Package>
             <Name>kwin-devel</Name>
             <Summary xml:lang="en">Development files for kwin</Summary>
             <RuntimeDependencies>
-                <Dependency>qt5-base-devel</Dependency>
                 <Dependency release="2">kwin</Dependency>
+                <Dependency>kactivities-devel</Dependency>
+                <Dependency>kauth-devel</Dependency>
+                <Dependency>kcmutils-devel</Dependency>
+                <Dependency>kcompletion-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>kconfigwidgets-devel</Dependency>
+                <Dependency>kcoreaddons-devel</Dependency>
+                <Dependency>kcrash-devel</Dependency>
+                <Dependency>kdeclarative-devel</Dependency>
+                <Dependency>kdecorations-devel</Dependency>
+                <Dependency>kglobalaccel-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
+                <Dependency>kinit-devel</Dependency>
+                <Dependency>kio-devel</Dependency>
+                <Dependency>knewstuff-devel</Dependency>
+                <Dependency>knotifications-devel</Dependency>
+                <Dependency>kservice-devel</Dependency>
+                <Dependency>kwayland-devel</Dependency>
+                <Dependency>kwidgetsaddons-devel</Dependency>
+                <Dependency>kwindowsystem-devel</Dependency>
+                <Dependency>kxmlgui-devel</Dependency>
+                <Dependency>libepoxy-devel</Dependency>
+                <Dependency>libICE-devel</Dependency>
+                <Dependency>libSM-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libxcb-devel</Dependency>
+                <Dependency>libXcursor-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libxkbcommon-devel</Dependency>
+                <Dependency>libXxf86vm-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>plasma-framework-devel</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>qt5-script-devel</Dependency>
+                <Dependency>qt5-x11extras-devel</Dependency>
+                <Dependency>wayland-devel</Dependency>
+                <Dependency>xcb-util-image-devel</Dependency>
+                <Dependency>xcb-util-keysyms-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
                 <Path fileType="data">/usr/lib/cmake</Path>
                 <Path fileType="config">/usr/lib/pkgconfig</Path>
             </Files>
-            <Conflicts>
-                <Package>kde-workspace-devel</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kde-workspace-devel</Package>
-            </Replaces>
         </Package>
         <History>
             <Update release="2">
@@ -51691,14 +51916,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Archive type="tarxz" sha1sum="33c22a849af441582686a3fde9fc96d9dc2b6d5c">http://download.kde.org/stable/plasma/5.3.2/khelpcenter-5.3.2.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
-                <Dependency>python3</Dependency>
-                <Dependency>qt5-libdbusmenu-devel</Dependency>
+                <Dependency>libdbusmenu-qt-devel</Dependency>
                 <Dependency>kinit-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>kcmutils-devel</Dependency>
                 <Dependency>khtml-devel</Dependency>
+                <Dependency>kdoctools-devel</Dependency>
+                <Dependency>kemoticons-devel</Dependency>
+                <Dependency>kitemmodels-devel</Dependency>
+                <Dependency>kunitconversion-devel</Dependency>
+                <Dependency>kdesignerplugin</Dependency>
                 <Dependency>kdelibs4-support-devel</Dependency>
+                <Dependency>docbook-xsl</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/khelpcenter/pspec.xml</SourceURI>
         </Source>
@@ -51848,10 +52078,14 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-graphicaleffects</Dependency>
-                <Dependency>python3</Dependency>
-                <Dependency>libgcc</Dependency>
+                <Dependency>qt5-declarative-devel</Dependency>
+                <Dependency>kglobalaccel-devel</Dependency>
+                <Dependency>libkscreen-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
+                <Dependency>kxmlgui-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/kscreen/pspec.xml</SourceURI>
         </Source>
