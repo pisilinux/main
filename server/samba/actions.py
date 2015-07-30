@@ -41,7 +41,6 @@ def setup():
                          --with-automount \
                          --with-cluster-support \
                          --with-dnsupdate \
-                         --with-dnsupdate \
                          --with-pam \
                          --with-pam_smbpass \
                          --with-quotas \
@@ -50,7 +49,9 @@ def setup():
                          --with-syslog \
                          --with-utmp \
                          --with-winbind \
+                         --bundled-libraries=!tdb,!talloc,!pytalloc-util,!tevent,!popt \
                         " % MODULES)
+    # !ldb,!pyldb-util
 
 def build():
     shelltools.system("make")
