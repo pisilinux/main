@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pm-utils</Name>
+        <Homepage>http://pm-utils.freedesktop.org/wiki/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>A toolset to suspend and hibernate computers</Summary>
+        <Description>pm-utils provides simple shell command line tools to suspend and hibernate computers, and it that can be used to run vendor, distribution, or user supplied scripts on suspend and resume.</Description>
+        <Archive sha1sum="9aacb9b4a5f11f751d94f5257c6c54460f106197" type="targz">http://pm-utils.freedesktop.org/releases/pm-utils-1.4.1.tar.gz</Archive>
+        <Archive sha1sum="01aab63e2bb8c0f8d81d325ffce1fa49af0e2f3a" type="targz" target="video-quirks">http://pm-utils.freedesktop.org/releases/pm-quirks-20100619.tar.gz</Archive>
+        <AdditionalFiles>
+            <!--AdditionalFile target="pm/sleep.d/01grub">suse/hooks/sleep.d/01grub</AdditionalFile-->
+        </AdditionalFiles>
+        <BuildDependencies>
+            <Dependency>xmlto</Dependency>
+	    <Dependency>libxslt</Dependency>
+            <Dependency>util-linux</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- Attempt to fix #15147 eventhough the fix is not fine-grained at all -->
+            <Patch level="1">pisilinux/check-for-swap-partition.patch</Patch>
+
+            <!-- Disable powersave stuff completely -->
+            <Patch level="1">pisilinux/disable-powersave.patch</Patch>
+
+            <!-- https://bugzilla.redhat.com/show_bug.cgi?id=552506#c4 -->
+            <Patch level="1">suse/pm-utils-1.2.6.1-fix-broken-dbus-send.diff</Patch>
+            <Patch level="1">suse/pm-utils-1.3.0-suse-smart-uswsusp.patch</Patch>
+            <Patch level="1">suse/pm-utils-1.4.1-suse-config.patch</Patch>
+
+            <!-- Gentoo patches -->
+            <Patch level="1">gentoo/1.4.1-bluetooth-sync.patch</Patch>
+            <Patch level="1">gentoo/1.4.1-disable-sata-alpm.patch</Patch>
+            <Patch level="1">gentoo/1.4.1-fix-intel-audio-powersave-hook.patch</Patch>
+            <Patch level="1">gentoo/1.4.1-logging-append.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>pm-utils</Name>
+        <RuntimeDependencies>
+            <Dependency>hdparm</Dependency>
+            <Dependency>vbetool</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/pm</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/run/pm-utils</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/pm-utils/video-quirks</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/pm-utils.conf</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/pm-utils.conf">tmpfiles.conf</AdditionalFile>
+            <!-- not implemented in our kernel yet
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/000kernel-change">000kernel-change</AdditionalFile>
+            FIXME: Should be enabled after enabling plymouth in suspend package and testing a lot
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/00plymouthd">pisilinux/00plymouthd</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/75ndiswrapper">suse/hooks/sleep.d/75ndiswrapper</AdditionalFile>
+
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/99hd-apm-restore">pisilinux/99hd-apm-restore</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/pm/config.d/hd-apm-restore.conf">pisilinux/hd-apm-restore.conf</AdditionalFile>
+            -->
+
+            <AdditionalFile owner="root" permission="0644" target="/etc/pm/config.d/rtcwake.conf">suse/hooks/config.d/rtcwake.config</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/30s2disk-check">suse/hooks/sleep.d/30s2disk-check</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/45pcmcia">suse/hooks/sleep.d/45pcmcia</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+        <Update release="5">
+            <Date>2015-07-31</Date>
+            <Version>1.4.1</Version>
+            <Comment>Rebuild for gcc.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-01-10</Date>
+            <Version>1.4.1</Version>
+            <Comment>Add tmpfiles.conf</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-08-26</Date>
+            <Version>1.4.1</Version>
+            <Comment>Fix hibernation issue, add some patches.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-07-03</Date>
+            <Version>1.4.1</Version>
+            <Comment>Fix suspend/hibernation issue</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2011-04-05</Date>
+            <Version>1.4.1</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
