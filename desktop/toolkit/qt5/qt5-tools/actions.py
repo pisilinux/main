@@ -25,4 +25,8 @@ def install():
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
         pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
+    # kde5 need qdbus and qtpaths in /usr/bin
+    pisitools.dosym("/usr/bin/qdbus-qt5", "/usr/bin/qdbus")
+    pisitools.dosym("/usr/bin/qtpaths-qt5", "/usr/bin/qtpaths")
+
     pisitools.insinto("/usr/share/licenses/qt5-tools/", "LGPL_EXCEPTION.txt")
