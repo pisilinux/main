@@ -25,6 +25,9 @@ def setup():
                          --disable-latex \
                          --with-docdir=/usr/share/doc/%s \
                          --with-gphoto2" % get.srcNAME())
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    
 def build():
     autotools.make()
 
