@@ -8,20 +8,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
+from pisi.actionsapi import kde5
 
 def setup():
-     #pisitools.ldflags.add("-Wl,-rpath")
-    
-    #shelltools.system("sed -i -e 's|add_subdirectory(dolphin)|#add_subdirectory(dolphin)|' CMakeLists.txt")
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -DKDE4_BUILD_TESTS=OFF \
-                          -DCMAKE_SKIP_RPATH=ON \
-                          -DCMAKE_INSTALL_PREFIX=/usr")
+    kde5.configure()
 
 def build():
-    cmaketools.make()
+    kde5.make()
 
 def install():
-    cmaketools.install()
+    kde5.install()
     
     pisitools.dodoc("README", "COPYING.LIB")
