@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>sane-backends</Name>
+        <Homepage>http://www.sane-project.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <Icon>sane</Icon>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>Scanner access software</Summary>
+        <Description>Scanner Access Now Easy (SANE) is a universal scanner interface. The SANE application programming interface provides standardized access to any raster image scanner hardware.</Description>
+        <Archive sha1sum="c10bcb30a1b092b2c2fe5a86d6a5efc29123ccf9" type="targz">ftp://ftp.archlinux.org/other/sane/sane-backends-1.0.24.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libieee1284-devel</Dependency>
+            <Dependency>libgphoto2-devel</Dependency>
+            <Dependency>libv4l-devel</Dependency>
+            <Dependency>avahi-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>net-snmp-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- fixes too small arrays in backend/niash.c -->
+            <Patch>fix-buffer-overflow.patch</Patch>
+            <Patch level="1">sane-backends-1.0.20-open-macro.patch</Patch>
+            <Patch level="1">sane-backends-1.0.23-sane-config-multilib.patch</Patch>
+            <Patch level="1">sane-backends-1.0.23-soname.patch</Patch>
+            <Patch level="1">sane-backends-1.0.21-epson-expression800.patch</Patch>
+            <Patch level="1">sane-backends-1.0.23-udev.patch</Patch>
+
+            <!-- Fix undefined 'foo = ++foo modulo bar' operations -->
+            <Patch level="1">suse/fix-mustek_pp_ccd300.c.patch</Patch>
+            
+            <Patch level="1">archlinux/network.patch</Patch>
+            <Patch level="1">archlinux/segfault-avahi-fix-kodakio.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>sane-backends</Name>
+        <RuntimeDependencies>
+            <Dependency>libieee1284</Dependency>
+            <Dependency>avahi-libs</Dependency>
+            <Dependency>libgphoto2</Dependency>
+            <Dependency>libv4l</Dependency>
+            <Dependency>tiff</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>net-snmp</Dependency>
+            <Dependency>cups</Dependency>
+            <Dependency>libexif</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/etc/sane.d/dll.d</Path>
+            <Path fileType="data">/etc/env.d</Path>
+            <Path fileType="config">/etc/sane.d</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc/sane-backends/README</Path>
+            <Path fileType="doc">/usr/share/doc/sane-backends/COPYING</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+            <Path fileType="data">/lib/udev/rules.d</Path>
+            <Path fileType="data">/usr/share/sane</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/sane.png">sane.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/30sane">30sane</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>sane-backends-devel</Name>
+        <Summary>Development files for sane-backends</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">sane-backends</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>sane-backends-docs</Name>
+        <Summary>Documentation for SANE backends</Summary>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="4">
+            <Date>2014-02-15</Date>
+            <Version>1.0.24</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-12-21</Date>
+            <Version>1.0.23</Version>
+            <Comment>Move devel files fix to paths</Comment>
+            <Name>Burak Fazıl Ertürk</Name>
+            <Email>burakerturk@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-07-28</Date>
+            <Version>1.0.23</Version>
+            <Comment>Dep Fixed</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-10-25</Date>
+            <Version>1.0.23</Version>
+            <Comment>First release</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
