@@ -4870,6 +4870,183 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>libcanberra</Name>
+            <Homepage>http://0pointer.de/lennart/projects/libcanberra/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <IsA>library</IsA>
+            <IsA>app:console</IsA>
+            <PartOf>multimedia.sound</PartOf>
+            <Summary xml:lang="en">A library for generating event sounds on free desktops</Summary>
+            <Summary xml:lang="tr">Masaüstü üzerinde bildirim sesleri üretmek için kütüphane</Summary>
+            <Description xml:lang="en">libcanberra is an implementation of the XDG Sound Theme and Name Specifications, for generating event sounds on free desktops, such as GNOME. It comes with several backends (ALSA, PulseAudio, OSS, GStreamer, null) and is designed to be portable.</Description>
+            <Description xml:lang="tr">libcanberra, çeşitli arka uç (ALSA, PulseAudio, GStreamer, null) destekleri olan, XDG Ses Teması ve İsimlendirme standartlarına uygun, bildirim sesi çalma kütüphanesidir.</Description>
+            <Archive type="tarxz" sha1sum="fd4c16e341ffc456d688ed3462930d17ca6f6c20">http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>libogg-devel</Dependency>
+                <Dependency>pulseaudio-libs-devel</Dependency>
+                <Dependency>gstreamer-devel</Dependency>
+                <Dependency>libvorbis-devel</Dependency>
+                <Dependency>alsa-lib-devel</Dependency>
+                <Dependency>glib2-devel</Dependency>
+                <Dependency>gtk2-devel</Dependency>
+                <Dependency>gtk3-devel</Dependency>
+                <Dependency>at-spi2-core-devel</Dependency>
+                <Dependency>eudev-devel</Dependency>
+                <Dependency>atk-devel</Dependency>
+                <Dependency>cairo-devel</Dependency>
+                <Dependency>pango-devel</Dependency>
+                <Dependency>libogg-devel</Dependency>
+                <Dependency>libtdb-devel</Dependency>
+                <Dependency>libvorbis-devel</Dependency>
+                <Dependency>fontconfig-devel</Dependency>
+                <Dependency>gstreamer-next-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">fix-pthread.patch</Patch>
+                <Patch level="1">fix-underlinking.patch</Patch>
+            </Patches>
+            <SourceURI>multimedia/sound/libcanberra/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libcanberra</Name>
+            <RuntimeDependencies>
+                <Dependency>libtdb</Dependency>
+                <Dependency>libtool-ltdl</Dependency>
+                <Dependency>glib2</Dependency>
+                <Dependency>alsa-lib</Dependency>
+                <Dependency>libvorbis</Dependency>
+                <Dependency>pulseaudio-libs</Dependency>
+                <Dependency>gstreamer-next</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="data">/usr/share/gdm</Path>
+                <Path fileType="data">/usr/share/gnome/</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libcanberra-devel</Name>
+            <Summary xml:lang="en">Development files for libcanberra</Summary>
+            <Summary xml:lang="tr">libcanberra için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">libcanberra</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/share/vala</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libcanberra-gtk</Name>
+            <Summary xml:lang="en">GTK+ convenience API and utilities for libcanberra</Summary>
+            <Summary xml:lang="tr">GTK+ için libcanberra araçları ve programlama kitaplığı</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">libcanberra</Dependency>
+                <Dependency>gtk2</Dependency>
+                <Dependency>glib2</Dependency>
+                <Dependency>libX11</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/gtk-2*</Path>
+                <Path fileType="library">/usr/lib/libcanberra-gtk.so*</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libcanberra-gtk-devel</Name>
+            <Summary xml:lang="en">Development files for libcanberra-gtk</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">libcanberra</Dependency>
+                <Dependency release="6">libcanberra-devel</Dependency>
+                <Dependency>gtk2-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include/canberra-gtk.h</Path>
+                <Path fileType="data">/usr/lib/pkgconfig/libcanberra-gtk.pc</Path>
+                <Path fileType="data">/usr/share/vala/vapi/libcanberra-gtk.vapi</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libcanberra-gtk3-devel</Name>
+            <Summary xml:lang="en">Development files for libcanberra-gtk</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">libcanberra-gtk-devel</Dependency>
+                <Dependency>gtk3-devel</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="data">/usr/lib/pkgconfig/libcanberra-gtk3.pc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libcanberra-gtk3</Name>
+            <Summary xml:lang="en">GTK+ convenience API and utilities for libcanberra</Summary>
+            <RuntimeDependencies>
+                <Dependency>gtk3</Dependency>
+                <Dependency>glib2</Dependency>
+                <Dependency>eudev</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency releaseFrom="4">libcanberra</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/gtk-3*</Path>
+                <Path fileType="library">/usr/lib/libcanberra-gtk3*</Path>
+                <Path fileType="doc">/usr/share/doc/libcanberra-gtk3</Path>
+                <Path fileType="executable">/usr/bin/canberra-boot</Path>
+                <Path fileType="executable">/usr/bin/canberra-gtk-play</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="6">
+                <Date>2015-08-03</Date>
+                <Version>0.30</Version>
+                <Comment>Rebuild Unused</Comment>
+                <Name>Varol Maksutoğlu</Name>
+                <Email>waroi@pisilinux.org</Email>
+            </Update>
+            <Update release="5">
+                <Date>2013-11-15</Date>
+                <Version>0.30</Version>
+                <Comment>Version bump</Comment>
+                <Name>Richard de Bruin</Name>
+                <Email>richdb@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2013-10-07</Date>
+                <Version>0.29</Version>
+                <Comment>Split Package + Fixed.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-08-17</Date>
+                <Version>0.29</Version>
+                <Comment>Release Bump.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-29</Date>
+                <Version>0.29</Version>
+                <Comment>missing dep.</Comment>
+                <Name>Erdinç Gültekin</Name>
+                <Email>erdincgultekin@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-08-31</Date>
+                <Version>0.29</Version>
+                <Comment>First release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libdca</Name>
             <Homepage>http://developers.videolan.org/libdca.html</Homepage>
             <Packager>
@@ -9899,6 +10076,106 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>gd</Name>
+            <Homepage>http://www.libgd.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>as-is</License>
+            <License>BSD</License>
+            <IsA>library</IsA>
+            <PartOf>multimedia.misc</PartOf>
+            <Summary xml:lang="fr">Une librairie rapide pour créer des graphiques en images.</Summary>
+            <Summary xml:lang="en">A fast library for creating graphic images</Summary>
+            <Summary xml:lang="tr">Hızlı bir şekilde resim oluşturmak için bir kütüphane</Summary>
+            <Description xml:lang="en">The gd graphics library allows your code to quickly draw images complete with lines, arcs, text, multiple colors, cut and paste from other images, and flood fills, and to write out the result as a PNG or JPEG file. This is particularly useful in Web applications, where PNG and JPEG are two of the formats accepted for inline images by most browsers. Note that gd is not a paint program.</Description>
+            <Archive type="targz" sha1sum="b089ee7fc0b47b8aa4c2c70087506806637f03be">https://github.com/libgd/libgd/archive/gd-2.1.1.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>fontconfig-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>freetype-devel</Dependency>
+                <Dependency>libpng-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency>tiff-devel</Dependency>
+                <Dependency>libvpx-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch>gd-2.1.1-libvpx-1.4.0.patch</Patch>
+            </Patches>
+            <SourceURI>multimedia/misc/gd/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>gd</Name>
+            <RuntimeDependencies>
+                <Dependency>fontconfig</Dependency>
+                <Dependency>tiff</Dependency>
+                <Dependency>libvpx</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+                <Dependency>zlib</Dependency>
+                <Dependency>freetype</Dependency>
+                <Dependency>libpng</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc/gd</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>gd-devel</Name>
+            <Summary xml:lang="en">Development files for gd</Summary>
+            <Summary xml:lang="tr">gd için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">gd</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+                <Path fileType="executable">/usr/bin/gdlib-config</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>gd-docs</Name>
+            <Summary xml:lang="en">Documents for gd</Summary>
+            <Summary xml:lang="tr">gd için geliştirme belgeleri</Summary>
+            <Files>
+                <Path fileType="doc">/usr/share/doc/gd/html</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-08-02</Date>
+                <Version>2.1.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-05-24</Date>
+                <Version>2.1.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Alihan Öztürk</Name>
+                <Email>alihan@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2014-01-25</Date>
+                <Version>2.0.35</Version>
+                <Comment>Rebuild</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2010-10-12</Date>
+                <Version>2.0.35</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>rtmpdump</Name>
             <Homepage>http://rtmpdump.mplayerhq.hu/</Homepage>
             <Packager>
@@ -12908,6 +13185,82 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>qupzilla</Name>
+            <Homepage>http://www.qupzilla.com/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv3</License>
+            <IsA>app:gui</IsA>
+            <PartOf>network.web</PartOf>
+            <Summary xml:lang="en">A fast open source browser based on WebKit core, written in Qt Framework, wayland port</Summary>
+            <Description xml:lang="en">A fast open source browser based on WebKit core, written in Qt Framework, wayland port</Description>
+            <Icon>qupzilla</Icon>
+            <Archive type="tarxz" sha1sum="e1164dd6afb1ee121c2d53acc95b1c7b7d51603e">https://github.com/QupZilla/qupzilla/releases/download/v1.8.6/QupZilla-1.8.6.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>qt5-webkit-devel</Dependency>
+                <Dependency>qt5-script-devel</Dependency>
+                <Dependency>qt5-tools-devel</Dependency>
+                <Dependency>openssl-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>network/web/qupzilla/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>qupzilla</Name>
+            <RuntimeDependencies>
+                <Dependency>libX11</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>qt5-webkit</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>qt5-script</Dependency>
+                <Dependency>libgcc</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="data">/usr/share/icons</Path>
+                <Path fileType="data">/usr/share/pixmaps</Path>
+                <Path fileType="data">/usr/share/qupzilla</Path>
+                <Path fileType="data">/usr/share/applications</Path>
+                <Path fileType="data">/usr/share/bash-completion</Path>
+                <Path fileType="data">/usr/share/appdata</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2015-08-02</Date>
+                <Version>1.8.6</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-11-07</Date>
+                <Version>1.8.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2014-02-15</Date>
+                <Version>1.6.3</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2014-01-18</Date>
+                <Version>1.6.0</Version>
+                <Comment>First Release</Comment>
+                <Name>Richard de Bruin</Name>
+                <Email>richdb@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>avahi</Name>
             <Homepage>http://avahi.org/</Homepage>
             <Packager>
@@ -14598,6 +14951,146 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Comment>First release</Comment>
                 <Name>Gökcen Eraslan</Name>
                 <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>net-snmp</Name>
+            <Homepage>http://net-snmp.sourceforge.net/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>BSD</License>
+            <IsA>library</IsA>
+            <IsA>app:console</IsA>
+            <PartOf>network.monitor</PartOf>
+            <Summary xml:lang="en">A collection of SNMP protocol tools and libraries</Summary>
+            <Summary xml:lang="tr">SNMP protokol araçları ve kitaplıkları</Summary>
+            <Summary xml:lang="pl">Kolekcja narzędzi do obsługi protokołu SNMP</Summary>
+            <Description xml:lang="en">Simple Network Management Protocol (SNMP) is a widely used protocol for monitoring the health and welfare of network equipment (eg. routers), computer equipment and even devices like UPSs. Net-SNMP is a suite of applications used to implement SNMP v1, SNMP v2c and SNMP v3 using both IPv4 and IPv6.</Description>
+            <Description xml:lang="tr">net-snmp, çeşitli ağ ekipmanlarının sağlığını ve işleyişini izlemek için SNMP protokolünü kullanan araçları içerir.</Description>
+            <Description xml:lang="pl">SNMP (Simple Network Management Protocol) jest protokołem używanym do zarządzania sieciami. Pakiet zawiera narzędzia: rozbudowywalnego agenta, bibliotekę SNMP, narzędzia do odpytywania oraz ustawiania informacji poprzez agentów SNMP, narzędzia do generowania i obsługi pułapek SNMP, wersję komendy netstat używającą SNMP, przeglądarkę mib w Tk/Perl, demona, dokumentację itp.</Description>
+            <Archive type="targz" sha1sum="97dc25077257680815de44e34128d365c76bd839">mirrors://sourceforge/net-snmp/net-snmp-5.7.3.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>libnl-devel</Dependency>
+                <Dependency>python-setuptools</Dependency>
+                <Dependency>openssl-devel</Dependency>
+                <Dependency>python-devel</Dependency>
+                <Dependency>perl</Dependency>
+                <Dependency>pciutils-devel</Dependency>
+                <Dependency>tcp-wrappers-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">locale.patch</Patch>
+            </Patches>
+            <SourceURI>network/monitor/net-snmp/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>net-snmp</Name>
+            <RuntimeDependencies>
+                <Dependency>libnl</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>python</Dependency>
+                <Dependency>perl</Dependency>
+                <Dependency>pciutils</Dependency>
+                <Dependency>tcp-wrappers</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="config">/etc/snmp</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="executable">/usr/sbin/snmpd</Path>
+                <Path fileType="config">/etc/conf.d/snmpd</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share/snmp</Path>
+                <Path fileType="data">/var/lib</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+            <Provides>
+                <COMAR script="snmpd.py">System.Service</COMAR>
+            </Provides>
+            <AdditionalFiles>
+                <AdditionalFile target="/etc/conf.d/snmpd" permission="0644" owner="root">confd-snmpd.conf</AdditionalFile>
+                <AdditionalFile target="/etc/snmp/snmpd.conf" permission="0644" owner="root">net-snmpd.conf</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <Package>
+            <Name>net-snmptrap</Name>
+            <RuntimeDependencies>
+                <Dependency>net-snmp</Dependency>
+                <Dependency>tcp-wrappers</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="config">/etc/conf.d/snmptrapd</Path>
+                <Path fileType="config">/etc/snmp/snmptrapd.conf</Path>
+                <Path fileType="executable">/usr/sbin/snmptrapd</Path>
+            </Files>
+            <Provides>
+                <COMAR script="snmptrapd.py">System.Service</COMAR>
+            </Provides>
+            <AdditionalFiles>
+                <AdditionalFile target="/etc/conf.d/snmptrapd" permission="0644" owner="root">confd-snmptrapd.conf</AdditionalFile>
+                <AdditionalFile target="/etc/snmp/snmptrapd.conf" permission="0644" owner="root">net-snmptrapd.conf</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <Package>
+            <Name>net-snmp-devel</Name>
+            <Summary xml:lang="en">Development files for net-snmp</Summary>
+            <Summary xml:lang="tr">net-snmp için geliştirme dosyaları</Summary>
+            <Summary xml:lang="pl">Pliki naglowkowe do net-snmp</Summary>
+            <RuntimeDependencies>
+                <Dependency release="6">net-snmp</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="6">
+                <Date>2015-08-02</Date>
+                <Version>5.7.3</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="5">
+                <Date>2014-09-13</Date>
+                <Version>5.7.2.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="4">
+                <Date>2014-02-19</Date>
+                <Version>5.7.2</Version>
+                <Comment>Rebuild Unused</Comment>
+                <Name>Varol Maksutoğlu</Name>
+                <Email>waroi@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-12-01</Date>
+                <Version>5.7.2</Version>
+                <Comment>Rebuild for new perl.</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-28</Date>
+                <Version>5.7.2</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-11-09</Date>
+                <Version>5.7.2</Version>
+                <Comment>First release</Comment>
+                <Name>Marcin Bojara</Name>
+                <Email>marcin@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -26345,6 +26838,53 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>tidy</Name>
+            <Homepage>http://tidy.sourceforge.net/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>app:console</IsA>
+            <PartOf>util.misc</PartOf>
+            <Summary xml:lang="en">HTML and XML error checking</Summary>
+            <Summary xml:lang="tr">HTML ve XML hata denetleme aracı</Summary>
+            <Description xml:lang="en">tidy, as the name suggests, tidies the layout of and corrects errors in HTML and XML documents.</Description>
+            <Description xml:lang="tr">tidy, HTML ve XML belgelerinin düzenini denetleyen ve hatalarını düzelten bir araçtır.</Description>
+            <Archive type="tarbz2" sha1sum="3688e2cc254e7ee49756def8cd5b1c91721edc00">http://anduin.linuxfromscratch.org/sources/BLFS/svn/t/tidy-cvs_20101110.tar.bz2</Archive>
+            <SourceURI>util/misc/tidy/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>tidy</Name>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>tidy-devel</Name>
+            <Summary xml:lang="en">Development files for tidy</Summary>
+            <Summary xml:lang="tr">tidy için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="1">tidy</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2012-10-04</Date>
+                <Version>20101110</Version>
+                <Comment>First release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>strace</Name>
             <Homepage>http://sourceforge.net/projects/strace/</Homepage>
             <Packager>
@@ -35745,6 +36285,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         <Package>
             <Name>xorg-video-openchrome</Name>
             <RuntimeDependencies>
+                <Dependency>libX11</Dependency>
                 <Dependency>libdrm</Dependency>
                 <Dependency>libXext</Dependency>
                 <Dependency>libXv</Dependency>
@@ -39381,137 +39922,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>xdm</Name>
-            <Homepage>http://www.x.org</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>MIT</License>
-            <IsA>app:gui</IsA>
-            <PartOf>x11.misc</PartOf>
-            <Summary xml:lang="en">X Display Manager</Summary>
-            <Summary xml:lang="tr">X Görüntü Yöneticisi</Summary>
-            <Description xml:lang="en">X Display Manager provides a login screen, session management, and support for XDMCP.</Description>
-            <Description xml:lang="tr">X Görüntü Yöneticisi, giriş ekranı, oturum yönetimi ve XDMCP desteği sağlar.</Description>
-            <Icon>xorg</Icon>
-            <Archive type="tarbz2" sha1sum="8195a8e17d71d18cb89813d04b69a3750e9e818e">mirrors://xorg/individual/app/xdm-1.1.11.tar.bz2</Archive>
-            <BuildDependencies>
-                <Dependency>libXt-devel</Dependency>
-                <Dependency>libICE-devel</Dependency>
-                <Dependency>libSM-devel</Dependency>
-                <Dependency>libbsd-devel</Dependency>
-                <Dependency>libXaw-devel</Dependency>
-                <Dependency>libXft-devel</Dependency>
-                <Dependency>libXmu-devel</Dependency>
-                <Dependency>libXpm-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency>libXrender-devel</Dependency>
-                <Dependency>libXinerama-devel</Dependency>
-                <Dependency>util-macros</Dependency>
-                <Dependency>ConsoleKit-devel</Dependency>
-                <Dependency>dbus-devel</Dependency>
-                <Dependency>pam-devel</Dependency>
-                <Dependency>xtrans</Dependency>
-            </BuildDependencies>
-            <Patches>
-                <Patch level="1">xsession.patch</Patch>
-                <Patch level="1">no-xconsole.patch</Patch>
-                <Patch level="1">resources.patch</Patch>
-                <Patch level="1">xdm-1.1.11-arc4random-include.patch</Patch>
-                <Patch level="1">xdm-1.1.11-cve-2013-2179.patch</Patch>
-                <Patch level="1">xdm-1.1.11-setproctitle-include.patch</Patch>
-                <Patch level="1">xdm-consolekit.patch</Patch>
-            </Patches>
-            <SourceURI>x11/misc/xdm/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>xdm</Name>
-            <RuntimeDependencies>
-                <Dependency>pam</Dependency>
-                <Dependency>libX11</Dependency>
-                <Dependency>libXau</Dependency>
-                <Dependency>libXdmcp</Dependency>
-                <Dependency>libXt</Dependency>
-                <Dependency>libbsd</Dependency>
-                <Dependency>libXft</Dependency>
-                <Dependency>libXmu</Dependency>
-                <Dependency>libXpm</Dependency>
-                <Dependency>libXaw</Dependency>
-                <Dependency>libXext</Dependency>
-                <Dependency>libXinerama</Dependency>
-                <Dependency>xinit</Dependency>
-                <Dependency>ConsoleKit</Dependency>
-                <Dependency>dbus</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="config">/etc</Path>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="library">/usr/lib/X11/xdm</Path>
-                <Path fileType="data">/usr/share/X11</Path>
-                <Path fileType="data">/usr/share/display-managers</Path>
-                <Path fileType="data">/var/lib/xdm</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="man">/usr/share/man</Path>
-            </Files>
-            <Provides>
-                <COMAR script="service.py">System.Service</COMAR>
-            </Provides>
-            <AdditionalFiles>
-                <AdditionalFile target="/etc/pam.d/xdm" permission="0644" owner="root">xdm.pam.d</AdditionalFile>
-                <AdditionalFile target="/usr/bin/start-dm" permission="0755" owner="root">start-dm.sh</AdditionalFile>
-                <AdditionalFile target="/usr/share/display-managers/xdm.desktop" permission="0644" owner="root">xdm.desktop</AdditionalFile>
-                <AdditionalFile target="/usr/share/X11/xorg-safe-fbdev.conf" permission="0644" owner="root">xorg-safe-fbdev.conf</AdditionalFile>
-                <AdditionalFile target="/usr/share/X11/xorg-safe-vesa.conf" permission="0644" owner="root">xorg-safe-vesa.conf</AdditionalFile>
-            </AdditionalFiles>
-        </Package>
-        <History>
-            <Update release="6">
-                <Date>2014-05-16</Date>
-                <Version>1.1.11</Version>
-                <Comment>Release bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="5">
-                <Date>2014-02-05</Date>
-                <Version>1.1.11</Version>
-                <Comment>Rebuild Unused</Comment>
-                <Name>Varol Maksutoğlu</Name>
-                <Email>waroi@pisilinux.org</Email>
-            </Update>
-            <Update release="4">
-                <Date>2014-01-14</Date>
-                <Version>1.1.11</Version>
-                <Comment>Disable default display manager</Comment>
-                <Name>Burak Fazıl Ertürk</Name>
-                <Email>burakerturk@pisilinux.org</Email>
-            </Update>
-            <Update release="3">
-                <Date>2013-11-06</Date>
-                <Version>1.1.11</Version>
-                <Comment>Fix deps.</Comment>
-                <Name>Serdar Soytetir</Name>
-                <Email>kaptan@pisilinux.org</Email>
-            </Update>
-            <Update release="2">
-                <Date>2013-08-25</Date>
-                <Version>1.1.11</Version>
-                <Comment>Release bump.</Comment>
-                <Name>Marcin Bojara</Name>
-                <Email>marcin@pisilinux.org</Email>
-            </Update>
-            <Update release="1">
-                <Date>2012-10-04</Date>
-                <Version>1.1.11</Version>
-                <Comment>First release</Comment>
-                <Name>Erdem Artan</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
             <Name>xbitmaps</Name>
             <Homepage>http://www.x.org/</Homepage>
             <Packager>
@@ -42544,6 +42954,95 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>libieee1284</Name>
+            <Homepage>http://cyberelk.net/tim/libieee1284/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>hardware.misc</PartOf>
+            <Summary xml:lang="en">Library to query devices using IEEE1284</Summary>
+            <Summary xml:lang="tr">IEEE1284 kullanarak donanımların sorgulanması için bir kütüphane</Summary>
+            <Description xml:lang="fr">Cette librairie est à destination des applications qui ont besoins de communiquer avec (ou au moins identifier) des périphériques liés au système par le port parallèle.</Description>
+            <Description xml:lang="en">Library is intended to be used by applications that need to communicate with (or at least identify) devices that are attached via a parallel port.</Description>
+            <Description xml:lang="tr">Paralel portlar aracılığı ile bağlanmış araçlarla iletişimi (en azından tanımlanmasını) gerçekleştiren uygulamalar için gerekli olan kütüphanedir.</Description>
+            <Description xml:lang="es">La librería usado por aplicaciones que necesitan comunicarse con (,o al menos necesitan identificar) dispositivos conectados al puerto paralelo.</Description>
+            <Archive type="tarbz2" sha1sum="600e6f8a5c79b435ee81df3618cd82e2b74812de">mirrors://sourceforge/libieee1284/libieee1284-0.2.11.tar.bz2</Archive>
+            <BuildDependencies>
+                <Dependency>python-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">libieee1284-strict-aliasing.patch</Patch>
+            </Patches>
+            <SourceURI>hardware/misc/libieee1284/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libieee1284</Name>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>python-libieee1284</Name>
+            <Summary xml:lang="en">Python bindings for libieee1284</Summary>
+            <Summary xml:lang="tr">libieee1284 için Python bağlayıcıları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">libieee1284</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib/python*</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libieee1284-devel</Name>
+            <Summary xml:lang="en">Development files for libieee1284</Summary>
+            <Summary xml:lang="tr">libieee1284 için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">libieee1284</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-03-10</Date>
+                <Version>0.2.11</Version>
+                <Comment>Fix rpath</Comment>
+                <Name>Varol Maksutoğlu</Name>
+                <Email>waroi@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-03-09</Date>
+                <Version>0.2.11</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvarice@gmail.com</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-28</Date>
+                <Version>0.2.11</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2010-10-13</Date>
+                <Version>0.2.11</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Admins</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libmtp</Name>
             <Homepage>http://libmtp.sourceforge.net/</Homepage>
             <Packager>
@@ -42707,6 +43206,119 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Comment>First release</Comment>
                 <Name>PisiLinux Community</Name>
                 <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>libgphoto2</Name>
+            <Homepage>http://www.gphoto.org/</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>hardware.misc</PartOf>
+            <Summary xml:lang="en">Library that implements support for numerous digital cameras</Summary>
+            <Summary xml:lang="tr">Sayısal kamera ve müzik çalarlara erişim sağlayan kütüphane</Summary>
+            <Description xml:lang="fr">Libgphoto2 est une librairie centrale conçue pour permettre aux programmes extérieurs d&apos;accéder aux appareils photos numériques.</Description>
+            <Description xml:lang="en">libgphoto2 is the core library designed to allow access to digital camera by external programs.</Description>
+            <Description xml:lang="tr">libgphoto2, harici uygulamalar tarafından sayısal kameralara ve müzik çalarlara erişim için kullanılan bir programlama kütüphanesidir.</Description>
+            <Description xml:lang="es">Libgphoto2 es la librería núcleo (core) que permite a programas externos acceder a camaras digitales.</Description>
+            <Archive type="tarbz2" sha1sum="976feb07d51026e6ca647f9fa333c500c5e0c041">mirrors://sourceforge/gphoto/libgphoto2-2.5.8.tar.bz2</Archive>
+            <BuildDependencies>
+                <Dependency>doxygen</Dependency>
+                <Dependency>libxml2-devel</Dependency>
+                <Dependency>gd-devel</Dependency>
+                <Dependency>tiff-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency>libexif-devel</Dependency>
+                <Dependency>libusb-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>hardware/misc/libgphoto2/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libgphoto2</Name>
+            <RuntimeDependencies>
+                <Dependency>libxml2</Dependency>
+                <Dependency>libtool-ltdl</Dependency>
+                <Dependency>libusb</Dependency>
+                <Dependency>gd</Dependency>
+                <Dependency>libexif</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="executable">/lib/udev</Path>
+                <Path fileType="doc">/usr/share/doc/libgphoto2/README</Path>
+                <Path fileType="doc">/usr/share/doc/libgphoto2/COPYING</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share/libgphoto2</Path>
+                <Path fileType="data">/usr/share/hal/fdi</Path>
+                <Path fileType="data">/lib/udev/rules.d</Path>
+                <Path fileType="localedata">/usr/share/locale</Path>
+                <Path fileType="man">/usr/share/man</Path>
+            </Files>
+            <Provides>
+                <COMAR script="package.py">System.Package</COMAR>
+            </Provides>
+        </Package>
+        <Package>
+            <Name>libgphoto2-docs</Name>
+            <Summary xml:lang="en">Documentation for libgphoto2</Summary>
+            <Summary xml:lang="tr">libgphoto2 için detaylı belgelendirme</Summary>
+            <Files>
+                <Path fileType="doc">/usr/share/doc/libgphoto2</Path>
+                <Path fileType="doc">/usr/share/doc/libgphoto2/camlibs</Path>
+                <Path fileType="doc">/usr/share/doc/libgphoto2/apidocs.html</Path>
+                <Path fileType="doc">/usr/share/doc/libgphoto2/linux-hotplug</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libgphoto2-devel</Name>
+            <Summary xml:lang="en">Development files for libgphoto2</Summary>
+            <Summary xml:lang="tr">libgphoto2 için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency>libexif-devel</Dependency>
+                <Dependency release="3">libgphoto2</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin/gphoto2-config*</Path>
+                <Path fileType="executable">/usr/bin/gphoto2-port-config</Path>
+                <Path fileType="header">/usr/include/gphoto2</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+                <Path fileType="man">/usr/share/man/man3</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="3">
+                <Date>2015-08-02</Date>
+                <Version>2.5.8</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
+            <Update release="3">
+                <Date>2014-05-15</Date>
+                <Version>2.5.4</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2014-01-30</Date>
+                <Version>2.5.3.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Stefan Gronewold(groni)</Name>
+                <Email>groni@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-11-16</Date>
+                <Version>2.5.0</Version>
+                <Comment>First release</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>namso-01qhotmail.it</Email>
             </Update>
         </History>
     </SpecFile>
@@ -42949,6 +43561,138 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Comment>First release</Comment>
                 <Name>Pisi Linux Admins</Name>
                 <Email>admins@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
+            <Name>sane-backends</Name>
+            <Homepage>http://www.sane-project.org</Homepage>
+            <Packager>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>app:console</IsA>
+            <IsA>library</IsA>
+            <PartOf>hardware.scanner</PartOf>
+            <Summary xml:lang="en">Scanner access software</Summary>
+            <Summary xml:lang="tr">SANE (Scanner Access Now Easy) döküman ve resim tarayıcı sistemi araçları</Summary>
+            <Description xml:lang="en">Scanner Access Now Easy (SANE) is a universal scanner interface. The SANE application programming interface provides standardized access to any raster image scanner hardware.</Description>
+            <Description xml:lang="tr">SANE ve uygulama programlama arayüzü (API) ile herhangi bir görüntü tarayıcı donanımına standartlaştırlmış erişim sağlar.</Description>
+            <Icon>sane</Icon>
+            <Archive type="targz" sha1sum="c10bcb30a1b092b2c2fe5a86d6a5efc29123ccf9">ftp://ftp.archlinux.org/other/sane/sane-backends-1.0.24.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>libieee1284-devel</Dependency>
+                <Dependency>libusb-compat-devel</Dependency>
+                <Dependency>libnl-devel</Dependency>
+                <Dependency>openssl-devel</Dependency>
+                <Dependency>cups-devel</Dependency>
+                <Dependency>libgphoto2-devel</Dependency>
+                <Dependency>libv4l-devel</Dependency>
+                <Dependency>avahi-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+                <Dependency>tiff-devel</Dependency>
+                <Dependency>net-snmp-devel</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch>fix-buffer-overflow.patch</Patch>
+                <Patch level="1">sane-backends-1.0.20-open-macro.patch</Patch>
+                <Patch level="1">sane-backends-1.0.23-sane-config-multilib.patch</Patch>
+                <Patch level="1">sane-backends-1.0.23-soname.patch</Patch>
+                <Patch level="1">sane-backends-1.0.21-epson-expression800.patch</Patch>
+                <Patch level="1">sane-backends-1.0.23-udev.patch</Patch>
+                <Patch level="1">suse/fix-mustek_pp_ccd300.c.patch</Patch>
+                <Patch level="1">archlinux/network.patch</Patch>
+                <Patch level="1">archlinux/segfault-avahi-fix-kodakio.patch</Patch>
+            </Patches>
+            <SourceURI>hardware/scannner/sane-backends/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>sane-backends</Name>
+            <RuntimeDependencies>
+                <Dependency>libnl</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>libusb-compat</Dependency>
+                <Dependency>libieee1284</Dependency>
+                <Dependency>avahi-libs</Dependency>
+                <Dependency>libgphoto2</Dependency>
+                <Dependency>libv4l</Dependency>
+                <Dependency>tiff</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+                <Dependency>net-snmp</Dependency>
+                <Dependency>cups</Dependency>
+                <Dependency>libexif</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="data">/etc/sane.d/dll.d</Path>
+                <Path fileType="data">/etc/env.d</Path>
+                <Path fileType="config">/etc/sane.d</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="localedata">/usr/share/locale</Path>
+                <Path fileType="executable">/usr/sbin</Path>
+                <Path fileType="executable">/usr/libexec</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="doc">/usr/share/doc/sane-backends/README</Path>
+                <Path fileType="doc">/usr/share/doc/sane-backends/COPYING</Path>
+                <Path fileType="man">/usr/share/man</Path>
+                <Path fileType="data">/usr/share/pixmaps</Path>
+                <Path fileType="data">/lib/udev/rules.d</Path>
+                <Path fileType="data">/usr/share/sane</Path>
+            </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/usr/share/pixmaps/sane.png" permission="0644" owner="root">sane.png</AdditionalFile>
+                <AdditionalFile target="/etc/env.d/30sane" permission="0644" owner="root">30sane</AdditionalFile>
+            </AdditionalFiles>
+        </Package>
+        <Package>
+            <Name>sane-backends-devel</Name>
+            <Summary xml:lang="en">Development files for sane-backends</Summary>
+            <Summary xml:lang="tr">sane-backends için geliştirme dosyaları</Summary>
+            <RuntimeDependencies>
+                <Dependency release="4">sane-backends</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>sane-backends-docs</Name>
+            <Summary xml:lang="en">Documentation for SANE backends</Summary>
+            <Summary xml:lang="tr">sane-backends için belgelendirme dosyaları</Summary>
+            <Files>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="4">
+                <Date>2014-02-15</Date>
+                <Version>1.0.24</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
+            </Update>
+            <Update release="3">
+                <Date>2013-12-21</Date>
+                <Version>1.0.23</Version>
+                <Comment>Move devel files fix to paths</Comment>
+                <Name>Burak Fazıl Ertürk</Name>
+                <Email>burakerturk@pisilinux.org</Email>
+            </Update>
+            <Update release="2">
+                <Date>2013-07-28</Date>
+                <Version>1.0.23</Version>
+                <Comment>Dep Fixed</Comment>
+                <Name>PisiLinux Community</Name>
+                <Email>admins@pisilinux.org</Email>
+            </Update>
+            <Update release="1">
+                <Date>2012-10-25</Date>
+                <Version>1.0.23</Version>
+                <Comment>First release</Comment>
+                <Name>Yusuf Aydemir</Name>
+                <Email>yusuf.aydemir@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -47648,6 +48392,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kcoreaddons-devel</Dependency>
                 <Dependency>kiconthemes-devel</Dependency>
                 <Dependency>kcodecs-devel</Dependency>
+                <Dependency>libdbusmenu-qt-devel</Dependency>
                 <Dependency>qt5-phonon-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>cmake</Dependency>
@@ -47666,6 +48411,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kcoreaddons</Dependency>
                 <Dependency>kiconthemes</Dependency>
                 <Dependency>kservice</Dependency>
+                <Dependency>libdbusmenu-qt</Dependency>
                 <Dependency>kwindowsystem</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -47690,6 +48436,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kiconthemes-devel</Dependency>
                 <Dependency>kservice-devel</Dependency>
                 <Dependency>kwindowsystem-devel</Dependency>
+                <Dependency>libdbusmenu-qt-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -47699,7 +48446,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Package>
         <History>
             <Update release="2">
-                <Date>2015-06-25</Date>
+                <Date>2015-08-03</Date>
                 <Version>5.11.0</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
@@ -50942,10 +51689,9 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>qt5-declarative-devel</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>pkgconfig</Dependency>
                 <Dependency>libxcb-devel</Dependency>
                 <Dependency>libxkbfile-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>docutils</Dependency>
                 <Dependency>cmake</Dependency>
@@ -51249,6 +51995,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>fontconfig-devel</Dependency>
                 <Dependency>plasma-workspace-devel</Dependency>
                 <Dependency>system-settings-devel</Dependency>
+                <Dependency>xorg-app-devel</Dependency>
+                <Dependency>libcanberra-devel</Dependency>
                 <Dependency>docbook-xsl</Dependency>
                 <Dependency>qt5-sql-sqlite</Dependency>
                 <Dependency>qt5-sql-mysql</Dependency>
@@ -51309,6 +52057,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>libxkbfile</Dependency>
                 <Dependency>plasma-framework</Dependency>
                 <Dependency>plasma-workspace</Dependency>
+                <Dependency>libcanberra</Dependency>
+                <Dependency>pulseaudio-libs</Dependency>
                 <Dependency>qt5-base</Dependency>
                 <Dependency>qt5-declarative</Dependency>
                 <Dependency>qt5-phonon</Dependency>
@@ -51316,8 +52066,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-x11extras</Dependency>
                 <Dependency>solid</Dependency>
                 <Dependency>sonnet</Dependency>
+                <Dependency>qt5-sql-sqlite</Dependency>
                 <Dependency>system-settings</Dependency>
                 <Dependency>xcb-util-image</Dependency>
+                <Dependency>oxygen-icons</Dependency>
+                <Dependency>oxygen-fonts</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc</Path>
@@ -51332,7 +52085,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Package>
         <History>
             <Update release="4">
-                <Date>2015-07-02</Date>
+                <Date>2015-08-03</Date>
                 <Version>5.3.2</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
@@ -51399,6 +52152,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>networkmanager-qt-devel</Dependency>
                 <Dependency>pam-devel</Dependency>
                 <Dependency>qt5-base-devel</Dependency>
+                <Dependency>xorg-app-devel</Dependency>
                 <Dependency>qt5-sql-mysql</Dependency>
                 <Dependency>qt5-sql-odbc</Dependency>
                 <Dependency>qt5-sql-postgresql</Dependency>
@@ -51483,10 +52237,12 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>wayland-client</Dependency>
                 <Dependency>wayland-server</Dependency>
                 <Dependency>xcb-util-keysyms</Dependency>
+                <Dependency>xorg-app</Dependency>
                 <Dependency>zlib</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc/pam.d</Path>
+                <Path fileType="config">/etc/env.d</Path>
                 <Path fileType="config">/etc/xdg</Path>
                 <Path fileType="data">/usr/share</Path>
                 <Path fileType="applications">/usr/share/applications</Path>
@@ -51497,6 +52253,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="library">/usr/lib</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
+            <AdditionalFiles>
+                <AdditionalFile target="/etc/pam.d/kde" permission="0644" owner="root">kde.pam</AdditionalFile>
+                <AdditionalFile target="/etc/pam.d/kde-np" permission="0644" owner="root">kde-np.pam</AdditionalFile>
+                <AdditionalFile target="/etc/env.d/40Kde5" permission="0644" owner="root">kde-env.sh</AdditionalFile>
+            </AdditionalFiles>
         </Package>
         <Package>
             <Name>plasma-workspace-devel</Name>
@@ -51574,9 +52335,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="data">/usr/lib/cmake</Path>
                 <Path fileType="config">/usr/lib/pkgconfig</Path>
             </Files>
-            <AdditionalFiles>
-                <AdditionalFile target="/etc/pam.d/kde" permission="0644" owner="root">kde.pam</AdditionalFile>
-            </AdditionalFiles>
         </Package>
         <Package>
             <Name>drkonqi</Name>
@@ -51592,7 +52350,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Package>
         <History>
             <Update release="2">
-                <Date>2015-07-02</Date>
+                <Date>2015-08-03</Date>
                 <Version>5.3.2</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
@@ -51850,7 +52608,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kdoctools-devel</Dependency>
                 <Dependency>kconfigwidgets-devel</Dependency>
                 <Dependency>kauth-devel</Dependency>
-                <Dependency>libgcc</Dependency>
                 <Dependency>libX11-devel</Dependency>
                 <Dependency>kxmlgui-devel</Dependency>
                 <Dependency>ki18n-devel</Dependency>
@@ -51860,10 +52617,12 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>qt5-tools-devel</Dependency>
                 <Dependency>qt5-x11extras-devel</Dependency>
                 <Dependency>kconfig-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
                 <Dependency>docutils</Dependency>
                 <Dependency>libXcursor-devel</Dependency>
-                <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>xcb-util-image-devel</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/plasma/sddm-kcm/pspec.xml</SourceURI>
         </Source>
@@ -54112,8 +54871,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>knewstuff-devel</Dependency>
                 <Dependency>gtk2-devel</Dependency>
                 <Dependency>gtk3-devel</Dependency>
-                <Dependency>gobject-introspection-devel</Dependency>
-                <Dependency>kde-cli-tools</Dependency>
+                <Dependency>at-spi2-core-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>cmake</Dependency>
             </BuildDependencies>
@@ -54130,9 +54888,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kcoreaddons</Dependency>
                 <Dependency>kiconthemes</Dependency>
                 <Dependency>kwidgetsaddons</Dependency>
-                <Dependency>kcmutils</Dependency>
                 <Dependency>karchive</Dependency>
-                <Dependency>kauth</Dependency>
                 <Dependency>knewstuff</Dependency>
                 <Dependency>kconfigwidgets</Dependency>
                 <Dependency>gtk2</Dependency>
@@ -54151,7 +54907,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Package>
         <History>
             <Update release="3">
-                <Date>2015-07-01</Date>
+                <Date>2015-08-03</Date>
                 <Version>5.3.2</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
