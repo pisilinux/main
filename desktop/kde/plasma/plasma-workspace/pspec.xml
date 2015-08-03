@@ -53,6 +53,7 @@
             <Dependency>pam-devel</Dependency>
             <!--Dependency>prison-qt5-devel</Dependency-->
             <Dependency>qt5-base-devel</Dependency>
+	    <Dependency>xorg-app-devel</Dependency>
             <Dependency>qt5-sql-mysql</Dependency> 
             <Dependency>qt5-sql-odbc</Dependency>
             <Dependency>qt5-sql-postgresql</Dependency>
@@ -138,10 +139,12 @@
             <Dependency>wayland-client</Dependency>
             <Dependency>wayland-server</Dependency>
             <Dependency>xcb-util-keysyms</Dependency>
+            <Dependency>xorg-app</Dependency>
             <Dependency>zlib</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc/pam.d</Path>
+            <Path fileType="config">/etc/env.d</Path>
             <Path fileType="config">/etc/xdg</Path>            
             <Path fileType="data">/usr/share</Path>
             <Path fileType="applications">/usr/share/applications</Path>
@@ -151,7 +154,12 @@
             <Path fileType="library">/usr/lib/qt5/qml</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-        </Files>	
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/pam.d/kde" permission="0644" owner="root">kde.pam</AdditionalFile>
+            <AdditionalFile target="/etc/pam.d/kde-np" permission="0644" owner="root">kde-np.pam</AdditionalFile>
+            <AdditionalFile target="/etc/env.d/40Kde5" permission="0644" owner="root">kde-env.sh</AdditionalFile>
+        </AdditionalFiles>
     </Package>
     
     <Package>
@@ -231,9 +239,6 @@
             <Path fileType="data">/usr/lib/cmake</Path>
             <Path fileType="config">/usr/lib/pkgconfig</Path>
         </Files>
-        <AdditionalFiles>            
-            <AdditionalFile target="/etc/pam.d/kde" permission="0644" owner="root">kde.pam</AdditionalFile>
-        </AdditionalFiles>
     </Package>
     
     <Package>
@@ -251,7 +256,7 @@
     
     <History>
         <Update release="2">
-            <Date>2015-07-02</Date>
+            <Date>2015-08-03</Date>
             <Version>5.3.2</Version>
             <Comment>Version bump.</Comment>
             <Name>Stefan Gronewold(groni)</Name>
