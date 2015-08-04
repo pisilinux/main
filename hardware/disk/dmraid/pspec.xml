@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>dmraid</Name>
+        <Homepage>http://people.redhat.com/~heinzm/sw/dmraid</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>Device-Mapper Software RAID support tool and library</Summary>
+        <Description>Device-Mapper Software RAID support tool and library</Description>
+        <Archive sha1sum="162b6173b91a0121a52402d2ed939b43d74ff605" type="tarbz2">http://launchpad.net/dmraid/1.0/1.0.0.rc16-3/+download/dmraid-1.0.0.rc16-3.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>device-mapper-event-devel</Dependency>
+            <Dependency>device-mapper-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">dmraid-diet.patch</Patch>
+            <Patch level="2">dmraid-1.0.0_rc16-return-all-sets.patch</Patch>
+            <Patch level="0">dmraid-1.0.0_rc16-static-build-fixes.patch</Patch>
+            <Patch level="2">dmraid-1.0.0_rc16-undo-p-rename.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>dmraid</Name>
+        <RuntimeDependencies>
+            <Dependency>device-mapper</Dependency>
+            <Dependency>device-mapper-event</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>dmraid-devel</Name>
+        <Summary>Development files for dmraid</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">dmraid</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+    <!--
+    <Package>
+        <Name>dmraid-static</Name>
+        <PartOf>system.static</PartOf>
+        <Files>
+            <Path fileType="executable">/sbin</Path>
+        </Files>
+    </Package>
+    -->
+
+    <History>
+        <Update release="3">
+            <Date>2014-02-17</Date>
+            <Version>1.0.0_rc16</Version>
+            <Comment>Release.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-03-15</Date>
+            <Version>1.0.0_rc16</Version>
+            <Comment>V.Bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2010-10-13</Date>
+            <Version>1.0.0_rc15</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
