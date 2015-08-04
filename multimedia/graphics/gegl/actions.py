@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-vfi")
     autotools.configure("--enable-mmx \
                          --enable-sse \
                          --includedir=/usr/include \
@@ -25,12 +25,10 @@ def setup():
                          --with-lensfun \
                          --with-libjpeg \
                          --with-libpng \
-                         --with-librsvg \
                          --with-openexr \
                          --with-sdl \
                          --with-libopenraw \
                          --with-jasper \
-                         --with-graphviz \
                          --with-lua \
                          --without-libavformat \
                          --with-libv4l \
@@ -42,7 +40,9 @@ def setup():
                          --enable-gtk-doc-html=no \
                          --disable-docs \
                          --disable-workshop")
-    
+                         #--with-librsvg \
+                         #--with-graphviz \
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
