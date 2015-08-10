@@ -13,13 +13,16 @@ def setup():
     pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
     opts = {
             "introspection": "no" if get.buildTYPE() == "emul32" else "yes",
-            "gnome-vfs": "dis" if get.buildTYPE() == "emul32" else "en"
+             "libvisual": "dis" if get.buildTYPE() == "emul32" else "en",
+             "theora": "dis" if get.buildTYPE() == "emul32" else "en",
            }
+    
     autotools.configure("--disable-static \
                          --disable-rpath \
                          --disable-examples \
-                         --%(gnome-vfs)sable-gnome-vfs \
-                         --enable-libvisual \
+                         --disable-gnome-vfs \
+                         --%(libvisual)sable-libvisual \
+                         --%(theora)sable-theora \
                          --enable-experimental \
                          --enable-introspection=%(introspection)s \
                          --with-package-name='PisiLinux gstreamer-plugins-base package' \

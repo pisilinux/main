@@ -10,10 +10,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.dosed("app/text/gimpfont.c", "freetype/tttables.h", "freetype2/tttables.h")
-    autotools.autoreconf("-fi")
-    autotools.configure("--without-webkit \
-                         --disable-gtk-doc \
+    #pisitools.dosed("app/text/gimpfont.c", "freetype/tttables.h", "freetype2/tttables.h")
+    #autotools.autoreconf("-fi")
+    autotools.configure("--disable-gtk-doc \
                          --disable-altivec \
                          --disable-alsatest \
                          --enable-python \
@@ -35,7 +34,7 @@ def setup():
                          --with-dbus \
                          --with-aa \
                          --with-x")
-    
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
     # Add illustrator and other mime types

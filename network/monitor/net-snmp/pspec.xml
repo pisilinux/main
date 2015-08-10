@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>net-snmp</Name>
+        <Homepage>http://net-snmp.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>A collection of SNMP protocol tools and libraries</Summary>
+        <Description>Simple Network Management Protocol (SNMP) is a widely used protocol for monitoring the health and welfare of network equipment (eg. routers), computer equipment and even devices like UPSs. Net-SNMP is a suite of applications used to implement SNMP v1, SNMP v2c and SNMP v3 using both IPv4 and IPv6.</Description>
+        <Archive sha1sum="97dc25077257680815de44e34128d365c76bd839" type="targz">mirrors://sourceforge/net-snmp/net-snmp-5.7.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libnl-devel</Dependency>
+            <Dependency>python-setuptools</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>python-devel</Dependency>
+            <Dependency>perl</Dependency>
+            <Dependency>pciutils-devel</Dependency>
+            <Dependency>tcp-wrappers-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!--Patch level="1">net-snmp-5.5-dir-fix.patch</Patch>
+            <Patch level="1">net-snmp-5.5-apsl-copying.patch</Patch-->
+            <Patch level="1">locale.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>net-snmp</Name>
+        <RuntimeDependencies>
+            <Dependency>libnl</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>python</Dependency>
+            <Dependency>perl</Dependency>
+            <Dependency>pciutils</Dependency>
+            <Dependency>tcp-wrappers</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/snmp</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/sbin/snmpd</Path>
+            <Path fileType="config">/etc/conf.d/snmpd</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/snmp</Path>
+            <Path fileType="data">/var/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/snmpd">confd-snmpd.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/snmp/snmpd.conf">net-snmpd.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="snmpd.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>net-snmptrap</Name>
+        <RuntimeDependencies>
+            <Dependency>net-snmp</Dependency>
+            <Dependency>tcp-wrappers</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/conf.d/snmptrapd</Path>
+            <Path fileType="config">/etc/snmp/snmptrapd.conf</Path>
+            <Path fileType="executable">/usr/sbin/snmptrapd</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/snmptrapd">confd-snmptrapd.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/snmp/snmptrapd.conf">net-snmptrapd.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="snmptrapd.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>net-snmp-devel</Name>
+        <Summary>Development files for net-snmp</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">net-snmp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="man">/usr/share/man/man3</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="6">
+            <Date>2015-08-02</Date>
+            <Version>5.7.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-09-13</Date>
+            <Version>5.7.2.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-02-19</Date>
+            <Version>5.7.2</Version>
+            <Comment>Rebuild Unused</Comment>
+            <Name>Varol Maksutoğlu</Name>
+            <Email>waroi@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-12-01</Date>
+            <Version>5.7.2</Version>
+            <Comment>Rebuild for new perl.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-07-28</Date>
+            <Version>5.7.2</Version>
+            <Comment>Dep Fixed</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-11-09</Date>
+            <Version>5.7.2</Version>
+            <Comment>First release</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

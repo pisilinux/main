@@ -12,6 +12,7 @@ def setup():
                           -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
                           -DSYSCONF_INSTALL_DIR=/etc \
                           -DLIB_INSTALL_DIR=lib \
+                          -DPhonon4Qt5_DIR=/usr/lib/qt5/cmake/phonon4qt5 \
                           -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
                           -DBUILD_TESTING=OFF")
 

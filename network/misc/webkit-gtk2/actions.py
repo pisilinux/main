@@ -18,15 +18,16 @@ docs = ["AUTHORS", "ChangeLog", "COPYING.LIB", "THANKS", \
 
 def setup():
     autotools.configure("\
-                         --disable-gtk-doc \
-                         --disable-silent-rules \
                          --disable-webkit2 \
-                         --enable-dependency-tracking \
-                         --enable-introspection \
-                         --enable-video \
-                         --with-gnu-ld \
+                         --libexecdir=/usr/lib \
                          --with-gtk=2.0 \
+                         --with-gnu-ld \
+                         --disable-silent-rules \
                         ")
+#--enable-dependency-tracking \
+#--disable-gtk-doc \
+#--enable-video \
+#--enable-introspection \
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 

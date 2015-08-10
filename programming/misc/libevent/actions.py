@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "libevent-%s-stable" % get.srcVERSION()
+#WorkDir = "libevent-%s-stable" % get.srcVERSION()
 
 def setup():
     pisitools.dosed("Makefile.am", "libevent_extra_la_LIBADD =", "libevent_extra_la_LIBADD = libevent.la ")
