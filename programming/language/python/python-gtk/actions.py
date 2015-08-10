@@ -15,8 +15,9 @@ def setup():
     shelltools.unlink("py-compile" )
     shelltools.sym("/bin/true", "%s/py-compile" % get.curDIR())
 
-    autotools.configure("--enable-thread \
-                         --disable-docs")
+    autotools.configure("--prefix=/usr \
+                         --enable-thread \
+                         --enable-numpy")
 
     shelltools.touch("%s/style.css" % get.curDIR())
     pisitools.dosed("docs/Makefile", "CSS_FILES = .*", "CSS_FILES = %s/style.css" % get.curDIR())
