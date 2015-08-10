@@ -12,7 +12,9 @@ def setup():
     shelltools.system("./bootstrap.sh")
     
     autotools.configure("--sbindir=/usr/bin \
-			 --prefix=/usr")
+                         --prefix=/usr \
+                         --disable-static \
+                         --with-distro=pardus")
 
 def build():
     autotools.make()
