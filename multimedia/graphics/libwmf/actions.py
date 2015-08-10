@@ -13,7 +13,7 @@ def setup():
     shelltools.unlink("configure.ac")
     shelltools.sym("patches/acconfig.h", "acconfig.h")
 
-    autotools.autoreconf("-fi")
+    autotools.autoreconf("-vfi")
     pisitools.dosed("src/Makefile.in", "@LIBWMF_GDK_PIXBUF_TRUE@", "#")
     autotools.configure("--without-expat \
                          --with-libxml2 \
