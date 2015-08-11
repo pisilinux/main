@@ -15,6 +15,8 @@ def setup():
                          --disable-dri3 \
                          --enable-glamor \
                         ")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
