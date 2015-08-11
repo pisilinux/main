@@ -13,17 +13,18 @@
         <IsA>library</IsA>
         <Summary>Image procession framework.</Summary>
         <Description>G'MIC stands for GREYC's Magic Image Converter. G'MIC is focused on the design of possibly complex pipelines for converting, manipulating, filtering and visualizing generic 1d/2d/3d multi-spectral image datasets.</Description>
-        <Archive sha1sum="ffac4ed3b883bc6fe49e06cfc12549f6e18da87a" type="targz">mirrors://sourceforge/gmic/gmic_1.6.0.3.tar.gz</Archive>
+        <Archive sha1sum="c15ce002dd9133efcf662a8e0a4c92a95c083c39" type="targz">http://gmic.eu/files/source/gmic_1.6.5.1.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>ffmpeg-devel</Dependency>
             <Dependency>fftw3-devel</Dependency>
             <Dependency>gimp-devel</Dependency>
-            <Dependency>GraphicsMagick-devel</Dependency>
+            <!--<Dependency>GraphicsMagick-devel</Dependency>-->
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>lapack-devel</Dependency>
             <Dependency>opencv-devel</Dependency>
             <Dependency>openexr-devel</Dependency>
             <Dependency>tiff-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
         </BuildDependencies>
         <Patches>
 <!--             <Patch level="1">gentoo/gmic-1.5.2.2-makefile.patch</Patch> -->
@@ -33,16 +34,15 @@
     <Package>
         <Name>gmic</Name>
         <RuntimeDependencies>
+            <Dependency>curl</Dependency>
             <Dependency>tiff</Dependency>
+            <Dependency>zlib</Dependency>
             <Dependency>fftw3</Dependency>
-            <Dependency>ffmpeg</Dependency>
-            <Dependency>opencv</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpng</Dependency>
             <Dependency>libgomp</Dependency>
-            <Dependency>ilmbase</Dependency>
-            <Dependency>libXext</Dependency>
-            <Dependency>openexr-libs</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
-            <Dependency>GraphicsMagick</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc/bash_completion.d</Path>
@@ -52,7 +52,7 @@
             <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
-    
+
     <Package>
         <Name>gmic-devel</Name>
         <Summary>Development files for gmic</Summary>
@@ -69,11 +69,19 @@
         <Summary>Gimp plugin for the GMIC image procession framework.</Summary>
         <RuntimeDependencies>
             <Dependency>atk</Dependency>
+            <Dependency>curl</Dependency>
             <Dependency>gtk2</Dependency>
+            <Dependency>zlib</Dependency>
             <Dependency>gimp</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>pango</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency>fftw3</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>fontconfig</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
         </RuntimeDependencies>
@@ -82,8 +90,15 @@
             <Path fileType="doc">/usr/share/doc/gimp-gmic-plugin</Path>
         </Files>
     </Package>
-    
+
     <History>
+        <Update release="5">
+            <Date>2015-08-10</Date>
+            <Version>1.6.5.1</Version>
+            <Comment>version bump</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
         <Update release="5">
             <Date>2014-12-25</Date>
             <Version>1.6.0.3</Version>
