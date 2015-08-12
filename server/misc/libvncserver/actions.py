@@ -12,7 +12,6 @@ WorkDir = "LibVNCServer-%s" % get.srcVERSION()
 
 def setup():
     autotools.configure("--disable-static \
-                         --with-backchannel \
                          --disable-dependency-tracking \
                          --with-24bpp \
                          --with-zlib \
