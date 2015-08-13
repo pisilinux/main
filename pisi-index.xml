@@ -3171,9 +3171,12 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <PartOf>multimedia.graphics</PartOf>
             <Summary xml:lang="en">Raw image decoder</Summary>
             <Description xml:lang="en">LibRaw is a library for reading RAW files obtained from digital photo cameras (CRW/CR2, NEF, RAF, DNG, and others).</Description>
-            <Archive type="targz" sha1sum="bb2e1ad00857ff896b2161265f821cd282c912ef">http://www.libraw.org/data/LibRaw-0.16.1.tar.gz</Archive>
+            <Archive type="targz" sha1sum="fd74432c9167a5621d24cb5ba0d1fc082a8963b4">http://www.libraw.org/data/LibRaw-0.16.2.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>libgomp</Dependency>
+                <Dependency>lcms2-devel</Dependency>
+                <Dependency>jasper-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
             </BuildDependencies>
             <SourceURI>multimedia/graphics/libraw/pspec.xml</SourceURI>
         </Source>
@@ -3181,6 +3184,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>libraw</Name>
             <RuntimeDependencies>
                 <Dependency>libgomp</Dependency>
+                <Dependency>libgcc</Dependency>
                 <Dependency>lcms2</Dependency>
                 <Dependency>jasper</Dependency>
                 <Dependency>libjpeg-turbo</Dependency>
@@ -3196,8 +3200,10 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for libraw</Summary>
             <Summary xml:lang="tr">libraw için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="7">libraw</Dependency>
+                <Dependency release="8">libraw</Dependency>
                 <Dependency>lcms2-devel</Dependency>
+                <Dependency>jasper-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -3205,6 +3211,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="8">
+                <Date>2015-08-13</Date>
+                <Version>0.16.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
             <Update release="7">
                 <Date>2015-05-16</Date>
                 <Version>0.16.1</Version>
@@ -10672,8 +10685,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <PartOf>kernel.tools</PartOf>
             <Summary xml:lang="en">Performance analyser tool that makes full use of the Linux performance counter subsystem</Summary>
             <Description xml:lang="en">perf is a new tool which is used to optimize, validate and measure applications, workloads or the full system through the Linux performance counter subsystem.</Description>
-            <Archive type="targz" sha1sum="553164212ea3a162a2ff63276c60fe7dd04e9ad1">https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.0.tar.gz</Archive>
+            <Archive type="targz" sha1sum="dce24ac1874f362000e40027075e7d24ba123b73">https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.1.tar.gz</Archive>
             <BuildDependencies>
+                <Dependency>libunwind-devel</Dependency>
+                <Dependency>audit-devel</Dependency>
+                <Dependency>xz-devel</Dependency>
                 <Dependency>gtk2-devel</Dependency>
                 <Dependency>unifdef</Dependency>
                 <Dependency>elfutils</Dependency>
@@ -10689,15 +10705,19 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>zlib-devel</Dependency>
                 <Dependency>perl</Dependency>
+                <Dependency>util-linux</Dependency>
+                <Dependency>libxslt</Dependency>
             </BuildDependencies>
             <Patches>
-                <Patch compressionType="xz" level="1">patches/linux/patch-4.0.5.xz</Patch>
+                <Patch compressionType="xz" level="1">patches/linux/patch-4.1.5.xz</Patch>
             </Patches>
             <SourceURI>kernel/tools/perf/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>perf</Name>
             <RuntimeDependencies>
+                <Dependency>audit</Dependency>
+                <Dependency>xz</Dependency>
                 <Dependency>newt</Dependency>
                 <Dependency>elfutils</Dependency>
                 <Dependency>gtk2</Dependency>
@@ -10720,6 +10740,13 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             </Files>
         </Package>
         <History>
+            <Update release="52">
+                <Date>2015-08-13</Date>
+                <Version>4.1.5</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Ertuğrul Erata</Name>
+                <Email>ertugrulerata@gmail.com</Email>
+            </Update>
             <Update release="51">
                 <Date>2015-06-16</Date>
                 <Version>4.0.5</Version>
@@ -50212,11 +50239,13 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">LibRaw kitaplığı için C++ arayüzü</Summary>
             <Description xml:lang="en">libkdcraw is a C++ interface around LibRaw library used to decode RAW picture files.</Description>
             <Description xml:lang="tr">libkdcraw, RAW resim dosyalarını çözmek için kullanılan LibRaW kitaplığının C++ arayüzüdür.</Description>
-            <Archive type="targz" sha1sum="d9d837a3ebfa14e3a66920229ef771c1b6d0002f">http://download948.mediafire.com/4znx7rkpdyzg/3ocxvqjsvdf3tzd/libkdcraw.tar.gz</Archive>
+            <Archive type="tarxz" sha1sum="0b09804bb198a9035128a289df10671c2a38ba1f">http://source.pisilinux.org/1.0/libkdcraw-15.07.90_20150715.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>qt5-base-devel</Dependency>
                 <Dependency>kdoctools-devel</Dependency>
                 <Dependency>libraw-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
                 <Dependency>cmake</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
@@ -50244,6 +50273,10 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Summary xml:lang="tr">libkdcraw için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
                 <Dependency release="22">libkdcraw</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
+                <Dependency>libraw-devel</Dependency>
+                <Dependency>kconfig-devel</Dependency>
+                <Dependency>ki18n-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -50253,8 +50286,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Package>
         <History>
             <Update release="22">
-                <Date>2014-11-13</Date>
-                <Version>5.0.0</Version>
+                <Date>2015-08-13</Date>
+                <Version>15.07.90_p1</Version>
                 <Comment>Version bump.</Comment>
                 <Name>Yusuf Aydemir</Name>
                 <Email>yusuf.aydemir@pisilinux.org</Email>
@@ -50514,6 +50547,11 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Dependency>kinit-devel</Dependency>
                 <Dependency>kunitconversion-devel</Dependency>
                 <Dependency>baloo-devel</Dependency>
+                <Dependency>libkdcraw-devel</Dependency>
+                <Dependency>libpng-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>docbook-xsl</Dependency>
                 <Dependency>cmake</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
             </BuildDependencies>
@@ -59790,163 +59828,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>kdesdk-thumbnailers</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Translation file thumbnail generators</Summary>
-            <Description xml:lang="en">Translation file thumbnail generators</Description>
-            <Archive type="tarxz" sha1sum="1d4c217133300f4a6b731746426328ea2b35e48a">mirrors://kde/stable/applications/15.04.3/src/kdesdk-thumbnailers-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>qt-devel</Dependency>
-                <Dependency>gettext-devel</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/kdesdk-thumbnailers/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kdesdk-thumbnailers</Name>
-            <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>gettext</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>kcachegrind</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:gui</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Visualisation tool for the Valgrind profiler</Summary>
-            <Summary xml:lang="tr">Valgrind için sanallaştırma aracı.</Summary>
-            <Description xml:lang="en">KCachegrind is a visualisation tool for the profiling data generated by calltree, a memory profiling tool for valgrind.</Description>
-            <Description xml:lang="tr">Kcachegrind, calltree tarafından oluşturulmuş verileri ayrımlamaya yarayan, Valgrind için bir hafıza belierleme uygulamasıdır.</Description>
-            <Archive type="tarxz" sha1sum="393c72269ab97f5f9cf81f9ccf8589cfcecff2c5">mirrors://kde/stable/applications/15.04.3/src/kcachegrind-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/kcachegrind/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kcachegrind</Name>
-            <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="executable">/usr/bin</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>kdedev-scripts</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:gui</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Kdevelop sscripts.</Summary>
-            <Summary xml:lang="tr">Kdevelop betikleri.</Summary>
-            <Description xml:lang="en">Kdevelop sscripts.</Description>
-            <Description xml:lang="tr">Kdevelop betikleri.</Description>
-            <Archive type="tarxz" sha1sum="2198f819d91a78c2360a4078c5d13db375f8552a">mirrors://kde/stable/applications/15.04.3/src/kde-dev-scripts-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/kdedev-scripts/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kdedev-scripts</Name>
-            <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>perl-XML-DOM</Dependency>
-                <Dependency>perl-DateTime-Locale</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="man">/usr/share/man</Path>
-                <Path fileType="executable">/usr/bin</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
             <Name>kompare</Name>
             <Homepage>http://www.kde.org/</Homepage>
             <Packager>
@@ -59996,232 +59877,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="doc">/usr/share/doc</Path>
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="header">/usr/include</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>dolphin-plugins</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Extra dolphin plugins</Summary>
-            <Summary xml:lang="tr">Dolphin eklentileri.</Summary>
-            <Description xml:lang="en">This package contains plugins that offer integration in Dolphin with the following version control systems:</Description>
-            <Description xml:lang="tr">Dolphin için VCS (Version Control System) eklentileri.</Description>
-            <Archive type="tarxz" sha1sum="4c122513d26e0195b9197dd5a9a97a44863d4047">http://download.kde.org/stable/applications/15.04.3/src/dolphin-plugins-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-                <Dependency versionFrom="4.11.8">kde-workspace-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/dolphin-plugins/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>dolphin-plugins</Name>
-            <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-                <Dependency versionFrom="15.04.3">kdebaseapps</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2015-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>lokalize</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:gui</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Computer-Aided Translation System</Summary>
-            <Summary xml:lang="tr">Uygulama yerelleştirme yardımcısı.</Summary>
-            <Description xml:lang="en">Lokalize is a computer-aided translation system that focuses on productivity and quality assurance.</Description>
-            <Description xml:lang="tr">Lokalize, uygulamalar için kolaylıkla yerelleştirme yapabileceğiniz bir programdır.</Description>
-            <Archive type="tarxz" sha1sum="903d2bcf3f3990747a37d00b0de0b41ce6f0a99a">mirrors://kde/stable/applications/15.04.3/src/lokalize-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency>hunspell-devel</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/lokalize/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>lokalize</Name>
-            <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
-                <Dependency>kio</Dependency>
-                <Dependency>kitemviews</Dependency>
-                <Dependency>ki18n</Dependency>
-                <Dependency>kross</Dependency>
-                <Dependency>kparts</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>sonnet</Dependency>
-                <Dependency>kconfig</Dependency>
-                <Dependency>kxmlgui</Dependency>
-                <Dependency>kcompletion</Dependency>
-                <Dependency>kcoreaddons</Dependency>
-                <Dependency>kdbusaddons</Dependency>
-                <Dependency>ktextwidgets</Dependency>
-                <Dependency>kconfigwidgets</Dependency>
-                <Dependency>knotifications</Dependency>
-                <Dependency>kwidgetsaddons</Dependency>
-                <Dependency>hunspell</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="executable">/usr/bin</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>kdesdk-strigi-analyzers</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>library</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Analyzer plugins for strigi</Summary>
-            <Summary xml:lang="tr">Strigi için analiz pluginleri.</Summary>
-            <Description xml:lang="en">Analyzer plugins for strigi</Description>
-            <Description xml:lang="tr">Strigi için analiz pluginleri.</Description>
-            <Archive type="tarxz" sha1sum="a9018d572e44b3a3dfac7d53b88b8042ae93ebbb">mirrors://kde/stable/applications/15.04.3/src/kdesdk-strigi-analyzers-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>qt-devel</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/kdesdk-strigi-analyzers/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kdesdk-strigi-analyzers</Name>
-            <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>strigi</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>kdesdk-kioslaves</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:gui</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Kio slaves</Summary>
-            <Description xml:lang="en">Kio slaves</Description>
-            <Archive type="tarxz" sha1sum="9865294560562123d94ed67267ca1b8bfeaa6715">mirrors://kde/stable/applications/15.04.3/src/kdesdk-kioslaves-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/kdesdk-kioslaves/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kdesdk-kioslaves</Name>
-            <RuntimeDependencies>
-                <Dependency>kdesvn</Dependency>
-                <Dependency>qt</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>apr</Dependency>
-                <Dependency>subversion</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="library">/usr/lib/qt5</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="executable">/usr/bin</Path>
             </Files>
             <Conflicts>
                 <Package>kdesdk</Package>
@@ -60292,68 +59947,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
                 <Path fileType="data">/usr/lib/cmake</Path>
                 <Path fileType="data">/usr/lib/pkgconfig</Path>
             </Files>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2014-07-19</Date>
-                <Version>15.04.3</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold (groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>kapptemplate</Name>
-            <Homepage>http://www.kde.org/</Homepage>
-            <Packager>
-                <Name>Pisi Linux Admins</Name>
-                <Email>admin@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:gui</IsA>
-            <PartOf>desktop.kde.sdk</PartOf>
-            <Summary xml:lang="en">Application template generator</Summary>
-            <Summary xml:lang="tr">Uygulama şablon oluşturucu.</Summary>
-            <Description xml:lang="en">KAppTemplate is a shell script that will create the necessary framework to develop several types of applications, including applications based on the KDE development platform.</Description>
-            <Description xml:lang="tr">Kapptemplate, çeşitli uygulamaları geliştirmek için gerekli olabilecek şablonlar oluşturmayı sağlar.</Description>
-            <Archive type="tarxz" sha1sum="55e1272a6c16ff14e8a7e911962eba139d79c0d8">mirrors://kde/stable/applications/15.04.3/src/kapptemplate-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>qt5-base-devel</Dependency>
-                <Dependency>extra-cmake-modules</Dependency>
-                <Dependency>gettext</Dependency>
-                <Dependency>python3</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="15.04.3">kde-runtime-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/sdk/kapptemplate/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kapptemplate</Name>
-            <RuntimeDependencies>
-                <Dependency>qt5-base</Dependency>
-                <Dependency>kio</Dependency>
-                <Dependency>ki18n</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>kconfig</Dependency>
-                <Dependency>karchive</Dependency>
-                <Dependency>kcompletion</Dependency>
-                <Dependency>kcoreaddons</Dependency>
-                <Dependency>kconfigwidgets</Dependency>
-                <Dependency>kwidgetsaddons</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="executable">/usr/bin</Path>
-            </Files>
-            <Conflicts>
-                <Package>kdesdk</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>kdesdk</Package>
-            </Replaces>
         </Package>
         <History>
             <Update release="1">
@@ -60529,7 +60122,7 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
     </SpecFile>
     <SpecFile>
         <Source>
-            <Name>kde5-ark</Name>
+            <Name>ark</Name>
             <Homepage>http://www.kde.org</Homepage>
             <Packager>
                 <Name>Pisi Linux Admins</Name>
@@ -60540,22 +60133,21 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <PartOf>desktop.kde.application</PartOf>
             <Summary xml:lang="en">KDE Archiving Tool</Summary>
             <Description xml:lang="en">Ark is a program for managing various archive formats within the KDE environment.</Description>
-            <Archive type="tarxz" sha1sum="24d24d72225d99debca98a92edee03bef78fde85">http://download.kde.org/stable/applications/15.04.2/src/ark-15.04.2.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="891187b1c49258ab461f1dcbfae82f0640a96f54">http://download.kde.org/stable/applications/15.04.3/src/ark-15.04.3.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency>qt-devel</Dependency>
-                <Dependency>automoc4</Dependency>
+                <Dependency>qt5-base-devel</Dependency>
                 <Dependency>libarchive-devel</Dependency>
-                <Dependency>kde5-kdebaseapps-devel</Dependency>
-                <Dependency>kdelibs-devel</Dependency>
+                <Dependency>kdebaseapps-devel</Dependency>
+                <Dependency>extra-cmake-modules</Dependency>
+                <Dependency>cmake</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/application/ark/pspec.xml</SourceURI>
         </Source>
         <Package>
-            <Name>kde5-ark</Name>
+            <Name>ark</Name>
             <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>kdelibs</Dependency>
-                <Dependency>kde5-kdebaseapps</Dependency>
+                <Dependency>qt5-base</Dependency>
+                <Dependency>kdebaseapps</Dependency>
                 <Dependency>libarchive</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -60571,8 +60163,8 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
         </Package>
         <History>
             <Update release="1">
-                <Date>2015-06-05</Date>
-                <Version>15.04.2</Version>
+                <Date>2015-08-13</Date>
+                <Version>15.04.3</Version>
                 <Comment>First Release.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
                 <Email>groni@pisilinux.org</Email>
@@ -60962,159 +60554,6 @@ Bu Skype SILK codec ve Xiph.Org &apos;s Celt codec teknolojisi dahil RFC 6716 ol
             <Update release="1">
                 <Date>2015-06-03</Date>
                 <Version>15.04.2</Version>
-                <Comment>First Release.</Comment>
-                <Name>Stefan Gronewold(groni)</Name>
-                <Email>groni@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>kde-runtime</Name>
-            <Homepage>http://www.kde.org</Homepage>
-            <Packager>
-                <Name>PisiLinux Community</Name>
-                <Email>admins@pisilinux.org</Email>
-            </Packager>
-            <License>GPLv2</License>
-            <IsA>app:gui</IsA>
-            <PartOf>desktop.kde.base</PartOf>
-            <Summary xml:lang="en">KDE4 Runtime Requirements</Summary>
-            <Description xml:lang="en">kde-runtime contains KDE4 base runtime applications and data files needed at runtime by other KDE applications. In this package, core applications and libraries like Nepomuk server, kcmshell, kwalletd, kio libraries and kdesu are included.</Description>
-            <Archive type="tarxz" sha1sum="9984b22d2706e7d3efefeefca94a9de5b53f07c3">http://download.kde.org/stable/applications/15.04.3/src/kde-runtime-15.04.3.tar.xz</Archive>
-            <BuildDependencies>
-                <Dependency>webp-devel</Dependency>
-                <Dependency>docbook-xsl</Dependency>
-                <Dependency>qca2-devel</Dependency>
-                <Dependency>exiv2-devel</Dependency>
-                <Dependency>gpgme-devel</Dependency>
-                <Dependency>phonon-devel</Dependency>
-                <Dependency>attica-devel</Dependency>
-                <Dependency>openexr-devel</Dependency>
-                <Dependency>openslp-devel</Dependency>
-                <Dependency>alsa-lib-devel</Dependency>
-                <Dependency>xine-lib-devel</Dependency>
-                <Dependency>qt-webkit-devel</Dependency>
-                <Dependency>libXcursor-devel</Dependency>
-                <Dependency>libcanberra-devel</Dependency>
-                <Dependency>kactivities-devel</Dependency>
-                <Dependency>libjpeg-turbo-devel</Dependency>
-                <Dependency releaseFrom="5">libssh-devel</Dependency>
-                <Dependency>NetworkManager-devel</Dependency>
-                <Dependency>pulseaudio-libs-devel</Dependency>
-                <Dependency>shared-mime-info</Dependency>
-                <Dependency>libX11-devel</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>libgcrypt-devel</Dependency>
-                <Dependency releaseFrom="5">samba-devel</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs-devel</Dependency>
-                <Dependency versionFrom="4.14.3">kdepimlibs-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/kde/base/kde-runtime/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>kde-runtime</Name>
-            <IsA>app:gui</IsA>
-            <RuntimeDependencies>
-                <Dependency>qt</Dependency>
-                <Dependency>webp</Dependency>
-                <Dependency>gpgme</Dependency>
-                <Dependency>attica</Dependency>
-                <Dependency>phonon</Dependency>
-                <Dependency releaseFrom="5">libssh</Dependency>
-                <Dependency>alsa-lib</Dependency>
-                <Dependency>qt-webkit</Dependency>
-                <Dependency>libXcursor</Dependency>
-                <Dependency>exiv2-libs</Dependency>
-                <Dependency>kactivities</Dependency>
-                <Dependency>libcanberra</Dependency>
-                <Dependency>openexr-libs</Dependency>
-                <Dependency>libjpeg-turbo</Dependency>
-                <Dependency>pulseaudio-libs</Dependency>
-                <Dependency>NetworkManager</Dependency>
-                <Dependency>icon-theme-hicolor</Dependency>
-                <Dependency>shared-mime-info</Dependency>
-                <Dependency>libX11</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>libgcrypt</Dependency>
-                <Dependency releaseFrom="5">samba</Dependency>
-                <Dependency versionFrom="4.14.3">kdelibs</Dependency>
-                <Dependency versionFrom="4.14.3">kdepimlibs</Dependency>
-                <Dependency versionFrom="4.14.3">icon-theme-oxygen-png</Dependency>
-                <Dependency versionFrom="4.14.3">icon-theme-oxygen-index</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="config">/etc</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="man">/usr/share/man</Path>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="data">/usr/share/kde4</Path>
-                <Path fileType="data">/usr/share/mime</Path>
-                <Path fileType="data">/usr/share/icons</Path>
-                <Path fileType="data">/usr/share/dbus-1</Path>
-                <Path fileType="data">/usr/share/ontology</Path>
-                <Path fileType="data">/usr/share/polkit-1</Path>
-                <Path fileType="data">/usr/share/autostart</Path>
-                <Path fileType="data">/usr/share/config.kcfg</Path>
-                <Path fileType="data">/usr/share/applications</Path>
-                <Path fileType="localedata">/usr/share/locale</Path>
-                <Path fileType="data">/usr/share/desktop-directories</Path>
-            </Files>
-            <AdditionalFiles>
-                <AdditionalFile target="/usr/lib/kde4/libexec/installdbgsymbols.py" permission="0755" owner="root">pisilinux/installdbgsymbols.py</AdditionalFile>
-            </AdditionalFiles>
-        </Package>
-        <Package>
-            <Name>kde-runtime-doc</Name>
-            <Summary xml:lang="en">Documentation of kde-runtime package</Summary>
-            <Description xml:lang="en">kde-runtime-doc contains documentation of applications and libraries included in kde-runtime package.</Description>
-            <IsA>data:doc</IsA>
-            <RuntimeDependencies>
-                <Dependency release="1">kde-runtime</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="doc">/usr/share/doc</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>kde-runtime-devel</Name>
-            <Summary xml:lang="en">Development files for kde-runtime package</Summary>
-            <IsA>library</IsA>
-            <RuntimeDependencies>
-                <Dependency release="1">kde-runtime</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>kde-sounds</Name>
-            <Summary xml:lang="en">KDE4 System Sounds</Summary>
-            <Description xml:lang="en">kdebase-sounds contains default KDE4 system sounds.</Description>
-            <IsA>data</IsA>
-            <RuntimeDependencies>
-                <Dependency release="1">kde-runtime</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share/sounds</Path>
-            </Files>
-        </Package>
-        <Package>
-            <Name>kde-emoticons</Name>
-            <Summary xml:lang="en">KDE4 Emoticons</Summary>
-            <Description xml:lang="en">kdebase-emoticonts contains default KDE4 emoticons.</Description>
-            <IsA>data</IsA>
-            <RuntimeDependencies>
-                <Dependency release="1">kde-runtime</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="data">/usr/share/emoticons</Path>
-            </Files>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2015-07-17</Date>
-                <Version>15.04.3</Version>
                 <Comment>First Release.</Comment>
                 <Name>Stefan Gronewold(groni)</Name>
                 <Email>groni@pisilinux.org</Email>
