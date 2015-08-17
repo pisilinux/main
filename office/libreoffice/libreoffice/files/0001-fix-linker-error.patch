@@ -1,0 +1,35 @@
+From 63a5f3804578dc185a88b7f88cdbdfc53dde02b4 Mon Sep 17 00:00:00 2001
+From: David Tardon <dtardon@redhat.com>
+Date: Wed, 11 Feb 2015 22:56:53 +0100
+Subject: [PATCH] fix linker error
+
+/builddir/build/BUILD/libreoffice-4.4.1.1/workdir/CxxObject/svtools/source/misc/imageresourceaccess.o: In function `com::sun::star::uno::Reference<com::sun::star::io::XOutputStream>::Reference(com::sun::star::io::XOutputStream*)':
+/builddir/build/BUILD/libreoffice-4.4.1.1/include/com/sun/star/uno/Reference.hxx:137: undefined reference to `non-virtual thunk to utl::OSeekableOutputStreamWrapper::acquire()'
+
+Change-Id: Ic644a8299cf2f79f02c1e3ca0de9687520f402a9
+---
+ include/unotools/streamwrap.hxx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/unotools/streamwrap.hxx b/include/unotools/streamwrap.hxx
+index e8027ce..8efc227 100644
+--- a/include/unotools/streamwrap.hxx
++++ b/include/unotools/streamwrap.hxx
+@@ -123,12 +123,12 @@ typedef ::cppu::ImplHelper1 <   css::io::XSeekable
+ /** helper class for wrapping an SvStream into an com.sun.star.io::XOutputStream
+     which is seekable (i.e. supports the com.sun.star.io::XSeekable interface).
+ */
+-class OSeekableOutputStreamWrapper
++class UNOTOOLS_DLLPUBLIC OSeekableOutputStreamWrapper
+                 :public OOutputStreamWrapper
+                 ,public OSeekableOutputStreamWrapper_Base
+ {
+ public:
+-    UNOTOOLS_DLLPUBLIC OSeekableOutputStreamWrapper(SvStream& _rStream);
++    OSeekableOutputStreamWrapper(SvStream& _rStream);
+ 
+ private:
+     virtual ~OSeekableOutputStreamWrapper();
+-- 
+2.1.0
+
