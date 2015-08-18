@@ -16,58 +16,15 @@
             <Dependency>mesa-devel</Dependency>
             <Dependency>qt5-base-devel</Dependency>
             <Dependency>qt5-declarative-devel</Dependency>
-             <!--Dependency>qt5-webkit-devel</Dependency--><!--designer webkit plugin i için lazım-->
+            <!--<Dependency>qt5-webkit-devel</Dependency>-->
         </BuildDependencies>
     </Source>
-
-    <Package>
-        <Name>qt5-tools</Name>
-        <RuntimeDependencies>
-            <Dependency>qt5-base</Dependency>
-            <Dependency>libgcc</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib/libQt5UiTools*</Path>
-            <Path fileType="library">/usr/lib/libQt5CLucene*</Path>
-            <Path fileType="library">/usr/lib/cmake/Qt5UiTools</Path>
-            <Path fileType="library">/usr/lib/qt5/mkspecs/modules/qt_lib_uitools*</Path>
-            <Path fileType="library">/usr/lib/qt5/mkspecs/modules/qt_lib_clucene*</Path>
-            <Path fileType="data">/usr/share/licenses/</Path>
-            <Path fileType="executable">/usr/lib/qt5/bin/lconvert</Path>
-            <Path fileType="executable">/usr/lib/qt5/bin/lrelease</Path>
-            <Path fileType="executable">/usr/lib/qt5/bin/lupdate</Path>
-            <Path fileType="executable">/usr/lib/qt5/bin/pixeltool</Path>
-            <Path fileType="executable">/usr/lib/qt5/bin/qdbus</Path>
-            <Path fileType="executable">/usr/lib/qt5/bin/qtplugininfo</Path>
-            <Path fileType="executable">/usr/bin/lconvert-qt5</Path>
-            <Path fileType="executable">/usr/bin/lrelease-qt5</Path>
-            <Path fileType="executable">/usr/bin/lupdate-qt5</Path>
-            <Path fileType="executable">/usr/bin/pixeltool-qt5</Path>
-            <Path fileType="executable">/usr/bin/qdbus-qt5</Path>
-            <Path fileType="executable">/usr/bin/qdbus</Path>
-            <Path fileType="executable">/usr/bin/qtplugininfo-qt5</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-        </Files>
-    </Package>
-
-    <Package>
-        <Name>qt5-tools-devel</Name>
-        <RuntimeDependencies>
-            <Dependency>qt5-base-devel</Dependency>
-            <Dependency release="current">qt5-tools</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
-            <Path fileType="data">/usr/include/qt5</Path>
-        </Files>
-    </Package>
 
     <Package>
         <Name>qt5-assistant</Name>
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
             <Dependency>qt5-base</Dependency>
-            <Dependency release="current">qt5-tools</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/lib/qt5/bin/assistant</Path>
@@ -78,6 +35,8 @@
             <Path fileType="executable">/usr/bin/qhelpconverter-qt5</Path>
             <Path fileType="library">/usr/lib/cmake/Qt5Help</Path>
             <Path fileType="library">/usr/lib/libQt5Help*</Path>
+            <Path fileType="library">/usr/lib/libQt5CLucene*</Path>
+            <Path fileType="library">/usr/lib/qt5/mkspecs/modules/qt_lib_clucene_private.pri</Path>
             <Path fileType="data">/usr/lib/qt5/mkspecs/modules/qt_lib_help*</Path>
             <Path fileType="data">/usr/share/applications/assistant5.desktop</Path>
             <Path fileType="data">/usr/share/qt5/translations/assistant_tr.qm</Path>
@@ -92,6 +51,32 @@
             <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/assistant5.desktop">assistant.desktop</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/assistant5.png">assistant.png</AdditionalFile>
         </AdditionalFiles>
+        <Replaces>
+            <Package>qt5-tools</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>qt5-tools</Package>
+        </Conflicts>
+    </Package>
+
+    <Package>
+        <Name>qt5-assistant-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">qt5-assistant</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/qt5/QtHelp</Path>
+            <Path fileType="header">/usr/include/qt5/QtCLucene</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/Qt5Help.pc</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/Qt5CLucene.pc</Path>
+        </Files>
+        <Replaces>
+            <Package>qt5-tools-devel</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>qt5-tools-devel</Package>
+        </Conflicts>
     </Package>
 
     <Package>
@@ -100,16 +85,18 @@
             <Dependency>libgcc</Dependency>
             <Dependency>qt5-base</Dependency>
             <Dependency>qt5-declarative</Dependency>
-            <Dependency release="current">qt5-tools</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/lib/qt5/bin/designer</Path>
             <Path fileType="executable">/usr/lib/qt5/bin/qtdiag</Path>
             <Path fileType="executable">/usr/lib/qt5/bin/qtpaths</Path>
+            <Path fileType="executable">/usr/lib/qt5/bin/pixeltool</Path>
             <Path fileType="executable">/usr/bin/designer-qt5</Path>
             <Path fileType="executable">/usr/bin/qtdiag-qt5</Path>
             <Path fileType="executable">/usr/bin/qtpaths*</Path>
+            <Path fileType="executable">/usr/bin/pixeltool-qt5</Path>
             <Path fileType="library">/usr/lib/cmake/Qt5Designer</Path>
+            <Path fileType="library">/usr/lib/cmake/Qt5UiTools</Path>
             <Path fileType="library">/usr/lib/cmake/Qt5UiPlugin</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/designer</Path>
             <Path fileType="data">/usr/share/applications/designer5.desktop</Path>
@@ -117,13 +104,41 @@
             <Path fileType="icon">/usr/share/icons/hicolor/128x128/apps/QtProject-designer.png</Path>
             <Path fileType="icon">/usr/share/pixmaps/designer5.png</Path>
             <Path fileType="library">/usr/lib/libQt5Designer*</Path>
+            <Path fileType="library">/usr/lib/libQt5UiTools*</Path>
             <Path fileType="library">/usr/lib/qt5/mkspecs/modules/qt_lib_designer*</Path>
+            <Path fileType="library">/usr/lib/qt5/mkspecs/modules/qt_lib_uitools*</Path>
         </Files>
          <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/designer5.desktop">designer.desktop</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/qt5/translations/designer_tr.qm">designer_tr.qm</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/designer5.png">designer.png</AdditionalFile>
         </AdditionalFiles>
+        <Replaces>
+            <Package>qt5-tools</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>qt5-tools</Package>
+        </Conflicts>
+    </Package>
+
+    <Package>
+        <Name>qt5-designer-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">qt5-designer</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/qt5/QtDesigner*</Path>
+            <Path fileType="header">/usr/include/qt5/QtUiTools</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/Qt5Designer*</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/Qt5UiTools.pc</Path>
+        </Files>
+        <Replaces>
+            <Package>qt5-tools-devel</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>qt5-tools-devel</Package>
+        </Conflicts>
     </Package>
 
     <Package>
@@ -131,11 +146,16 @@
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
             <Dependency>qt5-base</Dependency>
-            <Dependency release="current">qt5-tools</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/lib/qt5/bin/linguist</Path>
+            <Path fileType="executable">/usr/lib/qt5/bin/lconvert</Path>
+            <Path fileType="executable">/usr/lib/qt5/bin/lrelease</Path>
+            <Path fileType="executable">/usr/lib/qt5/bin/lupdate</Path>
+            <Path fileType="executable">/usr/bin/lrelease-qt5</Path>
             <Path fileType="executable">/usr/bin/linguist-qt5</Path>
+            <Path fileType="executable">/usr/bin/lconvert-qt5</Path>
+            <Path fileType="executable">/usr/bin/lupdate-qt5</Path>
             <Path fileType="library">/usr/lib/cmake/Qt5LinguistTools</Path>
             <Path fileType="data">/usr/share/applications/linguist5.desktop</Path>
             <Path fileType="icon">/usr/share/icons/hicolor/128x128/apps/linguist.png</Path>
@@ -152,6 +172,14 @@
             <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/linguist5.png">linguist.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/qt5/translations/linguist_tr.qm">linguist_tr.qm</AdditionalFile>
         </AdditionalFiles>
+        <Replaces>
+            <Package>qt5-tools</Package>
+            <Package>qt5-tools-devel</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>qt5-tools</Package>
+            <Package>qt5-tools-devel</Package>
+        </Conflicts>
     </Package>
 
     <Package>
@@ -159,11 +187,13 @@
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
             <Dependency>qt5-base</Dependency>
-            <Dependency release="current">qt5-tools</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/lib/qt5/bin/qdbusviewer</Path>
+            <Path fileType="executable">/usr/lib/qt5/bin/qdbus</Path>
             <Path fileType="executable">/usr/bin/qdbusviewer-qt5</Path>
+            <Path fileType="executable">/usr/bin/qdbus-qt5</Path>
+            <Path fileType="executable">/usr/bin/qdbus</Path>
             <Path fileType="data">/usr/share/applications/qdbusviewer5.desktop</Path>
             <Path fileType="icon">/usr/share/icons/hicolor/128x128/apps/qdbusviewer.png</Path>
             <Path fileType="icon">/usr/share/icons/hicolor/32x32/apps/qdbusviewer.png</Path>
@@ -173,6 +203,14 @@
             <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/qdbusviewer5.desktop">qdbusviewer.desktop</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/qdbusviewer5.png">assistant.png</AdditionalFile>
         </AdditionalFiles>
+        <Replaces>
+            <Package>qt5-tools</Package>
+            <Package>qt5-tools-devel</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>qt5-tools</Package>
+            <Package>qt5-tools-devel</Package>
+        </Conflicts>
     </Package>
 
     <History>
