@@ -12,6 +12,9 @@ def setup():
                           -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
                           -DQML_INSTALL_DIR=lib/qt5/qml \
                           -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+                          -DWITH_NEW_POWER_ASYNC_API=ON \
+                          -DWITH_NEW_POWER_ASYNC_FREEDESKTOP=ON \
+                          -DWITH_NEW_SOLID_JOB=ON \
                           -DLIB_INSTALL_DIR=lib \
                           -DBUILD_TESTING=OFF")
 
