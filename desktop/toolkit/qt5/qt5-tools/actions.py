@@ -29,4 +29,4 @@ def install():
     pisitools.dosym("/usr/bin/qdbus-qt5", "/usr/bin/qdbus")
     pisitools.dosym("/usr/bin/qtpaths-qt5", "/usr/bin/qtpaths")
 
-    pisitools.insinto("/usr/share/licenses/qt5-tools/", "LGPL_EXCEPTION.txt")
+    #pisitools.insinto("/usr/share/licenses/qt5-tools/", "LGPL_EXCEPTION.txt")
