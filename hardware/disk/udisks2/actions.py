@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     autotools.configure("--disable-static \
+                         --with-systemdsystemunitdir=no \
                          --disable-gtk-doc")
 
 def build():
