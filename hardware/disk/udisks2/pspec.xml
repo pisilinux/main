@@ -13,7 +13,7 @@
         <IsA>app:console</IsA>
         <Summary>Disk Management Service</Summary>
         <Description>udisks provides a daemon, API and command line tools for managing disk devices attached to the system.</Description>
-        <Archive sha1sum="c6416ac581aec9c413b3b5e311d27543cff443fb" type="tarbz2">http://udisks.freedesktop.org/releases/udisks-2.1.4.tar.bz2</Archive>
+        <Archive sha1sum="020e13e1d138657eab98f3931ef42fad5b8c1d40" type="tarbz2">http://udisks.freedesktop.org/releases/udisks-2.1.6.tar.bz2</Archive>
         <AdditionalFiles>
             <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
         </AdditionalFiles>
@@ -28,13 +28,15 @@
             <Dependency>device-mapper-devel</Dependency>
             <Dependency>lvm2-devel</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
-            <!--Dependency>sg3_utils-devel</Dependency-->
+            <Dependency>sg3_utils-devel</Dependency>
+            <Dependency>ntfsprogs</Dependency>      <!-- For mkntfs -->
+            <Dependency>dosfstools</Dependency>     <!-- For mkfs.vfat -->
             <Dependency>docbook-xsl</Dependency>
             <Dependency>libxslt</Dependency>
             <Dependency>intltool</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">udisks-2.0.91-udf-dvd-fix-dmask.patch</Patch>
+            <!--Patch level="1">udisks-2.0.91-udf-dvd-fix-dmask.patch</Patch-->
             <Patch level="0">udisks-2.x-ntfs-3g.patch</Patch>
         </Patches>
     </Source>
@@ -55,7 +57,7 @@
             <Dependency>dosfstools</Dependency>     <!-- For mkfs.vfat -->
             <!--Dependency>mtools</Dependency-->         <!-- For mlabel -->
             <!--Dependency>xfsprogs</Dependency>       < For mkfs.xfs, xfs_admin -->
-            <!--Dependency>sg3_utils</Dependency-->
+            <Dependency>sg3_utils</Dependency>
             <!--Dependency>smp_utils</Dependency>      <For smp_rep_manufacturer -->
         </RuntimeDependencies>
         <Files>
@@ -92,6 +94,13 @@
     </Package>
 
     <History>
+        <Update release="10">
+            <Date>2015-08-19</Date>
+            <Version>2.1.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="9">
             <Date>2015-02-07</Date>
             <Version>2.1.4</Version>
