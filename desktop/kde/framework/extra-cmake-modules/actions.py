@@ -16,10 +16,9 @@ def setup():
                           -DBUILD_MAN_DOCS=OFF", sourceDir=".")
 
 def build():
-    cmaketools.make()    
+    cmaketools.make()
 
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-        
+
     pisitools.dodoc("README.rst", "COPYING-CMAKE-SCRIPTS")
-    
