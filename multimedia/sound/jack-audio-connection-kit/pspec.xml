@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>jack-audio-connection-kit</Name>
+        <Homepage>http://jackaudio.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <IsA>service</IsA>
+        <Summary>A low-latency audio server</Summary>
+        <Description>JACK is a low-latency audio server written for POSIX conformant operating systems. It can connect a number of different applications to an audio device, as well as allowing them to share audio between themselves.</Description>
+<!--         <Archive sha1sum="397a01bb94eb4b40f328329a9e6af13f53abaa89" type="targz">http://source.pisilinux.org/1.0/jack-1.9.9.5.tgz</Archive> -->
+        <Archive sha1sum="1177655ae0fbbd8c2229b398a79724115a392941" type="tarbz2">https://dl.dropbox.com/u/28869550/jack-1.9.10.tar.bz2</Archive>
+        
+        <BuildDependencies>
+            <Dependency>celt-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>libsndfile-devel</Dependency>
+            <Dependency>libfreebob-devel</Dependency>
+            <Dependency>libsamplerate-devel</Dependency>
+            <Dependency>libffado-devel</Dependency>
+            <Dependency>libopus-devel</Dependency>
+            <Dependency>doxygen</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>jack-audio-connection-kit</Name>
+        <RuntimeDependencies>
+            <Dependency>celt</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>libsndfile</Dependency>
+            <Dependency>libfreebob</Dependency>
+            <Dependency>libsamplerate</Dependency>
+            <Dependency>libffado</Dependency>
+            <Dependency>libopus</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/security</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/jack-audio-connection-kit</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/security/limits.d/99-jack.conf">99-jack.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>jack-audio-connection-kit-devel</Name>
+        <Summary>Development files for jack-audio-connection-kit</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">jack-audio-connection-kit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>jack-audio-connection-kit-docs</Name>
+        <Summary>Help files and API documents for jack-audio-connection-kit</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">jack-audio-connection-kit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/jack-audio-connection-kit/reference</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="5">
+            <Date>2014-08-24</Date>
+            <Version>1.9.10</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+        <Update release="4">
+            <Date>2014-02-20</Date>
+            <Version>1.9.9.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2014-02-20</Date>
+            <Version>1.9.8</Version>
+            <Comment>rebuild</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvarice@gmail.com</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-08-29</Date>
+            <Version>1.9.8</Version>
+            <Comment>missing dep.</Comment>
+            <Name>Erdinç gültekin</Name>
+            <Email>erdincgultekin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-11-29</Date>
+            <Version>1.9.8</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>      
+    </History>
+</PISI>
