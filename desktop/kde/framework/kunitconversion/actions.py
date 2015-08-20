@@ -22,5 +22,5 @@ def build():
 
 def install():
     cmaketools.install()
-    
+
     pisitools.dodoc("README.md", "COPYING.LIB")

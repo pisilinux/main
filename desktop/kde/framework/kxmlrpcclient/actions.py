@@ -26,6 +26,3 @@ def build():
 
 def install():
     cmaketools.install()
-    
-    #pisitools.insinto("/usr/include/KF5/KLDAP", "/usr/include/KF5/kldap_version.h")
-    #pisitools.dodoc("COPYING.LIB", "README", "CHANGELOG", "AUTHORS")
