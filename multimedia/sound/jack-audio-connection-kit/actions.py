@@ -14,10 +14,9 @@ del(os.environ["JOBS"])
 def setup():
     shelltools.system("./waf configure \
                         --prefix=/usr \
-                        --classic \
+                        --libdir=/usr/lib \
                         --firewire \
-                        --freebob \
-                        --alsa")
+                        --alsa ")
 
 def build():
     shelltools.system("./waf build -v")
