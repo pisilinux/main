@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>kmbox</Name>
+        <Name>kpimtextedit</Name>
         <Homepage>http://www.kde.org</Homepage>
         <Packager>
             <Name>Pisi Linux Admins</Name>
@@ -10,45 +10,52 @@
         </Packager>
         <License>LGPLv2</License>
         <IsA>library</IsA>
-        <IsA>app:console</IsA>
-        <Summary>MBox library support.</Summary>
-        <Description>MBox library support.</Description>
-        <Archive sha1sum="de20a8cdfa0195e34da707943800121389be870a" type="tarxz">http://download.kde.org/stable/applications/15.08.0/src/kmbox-15.08.0.tar.xz</Archive>
+	<IsA>app:gui</IsA>
+        <Summary>A textedit with PIM-specific features.</Summary>
+        <Description>Text Edit with KDE-PIM specific features.</Description>
+        <Archive sha1sum="fef27a9bc13a433b6b902dbc0c387cf8b00cbb6a" type="tarxz">http://download.kde.org/stable/applications/15.08.0/src/kpimtextedit-15.08.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
-            <Dependency>extra-cmake-modules</Dependency>
-            <Dependency>kmime-devel</Dependency>
-            <Dependency>boost-devel</Dependency>
+	    <Dependency>ki18n-devel</Dependency>
+	    <Dependency>kcodecs-devel</Dependency>
+	    <Dependency>kconfig-devel</Dependency>
+	    <Dependency>kio-devel</Dependency>
+	    <Dependency>extra-cmake-modules</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>kmbox</Name>
+        <Name>kpimtextedit</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
-            <Dependency>kmime</Dependency>
+	    <Dependency>ki18n</Dependency>
+	    <Dependency>kcodecs</Dependency>
+	    <Dependency>kio</Dependency>
+	    <Dependency>sonnet</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>kemoticons</Dependency>
+            <Dependency>kcompletion</Dependency>
+            <Dependency>ktextwidgets</Dependency>
+            <Dependency>kwidgetsaddons</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/usr/share</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
             <Path fileType="library">/usr/lib/qt5</Path>
-            <Path fileType="library">/usr/lib</Path>
+	    <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
-
+    
     <Package>
-        <Name>kmbox-devel</Name>
-        <Summary>Development files for kmbox</Summary>
+        <Name>kpimtextedit-devel</Name>
+	<Summary>Development files for kpimtextedit</Summary>
         <RuntimeDependencies>
-            <Dependency>qt5-base-devel</Dependency>
-            <Dependency release="current">kmbox</Dependency>
+	    <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">kpimtextedit</Dependency>	    
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/cmake</Path>
-            <Path fileType="config">/usr/lib/pkgconfig</Path>
+	    <Path fileType="config">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
@@ -59,6 +66,6 @@
             <Comment>First Release</Comment>
             <Name>Stefan Gronewold (groni)</Name>
             <Email>groni@pisilinux.org</Email>
-        </Update>
+        </Update>                
     </History>
 </PISI>

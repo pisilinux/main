@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>kmbox</Name>
+        <Name>kimap</Name>
         <Homepage>http://www.kde.org</Homepage>
         <Packager>
             <Name>Pisi Linux Admins</Name>
@@ -10,55 +10,61 @@
         </Packager>
         <License>LGPLv2</License>
         <IsA>library</IsA>
-        <IsA>app:console</IsA>
-        <Summary>MBox library support.</Summary>
-        <Description>MBox library support.</Description>
-        <Archive sha1sum="de20a8cdfa0195e34da707943800121389be870a" type="tarxz">http://download.kde.org/stable/applications/15.08.0/src/kmbox-15.08.0.tar.xz</Archive>
+	<IsA>app:console</IsA>
+        <Summary>Job-based API for interacting with IMAP servers</Summary>
+        <Description>API for interacting with IMAP servers</Description>
+        <Archive sha1sum="402e19a3be4e95a136bea709fadef4015574bb8d" type="tarxz">http://download.kde.org/stable/applications/15.08.0/src/kimap-15.08.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
-            <Dependency>extra-cmake-modules</Dependency>
+            <Dependency>kdoctools-devel</Dependency>
             <Dependency>kmime-devel</Dependency>
             <Dependency>boost-devel</Dependency>
+            <Dependency>kdelibs4-support-devel</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>extra-cmake-modules</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
-        <Name>kmbox</Name>
+        <Name>kimap</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
             <Dependency>kmime</Dependency>
+            <Dependency>kio</Dependency>
+            <Dependency>ki18n</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>kcodecs</Dependency>
+            <Dependency>cyrus-sasl</Dependency>
+            <Dependency>kcoreaddons</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/usr/share</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="library">/usr/lib/qt5</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
+	    <Path fileType="library">/usr/lib/qt5</Path>
+	    <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>	    
         </Files>
     </Package>
-
+    
     <Package>
-        <Name>kmbox-devel</Name>
-        <Summary>Development files for kmbox</Summary>
+        <Name>kimap-devel</Name>
+	<Summary>Development files for kimap</Summary>
         <RuntimeDependencies>
-            <Dependency>qt5-base-devel</Dependency>
-            <Dependency release="current">kmbox</Dependency>
+	    <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">kimap</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/cmake</Path>
-            <Path fileType="config">/usr/lib/pkgconfig</Path>
+	    <Path fileType="config">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
         <Update release="1">
-            <Date>2015-08-20</Date>
+            <Date>2015-08-22</Date>
             <Version>15.08.0</Version>
             <Comment>First Release</Comment>
             <Name>Stefan Gronewold (groni)</Name>
             <Email>groni@pisilinux.org</Email>
-        </Update>
+        </Update>     
     </History>
 </PISI>
