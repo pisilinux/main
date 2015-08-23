@@ -5,15 +5,15 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import kde4
+from pisi.actionsapi import kde5
 
 def setup():
-    kde4.configure()
+    kde5.configure()
 
 def build():
-    kde4.make()
+    kde5.make()
 
 def install():
-    kde4.install()
+    kde5.install()
 
     pisitools.dodoc("COPYING*", "DEBUG", "HACKING", "MAINTAINERS", "PLAN", "POLICIES", "README")
