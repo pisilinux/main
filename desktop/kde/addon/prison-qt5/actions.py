@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DQT5_BUILD=ON")
 
 def build():
     kde5.make()

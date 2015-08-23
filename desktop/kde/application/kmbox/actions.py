@@ -15,5 +15,5 @@ def build():
 
 def install():
     kde5.install()
-    #pisitools.insinto("/usr/include/KF5/KMbox", "/usr/include/KF5/kmbox_version.h")
-    #pisitools.dodoc("COPYING.LIB", "README", "CHANGELOG", "AUTHORS")
+    
+    pisitools.dodoc("COPYING.LIB")
