@@ -1,0 +1,47 @@
+diff -Naur ntfs-3g_ntfsprogs-2015.3.14.orig/ntfsprogs/Makefile.in ntfs-3g_ntfsprogs-2015.3.14/ntfsprogs/Makefile.in
+--- ntfs-3g_ntfsprogs-2015.3.14.orig/ntfsprogs/Makefile.in	2015-03-14 16:10:28.000000000 +0200
++++ ntfs-3g_ntfsprogs-2015.3.14/ntfsprogs/Makefile.in	2015-05-06 10:22:31.563526903 +0300
+@@ -1348,15 +1348,15 @@
+ # mkfs.ntfs[.8] hard link
+ 
+ @ENABLE_NTFSPROGS_TRUE@install-exec-hook:
+-@ENABLE_NTFSPROGS_TRUE@	$(INSTALL) -d $(DESTDIR)/sbin
+-@ENABLE_NTFSPROGS_TRUE@	$(LN_S) -f $(sbindir)/mkntfs $(DESTDIR)/sbin/mkfs.ntfs
++@ENABLE_NTFSPROGS_TRUE@	$(INSTALL) -d $(DESTDIR)/usr/bin
++@ENABLE_NTFSPROGS_TRUE@	$(LN_S) -f $(sbindir)/mkntfs $(DESTDIR)/usr/bin/mkfs.ntfs
+ 
+ @ENABLE_NTFSPROGS_TRUE@install-data-hook:
+ @ENABLE_NTFSPROGS_TRUE@	$(INSTALL) -d $(DESTDIR)$(man8dir)
+ @ENABLE_NTFSPROGS_TRUE@	$(LN_S) -f mkntfs.8 $(DESTDIR)$(man8dir)/mkfs.ntfs.8
+ 
+ @ENABLE_NTFSPROGS_TRUE@uninstall-local:
+-@ENABLE_NTFSPROGS_TRUE@	$(RM) -f $(DESTDIR)/sbin/mkfs.ntfs
++@ENABLE_NTFSPROGS_TRUE@	$(RM) -f $(DESTDIR)/usr/bin/mkfs.ntfs
+ @ENABLE_NTFSPROGS_TRUE@	$(RM) -f $(DESTDIR)$(man8dir)/mkfs.ntfs.8
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+diff -Naur ntfs-3g_ntfsprogs-2015.3.14.orig/src/Makefile.in ntfs-3g_ntfsprogs-2015.3.14/src/Makefile.in
+--- ntfs-3g_ntfsprogs-2015.3.14.orig/src/Makefile.in	2015-03-14 16:10:28.000000000 +0200
++++ ntfs-3g_ntfsprogs-2015.3.14/src/Makefile.in	2015-05-06 10:22:31.566526903 +0300
+@@ -1040,9 +1040,9 @@
+ @ENABLE_NTFS_3G_TRUE@@RUN_LDCONFIG_TRUE@	$(LDCONFIG)
+ 
+ @ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@install-exec-local:	install-rootbinPROGRAMS
+-@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(MKDIR_P) "$(DESTDIR)/sbin"
+-@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(LN_S) -f "$(rootbindir)/ntfs-3g" "$(DESTDIR)/sbin/mount.ntfs-3g"
+-@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(LN_S) -f "$(rootbindir)/lowntfs-3g" "$(DESTDIR)/sbin/mount.lowntfs-3g"
++@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(MKDIR_P) "$(DESTDIR)/usr/bin"
++@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(LN_S) -f "$(rootbindir)/ntfs-3g" "$(DESTDIR)/usr/bin/mount.ntfs-3g"
++@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(LN_S) -f "$(rootbindir)/lowntfs-3g" "$(DESTDIR)/usr/bin/mount.lowntfs-3g"
+ 
+ @ENABLE_NTFS_3G_TRUE@install-data-local:	install-man8
+ @ENABLE_NTFS_3G_TRUE@	$(LN_S) -f ntfs-3g.8 "$(DESTDIR)$(man8dir)/mount.ntfs-3g.8"
+@@ -1050,7 +1050,7 @@
+ 
+ @ENABLE_NTFS_3G_TRUE@uninstall-local:
+ @ENABLE_NTFS_3G_TRUE@	$(RM) -f "$(DESTDIR)$(man8dir)/mount.ntfs-3g.8"
+-@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(RM) -f "$(DESTDIR)/sbin/mount.ntfs-3g" "$(DESTDIR)/sbin/mount.lowntfs-3g"
++@ENABLE_MOUNT_HELPER_TRUE@@ENABLE_NTFS_3G_TRUE@	$(RM) -f "$(DESTDIR)/usr/bin/mount.ntfs-3g" "$(DESTDIR)/sbin/mount.lowntfs-3g"
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
