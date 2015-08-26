@@ -18,9 +18,9 @@ def setup():
 def build():
     cmaketools.make()
 
-def install():    
+def install():
     cmaketools.install()
     pisitools.dosym("/usr/lib/drkonqi", "/usr/lib/libexec/drkonqi")
-    
+
     pisitools.dodoc("COPYING", "HACKING")
-    
+
