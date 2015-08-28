@@ -11,9 +11,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
+#WorkDir = "fontforge-%s-b" % get.srcVERSION().split('_')[-1]
 
 def setup():
-    #shelltools.system("./bootstrap --force")
+    #pisitools.dosed("configure.ac", "fontforge_package_name", "fontforge")
+    #shelltools.system("./autogen.sh")
 
     autotools.configure()
     
@@ -24,5 +26,5 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dodoc("AUTHORS", "LICENSE", "COPYING.gplv3")
+    pisitools.dodoc("AUTHORS", "LICENSE")
 
