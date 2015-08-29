@@ -49,6 +49,7 @@ def build():
     autotools.make("-C locale allmo")
 
 def install():
-    autotools.install()
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #autotools.install()
 
     pisitools.dodoc("docs/*.txt", "docs/*.htm")
