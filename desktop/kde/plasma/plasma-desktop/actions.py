@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DCONFIG_INSTALL_DIR=/etc/xdg")
 
 def build():
     kde5.make()
