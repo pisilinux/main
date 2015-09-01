@@ -1,0 +1,160 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>soprano</Name>
+        <Homepage>http://soprano.sourceforge.net</Homepage>
+        <Packager>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Qt wrapper API to different RDF storage solutions</Summary>
+        <Description>soprano is a library which provides a highly usable object-oriented C++/Qt4 framework for RDF data. It uses different RDF storage solutions as backends through a simple plugin system.</Description>
+        <Archive sha1sum="97bd76df4a9f9336358dd9d7175c72b84d4ec6a0" type="tarbz2">mirrors://sourceforge/soprano/Soprano/2.9.4/soprano-2.9.4.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>qt-devel</Dependency>
+            <Dependency>redland-devel</Dependency>
+            <Dependency>clucene-devel</Dependency>
+            <Dependency>raptor2-devel</Dependency>
+            <!-- JNI is needed by sesame2 backend -->
+            <Dependency>jdk7-openjdk</Dependency>
+            <Dependency>libiodbc-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- Locale workaround for "Data source name not found and no default driver specified." error of iODBC -->
+            <Patch level="1">locale-workaround-for-datasourcenamenotfound-error.diff</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>soprano</Name>
+        <RuntimeDependencies>
+            <Dependency>qt</Dependency>
+            <Dependency>clucene</Dependency>
+            <Dependency>raptor2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/dbus-1/interfaces</Path>
+            <Path fileType="library">/usr/share/soprano/plugins</Path>
+            <Path fileType="data">/usr/share/soprano/rules</Path>
+            <Path fileType="data">/usr/kde/4/share/apps</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>soprano-plugin-sesame2</Name>
+        <Summary>Sesame2 backend for Soprano</Summary>
+        <RuntimeDependencies>
+            <Dependency>qt</Dependency>
+            <!-- Sesame2 backend is linked to libjvm.so -->
+            <Dependency>jre7-openjdk-headless</Dependency>
+            <Dependency release="current">soprano</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/soprano/libsoprano_sesame2*</Path>
+            <Path fileType="data">/usr/share/soprano/plugins/sesame2*</Path>
+            <Path fileType="data">/usr/share/soprano/sesame2*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>soprano-plugin-virtuoso</Name>
+        <Summary>Virtuoso backend for Soprano</Summary>
+        <RuntimeDependencies>
+            <Dependency>qt</Dependency>
+            <Dependency>virtuoso</Dependency>
+            <Dependency>libiodbc</Dependency>
+            <Dependency release="current">soprano</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/soprano/libsoprano_virtuoso*</Path>
+            <Path fileType="data">/usr/share/soprano/plugins/virtuoso*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>soprano-plugin-redland</Name>
+        <Summary>Redland backend for Soprano</Summary>
+        <RuntimeDependencies>
+            <Dependency>qt</Dependency>
+            <Dependency>redland</Dependency>
+            <Dependency release="current">soprano</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/soprano/libsoprano_redland*</Path>
+            <Path fileType="data">/usr/share/soprano/plugins/redland*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>soprano-devel</Name>
+        <Summary>Development files for soprano</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">soprano</Dependency>
+            <Dependency>qt-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/library/pkgconfig</Path>
+            <Path fileType="data">/usr/share/soprano/cmake</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="7">
+            <Date>2014-05-24</Date>
+            <Version>2.9.4</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-03-03</Date>
+            <Version>2.9.4</Version>
+            <Comment>Rebuild for openjdk</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-10-26</Date>
+            <Version>2.9.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-07-17</Date>
+            <Version>2.9.3</Version>
+            <Comment>Move pc files to devel pack, release bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-07-17</Date>
+            <Version>2.9.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-07-10</Date>
+            <Version>2.9.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2013-01-08</Date>
+            <Version>2.9.0</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>yaralikurt15@hotmail.com</Email>
+        </Update>
+    </History>
+</PISI>
