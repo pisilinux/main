@@ -55,7 +55,7 @@ def setup():
                    -qvfb \
                    -glib \
                    -no-sql-sqlite2 \
-                   -disable-sqlite \
+                   -no-sql-sqlite \
                    -system-sqlite \
                    -system-zlib \
                    -system-libpng \
