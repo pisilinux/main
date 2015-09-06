@@ -40,3 +40,5 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     pisitools.rename("/usr/bin/sip", "sip3")
 
+
+# By PiSiDo 2.3.1
