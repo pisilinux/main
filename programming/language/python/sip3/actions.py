@@ -13,14 +13,6 @@ WorkDir = "sip-%s" % get.srcVERSION()
 py3dir = "python3.4"
 
 def setup():
-    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.4m\/Python.h/g' {} \;")
-
-    shelltools.cd("..")
-    shelltools.makedirs("build_python3")
-    shelltools.copytree("./%s" % WorkDir,  "build_python3")
-    shelltools.cd(WorkDir)
-
-    shelltools.cd("../build_python3/%s" % WorkDir)
     pythonmodules.run('configure.py \
                     -b /usr/bin \
                     -d /usr/lib/%s/site-packages/ \
@@ -28,13 +20,9 @@ def setup():
                     CFLAGS="%s" CXXFLAGS="%s"' % (py3dir, py3dir, get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
 
 def build():
-
-    shelltools.cd("../build_python3/%s" % WorkDir)
     autotools.make()
 
 def install():
-
-    shelltools.cd("../build_python3/%s" % WorkDir)
     autotools.rawInstall("DESTDIR=%s -C sipgen" % get.installDIR())
 
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
