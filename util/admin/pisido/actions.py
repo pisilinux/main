@@ -6,6 +6,7 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import qt5
 
+WorkDir="PisiDo-2.3.1/pisido"
 def setup():
     qt5.configure()
 
@@ -22,3 +23,5 @@ def install():
 # By PiSiDo 2.2.1
 
 # By PiSiDo 2.3.0
+
+# By PiSiDo 2.3.1
