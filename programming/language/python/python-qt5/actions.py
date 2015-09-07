@@ -20,7 +20,7 @@ def setup():
                                      --sip /usr/bin/sip3 \
                                      --qmake='/usr/lib/qt5/bin/qmake' \
                                      --destdir='/usr/lib/python3.4/site-packages/' \
-                                     --sip-incdir='/usr/include/python3.4' \
+                                     --sip-incdir='/usr/include/python3.4m' \
                                      CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
                                      
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
