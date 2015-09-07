@@ -17,14 +17,13 @@ def start():
     
     startService(command="/usr/bin/docker",
                 args="daemon %s" % (config.get("DOCKER_OPTS", "")),
-                chuid="root:docker",
-                pidfile="/var/run/docker.pid",
+                pidfile=pidfile,
                 donotify=True)
 
 @synchronized
 def stop():
     stopService(command="/usr/bin/docker",
-                pidfile="/var/run/docker.pid",
+                pidfile=pidfile,
                 donotify=True)
 
 def status():
