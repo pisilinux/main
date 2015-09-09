@@ -17,7 +17,7 @@ def setup():
                                      --assume-shared \
                                      --no-timestamp \
                                      --qsci-api \
-                                     --sip /usr/bin/sip3 \
+                                     --sip /usr/bin/sip \
                                      --qmake='/usr/lib/qt5/bin/qmake' \
                                      --destdir='/usr/lib/python3.4/site-packages/' \
                                      --sip-incdir='/usr/include/python3.4m' \

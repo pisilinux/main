@@ -9,7 +9,6 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import get
-
 WorkDir = "sip-%s" % get.srcVERSION()
 py3dir = "python3.4"
 
@@ -17,7 +16,7 @@ def setup():
     pythonmodules.run('configure.py \
                     -b /usr/bin \
                     -d /usr/lib/%s/site-packages/ \
-                    -e /usr/include/%sm/ \
+                    -e /usr/include/%s/ \
                     CFLAGS="%s" CXXFLAGS="%s"' % (py3dir, py3dir, get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
 
 def build():
@@ -27,4 +26,5 @@ def install():
     autotools.rawInstall("DESTDIR=%s -C sipgen" % get.installDIR())
 
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.rename("/usr/bin/sip", "sip3")
+
+
