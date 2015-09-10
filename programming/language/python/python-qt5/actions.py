@@ -31,7 +31,7 @@ def setup():
                                      --qsci-api \
                                      --destdir='/usr/lib/python2.7/site-packages/' \
                                      --sip-incdir='/usr/include/python2.7' \
-                                     --sip /usr/bin/sip \
+                                     --sip /usr/bin/sip2 \
                                      --qmake='/usr/lib/qt5/bin/qmake'")
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
