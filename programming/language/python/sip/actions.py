@@ -22,14 +22,14 @@ def setup():
     shelltools.copytree("./%s" % WorkDir,  "build_python3")
     shelltools.cd(WorkDir)
     pythonmodules.run('configure.py \
-                    -b /usr/local/bin \
+                    -b /usr/bin \
                     -d /usr/lib/%s/site-packages \
                     -e /usr/include/%s/ \
                     CFLAGS+="%s" CXXFLAGS+="%s"' % (py2dir, py2dir, get.CFLAGS(), get.CXXFLAGS()))
 
     shelltools.cd("../build_python3/%s" % WorkDir)
     pythonmodules.run('configure.py \
-                    -b /usr/local/bin \
+                    -b /usr/bin \
                     -d /usr/lib/%s/site-packages/ \
                     -e /usr/include/%sm/ \
                     CFLAGS="%s" CXXFLAGS="%s"' % (py3dir, py3dir, get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
@@ -42,11 +42,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.rename("/usr/local/bin/sip", "sip2")
-    pisitools.dosym("/usr/local/bin/sip2", "/usr/bin/sip2")
+    pisitools.rename("/usr/bin/sip", "sip2")
     
     shelltools.cd("../build_python3/%s" % WorkDir)
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.rename("/usr/local/bin/sip", "sip")
-    pisitools.dosym("/usr/local/bin/sip", "/usr/bin/sip")
 
