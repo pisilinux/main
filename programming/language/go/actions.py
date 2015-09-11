@@ -43,5 +43,8 @@ def install():
     pisitools.insinto("/usr/lib/go", "lib")
     pisitools.insinto("/usr/lib/go", "pkg")
     pisitools.insinto("/usr/lib/go", "src")
+ 
+    pisitools.dosym("/usr/bin/go","/usr/lib/go/bin/go")
+    pisitools.dosym("/usr/bin/gofmt","/usr/lib/go/bin/gofmt")
 
     pisitools.dodoc("VERSION", "LICENSE", "PATENTS", "README", "AUTHORS", "CONTRIBUTORS")
