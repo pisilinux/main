@@ -19,7 +19,9 @@ def build():
 def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
     pisitools.domove("/usr/lib64/*", "/usr/lib")
     pisitools.removeDir("/usr/lib64")
+    
     shelltools.cd("..")
-    pisitools.dodoc("LICENSE", "README.md")
+    pisitools.dodoc("LICENSE*", "README.md")
