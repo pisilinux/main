@@ -6,10 +6,8 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde5
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
-def setup():    
+def setup():
     kde5.configure()
 
 def build():
@@ -17,5 +15,5 @@ def build():
 
 def install():
     kde5.install()
-    
+
     pisitools.dodoc("TODO")
