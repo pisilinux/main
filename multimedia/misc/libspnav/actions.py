@@ -9,16 +9,19 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--enable-opt --enable-ldopt")
+    autotools.configure("--prefix=/usr \
+                         --disable-debug")
     
 def build():
     autotools.make()
 
 def install():
-    pisitools.insinto("/usr/lib/", "*.so*")
-    pisitools.dosym("libspnav.so.0.1", "/usr/lib/libspnav.so.0")
-    pisitools.domove("/usr/lib/libspnav.so.0.1", "/usr/lib", "libspnav.so")
-    pisitools.insinto("/usr/lib/", "*.so*")
-    pisitools.insinto("/usr/include/", "*.h")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    #pisitools.insinto("/usr/lib/", "*.so*")
+    #pisitools.dosym("libspnav.so.0.1", "/usr/lib/libspnav.so.0")
+    #pisitools.domove("/usr/lib/libspnav.so.0.1", "/usr/lib", "libspnav.so")
+    #pisitools.insinto("/usr/lib/", "*.so*")
+    #pisitools.insinto("/usr/include/", "*.h")
 
     pisitools.dodoc("README")
