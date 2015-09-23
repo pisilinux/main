@@ -46,9 +46,8 @@ def build():
 
     autotools.make("module")
     
-    shelltools.cd("uvm")
-    
-    autotools.make("module")
+    #shelltools.cd("uvm")
+    #autotools.make("module")
 
 def install():
 
@@ -58,7 +57,7 @@ def install():
                           "kernel/nvidia.ko")
         
         pisitools.insinto("/lib/modules/%s/extra/nvidia" % KDIR,
-                          "kernel/uvm/nvidia-uvm.ko")
+                          "kernel/nvidia-uvm.ko")
         
 
         # Command line tools and their man pages
