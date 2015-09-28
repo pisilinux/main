@@ -31,7 +31,7 @@ def setup():
                       % (arch, get.srcVERSION()))
     shelltools.move("tmp/*", ".")
     
-    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-304.125-kernel-3.19.patch")
+    #shelltools.system("patch -p0 < nv-drm.patch")
 
     # Our libc is TLS enabled so use TLS library
     shelltools.unlink("*-tls.so*")
