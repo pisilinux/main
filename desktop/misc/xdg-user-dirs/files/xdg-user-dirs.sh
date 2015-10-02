@@ -1,1 +1,5 @@
-[ -x /usr/bin/xdg-user-dirs-update ] && /usr/bin/xdg-user-dirs-update
+#!/bin/sh
+# Set up user directories like ~/Desktop and ~/Music
+if [ -x /usr/bin/xdg-user-dirs-update ]; then
+  /usr/bin/xdg-user-dirs-update
+fi
