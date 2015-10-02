@@ -13,26 +13,23 @@
         <IsA>service</IsA>
         <Summary>Linux Infrared Remote Control system</Summary>
         <Description>lirc is a package that allows you to decode and send infra-red signals of many (but not all) commonly used remote controls.</Description>
-        <Archive sha1sum="8456bf7101d4f2d31d61c5073357a4981b458581" type="tarbz2">http://sourceforge.net/projects/lirc/files/LIRC/0.9.0/lirc-0.9.0.tar.bz2</Archive>
+        <Archive sha1sum="6c1f1daa1fe4c020f4e349f1dd2c7fec759f939a" type="tarbz2">http://downloads.sourceforge.net/project/lirc/LIRC/0.9.3/lirc-0.9.3.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libftdi-devel</Dependency>
+            <Dependency>libusb-compat-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>doxygen</Dependency>
         </BuildDependencies>
-        <Patches>
-            <Patch level="1">devicenode.patch</Patch>
-            <Patch level="1">cflags.patch</Patch>
-            <!-- FIXME: this summons bug 8693 -->
-            <Patch level="1">nogpio.patch</Patch>
-            <!-- use fixed instead of courier font -->
-            <Patch level="1">xmode2_defaultfont.patch</Patch>
-            <Patch level="1">lirc-0.9.0-libusb-config-is-no-more.patch</Patch>
-        </Patches>
-    </Source>
+        </Source>
 
     <Package>
         <Name>lirc</Name>
         <RuntimeDependencies>
             <Dependency>alsa-lib</Dependency>
+            <Dependency>libusb</Dependency>
+            <Dependency>libftdi</Dependency>
             <Dependency>libusb-compat</Dependency>
             <Dependency>libX11</Dependency>
         </RuntimeDependencies>
@@ -44,13 +41,13 @@
             <Path fileType="executable">/usr/sbin</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="man">/usr/share/lirc</Path>
             <Path fileType="data">/run</Path>
-            <Path fileType="data">/lib/systemd/system</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/lirc">lirc.conf.d</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/lib/systemd/system/lirc.service">lirc.service</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/lib/systemd/system/lircmd.service">lircmd.service</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/lirc.conf">lirc.tmpfiles</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/logrotate/lirc">lirc.logrotate</AdditionalFile>
         </AdditionalFiles>
         <Provides>
             <COMAR script="service.py">System.Service</COMAR>
@@ -69,6 +66,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2015-10-02</Date>
+            <Version>0.9.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="2">
             <Date>2014-05-25</Date>
             <Version>0.9.0</Version>
