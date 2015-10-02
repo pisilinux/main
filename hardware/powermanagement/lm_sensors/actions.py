@@ -9,17 +9,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
-    autotools.make("CC=%s LIBDIR=/usr/lib EXLDFLAGS= PROG_EXTRA=sensord user" % get.CC())
+    autotools.make("PREFIX=/usr")
 
 def install():
-    autotools.rawInstall("PREFIX=/usr MANDIR=/%s PROG_EXTRA=sensord DESTDIR=%s user_install" % (get.manDIR(), get.installDIR()))
-
-    # Drop static lib
-    pisitools.remove("/usr/lib/libsensors.a")
-
-    pisitools.dodir("/etc/sensors.d")
-
-    # Install systemd service
-    pisitools.insinto("/lib/systemd/system", "prog/init/lm_sensors.service")
+    autotools.rawInstall("PREFIX=/usr BUILD_STATIC_LIB=0 MANDIR=/%s PROG_EXTRA=sensord DESTDIR=%s user_install" % (get.manDIR(), get.installDIR()))
 
     pisitools.dodoc("CHANGES", "CONTRIBUTORS", "README")
