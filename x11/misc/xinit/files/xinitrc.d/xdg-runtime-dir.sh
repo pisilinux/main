@@ -7,5 +7,5 @@ if test -z "${XDG_RUNTIME_DIR}"; then
     fi
 fi
 mkdir -p ~/.config
-cp weston/weston.ini ~/.config
-$EDITOR ~/.config/weston.ini
+#cp weston/weston.ini ~/.config
+#$EDITOR ~/.config/weston.ini
