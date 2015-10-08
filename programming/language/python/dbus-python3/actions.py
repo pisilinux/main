@@ -19,6 +19,8 @@ def setup():
                        --disable-api-docs \
                        --disable-html-docs \
                        --disable-static")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     shelltools.cd("build-python3")
