@@ -12,12 +12,7 @@ from pisi.actionsapi import get
 NoStrip=["/usr/share"]
 
 def setup():
-    kde5.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DLIB_INSTALL_DIR=lib \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_KF5=ON \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON")
+    kde5.configure("-DBUILD_KF5=ON")
 
 def build():
     kde5.make()
