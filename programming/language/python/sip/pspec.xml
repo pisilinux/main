@@ -15,9 +15,14 @@
             <Dependency>python-devel</Dependency>
         </BuildDependencies>
         <Archive sha1sum="c0a09aa63523293c5ca39444746b1cef1253a0c5" type="targz">mirrors://sourceforge/pyqt/sip-4.16.9.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+        </BuildDependencies>
         <Patches>
-            <Patch level="1">no-strip.patch</Patch>
-            <Patch level="1">sip-outoftree.patch</Patch>
+            <Patch>no-strip.patch</Patch>
+            <Patch>disable-rpaths.diff</Patch>
+            <Patch>fix-linking.diff</Patch>
+            <Patch>sip-outoftree.patch</Patch>
         </Patches>
     </Source>
     <Package>
@@ -27,13 +32,11 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="executable">/usr/sbin</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/sip</Path>
+            <Path fileType="data">/usr/share/licenses/sip/LICENSE</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile group="root" permission="0644" owner="root" target="/usr/share/sip/disable-rpaths.diff">disable-rpaths.diff</AdditionalFile>
-            <AdditionalFile group="root" permission="0644" owner="root" target="/usr/share/sip/fix-linking.diff">fix-linking.diff</AdditionalFile>
+            <!--<AdditionalFile group="root" permission="0644" owner="root" target="/usr/share/sip/disable-rpaths.diff">disable-rpaths.diff</AdditionalFile>
+            <AdditionalFile group="root" permission="0644" owner="root" target="/usr/share/sip/fix-linking.diff">fix-linking.diff</AdditionalFile>-->
         </AdditionalFiles>
     </Package>
 
@@ -41,6 +44,7 @@
         <Name>python3-sip</Name>
         <Files>
             <Path fileType="library">/usr/lib/python3*</Path>
+            <Path fileType="data">/usr/share/licenses/python3-sip/LICENSE</Path>
         </Files>
         <Summary>Python 3.x SIP bindings for C and C++ libraries</Summary>
         <RuntimeDependencies>
@@ -60,6 +64,7 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/python2.7/</Path>
+            <Path fileType="data">/usr/share/licenses/python2-sip/LICENSE</Path>
         </Files>
         <Summary>Python 2.x SIP bindings for C and C++ libraries</Summary>
     </Package>
