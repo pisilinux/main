@@ -20,3 +20,4 @@ def install():
     pisitools.dodoc("COPYING", "README", "NEWS")
     pisitools.domove("/usr/lib64/*", "/usr/lib")
     pisitools.removeDir("/usr/lib64")
+    
