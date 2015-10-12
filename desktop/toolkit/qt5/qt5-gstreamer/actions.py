@@ -9,7 +9,7 @@ from pisi.actionsapi import kde5
 
 def setup():
     kde5.configure("-DQTGSTREAMER_EXAMPLES=OFF \
-                                -DQT_VERSION=5")
+                    -DQT_VERSION=5")
 
 def build():
     kde5.make()
@@ -20,3 +20,4 @@ def install():
     pisitools.dodoc("COPYING", "README", "NEWS")
     pisitools.domove("/usr/lib64/*", "/usr/lib")
     pisitools.removeDir("/usr/lib64")
+    
