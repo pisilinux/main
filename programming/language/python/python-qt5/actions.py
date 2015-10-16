@@ -13,71 +13,74 @@ from pisi.actionsapi import get
 WorkDir="PyQt-gpl-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.copytree("%s/PyQt-gpl-5.4.2" % get.workDIR(), "%s/Py2Qt-gpl-5.4.2" % get.workDIR())
-    pythonmodules.run("configure.py  --confirm-license \
-                                     --assume-shared \
-                                     --no-timestamp \
-                                     --qsci-api \
-                                     --enable=QtDBus \
-                                     --enable=QtQml \
-                                     --enable=QtQuick \
-                                     --enable=QtQuickWidgets \
-                                     --enable=QtOpenGL \
-                                     --enable=QtTest \
-                                     --enable=QtSql \
-                                     --enable=QtSensors \
-                                     --enable=QtCore \
-                                     --enable=QtWidgets \
-                                     --enable=QtWebKitWidgets \
-                                     --enable=QtXml \
-                                     --enable=QtGui \
-                                     --enable=QtNetwork \
-                                     --enable=QtWebKit \
-                                     --enable=QtPrintSupport \
-                                     --enable=QtX11Extras \
-                                     --sip /usr/bin/sip \
-                                     --qmake='/usr/lib/qt5/bin/qmake' \
-                                     --destdir='/usr/lib/python3.4/site-packages' \
-                                     --sip-incdir='/usr/include/python3.4m' \
-                                     CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
-    #shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
+    shelltools.copytree("%s/PyQt-gpl-5.5" % get.workDIR(), "%s/Py2Qt-gpl-5.5" % get.workDIR())
+    pythonmodules.run("configure.py --confirm-license \
+                                    --qsci-api \
+                                    --sip /usr/bin/sip \
+                                    --qmake='/usr/bin/qmake-qt5' \
+                                    --destdir='/usr/lib/python3.4/site-packages' \
+                                    --sip-incdir='/usr/include/python3.4m' \
+                                    --enable=QtCore \
+                                    --enable=QtDBus \
+                                    --enable=QtDesigner \
+                                    --enable=QtGui \
+                                    --enable=QtHelp \
+                                    --enable=QtMultimedia\
+                                    --enable=QtMultimediaWidgets \
+                                    --enable=QtNetwork \
+                                    --enable=QtOpenGL \
+                                    --enable=QtPrintSupport \
+                                    --enable=QtQml \
+                                    --enable=QtQuick \
+                                    --enable=QtSensors \
+                                    --enable=QtSerialPort \
+                                    --enable=QtSql \
+                                    --enable=QtSvg \
+                                    --enable=QtTest \
+                                    --enable=QtWebKit \
+                                    --enable=QtWebKitWidgets \
+                                    --enable=QtWidgets \
+                                    --enable=QtXmlPatterns \
+                                    CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
+    shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
-    shelltools.cd("%s/Py2Qt-gpl-5.4.2" % get.workDIR())
-    shelltools.system("python configure.py  --confirm-license \
-                                     --assume-shared \
-                                     --no-timestamp \
-                                     --qsci-api \
-                                     --enable=QtDBus \
-                                     --enable=QtQml \
-                                     --enable=QtQuick \
-                                     --enable=QtQuickWidgets \
-                                     --enable=QtOpenGL \
-                                     --enable=QtTest \
-                                     --enable=QtSql \
-                                     --enable=QtSensors \
-                                     --enable=QtCore \
-                                     --enable=QtWidgets \
-                                     --enable=QtWebKitWidgets \
-                                     --enable=QtXml \
-                                     --enable=QtGui \
-                                     --enable=QtNetwork \
-                                     --enable=QtWebKit \
-                                     --enable=QtPrintSupport \
-                                     --enable=QtX11Extras \
-                                     --destdir='/usr/lib/python2.7/site-packages' \
-                                     --sip-incdir='/usr/include/python2.7' \
-                                     --sip /usr/bin/python2-sip \
-                                     --qmake='/usr/lib/qt5/bin/qmake'")
-
-    #shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
+    shelltools.cd("%s/Py2Qt-gpl-5.5" % get.workDIR())
+    pythonmodules.run("configure.py --confirm-license \
+                                    --qsci-api \
+                                    --destdir='/usr/lib/python2.7/site-packages' \
+                                    --sip-incdir='/usr/include/python2.7' \
+                                    --sip /usr/bin/py2sip \
+                                    --qmake='/usr/bin/qmake-qt5'\
+                                    --enable=QtCore \
+                                    --enable=QtDBus \
+                                    --enable=QtDesigner \
+                                    --enable=QtGui \
+                                    --enable=QtHelp \
+                                    --enable=QtMultimedia\
+                                    --enable=QtMultimediaWidgets \
+                                    --enable=QtNetwork \
+                                    --enable=QtOpenGL \
+                                    --enable=QtPrintSupport \
+                                    --enable=QtQml \
+                                    --enable=QtQuick \
+                                    --enable=QtSensors \
+                                    --enable=QtSerialPort \
+                                    --enable=QtSql \
+                                    --enable=QtSvg \
+                                    --enable=QtTest \
+                                    --enable=QtWebKit \
+                                    --enable=QtWebKitWidgets \
+                                    --enable=QtWidgets \
+                                    --enable=QtXmlPatterns ")
+    shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
 def build():
     autotools.make()
-    shelltools.cd("%s/Py2Qt-gpl-5.4.2" % get.workDIR())
+    shelltools.cd("%s/Py2Qt-gpl-5.5" % get.workDIR())
     autotools.make()
 
 def install():
-    shelltools.cd("%s/Py2Qt-gpl-5.4.2" % get.workDIR())
+    shelltools.cd("%s/Py2Qt-gpl-5.5" % get.workDIR())
     autotools.rawInstall("DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     # Fix conflicts with python3-pyqt5
     pisitools.rename("/usr/bin/pylupdate5", "py2lupdate5")
@@ -87,7 +90,7 @@ def install():
     #pisitools.remove("/usr/lib/qt5/plugins/designer/libpyqt5.so")
     pisitools.rename("/usr/bin/pyuic5", "python2-pyuic5")
     
-    shelltools.cd("%s/PyQt-gpl-5.4.2" % get.workDIR())
+    shelltools.cd("%s/PyQt-gpl-5.5" % get.workDIR())
     autotools.rawInstall("-C pyrcc DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     autotools.rawInstall("-C pylupdate DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     autotools.rawInstall("DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
