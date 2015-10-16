@@ -16,23 +16,16 @@ py2dir = get.curPYTHON()
 py3dir = "python3.4"
 
 def setup():
-    #shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.4m\/Python.h/g' {} \;")
+    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.4m\/Python.h/g' {} \;")
     shelltools.cd("..")
     shelltools.makedirs("build_python3")
     shelltools.copytree("./%s" % WorkDir,  "build_python3")
     shelltools.cd(WorkDir)
-    pythonmodules.run('configure.py \
-                    -b /usr/bin \
-                    -d /usr/lib/%s/site-packages \
-                    -e /usr/include/%s/ \
-                    CFLAGS+="%s" CXXFLAGS+="%s"' % (py2dir, py2dir, get.CFLAGS(), get.CXXFLAGS()))
+    pythonmodules.run('configure.py CFLAGS+="%s" CXXFLAGS+="%s"' % (get.CFLAGS(), get.CXXFLAGS()))
 
     shelltools.cd("../build_python3/%s" % WorkDir)
-    pythonmodules.run('configure.py \
-                    -b /usr/bin \
-                    -d /usr/lib/%s/site-packages/ \
-                    -e /usr/include/%sm/ \
-                    CFLAGS="%s" CXXFLAGS="%s"' % (py3dir, py3dir, get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
+    pythonmodules.run('configure.py CFLAGS="%s" CXXFLAGS="%s"' % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
+                        
 
 def build():
     autotools.make()
@@ -42,11 +35,11 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.rename("/usr/bin/sip", "python2-sip") 
-    pisitools.insinto("/usr/lib/python3.5/site-packages", "sipconfig.py")
-    pisitools.insinto("/usr/lib/python3.5/site-packages", "sipdistutils.py")
+    pisitools.rename("/usr/bin/sip", "py2sip") 
+    #pisitools.insinto("/usr/lib/python2.7/site-packages", "siputils.py")
+    #pisitools.insinto("/usr/lib/python2.7/site-packages", "sipdistutils.py")
 
     shelltools.cd("../build_python3/%s" % WorkDir)
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/lib/python3.5/site-packages", "sipconfig.py")
-    pisitools.insinto("/usr/lib/python3.5/site-packages", "sipdistutils.py")
+    #pisitools.insinto("/usr/lib/python3.4/site-packages", "siputils.py")
+    #pisitools.insinto("/usr/lib/python3.4/site-packages", "sipdistutils.py")
