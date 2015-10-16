@@ -28,4 +28,3 @@ def install():
 
     shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "README", "COPYING")
-# By PiSiDo 2.3.1
