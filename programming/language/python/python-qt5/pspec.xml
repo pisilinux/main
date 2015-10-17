@@ -11,6 +11,7 @@
         <IsA>library</IsA>
         <Summary>A set of Python bindings for the Qt 5.x Toolkit</Summary>
         <Description>Qt is a set of C++ libraries and development tools that includes platform independent abstractions for graphical user interfaces, networking, threads, Unicode, regular expressions, SQL databases, SVG, OpenGL, XML, and user and application settings. PyQt implements 440 of these classes as a set of Python modules.</Description>
+        <Archive sha1sum="6de6e23692069dbb934f4decdf86133e54a0cd54" type="targz">mirrors://sourceforge/pyqt/PyQt5/PyQt-5.4.2/PyQt-gpl-5.5.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>dbus-devel</Dependency>
             <Dependency>dbus-python3</Dependency>
@@ -18,7 +19,8 @@
             <Dependency>python3-devel</Dependency>
             <Dependency>python-devel</Dependency>
             <Dependency versionFrom="4.16.6">python3-sip</Dependency>
-            <Dependency>qt5-base-devel</Dependency>
+            <Dependency versionFrom="4.16.6">python-sip</Dependency>
+            <Dependency versionFrom="5.5.1">qt5-base-devel</Dependency>
             <Dependency>qt5-connectivity-devel</Dependency>
             <Dependency>qt5-declarative-devel</Dependency>
             <Dependency>qt5-enginio-devel</Dependency>
@@ -34,7 +36,6 @@
             <Dependency>qt5-xmlpatterns-devel</Dependency>
             <Dependency versionFrom="4.16.6">sip-devel</Dependency>
         </BuildDependencies>
-        <Archive sha1sum="ceb5f6e088923beaa9885226a3e677fec089964e" type="targz">mirrors://sourceforge/pyqt/PyQt5/PyQt-5.4.2/PyQt-gpl-5.4.2.tar.gz</Archive>
     </Source>
 
     <Package>
@@ -42,17 +43,15 @@
         <Summary>Common files shared between python-qt5 and python3-qt5</Summary>
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
-            <Dependency>python</Dependency>
-            <Dependency>qt5-base</Dependency>
-            <Dependency>qt5-declarative</Dependency>
+            <Dependency versionFrom="5.5.1">qt5-base</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/pylupdate5</Path>
+            <Path fileType="executable">/usr/bin/py2lupdate5</Path>
             <Path fileType="executable">/usr/bin/pyrcc5</Path>
+            <Path fileType="executable">/usr/bin/py2rcc5</Path>
             <Path fileType="data">/usr/share/qt5/qsci/api</Path>
-            <Path fileType="data">/usr/share/sip/PyQt5</Path>
-            <Path fileType="library">/usr/lib/qt5/plugins/PyQt5/libpyqt5qmlplugin.so</Path>
-            <Path fileType="library">/usr/lib/qt5/plugins/designer/libpyqt5.so</Path>
+            <Path fileType="data">/usr/share/sip/PyQt5</Path>            
         </Files>
     </Package>
 
@@ -62,20 +61,22 @@
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
             <Dependency>dbus</Dependency>
+            <Dependency>python</Dependency>
             <Dependency release="current">python-qt5-common</Dependency>
-            <Dependency>qt5-base</Dependency>
+            <Dependency versionFrom="5.5.1">qt5-base</Dependency>
             <Dependency>qt5-declarative</Dependency>
             <Dependency>qt5-sensors</Dependency>
-            <Dependency>qt5-assistant</Dependency>
             <Dependency>qt5-serialport</Dependency>
             <Dependency>qt5-svg</Dependency>
             <Dependency>qt5-webkit</Dependency>
             <Dependency>qt5-x11extras</Dependency>
+            <Dependency>qt5-multimedia</Dependency>
             <Dependency>qt5-xmlpatterns</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/pyuic5</Path>
+            <Path fileType="executable">/usr/bin/python2-pyuic5</Path>
             <Path fileType="library">/usr/lib/python2.7/site-packages</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/PyQt5/libpy2qt5qmlplugin.so</Path>
         </Files>
     </Package>
 
@@ -85,20 +86,23 @@
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
             <Dependency>dbus</Dependency>
+            <Dependency>python3</Dependency>
             <Dependency release="current">python-qt5-common</Dependency>
-            <Dependency>qt5-base</Dependency>
-            <Dependency>qt5-declarative</Dependency>
+            <Dependency versionFrom="5.5.1">qt5-base</Dependency>
             <Dependency>qt5-sensors</Dependency>
-            <Dependency>qt5-assistant</Dependency>
-            <Dependency>qt5-serialport</Dependency>
-            <Dependency>qt5-svg</Dependency>
             <Dependency>qt5-webkit</Dependency>
             <Dependency>qt5-x11extras</Dependency>
+            <Dependency>qt5-svg</Dependency>
+            <Dependency>qt5-multimedia</Dependency>
+            <Dependency>qt5-serialport</Dependency>
+            <Dependency>qt5-declarative</Dependency>
             <Dependency>qt5-xmlpatterns</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/py3uic5</Path>
+            <Path fileType="executable">/usr/bin/pyuic5</Path>
             <Path fileType="library">/usr/lib/python3.4/site-packages</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/PyQt5/libpyqt5qmlplugin.so</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/designer/libpyqt5.so</Path>
         </Files>
     </Package>
 
@@ -114,6 +118,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2015-10-16</Date>
+            <Version>5.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2015-09-07</Date>
             <Version>5.4.2</Version>
