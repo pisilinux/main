@@ -1,0 +1,49 @@
+diff -Nurp qtbase-opensource/mkspecs/common/g++-base.conf qtbase-opensourcey/mkspecs/common/g++-base.conf
+--- qtbase-opensource/mkspecs/common/g++-base.conf	2015-10-13 07:35:32.000000000 +0300
++++ qtbase-opensource-src-5.5.1/mkspecs/common/g++-base.conf	2015-10-18 00:30:49.000000000 +0300
+@@ -10,15 +10,19 @@
+ 
+ QMAKE_COMPILER          = gcc
+ 
+-QMAKE_CC                = gcc
++QMAKE_CC                = PISILINUX_CC
+ 
+ QMAKE_LINK_C            = $$QMAKE_CC
+ QMAKE_LINK_C_SHLIB      = $$QMAKE_CC
+ 
+-QMAKE_CXX               = g++
++QMAKE_CXX               = PISILINUX_CXX
+ 
+-QMAKE_LINK              = $$QMAKE_CXX
+-QMAKE_LINK_SHLIB        = $$QMAKE_CXX
++QMAKE_LINK     = PISILINUX_CXX
++QMAKE_LINK_SHLIB   = PISILINUX_CXX
++QMAKE_LINK_C       = PISILINUX_CC
++QMAKE_LINK_C_SHLIB = PISILINUX_CC
++
++QMAKE_LFLAGS_RELEASE    += PISILINUX_LDFLAGS
+ 
+ QMAKE_PCH_OUTPUT_EXT    = .gch
+ 
+diff -Nurp qtbase-opensource/mkspecs/common/g++-unix.conf qtbase-opensourcey/mkspecs/common/g++-unix.conf
+--- qtbase-opensource/mkspecs/common/g++-unix.conf	2015-10-13 07:35:32.000000000 +0300
++++ qtbase-opensource-src-5.5.1/mkspecs/common/g++-unix.conf	2015-10-18 00:31:47.000000000 +0300
+@@ -10,5 +10,5 @@
+ 
+ include(g++-base.conf)
+ 
+-QMAKE_LFLAGS_RELEASE   += -Wl,-O1
++QMAKE_LFLAGS_RELEASE += PISILINUX_LDFLAGS
+ QMAKE_LFLAGS_NOUNDEF   += -Wl,--no-undefined
+diff -Nurp qtbase-opensource/mkspecs/common/linux.conf qtbase-opensourcey/mkspecs/common/linux.conf
+--- qtbase-opensource/mkspecs/common/linux.conf	2015-10-13 07:35:32.000000000 +0300
++++ qtbase-opensource-src-5.5.1/mkspecs/common/linux.conf	2015-10-18 00:33:07.000000000 +0300
+@@ -49,7 +49,7 @@ QMAKE_OBJCOPY           = objcopy
+ QMAKE_NM                = nm -P
+ QMAKE_RANLIB            =
+ 
+-QMAKE_STRIP             = strip
++QMAKE_STRIP             = 
+ QMAKE_STRIPFLAGS_LIB   += --strip-unneeded
+ 
+ include(unix.conf)
