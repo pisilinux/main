@@ -15,8 +15,7 @@ WorkDir = "sip-%s" % get.srcVERSION()
 py2dir = get.curPYTHON()
 py3dir = "python3.4"
 
-def setup():
-    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.4m\/Python.h/g' {} \;")
+def setup():    
     shelltools.cd("..")
     shelltools.makedirs("build_python3")
     shelltools.copytree("./%s" % WorkDir,  "build_python3")
@@ -24,6 +23,7 @@ def setup():
     pythonmodules.run('configure.py CFLAGS+="%s" CXXFLAGS+="%s"' % (get.CFLAGS(), get.CXXFLAGS()))
 
     shelltools.cd("../build_python3/%s" % WorkDir)
+    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.4m\/Python.h/g' {} \;")
     pythonmodules.run('configure.py CFLAGS="%s" CXXFLAGS="%s"' % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
                         
 
