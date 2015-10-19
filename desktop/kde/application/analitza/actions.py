@@ -20,5 +20,3 @@ def install():
     kde5.install()
 
     pisitools.dodoc("COPYING*", "TODO")
-
-    pisitools.dopixmaps("icons/hi32-app-kalgebra.png")
