@@ -80,15 +80,12 @@ def install():
                               % (get.installDIR(), libdir, get.docDIR()))
 
 
-    shelltools.chmod("%s/usr/lib/llvm/*.a" % get.installDIR(), 0644)
+    #shelltools.chmod("%s/usr/lib/llvm/*.a" % get.installDIR(), 0644)
 
     # Install static analyzers which aren't installed by default
     for exe in ("scan-build", "scan-view"):
         pisitools.insinto("/usr/lib/clang-analyzer/%s" % exe, "tools/clang/tools/%s/%s" % (exe, exe))
         pisitools.dosym("/usr/lib/clang-analyzer/%s/%s" % (exe, exe), "/usr/bin/%s" % exe)
-
-    pisitools.dodir("/etc/ld.so.conf.d")
-    shelltools.echo("%s/etc/ld.so.conf.d/51-llvm.conf" % get.installDIR(), "/usr/lib/llvm")
 
     # Symlink the gold plugin where clang expects it
     pisitools.dosym("llvm/LLVMgold.so", "/usr/lib/LLVMgold.so")
@@ -105,6 +102,6 @@ def install():
     pisitools.insinto("/usr/share/vim/vimfiles/syntax", "utils/vim/*.vim")
 
     # Install kate syntax file
-    pisitools.insinto("%s/katepart/syntax" % kde4.appsdir, "utils/kate/*.xml")
+    #pisitools.insinto("%s/katepart/syntax" % kde4.appsdir, "utils/kate/*.xml")
 
     pisitools.dodoc("CREDITS.TXT", "LICENSE.TXT", "README.txt")
