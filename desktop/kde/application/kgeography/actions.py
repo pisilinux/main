@@ -7,6 +7,8 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde5
 
+NoStrip=["/usr/share/icons"]
+
 def setup():
     kde5.configure()
 
@@ -14,6 +16,6 @@ def build():
     kde5.make()
 
 def install():
-    kde5.install()    
-    
-    pisitools.dodoc("AUTHORS", "COPYING", "README", "COPYING-CMAKE-SCRIPTS", "COPYING.LIB")
+    kde5.install()
+
+    pisitools.dodoc("AUTHORS", "COPYING",  "COPYING.DOC", "README", "TODO")

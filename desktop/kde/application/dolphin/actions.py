@@ -6,7 +6,6 @@
 
 from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
 
 def setup():
     kde5.configure()
