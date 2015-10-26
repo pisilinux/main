@@ -7,18 +7,20 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde5
 
-#WorkDir = "kdepim-15.08.2/kaddressbook"
-
 def setup():
-    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
-                    -DBUILD_TESTING=OFF \
-                    -DCMAKE_INSTALL_PREFIX=/usr \
-                    -DCMAKE_INSTALL_LIBDIR=lib \
+    kde5.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_SKIP_RPATH=ON \
+                    -DLIB_INSTALL_DIR=lib \
+                    -DSYSCONF_INSTALL_DIR=/etc \
+                    -DQML_INSTALL_DIR=/usr/lib/qt5/qml \
+                    -DPLUGIN_INSTALL_DIR=/usr/lib/qt5/plugins \
                     -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                    -DLIBEXEC_INSTALL_DIR=lib")
+                    -DBUILD_TESTING=FALSE \
+                    -DKDEPIM_NO_TEXTTOSPEECH=TRUE")
 
 def build():
-    kde5.make()
+    kde5.make("VERBOSE=1")
 
 def install():
     kde5.install()
