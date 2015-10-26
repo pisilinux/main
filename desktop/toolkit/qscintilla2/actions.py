@@ -40,14 +40,11 @@ def build():
 
     # Get Makefile of qscintilla-python via sip
     shelltools.cd("../Python")
-    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --pyqt-sipdir=/usr/share/sip/Py2Qt5 --qsci-sipdir=/usr/share/sip/Py2Qt5 --sip-incdir=/usr/lib/python2.7/site-packages --qmake /usr/bin/qmake-qt5")
-    pisitools.dosed("Makefile", "/usr/include/qt/QtPrintSupport", "/usr/include/qt5/QtPrintSupport")
-    pisitools.dosed("Makefile", "/usr/include/qt/QtWidgets", "/usr/include/qt5/QtWidgets")
+    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5")
     autotools.make()
     shelltools.cd("../Python3")
-    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --qmake /usr/bin/qmake-qt5", pyVer = "3")
-    pisitools.dosed("Makefile", "/usr/include/qt/QtPrintSupport", "/usr/include/qt5/QtPrintSupport")
-    pisitools.dosed("Makefile", "/usr/include/qt/QtWidgets", "/usr/include/qt5/QtWidgets")
+    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5", pyVer = "3")
+    pisitools.dosed("Makefile", "-lpython3.4", "-lpython3")
     autotools.make()
 
 def install():
@@ -59,16 +56,16 @@ def install():
 
     #build and install qscintilla-python
     shelltools.cd("../Python3")
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/lib/python3.4/site-packages/PyQt5", "Qsci.so")
+    autotools.install("DESTDIR=%s" % get.installDIR())
     shelltools.cd("../Python")
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/lib/python2.7/site-packages/PyQt5", "Qsci.so")
+    autotools.install("DESTDIR=%s" % get.installDIR())
 
     shelltools.cd("..")
     pisitools.dohtml("doc/html-Qt4Qt5/")
     pisitools.insinto("/usr/share/doc/%s/Scintilla" % get.srcNAME(), "doc/Scintilla/*")
 
-    #pisitools.removeDir("/usr/share/qt4")
+    pisitools.removeDir("/usr/share/qt4")
 
     pisitools.dodoc("LICENSE*", "NEWS", "README")
+
+# By PiSiDo 2.3.1
