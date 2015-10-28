@@ -24,10 +24,10 @@ def build():
     shelltools.system("./hack/make.sh dynbinary")
 
 def install():
-    pisitools.dobin("bundles/1.8.2/dynbinary/docker")
-    pisitools.dobin("bundles/1.8.2/dynbinary/docker-1.8.2")
-    pisitools.doexe("bundles/1.8.2/dynbinary/dockerinit", "/usr/lib/docker")
-    pisitools.doexe("bundles/1.8.2/dynbinary/dockerinit-1.8.2", "/usr/lib/docker")
+    pisitools.dobin("bundles/1.8.3/dynbinary/docker")
+    pisitools.dobin("bundles/1.8.3/dynbinary/docker-1.8.3")
+    pisitools.doexe("bundles/1.8.3/dynbinary/dockerinit", "/usr/lib/docker")
+    pisitools.doexe("bundles/1.8.3/dynbinary/dockerinit-1.8.3", "/usr/lib/docker")
 
     # insert udev rules
     pisitools.insinto("/etc/udev/rules.d", "contrib/udev/*.rules")
