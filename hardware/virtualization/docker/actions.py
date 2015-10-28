@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT", "0a8c2e3")
+shelltools.export("DOCKER_GITCOMMIT", "f4bf5c7")
 shelltools.export("GOPATH", "%s" % get.workDIR())
 
 shelltools.export("CGO_CFLAGS", "-I/usr/include")
