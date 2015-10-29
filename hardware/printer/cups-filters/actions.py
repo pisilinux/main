@@ -6,25 +6,29 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
     pisitools.dosed("configure", "localstatedir/run/cups", "localstatedir/cups")
-
-    autotools.configure("--prefix=/usr  \
-                         --sysconfdir=/etc \
-                         --sbindir=/usr/bin \
+    #shelltools.system("./autogen.sh")
+    autotools.configure("--sbindir=/usr/bin \
+                         --localstatedir=/var \
+                         --enable-dbus \
                          --with-rcdir=no \
-                         --localstatedir=/run \
-                         --with-browseremoteprotocols=DNSSD,CUPS \
-                         --with-test-font-path=/usr/share/fonts/dejavu/DejaVuSans.ttf")
+                         --disable-static \
+                         --with-gs-path=/usr/bin/gs \
+                         --with-pdftops-path=/usr/bin/gs \
+                         --docdir=/usr/share/doc/cups-filters-1.0.76 \
+                         --with-browseremoteprotocols=DNSSD,CUPS ")
+                         #--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    autotools.make()
-    
-def check():
     autotools.make("check")
+    
+#def check():
+    #autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
