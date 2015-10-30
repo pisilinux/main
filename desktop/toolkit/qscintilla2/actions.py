@@ -34,17 +34,17 @@ def build():
     shelltools.system("cp -rf Python Python3")
     shelltools.cd("Qt4Qt5")
     qt5.make()
-    
+
     shelltools.cd("../designer-Qt4Qt5/")
     qt5.make()
-    
+
     # Get Makefile of qscintilla-python via sip
     shelltools.cd("../Python")
     pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --pyqt-sipdir=/usr/share/sip/Py2Qt5 --qsci-sipdir=/usr/share/sip/Py2Qt5 --sip-incdir=/usr/lib/python2.7/site-packages --qmake /usr/bin/qmake-qt5")
     pisitools.dosed("Makefile", "/usr/include/qt/QtPrintSupport", "/usr/include/qt5/QtPrintSupport")
     pisitools.dosed("Makefile", "/usr/include/qt/QtWidgets", "/usr/include/qt5/QtWidgets")
     autotools.make()
-    
+
     shelltools.cd("../Python3")
     pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --qmake /usr/bin/qmake-qt5", pyVer = "3")
     pisitools.dosed("Makefile", "/usr/include/qt/QtPrintSupport", "/usr/include/qt5/QtPrintSupport")
