@@ -57,10 +57,12 @@ def setup():
                             --disable-growl \
                             --disable-jack \
                             --disable-oss \
+                            --disable-opencv \
                             --disable-rpath \
                             --disable-static \
                             --disable-update-check \
                             --disable-silent-rules \
+                            --disable-qt4 \
                             --enable-a52 \
                             --enable-aa \
                             --enable-alsa \
@@ -89,7 +91,7 @@ def setup():
                             --enable-mod \
                             --enable-mpc \
                             --enable-nls \
-                            --enable-ncurses \
+                            --disable-ncurses \
                             --enable-ogg \
                             --enable-opus \
                             --enable-png \
@@ -100,7 +102,7 @@ def setup():
                             --enable-sdl \
                             --enable-sftp \
                             --enable-shared \
-                            --enable-skins2 \
+                            --disable-skins2 \
                             --enable-smbclient \
                             --enable-sout \
                             --enable-speex \
