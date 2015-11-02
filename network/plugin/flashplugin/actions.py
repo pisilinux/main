@@ -19,6 +19,5 @@ def install():
     #if get.ARCH() == "x86_64":
         #pisitools.insinto("/usr/lib/kde4", "usr/lib64/kde4/kcm_adobe_flash_player.so")
 
-    pisitools.doexe("libflashplayer.so", "/usr/lib/browser-plugins")
-    
+    pisitools.doexe("libflashplayer.so", "/usr/lib/mozilla/plugins")
     pisitools.removeDir("/usr/share/kde4")
