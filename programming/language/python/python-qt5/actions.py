@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 WorkDir="PyQt-gpl-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.copytree("%s/PyQt-gpl-5.5" % get.workDIR(), "%s/Py2Qt-gpl-5.5" % get.workDIR())
+    shelltools.copytree("%s/PyQt-gpl-5.5.1" % get.workDIR(), "%s/Py2Qt-gpl-5.5.1" % get.workDIR())
     pythonmodules.run("configure.py --confirm-license \
                                     --qsci-api \
                                     --sip /usr/bin/sip \
@@ -23,7 +23,7 @@ def setup():
                                     CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
-    shelltools.cd("%s/Py2Qt-gpl-5.5" % get.workDIR())
+    shelltools.cd("%s/Py2Qt-gpl-5.5.1" % get.workDIR())
     pythonmodules.run("configure.py --confirm-license \
                                     --qsci-api \
                                     --destdir='/usr/lib/python2.7/site-packages' \
@@ -34,11 +34,11 @@ def setup():
 
 def build():
     autotools.make()
-    shelltools.cd("%s/Py2Qt-gpl-5.5" % get.workDIR())
+    shelltools.cd("%s/Py2Qt-gpl-5.5.1" % get.workDIR())
     autotools.make()
 
 def install():
-    shelltools.cd("%s/Py2Qt-gpl-5.5" % get.workDIR())
+    shelltools.cd("%s/Py2Qt-gpl-5.5.1" % get.workDIR())
     autotools.rawInstall("-C pyrcc DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     autotools.rawInstall("-C pylupdate DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     autotools.rawInstall("DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
@@ -51,7 +51,7 @@ def install():
     pisitools.domove("/usr/share/sip/PyQt5/*", "/usr/share/sip/Py2Qt5")
     pisitools.removeDir("/usr/share/sip/PyQt5")
     
-    shelltools.cd("%s/PyQt-gpl-5.5" % get.workDIR())
+    shelltools.cd("%s/PyQt-gpl-5.5.1" % get.workDIR())
     autotools.rawInstall("-C pyrcc DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     autotools.rawInstall("-C pylupdate DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
     autotools.rawInstall("DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
