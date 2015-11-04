@@ -5,13 +5,8 @@
 
 from pisi.actionsapi import qt5
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 
-
-WorkDir="qpdfview-0.4.14"
-
-
-def setup():        
+def setup():
     qt5.configure("qpdfview.pro")
 
 def build():
