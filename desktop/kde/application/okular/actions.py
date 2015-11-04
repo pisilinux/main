@@ -7,7 +7,7 @@
 from pisi.actionsapi import kde5
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DKDEPIM_NO_TEXTTOSPEECH=TRUE")
 
 def build():
     kde5.make()
