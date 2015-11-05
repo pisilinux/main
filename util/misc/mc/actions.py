@@ -17,7 +17,7 @@ def setup():
                          --with-x=yes \
                          --enable-charset \
                          --enable-nls \
-                         --without-samba \
+                         --with-samba \
                          --with-configdir=/etc/samba \
                          --with-codepagedir=/var/lib/samba/codepages \
                          --with-privatedir=/etc/samba/private")
