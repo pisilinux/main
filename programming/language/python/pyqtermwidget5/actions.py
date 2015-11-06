@@ -10,7 +10,8 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.cd("pyqt5")
-    pisitools.dosed("config.py", "/PyQt5","/Py2Qt5")
+    #pisitools.dosed("config.py", "/PyQt5","/Py2Qt5")
+    #pisitools.dosed("config.py", "​config.sip_bin​", "/usr/bin/py2sip")
     shelltools.system("python config.py")
     pisitools.dosed("Makefile", "^(CXXFLAGS.*)$", "\\1 -fpermissive")
     pisitools.dosed("sipQTermWidgetQTermWidget.cpp", "sipCpp->setColorScheme\(a0\)", "sipCpp->setColorScheme(QString::number(a0))")
