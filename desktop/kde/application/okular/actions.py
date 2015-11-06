@@ -5,6 +5,7 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import kde5
+from pisi.actionsapi import pisitools
 
 def setup():
     kde5.configure("-DKDEPIM_NO_TEXTTOSPEECH=TRUE")
