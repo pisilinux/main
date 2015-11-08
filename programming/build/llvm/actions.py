@@ -50,27 +50,27 @@ def setup():
                           -DLLVM_BINUTILS_INCDIR=/usr/include", sourceDir="..")
 def build():
     shelltools.makedirs("build")
-    
+
     shelltools.cd("build")
-    
+
     cmaketools.make()
 
 def install():
     shelltools.makedirs("build")
-    
+
     shelltools.cd("build")
-    
+
     if get.buildTYPE() == "emul32":
- 
+
         #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         cmaketools.rawInstall("DESTDIR=%s \
                               PROJ_etcdir=/etc/llvm \
                               PROJ_libdir=/usr/lib32/llvm \
                               PROJ_docsdir=/%s/llvm"
                               % (get.installDIR(),  get.docDIR()))
-        shelltools.chmod("%s/usr/lib32/llvm/*.a" % get.installDIR(), mode = 0644)
-        pisitools.dosym("llvm/LLVMgold.so", "/usr/lib32/LLVMgold.so")
-        pisitools.remove("/usr/lib32/llvm/*LLVMHello.*")
+        # shelltools.chmod("%s/usr/lib32/llvm/*.a" % get.installDIR(), mode = 0644)
+        # pisitools.dosym("llvm/LLVMgold.so", "/usr/lib32/LLVMgold.so")
+        # pisitools.remove("/usr/lib32/llvm/*LLVMHello.*")
         return
     else:
         cmaketools.rawInstall("DESTDIR=%s \
@@ -82,24 +82,26 @@ def install():
 
     #shelltools.chmod("%s/usr/lib/llvm/*.a" % get.installDIR(), 0644)
 
+    shelltools.cd ("..")
+
     # Install static analyzers which aren't installed by default
     for exe in ("scan-build", "scan-view"):
         pisitools.insinto("/usr/lib/clang-analyzer/%s" % exe, "tools/clang/tools/%s/%s" % (exe, exe))
         pisitools.dosym("/usr/lib/clang-analyzer/%s/%s" % (exe, exe), "/usr/bin/%s" % exe)
 
     # Symlink the gold plugin where clang expects it
-    pisitools.dosym("llvm/LLVMgold.so", "/usr/lib/LLVMgold.so")
+    # pisitools.dosym("llvm/LLVMgold.so", "/usr/lib/LLVMgold.so")
 
     # Remove example file
-    pisitools.remove("/usr/lib/llvm/*LLVMHello.*")
+    # pisitools.remove("/usr/lib/llvm/*LLVMHello.*")
 
-    pisitools.remove("/usr/share/doc/llvm/*.tar.gz")
-    pisitools.remove("/usr/share/doc/llvm/ocamldoc/html/*.tar.gz")
-    pisitools.removeDir("/usr/share/doc/llvm/ps")
+    # pisitools.remove("/usr/share/doc/llvm/*.tar.gz")
+    # pisitools.remove("/usr/share/doc/llvm/ocamldoc/html/*.tar.gz")
+    # pisitools.removeDir("/usr/share/doc/llvm/ps")
 
     # Install vim syntax files for .ll and .td files
     # llvm.vim additional file add ftdetct vim file to detect .ll and .td as llvm files
-    pisitools.insinto("/usr/share/vim/vimfiles/syntax", "utils/vim/*.vim")
+    pisitools.insinto("/usr/share/vim/vimfiles/syntax", "utils/vim/syntax/*.vim")
 
     # Install kate syntax file
     #pisitools.insinto("%s/katepart/syntax" % kde4.appsdir, "utils/kate/*.xml")
