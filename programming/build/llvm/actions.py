@@ -31,6 +31,8 @@ def setup():
     shelltools.system("patch -d tools/clang/extra -Np1 < clang-tools-extra-3.7.0-install-clang-query.patch")
     
     shelltools.system("patch -d tools/lldb -Np1 < lldb-3.7.0-avoid-linking-to-libLLVM.patch")
+    
+    shelltools.system("patch -d projects/compiler-rt -Np1 < 0001-New-MSan-mapping-layout-compiler-rt-part.patch")
 
     shelltools.makedirs("build")
     

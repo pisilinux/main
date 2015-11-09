@@ -19,6 +19,7 @@
         <AdditionalFiles>
              <AdditionalFile target="clang-tools-extra-3.7.0-install-clang-query.patch">clang-tools-extra-3.7.0-install-clang-query.patch</AdditionalFile>
              <AdditionalFile target="lldb-3.7.0-avoid-linking-to-libLLVM.patch">lldb-3.7.0-avoid-linking-to-libLLVM.patch</AdditionalFile>
+             <AdditionalFile target="0001-New-MSan-mapping-layout-compiler-rt-part.patch">0001-New-MSan-mapping-layout-compiler-rt-part.patch</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
             <Dependency>zlib-devel</Dependency>
@@ -39,8 +40,8 @@
         <Patches>
             <Patch level="1">llvm-3.7.0-link-tools-against-libLLVM.patch</Patch>
             <Patch level="2">llvm-3.7.0-export-more-symbols.patch</Patch>
-            <!--Patch>clang-tools-extra-3.7.0-install-clang-query.patch</Patch>
-            <Patch level="2">lldb-3.7.0-avoid-linking-to-libLLVM.patch</Patch-->
+            <Patch>0001-New-MSan-mapping-layout-llvm-part.patch</Patch>
+            <!--Patch level="2">lldb-3.7.0-avoid-linking-to-libLLVM.patch</Patch-->
         </Patches>
     </Source>
 
@@ -57,8 +58,9 @@
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/bin/llvm-config</Path>
-            <Path fileType="header">/usr/include/llvm*</Path>            
+            <Path fileType="header">/usr/include/llvm*</Path>
             <Path fileType="library">/usr/lib/llvm</Path>
+            <Path fileType="library">/usr/include/lldb</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="conf">/etc/ld.so.conf.d</Path>
             <Path fileType="data">/etc/llvm</Path>
@@ -83,13 +85,15 @@
             <Dependency>ncurses</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/llvm/libLLVM-3*</Path>
-            <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
+            <Path fileType="library">/usr/lib/libLLVM.so*</Path>
+            <Path fileType="library">/usr/lib/LLVMgold.so</Path>
+            <Path fileType="library">/usr/lib/libLTO.so*</Path>
+            <Path fileType="data">/usr/share/doc/llvm/LICENSE*</Path>
         </Files>
     </Package>
 
     <Package>
-        <Name>llvm-ocaml</Name>
+        <Name>llvm-ocaml</Name><!--fix me ocamle package not builded-->
         <IsA>library</IsA>
         <PartOf>programming.language.ocaml</PartOf>
         <Summary>OCaml binding for LLVM</Summary>
@@ -122,15 +126,15 @@
         <Description>The goal of the Clang project is to create a new C, C++, Objective C and Objective C++ front-end for the LLVM compiler.</Description>
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
-	    <Dependency>libgcc</Dependency>
-	    <Dependency>ncurses</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>ncurses</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/clang*</Path>
             <Path fileType="executable">/usr/bin/tblgen</Path>
             <Path fileType="library">/usr/lib/clang</Path>
             <Path fileType="library">/usr/lib/clang/libclang.so</Path>
-            <Path fileType="data">/usr/share/clang</Path>            
+            <Path fileType="data">/usr/share/clang</Path>
             <Path fileType="man">/usr/share/man/man1/clang.1</Path>
         </Files>
     </Package>
@@ -147,7 +151,7 @@
         </Files>
     </Package>
 
-    <Package>
+    <!--Package>
         <Name>llvm-docs</Name>
         <PartOf>programming.docs</PartOf>
         <IsA>data:doc</IsA>
@@ -156,7 +160,7 @@
             <Path fileType="doc">/usr/share/doc/llvm/html</Path>
             <Path fileType="doc">/usr/share/doc/llvm/ocamldoc</Path>
         </Files>
-    </Package>
+    </Package-->
 
     <Package>
         <Name>llvm-32bit</Name>
@@ -183,7 +187,7 @@
 
     <History>
         <Update release="8">
-            <Date>2015-10-18</Date>
+            <Date>2015-11-08</Date>
             <Version>3.7.0</Version>
             <Comment>Version bump.</Comment>
             <Name>Ertuğrul Erata</Name>
