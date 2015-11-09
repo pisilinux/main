@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir = "mozilla-release"
+#WorkDir = "mozilla-release"
 ObjDir = "build"
 locales = "az be  bs ca  da  de  el  en-US en-GB en-ZA  es-AR  es-CL  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
 xpidir = "%s/xpi" % get.workDIR()
