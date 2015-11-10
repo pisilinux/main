@@ -9,10 +9,8 @@ from pisi.actionsapi import pisitools
 
 Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 
-def setup():  
+def setup():
     autotools.autoreconf("-vif")
-    
-    pisitools.dosed("configure", "LLVM_SO_NAME=.*", "LLVM_SO_NAME=LLVM")
 
 # --enable-sysfs option provides better hardware information support with "lspci"
 # --enable-32-bit option is not present anymore. Although build fails in emul32. With --disable-asm option, not fail. Needs to be tested.
