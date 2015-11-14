@@ -23,4 +23,3 @@ def install():
     pisitools.dosym("/usr/lib/drkonqi", "/usr/lib/libexec/drkonqi")
 
     pisitools.dodoc("COPYING", "HACKING")
-
