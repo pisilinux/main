@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     kde5.configure()
 
-def build():   
+def build():
     kde5.make()
 
 def install():
