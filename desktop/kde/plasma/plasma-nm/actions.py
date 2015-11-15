@@ -8,11 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                    -DCMAKE_BUILD_TYPE=Release \
-                    -DLIB_INSTALL_DIR=lib \
-                    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                    -DBUILD_TESTING=OFF")
+    kde5.configure()
 
 def build():
     kde5.make()
