@@ -5,21 +5,16 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import cmaketools
+from pisi.actionsapi import kde5
 
 def setup():
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_BUILD_TYPE=Release \
-                          -DLIB_INSTALL_DIR=lib \
-                          -DLIBEXEC_INSTALL_DIR=lib \
-                          -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                          -DBUILD_TESTING=OFF")
+    kde5.configure()
 
 def build():
-    cmaketools.make()
+    kde5.make()
 
 def install():
-    cmaketools.install()
+    kde5.install()
     pisitools.dosym("/usr/lib/drkonqi", "/usr/lib/libexec/drkonqi")
 
     pisitools.dodoc("COPYING", "HACKING")
