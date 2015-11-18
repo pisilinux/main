@@ -15,8 +15,8 @@ def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                          -DUSE_QT5:bool=ON \
-                          -DUSE_WAYLAND:bool=ON \
+                          -DUSE_QT5=ON \
+                          -DUSE_WAYLAND=ON \
                           -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/sddm \
                           -DBUILD_MAN_PAGES=ON", sourceDir=".." )
 
