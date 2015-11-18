@@ -14,9 +14,6 @@ def setup():
 
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
-                          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                          -DUSE_QT5=ON \
-                          -DUSE_WAYLAND=ON \
                           -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/sddm \
                           -DBUILD_MAN_PAGES=ON", sourceDir=".." )
 
@@ -31,5 +28,7 @@ def install():
     shelltools.cd("build")
 
     cmaketools.install()
+    
+    pisitools.insinto("/usr/share/dbus-1/interfaces", "../data/interfaces/*.xml")
 
     pisitools.dodoc("../COPYING")
