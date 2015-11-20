@@ -9,10 +9,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
+    autotools.autoreconf("-vfi")
     autotools.configure("--disable-static")
     
-    #pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
@@ -20,4 +20,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("COPYING", "ChangeLog", "NEWS", "README")
