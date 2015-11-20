@@ -1,0 +1,14 @@
+Index: farstream-0.2.7/configure.ac
+===================================================================
+--- farstream-0.2.7.orig/configure.ac
++++ farstream-0.2.7/configure.ac
+@@ -177,7 +177,8 @@ AC_SUBST(NICE_LIBS)
+ AC_SUBST(FS_TRANSMITTER_PLUGINS_SELECTED)
+ 
+ dnl set the plugindir where plugins should be installed
+-AS_AC_EXPAND(FS_PLUGIN_PATH, ${libdir}/farstream-$FS_APIVERSION)
++AS_VAR_ARITH(FS_MAJOR, $FS_CURRENT-$FS_AGE)
++AS_AC_EXPAND(FS_PLUGIN_PATH, ${libdir}/farstream-$FS_APIVERSION-$FS_MAJOR)
+ AC_SUBST(FS_PLUGIN_PATH)
+ AC_DEFINE_UNQUOTED(FS_PLUGIN_PATH, "${FS_PLUGIN_PATH}", [The path were plugins are installed and search by default])
+ 

@@ -12,7 +12,6 @@ def setup():
     autotools.autoreconf("-fi")
     autotools.configure("--prefix=/usr \
                          --disable-static \
-                         --enable-python \
                          --with-html-dir=/%s/%s/html \
                          --with-package-name='PisiLinux farstream package' \
                          --with-package-origin='http://www.pisilinux.org'"
