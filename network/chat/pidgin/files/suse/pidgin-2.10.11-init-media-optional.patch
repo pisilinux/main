@@ -1,0 +1,52 @@
+
+# HG changeset patch
+# User Jakub Adam <jakub.adam@ktknet.cz>
+# Date 1407847148 -7200
+# Node ID 7767aaeade6404396204794f9bc75d9a2cb723f0
+# Parent  8e4fa54f166211ffd6cd869cca611e8d64ea1fdf
+media: make "init-media" signal handler optional
+
+Change the logic so that the PurpleMedia instance isn't disposed when
+"init-media" has no connected handlers.
+
+We want the media object freed only when some signal callback function
+explicitly returns FALSE, indicating an error during the initialization.
+
+This is mostly useful for the imminent addition of private media streams.
+
+diff --git a/libpurple/mediamanager.c b/libpurple/mediamanager.c
+--- a/libpurple/mediamanager.c
++++ b/libpurple/mediamanager.c
+@@ -334,7 +334,7 @@
+ {
+ #ifdef USE_VV
+ 	PurpleMedia *media;
+-	gboolean signal_ret;
++	guint signal_id;
+ 
+ 	media = PURPLE_MEDIA(g_object_new(purple_media_get_type(),
+ 			     "manager", manager,
+@@ -343,12 +343,17 @@
+ 			     "initiator", initiator,
+ 			     NULL));
+ 
+-	g_signal_emit(manager, purple_media_manager_signals[INIT_MEDIA], 0,
+-			media, account, remote_user, &signal_ret);
++	signal_id = purple_media_manager_signals[INIT_MEDIA];
+ 
+-	if (signal_ret == FALSE) {
+-		g_object_unref(media);
+-		return NULL;
++	if (g_signal_has_handler_pending(manager, signal_id, 0, FALSE)) {
++		gboolean signal_ret;
++
++		g_signal_emit(manager, signal_id, 0, media, account, remote_user,
++				&signal_ret);
++		if (signal_ret == FALSE) {
++			g_object_unref(media);
++			return NULL;
++		}
+ 	}
+ 
+ 	manager->priv->medias = g_list_append(manager->priv->medias, media);
+

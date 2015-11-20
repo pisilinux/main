@@ -1,0 +1,350 @@
+
+# HG changeset patch
+# User David Woodhouse <David.Woodhouse@intel.com>
+# Date 1425675783 0
+# Node ID 6b4576edf2a694ab55d0d06d3643c44601a75b15
+# Parent  714ba418d0aa5ba0cc4cc3b9db37296cd2bbf041
+Add out-of-band DTMF support and dialpad to use it
+
+This is a backport of e4c122196b08 from the trunk. It adds the UI and
+farstream backend support for sending DTMF.
+
+Fixes #15575
+
+diff --git a/libpurple/media.c b/libpurple/media.c
+--- a/libpurple/media.c
++++ b/libpurple/media.c
+@@ -1439,3 +1439,46 @@
+ }
+ #endif /* USE_GSTREAMER */
+ 
++gboolean
++purple_media_send_dtmf(PurpleMedia *media, const gchar *session_id,
++		gchar dtmf, guint8 volume, guint16 duration)
++{
++#ifdef USE_VV
++	PurpleAccount *account = NULL;
++	PurpleConnection *gc = NULL;
++	PurplePlugin *prpl = NULL;
++	PurplePluginProtocolInfo *prpl_info = NULL;
++	PurpleMediaBackendIface *backend_iface = NULL;
++
++	if (media)
++	{
++		account = purple_media_get_account(media);
++		backend_iface = PURPLE_MEDIA_BACKEND_GET_INTERFACE(media->priv->backend);
++	}
++	if (account)
++		gc = purple_account_get_connection(account);
++	if (gc)
++		prpl = purple_connection_get_prpl(gc);
++	if (prpl)
++		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl);
++
++	if (dtmf == 'a')
++		dtmf = 'A';
++	else if (dtmf == 'b')
++		dtmf = 'B';
++	else if (dtmf == 'c')
++		dtmf = 'C';
++	else if (dtmf == 'd')
++		dtmf = 'D';
++
++	g_return_val_if_fail(strchr("0123456789ABCD#*", dtmf), FALSE);
++
++	if (backend_iface && backend_iface->send_dtmf
++		&& backend_iface->send_dtmf(media->priv->backend,
++				session_id, dtmf, volume, duration))
++	{
++		return TRUE;
++	}
++#endif
++	return FALSE;
++}
+diff --git a/libpurple/media.h b/libpurple/media.h
+--- a/libpurple/media.h
++++ b/libpurple/media.h
+@@ -437,6 +437,21 @@
+  */
+ void purple_media_remove_output_windows(PurpleMedia *media);
+ 
++/**
++ * Sends a DTMF signal out-of-band.
++ *
++ * @param media The media instance to send a DTMF signal to.
++ * @param sess_id The session id of the session to send the DTMF signal on.
++ * @param dtmf The character representing the DTMF in the range [0-9#*A-D].
++ * @param volume The power level expressed in dBm0 after dropping the sign
++ *      in the range of 0 to 63.  A larger value represents a lower volume.
++ * @param duration The duration of the tone in milliseconds.
++ *
++ * @since 2.11
++ */
++gboolean purple_media_send_dtmf(PurpleMedia *media, const gchar *session_id,
++		gchar dtmf, guint8 volume, guint16 duration);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/libpurple/media/backend-fs2.c b/libpurple/media/backend-fs2.c
+--- a/libpurple/media/backend-fs2.c
++++ b/libpurple/media/backend-fs2.c
+@@ -94,6 +94,9 @@
+ static void purple_media_backend_fs2_set_params(PurpleMediaBackend *self,
+ 		guint num_params, GParameter *params);
+ static const gchar **purple_media_backend_fs2_get_available_params(void);
++static gboolean purple_media_backend_fs2_send_dtmf(
++		PurpleMediaBackend *self, const gchar *sess_id,
++		gchar dtmf, guint8 volume, guint16 duration);
+ 
+ static void free_stream(PurpleMediaBackendFs2Stream *stream);
+ static void free_session(PurpleMediaBackendFs2Session *session);
+@@ -499,6 +502,7 @@
+ 	iface->set_send_codec = purple_media_backend_fs2_set_send_codec;
+ 	iface->set_params = purple_media_backend_fs2_set_params;
+ 	iface->get_available_params = purple_media_backend_fs2_get_available_params;
++	iface->send_dtmf = purple_media_backend_fs2_send_dtmf;
+ }
+ 
+ static FsMediaType
+@@ -2436,6 +2440,65 @@
+ 
+ 	return supported_params;
+ }
++static gboolean
++send_dtmf_callback(gpointer userdata)
++{
++	FsSession *session = userdata;
++
++	fs_session_stop_telephony_event(session);
++
++	return FALSE;
++}
++static gboolean
++purple_media_backend_fs2_send_dtmf(PurpleMediaBackend *self,
++		const gchar *sess_id, gchar dtmf, guint8 volume,
++		guint16 duration)
++{
++	PurpleMediaBackendFs2Session *session;
++	FsDTMFEvent event;
++
++	g_return_val_if_fail(PURPLE_IS_MEDIA_BACKEND_FS2(self), FALSE);
++
++	session = get_session(PURPLE_MEDIA_BACKEND_FS2(self), sess_id);
++	if (session == NULL)
++		return FALSE;
++
++	/* Convert DTMF char into FsDTMFEvent enum */
++	switch(dtmf) {
++		case '0': event = FS_DTMF_EVENT_0; break;
++		case '1': event = FS_DTMF_EVENT_1; break;
++		case '2': event = FS_DTMF_EVENT_2; break;
++		case '3': event = FS_DTMF_EVENT_3; break;
++		case '4': event = FS_DTMF_EVENT_4; break;
++		case '5': event = FS_DTMF_EVENT_5; break;
++		case '6': event = FS_DTMF_EVENT_6; break;
++		case '7': event = FS_DTMF_EVENT_7; break;
++		case '8': event = FS_DTMF_EVENT_8; break;
++		case '9': event = FS_DTMF_EVENT_9; break;
++		case '*': event = FS_DTMF_EVENT_STAR; break;
++		case '#': event = FS_DTMF_EVENT_POUND; break;
++		case 'A': event = FS_DTMF_EVENT_A; break;
++		case 'B': event = FS_DTMF_EVENT_B; break;
++		case 'C': event = FS_DTMF_EVENT_C; break;
++		case 'D': event = FS_DTMF_EVENT_D; break;
++		default:
++			return FALSE;
++	}
++
++	if (!fs_session_start_telephony_event(session->session,
++			event, volume)) {
++		return FALSE;
++	}
++
++	if (duration <= 50) {
++		fs_session_stop_telephony_event(session->session);
++	} else {
++		purple_timeout_add(duration, send_dtmf_callback,
++				session->session);
++	}
++
++	return TRUE;
++}
+ #else
+ GType
+ purple_media_backend_fs2_get_type(void)
+diff --git a/libpurple/media/backend-iface.h b/libpurple/media/backend-iface.h
+--- a/libpurple/media/backend-iface.h
++++ b/libpurple/media/backend-iface.h
+@@ -71,6 +71,9 @@
+ 	void (*set_params) (PurpleMediaBackend *self,
+ 		guint num_params, GParameter *params);
+ 	const gchar **(*get_available_params) (void);
++	gboolean (*send_dtmf) (PurpleMediaBackend *self,
++		const gchar *sess_id, gchar dtmf, guint8 volume,
++		guint16 duration);
+ };
+ 
+ /**
+diff --git a/pidgin/gtkmedia.c b/pidgin/gtkmedia.c
+--- a/pidgin/gtkmedia.c
++++ b/pidgin/gtkmedia.c
+@@ -41,6 +41,7 @@
+ #ifdef _WIN32
+ #include <gdk/gdkwin32.h>
+ #endif
++#include <gdk/gdkkeysyms.h>
+ 
+ #include <gst/interfaces/xoverlay.h>
+ 
+@@ -759,6 +760,136 @@
+ }
+ 
+ static void
++phone_dtmf_pressed_cb(GtkButton *button, gpointer user_data)
++{
++	PidginMedia *gtkmedia = user_data;
++	gint num;
++	gchar *sid;
++
++	num = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button), "dtmf-digit"));
++	sid = g_object_get_data(G_OBJECT(button), "session-id");
++
++	purple_media_send_dtmf(gtkmedia->priv->media, sid, num, 25, 50);
++}
++
++static inline GtkWidget *
++phone_create_button(const gchar *text_hi, const gchar *text_lo)
++{
++	GtkWidget *button;
++	GtkWidget *label_hi;
++	GtkWidget *label_lo;
++	GtkWidget *grid;
++	const gchar *text_hi_local;
++
++	if (text_hi)
++		text_hi_local = _(text_hi);
++	else
++		text_hi_local = "";
++
++	grid = gtk_vbox_new(TRUE, 0);
++
++	button = gtk_button_new();
++	label_hi = gtk_label_new(text_hi_local);
++	gtk_misc_set_alignment(GTK_MISC(label_hi), 0.5, 0.5);
++	gtk_box_pack_end(GTK_BOX(grid), label_hi, FALSE, TRUE, 0);
++	label_lo = gtk_label_new(text_lo);
++	gtk_misc_set_alignment(GTK_MISC(label_lo), 0.5, 0.5);
++	gtk_label_set_use_markup(GTK_LABEL(label_lo), TRUE);
++	gtk_box_pack_end(GTK_BOX(grid), label_lo, FALSE, TRUE, 0);
++	gtk_container_add(GTK_CONTAINER(button), grid);
++
++	return button;
++}
++
++static struct phone_label {
++	gchar *subtext;
++	gchar *text;
++	gchar chr;
++} phone_labels[] = {
++	{"<b>1</b>", NULL, '1'},
++	/* Translators note: These are the letters on the keys of a numeric
++	   keypad; translate according to §7.2.4 of
++	 http://www.etsi.org/deliver/etsi_es/202100_202199/202130/01.01.01_60/es_20213 */
++	 /* Letters on the '2' key of a numeric keypad */
++	{"<b>2</b>", N_("ABC"), '2'},
++	 /* Letters on the '3' key of a numeric keypad */
++	{"<b>3</b>", N_("DEF"), '3'},
++	 /* Letters on the '4' key of a numeric keypad */
++	{"<b>4</b>", N_("GHI"), '4'},
++	 /* Letters on the '5' key of a numeric keypad */
++	{"<b>5</b>", N_("JKL"), '5'},
++	 /* Letters on the '6' key of a numeric keypad */
++	{"<b>6</b>", N_("MNO"), '6'},
++	 /* Letters on the '7' key of a numeric keypad */
++	{"<b>7</b>", N_("PQRS"), '7'},
++	 /* Letters on the '8' key of a numeric keypad */
++	{"<b>8</b>", N_("TUV"), '8'},
++	 /* Letters on the '9' key of a numeric keypad */
++	{"<b>9</b>", N_("WXYZ"), '9'},
++	{"<b>*</b>", NULL, '*'},
++	{"<b>0</b>", NULL, '0'},
++	{"<b>#</b>", NULL, '#'},
++	{NULL, NULL, 0}
++};
++
++static gboolean
++pidgin_media_dtmf_key_press_event_cb(GtkWidget *widget,
++		GdkEvent *event, gpointer user_data)
++{
++	PidginMedia *gtkmedia = user_data;
++	GdkEventKey *key = (GdkEventKey *) event;
++
++	if (event->type != GDK_KEY_PRESS) {
++		return FALSE;
++	}
++
++	if ((key->keyval >= GDK_KEY_0 && key->keyval <= GDK_KEY_9) ||
++		key->keyval == GDK_KEY_asterisk ||
++		key->keyval == GDK_KEY_numbersign) {
++		gchar *sid = g_object_get_data(G_OBJECT(widget), "session-id");
++
++		purple_media_send_dtmf(gtkmedia->priv->media, sid, key->keyval, 25, 50);
++	}
++
++	return FALSE;
++}
++
++static GtkWidget *
++pidgin_media_add_dtmf_widget(PidginMedia *gtkmedia,
++		PurpleMediaSessionType type, const gchar *_sid)
++{
++	GtkWidget *grid = gtk_table_new(4, 3, TRUE);
++	GtkWidget *button;
++	gint index = 0;
++	GtkWindow *win = &gtkmedia->parent;
++
++	/* Add buttons */
++	for (index = 0; phone_labels[index].subtext != NULL; index++) {
++		button = phone_create_button(phone_labels[index].text,
++				phone_labels[index].subtext);
++		g_signal_connect(button, "pressed",
++				G_CALLBACK(phone_dtmf_pressed_cb), gtkmedia);
++		g_object_set_data(G_OBJECT(button), "dtmf-digit",
++				GINT_TO_POINTER(phone_labels[index].chr));
++		g_object_set_data_full(G_OBJECT(button), "session-id",
++				g_strdup(_sid), g_free);
++		gtk_table_attach(GTK_TABLE(grid), button, index % 3,
++				index % 3 + 1, index / 3, index / 3 + 1,
++				GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND,
++				2, 2);
++	}
++
++	g_signal_connect(G_OBJECT(win), "key-press-event",
++		G_CALLBACK(pidgin_media_dtmf_key_press_event_cb), gtkmedia);
++	g_object_set_data_full(G_OBJECT(win), "session-id",
++		g_strdup(_sid), g_free);
++
++	gtk_widget_show_all(grid);
++
++	return grid;
++}
++
++static void
+ pidgin_media_ready_cb(PurpleMedia *media, PidginMedia *gtkmedia, const gchar *sid)
+ {
+ 	GtkWidget *send_widget = NULL, *recv_widget = NULL, *button_widget = NULL;
+@@ -888,7 +1019,11 @@
+ 
+ 		gtk_box_pack_end(GTK_BOX(recv_widget),
+ 				pidgin_media_add_audio_widget(gtkmedia,
+-				PURPLE_MEDIA_SEND_AUDIO, NULL), FALSE, FALSE, 0);
++				PURPLE_MEDIA_SEND_AUDIO, sid), FALSE, FALSE, 0);
++
++		gtk_box_pack_end(GTK_BOX(recv_widget),
++				pidgin_media_add_dtmf_widget(gtkmedia,
++				PURPLE_MEDIA_SEND_AUDIO, sid), FALSE, FALSE, 0);
+ 	}
+ 
+ 	if (type & PURPLE_MEDIA_AUDIO &&
+

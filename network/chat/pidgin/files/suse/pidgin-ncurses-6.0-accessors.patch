@@ -1,0 +1,57 @@
+Index: pidgin-2.10.11/finch/libgnt/gntwm.c
+===================================================================
+--- pidgin-2.10.11.orig/finch/libgnt/gntwm.c
++++ pidgin-2.10.11/finch/libgnt/gntwm.c
+@@ -174,37 +174,37 @@ work_around_for_ncurses_bug(void)
+ 		cchar_t ch;
+ 		PANEL *below = panel;
+ 
+-		sx = panel->win->_begx;
+-		ex = panel->win->_maxx + sx;
+-		sy = panel->win->_begy;
+-		ey = panel->win->_maxy + sy;
++		sx = getbegx(panel->win);
++		ex = getmaxx(panel->win) + sx;
++		sy = getbegy(panel->win);
++		ey = getmaxy(panel->win) + sy;
+ 
+ 		while ((below = panel_below(below)) != NULL) {
+-			if (sy > below->win->_begy + below->win->_maxy ||
+-					ey < below->win->_begy)
++			if (sy > getbegy(below->win) + getmaxy(below->win) ||
++					ey < getbegy(below->win))
+ 				continue;
+-			if (sx > below->win->_begx + below->win->_maxx ||
+-					ex < below->win->_begx)
++			if (sx > getbegx(below->win) + getmaxx(below->win) ||
++					ex < getbegx(below->win))
+ 				continue;
+-			for (y = MAX(sy, below->win->_begy); y <= MIN(ey, below->win->_begy + below->win->_maxy); y++) {
+-				if (mvwin_wch(below->win, y - below->win->_begy, sx - 1 - below->win->_begx, &ch) != OK)
++			for (y = MAX(sy, getbegy(below->win)); y <= MIN(ey, getbegy(below->win) + getmaxy(below->win)); y++) {
++				if (mvwin_wch(below->win, y - getbegy(below->win), sx - 1 - getbegx(below->win), &ch) != OK)
+ 					goto right;
+ 				w = widestringwidth(ch.chars);
+ 				if (w > 1 && (ch.attr & 1)) {
+ 					ch.chars[0] = ' ';
+ 					ch.attr &= ~ A_CHARTEXT;
+-					mvwadd_wch(below->win, y - below->win->_begy, sx - 1 - below->win->_begx, &ch);
+-					touchline(below->win, y - below->win->_begy, 1);
++					mvwadd_wch(below->win, y - getbegy(below->win), sx - 1 - getbegx(below->win), &ch);
++					touchline(below->win, y - getbegy(below->win), 1);
+ 				}
+ right:
+-				if (mvwin_wch(below->win, y - below->win->_begy, ex + 1 - below->win->_begx, &ch) != OK)
++				if (mvwin_wch(below->win, y - getbegy(below->win), ex + 1 - getbegx(below->win), &ch) != OK)
+ 					continue;
+ 				w = widestringwidth(ch.chars);
+ 				if (w > 1 && !(ch.attr & 1)) {
+ 					ch.chars[0] = ' ';
+ 					ch.attr &= ~ A_CHARTEXT;
+-					mvwadd_wch(below->win, y - below->win->_begy, ex + 1 - below->win->_begx, &ch);
+-					touchline(below->win, y - below->win->_begy, 1);
++					mvwadd_wch(below->win, y - getbegy(below->win), ex + 1 - getbegx(below->win), &ch);
++					touchline(below->win, y - getbegy(below->win), 1);
+ 				}
+ 			}
+ 		}
