@@ -9,11 +9,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-fi")
-    autotools.configure("--disable-static \
-                         --with-gstreamer-0-10")
+    autotools.autoreconf("-fi")
+    autotools.configure("--disable-static")
     
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    #pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
 def build():
     autotools.make()
