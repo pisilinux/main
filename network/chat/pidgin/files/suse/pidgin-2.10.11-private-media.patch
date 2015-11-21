@@ -1,0 +1,290 @@
+
+# HG changeset patch
+# User Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+# Date 1404764862 14400
+# Node ID d729a9b2126594df3e38647e926ac7c0a7db807b
+# Parent  7767aaeade6404396204794f9bc75d9a2cb723f0
+Add Private media API
+
+Creating a private media can be useful for plugins that want to create a
+PurpleMedia for internal use without the front-end being notified of its
+creation.
+
+diff --git a/libpurple/mediamanager.c b/libpurple/mediamanager.c
+--- a/libpurple/mediamanager.c
++++ b/libpurple/mediamanager.c
+@@ -86,6 +86,7 @@
+ 	GstElement *pipeline;
+ 	PurpleMediaCaps ui_caps;
+ 	GList *medias;
++	GList *private_medias;
+ 	GList *elements;
+ 	GList *output_windows;
+ 	gulong next_output_window_id;
+@@ -111,6 +112,7 @@
+ 
+ enum {
+ 	INIT_MEDIA,
++	INIT_PRIVATE_MEDIA,
+ 	UI_CAPS_CHANGED,
+ 	LAST_SIGNAL
+ };
+@@ -161,6 +163,15 @@
+ 		G_TYPE_BOOLEAN, 3, PURPLE_TYPE_MEDIA,
+ 		G_TYPE_POINTER, G_TYPE_STRING);
+ 
++	purple_media_manager_signals[INIT_PRIVATE_MEDIA] =
++		g_signal_new ("init-private-media",
++			G_TYPE_FROM_CLASS (klass),
++			G_SIGNAL_RUN_LAST,
++			0, NULL, NULL,
++			purple_smarshal_BOOLEAN__OBJECT_POINTER_STRING,
++			G_TYPE_BOOLEAN, 3, PURPLE_TYPE_MEDIA,
++			G_TYPE_POINTER, G_TYPE_STRING);
++
+ 	purple_media_manager_signals[UI_CAPS_CHANGED] = g_signal_new ("ui-caps-changed",
+ 		G_TYPE_FROM_CLASS (klass),
+ 		G_SIGNAL_RUN_LAST,
+@@ -177,6 +188,7 @@
+ {
+ 	media->priv = PURPLE_MEDIA_MANAGER_GET_PRIVATE(media);
+ 	media->priv->medias = NULL;
++	media->priv->private_medias = NULL;
+ 	media->priv->next_output_window_id = 1;
+ #ifdef USE_VV
+ 	media->priv->backend_type = PURPLE_TYPE_MEDIA_BACKEND_FS2;
+@@ -198,6 +210,10 @@
+ 			g_list_delete_link(priv->medias, priv->medias)) {
+ 		g_object_unref(priv->medias->data);
+ 	}
++	for (; priv->private_medias; priv->private_medias =
++			g_list_delete_link(priv->private_medias, priv->private_medias)) {
++		g_object_unref(priv->private_medias->data);
++	}
+ 	for (; priv->elements; priv->elements =
+ 			g_list_delete_link(priv->elements, priv->elements)) {
+ 		g_object_unref(priv->elements->data);
+@@ -325,12 +341,13 @@
+ }
+ #endif /* USE_GSTREAMER */
+ 
+-PurpleMedia *
+-purple_media_manager_create_media(PurpleMediaManager *manager,
+-				  PurpleAccount *account,
+-				  const char *conference_type,
+-				  const char *remote_user,
+-				  gboolean initiator)
++static PurpleMedia *
++create_media(PurpleMediaManager *manager,
++			  PurpleAccount *account,
++			  const char *conference_type,
++			  const char *remote_user,
++			  gboolean initiator,
++			  gboolean private)
+ {
+ #ifdef USE_VV
+ 	PurpleMedia *media;
+@@ -343,7 +360,9 @@
+ 			     "initiator", initiator,
+ 			     NULL));
+ 
+-	signal_id = purple_media_manager_signals[INIT_MEDIA];
++	signal_id = private ?
++			purple_media_manager_signals[INIT_PRIVATE_MEDIA] :
++			purple_media_manager_signals[INIT_MEDIA];
+ 
+ 	if (g_signal_has_handler_pending(manager, signal_id, 0, FALSE)) {
+ 		gboolean signal_ret;
+@@ -356,26 +375,33 @@
+ 		}
+ 	}
+ 
+-	manager->priv->medias = g_list_append(manager->priv->medias, media);
++	if (private)
++		manager->priv->private_medias = g_list_append(
++			manager->priv->private_medias, media);
++	else
++		manager->priv->medias = g_list_append(manager->priv->medias, media);
+ 	return media;
+ #else
+ 	return NULL;
+ #endif
+ }
+ 
+-GList *
+-purple_media_manager_get_media(PurpleMediaManager *manager)
++static GList *
++get_media(PurpleMediaManager *manager, gboolean private)
+ {
+ #ifdef USE_VV
+-	return manager->priv->medias;
++	if (private)
++		return manager->priv->private_medias;
++	else
++		return manager->priv->medias;
+ #else
+ 	return NULL;
+ #endif
+ }
+ 
+-GList *
+-purple_media_manager_get_media_by_account(PurpleMediaManager *manager,
+-		PurpleAccount *account)
++static GList *
++get_media_by_account(PurpleMediaManager *manager,
++		PurpleAccount *account, gboolean private)
+ {
+ #ifdef USE_VV
+ 	GList *media = NULL;
+@@ -383,7 +409,10 @@
+ 
+ 	g_return_val_if_fail(PURPLE_IS_MEDIA_MANAGER(manager), NULL);
+ 
+-	iter = manager->priv->medias;
++	if (private)
++		iter = manager->priv->private_medias;
++	else
++		iter = manager->priv->medias;
+ 	for (; iter; iter = g_list_next(iter)) {
+ 		if (purple_media_get_account(iter->data) == account) {
+ 			media = g_list_prepend(media, iter->data);
+@@ -397,21 +426,73 @@
+ }
+ 
+ void
+-purple_media_manager_remove_media(PurpleMediaManager *manager,
+-				  PurpleMedia *media)
++purple_media_manager_remove_media(PurpleMediaManager *manager, PurpleMedia *media)
+ {
+ #ifdef USE_VV
+ 	GList *list;
++	GList **medias;
+ 
+ 	g_return_if_fail(manager != NULL);
+ 
+-	list = g_list_find(manager->priv->medias, media);
++	if ((list = g_list_find(manager->priv->medias, media))) {
++		medias = &manager->priv->medias;
++	} else if ((list = g_list_find(manager->priv->private_medias, media))) {
++		medias = &manager->priv->private_medias;
++	}
++
+ 	if (list)
+-		manager->priv->medias =
+-			g_list_delete_link(manager->priv->medias, list);
++		*medias = g_list_delete_link(*medias, list);
+ #endif
+ }
+ 
++PurpleMedia *
++purple_media_manager_create_media(PurpleMediaManager *manager,
++				  PurpleAccount *account,
++				  const char *conference_type,
++				  const char *remote_user,
++				  gboolean initiator)
++{
++	return create_media (manager, account, conference_type,
++						  remote_user, initiator, FALSE);
++}
++
++GList *
++purple_media_manager_get_media(PurpleMediaManager *manager)
++{
++	return get_media (manager, FALSE);
++}
++
++GList *
++purple_media_manager_get_media_by_account(PurpleMediaManager *manager,
++		PurpleAccount *account)
++{
++	return get_media_by_account (manager, account, FALSE);
++}
++
++PurpleMedia *
++purple_media_manager_create_private_media(PurpleMediaManager *manager,
++				  PurpleAccount *account,
++				  const char *conference_type,
++				  const char *remote_user,
++				  gboolean initiator)
++{
++	return create_media (manager, account, conference_type,
++		remote_user, initiator, TRUE);
++}
++
++GList *
++purple_media_manager_get_private_media(PurpleMediaManager *manager)
++{
++	return get_media (manager, TRUE);
++}
++
++GList *
++purple_media_manager_get_private_media_by_account(PurpleMediaManager *manager,
++		PurpleAccount *account)
++{
++	return get_media_by_account (manager, account, TRUE);
++}
++
+ #ifdef USE_VV
+ static void
+ request_pad_unlinked_cb(GstPad *pad, GstPad *peer, gpointer user_data)
+diff --git a/libpurple/mediamanager.h b/libpurple/mediamanager.h
+--- a/libpurple/mediamanager.h
++++ b/libpurple/mediamanager.h
+@@ -130,6 +130,56 @@
+ 				  PurpleMedia *media);
+ 
+ /**
++ * Creates a private media session.  A private media session is a
++ * media session which is private to the caller. It is meant to be
++ * used by plugins to create a media session that the front-end does
++ * not get notified about. It is useful especially for sessions with a
++ * type of PURPLE_MEDIA_APPLICATION which the front-end wouldn't know
++ * how to handle.
++ *
++ * @param manager The media manager to create the session under.
++ * @param account The account to create the session on.
++ * @param conference_type The conference type to feed into Farsight2.
++ * @param remote_user The remote user to initiate the session with.
++ * @param initiator TRUE if the local user is the initiator of this media
++ *        call, FALSE otherwise.
++ *
++ * @return A newly created media session.
++ *
++ * @since 2.11.0
++ */
++PurpleMedia *purple_media_manager_create_private_media(
++                                                PurpleMediaManager *manager,
++						PurpleAccount *account,
++						const char *conference_type,
++						const char *remote_user,
++						gboolean initiator);
++
++/**
++ * Gets all of the private media sessions.
++ *
++ * @param manager The media manager to get all of the sessions from.
++ *
++ * @return A list of all the private media sessions.
++ *
++ * @since 2.11.0
++ */
++GList *purple_media_manager_get_private_media(PurpleMediaManager *manager);
++
++/**
++ * Gets all of the private media sessions for a given account.
++ *
++ * @param manager The media manager to get the sessions from.
++ * @param account The account the sessions are on.
++ *
++ * @return A list of the private media sessions on the given account.
++ *
++ * @since 2.11.0
++ */
++GList *purple_media_manager_get_private_media_by_account(
++		PurpleMediaManager *manager, PurpleAccount *account);
++
++/**
+  * Signals that output windows should be created for the chosen stream.
+  *
+  * This shouldn't be called outside of mediamanager.c and media.c
+

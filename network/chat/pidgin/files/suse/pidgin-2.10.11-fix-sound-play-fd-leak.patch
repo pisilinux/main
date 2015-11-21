@@ -1,0 +1,38 @@
+--- a/finch/gntsound.c
++++ b/finch/gntsound.c
+@@ -449,6 +449,7 @@ bus_call (GstBus *bus, GstMessage *msg,
+ 	case GST_MESSAGE_EOS:
+ 		gst_element_set_state(play, GST_STATE_NULL);
+ 		gst_object_unref(GST_OBJECT(play));
++		return FALSE;
+ 		break;
+ 	case GST_MESSAGE_WARNING:
+ 		gst_message_parse_warning(msg, &err, NULL);
+--- a/libpurple/mediamanager.c
++++ b/libpurple/mediamanager.c
+@@ -288,6 +288,7 @@ pipeline_bus_call(GstBus *bus, GstMessag
+ 	switch(GST_MESSAGE_TYPE(msg)) {
+ 		case GST_MESSAGE_EOS:
+ 			purple_debug_info("mediamanager", "End of Stream\n");
++			return FALSE;
+ 			break;
+ 		case GST_MESSAGE_ERROR: {
+ 			gchar *debug = NULL;
+@@ -305,6 +306,7 @@
+ 						"Debug details: %s\n", debug);
+ 				g_free (debug);
+ 			}
++			return FALSE;
+ 			break;
+ 		}
+ 		default:
+--- a/pidgin/gtksound.c
++++ b/pidgin/gtksound.c
+@@ -394,6 +394,7 @@ bus_call (GstBus     *bus,
+ 	case GST_MESSAGE_EOS:
+ 		gst_element_set_state(play, GST_STATE_NULL);
+ 		gst_object_unref(GST_OBJECT(play));
++		return FALSE;
+ 		break;
+ 	case GST_MESSAGE_WARNING:
+ 		gst_message_parse_warning(msg, &err, NULL);

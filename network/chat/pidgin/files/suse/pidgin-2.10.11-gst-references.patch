@@ -1,0 +1,44 @@
+
+# HG changeset patch
+# User Youness Alaoui <kakaroto@kakaroto.homelinux.net>
+# Date 1404874798 14400
+# Node ID b52be4fef1ded825e262095480915f2c675a5694
+# Parent  2b41ba1fde8a80a4f2d715874a0b02449d4b66ad
+Fix gstreamer elements references
+In backend-fs2, the create_src will unref the src after it's done with
+it, if we simply return the created source, it will segfault.
+The issue never happened before because every source so far also has
+the UNIQUE flag, which causes it to go in a different branch of the
+code which does ref the element and add it to the bin.
+
+Refs #16315
+
+diff --git a/libpurple/mediamanager.c b/libpurple/mediamanager.c
+--- a/libpurple/mediamanager.c
++++ b/libpurple/mediamanager.c
+@@ -443,7 +443,11 @@
+ 
+ 		if (src) {
+ 			GstElement *capsfilter = gst_bin_get_by_name(GST_BIN(src), "prpl_video_caps");
+-			g_object_set(G_OBJECT(capsfilter), "caps", caps, NULL);
++			if (capsfilter) {
++				g_object_set(G_OBJECT(capsfilter), "caps", caps, NULL);
++				gst_object_unref (capsfilter);
++			}
++			gst_object_unref (src);
+ 		}
+ 
+ 		g_free(id);
+@@ -550,6 +554,11 @@
+ 	} else {
+ 		ret = purple_media_element_info_call_create(info,
+ 				media, session_id, participant);
++		if (element_type & PURPLE_MEDIA_ELEMENT_SRC) {
++			gst_object_ref(ret);
++			gst_bin_add(GST_BIN(purple_media_manager_get_pipeline(manager)),
++				ret);
++		}
+ 	}
+ 
+ 	if (ret == NULL)
+
