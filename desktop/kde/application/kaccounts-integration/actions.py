@@ -7,7 +7,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DKDE_INSTALL_USE_QT_SYS_PATHS=ON")
+    kde5.configure()
 
 def build():
     kde5.make()
