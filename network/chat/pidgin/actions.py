@@ -22,7 +22,7 @@ def setup():
                          --enable-nss=yes \
                          --enable-nm \
                          --enable-cap \
-                         --enable-mono \
+                         --disable-mono \
                          --disable-schemas-install \
                          --disable-meanwhile \
                          --disable-vv \
