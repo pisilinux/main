@@ -9,10 +9,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static \
-                         --libexecdir=/usr/lib \
-                         --enable-gnome-keyring \
+    autotools.configure("--prefix=/usr \
+                         --disable-static \
+                         --libexecdir=/usr/lib/telepathy \
                          --with-connectivity=nm \
+                         --with-pic \
                          --enable-gtk-doc \
                          --disable-upower \
                          --disable-static \
