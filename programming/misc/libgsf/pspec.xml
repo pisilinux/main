@@ -1,0 +1,153 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libgsf</Name>
+        <Homepage>http://www.gnome.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <License>GPLv2</License>
+        <Summary>Gnome structured file library</Summary>
+        <Description>The libgsf is a library for reading and writing structured files (eg MS OLE and Zip).</Description>
+        <Archive sha1sum="e813178d5726eed3f3461f9236235393bba7d6dc" type="tarxz">mirrors://gnome/libgsf/1.14/libgsf-1.14.31.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>libbonobo-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>python-gtk-devel</Dependency>
+            <Dependency>orbit2-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>grep</Dependency>
+            <Dependency>libtool</Dependency>
+            <Dependency>gettext-devel</Dependency>
+            <Dependency>perl</Dependency>
+            <Dependency>pkgconfig</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>gtkdoc</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libgsf</Name>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libxml2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share/thumbnailers/gsf-office.thumbnailer</Path>
+            <Path fileType="data">/usr/share/gir-1.0/Gsf-1.gir</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgsf-gnome</Name>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>Gnome support for libgsf</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libgsf</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>            
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/bin/gsf-office-thumbnailer</Path>
+            <Path fileType="library">/usr/lib/libgsf-gnome*</Path>
+            <Path fileType="library">/usr/lib/python*/site-packages/gsf/gnome*</Path>
+            <Path fileType="man">/usr/share/man/man1/gst-office-thumbnailer*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgsf-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>Libgsf reference documents</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libgsf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgsf-devel</Name>
+        <IsA>library</IsA>
+        <Summary>Development files for libgsf</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libgsf</Dependency>
+            <Dependency release="current">libgsf-gnome</Dependency>
+            <Dependency>libbonobo-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="7">
+            <Date>2015-02-07</Date>
+            <Version>1.14.31</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-05-24</Date>
+            <Version>1.14.30</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-03-30</Date>
+            <Version>1.14.30</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-10-27</Date>
+            <Version>1.14.28</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-08-17</Date>
+            <Version>1.14.25</Version>
+            <Comment>Dep Fixed</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-02-23</Date>
+            <Version>1.14.25</Version>
+            <Comment>version bump, fix-call missing Gsf-1.gir</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2012-10-02</Date>
+            <Version>1.14.24</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
