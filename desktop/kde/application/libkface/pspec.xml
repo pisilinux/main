@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libkface</Name>
+        <Homepage>https://projects.kde.org/projects/kde/kdegraphics/libs/libkface</Homepage>
+        <Packager>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>A Qt/C++ wrapper around LibFace library to perform face recognition and detection over pictures</Summary>
+        <Description>Libkface is a Qt/C++ library to perform face recognition and detection over pictures.This library is used by kipi-plugins, digiKam and others Kipi host programs.</Description>
+        <Archive type="tarxz" sha1sum="2b19fa4fd87e4226c327c6e9c0362d8dc7903654">http://download.kde.org/stable/applications/15.12.0/src/libkface-15.12.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>extra-cmake-modules</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-sql-postgresql</Dependency>
+            <Dependency>qt5-sql-mysql</Dependency>
+            <Dependency>qt5-sql-odbc</Dependency>
+            <Dependency>qt5-sql-sqlite</Dependency>
+            <Dependency>opencv-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+    
+    <Package>
+        <Name>libkface</Name>
+        <Summary>A Qt/C++ wrapper around LibFace library to perform face recognition and detection over pictures</Summary>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>opencv</Dependency>
+            <Dependency>qt5-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/*.so.*</Path>
+            <Path fileType="data">/usr/share/libkface</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>libkface-devel</Name>
+        <IsA>library</IsA>
+        <Summary>Development files for libkface</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libkface</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/KF5</Path>
+            <Path fileType="header">/usr/include/libkface_version.h</Path>
+            <Path fileType="library">/usr/lib/cmake/KF5KFace</Path>
+            <Path fileType="library">/usr/lib/*.so</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2015-12-19</Date>
+            <Version>15.12.0</Version>
+            <Comment>First release</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
