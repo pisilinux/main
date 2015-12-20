@@ -4,6 +4,8 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+NoStrip = "/"
+
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
@@ -17,6 +19,11 @@ def build():
      qt5.make()
 
 def install():
+    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQml")
+    pisitools.insinto("/usr/lib/qt5/qml", "qml/Qt")
+    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick")
+    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick.2")
+    pisitools.insinto("usr/lib/qt5/qml", "qml/QtTest")        
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
     #I hope qtchooser will manage this issue
