@@ -23,7 +23,7 @@ def install():
     pisitools.insinto("/usr/lib/qt5/qml", "qml/Qt")
     pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick")
     pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick.2")
-    pisitools.insinto("usr/lib/qt5/qml", "qml/QtTest")        
+    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtTest")        
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
     #I hope qtchooser will manage this issue
