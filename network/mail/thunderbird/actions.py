@@ -29,7 +29,7 @@ def setup():
         shelltools.system("unzip -uo %s/%s.xpi -d langpack-tb/langpack-%s@thunderbird.mozilla.org" % (xpidir, locale, locale))
 
 def build():
-    shelltools.system("sed -i '/^ftglyph.h/ i ftfntfmt.h' mozilla/config/system-headers")
+    #shelltools.system("sed -i '/^ftglyph.h/ i ftfntfmt.h' mozilla/config/system-headers")
     autotools.make("-f ./client.mk")
 
 def install():
