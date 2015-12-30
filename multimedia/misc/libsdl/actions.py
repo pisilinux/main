@@ -68,6 +68,8 @@ def setup():
         shelltools.export("LDFLAGS", "%s -m32" % get.LDFLAGS())
 
     autotools.configure(options)
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
