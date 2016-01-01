@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>recode</Name>
+        <Homepage>http://www.gnu.org/software/recode/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>File character set converter</Summary>
+        <Description>Recode can convert files to various character sets (e.g. utf8, iso-8859-1, koi8r..).</Description>
+        <Archive sha1sum="2de90cd2ba553bc07d75a29913ea4424dd9e616b" type="targz">http://pkgs.fedoraproject.org/repo/pkgs/recode/recode-3.6.tar.gz/be3f40ad2e93dae5cd5f628264bf1877/recode-3.6.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gettext</Dependency>
+            <Dependency>libtool</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">recode.patch</Patch>
+            <Patch level="1">recode-3.6-getcwd.patch</Patch>
+            <Patch level="0">recode-bool-bitfield.patch</Patch>
+            <Patch level="1">recode-flex-m4.patch</Patch>
+
+            <Patch level="1">stdlib.patch</Patch>
+            <Patch level="1">recode-3.6-gettextfix.diff</Patch>
+            <!--
+            <Patch level="1">recode_3.6-15.diff</Patch>
+            -->
+            <Patch level="1">system-aclocal.diff</Patch>
+
+            <!-- Segfault patch from SuSE -->
+            <Patch>recode-3.6-segfault.patch</Patch>
+            <Patch level="1">recode-automake.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>recode</Name>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="info">/usr/share/info</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>recode-devel</Name>
+        <Summary>Development files for recode</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">recode</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="4">
+            <Date>2016-01-01</Date>
+            <Version>3.6</Version>
+            <Comment>Rebuild for Pisi 2.0</Comment>
+            <Name>Stefan Gronewold</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2014-05-22</Date>
+            <Version>3.6</Version>
+            <Comment>Rebuild</Comment>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2014-02-10</Date>
+            <Version>3.6</Version>
+            <Comment>Rebuild, Url değiş.</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2011-01-03</Date>
+            <Version>3.6</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
