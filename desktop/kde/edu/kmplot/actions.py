@@ -18,5 +18,3 @@ def install():
 
 
     pisitools.dodoc("COPYING.DOC", "COPYING")
-
-
