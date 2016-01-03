@@ -18,4 +18,3 @@ def install():
 
 
     pisitools.dodoc("AUTHORS", "COPYING-sjfonts", "COPYING.DOC", "COPYING", "README.packagers")
-
