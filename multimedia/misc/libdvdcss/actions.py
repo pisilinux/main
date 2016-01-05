@@ -19,5 +19,5 @@ def build():
 def install():
     autotools.install()
 
-    pisitools.dohtml("doc/*.html")
+    #pisitools.dohtml("doc/*.html")
     pisitools.dodoc("ChangeLog", "AUTHORS", "NEWS", "README")
