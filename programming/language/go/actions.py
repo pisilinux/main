@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-shelltools.export("GOROOT", "%s/go-go1.4.2" % get.workDIR())
+shelltools.export("GOROOT", "%s/go-go1.4.3" % get.workDIR())
 shelltools.export("GOBIN", "$GOROOT/bin")
 shelltools.export("GOPATH", "%s" % get.workDIR())
 shelltools.export("GOROOT_FINAL", "/usr/lib/go")
@@ -23,7 +23,7 @@ def build():
     shelltools.cd("src")
     shelltools.system("bash make.bash")
 
-    shelltools.cd("%s/go-go1.4.2" % get.workDIR())
+    shelltools.cd("%s/go-go1.4.3" % get.workDIR())
 
     shelltools.system("$GOROOT/bin/go get -d golang.org/x/tools/cmd/godoc")
     shelltools.system("$GOROOT/bin/go build -o $GOPATH/godoc golang.org/x/tools/cmd/godoc")
@@ -34,7 +34,7 @@ def build():
 
 
 def install():  
-    shelltools.cd("%s/go-go1.4.2" % get.workDIR())
+    shelltools.cd("%s/go-go1.4.3" % get.workDIR())
     
     pisitools.dobin("bin/*")
     pisitools.dodir("/usr/lib/go")
