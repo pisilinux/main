@@ -1,0 +1,126 @@
+diff -up system-config-printer-1.5.7/cupshelpers/cupshelpers.py.device-sorting system-config-printer-1.5.7/cupshelpers/cupshelpers.py
+--- system-config-printer-1.5.7/cupshelpers/cupshelpers.py.device-sorting	2015-04-23 16:05:58.000000000 +0100
++++ system-config-printer-1.5.7/cupshelpers/cupshelpers.py	2015-05-26 09:57:43.583569255 +0100
+@@ -547,68 +547,68 @@ class Device:
+         Compare devices by order of preference.
+         """
+         if other == None:
+-            return 1
++            return True
+ 
+         if self.is_class != other.is_class:
+             if other.is_class:
+-                return 1
+-            return -1
++                return True
++            return False
+         if not self.is_class and (self.type != other.type):
+             # "hp"/"hpfax" before "usb" before * before "parallel" before
+             # "serial"
+             if other.type == "serial":
+-                return 1
++                return True
+             if self.type == "serial":
+-                return -1
++                return False
+             if other.type == "parallel":
+-                return 1
++                return True
+             if self.type == "parallel":
+-                return -1
++                return False
+             if other.type == "hp":
+-                return -1
++                return False
+             if self.type == "hp":
+-                return 1
++                return True
+             if other.type == "hpfax":
+-                return -1
++                return False
+             if self.type == "hpfax":
+-                return 1
++                return True
+             if other.type == "dnssd":
+-                return -1
++                return False
+             if self.type == "dnssd":
+-                return 1
++                return True
+             if other.type == "socket":
+-                return -1
++                return False
+             if self.type == "socket":
+-                return 1
++                return True
+             if other.type == "lpd":
+-                return -1
++                return False
+             if self.type == "lpd":
+-                return 1
++                return True
+             if other.type == "ipps":
+-                return -1
++                return False
+             if self.type == "ipps":
+-                return 1
++                return True
+             if other.type == "ipp":
+-                return -1
++                return False
+             if self.type == "ipp":
+-                return 1
++                return True
+             if other.type == "usb":
+-                return -1
++                return False
+             if self.type == "usb":
+-                return 1
++                return True
+         if self.type == "dnssd" and other.type == "dnssd":
+             if other.uri.find("._pdl-datastream") != -1: # Socket
+-                return -1
++                return False
+             if self.uri.find("._pdl-datastream") != -1:
+-                return 1
++                return True
+             if other.uri.find("._printer") != -1: # LPD
+-                return -1
++                return False
+             if self.uri.find("._printer") != -1:
+-                return 1
++                return True
+             if other.uri.find("._ipp") != -1: # IPP
+-                return -1
++                return False
+             if self.uri.find("._ipp") != -1:
+-                return 1
++                return True
+         result = bool(self.id) < bool(other.id)
+         if not result:
+             result = self.info < other.info
+diff -up system-config-printer-1.5.7/test_PhysicalDevice.py.device-sorting system-config-printer-1.5.7/test_PhysicalDevice.py
+--- system-config-printer-1.5.7/test_PhysicalDevice.py.device-sorting	2015-04-23 16:22:28.000000000 +0100
++++ system-config-printer-1.5.7/test_PhysicalDevice.py	2015-05-26 09:57:43.583569255 +0100
+@@ -49,3 +49,21 @@ def run_test():
+     phys.add_device (device)
+     devices = phys.get_devices ()
+     assert devices[0].uri.startswith ("hp")
++
++    dev1 = cupshelpers.Device("hp:/usb/HP_Color_LaserJet_CP3525?serial=CNCTC8G0QX",
++                              **{'device-id':'MFG:Hewlett-Packard;CMD:PJL,MLC,BIDI-ECP,PJL,PCLXL,PCL,POSTSCRIPT,PDF;MDL:HP Color LaserJet CP3525;CLS:PRINTER;DES:Hewlett-Packard Color LaserJet CP3525;',
++                                 'device-make-and-model':'HP Color LaserJet CP3525',
++                                 'device-class':'direct'})
++    phys = PhysicalDevice (dev1)
++    dev2 = cupshelpers.Device('usb://HP/Color%20LaserJet%20CP3525?serial=CNCTC8G0QX',
++                              **{'device-id':'MFG:Hewlett-Packard;CMD:PJL,MLC,BIDI-ECP,PJL,PCLXL,PCL,POSTSCRIPT,PDF;MDL:HP Color LaserJet CP3525;CLS:PRINTER;DES:Hewlett-Packard Color LaserJet CP3525;',
++                                 'device-make-and-model':'HP Color LaserJet CP3525',
++                                 'device-class':'direct'})
++
++    # hp device should sort < usb device
++    assert dev1 < dev2
++
++    phys.add_device (dev2)
++    devices = phys.get_devices ()
++    assert devices[0] < devices[1]
++    assert devices[0].uri.startswith ("hp")
