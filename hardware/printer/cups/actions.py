@@ -17,7 +17,7 @@ def setup():
     autotools.aclocal("-I config-scripts")
     autotools.autoconf("-I config-scripts")
 
-    options = '--with-cups-user=lp \
+    options = '--with-cups-user=daemon \
                --with-cups-group=lp \
                --with-system-groups=lpadmin \
                --with-docdir=/usr/share/cups/html \
@@ -40,6 +40,7 @@ def setup():
                --enable-browsing \
                --enable-threads \
                --enable-raw-printing \
+               --enable-avahi \
                --disable-gnutls \
                --disable-launchd \
                --without-rcdir \
@@ -55,6 +56,7 @@ def setup():
     if get.buildTYPE() == "emul32":
         options += '  \
                      --enable-libusb=no \
+                     --disable-avahi \
                      --disable-dnssd \
                      --disable-gssapi \
                      --disable-dbus \
@@ -80,7 +82,7 @@ def install():
         pisitools.removeDir("/usr/serverbin32")
 
         # remove files now part of cups-filters
-        pisitools.remove("/usr/share/cups/data/testprint")
+        #pisitools.remove("/usr/share/cups/data/testprint")
         pisitools.removeDir("/usr/share/cups/banners")
         pisitools.dodir("/usr/share/cups/banners")
         return
