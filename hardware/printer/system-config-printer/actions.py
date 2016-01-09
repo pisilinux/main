@@ -15,6 +15,7 @@ def setup():
 
     pisitools.dosed("Makefile.in", "xmlto man", "xmlto --skip-validation man")
     autotools.configure("--with-udev-rules \
+                         --with-systemdsystemunitdir=no \
                          --sysconfdir=/etc")
 
 def build():
