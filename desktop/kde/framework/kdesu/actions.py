@@ -4,23 +4,16 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import cmaketools
 
 def setup():
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-                          -DSYSCONF_INSTALL_DIR=/etc \
-                          -DLIBEXEC_INSTALL_DIR=lib \
-                          -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python \
-                          -DLIB_INSTALL_DIR=lib \
-                          -DBUILD_TESTING=OFF")
+    kde5.configure()
 
 def build():
-    cmaketools.make()
+    kde5.make()
 
 def install():
-    cmaketools.install()
-    
+    kde5.install()
+
     pisitools.dodoc("README.md", "COPYING.LIB")

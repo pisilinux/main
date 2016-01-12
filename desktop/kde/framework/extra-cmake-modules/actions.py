@@ -4,19 +4,17 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import get
+from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 
 def setup():
-    cmaketools.configure("-DBUILD_HTML_DOCS=OFF \
-                          -DBUILD_MAN_DOCS=OFF", sourceDir=".")
+    kde5.configure("-DBUILD_HTML_DOCS=OFF \
+                    -DBUILD_MAN_DOCS=OFF")
 
 def build():
-    cmaketools.make()
+    kde5.make()
 
 def install():
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    kde5.install()
 
     pisitools.dodoc("README.rst", "COPYING-CMAKE-SCRIPTS")
