@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     kde5.configure("-DCMAKE_BUILD_TYPE=Release \
                     -DINSTALL_QSQLITE_IN_QT_PREFIX=TRUE \
+                    -DMYSQLD_EXECUTABLE:FILEPATH=/usr/bin/mysqld \
                     -DWITH_SOPRANO=OFF")
 
 def build():
