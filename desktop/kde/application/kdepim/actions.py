@@ -8,19 +8,13 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde5
 
 def setup():
-    kde5.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                    -DCMAKE_BUILD_TYPE=Release \
-                    -DCMAKE_SKIP_RPATH=ON \
+    kde5.configure("-DBUILD_TESTING=OFF \
                     -DLIB_INSTALL_DIR=lib \
-                    -DSYSCONF_INSTALL_DIR=/etc \
-                    -DQML_INSTALL_DIR=/usr/lib/qt5/qml \
-                    -DPLUGIN_INSTALL_DIR=/usr/lib/qt5/plugins \
-                    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-                    -DBUILD_TESTING=FALSE \
-                    -DKDEPIM_NO_TEXTTOSPEECH=TRUE")
-
+                    -DCMAKE_INSTALL_PREFIX=/usr \
+                    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON")
+    
 def build():
-    kde5.make("VERBOSE=1")
+    kde5.make()
 
 def install():
     kde5.install()
