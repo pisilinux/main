@@ -19,6 +19,7 @@ def setup():
     autotools.configure("--enable-openmp \
                          --enable-shared \
                          --disable-static \
+                         --disable-openmp \
                          --with-threads \
                          --with-modules \
                          --with-magick-plus-plus \
