@@ -14,7 +14,8 @@ def setup():
     pisitools.dosed("CMakeLists.txt", "\"share\/doc\/\$\{MAIN_DIR_NAME\}.*", "\"share/doc/${MAIN_DIR_NAME}/\")")
     
     cmaketools.configure("-DWANT_DISTROBUILD=YES \
-                          -DWANT_QT5SUPPORT=ON")
+                          -DWANT_QT5SUPPORT=ON \
+                          -DWANT_GRAPHICSMAGICK=1")
 
 def build():
     
