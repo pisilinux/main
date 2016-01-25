@@ -19,7 +19,6 @@ def setup():
     autotools.configure("--disable-static \
                          --sysconfdir=/etc \
                          --disable-gtk-doc \
-                         --with-included-modules=basic-fc \
                          --%sable-introspection" % ("dis" if get.buildTYPE()=="emul32" else "en"))
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -31,8 +30,8 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     if get.buildTYPE()=="emul32":
-        shelltools.move("pango/.libs/pango-querymodules", "pango/.libs/pango-querymodules-32")
-        pisitools.dobin("pango/.libs/pango-querymodules-32")
+        #shelltools.move("pango/.libs/pango-querymodules", "pango/.libs/pango-querymodules-32")
+        #pisitools.dobin("pango/.libs/pango-querymodules-32")
         return
 
     pisitools.dodir("/etc/pango")

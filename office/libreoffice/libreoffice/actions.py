@@ -33,9 +33,8 @@ def setup():
                         --with-help                     \
                         --with-myspell-dicts            \
                         --with-alloc=system             \
-                        --without-java                  \
+                        --with-java                     \
                         --without-system-dicts          \
-                        --disable-gconf                 \
                         --disable-postgresql-sdbc       \
                         --enable-release-build=yes      \
                         --enable-python=system          \
@@ -49,14 +48,16 @@ def setup():
                         --with-system-lcms2             \
                         --with-system-libpng            \
                         --with-system-libxml            \
-                        --with-system-mesa-headers      \
                         --with-system-nss               \
                         --with-system-openssl           \
                         --with-system-poppler           \
                         --with-system-zlib              \
+                        --enable-scripting-beanshell    \
+                        --enable-scripting-javascript   \
                         --disable-odk                   \
                         --enable-ext-wiki-publisher     \
                         --enable-ext-nlpsolver          \
+                        --with-jdk-home=/usr/lib/jvm/java-7-openjdk \
                         --with-parallelism=%s' % (get.makeJOBS().replace("-j","")))
 
 def build():
