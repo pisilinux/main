@@ -10,10 +10,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    #autotools.autoreconf("-vfi")
+    shelltools.system("sed -i 's/cicero //g' configure.ac")
+    shelltools.system("sed -i 's/sd_cicero//g' src/modules/Makefile.am")
+    autotools.autoreconf("-i")
     autotools.configure("--disable-static \
                          --enable-shared \
-                         --disable-python \
                          --with-default-audio-method=alsa \
                          --without-flite ")
 
@@ -27,7 +28,7 @@ def install():
     pisitools.remove("/usr/share/info/ssip.info")
 
     # Set executable bit
-    #shelltools.chmod("%s/usr/lib/python3.4/site-packages/speechd/_test.py" % get.installDIR(), 0755)
+    shelltools.chmod("%s/usr/lib/python3.4/site-packages/speechd/_test.py" % get.installDIR(), 0755)
 
     # Create log directory, it should be world unreadable
     pisitools.dodir("/var/log/speech-dispatcher")
