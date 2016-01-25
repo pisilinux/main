@@ -12,7 +12,7 @@
         <IsA>app:console</IsA>
         <Summary>MariaDB is a drop-in replacement for MySQL</Summary>
         <Description>MariaDB strives to be the logical choice for database professionals looking for a robust, scalable, and reliable SQL server.</Description>
-        <Archive sha1sum="e005c8dc2b2e4b0b3215f8bbb9b0b43726c7cf6a" type="targz">ftp://ftp.ulak.net.tr/pub/MariaDB/mariadb-10.0.20/source/mariadb-10.0.20.tar.gz</Archive>
+        <Archive sha1sum="a9f055d7845b6a4896ad5e2fd62cef8531eefb32" type="targz">http://mirrors.syringanetworks.net/mariadb/mariadb-10.1.10/source/mariadb-10.1.10.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>ncurses-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
@@ -36,6 +36,7 @@
         <Summary>The shared libraries required for MariaDB clients</Summary>
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libpcre</Dependency>
             <Dependency>libxml2</Dependency>
@@ -49,38 +50,23 @@
         <Files>
             <Path fileType="executable">/usr/bin/mysql_config</Path>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/usr/share/mysql/charsets</Path>
-            <Path fileType="data">/usr/share/mysql/czech</Path>
-            <Path fileType="data">/usr/share/mysql/danish</Path>
-            <Path fileType="data">/usr/share/mysql/dutch</Path>
-            <Path fileType="data">/usr/share/mysql/english</Path>
-            <Path fileType="data">/usr/share/mysql/estonian</Path>
-            <Path fileType="data">/usr/share/mysql/french</Path>
-            <Path fileType="data">/usr/share/mysql/german</Path>
-            <Path fileType="data">/usr/share/mysql/greek</Path>
-            <Path fileType="data">/usr/share/mysql/hungarian</Path>
-            <Path fileType="data">/usr/share/mysql/italian</Path>
-            <Path fileType="data">/usr/share/mysql/japanese</Path>
-            <Path fileType="data">/usr/share/mysql/korean</Path>
-            <Path fileType="data">/usr/share/mysql/norwegian</Path>
-            <Path fileType="data">/usr/share/mysql/norwegian-ny</Path>
-            <Path fileType="data">/usr/share/mysql/polish</Path>
-            <Path fileType="data">/usr/share/mysql/portuguese</Path>
-            <Path fileType="data">/usr/share/mysql/romanian</Path>
-            <Path fileType="data">/usr/share/mysql/russian</Path>
-            <Path fileType="data">/usr/share/mysql/serbian</Path>
-            <Path fileType="data">/usr/share/mysql/slovak</Path>
-            <Path fileType="data">/usr/share/mysql/spanish</Path>
-            <Path fileType="data">/usr/share/mysql/swedish</Path>
-            <Path fileType="data">/usr/share/mysql/ukrainian</Path>
-            <Path fileType="data">/usr/share/mysql/errmsg.txt</Path>
-            <Path fileType="data">/usr/share/mysql</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient.so</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient.so.18</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient.so.18.0.0</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient_r.so</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient_r.so.18</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient_r.so.18.0.0</Path>
+            <Path fileType="library">/usr/lib/libmysqld.a</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient_r.a</Path>
+            <Path fileType="library">/usr/lib/libmysqlclient.a</Path>
+            <Path fileType="library">/usr/lib/libmysqld.so</Path>
+            <Path fileType="library">/usr/lib/libmysqld.so.18</Path>
+            <Path fileType="library">/usr/lib/libmysqlservices.a</Path>
         </Files>
     </Package>
 
     <Package>
-        <Name>mariadb-client</Name>
+        <Name>mariadb-client</Name>main
         <IsA>app:console</IsA>
         <Summary>MariaDB client programs</Summary>
         <RuntimeDependencies>
@@ -96,7 +82,13 @@
             <Package>mysql-client</Package>
         </Replaces>
         <Files>
-            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/bin/mysql</Path>
+            <Path fileType="executable">/usr/bin/mysqladmin</Path>
+            <Path fileType="executable">/usr/bin/mysqlcheck</Path>
+            <Path fileType="executable">/usr/bin/mysqldump</Path>
+            <Path fileType="executable">/usr/bin/mysqlimport</Path>
+            <Path fileType="executable">/usr/bin/mysqlshow</Path>
+            <Path fileType="executable">/usr/bin/mysqlslap</Path>
         </Files>
     </Package>
 
@@ -110,38 +102,65 @@
             <Dependency>zlib</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>openssl</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>unixODBC</Dependency>
         </RuntimeDependencies>
         <Replaces>
             <Package>mysql-server</Package>
         </Replaces>
         <Files>
             <Path fileType="config">/etc</Path>
-            <Path fileType="executable">/usr/sbin</Path>
-            <Path fileType="executable">/usr/bin/mysql_install_db</Path>
-            <Path fileType="executable">/usr/bin/mysqlmanagerc</Path>
-            <Path fileType="executable">/usr/bin/mysqlmanager-pwgen</Path>
-            <Path fileType="executable">/usr/bin/mysqlmanager</Path>
-            <Path fileType="executable">/usr/bin/mysql_secure_installation</Path>
-            <Path fileType="executable">/usr/bin/mysql_fix_privilege_tables</Path>
-            <Path fileType="executable">/usr/bin/mysqld_safe</Path>
+            <Path fileType="executable">/usr/bin/aria_chk</Path>
+            <Path fileType="executable">/usr/bin/aria_dump_log</Path>
+            <Path fileType="executable">/usr/bin/aria_ftdump</Path>
+            <Path fileType="executable">/usr/bin/aria_pack</Path>
+            <Path fileType="executable">/usr/bin/aria_read_log</Path>
+            <Path fileType="executable">/usr/bin/innochecksum</Path>
+            <Path fileType="executable">/usr/bin/msql2mysql</Path>
+            <Path fileType="executable">/usr/bin/my_print_defaults</Path>
+            <Path fileType="executable">/usr/bin/myisam_ftdump</Path>
             <Path fileType="executable">/usr/bin/myisamchk</Path>
             <Path fileType="executable">/usr/bin/myisamlog</Path>
             <Path fileType="executable">/usr/bin/myisampack</Path>
-            <Path fileType="executable">/usr/bin/myisam_ftdump</Path>
-            <Path fileType="executable">/usr/bin/isamchk</Path>
-            <Path fileType="executable">/usr/bin/isamlog</Path>
+            <Path fileType="executable">/usr/bin/mysql_client_test</Path>
+            <Path fileType="executable">/usr/bin/mysql_convert_table_format</Path>
+            <Path fileType="executable">/usr/bin/mysql_embedded</Path>
+            <Path fileType="executable">/usr/bin/mysql_client_test_embedded</Path>
+            <Path fileType="executable">/usr/bin/mysqltest_embedded</Path>
+            <Path fileType="executable">/usr/bin/mysql_find_rows</Path>
+            <Path fileType="executable">/usr/bin/mysql_fix_extensions</Path>
+            <Path fileType="executable">/usr/bin/mysql_install_db</Path>
+            <Path fileType="executable">/usr/bin/mysql_plugin</Path>
+            <Path fileType="executable">/usr/bin/mysql_secure_installation</Path>
+            <Path fileType="executable">/usr/bin/mysql_setpermission</Path>
+            <Path fileType="executable">/usr/bin/mysql_tzinfo_to_sql</Path>
+            <Path fileType="executable">/usr/bin/mysql_upgrade</Path>
             <Path fileType="executable">/usr/bin/mysql_waitpid</Path>
+            <Path fileType="executable">/usr/bin/mysql_zap</Path>
+            <Path fileType="executable">/usr/bin/mysqlaccess</Path>
             <Path fileType="executable">/usr/bin/mysqlbinlog</Path>
-            <Path fileType="executable">/usr/bin/pack_isam</Path>
-            <Path fileType="data">/usr/share/mysql/binary-configure</Path>
-            <Path fileType="data">/usr/share/mysql/fill_help_tables.sql</Path>
-            <Path fileType="data">/usr/share/mysql/mysqld_multi.server</Path>
-            <Path fileType="data">/usr/share/mysql/mysql_fix_privilege_tables.sql</Path>
-            <Path fileType="data">/usr/share/mysql/mysql_system_tables_data.sql</Path>
-            <Path fileType="data">/usr/share/mysql/mysql_system_tables.sql</Path>
-            <Path fileType="data">/usr/share/mysql/mysql_test_data_timezone.sql</Path>
-            <Path fileType="data">/usr/share/mysql/ndb-config-2-node.ini</Path>
-            <Path fileType="info">/usr/share/info</Path>
+            <Path fileType="executable">/usr/bin/mysqlbug</Path>
+            <Path fileType="executable">/usr/bin/mysqld</Path>
+            <Path fileType="executable">/usr/bin/mysqld-post</Path>
+            <Path fileType="executable">/usr/bin/mysqld_multi</Path>
+            <Path fileType="executable">/usr/bin/mysqld_safe</Path>
+            <Path fileType="executable">/usr/bin/mysqldumpslow</Path>
+            <Path fileType="executable">/usr/bin/mysqlhotcopy</Path>
+            <Path fileType="executable">/usr/bin/mysqltest</Path>
+            <Path fileType="executable">/usr/bin/perror</Path>
+            <Path fileType="executable">/usr/bin/replace</Path>
+            <Path fileType="executable">/usr/bin/resolve_stack_dump</Path>
+            <Path fileType="executable">/usr/bin/resolveip</Path>
+            <Path fileType="executable">/usr/bin/tokuft_logprint</Path>
+            <Path fileType="executable">/usr/bin/tokuftdump</Path>
+            <Path fileType="executable">/usr/bin/wsrep_sst_common</Path>
+            <Path fileType="executable">/usr/bin/wsrep_sst_mysqldump</Path>
+            <Path fileType="executable">/usr/bin/wsrep_sst_rsync</Path>
+            <Path fileType="executable">/usr/bin/wsrep_sst_xtrabackup</Path>
+            <Path fileType="executable">/usr/bin/wsrep_sst_xtrabackup-v2</Path>
+            <Path fileType="executable">/usr/bin/mytop</Path>
+            <Path fileType="library">/usr/lib/mysql/plugin</Path>
+            <Path fileType="data">/usr/share/mysql</Path>
             <Path fileType="data">/var</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="config">/usr/lib/tmpfiles.d/mariadb.conf</Path>
@@ -170,6 +189,13 @@
     </Package>
 
     <History>
+        <Update release="10">
+            <Date>2016-01-24</Date>
+            <Version>10.1.10</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
         <Update release="9">
             <Date>2015-07-03</Date>
             <Version>10.0.20</Version>
