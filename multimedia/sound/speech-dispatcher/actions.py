@@ -14,14 +14,13 @@ def setup():
     shelltools.system("sed -i 's/sd_cicero//g' src/modules/Makefile.am")
     autotools.autoreconf("-i")
     autotools.configure("--disable-static \
-                         --without-ibmtts \
-                         --without-nas \
+                         --enable-shared \
                          --without-flite \
-                         --with-ivona \
                          --with-alsa \
                          --with-espeak \
                          --with-libao \
-                         --with-pulse")
+                         --with-pulse \
+                         --with-default-audio-method=alsa")
 
 def build():
     autotools.make()
