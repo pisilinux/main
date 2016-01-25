@@ -6,6 +6,7 @@
 
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
 
 
@@ -15,6 +16,8 @@ from pisi.actionsapi import cmaketools
 
 def setup():
     #pisitools.dosed("storage/tokudb/ft-index/ft/ft-ops.cc", "LEAFENTRY leaf_entry;", "LEAFENTRY leaf_entry = 0;")
+    shelltools.export("CFLAGS", get.CFLAGS())
+    shelltools.export("CXXFLAGS", get.CXXFLAGS())
     cmaketools.configure("-DBUILD_CONFIG=mysql_release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DSYSCONFDIR=/etc/mysql \
