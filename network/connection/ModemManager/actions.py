@@ -10,12 +10,12 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("./autogen.sh")
+    shelltools.system("./autogen.sh")
     autotools.configure("--disable-static \
                          --enable-more-warnings=yes \
                          --with-udev-base-dir=/lib/udev \
-                         --with-tests=yes \
-                         --with-polkit=no")
+                         --enable-gtk-doc \
+                         --with-polkit=permissive")
 
 def build():
     autotools.make()

@@ -1,0 +1,72 @@
+fix error reporting:
+
+...
+  File "chromium/scripts/generate_gyp.py", line 757, in GetIncludedSources
+    exit('Failed to find file', include_file_path)
+TypeError: __call__() takes at most 2 arguments (3 given)
+
+--- ./third_party/ffmpeg/chromium/scripts/generate_gyp.py~	2015-07-27 07:15:51.000000000 +0300
++++ ./third_party/ffmpeg/chromium/scripts/generate_gyp.py	2015-07-27 07:15:55.928135410 +0300
+@@ -79,6 +79,7 @@
+ import string
+ import subprocess
+ import shutil
++import sys
+ 
+ COPYRIGHT = """# Copyright %d The Chromium Authors. All rights reserved.
+ # Use of this source code is governed by a BSD-style license that can be
+@@ -149,6 +150,9 @@
+ # Mac doesn't have any platform specific files, so just use linux and win.
+ SUPPORTED_PLATFORMS = ['linux', 'win']
+ 
++def die(error):
++    print >> sys.stderr, error
++    sys.exit(1)
+ 
+ def NormalizeFilename(name):
+   """ Removes leading path separators in an attempt to normalize paths."""
+@@ -753,7 +757,7 @@
+     elif include_file_path in IGNORED_INCLUDE_FILES:
+       continue
+     else:
+-      exit('Failed to find file', include_file_path)
++      die('Failed to find file: ' + include_file_path)
+ 
+     # At this point we've found the file. Check if its in our ignore list which
+     # means that the list should be updated to no longer mention this file.
+@@ -772,7 +776,7 @@
+   licensecheck_path = os.path.abspath(os.path.join(
+       source_root, 'third_party', 'devscripts', 'licensecheck.pl'));
+   if not os.path.exists(licensecheck_path):
+-    exit('Could not find licensecheck.pl: ' + str(licensecheck_path))
++    die('Could not find licensecheck.pl: ' + str(licensecheck_path))
+ 
+   check_process = subprocess.Popen([licensecheck_path,
+                                     '-l', '100',
+@@ -838,7 +842,7 @@
+ 
+       # Sanity check: source set should not have any renames prior to this step.
+       if RENAME_PREFIX in basename:
+-        exit('Found unexpected renamed file in SourceSet: %s' % basename)
++        die('Found unexpected renamed file in SourceSet: %s' % basename)
+ 
+       # Craft a new unique basename from the path of the colliding file
+       if basename in known_basenames:
+@@ -896,7 +900,7 @@
+   sets = CreatePairwiseDisjointSets(sets)
+ 
+   if not sets:
+-    exit('ERROR: failed to find any source sets. ' +
++    die('ERROR: failed to find any source sets. ' +
+          'Are build_dir (%s) and/or source_dir (%s) options correct?' %
+               (options.build_dir, options.source_dir))
+ 
+@@ -904,7 +908,7 @@
+ 
+   if not CheckLicensesForStaticLinking(sets, source_dir,
+                                        options.print_licenses):
+-    exit ('GENERATE FAILED: invalid licenses detected.')
++    die('GENERATE FAILED: invalid licenses detected.')
+   print 'License checks passed.'
+ 
+   # Open for writing. 

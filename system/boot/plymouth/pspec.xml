@@ -1,0 +1,386 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>plymouth</Name>
+        <Homepage>http://cgit.freedesktop.org/plymouth</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2+</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>Graphical Boot Animation and Logger</Summary>
+        <Description>plymouth provides an attractive graphical boot animation in place of the text messages that normally get shown. Text messages are instead redirected to a log file for viewing after boot.</Description>
+        <Archive sha1sum="d0b70929bc47899e03019c3fcd681dd043d7fb8c" type="targz">http://source.pisilinux.org/1.0/plymouth-0.8.8.tar.gz</Archive>
+        <Archive sha1sum="02e7e562a55085d70cbe2eaaecde1a4cb42a46b8" type="tarxz" target="plymouth-0.8.8/themes">http://source.pisilinux.org/1.0/plymouth-theme-pisilinux-0.2.tar.xz</Archive>
+        <AdditionalFiles>
+            <AdditionalFile permission="0755" target="generate-flist">pisilinux/generate-flist.py</AdditionalFile>
+        </AdditionalFiles>
+        <BuildDependencies>
+            <Dependency>kernel-headers</Dependency>
+            <Dependency>libdrm-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- Pisi Linux patches-->
+            <!--<Patch level="1">pisilinux/fix-fbdev-path.patch</Patch>-->
+            <Patch level="1">pisilinux/disable-source-code-tracing.patch</Patch>
+            <Patch level="1">pisilinux/adapt-theme-script.patch</Patch>
+            <Patch level="1">pisilinux/add-pisilinux-theme.patch</Patch>
+            <!--<Patch level="1">pisilinux/implement-suspend-modes.patch</Patch>-->
+            <!--MaGeia patches-->
+            <Patch level="1">mageia/plymouth-restore-suspend.patch</Patch>
+            <Patch level="1">fedora/fix-crash.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>plymouth</Name>
+        <RuntimeDependencies>
+            <Dependency>libdrm</Dependency>
+            <Dependency>plymouth-core-libs</Dependency>
+            <Dependency>mkinitramfs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/bin</Path>
+            <Path fileType="executable">/sbin</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="executable">/bin/plymouth</Path>
+            <Path fileType="executable">/usr/libexec/plymouth</Path>
+            <Path fileType="config">/etc/plymouth</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/lib</Path>
+            <Path fileType="library">/usr/lib/plymouth/text.so</Path>
+            <Path fileType="library">/usr/lib/plymouth/details.so</Path>
+            <Path fileType="library">/usr/lib/plymouth/renderers</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+            <Path fileType="data">/usr/share/plymouth</Path>
+            <Path fileType="data">/usr/share/plymouth/themes</Path>
+            <Path fileType="data">/usr/share/plymouth/themes/details</Path>
+            <Path fileType="data">/usr/share/plymouth/themes/text</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/var/lib/plymouth</Path>
+            <Path fileType="data">/run/plymouth</Path>
+            <Path fileType="data">/var/spool/plymouth</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/plymouth.conf</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/plymouth.conf">tmpfiles.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/var/lib/plymouth/boot-duration">pisilinux/boot-duration</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/lib/initramfs/plymouth.list">pisilinux/initramfs.files</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/plymouth-pisilinux.png">pisilinux/images/white-head.png</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/plymouth/themes/charge/charge.plymouth">fedora/charge.plymouth</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>plymouth-core-libs</Name>
+        <Summary>Plymouth core libraries</Summary>
+        <Description>plymouth-core-libs contains the libply and libply-splash-core libraries used by Plymouth.</Description>
+        <Files>
+            <Path fileType="library">/lib/libply-splash-core.so*</Path>
+            <Path fileType="library">/lib/libply.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-graphics-libs</Name>
+        <Summary>Plymouth graphics libraries</Summary>
+        <Description>plymouth-graphics-libs contains the libply-splash-graphics library used by graphics Plymouth splashes.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+            <Dependency>libpng</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libply-splash-graphics.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-devel</Name>
+        <Summary>Development headers and files for plymouth</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-renderer-x11</Name>
+        <Summary>An X11 renderer for debugging purposes</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>atk</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>fontconfig</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/renderers/x11*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-utils</Name>
+        <Summary>Plymouth related utilities</Summary>
+        <Description>plymouth-utils contains utilities that integrate with Plymouth including a boot log viewing application.</Description>
+        <RuntimeDependencies>
+            <Dependency>pango</Dependency>
+            <Dependency>gtk2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/plymouth-log-viewer</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-plugin-label</Name>
+        <Summary>Plymouth label plugin</Summary>
+        <Description>plymouth-plugin-label contains the label control plugin for Plymouth. It provides the ability to render text on graphical boot splashes using pango and cairo.</Description>
+        <RuntimeDependencies>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+            <Dependency release="current">plymouth-graphics-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/label.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-plugin-fade-throbber</Name>
+        <Summary>Plymouth Fade-Throbber plugin</Summary>
+        <Description>plymouth-plugin-fade-throbber contains the "Fade-In" boot splash plugin for Plymouth. It features a centered image that fades in and out while other images pulsate around during system boot up.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-graphics-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/fade-throbber.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-spinner</Name>
+        <Summary>Spinner theme for Plymouth</Summary>
+        <Description>plymouth-theme-spinner contains the "Spinner" boot splash theme for Plymouth. It features a simple theme with a small spinner on a dark background.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-two-step</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/spinner</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-fade-in</Name>
+        <Summary>Fade-in theme for Plymouth</Summary>
+        <Description>plymouth-theme-fade-in contains the "Fade-In" boot splash theme for Plymouth. It features a centered logo that fades in and out while stars twinkle around the logo during system boot up.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-fade-throbber</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/fade-in</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-plugin-throbgress</Name>
+        <Summary>Plymouth Throbgress plugin</Summary>
+        <Description>plymouth-plugin-throbgress contains the "throbgress" boot splash plugin for Plymouth. It features a centered logo and animated spinner that spins repeatedly while a progress bar advances at the bottom of the screen.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-label</Dependency>
+            <Dependency release="current">plymouth-graphics-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/throbgress.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-spinfinity</Name>
+        <Summary>Plymouth Spinfinity theme</Summary>
+        <Description>plymouth-theme-spinfinity contains the "Spinfinity" boot splash theme for Plymouth. It features a centered logo and animated spinner that spins in the shape of an infinity sign.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-throbgress</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/spinfinity</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-plugin-space-flares</Name>
+        <Summary>Plymouth space-flares plugin</Summary>
+        <Description>plymouth-plugin-space-flares contains the "space-flares" boot splash plugin for Plymouth. It features a corner image with animated flares.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-label</Dependency>
+            <Dependency release="current">plymouth-graphics-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/space-flares.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-solar</Name>
+        <Summary>Plymouth Solar theme</Summary>
+        <Description>plymouth-theme-solar contains the "Solar" boot splash theme for Plymouth. It features a blue flamed sun with animated solar flares.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-space-flares</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/solar</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-plugin-two-step</Name>
+        <Summary>Plymouth Two-Step plugin</Summary>
+        <Description>plymouth-plugin-two-step contains the "two-step" boot splash plugin for Plymouth. It features a two phased boot process that starts with a progressing animation synced to boot time and finishes with a short, fast one-shot animation.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-label</Dependency>
+            <Dependency release="current">plymouth-graphics-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/two-step.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-charge</Name>
+        <Summary>Plymouth Charge plugin</Summary>
+        <Description>plymouth-theme-charge This package contains the "charge" boot splash theme for Plymouth. It features the shadowy hull of a Fedora logo charge up and and finally burst into full form.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-two-step</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/charge</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-plugin-script</Name>
+        <Summary>Plymouth script plugin</Summary>
+        <Description>plymouth-plugin-script contains "script" boot splash plugin for Plymouth. It features an extensible, scriptable boot splash language that simplifies the process of designing custom boot splash themes.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-graphics-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/plymouth/script.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-script</Name>
+        <Summary>Plymouth Script theme</Summary>
+        <Description>plymouth-theme-script contains the "script" boot splash theme for Plymouth. It it is a simple example theme the uses the "script" plugin.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-script</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/script</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>plymouth-theme-pisilinux</Name>
+        <Summary>Plymouth Pisi Linux theme</Summary>
+        <Description>plymouth-theme-pisilinux contains a simple but elegant boot theme for Pisi Linux.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">plymouth-plugin-script</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/plymouth/themes/pisilinux</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="10">
+            <Date>2014-08-04</Date>
+            <Version>0.8.8</Version>
+            <Comment>Enable gdm support.</Comment>
+            <Name>marcin bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="9">
+            <Date>2014-07-20</Date>
+            <Version>0.8.8</Version>
+            <Comment>New artwork.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="8">
+            <Date>2014-04-26</Date>
+            <Version>0.8.8</Version>
+            <Comment>Fix theme images for libpng warnings.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2014-04-13</Date>
+            <Version>0.8.8</Version>
+            <Comment>Release bump.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-01-10</Date>
+            <Version>0.8.8</Version>
+            <Comment>Add tmpfiles.conf</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2013-09-08</Date>
+            <Version>0.8.8</Version>
+            <Comment>/var/run => /run</Comment>
+            <Name>marcin bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-07-31</Date>
+            <Version>0.8.8</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-04-08</Date>
+            <Version>0.8.8</Version>
+            <Comment>Fixes.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-02-06</Date>
+            <Version>0.8.8</Version>
+            <Comment>First release</Comment>
+            <Name>marcin bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2013-01-16</Date>
+            <Version>0.8.8</Version>
+            <Comment>First release</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

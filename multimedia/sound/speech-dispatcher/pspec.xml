@@ -20,9 +20,14 @@
             <Dependency>glib2-devel</Dependency>
             <Dependency>libsndfile-devel</Dependency>
             <Dependency>dotconf-devel</Dependency>
+            <Dependency>espeak-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
             <Dependency>intltool</Dependency>
             <Dependency>gettext-devel</Dependency>
+            <Dependency>texinfo</Dependency>
             <Dependency>pkgconfig</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
+            <Dependency>libao-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
         </BuildDependencies>
@@ -32,10 +37,12 @@
         <Name>speech-dispatcher</Name>
         <RuntimeDependencies>
             <Dependency>glib2</Dependency>
-            <Dependency>libtool-ltdl</Dependency>
+            <Dependency>libao</Dependency>
+            <Dependency>espeak</Dependency>
             <Dependency>dotconf</Dependency>
-            <Dependency>libsndfile</Dependency>
             <Dependency>alsa-lib</Dependency>
+            <Dependency>libsndfile</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
             <Dependency>pulseaudio-libs</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -46,6 +53,21 @@
             <Path fileType="config">/etc/speech-dispatcher</Path>
             <Path fileType="data">/var/log/speech-dispatcher</Path>
             <Path fileType="data">/usr/share/speech-dispatcher</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>python3-speech-dispatcher</Name>
+        <Summary>Python3 bindings for speech-dispatcher</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">speech-dispatcher</Dependency>
+            <Dependency>python3</Dependency>
+        </RuntimeDependencies>
+        <Replaces>
+            <Package>python-speech-dispatcher</Package>
+        </Replaces>
+        <Files>
+            <Path fileType="library">/usr/lib/python3.*</Path>
         </Files>
     </Package>
 
@@ -62,12 +84,18 @@
         </Files>
     </Package>
 
-
     <History>
+        <Update release="2">
+            <Date>2016-01-25</Date>
+            <Version>0.8.3</Version>
+            <Comment>Edit and release bump</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2015-11-22</Date>
             <Version>0.8.3</Version>
-            <Comment>Version bump.</Comment>
+            <Comment>First release</Comment>
             <Name>Vedat Demir</Name>
             <Email>vedat@pisilinux.org</Email>
         </Update>
