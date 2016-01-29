@@ -8,18 +8,18 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
-WorkDir="distribute-%s" % get.srcVERSION()
+WorkDir="setuptools-%s" % get.srcVERSION()
 
 def setup():
     shelltools.makedirs("python3")
-    shelltools.copytree("../distribute-%s" % get.srcVERSION(), "%s/python3" % get.workDIR())
+    shelltools.copytree("../setuptools-%s" % get.srcVERSION(), "%s/python3" % get.workDIR())
 
 def install():
     #pythonmodules.install()
     #pisitools.remove("/usr/lib/%s/site-packages/setuptools/*.exe" % get.curPYTHON())
     shelltools.cd("%s/python3" % get.workDIR())
     pythonmodules.install(pyVer = "3")
-    pisitools.remove("/usr/lib/python3.4/site-packages/setuptools/*.exe")
+    #pisitools.remove("/usr/lib/python3.4/site-packages/setuptools/*.exe")
     pisitools.rename("/usr/bin/easy_install", "py3easy-install")
     #avoid python-setuptools conflict
     pisitools.removeDir("/usr/share")
