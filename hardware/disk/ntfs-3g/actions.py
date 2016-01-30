@@ -29,7 +29,7 @@ def install():
     pisitools.domove("/usr/bin/ntfs-3g.*", "/bin")
 
     # Create some compat symlinks
-    pisitools.dosym("/bin/ntfs-3g", "/sbin/mount.ntfs")
+    pisitools.dosym("/usr/bin/ntfs-3g", "/sbin/mount.ntfs")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "CREDITS", "NEWS", "README")
     pisitools.dosym("/usr/share/doc/ntfs-3g", "/usr/share/doc/ntfsprogs")
