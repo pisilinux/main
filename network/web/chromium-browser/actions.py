@@ -14,7 +14,7 @@ def setup():
     shelltools.export("LC_ALL", "C")
     shelltools.system("sed -i 's|icu)|icu-i18n)|g' build/linux/system.gyp")
     shelltools.system("export -n CFLAGS CXXFLAGS")
-
+    shelltools.touch(get.workDIR() + "/chromium-48.0.2564.97/chrome/test/data/webui/i18n_process_css_test.html")
     
     options = "\
                -Duse_system_expat=1 \
