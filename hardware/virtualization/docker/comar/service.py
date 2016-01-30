@@ -15,15 +15,15 @@ def start():
     os.system("/sbin/modprobe -va bridge nf_nat br_netfilter")
 
     startService(command="/usr/bin/docker",
-                args="daemon -p %s -s overlay --dns 8.8.8.8 --dns 8.8.4.4" % (pidfile),
+                args="daemon -p %s -s overlay %s" % (pidfile, config.get("DOCKER_OPTS", "")),
                 detach=True,
                 pidfile=pidfile,
-                donotify=False)
+                donotify=True)
 
 @synchronized
 def stop():
     stopService(command="/usr/bin/docker",
-                donotify=False)
+                donotify=True)
 
 def status():
     return isServiceRunning(pidfile)
