@@ -23,7 +23,6 @@ else:
 
 XDir = "xpic" + ("_64a" if Target == "x86_64" else "")
 
-
 def setup():
     shelltools.makedirs("%s/common" % get.workDIR())
     shelltools.move("lib", "%s/common/" % get.workDIR())
@@ -50,15 +49,17 @@ def setup():
     #shelltools.system("patch -p1 < lano1106_fglrx_intel_iommu.patch")
     #shelltools.system("patch -p1 < lano1106_kcl_agp_13_4.patch")
     shelltools.system("patch -p1 < makefile_compat.patch")
+    #shelltools.system("patch -p1 < 4.4-manjaro-xstate.patch")
 
 
 
 def build():
+    shelltools.export("SHELL", "/bin/sh")
     if get.buildTYPE() == "emul32":
         return
 
     shelltools.cd(BuildDir)
-    shelltools.system("sh make.sh")
+    shelltools.system("sh ./make.sh")
 
 def install():
     # Controlcenter binaries
