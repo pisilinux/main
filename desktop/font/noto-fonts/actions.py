@@ -9,10 +9,11 @@ from pisi.actionsapi import pisitools
 
 def install():
     pisitools.insinto("/usr/share/fonts/noto", "hinted/Noto*.ttf")
-    
+    pisitools.insinto("/usr/share/fonts/noto", "hinted/Noto*.ttc")
+
     #for noto-fonts-ttf-croscore
     pisitools.insinto("/usr/share/fonts/TTF", "hinted/Arimo*.ttf")
     pisitools.insinto("/usr/share/fonts/TTF", "hinted/Tinos*.ttf")
     pisitools.insinto("/usr/share/fonts/TTF", "hinted/Cousine*.ttf")
 
-    pisitools.dodoc("LICENSE")
+    pisitools.dodoc("LICENSE", "README.md")
