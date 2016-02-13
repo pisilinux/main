@@ -15,25 +15,25 @@
         <IsA>library</IsA>
         <Summary>Network Security Services</Summary>
         <Description>Network Security Services (NSS) is a set of libraries designed to support cross-platform development of security-enabled client and server applications. Applications built with NSS can support SSL v2 and v3, TLS, PKCS #5, PKCS #7, PKCS #11, PKCS #12, S/MIME, X.509 v3 certificates, and other security standards.</Description>
-        <Archive sha1sum="6f123d05a8184cdc5ab4c903250f3c9b5b96dea4" type="targz">https://ftp.mozilla.org/pub/security/nss/releases/NSS_3_20_1_RTM/src/nss-3.20.1.tar.gz</Archive>
+        <Archive sha1sum="47e1b0f297eabe9965abde3f1c5baafdee513f84" type="targz">https://ftp.mozilla.org/pub/security/nss/releases/NSS_3_22_RTM/src/nss-3.22.tar.gz</Archive>
         <AdditionalFiles>
             <AdditionalFile target="dist/pkgconfig/nss.pc.in">nss.pc.in</AdditionalFile>
             <AdditionalFile target="dist/pkgconfig/nss-config.in">nss-config.in</AdditionalFile>
             <AdditionalFile permission="0755" target="generate-pc-config.sh">generate-pc-config.sh</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
-            <Dependency>nspr-devel</Dependency>
-            <Dependency>sqlite-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency versionFrom="4.10.10">nspr-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">nss-3.18.1-standalone-1.patch</Patch>
+            <!--<Patch level="1">nss-3.18.1-standalone-1.patch</Patch>-->
             <Patch level="1">add_spi+cacert_ca_certs.patch</Patch>
             <Patch level="3">ssl-renegotiate-transitional.patch</Patch>
 
             <!-- Patches from Fedora -->
             <Patch level="0">fedora/add-relro-linker-option.patch</Patch>
-            <Patch level="0">fedora/nss-539183.patch</Patch>
+            <!--<Patch level="0">fedora/nss-539183.patch</Patch>-->
         </Patches>
     </Source>
 
@@ -75,6 +75,13 @@
     </Package>
 
     <History>
+        <Update release="18">
+            <Date>2016-02-14</Date>
+            <Version>3.22</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Osman Erkan</Name>
+            <Email>osman.erkan@pisilinux.org</Email>
+        </Update>
         <Update release="17">
             <Date>2015-12-21</Date>
             <Version>3.20.1</Version>
