@@ -9,8 +9,13 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("sed -e '/UPOWER_SERVICE)/ s:^://:' \
+                       -i src/daemon/PowerManager.cpp")
+    shelltools.system("sed -e 's/eval exec/& ck-launch-session /' \
+    -i data/scripts/Xsession")
+    
     shelltools.makedirs("build")
-    shelltools.cd("build")
+    shelltools.cd("build")    
 
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
