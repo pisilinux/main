@@ -40,7 +40,7 @@ def setup():
                          --without-gnomevfs \
                          --without-odbc \
                          --with-opengl \
-                         --with-regex=sys \
+                         --with-regex=builtin \
                          --with-zlib=sys \
                          --with-expat=sys")
 
