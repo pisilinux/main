@@ -11,8 +11,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import perlmodules
 
 def setup():
-    autotools.autoreconf("-vfi")
-    autotools.aclocal()
+#    autotools.autoreconf("-vfi")
+#    autotools.aclocal()
     pisitools.cflags.add("-fno-strict-aliasing")
 
     autotools.configure("--disable-static \
@@ -63,9 +63,16 @@ def setup():
                          --without-epsilon \
                          --without-idb \
                          --without-sde \
+                         --mandir=/usr/share/man \
                          --without-ruby")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    
+    #for bug 13646
+    #pisitools.dosed("GDALmake.opt", "PY_HAVE_SETUPTOOLS=1 ", "PY_HAVE_SETUPTOOLS= ")
+    #pisitools.dosed("apps/GNUmakefile", "EXE_DEP_LIBS ", "KILL_EXE_DEP_LIBS ")
+    
+
 
 def build():
     autotools.make()
@@ -73,6 +80,9 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     #remove egg
-    pisitools.removeDir("/usr/lib/python2.7/site-packages/GDAL-*")
+#    pisitools.removeDir("/usr/lib/python2.7/site-packages/GDAL-*")
+
+    pisitools.domove("/usr/man/man3/*", "/usr/share/man/man3")
+    pisitools.removeDir("/usr/man/")
 
     perlmodules.removePodfiles()
