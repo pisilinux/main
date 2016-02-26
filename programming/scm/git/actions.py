@@ -43,7 +43,7 @@ def setup():
 
 def build():
     pisitools.dosed("Makefile", "^CC = .*$", "CC = %s" % get.CC())
-    autotools.make("all doc gitweb/gitweb.cgi")
+    autotools.make("all doc")
 
 def install():
     autotools.rawInstall("install-doc")
