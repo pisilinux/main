@@ -11,11 +11,13 @@
         <License>NVIDIA</License>
         <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
         <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
-        <Archive sha1sum="2018e6b2729990ef380eee2b4e0154d6f3988ca6" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86/358.16/NVIDIA-Linux-x86-358.16.run</Archive>
-        <Archive sha1sum="e12c1a1c395708efd313d13c29c8d8a2117c9109" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86_64/358.16/NVIDIA-Linux-x86_64-358.16.run</Archive>
+        <Archive sha1sum="aa7057262cf34d53c87e2caf231301d5a499b13b" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86/361.28/NVIDIA-Linux-x86-361.28.run</Archive>
+        <Archive sha1sum="b2cd218732d0a1eae1f290b1c38138f1080eb39c" type="binary">ftp://download.nvidia.com/XFree86/Linux-x86_64/361.28/NVIDIA-Linux-x86_64-361.28.run</Archive>
         <BuildDependencies>
             <Dependency version="4.4.1">kernel-module-headers</Dependency>
             <Dependency>libX11-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -25,6 +27,7 @@
         <Summary>Kernel module for current NVIDIA graphics driver releases</Summary>
         <RuntimeDependencies>
             <Dependency version="4.4.1">kernel</Dependency>
+            <Dependency version="current">module-nvidia-current-userspace</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library" permanent="true">/lib/modules</Path>
@@ -32,6 +35,62 @@
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
+    </Package>
+    
+    <Package>
+        <Name>module-nvidia-current-userspace</Name>
+        <IsA>data</IsA>
+        <Summary>Modprobe rules for nvidia-current kernel driver</Summary>
+        <Files>
+            <Path fileType="data">/etc/modprobe.d</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/blacklist-nouveau.conf">modprobe.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    
+    <Package>
+        <Name>nvidia-settings</Name>
+        <IsA>app:gui</IsA>
+        <PartOf>hardware.graphics</PartOf>
+        <Summary>Settings for nvidia-current kernel driver</Summary>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency version="current">module-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/nvidia-settings</Path>
+            <Path fileType="man">/usr/share/man/man1/nvidia-settings.1</Path>
+            <Path fileType="library">/usr/lib/libnvidia-gtk*</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+            <Path fileType="data">/usr/share/nvidia</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/nvidia-settings.desktop">nvidia-settings.desktop</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    
+    <Package>
+        <Name>nvidia-xconfig</Name>
+        <IsA>app:console</IsA>
+        <PartOf>hardware.graphics</PartOf>
+        <Summary>Xconfig file for nvidia-current kernel driver</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">module-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/nvidia-xconfig</Path>
+            <Path fileType="man">/usr/share/man/man1/nvidia-xconfig.1</Path>
+        </Files>
     </Package>
 
     <Package>
@@ -49,7 +108,8 @@
             <Path fileType="data">/etc/OpenCL</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/usr/share/X11</Path>
+            <Path fileType="data">/usr/share/nvidia-current</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
         </Files>
@@ -72,6 +132,7 @@
         <RuntimeDependencies>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>mesa-32bit</Dependency>
+            <Dependency>glibc-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
             <Dependency>libXext-32bit</Dependency>
             <Dependency release="current">xorg-video-nvidia-current</Dependency>
@@ -89,6 +150,13 @@
     </Package>
 
     <History>
+        <Update release="53">
+            <Date>2016-02-25</Date>
+            <Version>361.28</Version>
+            <Comment>Version bump</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
         <Update release="52">
             <Date>2016-02-04</Date>
             <Version>358.16</Version>
