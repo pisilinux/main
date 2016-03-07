@@ -17,7 +17,7 @@ def build():
 
     shelltools.cd("plugins")
     qt5.configure("plugins.pro")
-    qt5.make()
+    qt5.make("-j4")
 
 def install():
     pisitools.dobin("unix/librecad")
