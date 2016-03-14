@@ -19,10 +19,10 @@ def setup():
     #Avoid "Only <gtk/gtk.h> can be included directly error"
     shelltools.export("CPPFLAGS", "-DGTK_COMPILATION")
 
-    if get.buildTYPE() == "_emul32":
+    if get.buildTYPE() == "emul32":
         options += " --libdir=/usr/lib32 \
-                     --bindir=/_emul32/bin \
-                     --sbindir=/_emul32/sbin \
+                     --bindir=/emul32/bin \
+                     --sbindir=/emul32/sbin \
                      --disable-cups"
 
         shelltools.export("CC", "%s -m32" % get.CC())
@@ -47,9 +47,9 @@ def install():
 
     pisitools.dodoc("AUTHORS", "README*", "HACKING", "ChangeLog*", "NEWS*")
 
-    if get.buildTYPE() == "_emul32":
+    if get.buildTYPE() == "emul32":
         for binaries in ["gtk-query-immodules-2.0", "gtk-demo"]:
-            pisitools.domove("/_emul32/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
-        pisitools.removeDir("/_emul32")
+            pisitools.domove("/emul32/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
+        pisitools.removeDir("/emul32")
         #hack to install gdkconfig.h in gdk headers dir
         pisitools.dosym("/usr/lib/gtk-2.0/include/gdkconfig.h","/usr/include/gtk-2.0/gdk/gdkconfig.h")
