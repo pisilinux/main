@@ -5,15 +5,18 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import kde5
+from pisi.actionsapi import cmaketools
 
 def setup():
-    kde5.configure()
+    cmaketools.configure()
 
 def build():
-    kde5.make()
+    cmaketools.make()
 
 def install():
-    kde5.install()
+    cmaketools.install()
+    
+    pisitools.domove("/usr/lib64/*", "/usr/lib")
+    pisitools.removeDir("/usr/lib64")
 
     pisitools.dodoc("TODO", "CHANGELOG", "COPYING", "README.md")
