@@ -21,8 +21,8 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += " --libdir=/usr/lib32 \
-                     --bindir=/emul32/bin \
-                     --sbindir=/emul32/sbin \
+                     --bindir=/usr/bin32 \
+                     --sbindir=/usr/sbin32 \
                      --disable-cups"
 
         shelltools.export("CC", "%s -m32" % get.CC())
@@ -49,7 +49,7 @@ def install():
 
     if get.buildTYPE() == "emul32":
         for binaries in ["gtk-query-immodules-2.0", "gtk-demo"]:
-            pisitools.domove("/emul32/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
-        pisitools.removeDir("/emul32")
+            pisitools.domove("/usr/bin32/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
+        pisitools.removeDir("/usr/bin32")
         #hack to install gdkconfig.h in gdk headers dir
         pisitools.dosym("/usr/lib/gtk-2.0/include/gdkconfig.h","/usr/include/gtk-2.0/gdk/gdkconfig.h")
