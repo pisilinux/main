@@ -25,8 +25,8 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += " --libdir=/usr/lib32 \
-                     --bindir=/emul32/bin \
-                     --sbindir=/emul32/sbin \
+                     --bindir=/usr/bin32 \
+                     --sbindir=/usr/sbin32 \
                      --enable-colord=no \
                    "
 
@@ -54,8 +54,8 @@ def install():
     pisitools.removeDir("/usr/share/man")
     pisitools.dodoc("AUTHORS", "README*", "HACKING", "ChangeLog*", "NEWS*")
 
-    if get.buildTYPE() == "_emul32":
+    if get.buildTYPE() == "emul32":
         for binaries in ["gtk-query-immodules-3.0"]:
-            pisitools.domove("/emul32/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
-        pisitools.removeDir("/emul32")
+            pisitools.domove("/usr/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
+        pisitools.removeDir("/usr/bin32")
     pisitools.rename("/usr/bin/gtk-update-icon-cache", "gtk3-update-icon-cache")
