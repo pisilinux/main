@@ -22,7 +22,7 @@ def build():
     perlmodules.make()
 
 def check():
-    #perlmodules.make("test")
+    perlmodules.make("test")
 
 def install():
     perlmodules.install()
