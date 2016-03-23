@@ -10,8 +10,8 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vfi")
-    libtools.libtoolize("--force --install")
+    #autotools.autoreconf("-vfi")
+    #libtools.libtoolize("--force --install")
     autotools.configure("--disable-doc \
                          --disable-static \
                          --disable-ruby \
@@ -26,6 +26,8 @@ def setup():
                          --enable-x11 \
                          --with-x \
                          --x-libraries=/usr/lib")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
