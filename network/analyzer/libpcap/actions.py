@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("CFLAGS", "%s -fPIC" % get.CFLAGS())
     autotools.autoreconf("-vfi")
-    autotools.configure("--enable-ipv6 \
+    autotools.configure("--prefix=/usr \
+                         --enable-ipv6 \
                          --enable-bluetooth")
 
 def build():
