@@ -1,0 +1,62 @@
+
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libpcap</Name>
+        <Homepage>http://www.tcpdump.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>A system-independent library for user-level network packet capture</Summary>
+        <Description>libpcap (Packet CAPture) provides a portable framework for low-level network monitoring. Applications include network statistics collection, security monitoring, network debugging, etc.</Description>
+        <Archive sha1sum="1dea8d908e0613b4384c0d594ce88a2793d50736" type="targz">http://www.tcpdump.org/release/libpcap-1.5.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>bluez</Dependency>
+            <Dependency>libnl-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!--<Patch>libpcap-1.1-cross-linux.patch</Patch>-->
+            <!--<Patch level="1">libpcap-1.1.1-ignore-ENODEV.patch</Patch>-->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libpcap</Name>
+        <RuntimeDependencies>
+            <Dependency>bluez</Dependency>
+            <Dependency>libnl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libpcap-devel</Name>
+        <Summary>Development files for libpcap</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libpcap</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/pcap-config</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="man">/usr/share/man/man3</Path>
+        </Files>
+    </Package>
+
+    <History>
+	<Update release="1">
+            <Date>2013-11-26</Date>
+            <Version>1.5.1</Version>
+            <Comment>First release</Comment>
+            <Name>Richard de Bruin</Name>
+            <Email>richdb@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
