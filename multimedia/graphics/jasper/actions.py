@@ -11,9 +11,9 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
 
-    libtools.libtoolize("--force --install")
+    #libtools.libtoolize("--force --install")
 
     autotools.configure("--enable-libjpeg \
                          --enable-opengl \
