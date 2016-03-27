@@ -16,8 +16,9 @@ def setup():
 def build():
     perlmodules.make()
 
-#def check():
-    #perlmodules.make("test")
+def check():
+    pisitools.dosed("t/afm.t", "Helvetica", "phvr")
+    perlmodules.make("test")
 
 def install():
     perlmodules.install()
