@@ -10,14 +10,14 @@ from pisi.actionsapi import pisitools
 Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 
 def setup():
-    autotools.autoreconf("-vif")
+    #autotools.autoreconf("-vif")
 
 # --enable-sysfs option provides better hardware information support with "lspci"
 # --enable-32-bit option is not present anymore. Although build fails in emul32. With --disable-asm option, not fail. Needs to be tested.
 
     options ="\
               --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-              --with-gallium-drivers=r300,r600,nouveau,svga,swrast \
+              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast \
               --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
               --with-egl-platforms=x11,drm,wayland \
               --enable-xa \
