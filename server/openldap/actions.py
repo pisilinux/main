@@ -23,8 +23,9 @@ def setup():
     #pisitools.ldflags.add("-pie")
 
     options = "--prefix=/usr \
-               --enable-bdb \
-               --enable-hdb=mod \
+               --disable-bdb \
+               --disable-hdb \
+               --enable-backends=mod \
                --enable-slapd \
                --enable-passwd=mod \
                --enable-dnssrv=mod \
@@ -54,6 +55,7 @@ def setup():
                --with-threads \
                --with-cyrus-sasl \
                --without-fetch \
+               --without-threads \
                --enable-crypt \
                --enable-ipv6 \
                --enable-dynacl \
