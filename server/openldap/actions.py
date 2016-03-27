@@ -51,6 +51,7 @@ def setup():
                --enable-local \
                --enable-proctitle \
                --enable-overlays=mod \
+               --enable-ndb=no \
                --with-pic \
                --with-threads \
                --with-cyrus-sasl \
@@ -75,7 +76,7 @@ def setup():
                      --disable-perl \
                      --without-tls \
                      --without-cyrus-sasl"
-    else: options += " --with-tls=moznss"
+    else: options += " --with-tls=auto"
 
     shelltools.export("AUTOMAKE", "/bin/true")
     #autotools.autoreconf("-fi")
