@@ -78,7 +78,7 @@ def setup():
     else: options += " --with-tls=moznss"
 
     shelltools.export("AUTOMAKE", "/bin/true")
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
     autotools.configure(options)
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
