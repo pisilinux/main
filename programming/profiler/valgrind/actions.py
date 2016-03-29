@@ -10,7 +10,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vfi")
+    shelltools.export("CFLAGS", get.CFLAGS().replace("-fstack-protector",""))
+    shelltools.export("CPPFLAGS", get.CXXFLAGS().replace("-fstack-protector",""))
     autotools.configure("--without-mpicc")
 
 def build():
