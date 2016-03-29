@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("AUTOPOINT", "true")
-    autotools.autoreconf("-vfi")
+    #autotools.autoreconf("-vfi")
 
     # sidplay is in contrib.
     autotools.configure("--disable-static \
