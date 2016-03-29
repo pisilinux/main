@@ -1,0 +1,21 @@
+--- a/src/sunriseset.cpp
++++ b/src/sunriseset.cpp
+@@ -180,7 +180,7 @@
+     double hourAngle = calcHourAngleSunrise(latitude, solarDec);
+     double delta = longitude + radToDeg(hourAngle);
+     QTime timeUTC(0, 0);
+-    if (isnan(delta))
++    if (std::isnan(delta))
+         return timeUTC;
+     timeUTC = timeUTC.addSecs((720 - (4.0 * delta) - eqTime) * 60);
+     return QTime(timeUTC.hour(),
+@@ -199,7 +199,7 @@
+     double hourAngle = -calcHourAngleSunrise(latitude, solarDec);
+     double delta = longitude + radToDeg(hourAngle);
+     QTime timeUTC(0, 0);
+-    if (isnan(delta))
++    if (std::isnan(delta))
+         return timeUTC;
+     timeUTC = timeUTC.addSecs((720 - (4.0 * delta) - eqTime) * 60);
+     return QTime(timeUTC.hour(),
+
