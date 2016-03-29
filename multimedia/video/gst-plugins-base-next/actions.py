@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 
 def setup():
-    autotools.autoreconf("-vfi")
+    #autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
                          --enable-experimental \
                          --with-package-name='PisiLinux gstreamer-plugins-base package' \

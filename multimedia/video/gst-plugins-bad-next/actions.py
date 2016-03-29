@@ -14,6 +14,7 @@ def setup():
     #pisitools.dosed("autogen.sh", "tool_run.*autopoint --force.*")
     shelltools.export("NOCONFIGURE", "1")
     shelltools.system("./autogen.sh")
+    autotools.autoreconf("-vi")
 
     """The following is a list of disabled plugins:
     celt -> (celtdec, celtenc) -> Not available in Pardus repos,
