@@ -9,16 +9,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
     autotools.configure("--prefix=/usr \
-                         --disable-static \
                          --with-html-dir=/%s/%s/html \
                          --with-package-name='PisiLinux farstream package' \
                          --with-package-origin='http://www.pisilinux.org'"
                          % (get.docDIR(), get.srcNAME()))
 
 def build():
-    autotools.make("-j1")
+    autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
