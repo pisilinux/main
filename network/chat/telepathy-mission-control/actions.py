@@ -10,17 +10,10 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--prefix=/usr \
-                         --disable-static \
-                         --libexecdir=/usr/lib/telepathy \
-                         --with-connectivity=nm \
-                         --with-pic \
                          --enable-gtk-doc \
                          --disable-upower \
-                         --disable-static \
-                         --disable-schemas-compile")
+                         --disable-static")
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
 def build():
     autotools.make()
 
