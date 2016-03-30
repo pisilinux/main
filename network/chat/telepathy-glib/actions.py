@@ -11,9 +11,9 @@ from pisi.actionsapi import get
 
 
 def setup():
-    autotools.configure("--disable-static \
-                         --enable-vala-bindings \
-                         --enable-introspection")
+    autotools.configure("--prefix=/usr \
+                         --disable-static \
+                         --enable-vala-bindings")
 
 def build():
     autotools.make()
