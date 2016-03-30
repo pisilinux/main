@@ -11,11 +11,9 @@ from pisi.actionsapi import get
 
 def setup():
     #autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static \
-                         --libexecdir=/usr/lib \
-                         --enable-call \
-                         --enable-shared \
-                         --with-gconf-schema-file-dir=/etc/gconf/schemas")
+    autotools.configure("--prefix=/usr \
+                         --libexecdir=/usr/lib/telepathy \
+                         --disable-static")
 
 def build():
     autotools.make("-j1")
