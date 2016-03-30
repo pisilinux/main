@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def build():
     shelltools.export("CFLAGS", "-Os")
     pisitools.dosed("Make.defaults","-O0","-Os")
-    autotools.make("libdir=/usr/lib bindir=/usr/bin")
+    pisitools.dosed("src/test/Makefile","-rpath=$(TOPDIR)/src/","-rpath=$(libdir)|g")
+    autotools.make("libdir=/usr/lib bindir=/usr/bin includedir=/usr/include/ V=1 -j1")
 
 def install():
      autotools.rawInstall("DESTDIR=%s libdir=/usr/lib/" % get.installDIR())
