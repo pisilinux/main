@@ -31,7 +31,6 @@ def setup():
                          --datadir=/usr/share/openssh \
                          --disable-strip \
                          --with-pam \
-                         --with-skey \
                          --with-libedit \
                          --with-kerberos5 \
                          --with-tcp-wrappers \
@@ -51,7 +50,10 @@ def install():
     # fixes #10992
     pisitools.dobin("contrib/ssh-copy-id")
     pisitools.doman("contrib/ssh-copy-id.1")
-
+    
+    # an script in contrib
+    pisitools.dobin("contrib/findssl.sh")
+    
     shelltools.chmod("%s/etc/ssh/sshd_config" % get.installDIR(), 0600)
     # special request by merensan
     shelltools.echo("%s/etc/ssh/ssh_config" % get.installDIR(), "ServerAliveInterval 5")
