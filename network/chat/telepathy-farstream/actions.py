@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vfi")
+    #autotools.autoreconf("-vfi")
     autotools.configure("--disable-static")
     
     #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
