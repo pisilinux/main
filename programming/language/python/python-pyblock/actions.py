@@ -8,11 +8,11 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-#WorkDir = "pyblock-0.47-1_20100712"
 
 def build():
-    shelltools.export("CFLAGS", "%s -g -I/usr/include/%s -Wall -Werror -fPIC" % (get.CFLAGS(), get.curPYTHON()))
+    shelltools.export("CFLAGS", "%s -g -I/usr/include/%s -Wall -fPIC" % (get.CFLAGS(), get.curPYTHON()))
     shelltools.export("LDFLAGS", "%s -shared" % get.LDFLAGS())
+
     autotools.make("USESELINUX=0")
 
 def install():
