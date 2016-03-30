@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.flags.add("-std=gnu89")
     autotools.configure("--prefix=/usr --sbindir=/sbin")
 
 def build():
