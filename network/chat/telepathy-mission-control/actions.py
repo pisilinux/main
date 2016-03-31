@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--prefix=/usr \
+                         --libexecdir=/usr/lib/telepathy \
                          --enable-gtk-doc \
                          --disable-upower \
                          --disable-static")
