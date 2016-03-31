@@ -1,0 +1,50 @@
+Herhangi bir paketin *-devel paketinin bağımlılığının tam olarak yazılması, pakete bağımlı diğer paketlerinde düzgün bir şekilde derlenmesi sağlayacaktır. Bu sebeple yapılan, derlenen paketlerin, derlendikten sonra;
+
+checkelf -s -x *.pisi
+
+çıktısının haricinde bir yolu daha var ki buda, derlenme dizinine gidip (/var/pisi/*) buradaki install dizinimizde /usr/lib/pkgconfig/*.pc içerisindeki *.pc dosyasının içeriğini okumaktır. 
+
+Bu dosyanın içerisinde;
+
+Requires.private:
+Requires:
+
+yani bağımlı ve özel bağımlı olarak karşısında bağımlı paketler yazmaktadır. burada yazanları pisi sf ile sistemde tartıp ne olduğunu bulabiliriz. 
+
+Örnek;
+
+libaccounts-glib  paketinin :  install dizini /var/pisi/libaccounts-glib-1.21-1/install
+
+pkgconfig dizini : /var/pisi/libaccounts-glib-1.21-1/install/usr/lib/pkgconfig/libaccounts-glib.pc
+
+libaccounts-glib.pc dosyasının içeriği;
+
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+applicationfilesdir=${prefix}/share/accounts/applications
+servicefilesdir=${prefix}/share/accounts/services
+servicetypefilesdir=${prefix}/share/accounts/service_types
+providerfilesdir=${prefix}/share/accounts/providers
+
+Name: libaccounts-glib
+Description: A low-level library for managing accounts settings.
+Requires: glib-2.0 gobject-2.0 gio-unix-2.0
+Require.private: libxml-2.0 sqlite3
+Version: 1.21
+Libs: -L${libdir} -laccounts-glib
+Cflags: -I${includedir}
+
+konsolu açıp;
+
+pisi sf glib-2.0 (çok fazla sonuç çıkacaktır ama içlerinden bu glib-2.0 bulmak zor değil ismiyle aynı paket olacak)
+
+
+glib2-devel paketi olduğunu öğreneceksiniz.
+
+-devel bağımlılıklarını bu şekilde bulabiliriz.
+
+
+
+
