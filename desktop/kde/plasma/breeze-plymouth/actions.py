@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     pisitools.dosed("breeze/breeze.script", "kde.logo.png", "pisi.logo.png")
     pisitools.dosed("breeze/breeze.script", "Plasma 5.6", "PisiLinux")
+    pisitools.dosed("breeze-text/breeze-text.plymouth.cmake", "Plasma @PROJECT_VERSION@", "PisiLinux")
     kde5.configure()
 
 def build():
