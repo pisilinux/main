@@ -14,11 +14,11 @@ WorkDir = "lash-0.6.0.594"
 def setup():
     shelltools.export("CFLAGS", "%s -D_GNU_SOURCE -ldl -ldm -lm -lreadline" % get.CFLAGS())
 
-    #fix unused direct deps.
     autotools.autoreconf("-fi")
 
-    autotools.configure("--disable-static --disable-serv-inst")
+    autotools.configure("--with-python")
     
+    #fix unused direct deps.
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
