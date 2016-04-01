@@ -10,8 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     #autotools.autoreconf("-fi")
-    autotools.configure("--disable-doxygen \
-                         --disable-static")
+    autotools.configure("--disable-static")
 
 def build():
     autotools.make()
@@ -25,7 +24,7 @@ def install():
 
     # Remove yum specific stuff
     pisitools.removeDir("/etc/yum")
-    pisitools.removeDir("/usr/bin")
+    #pisitools.removeDir("/usr/bin")
     pisitools.removeDir("/usr/lib/yum-plugins")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "TODO")
