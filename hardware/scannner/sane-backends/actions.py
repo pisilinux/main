@@ -25,9 +25,9 @@ def setup():
                          --disable-latex \
                          --with-docdir=/usr/share/doc/%s \
                          --with-gphoto2" % get.srcNAME())
-    
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-    
+
 def build():
     autotools.make()
 
@@ -49,5 +49,3 @@ def install():
                     "brother\nbrother2\nbrother3")
 
     shelltools.echo("%s/etc/sane.d/dll.conf" % get.installDIR(), "\n# Added for Xerox Phaser 3100 MFP\nXeroxPhaser3100\n")
-
-
