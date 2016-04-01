@@ -1,0 +1,46 @@
+From: Christian Dersch <lupinix@mailbox.org>
+Date: Wed, 03 Feb 2016 10:19:55 +0000
+Subject: Fix compilation with gcc 6.x (namespace std has to be used explicitly in some cases, e.g. when ambiguous)
+X-Git-Tag: v16.03.80
+X-Git-Url: http://quickgit.kde.org/?p=kstars.git&a=commitdiff&h=7d34e52f4dd6e15b871596b3c64d4c7cdba599b4
+---
+Fix compilation with gcc 6.x (namespace std has to be used explicitly in some cases, e.g. when ambiguous)
+REVIEW:126976
+---
+
+
+--- a/kstars/fitsviewer/fitsdata.cpp
++++ b/kstars/fitsviewer/fitsdata.cpp
+@@ -548,7 +548,7 @@
+     int diff_x=s1->x - s2->x;
+     int diff_y=s1->y - s2->y;
+ 
+-    dis = abs( sqrt( diff_x*diff_x + diff_y*diff_y));
++    dis = std::abs( sqrt( diff_x*diff_x + diff_y*diff_y));
+     dis -= s1->width/2;
+     dis -= s2->width/2;
+ 
+
+--- a/kstars/tools/horizonmanager.cpp
++++ b/kstars/tools/horizonmanager.cpp
+@@ -192,7 +192,7 @@
+         az  = dms::fromString(regionItem->child(i, 1)->data(Qt::DisplayRole).toString(), true);
+         alt = dms::fromString(regionItem->child(i, 2)->data(Qt::DisplayRole).toString(), true);
+ 
+-        if (isnan(az.Degrees()) || isnan(alt.Degrees()))
++        if (std::isnan(az.Degrees()) || std::isnan(alt.Degrees()))
+             return false;
+ 
+         p.setAz(az);
+@@ -534,9 +534,9 @@
+         dms azAngle  = dms::fromString(parent->child(item->row(),1)->data(Qt::DisplayRole).toString(), true);
+         dms altAngle = dms::fromString(parent->child(item->row(),2)->data(Qt::DisplayRole).toString(), true);
+ 
+-        if (isnan(azAngle.Degrees()))
++        if (std::isnan(azAngle.Degrees()))
+             azOK = false;
+-        if (isnan(altAngle.Degrees()))
++        if (std::isnan(altAngle.Degrees()))
+             altOK = false;
+ 
+         if ( (item->column() == 1 && azOK == false) || (item->column() == 2 && altOK == false) )
