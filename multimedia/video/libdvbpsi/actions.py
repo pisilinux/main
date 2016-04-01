@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--enable-release \
+    autotools.configure("--prefix=/usr \
                          --disable-static")
 
 def build():
