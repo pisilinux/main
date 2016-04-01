@@ -16,8 +16,8 @@ KeepSpecial = ["libtool"]
 
 def setup():
     shelltools.export("AUTOPOINT", "/bin/true")
-    autotools.autoreconf("-fi")
-    libtools.libtoolize("--force --copy")
+#    autotools.autoreconf("-fi")
+#    libtools.libtoolize("--force --copy")
     autotools.configure("--enable-shared \
                          --enable-asm \
                          --enable-gpl \
