@@ -12,9 +12,9 @@ from pisi.actionsapi import get
 
 def setup():
     #autotools.autoreconf("-vif")
+    shelltools.system("sh autogen.sh")
     autotools.configure("--enable-threads \
                          --enable-compress \
-                         --enable-plymouth \
                          --disable-encrypt \
                          --disable-resume-static \
                          --with-initramfsdir=/usr/sbin")
@@ -23,8 +23,9 @@ def build():
     autotools.make()
 
 def install():
+    pisitools.dodir("/etc")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.removeDir("/dev")
+    #pisitools.removeDir("/dev")
 
     shelltools.touch("%s/etc/suspend.key" % get.installDIR())
