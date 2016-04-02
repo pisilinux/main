@@ -6,17 +6,17 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
-from pisi.actionsapi import kde4
+from pisi.actionsapi import kde5
 
 WorkDir="%s-%s" % (get.srcNAME(), get.srcVERSION())
 
 def setup():
-    kde4.configure("-DWITH_KDE=1")
+    kde5.configure("-DWITH_KDE=1")
 
 def build():
-    kde4.make()
+    kde5.make()
 
 def install():
-    kde4.install()
+    kde5.install()
 
     pisitools.dodoc("AUTHORS", "COPYING.LGPL")
