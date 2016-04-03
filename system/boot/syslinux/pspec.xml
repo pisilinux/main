@@ -16,12 +16,18 @@
         <Archive sha1sum="1bea76b97b4e32a017dd4168e819934b7c6592cc" type="tarxz">https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>nasm</Dependency>
+            <Dependency>glibc-32bit</Dependency>
+            <Dependency>asciidoc</Dependency>
+            <Dependency>efibootmgr-devel</Dependency>
+            <!--Dependency>upx</Dependency--><!--1-->
             <Dependency>libutil-linux-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">btrfs-fix.patch</Patch>
+            <Patch level="1">0001-Add-install-all-target-to-top-side-of-HAVE_FIRMWARE.patch</Patch>
+            <Patch level="1">0035-SYSAPPEND-Fix-space-stripping.patch</Patch>
             <Patch level="1">gcc-fix-alignment.patch</Patch>
             <Patch level="1">dont-guess-alignment.patch</Patch>
+            <Patch level="1">btrfs-fix.patch</Patch>
         </Patches>
     </Source>
 
@@ -29,7 +35,12 @@
         <Name>syslinux</Name>
         <RuntimeDependencies>
             <Dependency>mtools</Dependency>
-	    <Dependency>libutil-linux</Dependency>
+            <Dependency>libutil-linux</Dependency>
+            <Dependency>mtools</Dependency>
+            <Dependency>efibootmgr</Dependency>
+            <Dependency>util-linux</Dependency>
+            <Dependency>dosfstools</Dependency>
+            <Dependency>gptfdisk</Dependency>
             <Dependency>perl-Crypt-PasswdMD5</Dependency>
             <Dependency>perl-Digest-SHA1</Dependency>
         </RuntimeDependencies>
@@ -43,6 +54,7 @@
         <AdditionalFiles>
             <AdditionalFile target="/usr/lib/syslinux/isolinux.cfg" permission="0644" owner="root">pisi-iso/isolinux.cfg</AdditionalFile>
             <AdditionalFile target="/usr/lib/syslinux/background.png" permission="0644" owner="root">pisi-iso/background.png</AdditionalFile>
+            <AdditionalFile target="/usr/bin/syslinux-install_update" permission="0755" owner="root">syslinux-install_update</AdditionalFile>
         </AdditionalFiles>
     </Package>
 
