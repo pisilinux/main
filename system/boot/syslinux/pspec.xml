@@ -13,21 +13,14 @@
         <IsA>app:console</IsA>
         <Summary>SysLinux, IsoLinux and PXELinux bootloader</Summary>
         <Description>Lightweight bootloaders for floppy media (SYSLINUX), network booting (PXELINUX), and bootable "El Torito" CD-ROMs (ISOLINUX). The project also includes MEMDISK, a tool to boot legacy operating systems (such as DOS) from nontraditional media; it is usually used in conjunction with PXELINUX and ISOLINUX.</Description>
-        <Archive sha1sum="1bea76b97b4e32a017dd4168e819934b7c6592cc" type="tarxz">https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.xz</Archive>
+        <Archive sha1sum="ceda70713fd575bd46fc497b503ed90f121ab3b1" type="tarxz">https://www.kernel.org/pub/linux/utils/boot/syslinux/4.xx/syslinux-4.07.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>nasm</Dependency>
-            <Dependency>glibc-32bit</Dependency>
-            <Dependency>asciidoc</Dependency>
-            <Dependency>efibootmgr-devel</Dependency>
-            <!--Dependency>upx</Dependency--><!--1-->
             <Dependency>libutil-linux-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">0001-Add-install-all-target-to-top-side-of-HAVE_FIRMWARE.patch</Patch>
-            <Patch level="1">0035-SYSAPPEND-Fix-space-stripping.patch</Patch>
-            <Patch level="1">gcc-fix-alignment.patch</Patch>
-            <Patch level="1">dont-guess-alignment.patch</Patch>
-            <Patch level="1">btrfs-fix.patch</Patch>
+            <Patch level="1">nopie.patch</Patch>
+            <Patch level="1">fixisohybrid.patch</Patch>
         </Patches>
     </Source>
 
@@ -35,12 +28,7 @@
         <Name>syslinux</Name>
         <RuntimeDependencies>
             <Dependency>mtools</Dependency>
-            <Dependency>libutil-linux</Dependency>
-            <Dependency>mtools</Dependency>
-            <Dependency>efibootmgr</Dependency>
-            <Dependency>util-linux</Dependency>
-            <Dependency>dosfstools</Dependency>
-            <Dependency>gptfdisk</Dependency>
+	    <Dependency>libutil-linux</Dependency>
             <Dependency>perl-Crypt-PasswdMD5</Dependency>
             <Dependency>perl-Digest-SHA1</Dependency>
         </RuntimeDependencies>
@@ -54,14 +42,13 @@
         <AdditionalFiles>
             <AdditionalFile target="/usr/lib/syslinux/isolinux.cfg" permission="0644" owner="root">pisi-iso/isolinux.cfg</AdditionalFile>
             <AdditionalFile target="/usr/lib/syslinux/background.png" permission="0644" owner="root">pisi-iso/background.png</AdditionalFile>
-            <!--AdditionalFile target="/usr/bin/syslinux-install_update" permission="0755" owner="root">syslinux-install_update</AdditionalFile-->
         </AdditionalFiles>
     </Package>
 
     <History>
         <Update release="1">
-            <Date>2016-04-02</Date>
-            <Version>6.03</Version>
+            <Date>2014-06-14</Date>
+            <Version>4.07</Version>
             <Comment>First release</Comment>
             <Name>Alihan Öztürk</Name>
             <Email>alihan@pisilinux.org</Email>
