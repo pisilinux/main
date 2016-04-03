@@ -9,8 +9,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     autotools.autoreconf("-vif")
-    autotools.configure("--disable-static \
-                         --disable-gtk-doc")
+    autotools.configure()
 
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
