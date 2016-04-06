@@ -33,12 +33,12 @@ def setup():
         
                 shelltools.export("CC", "gcc")
                 shelltools.export("CXX", "g++")
-                shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
+                
     
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
-    
+        shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
     
     shelltools.makedirs("build")
     
