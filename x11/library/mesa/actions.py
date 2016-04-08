@@ -6,6 +6,8 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+
 
 Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 
@@ -17,7 +19,7 @@ def setup():
 
     options ="\
               --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast \
+              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl \
               --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
               --with-egl-platforms=x11,drm,wayland \
               --enable-xa \
@@ -34,24 +36,23 @@ def setup():
               --enable-xvmc \
               --enable-glx-tls \
               --enable-gallium-llvm \
+              --enable-nine \
               --enable-llvm-shared-libs \
               --enable-shared-glapi \
               --enable-texture-float \
              "
 
     if get.buildTYPE() == "emul32":
-        # compile with llvm doesn't work for now, test it later
+        shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
+        shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32")        
         options += " --with-dri-driverdir=/usr/lib32/xorg/modules/dri \
-                     --with-gallium-drivers=r600,nouveau,swrast \
-                     --with-clang-libdir=/usr/lib32 \
-                     --disable-gallium-llvm \
-                     --disable-asm "
+                            --with-clang-libdir=/usr/lib32 \
+                            --disable-asm "
 
     elif get.ARCH() == "x86_64":
-
         options += " --with-clang-libdir=/usr/lib \
-                     --enable-opencl-icd \
-                   "
+                            --enable-omx \
+                            --enable-opencl-icd "
 
     autotools.configure(options)
     pisitools.dosed("libtool","( -shared )", " -Wl,--as-needed\\1")
