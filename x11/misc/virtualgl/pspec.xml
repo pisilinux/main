@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>VirtualGL</Name>
+        <Homepage>http://virtualgl.org</Homepage>
+        <Packager>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>A toolkit for displaying OpenGL applications to thin clients</Summary>
+        <Description>Redirects 3D commands from an OpenGL application onto a server-side 3D graphics card.</Description>
+        <Archive sha1sum="494ced91402e7cd4b3f561c202f8b4298d777785" type="targz">https://sourceforge.net/projects/virtualgl/files/2.5/VirtualGL-2.5.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>fltk-devel</Dependency>
+            <Dependency>libXv-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>mesa-glu-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>virtualgl</Name>
+        <RuntimeDependencies>
+            <Dependency>fltk</Dependency>
+            <Dependency>libXv</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>mesa-glu</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/fakelib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>virtualgl-32bit</Name>
+        <Summary>32 bit shared libraries of VirtualGL</Summary>
+        <PartOf>emul32</PartOf>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>fltk-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXv-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>mesa-glu-32bit</Dependency>
+            <Dependency>libjpeg-turbo-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>fltk-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXv-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>mesa-glu-32bit</Dependency>
+            <Dependency>libjpeg-turbo-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/glxspheres32</Path>
+            <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/lib32/fakelib</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>virtualgl-devel</Name>
+        <Summary>Development files for virtualgl</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">virtualgl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+      <Update release="1">
+            <Date>2016-04-08</Date>
+            <Version>2.5</Version>
+            <Comment>Version bump</Comment>
+            <Name>Idris KALP</Name>
+            <Email>idriskalp@gmail.com</Email>
+      </Update>
+    </History>
+</PISI>
