@@ -14,13 +14,13 @@ def setup():
 def build():
     autotools.make()
     
-def build():
-    autotools.make("check")
+#def build():
+  #  autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     pisitools.dosym("libinput.so.5.0.0","/usr/lib/libinput.so.0")
     
-    pisitools.remove("/usr/lib/udev/80-libinput-device-groups-litest.rules")
-    pisitools.remove("/usr/lib/udev/90-libinput-model-quirks-litest.rules")
-    #pisitools.dodoc("COPYING", "README")
+    #pisitools.remove("/usr/lib/udev/rules.d/80-libinput-device-groups.rules")
+    #pisitools.remove("/usr/lib/udev/rules.d/90-libinput-model-quirks.rules")
+    pisitools.dodoc("COPYING", "README")
