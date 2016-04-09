@@ -1,0 +1,31 @@
+Index: primus-master/primusrun
+===================================================================
+--- primus-master/primusrun
++++ primus-master/primusrun	2014-02-07 19:09:03.459850030 +0100
+@@ -10,7 +10,7 @@
+ 
+ # Upload/display method
+ # 0: autodetect, 1: textures, 2: PBO/glDrawPixels (needs Mesa-10.1+)
+-# export PRIMUS_UPLOAD=${PRIMUS_UPLOAD:-0}
++export PRIMUS_UPLOAD=\${PRIMUS_UPLOAD:-2}
+ 
+ # Approximate sleep ratio in the readback thread, percent
+ # export PRIMUS_SLEEP=${PRIMUS_SLEEP:-90}
+@@ -20,13 +20,13 @@
+ 
+ # "Accelerating" libGL
+ # $LIB will be interpreted by the dynamic linker
+-# export PRIMUS_libGLa=${PRIMUS_libGLa:-'/usr/$LIB/nvidia/libGL.so.1'}
++export PRIMUS_libGLa=${PRIMUS_libGLa:-'/usr/lib/nvidia-current/libGL.so.1.2.0:/usr/lib32/nvidia-current/libGL.so.1.2.0'}
+ 
+ # "Displaying" libGL
+-# export PRIMUS_libGLd=${PRIMUS_libGLd:-'/usr/$LIB/libGL.so.1'}
++export PRIMUS_libGLd=${PRIMUS_libGLd:-'/usr/lib/libGL.so.1.2.0:/usr/lib32/libGL.so.1.2.0'}
+ 
+ # Directory containing primus libGL
+-PRIMUS_libGL=${PRIMUS_libGL:-$(dirname `readlink -ne $0`)/'$LIB'}
++PRIMUS_libGL='/usr/lib/primus:/usr/lib32/primus'
+ 
+ # On some distributions, e.g. on Ubuntu, libnvidia-tls.so is not available
+ # in default search paths.  Add its path manually after the primus library
+
