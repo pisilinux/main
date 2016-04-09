@@ -26,7 +26,7 @@ def setup():
         shelltools.export("CFLAGS", "-m32")
         shelltools.export("CXXFLAGS", "-m32")
 
-        options += "--prefix=/usr \
+        options += "--prefix=/emul32 \
                     --libdir=/usr/lib32 \
                     --with-optim='%s' \
                     " % get.CFLAGS()
