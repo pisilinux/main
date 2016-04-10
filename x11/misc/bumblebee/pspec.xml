@@ -1,0 +1,60 @@
+<PISI>
+    <Source>
+        <Name>bumblebee</Name>
+        <Homepage>http://bumblebee-project.org</Homepage>
+        <Packager>
+            <Name>Idris Kalp</Name>   
+            <Email>idriskalp@gmail.com</Email> 
+        </Packager>
+        <License>GPLv3</License>
+        <PartOf>kernel.default.drivers</PartOf>
+        <IsA>app:gui</IsA>
+        <Summary>a project aiming to support NVIDIA Optimus technology under Linux.</Summary>
+        <Description>The Bumblebee Project proudly presents version 3.0 of Bumblebee, a project aiming to support NVIDIA Optimus technology under Linux. After two months of hard work this version has finally been considered stable enough for release.</Description>
+        <Archive sha1sum="a715f4aa1b0c24dd4352ff7e0bc390f1e4e03cd9" type="targz">http://www.bumblebee-project.org/bumblebee-3.2.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libbsd-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">bb-hexadecimal.patch</Patch> 
+            <Patch level="1">nv-uvm-modeset.patch</Patch> 
+        </Patches>
+    </Source>
+    <Package>
+        <Name>bumblebee</Name>
+        <RuntimeDependencies>
+            <Dependency>module-bbswitch</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libbsd</Dependency>
+            <Dependency>primus</Dependency>
+            <Dependency>virtualgl</Dependency>
+            <Dependency>virtualgl-32bit</Dependency>	    
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/bumblebee.conf</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="data">/lib/udev/rules.d</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+        <AdditionalFiles>
+             <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/bumblebee.conf">tmpfiles.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    <History>
+       <Update release="1">
+            <Date>2016-04-08</Date>
+            <Version>3.2.1</Version>
+            <Comment>First Release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@pgmail.com</Email>
+        </Update>
+    </History>
+</PISI>
