@@ -30,7 +30,7 @@ def install():
     pisitools.doexe("bundles/1.10.3/dynbinary/dockerinit-1.10.3", "/usr/lib/docker")
 
     # insert udev rules
-    pisitools.insinto("/etc/udev/rules.d", "contrib/udev/*.rules")
+    pisitools.insinto("/lib/udev/rules.d", "contrib/udev/*.rules")
 
     #insert contrib in docs
     pisitools.insinto("/usr/share/doc/docker", "contrib")
