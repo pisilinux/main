@@ -19,7 +19,7 @@ def install():
     kde5.install()
 
 # Take a look at the source folder for these file as documentation.
-    pisitools.dodoc("COPYING", "README")
+    pisitools.dodoc("COPYING", "README.md")
 
 # If there is no install rule for a runnable binary, you can 
 # install it to binary directory.
