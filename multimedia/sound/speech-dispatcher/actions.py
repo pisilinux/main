@@ -12,6 +12,7 @@ from pisi.actionsapi import shelltools
 def setup():
     shelltools.system("sed -i 's/cicero //g' configure.ac")
     shelltools.system("sed -i 's/sd_cicero//g' src/modules/Makefile.am")
+    
     autotools.autoreconf("-i")
     autotools.configure("--disable-static \
                          --enable-shared \
@@ -21,6 +22,8 @@ def setup():
                          --with-libao \
                          --with-pulse \
                          --with-default-audio-method=alsa")
+
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
