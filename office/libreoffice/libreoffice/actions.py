@@ -30,7 +30,7 @@ def setup():
                         --prefix=/usr                   \
                         --sysconfdir=/etc               \
                         --with-vendor=PisiLinux         \
-                        --with-lang="tr"               \
+                        --with-lang="ALL"               \
                         --with-help                     \
                         --with-myspell-dicts            \
                         --with-alloc=system             \
