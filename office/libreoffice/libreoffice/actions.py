@@ -16,6 +16,7 @@ LoVersion = "%s" % get.srcVERSION()
 OurWorkDir = "%s/libreoffice-%s" % (get.workDIR(), LoVersion)
 
 def setup():
+    shelltools.system('sed -i "s:mdds >= 0.12.0:mdds-1.0 >= 0.12.0:g" configure.ac')
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
     shelltools.export("LO_PREFIX", "/usr")    
     shelltools.export("PYTHON", "python2.7")
@@ -29,7 +30,7 @@ def setup():
                         --prefix=/usr                   \
                         --sysconfdir=/etc               \
                         --with-vendor=PisiLinux         \
-                        --with-lang="ALL"               \
+                        --with-lang="tr"               \
                         --with-help                     \
                         --with-myspell-dicts            \
                         --with-alloc=system             \
