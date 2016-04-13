@@ -28,13 +28,14 @@ def setup():
                               -i svl/source/misc/gridprinter.cxx')
     shelltools.system('./autogen.sh                     \
                         --prefix=/usr                   \
-                        --sysconfdir=/etc               \
+                        --sysconfdir=/etc           \
                         --with-vendor=PisiLinux         \
-                        --with-lang="ALL"               \
-                        --with-help                     \
-                        --with-myspell-dicts            \
-                        --with-alloc=system             \
-                        --with-java                     \
+                        --with-lang="ALL"   \
+                        --disable-gtk3  \
+                        --with-help                 \
+                        --with-myspell-dicts        \
+                        --with-alloc=system         \
+                        --with-java              \
                         --without-system-dicts          \
                         --disable-postgresql-sdbc       \
                         --enable-release-build=yes      \
