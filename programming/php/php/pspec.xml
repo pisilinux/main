@@ -1,0 +1,278 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>php</Name>
+        <Homepage>http://www.php.net</Homepage>
+        <Packager>
+            <Name>Fatih Turgel</Name>
+            <Email>turgelfatih@gmail.com</Email>
+        </Packager>
+        <License>PHP</License>
+        <IsA>library</IsA>
+        <Summary>PHP5 is an HTML-embedded scripting language. The goal of the language is to allow web developers to write dynamically generated pages quickly</Summary>
+        <Description>PHP5 is an HTML-embedded scripting language. Much of its syntax is borrowed from C, Java and Perl with a couple of unique PHP-specific features thrown in. The goal of the language is to allow web developers to write dynamically generated pages quickly.</Description>
+        <Archive sha1sum="41fcaf7a61936baf3ea9543697291865f9870a59" type="tarbz2">http://us2.php.net/distributions/php-5.6.20.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>gd-devel</Dependency>
+            <Dependency>harfbuzz-devel</Dependency>
+            <Dependency>apr-devel</Dependency>
+            <Dependency>apr-util-devel</Dependency>
+            <Dependency>apache</Dependency>
+            <Dependency>postfix</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>db-devel</Dependency>
+            <Dependency>mariadb-lib</Dependency>
+            <Dependency>libmcrypt-devel</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>libc-client</Dependency>
+            <Dependency>postgresql-server</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>gdbm-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">int_overflow_in_mt_rand.patch</Patch>
+            <Patch level="1">stack_buffer_overflow_in_imagepstext.patch</Patch>
+            <Patch level="1">denial_of_service_in_getArchiveComment.patch</Patch>
+            <Patch level="1">php-imap-myrights.diff</Patch>
+            <Patch level="0">db6.patch</Patch>
+<!--             <Patch>950-Fix-dl-cross-compiling-issue.patch</Patch> -->
+
+            <!--Debian Patches-->
+            <Patch level="1">debian/052-phpinfo_no_configure.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>php-cli</Name>
+        <RuntimeDependencies>
+            <Dependency version="current">php-common</Dependency>
+            <Dependency>gd</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>mariadb-lib</Dependency>
+            <Dependency>libmcrypt</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/php/cli</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/usr/bin/go-pear" permission="0755" owner="root">go-pear</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>php-common</Name>
+        <Summary>Common config files for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>db</Dependency>
+        </RuntimeDependencies>
+
+        <Files>
+            <Path fileType="library">/usr/lib/php/modules</Path>
+            <Path fileType="data">/usr/share/php5</Path>
+            <Path fileType="data">/etc/php/ext</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>php-devel</Name>
+        <Summary>Development files for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">php-common</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/php-config</Path>
+            <Path fileType="executable">/usr/bin/phpize</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/php/build</Path>
+            <Path fileType="man">/usr/share/man/man1/php-config*</Path>
+            <Path fileType="man">/usr/share/man/man1/phpize*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>mod_php</Name>
+        <PartOf>server.web</PartOf>
+        <RuntimeDependencies>
+            <Dependency>apache</Dependency>
+            <Dependency>mariadb-lib</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>gd</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>cyrus-sasl</Dependency>
+            <Dependency>harfbuzz</Dependency>
+            <Dependency>php-common</Dependency>
+            <Dependency>libmcrypt</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/apache2/modules/libphp5.so</Path>
+            <Path fileType="config">/etc/apache2</Path>
+            <Path fileType="config">/etc/php/apache2</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/apache2/modules.d/70_mod_php5.conf" permission="0644" owner="root">70_mod_php5.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>php-zip</Name>
+        <Summary>Zip extension for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency>php-common</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/php/modules/zip.so</Path>
+            <Path fileType="config">/etc/php/cli/ext/10-php-zip.ini</Path>
+            <Path fileType="config">/etc/php/ext/10-php-zip.ini</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/php/ext/10-php-zip.ini" permission="0644" owner="root">10-php-zip.ini</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>php-imap</Name>
+        <Summary>Module for PHP to enable IMAP support</Summary>
+        <RuntimeDependencies>
+            <Dependency>php-common</Dependency>
+            <Dependency>libc-client</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/php/modules/imap.so</Path>
+            <Path fileType="config">/etc/php/ext/11-php-imap.ini</Path>
+            <Path fileType="config">/etc/php/cli/ext/11-php-imap.ini</Path>
+            <Path fileType="config">/etc/php/apache2/ext/11-php-imap.ini</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/php/ext/11-php-imap.ini" permission="0644" owner="root">11-php-imap.ini</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    <Package>
+        <Name>php-fpm</Name>
+        <Summary>FPM for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency>php-common</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>libmcrypt</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/sbin/php-fpm</Path>
+            <Path fileType="man">/usr/share/man/man8/php-fpm.8</Path>
+            <Path fileType="config">/etc/php/ext/php-fpm.conf</Path>
+            <Path fileType="data">/usr/share/fpm</Path>
+            <Path fileType="data">/run</Path>
+            <Path fileType="data">/var/log</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/php/ext/php-fpm.conf" permission="0644" owner="root">php-fpm.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+
+    <History>
+        <Update release="10">
+            <Date>2015-02-25</Date>
+            <Version>5.6.20</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+        <Update release="9">
+            <Date>2015-02-25</Date>
+            <Version>5.6.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+        <Update release="8">
+            <Date>2014-07-07</Date>
+            <Version>5.5.14</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Vedat Demir</Name>
+            <Email>vedat@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2014-05-25</Date>
+            <Version>5.5.12</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2014-02-20</Date>
+            <Version>5.5.8</Version>
+            <Comment>Rebuild for Mariadb</Comment>
+            <Name>Fatih Turgel</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2014-01-23</Date>
+            <Version>5.5.8</Version>
+            <Comment>
+                *Version bump to 5.5.8 
+                *http://php.net/ChangeLog-5.php#5.5.8
+            </Comment>
+            <Name>Fatih Turgel</Name>
+            <Email>hitaf@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2013-08-28</Date>
+            <Version>5.5.3</Version>
+            <Comment>
+                *Build fixed
+                *Version bump to 5.5.3
+                *Say hello to new package php-fpm
+                *service.py script written for php-fpm package
+                *Patches fixed
+                *Package takenover
+            </Comment>
+            <Name>Fatih Turgel</Name>
+            <Email>turgelfatih@gmail.com</Email>
+        </Update>
+        <Update release="3">
+            <Date>2013-06-29</Date>
+            <Version>5.4.12</Version>
+            <Comment>Fixed mysql.default_socket and session.save_path taken to /tmp</Comment>
+            <Name>Fatih Turgel</Name>
+            <Email>hitaf@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2013-03-08</Date>
+            <Version>5.4.12</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Aydın Demirel</Name>
+            <Email>aydin@demirel.web.tr</Email>
+        </Update>
+        <Update release="1" type="security">
+            <Date>2012-10-23</Date>
+            <Version>5.4.8</Version>
+            <Comment>First release</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
