@@ -13,18 +13,20 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.export("CFLAGS", "CXXFLAGS")
     qt5.configure()
 
 def build():
-     qt5.make()
+    qt5.make()
+    qt5.make("docs")
 
 def install():
-    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQml")
-    pisitools.insinto("/usr/lib/qt5/qml", "qml/Qt")
-    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick")
-    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick.2")
-    pisitools.insinto("/usr/lib/qt5/qml", "qml/QtTest")        
-    qt5.install("INSTALL_ROOT=%s" % get.installDIR())
+    #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQml")
+    #pisitools.insinto("/usr/lib/qt5/qml", "qml/Qt")
+    #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick")
+    #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick.2")
+    #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtTest")        
+    qt5.install("INSTALL_ROOT=%s install_docs" % get.installDIR())
 
     #I hope qtchooser will manage this issue
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):

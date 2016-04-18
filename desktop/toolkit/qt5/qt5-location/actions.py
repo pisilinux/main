@@ -15,9 +15,10 @@ def setup():
 
 def build():
      qt5.make()
+     qt5.make("docs")
 
 def install():
-    qt5.install("INSTALL_ROOT=%s" % get.installDIR())
+    qt5.install("INSTALL_ROOT=%s install_docs" % get.installDIR())
 
     #I hope qtchooser will manage this issue
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):

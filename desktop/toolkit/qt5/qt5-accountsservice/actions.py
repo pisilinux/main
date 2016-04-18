@@ -11,7 +11,9 @@ from pisi.actionsapi import shelltools
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                                                  -DCMAKE_BUILD_TYPE=Release \
+                                                  -DCMAKE_LIBDIR=/usr/lib", sourceDir="..")
 def build():
     shelltools.cd("build")
     cmaketools.make()
