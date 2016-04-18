@@ -15,6 +15,7 @@ def setup():
 
 def build():
      qt5.make("docs")
+     qt5.make()
 
 def install():
     qt5.install("INSTALL_ROOT=%s install_docs" % get.installDIR())
