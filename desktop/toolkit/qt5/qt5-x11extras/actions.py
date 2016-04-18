@@ -14,6 +14,7 @@ def setup():
     qt5.configure()
 
 def build():
+    qt5.make()
     qt5.make("docs")
 
 def install():
