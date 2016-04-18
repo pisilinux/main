@@ -15,11 +15,9 @@ def setup():
 
 def build():
      qt5.make()
-     #qt5.make("docs")
 
 def install():
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
-    #qt5.install("install_docs")
 
     #I hope qtchooser will manage this issue
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
@@ -29,4 +27,3 @@ def install():
     pisitools.dosym("/usr/bin/qdbus-qt5", "/usr/bin/qdbus")
     pisitools.dosym("/usr/bin/qtpaths-qt5", "/usr/bin/qtpaths")
 
-    #pisitools.insinto("/usr/share/licenses/qt5-tools/", "LGPL_EXCEPTION.txt")
