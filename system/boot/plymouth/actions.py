@@ -37,6 +37,8 @@ def setup():
                          --enable-pango \
                          --enable-gdm-transition \
                          --without-rhgb-compat-link" % LOGO_FILE)
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
