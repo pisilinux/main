@@ -35,14 +35,7 @@ def setup():
                          --disable-tests \
                          --disable-static \
                          --enable-gdm-transition \
-<<<<<<< HEAD
                          --without-rhgb-compat-link" % LOGO_FILE)
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-=======
-                         --without-rhgb-compat-link \
-                         --without-gdm-autostart-file" % LOGO_FILE)
->>>>>>> parent of 84b30c3... revert
 
 def build():
     autotools.make()
