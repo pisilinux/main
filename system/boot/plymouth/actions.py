@@ -16,8 +16,6 @@ def setup():
     # /var/run => /run
     pisitools.dosed("configure.ac", "^(\s+plymouthruntimedir=)\$localstatedir(\/run\/plymouth)", r"\1\2")
     pisitools.dosed("src/Makefile.am", "^(plymouthdrundir\s=\s)\$\(localstatedir\)(\/run\/plymouth)", r"\1\2")
-    
-    shelltools.export("LDFLAGS","%s -ludev" % get.LDFLAGS())
 
     autotools.autoreconf("-fis")
 
@@ -32,13 +30,12 @@ def setup():
                          --with-system-root-install \
                          --with-boot-tty=/dev/tty7 \
                          --with-shutdown-tty=/dev/tty1 \
+                         --with-log-viewer \
+                         --disable-libdrm_nouveau \
+                         --disable-tests \
                          --disable-static \
-                         --enable-drm \
-                         --enable-pango \
                          --enable-gdm-transition \
                          --without-rhgb-compat-link" % LOGO_FILE)
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
