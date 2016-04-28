@@ -23,19 +23,16 @@ def setup():
 
     autotools.rawConfigure("\
                             --prefix=/usr \
-                            --enable-ipv6 \
-                            --enable-loadable-sqlite-extensions \
                             --enable-shared \
+                            --with-threads \
                             --with-computed-gotos \
-                            --with-dbmliborder=gdbm:ndbm \
-                            --with-fpectl \
+                            --enable-ipv6 \
                             --with-system-expat \
+                            --with-dbmliborder=gdbm:ndbm \
                             --with-system-ffi \
                             --with-system-libmpdec \
-                            --with-threads \
-                            --with-valgrind \
-                            --without-ensurepip \
-                           ")
+                            --enable-loadable-sqlite-extensions \
+                            --without-ensurepip")
 
 def build():
     autotools.make()
