@@ -20,9 +20,9 @@ def install():
     # Build and install the new 'perf' tool
     #pisitools.insinto("/usr/bin", "tools/perf/perf", "perf.%s-%s" % (get.srcNAME(), get.srcVERSION()))
     autotools.install("JOBS=5 WERROR=0 perf HAVE_CPLUS_DEMANGLE=1")
-    
+
     pisitools.domove("/usr/etc/bash_completion.d/perf", "/etc/bash_completion.d")
     pisitools.removeDir("/usr/etc")
-    
-    pisitools.domove("/usr/lib64/libperf-gtk.so", "/usr/lib/")
+
+    #pisitools.domove("/usr/lib64/libperf-gtk.so", "/usr/lib/")
     pisitools.removeDir("/usr/lib64")
