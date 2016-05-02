@@ -13,13 +13,13 @@ def setup():
     autotools.autoreconf("-fi")
     shelltools.cd("../")
     shelltools.makedirs("gst-next")
-    shelltools.copy("gstreamer-vaapi-0.6.0/*", "gst-next")
+    shelltools.copy("gstreamer-vaapi-0.7.0/*", "gst-next")
     shelltools.cd("gst-next")
     autotools.aclocal()
     autotools.configure("--prefix=/usr --disable-static")
 
     shelltools.cd("../")
-    shelltools.cd("gstreamer-vaapi-0.6.0")
+    shelltools.cd("gstreamer-vaapi-0.7.0")
     autotools.aclocal()
     autotools.configure("--with-gstreamer-api=0.10")
 
@@ -31,7 +31,7 @@ def build():
     autotools.make()
 
     shelltools.cd("../")
-    shelltools.cd("gstreamer-vaapi-0.6.0")
+    shelltools.cd("gstreamer-vaapi-0.7.0")
     autotools.make()
 
 def install():
@@ -40,7 +40,7 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     shelltools.cd("../")
-    shelltools.cd("gstreamer-vaapi-0.6.0")
+    shelltools.cd("gstreamer-vaapi-0.7.0")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README")
