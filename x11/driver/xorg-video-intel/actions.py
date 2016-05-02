@@ -6,15 +6,13 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-
+from pisi.actionsapi import shelltools
 
 def setup():
     # DRI3 has been known to be buggy with the current stack, so is disabled
-    autotools.configure("\
-                         --disable-static \
-                         --disable-dri3 \
-                         --enable-glamor \
-                        ")
+    
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    autotools.configure()
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -24,4 +22,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README")
+  #  pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README")
