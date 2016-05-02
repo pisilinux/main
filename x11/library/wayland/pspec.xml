@@ -13,16 +13,18 @@
         <IsA>library</IsA>
         <Summary>Wayland Compositor Infrastructure</Summary>
         <Description>Wayland is a protocol for a compositor to talk to its clients as well as a C library implementation of that protocol.</Description>
-        <Archive sha1sum="39dedba2a5c8a83e7b3a3076fc8f4c4495289f81" type="tarxz">http://wayland.freedesktop.org/releases/wayland-1.9.0.tar.xz</Archive>
+        <Archive sha1sum="a593c012233942ac9b0291dace6bb4a068ee99ea" type="tarxz">https://wayland.freedesktop.org/releases/wayland-1.10.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>libffi-devel</Dependency>
             <Dependency>expat-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>wayland</Name>
         <RuntimeDependencies>
+            <Dependency>libxml2</Dependency>
             <Dependency>expat</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -74,6 +76,7 @@
         <Name>wayland-devel</Name>
         <Summary>Development files for wayland</Summary>
         <RuntimeDependencies>
+            <Dependency>expat-devel</Dependency>
             <Dependency release="current">wayland</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -91,14 +94,14 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libffi-32bit</Dependency>
-            <Dependency>glibc-32bit</Dependency>
             <Dependency>expat-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">wayland</Dependency>
             <Dependency>expat-32bit</Dependency>
             <Dependency>libffi-32bit</Dependency>
-            <Dependency>glibc-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
@@ -106,6 +109,13 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2016-05-01</Date>
+            <Version>1.10.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2015-11-05</Date>
             <Version>1.9.0</Version>

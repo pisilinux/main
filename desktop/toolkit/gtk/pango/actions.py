@@ -14,7 +14,7 @@ def setup():
     if get.buildTYPE()=="emul32":
         pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
     
-    autotools.autoreconf("-fiv")
+    # autotools.autoreconf("-fiv")
     
     autotools.configure("--disable-static \
                          --sysconfdir=/etc \
