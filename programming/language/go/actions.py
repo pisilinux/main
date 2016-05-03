@@ -9,25 +9,19 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-shelltools.export("GOROOT", "%s/go-go1.6.2" % get.workDIR())
-shelltools.export("GOBIN", "$GOROOT/bin")
-shelltools.export("GOPATH", "%s" % get.workDIR())
-shelltools.export("GOROOT_FINAL", "/usr/lib/go")
-shelltools.export("GOROOT_BOOTSTRAP", "%s/go-go1.6.2/go-linux-amd64-bootstrap" % get.workDIR())
-
-shelltools.export("GOHOSTARCH","amd64")
-shelltools.export("GOHOSTOS","linux")
-shelltools.export("CC", "gcc")
-
-shelltools.export("GOOS","linux")
-shelltools.export("GOARCH","amd64")
-
-shelltools.export("CC_FOR_TARGET", "gcc")
-shelltools.export("CXX_FOR_TARGET", "g++")
-
 NoStrip=["/"]
 
 def build():
+    
+    shelltools.export("GOROOT", "%s/go-go1.6.2" % get.workDIR()) #0
+    shelltools.export("GOBIN", "$GOROOT/bin") #1
+    shelltools.export("GOPATH", "%s" % get.workDIR())
+    #shelltools.export("GOROOT_FINAL", "/usr/lib/go")
+    shelltools.export("GOROOT_BOOTSTRAP", "%s/go-go1.6.2/go-linux-amd64-bootstrap" % get.workDIR())  #2
+
+    shelltools.export("GOOS","linux")
+    shelltools.export("GOARCH","amd64")
+    
     shelltools.cd("src")
 
     shelltools.system("./make.bash")
@@ -46,20 +40,20 @@ def install():
     shelltools.cd("%s/go-go1.6.2" % get.workDIR())
 
     pisitools.dodir("/usr/lib/go")
-    pisitools.insinto("/usr/lib/go", "bin")
-    
+    shelltools.system("cp -rp api bin doc lib pkg src  %s/usr/lib/go" % get.installDIR())
+        
     pisitools.dosym("/usr/lib/go/bin/go", "/usr/bin/go")
     pisitools.dosym("/usr/lib/go/bin/gofmt", "/usr/bin/gofmt")
     
-    pisitools.insinto("/usr/lib/go", "doc")
-    pisitools.insinto("/usr/lib/go", "lib")
-    pisitools.insinto("/usr/lib/go", "pkg")
-    pisitools.insinto("/usr/lib/go", "src")
+    shelltools.system("cp -R doc  %s/usr/lib/go" % get.installDIR())
+    shelltools.system("cp -R lib  %s/usr/lib/go" % get.installDIR())
+    shelltools.system("cp -R pkg  %s/usr/lib/go" % get.installDIR())
+    shelltools.system("cp -R src  %s/usr/lib/go" % get.installDIR())
+    
+#    shelltools.chmod("%s/usr/lib/go/bin" % get.installDIR(), 0755)
+#    shelltools.chmod("%s/usr/lib/go/pkg/tool" % get.installDIR(), 0755)
 
-    shelltools.chmod("%s/usr/lib/go/bin" % get.installDIR(), 0755)
-    shelltools.chmod("%s/usr/lib/go/pkg/tool" % get.installDIR(), 0755)
-
-    pisitools.insinto("/usr/lib/go", "misc")
+    shelltools.system("cp -a misc  %s/usr/lib/go" % get.installDIR())
     
     pisitools.removeDir("/usr/lib/go/pkg/bootstrap")
  
