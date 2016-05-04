@@ -15,7 +15,7 @@ def setup():
     shelltools.sym("makefiles/Makefile.am", "Makefile.am")
     shelltools.sym("makefiles/makefile.linux", "Makefile")
     #shelltools.sym("contrib/gcc/sdl-mngplay/acinclude.m4", "acinclude.m4")
-    
+
     shelltools.system("sed -i -e 's/unroll-loops/& -fPIC/' Makefile ")
 
     autotools.autoreconf("-fiv")
