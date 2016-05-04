@@ -102,7 +102,7 @@ def setup():
 
 def build():
     shelltools.export("LD_LIBRARY_PATH", "%s/lib:%s" % (get.curDIR(), get.ENV("LD_LIBRARY_PATH")))
-    autotools.make()
+    qt5.make()
 
 def install():
     if get.buildTYPE() == "emul32":
