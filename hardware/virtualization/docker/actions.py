@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 shelltools.export("AUTO_GOPATH", "1")
 shelltools.export("DOCKER_GITCOMMIT", "20f81dd")
+shelltools.export("GOROOT","/usr/lib/go")
 shelltools.export("GOPATH", "%s" % get.workDIR())
 
 shelltools.export("CGO_CFLAGS", "-I/usr/include")
