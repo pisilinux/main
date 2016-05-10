@@ -10,5 +10,4 @@ from pisi.actionsapi import pisitools
 
 def install():
     pisitools.dodir("/usr/lib/prebootloader")
-    #pisitools.insinto("/usr/share/calamares/branding/pisilinux", "branding/pisi-kde/*")
     pisitools.dolib("*.efi", "/usr/lib/prebootloader/")
