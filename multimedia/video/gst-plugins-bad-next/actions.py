@@ -11,17 +11,9 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("AUTOPOINT", "true")
-    #pisitools.dosed("autogen.sh", "tool_run.*autopoint --force.*")
     shelltools.export("NOCONFIGURE", "1")
     shelltools.system("./autogen.sh")
     autotools.autoreconf("-vi")
-
-    """The following is a list of disabled plugins:
-    celt -> (celtdec, celtenc) -> Not available in Pardus repos,
-    qtwrapper, checks for QuickTime/Movies.h -> Not available in Pardus repos,
-    divx -> divx4linux,
-    dirac -> needs dirac-research package, http://dirac.sourceforge.net
-    """
 
     autotools.configure("--disable-static \
                          --disable-experimental \
@@ -43,4 +35,3 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("ABOUT-NLS", "AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README", "RELEASE", "REQUIREMENTS")
-
