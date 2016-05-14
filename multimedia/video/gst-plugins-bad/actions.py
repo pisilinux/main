@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("AUTOPOINT", "true")
     pisitools.dosed("autogen.sh", "tool_run.*autopoint --force.*")
-    
+
     pisitools.dosed("ext/modplug/gstmodplug.cc", "stdafx.h", "libmodplug/stdafx.h")
 
     shelltools.export("NOCONFIGURE", "1")
@@ -26,7 +26,7 @@ def setup():
                          --with-package-origin='http://www.pisilinux.org' \
                          --disable-experimental \
                          --disable-assrender")
-    
+
     # for fix unused dependency
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
