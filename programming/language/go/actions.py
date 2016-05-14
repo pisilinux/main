@@ -50,8 +50,8 @@ def install():
     pisitools.dosym("/usr/lib/go/bin/go", "/usr/bin/go")
     pisitools.dosym("/usr/lib/go/bin/gofmt", "/usr/bin/gofmt")
 
-    pisitools.dosym("usr/lib/go/doc", "/usr/share/doc/%s/doc" % get.srcNAME())
-    pisitools.dosym("usr/lib/go/api", "/usr/share/doc/%s/api" % get.srcNAME())
+    pisitools.dosym("/usr/lib/go/doc", "/usr/share/doc/%s/doc" % get.srcNAME())
+    pisitools.dosym("/usr/lib/go/api", "/usr/share/doc/%s/api" % get.srcNAME())
 
     shelltools.system("cp -a misc  %s/usr/lib/go" % get.installDIR())
 
