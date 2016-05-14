@@ -11,7 +11,7 @@ from pisi.actionsapi import pisitools
 def setup():
     autotools.configure("--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
                          --disable-static --enable-experimental --enable-gtk-doc \
-                         --with-package-name='GStreamer Bad Plugins (Pisi Linux)' \
+                         --with-package-name='GStreamer VAAPI Plugins (Pisi Linux)' \
                          --with-package-origin='http://www.pisilinux.org/' \
                          --with-gtk=3.0")
 
