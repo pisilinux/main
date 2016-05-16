@@ -11,6 +11,7 @@ def setup():
     autotools.configure("\
                          --disable-static \
                          --disable-silent-rules \
+                         --with-systemd-unit-dir=no \
                          --with-udev-rules-dir=/lib/udev/rules.d \
                          --enable-debug \
                         ")
@@ -20,6 +21,4 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.removeDir("/lib/udev/rules.d")
-    pisitools.removeDir("/usr/lib/systemd")
     pisitools.dodoc("AUTHORS", "ChangeLog", "GPL", "README")
