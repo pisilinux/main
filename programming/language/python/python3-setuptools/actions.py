@@ -17,6 +17,6 @@ def setup():
 def install():    
     shelltools.cd("%s/python3" % get.workDIR())
     pythonmodules.install(pyVer = "3")
-    pisitools.rename("/usr/bin/easy_install", "py3easy-install")
+    #pisitools.rename("/usr/bin/easy_install", "py3easy-install")
     #avoid python-setuptools conflict
     pisitools.removeDir("/usr/share")
