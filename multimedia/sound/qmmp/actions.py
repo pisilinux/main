@@ -10,22 +10,9 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("src/plugins/Input/cdaudio/decoder_cdaudio.cpp", "cdio\/cdda\.h", r"cdio/paranoia/cdda.h")
-    cmaketools.configure("-DUSE_PULSE=TRUE \
-                          -DUSE_ALSA=TRUE \
-                          -DUSE_FFMPEG=TRUE \
-                          -DUSE_FFMPEG_LEGACY=OFF \
-                          -DUSE_CDA=TRUE \
-                          -DUSE_VORBIS=TRUE \
-                          -DUSE_AAC=TRUE \
-                          -DUSE_LADSPA=TRUE \
-                          -DUSE_COVER=TRUE \
-                          -DUSE_KDENOTIFY=TRUE \
-                          -DUSE_ENCA=TRUE \
-                          -DUSE_FLAC=TRUE \
-                          -DUSE_MPRIS=TRUE \
-                          -DUSE_HAL=OFF \
-                          -DCMAKE_SKIP_RPATH=ON \
-                          -DCMAKE_SKIP_INSTALL_RPATH=ON")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+          -DUSE_HAL:BOOL=FALSE")
 
 def build():
     cmaketools.make()
