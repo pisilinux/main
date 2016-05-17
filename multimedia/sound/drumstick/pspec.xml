@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>drumstick</Name>
+        <Homepage>http://drumstick.sourceforge.net</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2+</License>
+        <Icon>drumstick</Icon>
+        <IsA>app:console</IsA>
+        <IsA>app:gui</IsA>
+        <Summary>Qt4/C++ wrapper for ALSA Sequencer</Summary>
+        <Description>Drumstick library is a C++ wrapper around the ALSA library sequencer interface, using Qt4 objects, idioms and style.</Description>
+        <Archive sha1sum="5f71f30cd98512c6930f16eb2ddacc318cc732ea" type="tarbz2">mirrors://sourceforge/drumstick/1.0.2/drumstick-1.0.2.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-svg-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>fluidsynth-devel</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>shared-mime-info</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>drumstick</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">drumstick-libs</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>qt5-svg</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>alsa-lib</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/mime</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>drumstick-libs</Name>
+        <IsA>library</IsA>
+        <Summary>Libraries for Drumstick</Summary>
+        <Description>drumstick-libs provides libraries for Drumstick based applications.</Description>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>fluidsynth</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/drumstick</Path>
+            <Path fileType="library">/usr/lib/libdrum*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>drumstick-devel</Name>
+        <IsA>data</IsA>
+        <Summary>Development files for Drumstick</Summary>
+        <Description>drumstick-devel provides development files for Drumstick libraries.</Description>
+        <RuntimeDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency release="current">drumstick-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2016-05-17</Date>
+            <Version>1.0.2</Version>
+            <Comment>First release</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+     </History>
+</PISI>
