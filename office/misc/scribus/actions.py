@@ -26,5 +26,5 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     pisitools.insinto("/usr/share/applications", "vnd.scribus.desktop", "scribus.desktop")
-    pisitools.insinto("/usr/share/pixmaps", "resources/icons/scribus.png")
-    pisitools.insinto("/usr/share/pixmaps", "resources/icons/scribusdoc.png", "x-scribus.png")
+    pisitools.insinto("/usr/share/pixmaps", "resources/iconsets/1_5_1/scribus.png")
+    pisitools.insinto("/usr/share/pixmaps", "resources/iconsets/1_5_0/scribusdoc.png", "x-scribus.png")
