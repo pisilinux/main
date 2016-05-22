@@ -8,18 +8,16 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-
+WorkDir="qt-creator-opensource-src-%s" % get.srcVERSION()
 def setup():
-    qt5.configure()
+    
+    shelltools.system("qmake-qt5 qtcreator.pro CONFIG+=release QTC_PREFIX=/usr")
+
 
 def build():
     qt5.make()
 
 def install():
-    pisitools.dodir("/usr")
     qt5.install()
-    pisitools.domove("/share", "/usr")
-    pisitools.domove("/lib", "/usr")
-    pisitools.domove("/bin", "/usr")
     pisitools.rename("/usr/bin/qtcreator", "qtcreator-bin")
-    pisitools.domove("/usr/share/qtcreator/debugger/LGPL_EXCEPTION.TXT", "/usr/share/licenses/qtcreator")
+    pisitools.domove("/usr/share/qtcreator/debugger/LICENSE.GPL3-EXCEPT", "/usr/share/licenses/qtcreator")
