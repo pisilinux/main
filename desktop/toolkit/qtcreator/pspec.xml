@@ -11,7 +11,7 @@
         <IsA>app:gui</IsA>
         <Summary>Lightweight, cross-platform integrated development environment</Summary>
         <Description>Lightweight, cross-platform integrated development environment</Description>
-        <Archive type="targz" sha1sum="3bd40b180a3c0b49eb6e3ce7945491f1be152921">http://download.qt.io/official_releases/qtcreator/3.6/3.6.1/qt-creator-opensource-src-3.6.1.tar.gz</Archive>
+        <Archive type="targz" sha1sum="be07f52421e5552b06bbe584fd2f957494c11aaf">http://download.qt.io/official_releases/qtcreator/4.0/4.0.0/qt-creator-opensource-src-4.0.0.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>libgcc</Dependency>
             <Dependency>libX11-devel</Dependency>
@@ -22,7 +22,6 @@
             <Dependency versionFrom="5.6.0">qt5-base-devel</Dependency>
             <Dependency versionFrom="5.6.0">qt5-declarative-devel</Dependency>
             <Dependency versionFrom="5.6.0">qt5-linguist</Dependency>
-            <Dependency>qt5-quick1-devel</Dependency>
             <Dependency versionFrom="5.6.0">qt5-quickcontrols2</Dependency>
             <Dependency versionFrom="5.6.0">qt5-svg-devel</Dependency>
             <Dependency versionFrom="5.6.0">qt5-xmlpatterns</Dependency>
@@ -35,28 +34,25 @@
             <Dependency>llvm-clang-devel</Dependency>
             <Dependency>llvm</Dependency>
         </BuildDependencies>
-        <Patches>
-<!--             <Patch>qt-creator_rpath.patch</Patch> -->
-        </Patches>
     </Source>
+    
     <Package>
         <Name>qtcreator</Name>
         <Summary>Lightweight, cross-platform integrated development environment</Summary>
         <RuntimeDependencies>
-            <Dependency>libX11</Dependency>
             <Dependency>libgcc</Dependency>
-            <Dependency>qt5-svg</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-svg</Dependency>
             <Dependency versionFrom="5.6.0">qt5-base</Dependency>
-            <Dependency>qt5-quick1</Dependency>
-            <Dependency>qt5-script</Dependency>
-            <Dependency>qt5-webkit</Dependency>
-            <Dependency>qt5-designer</Dependency>
-            <Dependency>qt5-assistant</Dependency>
-            <Dependency>qt5-x11extras</Dependency>
-            <Dependency>qt5-declarative</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-base-devel</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-script</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-webkit</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-designer</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-assistant</Dependency>
+            <Dependency versionFrom="5.6.0">qt5-declarative</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/libexec/qtcreator</Path>
             <Path fileType="library">/usr/lib/qtcreator</Path>
             <Path fileType="data">/usr/share/applications/qtcreator.desktop</Path>
             <Path fileType="data">/usr/share/licenses</Path>
@@ -68,10 +64,18 @@
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/qtcreator.desktop">qtcreator.desktop</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/bin/qtcreator.sh">qtcreator.sh</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/etc/ld.so.conf.d/80-qtcreator.conf">80-qtcreator.conf</AdditionalFile>
+<!--             <AdditionalFile owner="root" permission="0644" target="/etc/ld.so.conf.d/80-qtcreator.conf">80-qtcreator.conf</AdditionalFile> -->
         </AdditionalFiles>
     </Package>
+    
     <History>
+        <Update release="2">
+            <Date>2016-05-22</Date>
+            <Version>4.0.0</Version>
+            <Comment>version bump and fixed prefix path</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2016-04-21</Date>
             <Version>3.6.1</Version>
