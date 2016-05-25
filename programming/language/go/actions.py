@@ -9,7 +9,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-NoStrip = ["/usr/lib/go/pkg", "/usr/lib/go/src/runtime/race", "/usr/lib/go/src/debug/elf", "/usr/lib/go/src/debug/dwarf"]
+NoStrip = ["/"]
+#NoStrip = ["/usr/lib/go/pkg", "/usr/lib/go/src/runtime/race", "/usr/lib/go/src/debug/elf", "/usr/lib/go/src/debug/dwarf"]
 
 def build():
     shelltools.export("go_platform","linux-amd64")
@@ -59,7 +60,10 @@ def install():
 
     # remove testdata, which hit cave fix-linkage
     pisitools.remove("/usr/lib/go/src/debug/elf/testdata/gcc-386-freebsd-exec")
-    pisitools.removeDir("/usr/lib/go/pkg/linux_amd64/internal/syscall/windows")
     pisitools.removeDir("/usr/lib/go/pkg/obj")
+
+    # dirty fix thanks @erturk
+    pisitools.removeDir("/usr/lib/go/pkg/linux_amd64")
+    
 
     pisitools.dodoc("VERSION", "LICENSE", "PATENTS", "README*", "AUTHORS", "CONTRIBUTORS")
