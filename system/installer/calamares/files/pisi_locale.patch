@@ -1,0 +1,21 @@
+--- calamares-2.2.orig/src/modules/locale/LocalePage.cpp	2015-08-06 12:58:34.000000000 +0300
++++ calamares-2.2/src/modules/locale/LocalePage.cpp	2016-05-18 10:19:14.271694185 +0300
+@@ -240,7 +240,7 @@
+                  << ". Assuming the supported languages are already built into "
+                     "the locale archive.";
+         QProcess localeA;
+-        localeA.start( "locale", QStringList() << "-a" );
++        localeA.start( "cat", QStringList() << "/etc/languages" );
+         localeA.waitForFinished();
+         ba = localeA.readAllStandardOutput();
+     }
+--- calamares-2.2.orig/src/modules/localecfg/main.py	2015-10-16 17:56:51.000000000 +0300
++++ calamares-2.2/src/modules/localecfg/main.py	2016-05-18 10:19:38.315696547 +0300
+@@ -67,6 +67,6 @@
+ 
+     with open(locale_conf_path, "w") as locale_conf:
+         locale_split = locale.split(' ')[0]
+-        locale_conf.write("LANG={!s}\n".format(locale_split))
++        locale_conf.write("{!s}\n".format(locale_split))
+ 
+     return None

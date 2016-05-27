@@ -1,0 +1,20 @@
+--- calamares-2.2.orig/src/modules/users/SetHostNameJob.cpp	2015-08-06 12:58:32.000000000 +0300
++++ calamares-2.2/src/modules/users/SetHostNameJob.cpp	2016-05-17 01:02:30.131263802 +0300
+@@ -68,7 +68,7 @@
+         return Calamares::JobResult::error( tr( "Internal Error" ) );
+     }
+ 
+-    QFile hostfile( destDir + "/etc/hostname" );
++    QFile hostfile( destDir + "/etc/env.d/01hostname" );
+     if ( !hostfile.open( QFile::WriteOnly ) )
+     {
+         cLog() << "Can't write to hostname file";
+@@ -76,7 +76,7 @@
+     }
+ 
+     QTextStream hostfileout( &hostfile );
+-    hostfileout << m_hostname << "\n";
++    hostfileout << "HOSTNAME=" << "\"" << m_hostname << "\"" << "\n";
+     hostfile.close();
+ 
+     QFile hostsfile( destDir + "/etc/hosts" );
