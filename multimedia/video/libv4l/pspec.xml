@@ -13,11 +13,14 @@
         <IsA>library</IsA>
         <Summary>V4L wrapper for V4L2</Summary>
         <Description>A library to access V4L2 API with V4L1 alike calls.</Description>
-        <Archive sha1sum="f444b24e5805da4f814d467d20f65188d9b5be10" type="tarbz2">http://linuxtv.org/downloads/v4l-utils/v4l-utils-1.0.1.tar.bz2</Archive>
+        <Archive sha1sum="79b5d9f42e5926729e93fb7064dc46d3b862b13e" type="tarbz2">https://linuxtv.org/downloads/v4l-utils/v4l-utils-1.10.0.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>glibc-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>mesa-glu-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libgcc</Dependency>
         </BuildDependencies>
     </Source>
@@ -30,7 +33,8 @@
         <Files>
             <Path fileType="config">/lib/udev/rules.d</Path>
             <Path fileType="config">/lib/udev/rc_keymaps</Path>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/lib*</Path>
+            <Path fileType="library">/usr/lib/v4l*</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
@@ -39,7 +43,10 @@
         <Name>v4l-utils</Name>
         <Summary>Utilities for libv4l</Summary>
         <RuntimeDependencies>
+            <Dependency>mesa</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>qt5-base</Dependency>
             <Dependency release="current">libv4l</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -49,6 +56,7 @@
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="data">/usr/share/applications</Path>
             <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
         </Files>
     </Package>
 
@@ -56,13 +64,15 @@
         <Name>libv4l-devel</Name>
         <Summary>Development files for libv4l</Summary>
         <RuntimeDependencies>
+            <Dependency>mesa</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>mesa-glu</Dependency>
             <Dependency release="current">libv4l</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
             <Path fileType="data">/usr/lib32/pkgconfig</Path>
-            <Path fileType="doc">/usr/share/doc/libv4l/contrib</Path>
         </Files>
     </Package>
 
@@ -74,19 +84,31 @@
         <BuildDependencies>
             <Dependency>libjpeg-turbo-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>mesa-glu-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>qt5-base-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency>libjpeg-turbo-32bit</Dependency>
             <Dependency release="current">libv4l</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/lib32/lib*</Path>
+            <Path fileType="library">/usr/lib32/v4l*</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2016-05-28</Date>
+            <Version>1.10.0</Version>
+            <Comment>update</Comment>
+            <Name>Serdar Soytetir</Name>
+            <Email>kaptan@pisilinux.org</Email>
+        </Update>
         <Update release="2">
-            <Date>2016-05-25</Date>
+            <Date>2015-05-25</Date>
             <Version>1.0.1</Version>
             <Comment>Rebuild</Comment>
             <Name>Serdar Soytetir</Name>
