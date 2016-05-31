@@ -1,0 +1,22 @@
+diff -Nuar calamares-2.2.orig/src/modules/initcpiocfg/main.py calamares-2.2/src/modules/initcpiocfg/main.py
+--- calamares-2.2.orig/src/modules/initcpiocfg/main.py	2015-10-16 17:56:51.000000000 +0300
++++ calamares-2.2/src/modules/initcpiocfg/main.py	2016-05-31 22:02:52.423693761 +0300
+@@ -90,7 +90,7 @@
+     modules = []
+ 
+     # It is important that the plymouth hook comes before any encrypt hook
+-    plymouth_bin = os.path.join(root_mount_point, "usr/bin/plymouth")
++    plymouth_bin = os.path.join(root_mount_point, "bin/plymouth")
+     if os.path.exists(plymouth_bin):
+         hooks.append("plymouth")
+ 
+@@ -110,8 +110,7 @@
+         modules.append("crc32c")
+     elif btrfs is "yes" and cpu['proc0']['vendor_id'].lower() == "genuineintel":
+         modules.append("crc32c-intel")
+-    else:
+-        hooks.append("fsck")
++
+ 
+     set_mkinitcpio_hooks_and_modules(hooks, modules, root_mount_point)
+ 
