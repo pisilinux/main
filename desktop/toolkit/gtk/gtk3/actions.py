@@ -11,13 +11,10 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    options = "--enable-x11-backend \
-               --enable-xinerama \
-               --enable-xkb \
-               --disable-silent-rules \
-               --disable-schemas-compile \
-               --enable-introspection \
-               --disable-papi \
+    options = "--prefix=/usr             \
+               --sysconfdir=/etc         \
+               --enable-x11-backend \
+               --enable-broadway-backend \
                --disable-wayland-backend \
               "
 
