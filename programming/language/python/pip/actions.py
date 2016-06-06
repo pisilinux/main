@@ -12,22 +12,7 @@ from pisi.actionsapi import pisitools
 WorkDir="pip-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.makedirs("python3")
-    
-    shelltools.copytree("../pip-%s" % get.srcVERSION(), "%s/python3" % get.workDIR())
     pythonmodules.compile()
-    
-    shelltools.cd("%s/python3" % get.workDIR())
-    pythonmodules.compile(pyVer = "3")
-    
+        
 def install():    
     pythonmodules.install()
-    
-    shelltools.cd("%s/python3" % get.workDIR())
-    
-    pythonmodules.install(pyVer = "3")
-    pisitools.rename("/usr/bin/pip", "pip3")
-    
-    shelltools.system("sed -i 's|#!/usr/bin/env python$|#!/usr/bin/env python3|' %s/usr/lib/python3.4/site-packages/pip/__init__.py" % get.installDIR())
-    shelltools.system("python3 -m compileall %s/usr/lib/python3.4/site-packages/pip/__init__.py" % get.installDIR())
-    
