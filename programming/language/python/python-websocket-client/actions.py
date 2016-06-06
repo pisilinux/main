@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
@@ -13,5 +12,4 @@ def build():
 def install():
     pythonmodules.install()
 
-    pisitools.removeDir("/usr/lib/*/site-packages/six-1.9.0*egg-info*")
-    pisitools.remove("/usr/lib/*/site-packages/*egg-info*")
+    pisitools.dodoc("MANIFEST*", "ChangeLog", "README*", "LICENSE")

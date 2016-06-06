@@ -15,9 +15,14 @@ examples = "%s/%s/" % (get.docDIR(), get.srcNAME())
 
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
-def install():
-    pisitools.dosed("setup.py", "man/man1", "share/man/man1")
+def setup():
+    shelltools.system("sed -i -e 's:man/man1:share/man/man1:g' setup.py")
 
+def build():
+    pythonmodules.compile()
+
+
+def install():
     pythonmodules.install()
 
     pisitools.dohtml("doc/*")
