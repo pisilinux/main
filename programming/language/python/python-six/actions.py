@@ -12,6 +12,3 @@ def build():
 
 def install():
     pythonmodules.install()
-
-    pisitools.removeDir("/usr/lib/*/site-packages/six-1.9.0*egg-info*")
-    pisitools.remove("/usr/lib/*/site-packages/*egg-info*")
