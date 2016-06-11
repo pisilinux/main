@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 WorkDir = "."
 
 def setup():
-    shelltools.system("unzip -o ooo_swedish_dict_2-36.oxt")
+    shelltools.system("unzip -o ooo_swedish_dict_2-40.oxt")
 
 def install():
     pisitools.insinto("/usr/share/hunspell", "dictionaries/*.dic")
