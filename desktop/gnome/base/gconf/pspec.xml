@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>gconf</Name>
+        <Homepage>http://www.gnome.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Gnome Configuration System</Summary>
+        <Description>gconf is a Gnome Configuration System.</Description>
+        <Archive sha1sum="a90d3ac08dc454f927c8d3024f52d4d57e3ff613" type="tarxz">mirrors://gnome/GConf/3.2/GConf-3.2.6.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>gettext-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>python-lxml</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">01_xml-gettext-domain.patch</Patch>
+            <Patch level="1">gconf-reload.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>gconf</Name>
+        <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>polkit</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>dbus-glib</Dependency>
+            <Dependency>openldap-client</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/dbus-1/system.d</Path>
+            <Path fileType="config">/etc/gconf</Path>
+            <Path fileType="config">/etc/xdg/autostart</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libgconf*</Path>
+            <Path fileType="library">/usr/lib/GConf</Path>
+            <Path fileType="library">/usr/lib/gio</Path>
+            <Path fileType="library">/usr/lib/girepository-1.0</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/GConf</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/polkit-1/actions</Path>
+            <Path fileType="data">/usr/share/sgml/gconf</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/gconf/2/path">gconf2.path</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="pakhandler.py">System.PackageHandler</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>gconf-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>GConf reference documents</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gconf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>gconf-devel</Name>
+        <Summary>Development files for gconf</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gconf</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>python-lxml</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2016-05-05</Date>
+            <Version>3.2.6</Version>
+            <Comment>First release</Comment>
+            <Name>Erdinç Gültekin</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
