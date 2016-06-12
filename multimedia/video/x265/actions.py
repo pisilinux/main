@@ -10,18 +10,15 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 
 def setup():
-    pisitools.ldflags.add("-z,noexecstack")
-    shelltools.cd("build/linux")
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=release", sourceDir="../../source")
+    shelltools.cd("source")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DENABLE_STATIC=OFF")
 
 def build():
-    shelltools.cd("build/linux")
+    shelltools.cd("source")
     cmaketools.make()
 
 def install():
-    shelltools.cd("build/linux")
+    shelltools.cd("source")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.remove("/usr/lib/libx265.a")
-
 

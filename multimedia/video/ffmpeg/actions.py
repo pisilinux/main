@@ -54,7 +54,6 @@ def setup():
                             --enable-libcelt \
                             --enable-frei0r \
                             --enable-libcdio \
-                            --enable-libvo-aacenc \
                             --enable-libvo-amrwbenc \
                             --enable-nonfree \
                             --enable-libfaac")
@@ -62,6 +61,7 @@ def setup():
 def build():
     autotools.make()
     autotools.make('tools/qt-faststart')
+    autotools.make("doc/ff{mpeg,play,server}.1")
 
 def install():
     autotools.rawInstall("DESTDIR=%s install-man" % get.installDIR())
