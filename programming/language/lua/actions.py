@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 major = ".".join(get.srcVERSION().split(".")[:2])
 
 def setup():
-    pisitools.dosed("src/Makefile", "^CFLAGS.*$", "CFLAGS=%s -fPIC -DLUA_USE_LINUX" % get.CFLAGS())
+    pisitools.dosed("src/Makefile", "^CFLAGS.*$", "CFLAGS=%s -fPIC -DLUA_USE_LINUX -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" % get.CFLAGS())
     pisitools.dosed("src/Makefile", "^MYLDFLAGS.*$", "MYLDFLAGS=%s" % get.LDFLAGS())
     pisitools.dosed("lua.pc", "%VER%", "%s" % major)
     pisitools.dosed("lua.pc", "%REL%", "%s" % get.srcVERSION())
@@ -21,10 +21,10 @@ def build():
     autotools.make("linux")
 
 def install():
-    autotools.rawInstall("INSTALL_TOP=%s/usr INSTALL_MAN=%s/usr/share/man/ TO_LIB='liblua.so liblua.so.5.2 liblua.so.5.2.4'" % (get.installDIR(),get.installDIR()))
+    autotools.rawInstall("INSTALL_TOP=%s/usr INSTALL_MAN=%s/usr/share/man/ TO_LIB='liblua.so liblua.so.5.3 liblua.so.5.3.3'" % (get.installDIR(),get.installDIR()))
     
     pisitools.insinto("/usr/lib/pkgconfig", "lua.pc")
-    pisitools.insinto("/usr/lib/pkgconfig", "lua.pc", "lua5.2.pc")
+    pisitools.insinto("/usr/lib/pkgconfig", "lua.pc", "lua5.3.pc")
     
     #free directory
     pisitools.removeDir("usr/lib/lua/")
