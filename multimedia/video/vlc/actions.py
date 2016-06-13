@@ -25,24 +25,20 @@ def setup():
                             --with-default-font=/usr/share/fonts/dejavu/DejaVuSans.ttf \
                             --with-default-monospace-font=/usr/share/fonts/dejavu/DejaVuSansMono.ttf \
                             --with-x \
-                              LUAC=luac \
+                              LUAC=luac  LUA_LIBS='`pkg-config --libs lua`' \
+                              RCC=/usr/bin/rcc-qt5 \
                             --disable-asdcp \
                             --disable-coverage \
                             --disable-cprof \
                             --disable-crystalhd \
                             --disable-decklink \
-                            --disable-gles1 \
-                            --disable-gles2 \
                             --disable-goom \
                             --disable-kai \
                             --disable-kva \
                             --disable-maintainer-mode \
-                            --disable-merge-ffmpeg \
-                            --disable-mfx \
                             --disable-mmal-codec \
                             --disable-mmal-vout \
                             --disable-opensles \
-                            --disable-quicktime \
                             --disable-rpi-omxil \
                             --disable-shine \
                             --disable-sndio \
@@ -62,7 +58,8 @@ def setup():
                             --disable-static \
                             --disable-update-check \
                             --disable-silent-rules \
-                            --disable-qt4 \
+                            --disable-mfx \
+                            --enable-ncurses \
                             --enable-a52 \
                             --enable-aa \
                             --enable-alsa \
@@ -91,7 +88,6 @@ def setup():
                             --enable-mod \
                             --enable-mpc \
                             --enable-nls \
-                            --disable-ncurses \
                             --enable-ogg \
                             --enable-opus \
                             --enable-png \
@@ -101,26 +97,29 @@ def setup():
                             --enable-screen \
                             --enable-sdl \
                             --enable-sftp \
+                            --enable-schroedinger \
                             --enable-shared \
-                            --disable-skins2 \
                             --enable-smbclient \
                             --enable-sout \
                             --enable-speex \
                             --enable-svg \
-                            --enable-skins2 \
                             --enable-theora \
                             --enable-twolame \
-                            --enable-upnp \
                             --enable-upnp \
                             --enable-v4l2 \
                             --enable-vlc \
                             --enable-vcd \
+                            --enable-mtp \
                             --enable-vcdx \
                             --enable-vlm \
                             --enable-vorbis \
+                            --enable-x264 \
                             --enable-x265 \
                             --enable-xvideo \
+                            --enable-qt5 \
                            ")
+    #enable-skins2 \ --disable-qt4 \
+    shelltools.export("CFLAGS", "%s -fPIC -O2 -Wall -Wextra -DLUA_COMPAT_5_1" % get.CFLAGS())
 
     # for fix unused dependency
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
