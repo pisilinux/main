@@ -12,6 +12,8 @@ from pisi.actionsapi import get
 libdir = "lib"
 
 def setup():
+    shelltools.export("LC_ALL", "en_US.UTF-8")
+    shelltools.export("CFLAGS", get.CFLAGS().replace("-ggdb3", ""))
     autotools.rawConfigure("--prefix=/usr \
                             --libdir=/usr/%s \
                             --enable-pic \
@@ -20,15 +22,18 @@ def setup():
                             --enable-vp9-highbitdepth \
                             --enable-shared \
                             --enable-runtime-cpu-detect \
+                            --enable-multithread \
                             --enable-postproc \
                             --enable-experimental \
                             --enable-spatial-svc \
+                            --disable-debug \
+                            --disable-debug-libs \
                             --disable-install-docs \
                             --disable-install-srcs" % libdir)
 
 
 def build():
-    autotools.make()
+    autotools.make("verbose=true")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
