@@ -9,6 +9,7 @@ from pisi.actionsapi import cmaketools
 
 def setup():
     cmaketools.configure("-DCMAKE_SKIP_RPATH=ON \
+                          -DWITH_LIBSYSTEMD=OFF \
                           -DCMAKE_INSTALL_LIBDIR=lib")
 
 def build():

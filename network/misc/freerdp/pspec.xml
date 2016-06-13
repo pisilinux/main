@@ -12,16 +12,23 @@
         <IsA>app:console</IsA>
         <Summary>A Remote Desktop Implementation</Summary>
         <Description>FreeRDP is a free implementation of the Remote Desktop Protocol (RDP), released under Apacle License.</Description>
-        <Archive sha1sum="6c21e7f1505c64eeff056497bdd7b64551d34f5b" type="targz">http://pub.freerdp.com/releases/freerdp-1.0.2.tar.gz</Archive>
+        <Archive sha1sum="a94ada44a5d538e0d69b51a628f79a40206995fe" type="targz">https://github.com/FreeRDP/FreeRDP/archive/aa15327a3ac30710fbf23547ebcf6593e5e1701b/FreeRDP-aa15327a3ac30710fbf23547ebcf6593e5e1701b.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cups-devel</Dependency>
             <Dependency>ffmpeg-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libXinerama-devel</Dependency>
             <Dependency>xmlto</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXi-devel</Dependency>
             <Dependency>libXcursor-devel</Dependency>
-	    <Dependency>libxkbfile-devel</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
+	        <Dependency>libxkbfile-devel</Dependency>
             <Dependency>libXv-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>gstreamer-next-devel</Dependency>
+            <Dependency>gst-plugins-base-next-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>cmake</Dependency>
@@ -29,26 +36,29 @@
             <Dependency>util-linux</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">ffmpeg2.0.patch</Patch>
-            <Patch level="1">patch_numblock.patch</Patch>
+<!--             <Patch level="1">ffmpeg2.0.patch</Patch> -->
+<!--             <Patch level="1">patch_numblock.patch</Patch> -->
         </Patches>
     </Source>
 
     <Package>
         <Name>freerdp</Name>
         <RuntimeDependencies>
-            <Dependency>cups</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libXi</Dependency>
+            <Dependency>libXv</Dependency>
+            <Dependency>ffmpeg</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>libXext</Dependency>
             <Dependency>openssl</Dependency>
-            <Dependency>libXv</Dependency>                    
-            <Dependency>ffmpeg</Dependency>                    
-            <Dependency>libXext</Dependency>                    
-            <Dependency>alsa-lib</Dependency>                    
-            <Dependency>libXcursor</Dependency>                    
-            <Dependency>libxkbfile</Dependency>                  
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>libXfixes</Dependency>
+            <Dependency>libXcursor</Dependency>
+            <Dependency>libXrender</Dependency>
+            <Dependency>libxkbfile</Dependency>
             <Dependency>libXinerama</Dependency>
-            <Dependency>openssl</Dependency>
-            <Dependency>zlib</Dependency>
+            <Dependency>gstreamer-next</Dependency>
+            <Dependency>gst-plugins-base-next</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -58,14 +68,27 @@
             <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>freerdp-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">freerdp</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
+            <Path fileType="lib">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2016-06-14</Date>
+            <Version>2.0</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2016-06-09</Date>
             <Version>1.0.2</Version>
