@@ -57,7 +57,7 @@ def setup():
                         -Duse_system_xdg_utils=1 \
                         -Duse_system_yasm=1 \
                         -Duse_system_zlib=0 \
-                        -Dusb_ids_path=/usr/share/kcmusb/usb.ids \
+                        -Dusb_ids_path=/usr/share/misc/usb.ids \
                         -Duse_mojo=0 \
                         -Duse_gconf=0 \
                         -Duse_sysroot=0 \
