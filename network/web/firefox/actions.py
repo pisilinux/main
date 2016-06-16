@@ -39,7 +39,6 @@ def setup():
     shelltools.makedirs(ObjDir)
     shelltools.cd(ObjDir)
     shelltools.system("../configure --prefix=/usr --libdir=/usr/lib --disable-strip --disable-install-strip")
-    shelltools.system("sed -i '/^ftglyph.h/ i ftfntfmt.h' ../config/system-headers")
     
 
 def build():
