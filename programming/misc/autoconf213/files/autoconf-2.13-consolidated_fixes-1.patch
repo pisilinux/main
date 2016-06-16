@@ -189,7 +189,7 @@ diff -Naur a/autoconf.sh b/autoconf.sh
  
  : ${TMPDIR=/tmp}
 -tmpout=${TMPDIR}/acout.$$
-+tmpout=`/usr/bin/mktemp ${TMPDIR}/acout.XXXXXX`
++tmpout=`/bin/mktemp ${TMPDIR}/acout.XXXXXX`
  localdir=
  show_version=no
  
@@ -244,7 +244,7 @@ diff -Naur a/autoconf.sh b/autoconf.sh
  trap 'rm -f $tmpin $tmpout; exit 1' 1 2 15
  
 -tmpin=${TMPDIR}/acin.$$ # Always set this, to avoid bogus errors from some rm's.
-+tmpin=`/usr/bin/mktemp ${TMPDIR}/acin.XXXXXX`
++tmpin=`/bin/mktemp ${TMPDIR}/acin.XXXXXX`
 +# Always set this, to avoid bogus errors from some rm's.
  if test z$infile = z-; then
    infile=$tmpin
@@ -312,7 +312,7 @@ diff -Naur a/autoheader.sh b/autoheader.sh
    # pattern on the command line, so use a temporary file containing the
    # pattern.
 -  (fgrep_tmp=${TMPDIR-/tmp}/autoh$$
-+  (fgrep_tmp=`/usr/bin/mktemp ${TMPDIR-/tmp}/autoh$$.XXXXXX`
++  (fgrep_tmp=`/bin/mktemp ${TMPDIR-/tmp}/autoh$$.XXXXXX`
     trap "rm -f $fgrep_tmp; exit 1" 1 2 15
 -   cat > $fgrep_tmp <<EOF
 +   cat >> $fgrep_tmp <<EOF
@@ -327,7 +327,7 @@ diff -Naur a/autoupdate.sh b/autoupdate.sh
         [--version] [template-file]" 
  
 -sedtmp=/tmp/acups.$$
-+sedtmp=`/usr/bin/mktemp /tmp/acups.XXXXXX`
++sedtmp=`/bin/mktemp /tmp/acups.XXXXXX`
  # For debugging.
  #sedtmp=/tmp/acups
  show_version=no
