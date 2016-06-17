@@ -12,18 +12,17 @@
         <IsA>app:gui</IsA>
         <Summary>A powerful virtualization program</Summary>
         <Description>VirtualBox is a family of powerful x86 virtualization products for enterprise as well as home use. This is the Open Source Edition which lacks USB support and some other things.</Description>
-        <Archive sha1sum="eb2a74da2da48cd2b7b6f2e330ce37f8b33894ae" type="tarbz2">http://download.virtualbox.org/virtualbox/5.0.12/VirtualBox-5.0.12.tar.bz2</Archive>
+        <Archive sha1sum="8e7fa9bb7ab16854418c7878b61cc10dc5cc6a77" type="tarbz2">http://download.virtualbox.org/virtualbox/5.1.0_BETA2/VirtualBox-5.1.0_BETA2.tar.bz2</Archive>       
         <BuildDependencies>
             <Dependency>dev86</Dependency>
             <Dependency>cdrkit</Dependency>
             <Dependency>acpica</Dependency>
             <Dependency>mesa-devel</Dependency>
-            <Dependency>curl-devel</Dependency><!--1-->
+            <Dependency>curl-devel</Dependency>
             <Dependency>python-devel</Dependency>
             <Dependency>pam-devel</Dependency>
             <Dependency>device-mapper-devel</Dependency>
             <Dependency>libcap-devel</Dependency>
-            <!--6-->
             <Dependency>gsoap-devel</Dependency>
             <Dependency>libXt-devel</Dependency>
             <Dependency>libXmu-devel</Dependency>
@@ -45,30 +44,32 @@
             <Dependency>pulseaudio-libs-devel</Dependency>
             <Dependency>jdk7-openjdk</Dependency>
             <Dependency>kernel-module-headers</Dependency>
+            <Dependency>qt5-x11extras-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
         </BuildDependencies>
         <AdditionalFiles>
             <AdditionalFile target="LocalConfig.kmk">LocalConfig.kmk</AdditionalFile>
         </AdditionalFiles>
         <Patches>
-<!--             <Patch level="1">wrapper.patch</Patch> -->
+            <Patch level="1">wrapper.patch</Patch>
             <Patch level="1">002-dri-driver-path.patch</Patch>
             <Patch level="1">003-ogl-include-path.patch</Patch>
-            <!--Patch level="1">004-xorg.patch</Patch-->
+            <Patch level="1">004-xorg.patch</Patch>
             <Patch level="1">005-gsoap-build.patch</Patch>
             <Patch level="1">006-rdesktop-vrdp-keymap-path.patch</Patch>
-            <!--Patch level="1">008-root-window.patch</Patch-->
-            <!--<Patch level="1">009-fix-smap-crash.patch</Patch>-->
+            <Patch level="1">008-root-window.patch</Patch>
             <Patch level="1">desktop-file.patch</Patch>
             <Patch level="1">fix-tr-keyboard.patch</Patch>
             <Patch level="1">virtualbox-4-makeself-check.patch</Patch>
-          <!--  <Patch level="1">module-mismatch.patch</Patch>-->
         </Patches>
     </Source>
 
     <Package>
         <Name>virtualbox</Name>
         <RuntimeDependencies>
-            <Dependency>device-mapper</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libxcb</Dependency>
             <Dependency>mesa</Dependency>
             <Dependency>libXt</Dependency>
             <Dependency>gsoap</Dependency>
@@ -80,7 +81,6 @@
             <Dependency>libXinerama</Dependency>
             <Dependency>virt-wrapper</Dependency>
             <Dependency>libvncserver</Dependency>
-            <Dependency version="current">module-virtualbox</Dependency>
             <Dependency>curl</Dependency>
             <Dependency>zlib</Dependency>
             <Dependency>libX11</Dependency>
@@ -88,7 +88,10 @@
             <Dependency>libpng</Dependency>
             <Dependency>python</Dependency>
             <Dependency>libxml2</Dependency>
-	    <Dependency>openssl</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>device-mapper</Dependency>
+            <Dependency>qt5-x11extras</Dependency>
+            <Dependency version="current">module-virtualbox</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/etc/vbox</Path>
@@ -145,6 +148,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2016-06-17</Date>
+            <Version>5.1.0b</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2016-06-12</Date>
             <Version>5.0.12</Version>
