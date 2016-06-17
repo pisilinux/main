@@ -1,0 +1,26 @@
+--- VirtualBox-5.1.0_BETA2.orig/src/VBox/Installer/linux/VBox.sh	2016-06-06 21:48:53.000000000 +0300
++++ VirtualBox-5.1.0_BETA2/src/VBox/Installer/linux/VBox.sh	2016-06-17 21:24:47.111130079 +0300
+@@ -56,16 +56,21 @@
+ 
+ if [ "$1" = "shutdown" ]; then
+     SHUTDOWN="true"
+-elif ! lsmod|grep -q vboxdrv; then
+-    cat << EOF
++elif [ -x /usr/libexec/virt-wrapper ]; then
++    /usr/libexec/virt-wrapper virtualbox || exit 1
++
++    if ! lsmod|grep -q vboxdrv; then
++        cat << EOF
+ WARNING: The vboxdrv kernel module is not loaded. Either there is no module
+          available for the current kernel (`uname -r`) or it failed to
+          load. Please recompile the kernel module and install it by
+ 
+            sudo /sbin/vboxconfig
++         load.  
+ 
+          You will not be able to start VMs until this problem is fixed.
+ EOF
++    fi
+ elif [ ! -c /dev/vboxdrv ]; then
+     cat << EOF
+ WARNING: The character device /dev/vboxdrv does not exist. Try

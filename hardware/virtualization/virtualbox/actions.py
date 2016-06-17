@@ -24,7 +24,6 @@ def setup():
     autotools.rawConfigure("\
                              --with-makeself=/usr/bin/echo \
                              --disable-docs \
-                             --disable-qt \
                              --enable-vde \
                              --enable-vnc \
                              --enable-webservice \
