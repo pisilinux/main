@@ -22,7 +22,7 @@ def setup():
 
     # TODO: Enable web service when we have soapcpp2
     autotools.rawConfigure("\
-                             --with-makeself=/usr/bin/echo \
+                             --with-makeself=/bin/echo \
                              --disable-docs \
                              --enable-vde \
                              --enable-vnc \
@@ -62,7 +62,7 @@ def install():
         pisitools.insinto(VBoxLibDir, _file)
 
     pisitools.dobin("VBox*.sh", VBoxDataDir)
-#    pisitools.insinto(VBoxDataDir, "nls")
+    pisitools.insinto(VBoxDataDir, "nls")
 
     # TODO: Add vboxwebsrv when ready
     # Binaries and Wrapper with Launchers
@@ -73,7 +73,7 @@ def install():
     pisitools.dobin("VBoxTunctl")
 
     # Desktop file, mimetype file for xml and icon
-    #pisitools.domove("%s/*.desktop" % VBoxLibDir, "/usr/share/applications")
+    pisitools.domove("%s/*.desktop" % VBoxLibDir, "/usr/share/applications")
     pisitools.domove("%s/*.png" % VBoxLibDir, "/usr/share/pixmaps")
     pisitools.domove("%s/*.xml" % VBoxLibDir, "/usr/share/mime/packages")
 
