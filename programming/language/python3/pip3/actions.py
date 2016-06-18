@@ -17,8 +17,7 @@ def setup():
 def install(): 
     pythonmodules.install(pyVer = "3")
     pisitools.rename("/usr/bin/pip", "pip3")
-    pisitools.rename("/usr/share/doc/pip/README.rst", "README3.rst")
     
-    shelltools.system("sed -i 's|#!/usr/bin/env python$|#!/usr/bin/env python3|' %s/usr/lib/python3.4/site-packages/pip/__init__.py" % get.installDIR())
-    shelltools.system("python3 -m compileall %s/usr/lib/python3.4/site-packages/pip/__init__.py" % get.installDIR())
+    shelltools.system("sed -i 's|#!/usr/bin/env python$|#!/usr/bin/env python3|' %s/usr/lib/python3.*/site-packages/pip/__init__.py" % get.installDIR())
+    shelltools.system("python3 -m compileall %s/usr/lib/python3.*/site-packages/pip/__init__.py" % get.installDIR())
     
