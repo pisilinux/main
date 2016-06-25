@@ -15,8 +15,8 @@ def setup():
     autotools.configure("--enable-gpl \
                          --enable-gpl3 \
                          --disable-gtk2 \
-                         --qimage-libdir=/usr/lib/ \
-                         --qimage-includedir=/usr/include/Qt \
+                         --qt-libdir=/usr/lib/ \
+                         --qt-includedir=/usr/include/qt5 \
                          --avformat-vdpau \
                          --avformat-swscale")
 
