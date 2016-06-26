@@ -19,7 +19,7 @@ def setup():
     shelltools.system('sed -i "s:mdds >= 0.12.0:mdds-1.0 >= 0.12.0:g" configure.ac')
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
     shelltools.export("LO_PREFIX", "/usr")    
-    shelltools.export("PYTHON", "python2.7")
+    shelltools.export("PYTHON", "python3.4")
     shelltools.cd(OurWorkDir)
     
     shelltools.touch("autogen.lastrun")
@@ -28,14 +28,14 @@ def setup():
                               -i svl/source/misc/gridprinter.cxx')
     shelltools.system('./autogen.sh                     \
                         --prefix=/usr                   \
-                        --sysconfdir=/etc           \
+                        --sysconfdir=/etc               \
                         --with-vendor=PisiLinux         \
-                        --with-lang="ALL"   \
-                        --disable-gtk3  \
-                        --with-help                 \
-                        --with-myspell-dicts        \
-                        --with-alloc=system         \
-                        --with-java              \
+                        --with-lang="ALL"               \
+                        --enable-gtk3                   \
+                        --with-help                     \
+                        --with-myspell-dicts            \
+                        --with-alloc=system             \
+                        --with-java                     \
                         --without-system-dicts          \
                         --disable-postgresql-sdbc       \
                         --enable-release-build=yes      \
