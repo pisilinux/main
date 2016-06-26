@@ -18,6 +18,7 @@ def setup():
                         --disable-static \
                         --with-fuse=external \
                         --enable-posix-acls \
+                        --enable-ldscript \
                         --enable-extras")
 
 def build():
@@ -25,7 +26,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s rootbindir=/usr/bin rootsbindir=/usr/bin rootlibdir=/usr/lib" % get.installDIR())
-    
+
     pisitools.domove("/usr/bin/ntfs-3g.*", "/bin")
 
     # Create some compat symlinks
