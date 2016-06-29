@@ -47,7 +47,9 @@ def setup():
 
     if not get.buildTYPE() == "emul32":
         #-no-pch makes build ccache-friendly
-        options = "-v -confirm-license -opensource -no-rpath -no-use-gold-linker\
+        options = "-v -confirm-license -opensource \
+                            -no-rpath \
+                            -no-use-gold-linker\
                             -prefix %s \
                             -bindir %s \
                             -headerdir %s \
@@ -70,9 +72,6 @@ def setup():
                             -optimized-qmake \
                             -reduce-relocations \
                             -dbus-linked \
-                            -feature-menu \
-                            -feature-textdate \
-                            -feature-ftp \
                             -xcursor" % (qt5.prefix, bindirQt5, qt5.headerdir, qt5.archdatadir, qt5.docdir, qt5.plugindir, qt5.importdir, qt5.qmldir, qt5.datadir, qt5.testdir, qt5.translationdir, qt5.sysconfdir, qt5.examplesdir, qt5.libdir)
     else:
         pisitools.dosed("mkspecs/linux-g++-64/qmake.conf", "-m64", "-m32")
@@ -118,7 +117,5 @@ def install():
         pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
     mkspecPath = "%s/mkspecs" %  qt5.archdatadir
-
-    pisitools.remove("/usr/lib/*.prl")
 
     pisitools.dodoc("LGPL_EXCEPTION.txt", "LICENSE.*")
