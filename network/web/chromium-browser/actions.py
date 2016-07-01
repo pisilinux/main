@@ -38,8 +38,6 @@ def setup():
                         -Dicu_use_data_file_flag=1 \
                         -Dlogging_like_official_build=1 \
                         -Dtracing_like_official_build=1 \
-                        -Dfieldtrial_testing_like_official_build=1 \
-                        -Dlibspeechd_h_prefix=speech-dispatcher/ \
                         -Dffmpeg_branding=Chrome \
                         -Dproprietary_codecs=1 \
                         -Duse_gnome_keyring=0 \
@@ -57,19 +55,21 @@ def setup():
                         -Duse_system_xdg_utils=1 \
                         -Duse_system_yasm=1 \
                         -Duse_system_zlib=0 \
-                        -Dusb_ids_path=/usr/share/misc/usb.ids \
                         -Duse_mojo=0 \
                         -Duse_gconf=0 \
                         -Duse_sysroot=0 \
-                        -Denable_hangout_services_extension=1 \
                         -Denable_widevine=1 \
-                        -Ddisable_fatal_linker_warnings=1 \
                         -Ddisable_glibc=1 \
                         -Ddisable_nacl=1 \
                         -Ddisable_pnacl=1 \
+                        -Ddisable_fatal_linker_warnings=1 \
+                        -Drelease_extra_cflags=-fno-ipa-cp \
+                        -Denable_hangout_services_extension=1 \
+                        -Dusb_ids_path=/usr/share/misc/usb.ids \
+                        -Dlibspeechd_h_prefix=speech-dispatcher/ \
+                        -Dfieldtrial_testing_like_official_build=1 \
                         -Dlinux_sandbox_path=/usr/lib/chromium-browser/chromium-sandbox \
                         -Dlinux_sandbox_chrome_path=/usr/lib/chromium-browser/chromium-browser \
-                        -Drelease_extra_cflags=-fno-ipa-cp \
                         -Dgoogle_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM \
                         -Dgoogle_default_client_id=413772536636.apps.googleusercontent.com \
                         -Dgoogle_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4 "
@@ -100,8 +100,12 @@ def install():
     pisitools.insinto("/usr/lib/chromium-browser", "chromedriver")
     pisitools.insinto("/usr/lib/chromium-browser", "natives_blob.bin")
     pisitools.insinto("/usr/lib/chromium-browser", "snapshot_blob.bin")
+    pisitools.insinto("/usr/lib/chromium-browser", "libwidevinecdm.so")
+    pisitools.insinto("/usr/lib/chromium-browser", "libwidevinecdmadapter.so")
     pisitools.insinto("/usr/lib/chromium-browser", "character_data_generator")
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
+    
+    
     pisitools.dosym("/usr/lib/chromium-browser/chrome", "/usr/bin/chromium-browser")
     
     shelltools.system("chmod -v 4755 %s/usr/lib/chromium-browser/chrome-sandbox" %get.installDIR())
