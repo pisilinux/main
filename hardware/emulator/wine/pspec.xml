@@ -1,0 +1,272 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>wine</Name>
+        <Homepage>http://www.winehq.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <ExcludeArch>i686</ExcludeArch>
+        <License>LGPLv2.1</License>
+        <IsA>app:console</IsA>
+        <Summary>WINE Is Not An Emulator, which lets you run Microsoft Windows applications</Summary>
+        <Description>Wine allows running Windows 3.*, Windows 95/98 and Windows NT programs on a i386 (or compatible) machine running X11. It is still alpha level code; don't expect everything to work.</Description>
+        <Archive sha1sum="157efa125c047ac5a2f64f5ef2d26e9592645f82" type="tarbz2">https://dl.winehq.org/wine/source/1.9/wine-1.9.13.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>libao-devel</Dependency>
+            <Dependency>libSM-devel</Dependency>
+            <Dependency>mpg123-devel</Dependency>
+            <Dependency>openal-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libxslt-32bit</Dependency>
+            <Dependency>mesa-glu-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>gstreamer-devel</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>libgphoto2-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>gst-plugins-base-devel</Dependency>
+
+            <!-- Libraries used with dlopen() -->
+            <Dependency>cups-devel</Dependency>
+            <Dependency>gnutls-devel</Dependency>
+            <Dependency>libXcursor-devel</Dependency>
+            <Dependency>libXi-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>libXxf86vm-devel</Dependency>
+            <Dependency>sane-backends-devel</Dependency>
+            <Dependency>unixODBC-devel</Dependency>
+
+            <!-- configure script also checks for these librarires -->
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>gsm-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>libXcomposite-devel</Dependency>
+            <Dependency>libXinerama-devel</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>giflib-devel</Dependency>
+            <Dependency>v4l-utils</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libtevent-devel</Dependency>
+
+            <!-- Audio servers are not necessary for runtime -->
+            <Dependency>jack-audio-connection-kit-devel</Dependency>
+
+            <!-- fontforge is needed to build fonts -->
+            <Dependency>fontforge</Dependency>
+            <Dependency>libpcap-devel</Dependency>
+            <Dependency>util-linux</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+        </BuildDependencies>
+        
+        <Patches>
+            <!--  patches -->
+            <Patch level="1">wine-1.9.3-gcc-5_3_0-disable-force-alignment.patch</Patch>
+            <Patch level="1">gcc_erorr.patch</Patch>
+            <!-- Use XDG_DOCUMENTS_DIR for "My Documents" -->
+            <!--Patch level="1">documents-path.patch</Patch>
+            <Patch level="1">application-pdf.patch</Patch>
+            <Patch level="1">desktop-file-translation.patch</Patch>
+            <Patch level="1">fix_rm.patch</Patch-->
+        </Patches>
+        
+    </Source>
+
+    <Package>
+        <Name>wine</Name>
+        <IsA>app:gui</IsA>
+        <RuntimeDependencies>
+            <Dependency>lcms2</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libSM</Dependency>
+            <Dependency>mpg123</Dependency>
+            <Dependency>openal</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>mesa-glu</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>gstreamer</Dependency>
+            <Dependency>libgphoto2</Dependency>
+            <Dependency>libXcomposite</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>pulseaudio-libs</Dependency>
+            <Dependency>gst-plugins-base</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>libtevent</Dependency>
+            <Dependency>p11-kit</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>giflib</Dependency>
+            <Dependency>ncurses</Dependency>
+            <!-- Libraries used with dlopen() -->
+            <Dependency>cups</Dependency>
+            <Dependency>gnutls</Dependency>
+            <Dependency>libXcursor</Dependency>
+            <Dependency>libXi</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>libXxf86vm</Dependency>
+            <Dependency>sane-backends</Dependency>
+            <Dependency>unixODBC</Dependency>
+
+            <!-- required by winetricks -->
+            <Dependency>cabextract</Dependency>
+            <Dependency>libpcap</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/etc/xdg</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/desktop-directories</Path>
+            <Path fileType="data">/usr/share/wine</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <AdditionalFiles>
+            <!-- winetricks script from http://kegel.com/wine/winetricks -->
+            <AdditionalFile target="/usr/bin/winetricks" permission="0755">winetricks</AdditionalFile>
+            <!-- wisotool script from http://kegel.com/wine/wisotool -->
+            <AdditionalFile target="/usr/bin/wisotool" permission="0755">wisotool</AdditionalFile>
+
+            <AdditionalFile target="/etc/xdg/menus/applications-merged/wine.menu" permission="0644">menu/wine.menu</AdditionalFile>
+            <AdditionalFile target="/usr/share/desktop-directories/Wine.directory" permission="0644">menu/Wine.directory</AdditionalFile>
+
+            <AdditionalFile target="/usr/share/applications/wine/taskmgr.desktop" permission="0644">menu/taskmgr.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/uninstaller.desktop" permission="0644">menu/uninstaller.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/winecfg.desktop" permission="0644">menu/winecfg.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/winefile.desktop" permission="0644">menu/winefile.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/winetricks.desktop" permission="0644">menu/winetricks.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/wine-mime-msi.desktop" permission="0644">menu/wine-mime-msi.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/wine-oleview.desktop" permission="0644">menu/wine-oleview.desktop</AdditionalFile>
+            <AdditionalFile target="/usr/share/applications/wine/wine-winemine.desktop" permission="0644">menu/wine-winemine.desktop</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>wine-devel</Name>
+        <Summary>Wine development environment</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">wine</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/function_grep.pl</Path>
+            <Path fileType="executable">/usr/bin/widl</Path>
+            <Path fileType="executable">/usr/bin/winebuild</Path>
+            <Path fileType="executable">/usr/bin/winecpp</Path>
+            <Path fileType="executable">/usr/bin/wineg++</Path>
+            <Path fileType="executable">/usr/bin/winegcc</Path>
+            <Path fileType="executable">/usr/bin/winemaker</Path>
+            <Path fileType="executable">/usr/bin/wmc</Path>
+            <Path fileType="executable">/usr/bin/wrc</Path>
+            <Path fileType="header">/usr/include/wine</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+            <Path fileType="man">/usr/share/man/man1/widl.1</Path>
+            <Path fileType="man">/usr/share/man/man1/winebuild.1</Path>
+            <Path fileType="man">/usr/share/man/man1/winecpp.1</Path>
+            <Path fileType="man">/usr/share/man/man1/wineg++.1</Path>
+            <Path fileType="man">/usr/share/man/man1/winegcc.1</Path>
+            <Path fileType="man">/usr/share/man/man1/winemaker.1</Path>
+            <Path fileType="man">/usr/share/man/man1/wmc.1</Path>
+            <Path fileType="man">/usr/share/man/man1/wrc.1</Path>
+        </Files>
+    </Package>
+
+
+    <Package>
+        <Name>winetricks</Name>
+        <Summary>winetricks is a helper script to download and install various redistributable runtime libraries needed to run some programs in Wine.</Summary>
+        <Files>
+            <Path fileType="executable">/usr/bin/winetricks</Path>
+            <Path fileType="data">/usr/share/applications/winetricks.desktop</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>wine-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for wine</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>lcms2-32bit</Dependency>
+            <Dependency>libSM-32bit</Dependency>
+            <Dependency>p11-kit-32bit</Dependency>
+            <Dependency>giflib-32bit</Dependency>
+            <Dependency>libpng-32bit</Dependency>
+            <Dependency>libv4l-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>mpg123-32bit</Dependency>
+            <Dependency>openal-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>mesa-glu-32bit</Dependency>
+            <Dependency>openldap-32bit</Dependency>
+            <Dependency>ncurses-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>libXdamage-32bit</Dependency>
+            <Dependency>libXxf86vm-32bit</Dependency>
+            <Dependency>fontconfig-32bit</Dependency>
+            <Dependency>libXcursor-32bit</Dependency>
+            <Dependency>libXxf86dga-32bit</Dependency>
+            <Dependency>gstreamer-32bit</Dependency>
+            <Dependency>libXcomposite-32bit</Dependency>
+            <Dependency>pulseaudio-libs-32bit</Dependency>
+            <Dependency>gst-plugins-base-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>lcms2-32bit</Dependency>
+            <Dependency>libSM-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>mpg123-32bit</Dependency>
+            <Dependency>openal-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>mesa-glu-32bit</Dependency>
+            <Dependency>openldap-32bit</Dependency>
+            <Dependency>gsm-32bit</Dependency>
+            <Dependency>cups-32bit</Dependency>
+            <Dependency>tiff-32bit</Dependency>
+            <Dependency>libXi-32bit</Dependency>
+            <Dependency>gnutls-32bit</Dependency>
+            <Dependency>libpng-32bit</Dependency>
+            <Dependency>ncurses-32bit</Dependency>
+            <Dependency>openssl-32bit</Dependency>
+            <Dependency>p11-kit-32bit</Dependency>
+            <Dependency>giflib-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>gstreamer-32bit</Dependency>
+            <Dependency>fontconfig-32bit</Dependency>
+            <Dependency>libXcursor-32bit</Dependency>
+            <Dependency>libXdamage-32bit</Dependency>
+            <Dependency>libXxf86vm-32bit</Dependency>
+            <Dependency>libXxf86dga-32bit</Dependency>
+            <Dependency>libtool-ltdl-32bit</Dependency>
+            <Dependency>libXcomposite-32bit</Dependency>
+            <Dependency>libjpeg-turbo-32bit</Dependency>
+            <Dependency>pulseaudio-libs-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/libwine.so*</Path>
+            <Path fileType="library">/usr/lib32/wine</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2016-07-02</Date>
+            <Version>1.9.13</Version>
+            <Comment>First release</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
