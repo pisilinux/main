@@ -24,7 +24,7 @@ def setup():
     # More info can be obtained here: http://wiki.winehq.org/Wine64
    # shelltools.export("CPPFLAGS", "-D_FORTIFY_SOURCE=2 -D_FORTIFY_SOURCE=0")
     
-    shelltools.system("make -C ./wine-staging-%s/patches DESTDIR=$(pwd) install" %get.srcVERSION())    
+    #shelltools.system("make -C ./wine-staging-%s/patches DESTDIR=$(pwd) install" %get.srcVERSION())    
     pisitools.flags.add("-fno-omit-frame-pointer")
     autotools.autoreconf("-vif")
     options = "--without-capi \
@@ -76,4 +76,3 @@ def install():
     shelltools.cd("..")
 
     pisitools.dodoc("ANNOUNCE", "AUTHORS", "COPYING.LIB", "LICENSE*", "README", "documentation/README.*")
-
