@@ -13,6 +13,7 @@ from pisi.actionsapi import get
 def build():
     shelltools.system("python bootstrap.py")
     shelltools.system("asciidoc doc/manual.asciidoc")
+    shelltools.system("emacs -Q --batch -f batch-byte-compile misc/ninja-mode.el")
 
 def check():
     #needs new package gtest -> ignore it for now
