@@ -24,19 +24,17 @@ def setup():
     #     to the 64bit files that was compiled in the first step (files in the work)
     #
     # More info can be obtained here: http://wiki.winehq.org/Wine64
-    
     #shelltools.export("CPPFLAGS", "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0")
     #shelltools.system("make -C ./wine-staging-%s/patches DESTDIR=$(pwd) install" %get.srcVERSION())    
     #pisitools.flags.add("-fno-omit-frame-pointer")
-    
-    
-    shelltools.system("sed -i 's|OpenCL/opencl.h|CL/opencl.h|g'  configure*")
+    #shelltools.system("sed -i 's|OpenCL/opencl.h|CL/opencl.h|g'  configure*")
     
     autotools.autoreconf("-vif")
     options = "--without-capi \
-               --with-curses \
-               --without-hal \
+               --without-oss \
+               --without-opencl \
                --without-gstreamer \
+               --without-hal \
                --with-dbus \
                --with-opengl \
                --with-alsa \
