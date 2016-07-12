@@ -26,4 +26,9 @@ def build():
 def install():
     pisitools.dobin("bin/*")
     
+    # symlink containerd/run (nice integration with docker)
+    pisitools.dosym("/usr/bin/containerd" "/usr/bin/docker-containerd")
+    pisitools.dosym("/usr/bin/containerd-shim", "/usr/bin/docker-containerd-shim")
+    pisitools.dosym("/usr/bin/ctr", "/usr/bin/docker-containerd-ctr")
+    
     pisitools.dodoc("MAINTAINERS", "README*")

@@ -10,26 +10,25 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT", "20f81dd")
+shelltools.export("DOCKER_GITCOMMIT", "b9f10c9")
 shelltools.export("GOROOT","/usr/lib/go")
 shelltools.export("GOPATH", "%s" % get.workDIR())
 
 shelltools.export("CGO_CFLAGS", "-I/usr/include")
 shelltools.export("CGO_LDFLAGS", "-L/usr/lib")
-shelltools.export("DOCKER_BUILDTAGS","exclude_graphdriver_aufs")
-shelltools.export("DOCKER_INITPATH", "/usr/lib/docker/dockerinit")
+shelltools.export("DOCKER_BUILDTAGS","seccomp")
+#shelltools.export("DOCKER_INITPATH", "/usr/lib/docker/dockerinit")
   
 NoStrip=["/"]
 
 def build():
-    shelltools.system("./hack/make.sh dynbinary")
+    #shelltools.cd("docker")
+    shelltools.system("hack/make.sh dynbinary")
 
 def install():
-    pisitools.dobin("bundles/1.10.3/dynbinary/docker")
-    pisitools.dobin("bundles/1.10.3/dynbinary/docker-1.10.3")
-    pisitools.doexe("bundles/1.10.3/dynbinary/dockerinit", "/usr/lib/docker")
-    pisitools.doexe("bundles/1.10.3/dynbinary/dockerinit-1.10.3", "/usr/lib/docker")
-
+    pisitools.dobin("bundles/1.11.2/dynbinary/docker")
+    pisitools.dobin("bundles/1.11.2/dynbinary/docker-1.11.2")
+    
     # insert udev rules
     pisitools.insinto("/lib/udev/rules.d", "contrib/udev/*.rules")
 
