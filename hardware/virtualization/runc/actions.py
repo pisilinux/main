@@ -21,7 +21,7 @@ def install():
     pisitools.dobin("runc")
     
     # symlink containerd/run (nice integration with docker)
-    pisitools.dosym("/usr/bin/runc" "/usr/bin/docker-runc")
+    pisitools.dosym("/usr/bin/runc", "/usr/bin/docker-runc")
     
     #insert completions in doc
     pisitools.insinto("/usr/share/doc/runc", "contrib")
