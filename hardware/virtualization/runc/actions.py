@@ -10,7 +10,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-
 shelltools.export("GOPATH", "%s" % get.workDIR())
 shelltools.export("DOCKER_BUILDTAGS","seccomp")
 shelltools.export("BINDIR","/usr/bin")
