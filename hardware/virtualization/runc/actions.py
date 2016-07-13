@@ -24,6 +24,6 @@ def install():
     pisitools.dosym("/usr/bin/runc", "/usr/bin/docker-runc")
     
     #insert completions in doc
-    pisitools.insinto("/usr/share/doc/runc", "contrib")
+    #pisitools.insinto("/usr/share/doc/runc", "contrib")
      
-    pisitools.dodoc("MAINTAINERS", "VERSION", "README*")
+    pisitools.dodoc("MAINTAINERS", "README*")
