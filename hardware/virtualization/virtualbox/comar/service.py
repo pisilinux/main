@@ -2,6 +2,11 @@ from comar.service import *
 import os
 
 serviceType = "script"
+serviceDefault = "on"
+serviceDesc = _({"en": "VirtualBox",
+                 "tr": "VirtualBox"})
+serviceConf = "virtualbox"
+
 
 @synchronized
 def start():
@@ -10,6 +15,4 @@ def start():
         os.system("/sbin/modprobe vboxsf")
         os.system("/sbin/modprobe vboxdrv")
         os.system("/sbin/modprobe VBoxService -f ")
-
-
 
