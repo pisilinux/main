@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# vboxreload: shortcut to reload virtualbox modules with DKMS support
+# vboxreload: shortcut to reload virtualbox host modules
 #
-# Copyright © 2013 Sébastien Luttringer
+# Copyright © 2016 Sébastien Luttringer
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,6 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
+(( UID > 0 )) && { echo 'You must be root' >&2; exit 1; }
+
 modules=(vboxnetadp vboxnetflt vboxpci vboxdrv)
 
 echo -n 'Unloading modules: '
@@ -25,11 +27,6 @@ for _m in "${modules[@]}"; do
   lsmod|grep -q "$_m" && rmmod "$_m" && echo -n "$_m "
 done
 echo
-
-if type -P dkms >/dev/null; then
-  echo 'DKMS autoinstall'
-  dkms autoinstall
-fi
 
 echo -n 'Loading modules: '
 for _m in "${modules[@]}"; do
