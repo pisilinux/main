@@ -6,7 +6,7 @@ serviceDefault = "on"
 serviceDesc = _({"en": "VirtualBox",
                  "tr": "VirtualBox"})
 serviceConf = "virtualbox"
-
+PIDFILE = "/run/cups/virtualbox.pid"
 
 @synchronized
 def start():
@@ -15,4 +15,19 @@ def start():
         os.system("/sbin/modprobe vboxsf")
         os.system("/sbin/modprobe vboxdrv")
         os.system("/sbin/modprobe VBoxService -f ")
+        
+
+@synchronized
+def reload():
+    if os.path.exists(PIDFILE):
+        os.kill(int(open(PIDFILE, "r").read().strip()), 1)
+
+@synchronized
+def stop():
+    stopService(pidfile=PIDFILE, donotify=True)
+    if os.path.isfile(PIDFILE): os.unlink(PIDFILE)
+
+def status():
+    return isServiceRunning(pidfile=PIDFILE)
+
 
