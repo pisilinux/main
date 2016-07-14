@@ -6,7 +6,7 @@ serviceDefault = "on"
 serviceDesc = _({"en": "VirtualBox",
                  "tr": "VirtualBox"})
 serviceConf = "virtualbox"
-PIDFILE = "/run/cups/virtualbox.pid"
+PIDFILE = "/run/virtualbox.pid"
 
 @synchronized
 def start():
