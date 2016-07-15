@@ -14,7 +14,6 @@ def start():
         os.system("/sbin/modprobe vboxvideo") 
         os.system("/sbin/modprobe vboxsf")
         os.system("/sbin/modprobe vboxdrv")
-        os.system("/sbin/modprobe VBoxService -f ")
         
 
 @synchronized
