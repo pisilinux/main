@@ -1,4 +1,3 @@
-
 <?xml version="1.0" ?>
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
@@ -14,8 +13,11 @@
         <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
         <Archive sha1sum="082e5218059b565f652236a69e61d8426696098c" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86/340.96/NVIDIA-Linux-x86-340.96.run</Archive>
         <Archive sha1sum="1cfabc6116192aa5ba46293aa842eb1a5addeeed" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/340.96/NVIDIA-Linux-x86_64-340.96.run</Archive>
+        <AdditionalFiles>
+            <AdditionalFile target="linux-4.6.patch">linux-4.6.patch</AdditionalFile>
+        </AdditionalFiles>
         <BuildDependencies>
-            <Dependency version="4.4.8">kernel-module-headers</Dependency>
+            <Dependency version="4.6.3">kernel-module-headers</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -24,7 +26,7 @@
         <IsA>driver</IsA>
         <Summary>Kernel module for NVIDIA driver 340.xx releases</Summary>
         <RuntimeDependencies>
-            <Dependency version="4.4.8">kernel</Dependency>
+            <Dependency version="4.6.3">kernel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library" permanent="true">/lib/modules</Path>
@@ -71,7 +73,6 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libvdpau-32bit</Dependency>
-            
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency>zlib-32bit</Dependency>
@@ -96,6 +97,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2016-07-17</Date>
+            <Version>340.96</Version>
+            <Comment>Rebuild for new kernel</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2016-04-30</Date>
             <Version>340.96</Version>

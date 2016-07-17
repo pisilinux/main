@@ -24,17 +24,21 @@ xorglibdir= "%s/xorg" % libdir
 def setup():
     shelltools.system("sh NVIDIA-Linux-%s-%s.run -x --target tmp"
                       % (arch, get.srcVERSION()))
+
     shelltools.move("tmp/*", ".")
+
 
     # Our libc is TLS enabled so use TLS library
     shelltools.unlink("*-tls.so*")
     shelltools.move("tls/*", ".")
+
 
     # xorg-server provides libwfb.so
     shelltools.unlink("libnvidia-wfb.so.*")
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
+    shelltools.system("patch -p1 < linux-4.6.patch")
 
 def build():
     # We don't need kernel module for emul32 build
@@ -42,13 +46,13 @@ def build():
         return
 
     shelltools.export("SYSSRC", "/lib/modules/%s/build" % KDIR)
-    
+
     shelltools.cd("kernel")
 
     autotools.make("module")
-    
+
     shelltools.cd("uvm")
-    
+
     autotools.make("module")
 
 def install():
@@ -56,10 +60,10 @@ def install():
     if not get.buildTYPE() == 'emul32':
         # Kernel driver
         pisitools.insinto("/lib/modules/%s/extra/nvidia" % KDIR,
-                          "kernel/nvidia.ko")
-        
+                           "kernel/nvidia.ko")
+
         pisitools.insinto("/lib/modules/%s/extra/nvidia" % KDIR,
-                           "kernel/uvm/nvidia-uvm.ko")
+                            "kernel/uvm/nvidia-uvm.ko")
 
         # Command line tools and their man pages
         pisitools.dobin("nvidia-smi")
@@ -77,7 +81,7 @@ def install():
     pisitools.dolib("libOpenCL.so.1.0.0", libdir)
     pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
     pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
-    
+
     pisitools.dolib("libnvidia-opencl.so.%s" % version, libdir)
     pisitools.dosym("libnvidia-opencl.so.%s" % version, "%s/libnvidia-opencl.so.1" % libdir)
     pisitools.dosym("libnvidia-opencl.so.1", "%s/libnvidia-opencl.so" % libdir)
