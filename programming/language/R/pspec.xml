@@ -1,0 +1,132 @@
+
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>R</Name>
+        <Homepage>http://www.r-project.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <License>LGPLv2.1</License>
+        <IsA>app:console</IsA>
+        <Summary>A free software environment for statistical computing and graphics</Summary>
+        <Description>This package includes the core R userspace and all R development components.</Description>
+        <Archive sha1sum="df853188d3e2b1c2d32393016401c432a5192c4d" type="targz">http://cran.r-project.org/src/base/R-3/R-3.3.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libXmu-devel</Dependency>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>jdk7-openjdk</Dependency>
+            <Dependency>xdg-utils</Dependency>
+            <Dependency>blas-devel</Dependency>
+            <Dependency>lapack-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
+            <Dependency>libSM-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>libgfortran</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!--<Patch level="1">Rscript.patch</Patch>-->
+            <!--<Patch level="1">dont_use_atlas.patch</Patch>
+            <Patch level="1">config_site.patch</Patch-->
+            <Patch level="0">R-2.11.1-parallel.patch</Patch>
+            <Patch level="0">R-2.13.1-zlib_header_fix.patch</Patch>
+            <!--Patch level="1">lib64.patch</Patch-->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>R</Name>
+        <RuntimeDependencies>
+            <Dependency>blas</Dependency>
+            <Dependency>make</Dependency>
+            <Dependency>tiff</Dependency>
+            <Dependency>libXt</Dependency>
+            <Dependency>icu4c</Dependency>
+            <Dependency>libSM</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>libXmu</Dependency>
+            <Dependency>lapack</Dependency>
+            <Dependency>xdg-utils</Dependency>
+            <Dependency>libgfortran</Dependency>
+            <Dependency>jre7-openjdk</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>xz</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libpcre</Dependency>
+            <Dependency>readline</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/R</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/env.d/99R" owner="root" permission="0644">99R</AdditionalFile>
+            <AdditionalFile target="/etc/ld.so.conf.d/99-R.conf" owner="root" permission="0644">ld.so.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>R-mathlib</Name>
+        <IsA>library</IsA>
+        <Summary>Math library for R</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">R</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="header">/usr/include/Rmath.h</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>R-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>Documents for R</Summary>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/R</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>R-devel</Name>
+        <Summary>Development files for R</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">R</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/libR.pc</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/libRmath.pc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2016-06-27</Date>
+            <Version>3.3.1</Version>
+            <Comment>First release</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
