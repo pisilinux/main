@@ -7,12 +7,16 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde5
 
+#WorkDir = "kdepim-15.08.2/kaddressbook"
+
 def setup():
-    kde5.configure("-DBUILD_TESTING=OFF \
-                    -DLIB_INSTALL_DIR=lib \
+    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
+                    -DBUILD_TESTING=OFF \
                     -DCMAKE_INSTALL_PREFIX=/usr \
-                    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON")
-    
+                    -DCMAKE_INSTALL_LIBDIR=lib \
+                    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+                    -DLIBEXEC_INSTALL_DIR=lib")
+
 def build():
     kde5.make()
 
