@@ -10,4 +10,5 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     for _file in files:
         f = "/usr/lib/virtualbox/%s" % _file
         os.system("/bin/chown :%s %s" % (vboxgroup, f))
-        os.chmod(f, 04510)
+        os.chmod(f, 04755)
+

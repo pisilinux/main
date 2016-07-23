@@ -152,8 +152,8 @@ def install():
     pisitools.dolib("libnvidia-fatbinaryloader.so.%s" % version, libdir)
     
     pisitools.insinto("/usr/share/X11/xorg.conf.d", "nvidia-drm-outputclass.conf")
-    pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-361.28-rc")
-    pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-361.28-key-documentation")
+    pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-367.27-rc")
+    pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-367.27-key-documentation")
     pisitools.insinto("/usr/share/pixmaps", "nvidia-settings.png")
     
     pisitools.dolib("libnvidia-gtk2.so.%s" % version, libdir)

@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-verMAJOR = "0"
+verMAJOR = "142"
 verMINOR = "0"
 staticlibfile = "/usr/lib/libx264.a"
 
@@ -30,6 +30,7 @@ def setup():
     pisitools.dosed("configure", "-lgpac_static", "-lgpac")
 
     # these disables are here to prevent circular deps, especially with ffmpeg
+    # Not delete --bit-depth=8 \
     autotools.rawConfigure("--prefix=/usr \
                             --enable-pic \
                             --enable-shared \
@@ -38,6 +39,7 @@ def setup():
                             --disable-lavf \
                             --disable-swscale \
                             --bit-depth=10 \
+                            --bit-depth=8 \
                            ")
 
 def build():
@@ -47,7 +49,7 @@ def install():
     autotools.install()
 
     #verMINOR = getMinorVersion()
-    #pisitools.dosym("libx264.so.%s.%s" % (verMAJOR, verMINOR), "/usr/lib/libx264.so.%s" % verMAJOR)
+    pisitools.dosym("libx264.so.%s.%s" % (verMAJOR, verMINOR), "/usr/lib/libx264.so.%s" % verMAJOR)
 
     # No static libs
     if shelltools.isFile("%s/%s" % (get.installDIR(), staticlibfile)):

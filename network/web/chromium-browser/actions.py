@@ -100,8 +100,6 @@ def install():
     pisitools.insinto("/usr/lib/chromium-browser", "chromedriver")
     pisitools.insinto("/usr/lib/chromium-browser", "natives_blob.bin")
     pisitools.insinto("/usr/lib/chromium-browser", "snapshot_blob.bin")
-    pisitools.insinto("/usr/lib/chromium-browser", "libwidevinecdm.so")
-    pisitools.insinto("/usr/lib/chromium-browser", "libwidevinecdmadapter.so")
     pisitools.insinto("/usr/lib/chromium-browser", "character_data_generator")
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
     
