@@ -1,0 +1,56 @@
+diff -Nuar aufs-util.orig/fhsm/Makefile aufs-util/fhsm/Makefile
+--- aufs-util.orig/fhsm/Makefile	2016-07-23 21:55:47.853968465 +0300
++++ aufs-util/fhsm/Makefile	2016-07-23 22:46:11.418882478 +0300
+@@ -42,9 +42,9 @@
+ .NOTPARALLEL: ${LibFhsm}
+ 
+ ${TgtObj}: %.o: %.c ${LibFhsmHdr} $(addprefix ../, ${LibUtilHdr}) ${LibFhsm}
+-#${Tgt}: override LDFLAGS += -static
+-${Tgt}: override LDFLAGS += -s
+-${Tgt}: override LDLIBS += -L. -lfhsm -L.. -lautil -lrt
++#${Tgt}: override LDFLAGS +=tatic
++${Tgt}: override LDFLAGS +=
++${Tgt}: override LDLIBS += -L. -lfhsm -L.. -lautil  -lrt
+ 
+ ########################################
+ 
+diff -Nuar aufs-util.orig/libau/Makefile aufs-util/libau/Makefile
+--- aufs-util.orig/libau/Makefile	2016-07-23 21:55:47.854968465 +0300
++++ aufs-util/libau/Makefile	2016-07-23 22:45:59.081882829 +0300
+@@ -37,14 +37,14 @@
+ 	ln -sf $< $@
+ ${LibSo}.${LibSoMajor}: ${LibSo}.${LibSoMajor}.${LibSoMinor}
+ 	ln -sf $< $@
+-${LibSo}.${LibSoMajor}.${LibSoMinor}: override LDFLAGS += -s
++${LibSo}.${LibSoMajor}.${LibSoMinor}: override LDFLAGS +=
+ ${LibSo}.${LibSoMajor}.${LibSoMinor}: override LDLIBS += -ldl -lpthread
+ ${LibSo}.${LibSoMajor}.${LibSoMinor}: ${LibSoObj}
+ 	${CC} --shared -Wl,-soname,${LibSo}.${LibSoMajor} ${LDFLAGS} \
+ 		-o $@ $^ ${LDLIBS}
+ 
+ install_ulib: File = ${LibSo}.${LibSoMajor}.${LibSoMinor}
+-install_ulib: Tgt = ${DESTDIR}/usr/lib
++install_ulib: Tgt = ${DESTDIR}/usr/
+ install_ulib: ${File}
+ 	${INSTALL} -d ${Tgt}
+ 	${Install} -m 644 ${File} ${Tgt}
+diff -Nuar aufs-util.orig/Makefile aufs-util/Makefile
+--- aufs-util.orig/Makefile	2016-07-23 21:55:47.852968465 +0300
++++ aufs-util/Makefile	2016-07-23 22:45:33.723883550 +0300
+@@ -19,7 +19,7 @@
+ override CPPFLAGS += -D_GNU_SOURCE
+ override CPPFLAGS += -I./libau
+ override CPPFLAGS += -DAUFHSM_CMD=\"/usr/bin/aufhsm\"
+-override CFLAGS += -O -Wall
++override CFLAGS +=  -Wall
+ INSTALL ?= install
+ Install = ${INSTALL} -o root -g root -p
+ ManDir = /usr/share/man
+@@ -76,7 +76,6 @@
+ ver_test: ver
+ 	./ver
+ 
+-${Bin}: override LDFLAGS += -static -s
+ ${Bin}: LDLIBS = -L. -lautil
+ ${BinObj}: %.o: %.c ${LibUtilHdr} ${LibUtil}
+ 
