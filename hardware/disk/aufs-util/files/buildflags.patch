@@ -1,0 +1,53 @@
+--- aufs-util-4.0_p20151116.orig/Makefile	2015-11-12 05:29:36.000000000 +0200
++++ aufs-util-4.0_p20151116/Makefile	2016-06-18 02:13:42.598522963 +0300
+@@ -19,7 +19,7 @@
+ override CPPFLAGS += -D_GNU_SOURCE
+ override CPPFLAGS += -I./libau
+ override CPPFLAGS += -DAUFHSM_CMD=\"/usr/bin/aufhsm\"
+-override CFLAGS += -O -Wall
++override CFLAGS += -Wall
+ INSTALL ?= install
+ Install = ${INSTALL} -o root -g root -p
+ ManDir = /usr/share/man
+@@ -76,7 +76,6 @@
+ ver_test: ver
+ 	./ver
+ 
+-${Bin}: override LDFLAGS += -static -s
+ ${Bin}: LDLIBS = -L. -lautil
+ ${BinObj}: %.o: %.c ${LibUtilHdr} ${LibUtil}
+ 
+--- aufs-util-4.0_p20151116.orig/fhsm/Makefile	2015-11-12 05:29:36.000000000 +0200
++++ aufs-util-4.0_p20151116/fhsm/Makefile	2016-06-18 02:13:42.601856468 +0300
+@@ -42,9 +42,9 @@
+ .NOTPARALLEL: ${LibFhsm}
+ 
+ ${TgtObj}: %.o: %.c ${LibFhsmHdr} $(addprefix ../, ${LibUtilHdr}) ${LibFhsm}
+-#${Tgt}: override LDFLAGS += -static
+-${Tgt}: override LDFLAGS += -s
+-${Tgt}: override LDLIBS += -L. -lfhsm -L.. -lautil -lrt
++#${Tgt}: override LDFLAGS +=
++${Tgt}: override LDFLAGS +=
++${Tgt}: override LDLIBS += -L. -lfhsm -L.. -lautil  -lrt
+ 
+ ########################################
+ 
+--- aufs-util-4.0_p20151116.orig/libau/Makefile	2015-11-12 05:29:36.000000000 +0200
++++ aufs-util-4.0_p20151116/libau/Makefile	2016-06-18 02:13:42.601856468 +0300
+@@ -37,14 +37,14 @@
+ 	ln -sf $< $@
+ ${LibSo}.${LibSoMajor}: ${LibSo}.${LibSoMajor}.${LibSoMinor}
+ 	ln -sf $< $@
+-${LibSo}.${LibSoMajor}.${LibSoMinor}: override LDFLAGS += -s
++${LibSo}.${LibSoMajor}.${LibSoMinor}: override LDFLAGS +=
+ ${LibSo}.${LibSoMajor}.${LibSoMinor}: override LDLIBS += -ldl -lpthread
+ ${LibSo}.${LibSoMajor}.${LibSoMinor}: ${LibSoObj}
+ 	${CC} --shared -Wl,-soname,${LibSo}.${LibSoMajor} ${LDFLAGS} \
+ 		-o $@ $^ ${LDLIBS}
+ 
+ install_ulib: File = ${LibSo}.${LibSoMajor}.${LibSoMinor}
+-install_ulib: Tgt = ${DESTDIR}/usr/lib
++install_ulib: Tgt = ${DESTDIR}$(LIBDIR)
+ install_ulib: ${File}
+ 	${INSTALL} -d ${Tgt}
+ 	${Install} -m 644 ${File} ${Tgt}
