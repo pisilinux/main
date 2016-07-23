@@ -24,6 +24,8 @@ def build():
     shelltools.system("LDFLAGS= make")
 
 def install():
+    shelltools.cd("%s/containerd" % get.workDIR())
+
     pisitools.dobin("bin/*")
     
     # symlink containerd/run (nice integration with docker)
