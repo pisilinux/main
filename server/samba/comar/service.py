@@ -5,9 +5,9 @@ serviceType = "server"
 serviceDesc = _({"en": "SMB Network Sharing",
                  "tr": "SMB Ağ Paylaşımı"})
 
-WINBINDD_PIDFILE = "/var/run/samba/winbindd.pid"
-NMBD_PIDFILE = "/var/run/samba/nmbd.pid"
-SMBD_PIDFILE = "/var/run/samba/smbd.pid"
+WINBINDD_PIDFILE = "/run/samba/winbindd.pid"
+NMBD_PIDFILE = "/run/samba/nmbd.pid"
+SMBD_PIDFILE = "/run/samba/smbd.pid"
 
 
 @synchronized
@@ -15,19 +15,14 @@ def start():
     startService(command="/usr/sbin/smbd",
                  args="-D",
                  donotify=True)
-    
-    startService(command="/usr/sbin/ctdbd",
-                 args="-D",
-                 donotify=True)
 
     startService(command="/usr/sbin/nmbd",
-                 args="-D",
-                 donotify=True)
+                 args="-D")
 
-    startService(command="/usr/sbin/winbindd",
-                 args="-D",
-                 donotify=True)
-    
+    if config.get("winbind", "no") == "yes":
+        startService(command="/usr/sbin/winbindd",
+                     args="-D")
+
 @synchronized
 def stop():
     stopService(pidfile=WINBINDD_PIDFILE,
@@ -49,6 +44,6 @@ def reload():
 
 def status():
     result = isServiceRunning(SMBD_PIDFILE) and isServiceRunning(NMBD_PIDFILE)
-    if config.get():
+    if config.get("winbind", "no") == "yes":
         result = result and isServiceRunning(WINBINDD_PIDFILE)
     return result
