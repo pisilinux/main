@@ -10,6 +10,6 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     # needed by non-root sharing support.
     os.system("/bin/mkdir /var/lib/samba/usershares")
     os.system("/bin/chgrp users /var/lib/samba/usershares")
-    os.system("/bin/chmod 1770 /var/lib/samba/usershares")
+    os.system("/bin/chmod 1777 /var/lib/samba/usershares")
 
     os.system("/bin/chmod 0750 /var/lib/samba/winbindd_privileged")
