@@ -23,7 +23,7 @@ def setup():
                          --libdir=/usr/lib \
                          --with-cachedir=/var/lib/samba \
                          --with-configdir=/etc/samba \
-                         --with-lockdir=/var/lib/samba \
+                         --with-lockdir=/var/cache/samba \
                          --with-logfilebase=/var/log/samba \
                          --with-modulesdir=/usr/lib/samba \
                          --with-pammodulesdir=/lib/security \
@@ -42,7 +42,6 @@ def setup():
                          --with-cluster-support \
                          --with-dnsupdate \
                          --with-pam \
-                         --with-pam_smbpass \
                          --with-quotas \
                          --with-sendfile-support \
                          --with-shared-modules=%s \
