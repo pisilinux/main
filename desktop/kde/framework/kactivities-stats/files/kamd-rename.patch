@@ -1,0 +1,91 @@
+diff --git a/autotests/Process.cpp b/autotests/Process.cpp
+index a7a0507..afa4bf1 100644
+--- a/autotests/Process.cpp
++++ b/autotests/Process.cpp
+@@ -83,7 +83,7 @@ void Modifier::initTestCase()
+             // qDebug() << env;
+ 
+             s_process->setEnvironment(env);
+-            s_process->start(QStringLiteral(KAMD_INSTALL_PREFIX "/bin/kactivitymanagerd"));
++            s_process->start(QStringLiteral(KAMD_INSTALL_PREFIX "/bin/kactivitymanagerd5"));
+             s_process->waitForStarted();
+ 
+ 
+diff --git a/src/lib/core/manager_p.cpp b/src/lib/core/manager_p.cpp
+index 077c634..7be66dd 100644
+--- a/src/lib/core/manager_p.cpp
++++ b/src/lib/core/manager_p.cpp
+@@ -94,11 +94,11 @@ Manager *Manager::self()
+                          ->property("org.kde.KActivities.core.disableAutostart")
+                          .toBool()) {
+                     qCDebug(KAMD_CORELIB) << "Starting the activity manager daemon";
+-                    QProcess::startDetached(QStringLiteral("kactivitymanagerd"));
++                    QProcess::startDetached(QStringLiteral("kactivitymanagerd5"));
+                 }
+ 
+                 #else
+-                QProcess::startDetached(QStringLiteral("kactivitymanagerd"));
++                QProcess::startDetached(QStringLiteral("kactivitymanagerd5"));
+                 #endif
+             }
+ 
+diff --git a/src/service/Application.cpp b/src/service/Application.cpp
+index 6b0e3e1..3894540 100644
+--- a/src/service/Application.cpp
++++ b/src/service/Application.cpp
+@@ -280,7 +280,7 @@ int main(int argc, char **argv)
+     application.setApplicationName(QStringLiteral("ActivityManager"));
+     application.setOrganizationDomain(QStringLiteral("kde.org"));
+ 
+-    // KAboutData about("kactivitymanagerd", Q_NULLPTR, ki18n("KDE Activity Manager"), "3.0",
++    // KAboutData about("kactivitymanagerd5", Q_NULLPTR, ki18n("KDE Activity Manager"), "3.0",
+     //         ki18n("KDE Activity Management Service"),
+     //         KAboutData::License_GPL,
+     //         ki18n("(c) 2010, 2011, 2012 Ivan Cukic"), KLocalizedString(),
+@@ -333,7 +333,7 @@ int main(int argc, char **argv)
+         // Starting the dameon
+ 
+         QProcess::startDetached(
+-                KAMD_INSTALL_PREFIX "/bin/kactivitymanagerd",
++                KAMD_INSTALL_PREFIX "/bin/kactivitymanagerd5",
+                 QStringList{"start-daemon"}
+             );
+ 
+diff --git a/src/service/CMakeLists.txt b/src/service/CMakeLists.txt
+index 4b4978b..2220f34 100644
+--- a/src/service/CMakeLists.txt
++++ b/src/service/CMakeLists.txt
+@@ -62,9 +62,9 @@ qt5_add_dbus_adaptor (
+    Features.h Features
+    )
+ 
+-add_executable (kactivitymanagerd ${kactivitymanager_SRCS})
++add_executable (kactivitymanagerd5 ${kactivitymanager_SRCS})
+ 
+-target_link_libraries (kactivitymanagerd
++target_link_libraries (kactivitymanagerd5
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Widgets
+@@ -84,7 +84,7 @@ install (FILES
+    )
+ 
+ install (TARGETS
+-   kactivitymanagerd ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
++   kactivitymanagerd5 ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+    )
+ 
+ install (FILES
+diff --git a/src/service/files/kactivitymanagerd.desktop b/src/service/files/kactivitymanagerd.desktop
+index be5faa1..3c9b9a9 100644
+--- a/src/service/files/kactivitymanagerd.desktop
++++ b/src/service/files/kactivitymanagerd.desktop
+@@ -4,7 +4,7 @@ Icon=preferences-activities
+ X-KDE-ServiceTypes=
+ X-DBUS-StartupType=Unique
+ X-KDE-StartupNotify=false
+-Exec=kactivitymanagerd
++Exec=kactivitymanagerd5
+ 
+ Name=Activity Manager
+ Name[ar]=مدير الأنشطة
