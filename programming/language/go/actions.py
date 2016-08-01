@@ -16,12 +16,12 @@ def build():
     shelltools.export("go_platform","linux-amd64")
     shelltools.export("go_linker","/lib/ld-linux-x86-64.so.2")
 
-    shelltools.export("GOROOT", "%s/go-go1.6.2" % get.workDIR()) #0
+    shelltools.export("GOROOT", "%s/go-go1.6.3" % get.workDIR()) #0
 
     shelltools.export("GOBIN", "$GOROOT/bin") #1
     shelltools.export("GOPATH", "%s" % get.workDIR())
     shelltools.export("GOROOT_FINAL", "/usr/lib/go")
-    shelltools.export("GOROOT_BOOTSTRAP", "%s/go-go1.6.2/go-linux-amd64-bootstrap" % get.workDIR())  #2
+    shelltools.export("GOROOT_BOOTSTRAP", "%s/go-go1.6.3/go-linux-amd64-bootstrap" % get.workDIR())  #2
 
     shelltools.export("GOOS","linux")
     shelltools.export("GOARCH","amd64")
@@ -30,7 +30,7 @@ def build():
 
     shelltools.system("./make.bash")
 
-    #shelltools.cd("%s/go-go1.6.2" % get.workDIR())
+    #shelltools.cd("%s/go-go1.6.3" % get.workDIR())
 
     #shelltools.system("$GOROOT/bin/go get -d golang.org/x/tools/cmd/godoc")
     #shelltools.system("$GOROOT/bin/go build -o $GOPATH/godoc golang.org/x/tools/cmd/godoc")
@@ -42,7 +42,7 @@ def build():
 
 def install():
     shelltools.export("GOROOT_FINAL", "/usr/lib/go")
-    shelltools.cd("%s/go-go1.6.2" % get.workDIR())
+    shelltools.cd("%s/go-go1.6.3" % get.workDIR())
 
     pisitools.dodir("/usr/lib/go")
     shelltools.system("cp -rp api bin doc lib pkg src  %s/usr/lib/go" % get.installDIR())
