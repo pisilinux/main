@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT", "b9f10c9")
+shelltools.export("DOCKER_GITCOMMIT", "8eab29e")
 shelltools.export("GOROOT","/usr/lib/go")
 shelltools.export("GOPATH", "%s" % get.workDIR())
 
@@ -26,8 +26,8 @@ def build():
     shelltools.system("hack/make.sh dynbinary")
 
 def install():
-    pisitools.dobin("bundles/1.11.2/dynbinary/docker")
-    pisitools.dobin("bundles/1.11.2/dynbinary/docker-1.11.2")
+    pisitools.dobin("bundles/1.12.0/dynbinary/docker")
+    pisitools.dobin("bundles/1.12.0/dynbinary/docker-1.12.0")
     
     # insert udev rules
     pisitools.insinto("/lib/udev/rules.d", "contrib/udev/*.rules")
