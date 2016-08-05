@@ -70,9 +70,9 @@ def setup():
                         -Dfieldtrial_testing_like_official_build=1 \
                         -Dlinux_sandbox_path=/usr/lib/chromium-browser/chromium-sandbox \
                         -Dlinux_sandbox_chrome_path=/usr/lib/chromium-browser/chromium-browser \
-                        -Dgoogle_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM \
-                        -Dgoogle_default_client_id=413772536636.apps.googleusercontent.com \
-                        -Dgoogle_default_client_secret=0ZChLK6AxeA3Isu96MkwqDR4 "
+                        -Dgoogle_api_key=AIzaSyDEAOvatFo0eTgsV_ZlEzx0ObmepsMzfAc \
+                        -Dgoogle_default_client_id=329227923882.apps.googleusercontent.com \
+                        -Dgoogle_default_client_secret=vgKG0NNv7GoDpbtoFNLxCUXu "
     
     shelltools.system("build/linux/unbundle/replace_gyp_files.py  %s" % options)
     shelltools.system("build/gyp_chromium build/all.gyp --depth=. %s" % options)
