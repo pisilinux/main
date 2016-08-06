@@ -1,0 +1,54 @@
+From 126f40298446a82116e1f92a1aaf72b8c8228fae Mon Sep 17 00:00:00 2001
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Date: Wed, 11 May 2016 18:44:32 -0300
+Subject: [PATCH] [media] vb2: core: Skip planes array verification if pb is
+ NULL
+
+An earlier patch fixing an input validation issue introduced another
+issue: vb2_core_dqbuf() is called with pb argument value NULL in some
+cases, causing a NULL pointer dereference. Fix this by skipping the
+verification as there's nothing to verify.
+
+Fixes: e7e0c3e26587 ("[media] videobuf2-core: Check user space planes array in dqbuf")
+
+Signed-off-by: David R <david@unsolicited.net>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: stable@vger.kernel.org # for v4.4 and later
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+---
+ drivers/media/v4l2-core/videobuf2-core.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/v4l2-core/videobuf2-core.c b/drivers/media/v4l2-core/videobuf2-core.c
+index 9fbcb67..633fc1a 100644
+--- a/drivers/media/v4l2-core/videobuf2-core.c
++++ b/drivers/media/v4l2-core/videobuf2-core.c
+@@ -1648,7 +1648,7 @@ static int __vb2_get_done_vb(struct vb2_queue *q, struct vb2_buffer **vb,
+ 			     void *pb, int nonblocking)
+ {
+ 	unsigned long flags;
+-	int ret;
++	int ret = 0;
+ 
+ 	/*
+ 	 * Wait for at least one buffer to become available on the done_list.
+@@ -1664,10 +1664,12 @@ static int __vb2_get_done_vb(struct vb2_queue *q, struct vb2_buffer **vb,
+ 	spin_lock_irqsave(&q->done_lock, flags);
+ 	*vb = list_first_entry(&q->done_list, struct vb2_buffer, done_entry);
+ 	/*
+-	 * Only remove the buffer from done_list if v4l2_buffer can handle all
+-	 * the planes.
++	 * Only remove the buffer from done_list if all planes can be
++	 * handled. Some cases such as V4L2 file I/O and DVB have pb
++	 * == NULL; skip the check then as there's nothing to verify.
+ 	 */
+-	ret = call_bufop(q, verify_planes_array, *vb, pb);
++	if (pb)
++		ret = call_bufop(q, verify_planes_array, *vb, pb);
+ 	if (!ret)
+ 		list_del(&(*vb)->done_entry);
+ 	spin_unlock_irqrestore(&q->done_lock, flags);
+-- 
+2.9.2
+

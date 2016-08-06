@@ -1,0 +1,70 @@
+From ca45663819accf038291dbe2d67ed66dc48d714c Mon Sep 17 00:00:00 2001
+From: Thomas Backlund <tmb@mageia.org>
+Date: Sun, 29 Nov 2015 14:44:22 +0200
+Subject: [PATCH] Revert "x86/mm/mtrr: Remove kernel internal MTRR interfaces:
+ unexport mtrr_add() and mtrr_del()"
+
+This reverts commit 2baa891e42d84159b693eadd44f6fe1486285bdc.
+
+It currently breaks nvidia304 driver.
+
+Signed-of-by: Thomas Backlund <tmb@mageia.org>
+---
+ Documentation/x86/mtrr.txt      | 20 ++++----------------
+ arch/x86/kernel/cpu/mtrr/main.c |  2 ++
+ 2 files changed, 6 insertions(+), 16 deletions(-)
+
+diff --git a/Documentation/x86/mtrr.txt b/Documentation/x86/mtrr.txt
+index dc3e703..860bc3a 100644
+--- a/Documentation/x86/mtrr.txt
++++ b/Documentation/x86/mtrr.txt
+@@ -6,22 +6,10 @@ Luis R. Rodriguez <mcgrof@do-not-panic.com> - April 9, 2015
+ ===============================================================================
+ Phasing out MTRR use
+ 
+-MTRR use is replaced on modern x86 hardware with PAT. Direct MTRR use by
+-drivers on Linux is now completely phased out, device drivers should use
+-arch_phys_wc_add() in combination with ioremap_wc() to make MTRR effective on
+-non-PAT systems while a no-op but equally effective on PAT enabled systems.
+-
+-Even if Linux does not use MTRRs directly, some x86 platform firmware may still
+-set up MTRRs early before booting the OS. They do this as some platform
+-firmware may still have implemented access to MTRRs which would be controlled
+-and handled by the platform firmware directly. An example of platform use of
+-MTRRs is through the use of SMI handlers, one case could be for fan control,
+-the platform code would need uncachable access to some of its fan control
+-registers. Such platform access does not need any Operating System MTRR code in
+-place other than mtrr_type_lookup() to ensure any OS specific mapping requests
+-are aligned with platform MTRR setup. If MTRRs are only set up by the platform
+-firmware code though and the OS does not make any specific MTRR mapping
+-requests mtrr_type_lookup() should always return MTRR_TYPE_INVALID.
++MTRR use is replaced on modern x86 hardware with PAT. Over time the only type
++of effective MTRR that is expected to be supported will be for write-combining.
++As MTRR use is phased out device drivers should use arch_phys_wc_add() to make
++MTRR effective on non-PAT systems while a no-op on PAT enabled systems.
+ 
+ For details refer to Documentation/x86/pat.txt.
+ 
+diff --git a/arch/x86/kernel/cpu/mtrr/main.c b/arch/x86/kernel/cpu/mtrr/main.c
+index f891b47..e7ed0d8 100644
+--- a/arch/x86/kernel/cpu/mtrr/main.c
++++ b/arch/x86/kernel/cpu/mtrr/main.c
+@@ -448,6 +448,7 @@ int mtrr_add(unsigned long base, unsigned long size, unsigned int type,
+ 	return mtrr_add_page(base >> PAGE_SHIFT, size >> PAGE_SHIFT, type,
+ 			     increment);
+ }
++EXPORT_SYMBOL(mtrr_add);
+ 
+ /**
+  * mtrr_del_page - delete a memory type region
+@@ -536,6 +537,7 @@ int mtrr_del(int reg, unsigned long base, unsigned long size)
+ 		return -EINVAL;
+ 	return mtrr_del_page(reg, base >> PAGE_SHIFT, size >> PAGE_SHIFT);
+ }
++EXPORT_SYMBOL(mtrr_del);
+ 
+ /**
+  * arch_phys_wc_add - add a WC MTRR and handle errors if PAT is unavailable
+-- 
+2.3.10
+

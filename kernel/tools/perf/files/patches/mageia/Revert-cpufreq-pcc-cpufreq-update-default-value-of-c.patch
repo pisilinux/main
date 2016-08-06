@@ -1,0 +1,75 @@
+From da7d3abe1c9e5ebac2cf86f97e9e89888a5e2094 Mon Sep 17 00:00:00 2001
+From: Andreas Herrmann <aherrmann@suse.com>
+Date: Fri, 22 Jul 2016 17:14:11 +0200
+Subject: [PATCH] Revert "cpufreq: pcc-cpufreq: update default value of
+ cpuinfo_transition_latency"
+
+This reverts commit 790d849bf811a8ab5d4cd2cce0f6fda92f6aebf2.
+
+Using a v4.7-rc7 kernel on a HP ProLiant triggered following messages
+
+ pcc-cpufreq: (v1.10.00) driver loaded with frequency limits: 1200 MHz, 2800 MHz
+ cpufreq: ondemand governor failed, too long transition latency of HW, fallback to performance governor
+
+The last line was shown for each CPU in the system.
+Testing v4.5 (where commit 790d849b was integrated) triggered
+similar messages. Same behaviour on a 2nd HP Proliant system.
+
+So commit 790d849bf (cpufreq: pcc-cpufreq: update default value of
+cpuinfo_transition_latency) causes the system to use performance
+governor which, I guess, was not the intention of the patch.
+
+Enabling debug output in pcc-cpufreq provides following verbose output:
+
+ pcc-cpufreq: (v1.10.00) driver loaded with frequency limits: 1200 MHz, 2800 MHz
+ pcc_get_offset: for CPU 0: pcc_cpu_data input_offset: 0x44, pcc_cpu_data output_offset: 0x48
+ init: policy->max is 2800000, policy->min is 1200000
+ get: get_freq for CPU 0
+ get: SUCCESS: (virtual) output_offset for cpu 0 is 0xffffc9000d7c0048, contains a value of: 0xff06. Speed is: 168000 MHz
+ cpufreq: ondemand governor failed, too long transition latency of HW, fallback to performance governor
+ target: CPU 0 should go to target freq: 2800000 (virtual) input_offset is 0xffffc9000d7c0044
+ target: was SUCCESSFUL for cpu 0
+
+I am asking to revert 790d849bf to re-enable usage of ondemand
+governor with pcc-cpufreq.
+
+Fixes: 790d849bf (cpufreq: pcc-cpufreq: update default value of cpuinfo_transition_latency)
+CC: <stable@vger.kernel.org> # 4.5+
+Signed-off-by: Andreas Herrmann <aherrmann@suse.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ Documentation/cpu-freq/pcc-cpufreq.txt | 4 ++--
+ drivers/cpufreq/pcc-cpufreq.c          | 2 --
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/cpu-freq/pcc-cpufreq.txt b/Documentation/cpu-freq/pcc-cpufreq.txt
+index 0a94224..9e3c3b3 100644
+--- a/Documentation/cpu-freq/pcc-cpufreq.txt
++++ b/Documentation/cpu-freq/pcc-cpufreq.txt
+@@ -159,8 +159,8 @@ to be strictly associated with a P-state.
+ 
+ 2.2 cpuinfo_transition_latency:
+ -------------------------------
+-The cpuinfo_transition_latency field is CPUFREQ_ETERNAL. The PCC specification
+-does not include a field to expose this value currently.
++The cpuinfo_transition_latency field is 0. The PCC specification does
++not include a field to expose this value currently.
+ 
+ 2.3 cpuinfo_cur_freq:
+ ---------------------
+diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
+index a7ecb9a..3f0ce2a 100644
+--- a/drivers/cpufreq/pcc-cpufreq.c
++++ b/drivers/cpufreq/pcc-cpufreq.c
+@@ -555,8 +555,6 @@ static int pcc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	policy->min = policy->cpuinfo.min_freq =
+ 		ioread32(&pcch_hdr->minimum_frequency) * 1000;
+ 
+-	policy->cpuinfo.transition_latency = CPUFREQ_ETERNAL;
+-
+ 	pr_debug("init: policy->max is %d, policy->min is %d\n",
+ 		policy->max, policy->min);
+ out:
+-- 
+2.9.2
+

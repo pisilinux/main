@@ -1,0 +1,19 @@
+--- linux/drivers/platform/x86/shuttle-wmi.c.orig	2015-09-30 00:51:13.000000000 +0300
++++ linux/drivers/platform/x86/shuttle-wmi.c	2015-09-30 02:04:20.808458393 +0300
+@@ -26,6 +26,7 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/backlight.h>
+ #include <linux/fb.h>
++#include <acpi/video.h>
+ 
+ MODULE_AUTHOR("Herton Ronaldo Krzesinski");
+ MODULE_DESCRIPTION("Shuttle WMI Extras Driver");
+@@ -1161,7 +1162,7 @@ static int shuttle_wmi_probe(struct plat
+ 		goto err_notify;
+ 	}
+ 
+-	if (!acpi_video_backlight_support()) {
++	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 		rc = shuttle_wmi_backlight_init(priv);
+ 		if (rc)
+ 			goto err_backlight;

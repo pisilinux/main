@@ -1,0 +1,20 @@
+
+Add supprto for 4.7 series kernels.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+diff -urp linux/3rdparty/ndiswrapper.orig/wrapndis.c linux/3rdparty/ndiswrapper/wrapndis.c
+--- linux/3rdparty/ndiswrapper.orig/wrapndis.c	2016-07-04 20:00:13.000000000 +0300
++++ linux/3rdparty/ndiswrapper/wrapndis.c	2016-07-04 20:23:29.454819702 +0300
+@@ -704,7 +704,11 @@ static void tx_worker(struct work_struct
+ 			n = wnd->max_tx_packets;
+ 		n = mp_tx_packets(wnd, wnd->tx_ring_start, n);
+ 		if (n) {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 7, 0)
+ 			wnd->net_dev->trans_start = jiffies;
++#else
++			netif_trans_update(wnd->net_dev);
++#endif
+ 			wnd->tx_ring_start =
+ 				(wnd->tx_ring_start + n) % TX_RING_SIZE;
+ 			wnd->is_tx_ring_full = 0;

@@ -1,0 +1,57 @@
+From 12d868964f7352e8b18e755488f7265a93431de1 Mon Sep 17 00:00:00 2001
+From: Dmitry Tunin <hanipouspilot@gmail.com>
+Date: Tue, 12 Jul 2016 01:35:18 +0300
+Subject: [PATCH] Bluetooth: Add support of 13d3:3490 AR3012 device
+
+T: Bus=01 Lev=01 Prnt=01 Port=07 Cnt=05 Dev#= 5 Spd=12 MxCh= 0
+D: Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs= 1
+P: Vendor=13d3 ProdID=3490 Rev=00.01
+C: #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
+I: If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+I: If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+
+BugLink: https://bugs.launchpad.net/bugs/1600623
+
+Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+---
+ drivers/bluetooth/ath3k.c | 2 ++
+ drivers/bluetooth/btusb.c | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/bluetooth/ath3k.c b/drivers/bluetooth/ath3k.c
+index 2589468..fadba88 100644
+--- a/drivers/bluetooth/ath3k.c
++++ b/drivers/bluetooth/ath3k.c
+@@ -123,6 +123,7 @@ static const struct usb_device_id ath3k_table[] = {
+ 	{ USB_DEVICE(0x13d3, 0x3472) },
+ 	{ USB_DEVICE(0x13d3, 0x3474) },
+ 	{ USB_DEVICE(0x13d3, 0x3487) },
++	{ USB_DEVICE(0x13d3, 0x3490) },
+ 
+ 	/* Atheros AR5BBU12 with sflash firmware */
+ 	{ USB_DEVICE(0x0489, 0xE02C) },
+@@ -190,6 +191,7 @@ static const struct usb_device_id ath3k_blist_tbl[] = {
+ 	{ USB_DEVICE(0x13d3, 0x3472), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x13d3, 0x3474), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x13d3, 0x3487), .driver_info = BTUSB_ATH3012 },
++	{ USB_DEVICE(0x13d3, 0x3490), .driver_info = BTUSB_ATH3012 },
+ 
+ 	/* Atheros AR5BBU22 with sflash firmware */
+ 	{ USB_DEVICE(0x0489, 0xE036), .driver_info = BTUSB_ATH3012 },
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index f2e8fd7..811f9b9 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -237,6 +237,7 @@ static const struct usb_device_id blacklist_table[] = {
+ 	{ USB_DEVICE(0x13d3, 0x3472), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x13d3, 0x3474), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x13d3, 0x3487), .driver_info = BTUSB_ATH3012 },
++	{ USB_DEVICE(0x13d3, 0x3490), .driver_info = BTUSB_ATH3012 },
+ 
+ 	/* Atheros AR5BBU12 with sflash firmware */
+ 	{ USB_DEVICE(0x0489, 0xe02c), .driver_info = BTUSB_IGNORE },
+-- 
+2.9.2
+

@@ -1,0 +1,178 @@
+
+Fix building with kernel-4.7 series.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+ 3rdparty/rtl8723bs/os_dep/ioctl_cfg80211.c |   32 ++++++++++++++---------------
+ 3rdparty/rtl8723bs/os_dep/wifi_regd.c      |    6 ++---
+ 2 files changed, 19 insertions(+), 19 deletions(-)
+
+diff -urp linux/3rdparty/rtl8723bs.orig/os_dep/ioctl_cfg80211.c linux/3rdparty/rtl8723bs/os_dep/ioctl_cfg80211.c
+--- linux/3rdparty/rtl8723bs.orig/os_dep/ioctl_cfg80211.c	2016-07-04 20:00:13.000000000 +0300
++++ linux/3rdparty/rtl8723bs/os_dep/ioctl_cfg80211.c	2016-07-04 20:37:45.054379270 +0300
+@@ -44,7 +44,7 @@ static const u32 rtw_cipher_suites[] = {
+ 	}
+ 
+ #define CHAN2G(_channel, _freq, _flags) {			\
+-	.band			= IEEE80211_BAND_2GHZ,		\
++	.band			= NL80211_BAND_2GHZ,		\
+ 	.center_freq		= (_freq),			\
+ 	.hw_value		= (_channel),			\
+ 	.flags			= (_flags),			\
+@@ -120,13 +120,13 @@ static void rtw_2g_rates_init(struct iee
+ }
+ 
+ static struct ieee80211_supported_band *rtw_spt_band_alloc(
+-	enum ieee80211_band band
++	enum nl80211_band band
+ 	)
+ {
+ 	struct ieee80211_supported_band *spt_band = NULL;
+ 	int n_channels, n_bitrates;
+ 
+-	if (band == IEEE80211_BAND_2GHZ)
++	if (band == NL80211_BAND_2GHZ)
+ 	{
+ 		n_channels = RTW_2G_CHANNELS_NUM;
+ 		n_bitrates = RTW_G_RATES_NUM;
+@@ -150,7 +150,7 @@ static struct ieee80211_supported_band *
+ 	spt_band->n_channels = n_channels;
+ 	spt_band->n_bitrates = n_bitrates;
+ 
+-	if (band == IEEE80211_BAND_2GHZ)
++	if (band == NL80211_BAND_2GHZ)
+ 	{
+ 		rtw_2g_channels_init(spt_band->channels);
+ 		rtw_2g_rates_init(spt_band->bitrates);
+@@ -170,7 +170,7 @@ static void rtw_spt_band_free(struct iee
+ 	if (!spt_band)
+ 		return;
+ 
+-	if (spt_band->band == IEEE80211_BAND_2GHZ)
++	if (spt_band->band == NL80211_BAND_2GHZ)
+ 	{
+ 		size = sizeof(struct ieee80211_supported_band)
+ 			+ sizeof(struct ieee80211_channel)*RTW_2G_CHANNELS_NUM
+@@ -232,7 +232,7 @@ static int rtw_ieee80211_channel_to_freq
+ {
+ 	/* see 802.11 17.3.8.3.2 and Annex J
+ 	* there are overlapping channel numbers in 5GHz and 2GHz bands */
+-	if (band == IEEE80211_BAND_2GHZ) {
++	if (band == NL80211_BAND_2GHZ) {
+ 		if (chan == 14)
+ 			return 2484;
+              else if (chan < 14)
+@@ -336,7 +336,7 @@ struct cfg80211_bss *rtw_cfg80211_inform
+ 
+ 
+ 	channel = pnetwork->network.Configuration.DSConfig;
+-	freq = rtw_ieee80211_channel_to_frequency(channel, IEEE80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
+ 
+ 	notify_channel = ieee80211_get_channel(wiphy, freq);
+ 
+@@ -420,7 +420,7 @@ int rtw_cfg80211_check_bss(struct adapte
+ 	if (!(pnetwork) || !(padapter->rtw_wdev))
+ 		return false;
+ 
+-	freq = rtw_ieee80211_channel_to_frequency(pnetwork->Configuration.DSConfig, IEEE80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(pnetwork->Configuration.DSConfig, NL80211_BAND_2GHZ);
+ 
+ 	notify_channel = ieee80211_get_channel(padapter->rtw_wdev->wiphy, freq);
+ 	bss = cfg80211_get_bss(padapter->rtw_wdev->wiphy, notify_channel,
+@@ -542,7 +542,7 @@ check_bss:
+ 		u32 freq;
+ 		u16 channel = cur_network->network.Configuration.DSConfig;
+ 
+-		freq = rtw_ieee80211_channel_to_frequency(channel, IEEE80211_BAND_2GHZ);
++		freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
+ 
+ 		notify_channel = ieee80211_get_channel(wiphy, freq);
+ 
+@@ -3064,7 +3064,7 @@ void rtw_cfg80211_rx_action(struct adapt
+ 	else
+ 		DBG_871X("RTW_Rx:category(%u), action(%u)\n", category, action);
+ 
+-	freq = rtw_ieee80211_channel_to_frequency(channel, IEEE80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
+ 
+ 	rtw_cfg80211_rx_mgmt(adapter, freq, 0, frame, frame_len, GFP_ATOMIC);
+ }
+@@ -3311,7 +3311,7 @@ static int cfg80211_rtw_sched_scan_stop(
+ }
+ #endif /* CONFIG_PNO_SUPPORT */
+ 
+-static void rtw_cfg80211_init_ht_capab(struct ieee80211_sta_ht_cap *ht_cap, enum ieee80211_band band, u8 rf_type)
++static void rtw_cfg80211_init_ht_capab(struct ieee80211_sta_ht_cap *ht_cap, enum nl80211_band band, u8 rf_type)
+ {
+ 
+ #define MAX_BIT_RATE_40MHZ_MCS15	300	/* Mbps */
+@@ -3335,7 +3335,7 @@ static void rtw_cfg80211_init_ht_capab(s
+ 	ht_cap->mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
+ 
+ 	/*
+-	 *hw->wiphy->bands[IEEE80211_BAND_2GHZ]
++	 *hw->wiphy->bands[NL80211_BAND_2GHZ]
+ 	 *base on ant_num
+ 	 *rx_mask: RX mask
+ 	 *if rx_ant = 1 rx_mask[0]= 0xff;==>MCS0-MCS7
+@@ -3379,9 +3379,9 @@ void rtw_cfg80211_init_wiphy(struct adap
+ 	DBG_8192C("%s:rf_type =%d\n", __func__, rf_type);
+ 
+ 	{
+-		bands = wiphy->bands[IEEE80211_BAND_2GHZ];
++		bands = wiphy->bands[NL80211_BAND_2GHZ];
+ 		if (bands)
+-			rtw_cfg80211_init_ht_capab(&bands->ht_cap, IEEE80211_BAND_2GHZ, rf_type);
++			rtw_cfg80211_init_ht_capab(&bands->ht_cap, NL80211_BAND_2GHZ, rf_type);
+ 	}
+ 
+ 	/* init regulary domain */
+@@ -3417,7 +3417,7 @@ static void rtw_cfg80211_preinit_wiphy(s
+ 	wiphy->n_cipher_suites = ARRAY_SIZE(rtw_cipher_suites);
+ 
+ 	/* if (padapter->registrypriv.wireless_mode & WIRELESS_11G) */
+-		wiphy->bands[IEEE80211_BAND_2GHZ] = rtw_spt_band_alloc(IEEE80211_BAND_2GHZ);
++		wiphy->bands[NL80211_BAND_2GHZ] = rtw_spt_band_alloc(NL80211_BAND_2GHZ);
+ 
+ 	wiphy->flags |= WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL;
+ 	wiphy->flags |= WIPHY_FLAG_OFFCHAN_TX | WIPHY_FLAG_HAVE_AP_SME;
+@@ -3564,7 +3564,7 @@ void rtw_wdev_free(struct wireless_dev *
+ 	if (!wdev)
+ 		return;
+ 
+-	rtw_spt_band_free(wdev->wiphy->bands[IEEE80211_BAND_2GHZ]);
++	rtw_spt_band_free(wdev->wiphy->bands[NL80211_BAND_2GHZ]);
+ 
+ 	wiphy_free(wdev->wiphy);
+ 
+diff -urp linux/3rdparty/rtl8723bs.orig/os_dep/wifi_regd.c linux/3rdparty/rtl8723bs/os_dep/wifi_regd.c
+--- linux/3rdparty/rtl8723bs.orig/os_dep/wifi_regd.c	2016-07-04 20:00:13.000000000 +0300
++++ linux/3rdparty/rtl8723bs/os_dep/wifi_regd.c	2016-07-04 20:35:31.427278665 +0300
+@@ -105,7 +105,7 @@ static int rtw_ieee80211_channel_to_freq
+ 	/* see 802.11 17.3.8.3.2 and Annex J
+ 	 * there are overlapping channel numbers in 5GHz and 2GHz bands */
+ 
+-	/* IEEE80211_BAND_2GHZ */
++	/* NL80211_BAND_2GHZ */
+ 	if (chan == 14)
+ 		return 2484;
+ 	else if (chan < 14)
+@@ -128,7 +128,7 @@ static void _rtw_reg_apply_flags(struct
+ 	u32 freq;
+ 
+ 	/*  all channels disable */
+-	for (i = 0; i < IEEE80211_NUM_BANDS; i++) {
++	for (i = 0; i < NUM_NL80211_BANDS; i++) {
+ 		sband = wiphy->bands[i];
+ 
+ 		if (sband) {
+@@ -146,7 +146,7 @@ static void _rtw_reg_apply_flags(struct
+ 		channel = channel_set[i].ChannelNum;
+ 		freq =
+ 		    rtw_ieee80211_channel_to_frequency(channel,
+-						       IEEE80211_BAND_2GHZ);
++						       NL80211_BAND_2GHZ);
+ 
+ 		ch = ieee80211_get_channel(wiphy, freq);
+ 		if (ch) {

@@ -1,0 +1,59 @@
+From d9083160c2f6ee456ea867ea2279c1fc6124e56f Mon Sep 17 00:00:00 2001
+From: Sumit Saxena <sumit.saxena@broadcom.com>
+Date: Fri, 8 Jul 2016 03:30:16 -0700
+Subject: [PATCH] megaraid_sas: Do not fire MR_DCMD_PD_LIST_QUERY to
+ controllers which do not support it
+
+There was an issue reported by Lucz Geza on Dell Perc 6i. As per issue
+reported, megaraid_sas driver goes into an infinite error reporting loop
+as soon as there is a change in the status of one of the
+arrays (degrade, resync online etc ).  Below are the error logs reported
+continuously-
+
+Jun 25 08:49:30 ns8 kernel: [  757.757017] megaraid_sas 0000:02:00.0: DCMD failed/not supported by firmware: megasas_get_pd_list 4115
+Jun 25 08:49:30 ns8 kernel: [  757.778017] megaraid_sas 0000:02:00.0: DCMD failed/not supported by firmware: megasas_get_pd_list 4115
+Jun 25 08:49:30 ns8 kernel: [  757.799017] megaraid_sas 0000:02:00.0: DCMD failed/not supported by firmware: megasas_get_pd_list 4115
+Jun 25 08:49:30 ns8 kernel: [  757.820018] megaraid_sas 0000:02:00.0: DCMD failed/not supported by firmware: megasas_get_pd_list 4115
+Jun 25 08:49:30 ns8 kernel: [  757.841018] megaraid_sas 0000:02:00.0: DCMD failed/not supported by firmware: megasas_get_pd_list 4115
+
+This issue is very much specific to controllers which do not support
+DCMD- MR_DCMD_PD_LIST_QUERY.  In case of any hotplugging/rescanning of
+drives, AEN thread will be scheduled by driver and fire DCMD-
+MR_DCMD_PD_LIST_QUERY and if this DCMD is failed then driver will fail
+this event processing and will not go ahead for further events. This
+will cause infinite loop of same event getting retried infinitely and
+causing above mentioned logs.
+
+Fix for this problem is: not to fire DCMD MR_DCMD_PD_LIST_QUERY for
+controllers which do not support it and send DCMD SUCCESS status to AEN
+function so that it can go ahead with other event processing.
+
+Reported-by: Lucz Geza <geza@lucz.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Reviewed-by: Tomas Henzl <thenzl@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+---
+ drivers/scsi/megaraid/megaraid_sas_base.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index f4b0690..2dab3dc 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -4079,6 +4079,12 @@ megasas_get_pd_list(struct megasas_instance *instance)
+ 	struct MR_PD_ADDRESS *pd_addr;
+ 	dma_addr_t ci_h = 0;
+ 
++	if (instance->pd_list_not_supported) {
++		dev_info(&instance->pdev->dev, "MR_DCMD_PD_LIST_QUERY "
++		"not supported by firmware\n");
++		return ret;
++	}
++
+ 	cmd = megasas_get_cmd(instance);
+ 
+ 	if (!cmd) {
+-- 
+2.9.2
+

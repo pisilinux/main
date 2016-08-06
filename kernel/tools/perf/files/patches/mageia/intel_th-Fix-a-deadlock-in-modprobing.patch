@@ -1,0 +1,95 @@
+From a36aa80f3cb2540fb1dbad6240852de4365a2e82 Mon Sep 17 00:00:00 2001
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Date: Thu, 30 Jun 2016 11:51:44 +0300
+Subject: [PATCH] intel_th: Fix a deadlock in modprobing
+
+Driver initialization tries to request a hub (GTH) driver module from
+its probe callback, resulting in a deadlock.
+
+This patch solves the problem by adding a deferred work for requesting
+the hub module.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: <stable@vger.kernel.org> # 4.4.x-
+---
+ drivers/hwtracing/intel_th/core.c     | 35 ++++++++++++++++++++++++++++++++++-
+ drivers/hwtracing/intel_th/intel_th.h |  3 +++
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/intel_th/core.c b/drivers/hwtracing/intel_th/core.c
+index 1be543e..0b112ae 100644
+--- a/drivers/hwtracing/intel_th/core.c
++++ b/drivers/hwtracing/intel_th/core.c
+@@ -465,6 +465,38 @@ static struct intel_th_subdevice {
+ 	},
+ };
+ 
++#ifdef CONFIG_MODULES
++static void __intel_th_request_hub_module(struct work_struct *work)
++{
++	struct intel_th *th = container_of(work, struct intel_th,
++					   request_module_work);
++
++	request_module("intel_th_%s", th->hub->name);
++}
++
++static int intel_th_request_hub_module(struct intel_th *th)
++{
++	INIT_WORK(&th->request_module_work, __intel_th_request_hub_module);
++	schedule_work(&th->request_module_work);
++
++	return 0;
++}
++
++static void intel_th_request_hub_module_flush(struct intel_th *th)
++{
++	flush_work(&th->request_module_work);
++}
++#else
++static inline int intel_th_request_hub_module(struct intel_th *th)
++{
++	return -EINVAL;
++}
++
++static inline void intel_th_request_hub_module_flush(struct intel_th *th)
++{
++}
++#endif /* CONFIG_MODULES */
++
+ static int intel_th_populate(struct intel_th *th, struct resource *devres,
+ 			     unsigned int ndevres, int irq)
+ {
+@@ -535,7 +567,7 @@ static int intel_th_populate(struct intel_th *th, struct resource *devres,
+ 		/* need switch driver to be loaded to enumerate the rest */
+ 		if (subdev->type == INTEL_TH_SWITCH && !req) {
+ 			th->hub = thdev;
+-			err = request_module("intel_th_%s", subdev->name);
++			err = intel_th_request_hub_module(th);
+ 			if (!err)
+ 				req++;
+ 		}
+@@ -652,6 +684,7 @@ void intel_th_free(struct intel_th *th)
+ {
+ 	int i;
+ 
++	intel_th_request_hub_module_flush(th);
+ 	for (i = 0; i < TH_SUBDEVICE_MAX; i++)
+ 		if (th->thdev[i] != th->hub)
+ 			intel_th_device_remove(th->thdev[i]);
+diff --git a/drivers/hwtracing/intel_th/intel_th.h b/drivers/hwtracing/intel_th/intel_th.h
+index 0df22e3..0482848 100644
+--- a/drivers/hwtracing/intel_th/intel_th.h
++++ b/drivers/hwtracing/intel_th/intel_th.h
+@@ -205,6 +205,9 @@ struct intel_th {
+ 
+ 	int			id;
+ 	int			major;
++#ifdef CONFIG_MODULES
++	struct work_struct	request_module_work;
++#endif /* CONFIG_MODULES */
+ #ifdef CONFIG_INTEL_TH_DEBUG
+ 	struct dentry		*dbg;
+ #endif
+-- 
+2.9.2
+
