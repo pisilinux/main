@@ -1,0 +1,58 @@
+From: Luca Coelho <luca-XPOmlcxoEMv1KXRcyAk9cg@public.gmane.org>
+Subject: [PATCH 28/56] iwlwifi: pcie: enable interrupts before releasing the NIC's CPU
+Date: Wed,  6 Jul 2016 13:40:23 +0300
+
+From: Emmanuel Grumbach <emmanuel.grumbach-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+The NIC's CPU gets started after the firmware has been
+written to its memory. The first thing it does is to
+send an interrupt to let the driver know that it is
+running. In order to get that interrupt, the driver needs
+to make sure it is not masked. Of course, the interrupt
+needs to be enabled in the driver before the CPU starts to
+run.
+I mistakenly inversed those two steps leading to races
+which prevented the driver from getting the alive interrupt
+from the firmware.
+Fix that.
+
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> [4.5+]
+Fixes: a6bd005fe92 ("iwlwifi: pcie: fix RF-Kill vs. firmware load race")
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 3badebb..ac623c3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -801,6 +801,8 @@ static int iwl_pcie_load_cpu_sections_8000(struct iwl_trans *trans,
+ 
+ 	*first_ucode_section = last_read_idx;
+ 
++	iwl_enable_interrupts(trans);
++
+ 	if (cpu == 1)
+ 		iwl_write_direct32(trans, FH_UCODE_LOAD_STATUS, 0xFFFF);
+ 	else
+@@ -980,6 +982,8 @@ static int iwl_pcie_load_given_ucode(struct iwl_trans *trans,
+ 		iwl_pcie_apply_destination(trans);
+ 	}
+ 
++	iwl_enable_interrupts(trans);
++
+ 	/* release CPU reset */
+ 	iwl_write32(trans, CSR_RESET, 0);
+ 
+@@ -1215,7 +1219,6 @@ static int iwl_trans_pcie_start_fw(struct iwl_trans *trans,
+ 		ret = iwl_pcie_load_given_ucode_8000(trans, fw);
+ 	else
+ 		ret = iwl_pcie_load_given_ucode(trans, fw);
+-	iwl_enable_interrupts(trans);
+ 
+ 	/* re-check RF-Kill state since we may have missed the interrupt */
+ 	hw_rfkill = iwl_is_rfkill_set(trans);
+-- 
+2.8.1

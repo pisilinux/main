@@ -1,0 +1,45 @@
+From 6a7fd522a7c94cdef0a3b08acf8e6702056e635c Mon Sep 17 00:00:00 2001
+From: Vegard Nossum <vegard.nossum@oracle.com>
+Date: Mon, 4 Jul 2016 11:03:00 -0400
+Subject: [PATCH] ext4: don't call ext4_should_journal_data() on the journal
+ inode
+
+If ext4_fill_super() fails early, it's possible for ext4_evict_inode()
+to call ext4_should_journal_data() before superblock options and flags
+are fully set up.  In that case, the iput() on the journal inode can
+end up causing a BUG().
+
+Work around this problem by reordering the tests so we only call
+ext4_should_journal_data() after we know it's not the journal inode.
+
+Fixes: 2d859db3e4 ("ext4: fix data corruption in inodes with journalled data")
+Fixes: 2b405bfa84 ("ext4: fix data=journal fast mount/umount hang")
+Cc: Jan Kara <jack@suse.cz>
+Cc: stable@vger.kernel.org
+Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ fs/ext4/inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 321a31c..ea39d19 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -211,9 +211,9 @@ void ext4_evict_inode(struct inode *inode)
+ 		 * Note that directories do not have this problem because they
+ 		 * don't use page cache.
+ 		 */
+-		if (ext4_should_journal_data(inode) &&
+-		    (S_ISLNK(inode->i_mode) || S_ISREG(inode->i_mode)) &&
+-		    inode->i_ino != EXT4_JOURNAL_INO) {
++		if (inode->i_ino != EXT4_JOURNAL_INO &&
++		    ext4_should_journal_data(inode) &&
++		    (S_ISLNK(inode->i_mode) || S_ISREG(inode->i_mode))) {
+ 			journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+ 			tid_t commit_tid = EXT4_I(inode)->i_datasync_tid;
+ 
+-- 
+2.9.2
+

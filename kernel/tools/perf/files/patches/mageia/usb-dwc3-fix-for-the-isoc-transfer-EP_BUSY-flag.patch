@@ -1,0 +1,42 @@
+From 9cad39fe4e4a4fe95d8ea5a7b0692b0a6e89e38b Mon Sep 17 00:00:00 2001
+From: Konrad Leszczynski <konrad.leszczynski@intel.com>
+Date: Mon, 8 Feb 2016 16:13:12 +0100
+Subject: [PATCH] usb: dwc3: fix for the isoc transfer EP_BUSY flag
+
+commit f3af36511e60 ("usb: dwc3: gadget: always
+enable IOC on bulk/interrupt transfers") ended up
+regressing Isochronous endpoints by clearing
+DWC3_EP_BUSY flag too early, which resulted in
+choppy audio playback over USB.
+
+Fix that by partially reverting original commit and
+making sure that we check for isochronous endpoints.
+
+Fixes: f3af36511e60 ("usb: dwc3: gadget: always enable IOC
+		on bulk/interrupt transfers")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Konrad Leszczynski <konrad.leszczynski@intel.com>
+Signed-off-by: Rafal Redzimski <rafal.f.redzimski@intel.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+---
+ drivers/usb/dwc3/gadget.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 5e7b2ba..867adc9 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2058,6 +2058,10 @@ static int dwc3_cleanup_done_reqs(struct dwc3 *dwc, struct dwc3_ep *dep,
+ 		return 1;
+ 	}
+ 
++	if (usb_endpoint_xfer_isoc(dep->endpoint.desc))
++		if ((event->status & DEPEVT_STATUS_IOC) &&
++				(trb->ctrl & DWC3_TRB_CTRL_IOC))
++			return 0;
+ 	return 1;
+ }
+ 
+-- 
+2.9.2
+

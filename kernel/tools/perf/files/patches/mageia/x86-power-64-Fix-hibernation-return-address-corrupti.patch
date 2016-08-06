@@ -1,0 +1,101 @@
+From 4ce827b4cc58bec7952591b96cce2b28553e4d5b Mon Sep 17 00:00:00 2001
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Date: Thu, 28 Jul 2016 23:15:21 +0200
+Subject: [PATCH] x86/power/64: Fix hibernation return address corruption
+
+In kernel bug 150021, a kernel panic was reported when restoring a
+hibernate image.  Only a picture of the oops was reported, so I can't
+paste the whole thing here.  But here are the most interesting parts:
+
+  kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+  BUG: unable to handle kernel paging request at ffff8804615cfd78
+  ...
+  RIP: ffff8804615cfd78
+  RSP: ffff8804615f0000
+  RBP: ffff8804615cfdc0
+  ...
+  Call Trace:
+   do_signal+0x23
+   exit_to_usermode_loop+0x64
+   ...
+
+The RIP is on the same page as RBP, so it apparently started executing
+on the stack.
+
+The bug was bisected to commit ef0f3ed5a4ac (x86/asm/power: Create
+stack frames in hibernate_asm_64.S), which in retrospect seems quite
+dangerous, since that code saves and restores the stack pointer from a
+global variable ('saved_context').
+
+There are a lot of moving parts in the hibernate save and restore paths,
+so I don't know exactly what caused the panic.  Presumably, a FRAME_END
+was executed without the corresponding FRAME_BEGIN, or vice versa.  That
+would corrupt the return address on the stack and would be consistent
+with the details of the above panic.
+
+[ rjw: One major problem is that by the time the FRAME_BEGIN in
+  restore_registers() is executed, the stack pointer value may not
+  be valid any more.  Namely, the stack area pointed to by it
+  previously may have been overwritten by some image memory contents
+  and that page frame may now be used for whatever different purpose
+  it had been allocated for before hibernation.  In that case, the
+  FRAME_BEGIN will corrupt that memory. ]
+
+Instead of doing the frame pointer save/restore around the bounds of the
+affected functions, just do it around the call to swsusp_save().
+
+That has the same effect of ensuring that if swsusp_save() sleeps, the
+frame pointers will be correct.  It's also a much more obviously safe
+way to do it than the original patch.  And objtool still doesn't report
+any warnings.
+
+Fixes: ef0f3ed5a4ac (x86/asm/power: Create stack frames in hibernate_asm_64.S)
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=150021
+Cc: 4.6+ <stable@vger.kernel.org> # 4.6+
+Reported-by: Andre Reinke <andre.reinke@mailbox.org>
+Tested-by: Andre Reinke <andre.reinke@mailbox.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ arch/x86/power/hibernate_asm_64.S | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
+index 3177c2b..8eee0e9 100644
+--- a/arch/x86/power/hibernate_asm_64.S
++++ b/arch/x86/power/hibernate_asm_64.S
+@@ -24,7 +24,6 @@
+ #include <asm/frame.h>
+ 
+ ENTRY(swsusp_arch_suspend)
+-	FRAME_BEGIN
+ 	movq	$saved_context, %rax
+ 	movq	%rsp, pt_regs_sp(%rax)
+ 	movq	%rbp, pt_regs_bp(%rax)
+@@ -48,6 +47,7 @@ ENTRY(swsusp_arch_suspend)
+ 	movq	%cr3, %rax
+ 	movq	%rax, restore_cr3(%rip)
+ 
++	FRAME_BEGIN
+ 	call swsusp_save
+ 	FRAME_END
+ 	ret
+@@ -104,7 +104,6 @@ ENTRY(core_restore_code)
+ 	 /* code below belongs to the image kernel */
+ 	.align PAGE_SIZE
+ ENTRY(restore_registers)
+-	FRAME_BEGIN
+ 	/* go back to the original page tables */
+ 	movq    %r9, %cr3
+ 
+@@ -145,6 +144,5 @@ ENTRY(restore_registers)
+ 	/* tell the hibernation core that we've just restored the memory */
+ 	movq	%rax, in_suspend(%rip)
+ 
+-	FRAME_END
+ 	ret
+ ENDPROC(restore_registers)
+-- 
+2.9.2
+

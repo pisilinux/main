@@ -1,0 +1,49 @@
+
+Devicetree is enabled on 32bit kernels for OLPC support,
+but this causes error messages:
+
+'Failed to find cpu0 device node' that breaks bootsplash.
+
+https://bugs.mageia.org/show_bug.cgi?id=16655#c39
+https://bugs.mageia.org/show_bug.cgi?id=17010
+
+So hide them behind debug for cleaner boot.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+
+--- linux/drivers/base/cacheinfo.c.orig
++++ linux/drivers/base/cacheinfo.c
+@@ -53,12 +53,12 @@
+ 		return 0;
+ 
+ 	if (!cpu_dev) {
+-		pr_err("No cpu device for CPU %d\n", cpu);
++		pr_debug("No cpu device for CPU %d\n", cpu);
+ 		return -ENODEV;
+ 	}
+ 	np = cpu_dev->of_node;
+ 	if (!np) {
+-		pr_err("Failed to find cpu%d device node\n", cpu);
++		pr_debug("Failed to find cpu%d device node\n", cpu);
+ 		return -ENOENT;
+ 	}
+ 
+@@ -203,7 +203,7 @@
+ 	 */
+ 	ret = cache_shared_cpu_map_setup(cpu);
+ 	if (ret) {
+-		pr_warn("Unable to detect cache hierarchy from DT for CPU %d\n",
++		pr_debug("Unable to detect cache hierarchy from DT for CPU %d\n",
+ 			cpu);
+ 		goto free_ci;
+ 	}
+@@ -540,7 +540,7 @@
+ 		rc = cache_add_dev(cpu);
+ 		if (rc) {
+ 			free_cache_attributes(cpu);
+-			pr_err("error populating cacheinfo..cpu%d\n", cpu);
++			pr_debug("error populating cacheinfo..cpu%d\n", cpu);
+ 			goto out;
+ 		}
+ 	}
