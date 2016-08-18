@@ -15,3 +15,5 @@ def build():
 
 def install():
     kde5.install()
+    
+    pisitools.remove("/usr/share/locale/tr/LC_MESSAGES/khelpcenter.mo")
