@@ -22,20 +22,19 @@ def setup():
     # The end-start colors seems to be used by the two-step plugin
     # Disable nouveau drm renderer as it causes hangs when starting X server
     autotools.configure("--enable-tracing \
-                         --enable-static \
-                         --enable-pango \
                          --with-logo=%s \
                          --with-release-file=/etc/pisilinux-release \
                          --with-background-color=0x000000 \
                          --with-background-end-color-stop=0x000000 \
                          --with-background-start-color-stop=0x000000 \
                          --with-system-root-install \
-                         --with-boot-tty=/dev/tty1 \
+                         --with-boot-tty=/dev/tty7 \
                          --with-shutdown-tty=/dev/tty1 \
-                         --disable-silent-rules \
-                         --disable-systemd-integration \
-                         --disable-gdm-transition \
-                         --without-log-viewer \
+                         --with-log-viewer \
+                         --disable-libdrm_nouveau \
+                         --disable-tests \
+                         --disable-static \
+                         --enable-gdm-transition \
                          --without-rhgb-compat-link" % LOGO_FILE)
 
 def build():
