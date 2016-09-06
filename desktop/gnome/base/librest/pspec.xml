@@ -1,0 +1,79 @@
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>librest</Name>
+        <Homepage>http://www.gtk.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>A helper library for RESTful services.</Summary>
+        <Description>This library was designed to make it easier to access web services that claim to be "RESTful".</Description>
+        <Archive sha1sum="e8cb955148745e75313766a6b5fb7a0da6bf42e8" type="tarxz">http://ftp.acc.umu.se/pub/GNOME/sources/rest/0.7/rest-0.7.92.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>libsoup-devel</Dependency>
+            <Dependency>libsoup-gnome</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>librest</Name>
+        <RuntimeDependencies>
+            <Dependency>libsoup</Dependency>
+            <Dependency>libsoup-gnome</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="executable">/usr/bin</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>librest-devel</Name>
+        <Summary>Development files for librest</Summary>
+        <RuntimeDependencies>
+            <Dependency>libsoup-devel</Dependency>
+            <Dependency release="current">librest</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>librest-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for librest</Summary>
+        <BuildType>_emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
+            <Dependency>libsoup-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
+            <Dependency>libsoup-32bit</Dependency>
+            <Dependency release="current">librest</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="6">
+            <Date>2015-03-18</Date>
+            <Version>0.7.92</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Hakan Yıldız</Name>
+            <Email>hknyldz93@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
