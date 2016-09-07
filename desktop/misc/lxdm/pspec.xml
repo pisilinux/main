@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>lxdm</Name>
+        <Homepage>http://lxde.org</Homepage>
+        <Packager>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <License>LGPLv2</License>
+        <IsA>app:gui</IsA>
+        <PartOf>desktop.lxde.base</PartOf>
+        <Summary>LXDE Display Manager</Summary>
+        <Description>LXDM is the future display manager of LXDE.</Description>
+        <Archive sha1sum="829528672b46fff945a2949161dd74b7410ddb8f" type="tarxz">mirrors://sourceforge/lxdm/lxdm-0.5.1.tar.xz</Archive>  
+        
+        <!--Archive sha1sum="1934b7f22adc50445a935db817febe4b6ec1a5f2" target="lxdm-0.5.0" type="tarxz">http://source.pisilinux.org/1.0/lxdm-pisilinux-theme.tar.xz</Archive-->  
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>iso-codes</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>pam-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>at-spi2-atk-devel</Dependency>
+            <Dependency>at-spi2-core-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">default_config.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>lxdm</Name>
+        <Conflicts>
+            <Package>lightdm</Package>
+            <Package>sddm</Package>
+            <Package>mdm</Package>
+            <Package>gdm</Package>
+            <Package>slim</Package>
+        </Conflicts>
+        <RuntimeDependencies>
+            <Dependency>pam</Dependency>
+            <Dependency>iso-codes</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>at-spi2-atk</Dependency>
+            <Dependency>at-spi2-core</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/etc/conf.d/xdm</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/display-managers/lxdm.desktop">lxdm.desktop</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <History>
+       <Update release="1">
+            <Date>2016-08-23</Date>
+            <Version>0.5.1</Version>
+            <Comment>First Release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+       </Update>
+    </History>
+</PISI>
