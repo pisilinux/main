@@ -8,8 +8,6 @@ from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "."
 
 def install():
     pythonmodules.install()
-    pisitools.insinto("/usr/share/","./share/*")
