@@ -27,7 +27,6 @@ def setup():
                --disable-rpath \
                --disable-jack \
                --disable-systemd \
-               --disable-bluez4 \
                --disable-oss-output \
                --enable-largefile \
                --with-system-user=pulse \
@@ -43,8 +42,6 @@ def setup():
                      --disable-gconf \
                      --disable-gtk2 \
                      --disable-jack \
-                     --disable-bluez4 \
-                     --disable-bluez5 \
                      --disable-asyncns \
                      --disable-lirc \
                      --disable-x11 \
