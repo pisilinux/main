@@ -25,7 +25,6 @@ def setup():
                --disable-dependency-tracking \
                --disable-static \
                --disable-rpath \
-               --disable-jack \
                --disable-systemd \
                --disable-oss-output \
                --enable-largefile \
@@ -41,7 +40,6 @@ def setup():
                      --libexecdir=/usr/lib32 \
                      --disable-gconf \
                      --disable-gtk2 \
-                     --disable-jack \
                      --disable-asyncns \
                      --disable-lirc \
                      --disable-x11 \
