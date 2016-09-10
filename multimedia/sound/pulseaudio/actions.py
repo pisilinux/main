@@ -24,6 +24,7 @@ def setup():
                --libexecdir=/usr/libexec \
                --disable-dependency-tracking \
                --disable-static \
+               --disable-bluez4 \
                --disable-rpath \
                --disable-systemd \
                --disable-oss-output \
@@ -43,6 +44,7 @@ def setup():
                      --disable-asyncns \
                      --disable-lirc \
                      --disable-x11 \
+                     --disable-bluez4 \
                      --disable-oss-output \
                      --disable-oss-wrapper \
                      --disable-solaris \
