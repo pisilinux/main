@@ -25,5 +25,6 @@ def build():
 
 def install():
     autotools.install()
+    pisitools.remove("/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "TODO")
