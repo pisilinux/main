@@ -11,11 +11,15 @@ DAEMON="/usr/sbin/lxdm"
 
 @synchronized
 def start():
-    startService(command=DAEMON,
-                 pidfile=PIDFILE,
-                 detach=True,
-                 donotify=True)
+    if status():
+        return
     
+    reply = startService(command=DAEMON,
+                 pidfile=PIDFILE,
+                 donotify=True)
+
+    if reply == 0:
+        run("/usr/sbin/lxdm")
 
 @synchronized
 def stop():
