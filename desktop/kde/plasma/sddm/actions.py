@@ -31,5 +31,3 @@ def install():
     shelltools.cd("build")
 
     cmaketools.install()
-
-    pisitools.dodoc("../COPYING")
