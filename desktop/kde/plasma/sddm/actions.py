@@ -16,6 +16,7 @@ def setup():
                           -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
                           -DUSE_QT5=ON \
+                          -DDBUS_CONFIG_FILENAME=sddm_org.freedesktop.DisplayManager.conf \
                           -DUSE_WAYLAND=ON \
                           -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/sddm \
                           -DBUILD_MAN_PAGES=ON", sourceDir=".." )
@@ -31,3 +32,5 @@ def install():
     shelltools.cd("build")
 
     cmaketools.install()
+
+    pisitools.dodoc("../LICENSE")
