@@ -18,8 +18,8 @@ def setup():
     shelltools.export("ac_cv_header_dns_sd_h", "yes")
     shelltools.export("ac_cv_lib_dns_sd_DNSServiceRegister", "yes")
 
-    pisitools.dosed("ntpstat-0.2/Makefile", "^CC=.*gcc", "CC=%s" % get.CC())
-    pisitools.dosed("ntpstat-0.2/Makefile", "^CFLAGS=.*", "CFLAGS=%s" % get.CFLAGS())
+    #pisitools.dosed("ntpstat-0.2/Makefile", "^CC=.*gcc", "CC=%s" % get.CC())
+    #pisitools.dosed("ntpstat-0.2/Makefile", "^CFLAGS=.*", "CFLAGS=%s" % get.CFLAGS())
 
     autotools.configure("--enable-all-clocks \
                          --enable-parse-clocks \
@@ -29,7 +29,7 @@ def setup():
 
 def build():
     autotools.make()
-    autotools.make("-C ntpstat-0.2")
+    #autotools.make("-C ntpstat-0.2")
 
     #shelltools.cd("html")
     #shelltools.system("../scripts/html2man")
@@ -48,8 +48,8 @@ def install():
         pisitools.domove("/usr/bin/%s" % sbin, "/usr/sbin")
 
     # Additional ntpstat binary and man page
-    pisitools.dobin("ntpstat-0.2/ntpstat")
-    pisitools.doman("ntpstat-0.2/ntpstat.1")
+    #pisitools.dobin("ntpstat-0.2/ntpstat")
+    #pisitools.doman("ntpstat-0.2/ntpstat.1")
 
     pisitools.dodir("/var/lib/ntp")
 
