@@ -29,7 +29,7 @@ def install():
                               LIBDIR=%s/usr/lib32" % (get.installDIR() , get.installDIR(), get.installDIR(), get.installDIR()))
 
         pisitools.remove("/usr/lib32/libGLEW.a")
-        pisitools.dosed("%s/usr/lib32/pkgconfig/glew.pc" % get.installDIR(), "/usr/lib", "/usr/lib32")
+        pisitools.insinto("/usr/lib32/pkgconfig/", "glew.pc")
         return
 
     autotools.rawInstall("GLEW_DEST=%s/usr/ \
@@ -38,4 +38,4 @@ def install():
                           LIBDIR=%s/usr/lib" % (get.installDIR() , get.installDIR(), get.installDIR(), get.installDIR()))
 
     pisitools.dohtml("doc/*")
-    pisitools.dodoc("README.txt", "doc/*.txt")
+    pisitools.dodoc("README.md", "doc/*.txt")
