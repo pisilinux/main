@@ -69,5 +69,5 @@ def install():
     if get.buildTYPE() == "emul32":
         return
 
-    pisitools.dodoc("docs/COPYING")
+    #pisitools.dodoc("docs/COPYING")
     pisitools.dohtml("docs/*")
