@@ -15,6 +15,7 @@ def build():
     
     if get.buildTYPE() == "emul32":
         pisitools.dosed("config/Makefile.linux", "LD = cc", "LD = gcc -m32")
+        shelltools.system("sed -i 's|lib64|lib32|' config/Makefile.linux")
         autotools.make('CC="%s -m32" CXXFLAGS="%s"' % (get.CC(), get.CXXFLAGS()))
         return
     else:
@@ -26,16 +27,20 @@ def install():
         autotools.rawInstall("GLEW_DEST=%s/usr/ \
                               INCDIR=%s/emul32 \
                               BINDIR=%s/emul32 \
-                              LIBDIR=%s/usr/lib32" % (get.installDIR() , get.installDIR(), get.installDIR(), get.installDIR()))
+                              LIBDIR=%s/usr/lib32 \
+                              PKGDIR=%s/usr/lib32/pkgconfig" % (get.installDIR() , get.installDIR(), get.installDIR(), get.installDIR(), get.installDIR()))
 
         pisitools.remove("/usr/lib32/libGLEW.a")
-        pisitools.insinto("/usr/lib32/pkgconfig/", "glew.pc")
+        pisitools.dosed("%s/usr/lib32/pkgconfig/glew.pc" % get.installDIR(), "/usr/lib", "/usr/lib32")
         return
 
     autotools.rawInstall("GLEW_DEST=%s/usr/ \
                           INCDIR=%s/usr/include/GL \
-                          BINDIR=%s/usr/bin/ \
+                          BINDIR=%s/usr/bin \
                           LIBDIR=%s/usr/lib" % (get.installDIR() , get.installDIR(), get.installDIR(), get.installDIR()))
 
+    pisitools.dobin("bin/glewinfo")
+    pisitools.dobin("bin/visualinfo")
+
     pisitools.dohtml("doc/*")
-    pisitools.dodoc("README.md", "doc/*.txt")
+    pisitools.dodoc("README.md", "doc/*.txt", "LICENSE.txt")

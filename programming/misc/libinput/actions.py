@@ -23,4 +23,4 @@ def install():
     
     #pisitools.remove("/usr/lib/udev/rules.d/80-libinput-device-groups.rules")
     #pisitools.remove("/usr/lib/udev/rules.d/90-libinput-model-quirks.rules")
-    pisitools.dodoc("COPYING", "README")
+    pisitools.dodoc("COPYING", "README.txt")
