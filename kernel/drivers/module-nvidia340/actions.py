@@ -38,7 +38,7 @@ def setup():
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
-    shelltools.system("patch -p1 < linux-4.6.patch")
+    #shelltools.system("patch -p1 < linux-4.6.patch")
 
 def build():
     # We don't need kernel module for emul32 build
