@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     kde5.configure("-DCMAKE_BUILD_TYPE=Release \
-                             -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix`")
+                    -DCMAKE_INSTALL_PREFIX=/usr")
 
 def build():
     kde5.make()
@@ -17,6 +17,4 @@ def build():
 def install():
     kde5.install()
 
-
     pisitools.dodoc("AUTHORS", "COPYING-CMAKE-SCRIPTS", "COPYING", "README.md", "COPYING.LIB")
-
