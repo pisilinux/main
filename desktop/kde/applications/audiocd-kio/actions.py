@@ -8,8 +8,7 @@ from pisi.actionsapi import pisitools
 
 
 def setup():
-    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
-                             -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix`")
+    kde5.configure()
 
 def build():
     kde5.make()
@@ -17,6 +16,4 @@ def build():
 def install():
     kde5.install()
 
-
     pisitools.dodoc("COPYING", "COPYING.DOC")
-
