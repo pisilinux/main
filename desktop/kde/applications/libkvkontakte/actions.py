@@ -7,8 +7,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
-                             -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix`")
+    kde5.configure()
 
 def build():
     kde5.make()
