@@ -13,7 +13,7 @@ from pisi.actionsapi import cmaketools
 def setup():
     kde5.configure("-DFORCED_UNBUNDLE=ON \
                     -DWITH_LQR=ON \
-                    -DWITH_LENSFUN=OFF \
+                    -DWITH_LENSFUN=ON \
                     -DWITH_MarbleWidget=ON \
                     -DENABLE_LCMS2=ON \
                     -DDIGIKAMSC_COMPILE_KIPIPLUGINS=ON \
