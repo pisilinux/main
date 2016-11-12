@@ -60,7 +60,7 @@ def install():
     #pisitools.insinto("/usr/share/doc/emacs-git", "contrib/emacs/README")
 
     # Some docs
-    pisitools.dodoc("README", "COPYING", "Documentation/SubmittingPatches")
+    pisitools.dodoc("README.md", "COPYING", "Documentation/SubmittingPatches")
 
     # remove .pod and .packlist files
     perlmodules.removePodfiles()
