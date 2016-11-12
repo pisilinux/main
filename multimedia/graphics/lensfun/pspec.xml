@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>lensfun</Name>
+        <Homepage>http://lensfun.berlios.de/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv3</License>
+        <License>GPLv3</License>
+        <License>CCPL-Attribution-ShareAlike-3.0</License>
+        <IsA>library</IsA>
+        <Summary>A programming library for rectifying and simulating photographic lens distortions</Summary>
+        <Description>lensfun provides an open source database of photographic lenses and their characteristics. The library provides also the necessary set of algorithms for correcting images based on detailed knowledge of lens properties and calibration data.</Description>
+        <Archive sha1sum="1d978b15aa7304d66a4931fa37ca9f8f89396c16" type="targz">https://sourceforge.net/projects/lensfun/files/0.3.2/lensfun-0.3.2.tar.gz</Archive>
+        <Patches>
+            <Patch level="1">upstream_Patch-47-respect-DESTDIR-when-installing-python-stuf.patch</Patch>
+            <Patch level="1">upstream_Use-database-in-source-directory-while-running-tests.patch</Patch>            
+        </Patches>
+        <BuildDependencies>
+            <Dependency>doxygen</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>lensfun</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>glib2</Dependency>                        
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>            
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>lensfun-devel</Name>
+        <Summary>Development files for lensfun</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">lensfun</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="4">
+            <Date>2016-11-12</Date>
+            <Version>0.3.2</Version>
+            <Comment>First Release.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>       
+    </History>
+</PISI>

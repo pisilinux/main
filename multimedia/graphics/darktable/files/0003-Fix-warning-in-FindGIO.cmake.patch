@@ -1,0 +1,32 @@
+From 6f52fa346ef5dd5c22895a5fc404bf02bf29932c Mon Sep 17 00:00:00 2001
+From: Roman Lebedev <lebedev.ri@gmail.com>
+Date: Thu, 9 Jun 2016 12:52:09 +0300
+Subject: [PATCH 3/3] Fix warning in FindGIO.cmake
+
+CMake Warning (dev) at cmake/modules/LibFindMacros.cmake:160 (message):
+  Plural form Glib_LIBRARIES;Glib_LIBRARY found in config options of GIO.
+  This works as before but is now deprecated.  Please only use singular forms
+  INCLUDE_DIR and LIBRARY, and update your find scripts for LibFindMacros >
+  2.0 automatic dependency system (most often you can simply remove the
+  PROCESS variables entirely).
+Call Stack (most recent call first):
+  cmake/modules/FindGIO.cmake:26 (libfind_process)
+  src/CMakeLists.txt:196 (find_package)
+
+(cherry picked from commit 0717a2f5fc9dce880376c22856eae0c4dd7e4955)
+---
+ cmake/modules/FindGIO.cmake | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/cmake/modules/FindGIO.cmake b/cmake/modules/FindGIO.cmake
+index c039042..a62f36e 100644
+--- a/cmake/modules/FindGIO.cmake
++++ b/cmake/modules/FindGIO.cmake
+@@ -21,7 +21,5 @@ find_library(GIO_LIBRARY
+ 
+ # Set the include dir variables and the libraries and let libfind_process do the rest.
+ # NOTE: Singular variables for this library, plural for libraries this this lib depends on.
+-set(GIO_PROCESS_INCLUDES Glib_INCLUDE_DIRS)
+-set(GIO_PROCESS_LIBS GIO_LIBRARY Glib_LIBRARIES)
+ libfind_process(GIO)
+ 
