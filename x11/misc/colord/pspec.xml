@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>colord</Name>
+        <Homepage>http://www.freedesktop.org/software/colord</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Colord is a system activated daemon that maps devices to color profiles</Summary>
+        <Description>Colord is a system activated daemon that maps devices to color profiles. It is used by GNOME Color Manager for system integration and use when there are no users logged in.</Description>
+        <Archive sha1sum="401f4b5c2f38895b14be4cfa36590ed3ce40cce4" type="tarxz">https://www.freedesktop.org/software/colord/releases/colord-1.3.3.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>gobject-introspection</Dependency>
+            <Dependency>docbook2x</Dependency>
+            <Dependency>argyllcms</Dependency>
+            <Dependency>vala</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>libgusb-devel</Dependency>
+            <Dependency>sane-backends-devel</Dependency>
+            <Dependency>bash-completion</Dependency>
+            <Dependency>vala</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libgudev-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>colord</Name>
+        <RuntimeDependencies>
+            <Dependency>lcms2</Dependency>
+            <Dependency>libgusb</Dependency>
+            <Dependency>shared-color-profiles</Dependency>
+            <Dependency>sane-backends</Dependency>
+            <Dependency>dbus</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>polkit</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libgudev</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/lib</Path>
+            <Path fileType="libexec">/usr/libexec/colord-session</Path>
+            <Path fileType="data">/var/lib/colord/icc/</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/libexec/colord</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/polkit-1</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/var</Path>
+            <Path fileType="data">/usr/share/colord</Path>
+            <Path fileType="data">/usr/share/glib-2.0</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
+            <Path fileType="data">/usr/libexec/colord-sane</Path>
+        </Files>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>colord-devel</Name>
+        <Summary>Development files for colord</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">colord</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>libgusb-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/share/vala/vapi/colord.vapi</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+ 
+    <Package>
+        <Name>shared-color-profiles</Name>
+        <Files>
+            <Path fileType="data">/usr/share/color</Path>
+        </Files>
+    </Package>
+   
+    <History>
+        <Update release="1">
+            <Date>2016-11-13</Date>
+            <Version>1.3.3</Version>
+            <Comment>First Release.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>        
+    </History>
+</PISI>
