@@ -20,7 +20,7 @@ def setup():
                          --with-systemdsystemunitdir=no \
                          --enable-introspection \
                          --enable-vala ")
-    
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
