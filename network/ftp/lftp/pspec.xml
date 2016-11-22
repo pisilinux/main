@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>lftp</Name>
+        <Homepage>http://lftp.yar.ru/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv3</License>
+        <Icon>lftp</Icon>
+        <IsA>app:console</IsA>
+        <Summary>Command line FTP client</Summary>
+        <Description>LFTP is sophisticated file transfer program with command line interface. It supports FTP, HTTP, FISH, SFTP, HTTPS and FTPS protocols. It has bookmarks, built-in mirror, can transfer several files in parallel. It was designed with reliability in mind.</Description>
+        <Archive sha1sum="d15de1efa38111edc60b8d5e3d9ea8f41e842367" type="tarxz">http://lftp.tech/ftp/lftp-4.7.4.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>gnutls-devel</Dependency>
+            <Dependency>flex</Dependency>
+            <Dependency>bison</Dependency>
+            <Dependency>gcc</Dependency>
+            <Dependency>gettext-devel</Dependency>
+            <Dependency>libtool</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>expat-devel</Dependency>
+            <Dependency>libidn-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">config-dns-inet6_before_inet.patch</Patch>
+            <Patch level="1">lftp_sys-stdint-kfreebsd.patch</Patch>            
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>lftp</Name>
+        <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>expat</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libidn</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>readline</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc/lftp</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share/lftp</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/usr/share/pixmaps/lftp.png">lftp.png</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+        <Update release="8">
+            <Date>2016-11-22</Date>
+            <Version>4.7.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>        
+    </History>
+</PISI>

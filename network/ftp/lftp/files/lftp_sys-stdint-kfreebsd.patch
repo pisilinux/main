@@ -1,0 +1,18 @@
+Description: prevent sys/_stdint.h from redefining intptr_t et.al.
+Author: Andreas Henriksson <andreas@fatal.se>
+Bug-Debian: http://bugs.debian.org/677861
+Forwarded: no
+
+--- lftp-4.3.6.orig/lib/stdint.in.h
++++ lftp-4.3.6/lib/stdint.in.h
+@@ -75,6 +75,10 @@
+      _@GUARD_PREFIX@_STDINT_H is defined.
+      The include_next requires a split double-inclusion guard.  */
+ # @INCLUDE_NEXT@ @NEXT_STDINT_H@
++#ifdef __FreeBSD_kernel__
++// prevent sys/_stdint.h from being included and redefine intptr_t et.al.
++#define _SYS__STDINT_H_
++#endif
+ #endif
+ 
+ #if ! defined _@GUARD_PREFIX@_STDINT_H && ! defined _GL_JUST_INCLUDE_SYSTEM_STDINT_H
