@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>vsftpd</Name>
+        <Homepage>http://vsftpd.beasts.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>service</IsA>
+        <Summary>Very Secure FTP Daemon written with speed, size and security in mind</Summary>
+        <Description>Vsftpd is a ftp server, mostly focuses on security.</Description>
+        <Archive sha1sum="d5f5a180dbecd0fbcdc92bf0ba2fc001c962b55a" type="targz">https://security.appspot.com/downloads/vsftpd-3.0.3.tar.gz</Archive>
+        <Patches>
+            <Patch level="1">vsftpd-pisilinux.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>vsftpd</Name>
+        <RuntimeDependencies>
+            <Dependency>pam</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>openssl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="data">/home/ftp</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/vsftpd/empty</Path>
+            <Path fileType="data">/var/log/vsftpd</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/pam.d/ftp">ftp-pamd</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/vsftpd/vsftpd.conf">vsftpd.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/vsftpd/ftpusers">ftpusers</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2016-11-22</Date>
+            <Version>3.0.3</Version>
+            <Comment>First Release.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>        
+    </History>
+</PISI>
