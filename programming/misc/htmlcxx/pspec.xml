@@ -1,0 +1,61 @@
+<?xml version='1.0'?>
+<!DOCTYPE PISI SYSTEM 'http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd'>
+<PISI>
+    <Source>
+        <Name>htmlcxx</Name>
+        <Homepage>http://htmlcxx.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPL</License>        
+        <IsA>app:library</IsA>
+        <Summary>htmlcxx is a simple non-validating css1 and html parser for C++</Summary>
+        <Description>htmlcxx is the name of both the library and the utility application that comes with this package. Although the htmlcxx (the application) is mostly useless for programming, you can use it to easily see how htmlcxx (the library) would parse your html code.</Description>
+        <Archive sha1sum="0d8205a0d1296fd228af2001b1d990e9257c104c" type="targz">http://sourceforge.net/projects/htmlcxx/files/htmlcxx/0.86/htmlcxx-0.86.tar.gz</Archive>
+        <Patches>
+             <Patch level="1">fix-gcc-4.6-ftbfs.patch</Patch>
+             <Patch level="1">reduce-linking.patch</Patch>
+        </Patches>
+        <BuildDependencies>
+            <Dependency>flex</Dependency>
+            <Dependency>bison</Dependency>
+            <Dependency>libtool</Dependency>
+            </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>htmlcxx</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>htmlcxx-devel</Name>
+        <Summary>Development files for htmlcxx</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">htmlcxx</Dependency>            
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>            
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>       
+        <Update release="1">
+            <Date>2016-11-20</Date>
+            <Version>0.86</Version>
+            <Comment>First release</Comment>
+            <Name>Stefan Gronewold</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>      
+    </History>
+</PISI>
