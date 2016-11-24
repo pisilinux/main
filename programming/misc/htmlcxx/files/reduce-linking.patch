@@ -1,0 +1,38 @@
+Description: do not link htmlcxx against libcss_parser, but have
+ libcss_parser_pp link against it.
+Author: Ludovico Cavedon <cavedon@debian.org>
+
+Index: htmlcxx/Makefile.am
+===================================================================
+--- htmlcxx.orig/Makefile.am
++++ htmlcxx/Makefile.am
+@@ -3,7 +3,7 @@ SUBDIRS = html css
+ bin_PROGRAMS = htmlcxx
+ htmlcxx_SOURCES = htmlcxx.cc wingetopt.h 
+ 
+-htmlcxx_LDADD = html/libhtmlcxx.la css/libcss_parser_pp.la css/libcss_parser.la
++htmlcxx_LDADD = html/libhtmlcxx.la css/libcss_parser_pp.la
+ 
+ EXTRA_DIST = ASF-2.0 LGPL_V2 wingetopt.c htmlcxx.spec htmlcxx.vcproj htmlcxxapp.vcproj htmlcxx.pc.in
+ 
+Index: htmlcxx/css/Makefile.am
+===================================================================
+--- htmlcxx.orig/css/Makefile.am
++++ htmlcxx/css/Makefile.am
+@@ -1,11 +1,12 @@
+-lib_LTLIBRARIES = libcss_parser_pp.la libcss_parser.la
+-
+-libcss_parser_pp_la_SOURCES = parser_pp.h parser_pp.cc parser.c
+-libcss_parser_pp_la_LDFLAGS = -version-info 0:0:0
++lib_LTLIBRARIES = libcss_parser.la libcss_parser_pp.la
+ 
+ libcss_parser_la_SOURCES = css_syntax.y css_lex.l css_lex.h css_syntax.h parser.c parser.h
+ libcss_parser_la_LDFLAGS = -version-info 0:0:0
+ 
++libcss_parser_pp_la_SOURCES = parser_pp.h parser_pp.cc parser.c
++libcss_parser_pp_la_LDFLAGS = -version-info 0:0:0
++libcss_parser_pp_la_LIBADD = libcss_parser.la
++
+ AM_YFLAGS = -d
+ AM_LFLAGS = -i
+ 
