@@ -20,6 +20,7 @@
             <Dependency>qt5-sql-postgresql</Dependency>
             <Dependency>qt5-sql-sqlite</Dependency>
             <Dependency>qt5-sql-odbc</Dependency>
+            <Dependency>qt5-webengine-devel</Dependency>
             <Dependency>qt5-declarative-devel</Dependency>
             <Dependency>qt5-quick1-devel</Dependency>
             <Dependency>qt5-phonon-devel</Dependency>
@@ -112,13 +113,20 @@
             <Dependency>libkdepim-devel</Dependency>
             <Dependency>libgravatar-devel</Dependency>
             <Dependency>kmime-devel</Dependency>
+            <Dependency>akonadi-contacts-devel</Dependency>
+            <Dependency>akonadi-mime-devel</Dependency>
+            <Dependency>akonadi-notes-devel</Dependency>
         </BuildDependencies>
     </Source>
 
-    <Package>
+<Package>
         <Name>kdepim-common</Name>
         <Description>Common libraries and resources for KDE PIM applications</Description>
         <RuntimeDependencies>
+            <Dependency>kio</Dependency>
+            <Dependency>kcrash</Dependency>
+            <Dependency>klibkdepim</Dependency>
+            <Dependency>akonadi-mime</Dependency>
             <Dependency>kio</Dependency>
             <Dependency>ktnef</Dependency>
             <Dependency>ki18n</Dependency>
@@ -179,6 +187,8 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc/xdg/accountwizard.knsrc</Path>
+            <Path fileType="config">/etc/xdg/accountwizard.categories</Path>
+            <Path fileType="config">/etc/xdg/pimsettingexporter.categories</Path>
             <Path fileType="config">/etc/xdg/kdepim.categories</Path>
             <Path fileType="config">/etc/xdg/libkleopatrarc</Path>
             <Path fileType="config">/etc/xdg/messageviewer_header_themes.knsrc</Path>
@@ -244,6 +254,7 @@
             <Path fileType="data">/usr/share/applications/org.kde.accountwizard.desktop</Path>
             <Path fileType="data">/usr/share/applications/org.kde.pimsettingexporter.desktop</Path>
             <Path fileType="data">/usr/share/config.kcfg/customtemplates_kfg.kcfg</Path>
+            <Path fileType="data">/usr/share/config.kcfg/pimsettingexporterglobalconfig.kcfg</Path>
             <Path fileType="data">/usr/share/config.kcfg/templatesconfiguration_kfg.kcfg</Path>
             <Path fileType="data">/usr/share/dbus-1/interfaces/org.kde.addressbook.service.xml</Path>
             <Path fileType="data">/usr/share/dbus-1/interfaces/org.kde.mailtransport.service.xml</Path>
@@ -282,13 +293,14 @@
         <Conflicts>
             <Package>kdepim</Package>
         </Conflicts>
-    </Package>
+    </Package>    
     
     <Package>
         <Name>akonadiconsole</Name>
         <Description>Akonadi Management and Debugging Console</Description>
         <RuntimeDependencies>
             <Dependency>ki18n</Dependency>
+            <Dependency>akonadi-contacts</Dependency>
             <Dependency>kmime</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>akonadi</Dependency>
@@ -312,6 +324,7 @@
             <Dependency release="current">libkdepim</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/xdg/akonadiconsole.categories</Path>
             <Path fileType="executable">/usr/bin/akonadiconsole</Path>
             <Path fileType="data">/usr/share/applications/org.kde.akonadiconsole.desktop</Path>
             <Path fileType="data">/usr/share/icons/hicolor/128x128/apps/akonadiconsole.png</Path>
@@ -337,6 +350,7 @@
         <Description>A Feed Reader for KDE</Description>
         <RuntimeDependencies>
             <Dependency>kio</Dependency>
+            <Dependency>qt5-webengine</Dependency>
             <Dependency>khtml</Dependency>
             <Dependency>ki18n</Dependency>
             <Dependency>kparts</Dependency>
@@ -365,6 +379,7 @@
             <Dependency release="current">kdepim-common</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/xdg/akregator.categories</Path>
             <Path fileType="executable">/usr/bin/akregator</Path>
             <Path fileType="executable">/usr/bin/akregatorstorageexporter</Path>
             <Path fileType="library">/usr/lib/libakregatorinterfaces.so.*</Path>
@@ -378,6 +393,7 @@
             <Path fileType="library">/usr/lib/qt5/plugins/akregator_mk4storage_plugin.so</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/akregatorpart.so</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/kontact_akregatorplugin.so</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/akregator_config_webengineurlinterceptor.so</Path>
             <Path fileType="data">/usr/share/akregator/about</Path>
             <Path fileType="data">/usr/share/applications/org.kde.akregator.desktop</Path>
             <Path fileType="data">/usr/share/config.kcfg/akregator.kcfg</Path>
@@ -406,10 +422,12 @@
             <Path fileType="data">/usr/share/kservices5/kontact/akregatorplugin.desktop</Path>
             <Path fileType="data">/usr/share/kservices5/akregator_config_adblock.desktop</Path>
             <Path fileType="data">/usr/share/kservicetypes5/akregator_plugin.desktop</Path>
+            <Path fileType="data">/usr/share/kservices5/akregator_config_webengineurlinterceptor.desktop</Path>
             <Path fileType="data">/usr/share/kxmlgui5/akregator</Path>
             <Path fileType="data">/usr/share/akregator/grantleetheme</Path>
             <Path fileType="data">/usr/share/messageviewer/about/default/introduction_akregator.html</Path>
             <Path fileType="data">/usr/share/appdata/org.kde.akregator.appdata.xml</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.akregator.appdata.xml</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/akregator_config_adblock.so</Path>
         </Files>
         <Replaces>
@@ -448,11 +466,15 @@
             <Dependency release="current">kdepim-common</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/xdg/blogilo.categories</Path>
             <Path fileType="executable">/usr/bin/blogilo</Path>
             <Path fileType="library">/usr/lib/libKF5ComposerEditorNG.so.*</Path>
+            <Path fileType="library">/usr/lib/libcomposereditorwebengineprivate.so.5.3.3</Path>
+            <Path fileType="library">/usr/lib/libcomposereditorwebengineprivate.so.5</Path>
             <Path fileType="data">/usr/share/appdata/org.kde.blogilo.appdata.xml</Path>
             <Path fileType="data">/usr/share/applications/org.kde.blogilo.desktop</Path>
             <Path fileType="data">/usr/share/composereditor/composereditorinitialhtml</Path>
+            <Path fileType="data">/usr/share/composereditorwebengine/composereditorinitialhtml</Path>
             <Path fileType="data">/usr/share/config.kcfg/blogilo.kcfg</Path>
             <Path fileType="data">/usr/share/doc/kde5/html/en/blogilo</Path>
             <Path fileType="data">/usr/share/icons/hicolor/128x128/actions/upload-media.png</Path>
@@ -477,6 +499,7 @@
             <Path fileType="data">/usr/share/icons/hicolor/64x64/apps/blogilo.png</Path>
             <Path fileType="data">/usr/share/kconf_update/blogilo-15.08-kickoff.sh</Path>
             <Path fileType="data">/usr/share/kconf_update/blogilo.upd</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.blogilo.appdata.xml</Path>
         </Files>
         <Replaces>
             <Package>kdepim</Package>
@@ -517,6 +540,7 @@
         <Files>
             <Path fileType="executable">/usr/bin/kaddressbook</Path>
             <Path fileType="config">/etc/xdg/kaddressbook_themes.knsrc</Path>
+            <Path fileType="config">/etc/xdg/kaddressbook.categories</Path>
             <Path fileType="library">/usr/lib/akonadi/contact/editorpageplugins/cryptopageplugin.so</Path>
             <Path fileType="library">/usr/lib/libkaddressbookprivate.so.*</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/kaddressbookpart.so</Path>
@@ -530,6 +554,7 @@
             <Path fileType="data">/usr/share/icons/hicolor/32x32/apps/kaddressbook.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/48x48/apps/kaddressbook.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/64x64/apps/kaddressbook.png</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.kaddressbook.appdata.xml</Path>
             <Path fileType="data">/usr/share/kaddressbook</Path>
             <Path fileType="data">/usr/share/kconf_update/kaddressbook-15.08-kickoff.sh</Path>
             <Path fileType="data">/usr/share/kconf_update/kaddressbook.upd</Path>
@@ -589,6 +614,7 @@
             <Path fileType="executable">/usr/bin/kalarmautostart</Path>
             <Path fileType="config">/etc/dbus-1/system.d/org.kde.kalarmrtcwake.conf</Path>
             <Path fileType="config">/etc/xdg/autostart/kalarm.autostart.desktop</Path>
+            <Path fileType="config">/etc/xdg/kalarm.categories</Path>
             <Path fileType="library">/usr/lib/kauth</Path>
             <Path fileType="library">/usr/lib/kalarm_helper</Path>
             <Path fileType="data">/usr/share/appdata/org.kde.kalarm.appdata.xml</Path>
@@ -603,6 +629,7 @@
             <Path fileType="data">/usr/share/icons/hicolor/32x32/apps/kalarm.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/48x48/apps/kalarm.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/64x64/apps/kalarm.png</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.kalarm.appdata.xml</Path>
             <Path fileType="data">/usr/share/kalarm/icons/oxygen/16x16/actions/document-new-from-template.png</Path>
             <Path fileType="data">/usr/share/kalarm/icons/oxygen/16x16/actions/new-audio-alarm.png</Path>
             <Path fileType="data">/usr/share/kalarm/icons/oxygen/16x16/actions/new-command-alarm.png</Path>
@@ -694,8 +721,13 @@
             <Path fileType="executable">/usr/bin/mboximporter</Path>
             <Path fileType="executable">/usr/bin/sieveeditor</Path>
             <Path fileType="executable">/usr/bin/storageservicemanager</Path>
+            <Path fileType="config">/etc/xdg/kmail.categories</Path>
             <Path fileType="config">/etc/xdg/kmail.antispamrc</Path>
+            <Path fileType="config">/etc/xdg/storageservicemanager.categories</Path>
             <Path fileType="config">/etc/xdg/kmail.antivirusrc</Path>
+            <Path fileType="config">/etc/xdg/sieveeditor.categories</Path>
+            <Path fileType="config">/etc/xdg/grantleeditor.categories</Path>
+            <Path fileType="config">/etc/xdg/importwizard.categories</Path>
             <Path fileType="config">/etc/xdg/ksieve_script.knsrc</Path>
             <Path fileType="library">/usr/lib/libKF5KManageSieve.so</Path>
             <Path fileType="library">/usr/lib/libKF5KManageSieve.so.*</Path>
@@ -723,16 +755,21 @@
             <Path fileType="data">/usr/share/applications/org.kde.mboximporter.desktop</Path>
             <Path fileType="data">/usr/share/applications/org.kde.sieveeditor.desktop</Path>
             <Path fileType="data">/usr/share/applications/org.kde.storageservicemanager.desktop</Path>
+            <Path fileType="data">/usr/share/config.kcfg/sieveeditorglobalconfig.kcfg</Path>
             <Path fileType="data">/usr/share/config.kcfg/kmail.kcfg</Path>
+            <Path fileType="data">/usr/share/config.kcfg/archivemailagentsettings.kcfg</Path>
+            <Path fileType="data">/usr/share/config.kcfg/grantleethemeeditor.kcfg</Path>            
+            <Path fileType="data">/usr/share/config.kcfg/storageservicemanagerglobalconfig.kcfg</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.kmail.appdata.xml</Path>
             <Path fileType="data">/usr/share/dbus-1/interfaces/org.kde.kmail.kmail.xml</Path>
             <Path fileType="data">/usr/share/dbus-1/interfaces/org.kde.kmail.kmailpart.xml</Path>
-            <Path fileType="doc">/usr/share/doc/kde5/html/en/akonadi_archivemail_agent</Path>
+            <Path fileType="doc">/usr/share/doc/kde5/html/en/akonadi_archivemail_agent</Path>            
             <Path fileType="doc">/usr/share/doc/kde5/html/en/importwizard</Path>
             <Path fileType="doc">/usr/share/doc/kde5/html/en/kmail</Path>
             <Path fileType="doc">/usr/share/doc/kde5/html/en/sieveeditor</Path>
             <Path fileType="data">/usr/share/icons/hicolor/128x128/apps/kmail.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/128x128/apps/kontact-import-wizard.png</Path>
-            <Path fileType="data">/usr/share/icons/hicolor/16x16/apps/kmail.png</Path>
+            <Path fileType="data">/usr/share/icons/hicolor/16x16/apps/kmail.png</Path>            
             <Path fileType="data">/usr/share/icons/hicolor/22x22/apps/kmail.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/256x256/apps/kontact-import-wizard.png</Path>
             <Path fileType="data">/usr/share/icons/hicolor/32x32/apps/kmail.png</Path>
@@ -783,6 +820,7 @@
         <Description>Popup Notes</Description>
         <RuntimeDependencies>
             <Dependency>ki18n</Dependency>
+            <Dependency>akonadi-notes</Dependency>
             <Dependency>kmime</Dependency>
             <Dependency>kdnssd</Dependency>
             <Dependency>kparts</Dependency>
@@ -820,6 +858,7 @@
         <Files>
             <Path fileType="executable">/usr/bin/akonadi_notes_agent</Path>
             <Path fileType="executable">/usr/bin/knotes</Path>
+            <Path fileType="config">/etc/xdg/knotes.categories</Path>
             <Path fileType="config">/etc/xdg/knotes_printing_theme.knsrc</Path>
             <Path fileType="library">/usr/lib/libKF5NoteShared.so.*</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/kcm_knote.so</Path>
@@ -828,9 +867,11 @@
             <Path fileType="library">/usr/lib/qt5/plugins/kcm_knotessummary.so</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/kontact_knotesplugin.so</Path>
             <Path fileType="data">/usr/share/akonadi/agents/notesagent.desktop</Path>
+            <Path fileType="data">/usr/share/config.kcfg/notesagentsettings.kcfg</Path>
             <Path fileType="data">/usr/share/appdata/org.kde.knotes.appdata.xml</Path>
             <Path fileType="data">/usr/share/applications/org.kde.knotes.desktop</Path>
             <Path fileType="data">/usr/share/config.kcfg/knotesglobalconfig.kcfg</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.knotes.appdata.xml</Path>
             <Path fileType="data">/usr/share/dbus-1/interfaces/org.kde.KNotes.xml</Path>
             <Path fileType="data">/usr/share/dbus-1/interfaces/org.kde.kontact.KNotes.xml</Path>
             <Path fileType="doc">/usr/share/doc/kde5/html/en/akonadi_notes_agent</Path>
@@ -885,6 +926,7 @@
             <Dependency release="current">kdepim-common</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/xdg/console.categories</Path>
             <Path fileType="executable">/usr/bin/calendarjanitor</Path>
             <Path fileType="executable">/usr/bin/konsolekalendar</Path>
             <Path fileType="data">/usr/share/applications/konsolekalendar.desktop</Path>
@@ -929,6 +971,7 @@
             <Dependency release="current">kdepim-common</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/xdg/kontact.categories</Path>
             <Path fileType="executable">/usr/bin/kontact</Path>
             <Path fileType="library">/usr/lib/libkontactprivate.so.*</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/kcm_kontact.so</Path>
@@ -937,6 +980,7 @@
             <Path fileType="data">/usr/share/appdata/org.kde.kontact.appdata.xml</Path>
             <Path fileType="data">/usr/share/applications/kontact-admin.desktop</Path>
             <Path fileType="data">/usr/share/applications/org.kde.kontact.desktop</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.kontact.appdata.xml</Path>
             <Path fileType="data">/usr/share/config.kcfg/kontact.kcfg</Path>
             <Path fileType="doc">/usr/share/doc/kde5/html/en/kontact-admin</Path>
             <Path fileType="doc">/usr/share/doc/kde5/html/en/kontact</Path>
@@ -970,6 +1014,7 @@
         <Description>Calendar and Scheduling Program</Description>
         <RuntimeDependencies>
             <Dependency>kio</Dependency>
+            <Dependency>incidenceeditor</Dependency>
             <Dependency>ki18n</Dependency>
             <Dependency>kmime</Dependency>
             <Dependency>kparts</Dependency>
@@ -1012,6 +1057,7 @@
             <Path fileType="executable">/usr/bin/korgac</Path>
             <Path fileType="executable">/usr/bin/korganizer</Path>
             <Path fileType="config">/etc/xdg/autostart/org.kde.korgac.desktop</Path>
+            <Path fileType="config">/etc/xdg/korganizer.categories</Path>
             <Path fileType="config">/etc/xdg/korganizer.knsrc</Path>
             <Path fileType="library">/usr/lib/libkorganizer_core.so</Path>
             <Path fileType="library">/usr/lib/libkorganizer_core.so.*</Path>
@@ -1032,6 +1078,7 @@
             <Path fileType="library">/usr/lib/qt5/plugins/korg_thisdayinhistory.so</Path>
             <Path fileType="library">/usr/lib/qt5/plugins/korganizerpart.so</Path>
             <Path fileType="data">/usr/share/appdata/org.kde.korganizer.appdata.xml</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.korganizer.appdata.xml</Path>
             <Path fileType="data">/usr/share/applications/korganizer-import.desktop</Path>
             <Path fileType="data">/usr/share/applications/org.kde.korganizer.desktop</Path>
             <Path fileType="data">/usr/share/config.kcfg/korganizer.kcfg</Path>
@@ -1128,6 +1175,7 @@
             <Dependency release="current">kdepim-common</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/xdg/ktnef.categories</Path>
             <Path fileType="executable">/usr/bin/ktnef</Path>
             <Path fileType="data">/usr/share/applications/org.kde.ktnef.desktop</Path>
             <Path fileType="doc">/usr/share/doc/kde5/html/en/ktnef</Path>
