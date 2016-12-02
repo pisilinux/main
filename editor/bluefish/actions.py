@@ -5,14 +5,13 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import autotools
-from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
-def setup():
-    autotools.autoreconf("-vfi")
+def setup():    
     autotools.configure("--disable-static \
-                                        --disable-update-databases \
-                                        --disable-xml-catalog-update")
+                        --disable-update-databases \
+                        --disable-xml-catalog-update")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -23,3 +22,4 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "TODO")
+
