@@ -26,10 +26,10 @@ def setup():
     pisitools.dosed("runtime/doc/tagsrch.txt", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
     pisitools.dosed("runtime/doc/usr_29.txt", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
     pisitools.dosed("runtime/menu.vim", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
-    pisitools.dosed("src/configure.in", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
+#    pisitools.dosed("src/configure.in", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
 
     # TODO: do we need that ?
-    pisitools.dosed("src/configure.in", r"libc\.h", "")
+#    pisitools.dosed("src/configure.in", r"libc\.h", "")
 
     # TODO: we could need that
     #autotools.make("-C src autoconf")
