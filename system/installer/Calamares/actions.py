@@ -15,9 +15,8 @@ def setup():
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Debug \
                           -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DWITH_PARTITIONMANAGER=1 \
                           -DCMAKE_INSTALL_LIBDIR=lib \
-                          -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo", \
+                          -DWITH_CRASHREPORTER=ON", \
                           sourceDir=".." )
     
 def build():
