@@ -11,7 +11,8 @@ from pisi.actionsapi import get
 def setup():
      autotools.configure("--disable-fd-passing \
                           --disable-static \
-                          --disable-gpgsm-test")
+                          --disable-gpgsm-test \
+                          --enable-languages=cpp,qt,python")
 
 def build():
     autotools.make()
