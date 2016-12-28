@@ -21,8 +21,6 @@ def build():
     #autotools.make("check")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfig.cmake")
-    pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfigVersion.cmake")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())    
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "THANKS", "TODO")
