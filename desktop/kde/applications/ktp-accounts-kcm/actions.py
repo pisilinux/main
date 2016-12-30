@@ -16,5 +16,6 @@ def build():
 
 def install():
     cmaketools.install()
-
+    pisitools.domove("/usr/lib64/*", "/usr/lib")
+    pisitools.removeDir("/usr/lib64")
     pisitools.dodoc("COPYING", "INSTALL", "README")
