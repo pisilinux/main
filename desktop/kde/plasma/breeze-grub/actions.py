@@ -7,6 +7,6 @@
 from pisi.actionsapi import pisitools
 
 def install():
-    pisitools.insinto("/boot/grub2/themes/breeze", "breeze/*")
+    pisitools.insinto("/boot/grub2/themes/breeze", "./breeze/*")
 
     pisitools.dodoc("COPYING")
