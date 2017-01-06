@@ -5,13 +5,13 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
+    shelltools.system("./autogen.sh")
+    autotools.configure("--without-docs --enable-static=no --prefix=/usr")
     
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
-
 def build():
     autotools.make()
 
