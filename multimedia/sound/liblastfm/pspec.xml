@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>liblastfm</Name>
+        <Homepage>https://github.com/lastfm/liblastfm</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv3</License>
+        <IsA>library</IsA>
+        <Summary>A library for Last.fm integration</Summary>
+        <Description>liblastfm is a collection of libraries to help you integrate Last.fm services into your rich desktop software. It is officially supported software developed by Last.fm staff.</Description>
+        <Archive sha1sum="4a6323538a26c5ea2080a8ebe58e4407dbc42397" type="targz">https://github.com/lastfm/liblastfm/archive/1.0.9.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>qt5-sql-mysql</Dependency>
+            <Dependency>qt5-sql-odbc</Dependency>
+            <Dependency>qt5-sql-postgresql</Dependency>
+            <Dependency>qt5-sql-sqlite</Dependency>
+            <Dependency>libsamplerate-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>liblastfm</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>qt5-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/liblastfm5.so*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>liblastfm-devel</Name>
+        <Summary>A collection of libraries to help you integrate Last.fm services</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">liblastfm</Dependency>
+            <Dependency release="current">liblastfm_fingerprint</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>liblastfm_fingerprint</Name>
+        <Summary>A collection of libraries to help you integrate Last.fm services</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">liblastfm</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libsamplerate</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>fftw3</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/liblastfm_fingerprint*</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2016-04-27</Date>
+            <Version>1.0.9</Version>
+            <Comment>First release</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
