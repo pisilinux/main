@@ -1,21 +1,24 @@
 # main
 packages for Pisi-2.0 library, desktops, programming, supported with team
 
-#Notice !!!
-Package kde-baseapps are obsolete. We will remove it with the time.
+Dear Developers,
 
-The new kde-baseapps packages are now available individually.
+Sevgili Geliştiriciler,
 
-The KDE Team has split the kde-baseapps package and they are now separately
+Please be carefull following issues;
 
-You found the new packages in the Repository:[Applications](https://github.com/pisilinux/main/tree/master/desktop/kde/applications)
+Lütfen aşağıdaki konularda dikkatli olalım;
 
-kdialog
-keditbookmarks
-kfind
-konqueror
+There is no systemd in our project that is why we use "--with-systemdsystemunitdir=no" instead of "--with-systemdsystemunitdir=/lib/systemd/system" when we are configure a package.
 
-When you install one of this packages it remove the old kde-baseapps package automatically
+Bizde systemd olmadığı için paketleri yapılandırırken "--with-systemdsystemunitdir=/lib/systemd/system" yerine "--with-systemdsystemunitdir=no" kullanıyoruz.
+
+When we are configure a package if we use "--libexecdir=", we use it as "--libexecdir=/usr/lib"
+
+Bir paketi yapılandırırken "--libexecdir=" kullanılacaksa "--libexecdir=/usr/lib" böyle olacak.
+
+
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 [![Throughput Graph](https://graphs.waffle.io/pisilinux/main/throughput.svg)](https://waffle.io/pisilinux/main/metrics)
