@@ -11,17 +11,13 @@ from pisi.actionsapi import get
 
 
 def setup():    
-     shelltools.system("qmake-qt5  QMPlay2.pro")         
+     qt5.configure("USE_SIDPLAYFP= -DUSE_CHIPTUNE_SID=OFF")         
     
 
 def build():      
     qt5.make()
 
 def install():    
-    qt5.install()
-    pisitools.insinto("/usr/bin/", "./app/bin/QMPlay2")
-    pisitools.insinto("/usr/lib/", "./app/lib/libqmplay2.so")
-    pisitools.insinto("/usr/share/qmplay2/modules/", "./app/share/qmplay2/modules/*")
-    pisitools.insinto("/usr/share/qmplay2/lang/", "./lang/*")
+    qt5.install()    
 
     pisitools.dodoc( "README.md", "COPYING", "ChangeLog*")
