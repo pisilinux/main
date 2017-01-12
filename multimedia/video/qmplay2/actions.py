@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 
 def setup():    
-     qt5.configure("USE_SIDPLAYFP= -DUSE_CHIPTUNE_SID=OFF")         
+     qt5.configure("-DUSE_CHIPTUNE_SID=OFF")         
     
 
 def build():      
