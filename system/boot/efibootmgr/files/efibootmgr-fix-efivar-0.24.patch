@@ -1,0 +1,201 @@
+From cddc48752cbb1c0d74b581f8aa6b2d9e51fd69d9 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 25 Feb 2016 10:43:40 -0500
+Subject: [PATCH 1/3] efibootmgr: update for efivar 0.24
+
+As of 0.24 efi_loadopt_pathlen() and efi_loadopt_path() require a limit
+argument to avoid overruns of the input data.
+
+This patch adds reasonable limits to those calls.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/efibootmgr/efibootmgr.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/src/efibootmgr/efibootmgr.c b/src/efibootmgr/efibootmgr.c
+index a5b5bf9..09489ab 100644
+--- a/src/efibootmgr/efibootmgr.c
++++ b/src/efibootmgr/efibootmgr.c
+@@ -219,13 +219,12 @@ warn_duplicate_name(list_t *boot_list)
+ 
+ 	list_for_each(pos, boot_list) {
+ 		boot = list_entry(pos, var_entry_t, list);
+-		load_option = (efi_load_option *)
+-			boot->data;
+-		desc = efi_loadopt_desc(load_option);
++		load_option = (efi_load_option *)boot->data;
++		desc = efi_loadopt_desc(load_option, boot->data_size);
+ 		if (!strcmp((char *)opts.label, (char *)desc)) {
+-			fprintf(stderr, "** Warning ** : %.8s has same label %s\n",
+-			       boot->name,
+-			       opts.label);
++			fprintf(stderr,
++				"** Warning ** : %.8s has same label %s\n",
++				boot->name, opts.label);
+ 		}
+ 	}
+ }
+@@ -821,8 +820,7 @@ show_boot_vars()
+ 	list_for_each(pos, &boot_entry_list) {
+ 		boot = list_entry(pos, var_entry_t, list);
+ 		load_option = (efi_load_option *)boot->data;
+-		description = efi_loadopt_desc(load_option);
+-		dp = efi_loadopt_path(load_option);
++		description = efi_loadopt_desc(load_option, boot->data_size);
+ 		if (boot->name)
+ 			printf("%.8s", boot->name);
+ 		else
+@@ -835,9 +833,12 @@ show_boot_vars()
+ 		if (opts.verbose) {
+ 			char *text_path = NULL;
+ 			size_t text_path_len = 0;
+-			uint16_t pathlen = efi_loadopt_pathlen(load_option);
++			uint16_t pathlen;
+ 			ssize_t rc;
+ 
++			pathlen = efi_loadopt_pathlen(load_option,
++						      boot->data_size);
++			dp = efi_loadopt_path(load_option, pathlen);
+ 			rc = efidp_format_device_path(text_path, text_path_len,
+ 						      dp, pathlen);
+ 			if (rc < 0)
+-- 
+2.9.0
+
+
+From 62944db11c87a936368525e4b480d1a0af61fd5e Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 25 Feb 2016 14:16:38 -0500
+Subject: [PATCH 2/3] efibootmgr: fix some types the compiler doesn't like.
+
+Basically uint8_t * vs char *.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/lib/efi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/lib/efi.c b/src/lib/efi.c
+index c2b8152..91ed11e 100644
+--- a/src/lib/efi.c
++++ b/src/lib/efi.c
+@@ -424,7 +424,7 @@ get_extra_args(uint8_t *data, ssize_t data_size)
+ 			sz = efi_loadopt_args_as_ucs2(
+ 						(uint16_t *)(data+off),
+ 						data_size?data_size+off:0,
+-						opts.argv[i]);
++						(uint8_t *)opts.argv[i]);
+ 			if (sz < 0)
+ 				return -1;
+ 			off += sz;
+@@ -436,7 +436,7 @@ get_extra_args(uint8_t *data, ssize_t data_size)
+ 		} else {
+ 			sz = efi_loadopt_args_as_utf8(data+off,
+ 						data_size?data_size+off:0,
+-						opts.argv[i]);
++						(uint8_t *)opts.argv[i]);
+ 			if (sz < 0)
+ 				return -1;
+ 			off += sz;
+-- 
+2.9.0
+
+
+From 3d68945362177a762e6331a02b8896e38b984a12 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 3 Mar 2016 09:50:03 -0500
+Subject: [PATCH 3/3] Explicitly pass a mode to efi_set_variable() in all
+ cases.
+
+We'll have to do this for efivar-0.24 .
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/efibootmgr/efibootmgr.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/src/efibootmgr/efibootmgr.c b/src/efibootmgr/efibootmgr.c
+index 09489ab..d1d4fe2 100644
+--- a/src/efibootmgr/efibootmgr.c
++++ b/src/efibootmgr/efibootmgr.c
+@@ -304,7 +304,7 @@ make_boot_var(list_t *boot_list)
+ 			    EFI_VARIABLE_BOOTSERVICE_ACCESS |
+ 			    EFI_VARIABLE_RUNTIME_ACCESS;
+ 	rc = efi_set_variable(boot->guid, boot->name, boot->data,
+-				boot->data_size, boot->attributes);
++				boot->data_size, boot->attributes, 0644);
+ 	if (rc < 0)
+ 		goto err;
+ 	list_add_tail(&boot->list, boot_list);
+@@ -362,7 +362,8 @@ set_boot_u16(const char *name, uint16_t num)
+ 	return efi_set_variable(EFI_GLOBAL_GUID, name, (uint8_t *)&num,
+ 				sizeof (num), EFI_VARIABLE_NON_VOLATILE |
+ 					      EFI_VARIABLE_BOOTSERVICE_ACCESS |
+-					      EFI_VARIABLE_RUNTIME_ACCESS);
++					      EFI_VARIABLE_RUNTIME_ACCESS,
++					      0644);
+ }
+ 
+ static int
+@@ -398,7 +399,7 @@ add_to_boot_order(uint16_t num)
+ 	boot_order->data_size = new_data_size;
+ 
+ 	rc = efi_set_variable(EFI_GLOBAL_GUID, "BootOrder", boot_order->data,
+-			boot_order->data_size, boot_order->attributes);
++			boot_order->data_size, boot_order->attributes, 0644);
+ 	free(boot_order->data);
+ 	free(boot_order);
+ 	return rc;
+@@ -452,7 +453,8 @@ remove_dupes_from_boot_order(void)
+ 	boot_order->data_size = new_data_size;
+ 	efi_del_variable(EFI_GLOBAL_GUID, "BootOrder");
+ 	rc = efi_set_variable(EFI_GLOBAL_GUID, "BootOrder", boot_order->data,
+-				boot_order->data_size, boot_order->attributes);
++				boot_order->data_size, boot_order->attributes,
++				0644);
+ 	free(boot_order->data);
+ 	free(boot_order);
+ 	return rc;
+@@ -501,7 +503,8 @@ remove_from_boot_order(uint16_t num)
+ 
+ 	boot_order->data_size = sizeof(data[0]) * new_i;
+ 	rc = efi_set_variable(EFI_GLOBAL_GUID, "BootOrder", boot_order->data,
+-				boot_order->data_size, boot_order->attributes);
++				boot_order->data_size, boot_order->attributes,
++				0644);
+ all_done:
+ 	free(boot_order->data);
+ 	free(boot_order);
+@@ -801,7 +804,8 @@ set_boot_order(int keep_old_entries)
+ 	rc = efi_set_variable(EFI_GLOBAL_GUID, "BootOrder", data, data_size,
+ 			      EFI_VARIABLE_NON_VOLATILE |
+ 			      EFI_VARIABLE_BOOTSERVICE_ACCESS |
+-			      EFI_VARIABLE_RUNTIME_ACCESS);
++			      EFI_VARIABLE_RUNTIME_ACCESS,
++			      0644);
+ 	free(data);
+ 	return rc;
+ }
+@@ -936,7 +940,8 @@ set_active_state()
+ 							boot->name,
+ 							boot->data,
+ 							boot->data_size,
+-							boot->attributes);
++							boot->attributes,
++							0644);
+ 				}
+ 			}
+ 			else if (opts.active == 0) {
+@@ -950,7 +955,8 @@ set_active_state()
+ 							boot->name,
+ 							boot->data,
+ 							boot->data_size,
+-							boot->attributes);
++							boot->attributes,
++							0644);
+ 				}
+ 			}
+ 		}
+-- 
+2.9.0 
