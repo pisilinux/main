@@ -1,0 +1,36 @@
+From 5e2f64ebb96f45155d0301a81ccd141a17fd7d9b Mon Sep 17 00:00:00 2001
+From: Andreas Schwab <schwab@suse.de>
+Date: Tue, 12 Jul 2016 10:34:50 +0200
+Subject: [PATCH] Remove use of deprecated readdir_r
+
+Signed-off-by: Andreas Schwab <schwab@suse.de>
+---
+Index: efivar-0.23/src/vars.c
+===================================================================
+--- efivar-0.23.orig/src/vars.c
++++ efivar-0.23/src/vars.c
+@@ -128,19 +128,15 @@ is_64bit(void)
+ 	if (dfd < 0)
+ 		goto err;
+ 
+-	struct dirent entry;
+-	struct dirent *result = NULL;
+ 	while (1) {
+-		int rc = readdir_r(dir, &entry, &result);
+-		if (rc != 0)
+-			break;
+-		if (result == NULL)
++		struct dirent *entry = readdir(dir);
++		if (entry == NULL)
+ 			break;
+ 
+-		if (!strcmp(entry.d_name, "..") || !strcmp(entry.d_name, "."))
++		if (!strcmp(entry->d_name, "..") || !strcmp(entry->d_name, "."))
+ 			continue;
+ 
+-		ssize_t size = get_file_data_size(dfd, entry.d_name);
++		ssize_t size = get_file_data_size(dfd, entry->d_name);
+ 		if (size < 0) {
+ 			continue;
+ 		} else if (size == 2084) {
+ 
