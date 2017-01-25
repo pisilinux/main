@@ -23,7 +23,7 @@ def check():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS","NEWS","README")
-    
+    pisitools.dodoc("AUTHORS", "NEWS.md", "README.md")
+
     # preserve old header path for compatibility
     pisitools.dosym("/usr/lib/libzip/include/zipconf.h", "/usr/include/zipconf.h")
