@@ -12,4 +12,4 @@ def build():
 def install():
     pythonmodules.install()
 
-    pisitools.dodoc("PKG-INFO", "MANIFEST*")
+    pisitools.dodoc("PKG-INFO")
