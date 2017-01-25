@@ -11,8 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("configure", "-Werror=format", "#-Werror=format")
-
-    shelltools.export("PYTHON", "/usr/bin/python2.7")
+    shelltools.export("PYTHON", "/usr/bin/python3.4")
     shelltools.system("./configure --prefix=/usr \
                        --localstatedir=/var \
                        --disable-static")
