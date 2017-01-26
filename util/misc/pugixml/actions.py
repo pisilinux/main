@@ -7,7 +7,7 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
-WorkDir = "pugixml-1.7/scripts"
+#WorkDir = "pugixml-1.8/scripts"
 
 def setup():    
     cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
