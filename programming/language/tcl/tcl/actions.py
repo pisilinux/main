@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.unlinkDir("%s/tcl8.6.4/pkgs/sqlite3.8.8.3" % get.workDIR())
+    shelltools.unlinkDir("%s/tcl8.6.6/pkgs/sqlite3.13.0" % get.workDIR())
     shelltools.cd("unix")
 
     autotools.autoreconf("-fi")
