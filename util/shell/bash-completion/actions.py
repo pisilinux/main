@@ -21,7 +21,7 @@ def install():
 
 # provided by util-linux , networkmanager , remove Slackware's makepkg completion
     blacklist = ["cal", "chsh", "dmesg", "eject", "hd", "hexdump", "hwclock", "ionice", "look", "ncal", "nmcli", "newgrp", "makepkg", "renice", "rtcwake", "su"]
-    for comp in blacklist:
-       pisitools.remove("/usr/share/bash-completion/completions/%s" % comp)
-      
-    pisitools.dodoc("AUTHORS", "CHANGES", "COPYING", "README")
+    #for comp in blacklist:
+       #pisitools.remove("/usr/share/bash-completion/completions/%s" % comp)
+
+    pisitools.dodoc("AUTHORS", "CHANGES", "COPYING", "README.md")

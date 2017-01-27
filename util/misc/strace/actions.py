@@ -21,4 +21,4 @@ def check():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog", "CREDITS", "NEWS", "README", "README-linux",)
+    pisitools.dodoc("ChangeLog", "CREDITS", "NEWS", "README", "README-linux-ptrace",)

@@ -6,9 +6,11 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.export("PYTHON", "/usr/bin/python2.7")
     autotools.autoreconf("-vfi")
     autotools.configure("--disable-static")
     
@@ -19,7 +21,5 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.domove("/usr/share/gst-python/0.10/examples/", "/%s/%s/" % (get.docDIR(), get.srcNAME()))
 
     pisitools.dodoc("AUTHORS", "ChangeLog" ,"COPYING", "README", "TODO")

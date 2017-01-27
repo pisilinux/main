@@ -11,33 +11,16 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("configure", "-Werror=format", "#-Werror=format")
-    shelltools.makedirs("build-python2")
-    shelltools.makedirs("build-python3")
 
-    shelltools.cd("build-python3")
-    shelltools.export("PYTHON", "/usr/bin/python3.4")
-    shelltools.system("../configure --prefix=/usr \
-                       --localstatedir=/var \
-                       --disable-static")
-
-    shelltools.cd("../build-python2")
     shelltools.export("PYTHON", "/usr/bin/python2.7")
-    shelltools.system("../configure --prefix=/usr \
+    shelltools.system("./configure --prefix=/usr \
                        --localstatedir=/var \
                        --disable-static")
 
 def build():
-    shelltools.cd("build-python3")
-    autotools.make()
-
-    shelltools.cd("../build-python2")
     autotools.make()
 
 def install():
     pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README")
 
-    shelltools.cd("build-python3")
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    shelltools.cd("../build-python2")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())

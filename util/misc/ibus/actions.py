@@ -18,6 +18,7 @@ def setup():
                          --sysconfdir=/etc \
                          --libexecdir=/usr/lib/ibus \
                          --disable-gconf \
+                         --disable-emoji-dict \
                          --enable-dconf \
                          --enable-wayland \
                          --enable-vala \

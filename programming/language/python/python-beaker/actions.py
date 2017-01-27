@@ -10,8 +10,6 @@ from pisi.actionsapi import shelltools
 
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
-WorkDir = "Beaker-%s" % get.srcVERSION()
-
 def install():
     pythonmodules.install()
 
