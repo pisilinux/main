@@ -12,9 +12,14 @@ from pisi.actionsapi import get
 def setup():
     shelltools.touch("ChangeLog")
     autotools.autoreconf("-fi")
-    autotools.configure("--with-libcap-ng=yes \
-                         --enable-drivedb \
-                         --with-systemdsystemunitdir=no")
+    autotools.configure("--prefix=/usr \
+              --sbindir=/usr/bin \
+              --sysconfdir=/etc \
+              --with-drivedbdir \
+              --with-libcap-ng=yes \
+              --with-smartdscriptdir=/usr/share/smartmontools \
+              --with-smartdplugindir=/usr/share/smartmontools/smartd_warning.d
+            --with-systemdsystemunitdir=no")
 
 def build():
     autotools.make("CXXFLAGS='%s -fpie'" % get.CXXFLAGS())
