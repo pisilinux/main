@@ -18,7 +18,7 @@ def setup():
               --with-drivedbdir \
               --with-libcap-ng=yes \
               --with-smartdscriptdir=/usr/share/smartmontools \
-              --with-smartdplugindir=/usr/share/smartmontools/smartd_warning.d
+              --with-smartdplugindir=/usr/share/smartmontools/smartd_warning.d \
             --with-systemdsystemunitdir=no")
 
 def build():
