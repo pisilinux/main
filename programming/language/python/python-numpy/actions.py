@@ -24,7 +24,7 @@ def build():
 def install():
     pythonmodules.install(NUMPY_FCONFIG)
 
-    pisitools.doman("numpy/f2py/f2py.1")
+    pisitools.doman("doc/f2py/f2py.1")
 
-    pisitools.insinto(f2py_docs, "numpy/f2py/docs/*.txt")
+    pisitools.insinto(f2py_docs, "doc/f2py/*.txt")
     pisitools.dodoc("COMPATIBILITY", "DEV_README.txt", "LICENSE.txt", "THANKS.txt")
