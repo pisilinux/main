@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 def setup():
     pisitools.flags.add("-DNDEBUG")
 
-    autotools.autoreconf("-vif")
+    autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
                          --enable-xevie \
                          --enable-xprint \
@@ -22,7 +22,7 @@ def setup():
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ") 
 
 def build():
-    autotools.make()
+    autotools.make("-j1")
 
 def install():
     autotools.rawInstall("-j1 DESTDIR=%s" % get.installDIR())
