@@ -43,5 +43,5 @@ def install():
     pisitools.rename("/%s/%s" % (get.docDIR(), get.srcNAME()), "lirc")
 
     pisitools.insinto("/%s/lirc/contrib" % get.docDIR(), "contrib/*")
-    pisitools.insinto("/lib/udev/rules.d", "contrib/lirc.rules", "10-lirc.rules")
+    pisitools.insinto("/lib/udev/rules.d", "contrib/*.rules", "60-lirc.rules")
 

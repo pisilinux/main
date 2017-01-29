@@ -13,7 +13,7 @@
         <IsA>service</IsA>
         <Summary>Linux Infrared Remote Control system</Summary>
         <Description>lirc is a package that allows you to decode and send infra-red signals of many (but not all) commonly used remote controls.</Description>
-        <Archive sha1sum="6c1f1daa1fe4c020f4e349f1dd2c7fec759f939a" type="tarbz2">http://downloads.sourceforge.net/project/lirc/LIRC/0.9.3/lirc-0.9.3.tar.bz2</Archive>
+        <Archive sha1sum="e6a04fa7447b2c3bc5bac7658fa2cc377ae133ed" type="tarbz2">https://sourceforge.net/projects/lirc/files/LIRC/0.9.4c/lirc-0.9.4c.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libftdi-devel</Dependency>
@@ -23,6 +23,12 @@
             <Dependency>doxygen</Dependency>
             <Dependency>python3-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch level="1">lirc-lib-curl_poll.h-Ensure-build-on-unconfiguredclients.patch</Patch>
+            <Patch level="1">lirc-configure-libudev.patch</Patch>
+            <Patch level="1">lirc.pc-Fix-bad-library-specification-236.patch</Patch>
+            <Patch level="1">Build-Use-HAVE_UINPUT-1-to-force-building-uinput-cod.patch</Patch>
+        </Patches>
         </Source>
 
     <Package>
@@ -32,6 +38,9 @@
             <Dependency>libftdi</Dependency>
             <Dependency>libusb-compat</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libusb</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -40,8 +49,10 @@
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="executable">/usr/sbin</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="man">/usr/share/lirc</Path>
+            <Path fileType="man">/usr/share/man/man1</Path>
+            <Path fileType="man">/usr/share/man/man5</Path>
+            <Path fileType="man">/usr/share/man/man8</Path>
+            <Path fileType="data">/usr/share/lirc</Path>
             <Path fileType="data">/run</Path>
         </Files>
         <AdditionalFiles>
@@ -66,6 +77,13 @@
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2017-01-29</Date>
+            <Version>0.9.4c</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2016-06-09</Date>
             <Version>0.9.3</Version>
