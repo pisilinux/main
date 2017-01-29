@@ -14,7 +14,7 @@ def setup():
         pisitools.dosed(f, "\$\(localstatedir\)(\/run\/libvirt)", "\\1")
     for f in ["daemon/libvirtd.c", "daemon/libvirtd.conf", "daemon/test_libvirtd.aug.in"]:
         pisitools.dosed(f, "\/var(\/run\/libvirt)", "\\1")
-    for f in ["src/locking/virtlockd.pod.in", "src/virtlockd.8.in", "daemon/libvirtd.8.in", "daemon/libvirtd.pod.in", ]:
+    for f in ["src/locking/virtlockd.pod", "src/virtlockd.8.in", "daemon/libvirtd.8.in", "daemon/libvirtd.pod", ]:
         pisitools.dosed(f, "LOCALSTATEDIR(\/run\/libvirt)", "\\1")
     autotools.configure("--with-init-script=none \
                          --with-remote-pid-file=/run/libvirtd.pid \
