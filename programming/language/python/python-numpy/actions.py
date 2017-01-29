@@ -27,4 +27,4 @@ def install():
     pisitools.doman("doc/f2py/f2py.1")
 
     pisitools.insinto(f2py_docs, "doc/f2py/*.txt")
-    pisitools.dodoc("COMPATIBILITY", "DEV_README.txt", "LICENSE.txt", "THANKS.txt")
+    pisitools.dodoc("LICENSE.txt", "THANKS.txt")
