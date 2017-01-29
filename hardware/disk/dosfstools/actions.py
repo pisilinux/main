@@ -17,8 +17,7 @@ def setup():
                         --enable-compat-symlinks")
 
 def build():
-    #autotools.autoreconf("--enable-compat-symlinks")
     autotools.make()
 
 def install():
-    autotools.install()
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
