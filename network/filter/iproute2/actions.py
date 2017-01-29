@@ -21,5 +21,4 @@ def install():
                           MANDIR=/usr/share/man \
                           " % (get.installDIR(), get.docDIR(), get.srcNAME()))
 
-    #pisitools.dodir("/usr/sbin")
     pisitools.dodir("/var/lib/arpd")
