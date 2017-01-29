@@ -16,7 +16,7 @@ def build():
 def install():
     pythonmodules.install()
 
-    pisitools.dohtml("docs/build/*")
-    pisitools.insinto("/usr/share/doc/%s/src/" % get.srcNAME(),"docs/src/*")
-    pisitools.doman("docs/pygmentize.1")
+    #pisitools.dohtml("docs/build/*")
+    #pisitools.insinto("/usr/share/doc/%s/src/" % get.srcNAME(),"docs/src/*")
+    pisitools.doman("doc/pygmentize.1")
 
