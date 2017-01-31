@@ -17,9 +17,9 @@ def setup():
     shelltools.unlinkDir("Modules/zlib")
     shelltools.unlinkDir("Modules/_ctypes/darwin")
     shelltools.unlinkDir("Modules/_ctypes/libffi")
-    shelltools.unlinkDir("Modules/_ctypes/libffi_arm_wince")
     shelltools.unlinkDir("Modules/_ctypes/libffi_msvc")
     shelltools.unlinkDir("Modules/_ctypes/libffi_osx")
+    shelltools.unlinkDir("Modules/_decimal/libmpdec")
 
     autotools.rawConfigure("\
                             --prefix=/usr \
