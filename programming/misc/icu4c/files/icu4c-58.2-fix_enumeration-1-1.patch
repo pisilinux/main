@@ -1,0 +1,79 @@
+Submitted By: Pierre Labastie <pierre dot labastie at neuf dot fr>
+Date: 2016-11-15
+Initial Package Version: 58.1
+Upstream Status: Applied
+Origin: Upstream, rediffed so that patch -p1 works.
+Description: Fix a regression in 58.1, which made mozilla applications
+segfault. See ticket #8527
+
+diff -Naur icu.old/source/common/ulist.c icu.new/source/common/ulist.c
+--- icu.old/source/common/ulist.c	2016-06-15 20:58:17.000000000 +0200
++++ /icu/source/common/ulist.c	2016-11-15 16:11:09.996596933 +0100
+@@ -29,7 +29,6 @@
+     UListNode *tail;
+     
+     int32_t size;
+-    int32_t currentIndex;
+ };
+ 
+ static void ulist_addFirstItem(UList *list, UListNode *newItem);
+@@ -51,7 +50,6 @@
+     newList->head = NULL;
+     newList->tail = NULL;
+     newList->size = 0;
+-    newList->currentIndex = -1;
+     
+     return newList;
+ }
+@@ -80,8 +78,9 @@
+     } else {
+         p->next->previous = p->previous;
+     }
+-    list->curr = NULL;
+-    list->currentIndex = 0;
++    if (p == list->curr) {
++        list->curr = p->next;
++    }
+     --list->size;
+     if (p->forceDelete) {
+         uprv_free(p->data);
+@@ -150,7 +149,6 @@
+         newItem->next = list->head;
+         list->head->previous = newItem;
+         list->head = newItem;
+-        list->currentIndex++;
+     }
+     
+     list->size++;
+@@ -193,7 +191,6 @@
+     
+     curr = list->curr;
+     list->curr = curr->next;
+-    list->currentIndex++;
+     
+     return curr->data;
+ }
+@@ -209,7 +206,6 @@
+ U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
+     if (list != NULL) {
+         list->curr = list->head;
+-        list->currentIndex = 0;
+     }
+ }
+ 
+@@ -272,4 +268,3 @@
+ U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en) {
+     return (UList *)(en->context);
+ }
+-
+diff -Naur icu.old/source/i18n/ucol_res.cpp icu.new/source/i18n/ucol_res.cpp
+--- icu.old/source/i18n/ucol_res.cpp	2016-09-28 04:26:02.000000000 +0200
++++ /icu/source/i18n/ucol_res.cpp	2016-11-15 16:11:10.000596933 +0100
+@@ -680,6 +680,7 @@
+         return NULL;
+     }
+     memcpy(en, &defaultKeywordValues, sizeof(UEnumeration));
++    ulist_resetList(sink.values);  // Initialize the iterator.
+     en->context = sink.values;
+     sink.values = NULL;  // Avoid deletion in the sink destructor.
+     return en;
