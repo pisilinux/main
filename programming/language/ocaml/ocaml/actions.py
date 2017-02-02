@@ -32,7 +32,7 @@ def install():
                           MANDIR=%(install)s/usr/share/man" \
                           % { "install": get.installDIR()})
 
-    pisitools.dodoc("Changes", "LICENSE", "README")
+    pisitools.dodoc("Changes", "LICENSE", "README*")
 
 
     ''' autotools.rawInstall("-C emacs \
