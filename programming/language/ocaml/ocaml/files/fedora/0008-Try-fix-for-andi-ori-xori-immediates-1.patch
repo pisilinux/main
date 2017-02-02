@@ -1,0 +1,42 @@
+From f1be77d69e28ad3bd128c6c757d966e90bbf73d3 Mon Sep 17 00:00:00 2001
+From: Nicolas Ojeda Bar <n.oje.bar@gmail.com>
+Date: Thu, 10 Nov 2016 14:12:53 +0100
+Subject: [PATCH 08/10] Try fix for andi/ori/xori immediates (#1)
+
+---
+ asmcomp/riscv/selection.ml | 13 -------------
+ 1 file changed, 13 deletions(-)
+
+diff --git a/asmcomp/riscv/selection.ml b/asmcomp/riscv/selection.ml
+index 60ec5cb..ad2b26e 100644
+--- a/asmcomp/riscv/selection.ml
++++ b/asmcomp/riscv/selection.ml
+@@ -36,11 +36,6 @@ method! select_operation op args =
+   match (op, args) with
+   (* RISC-V does not support immediate operands for multiply high *)
+   | (Cmulhi, _) -> (Iintop Imulh, args)
+-  (* The and, or and xor instructions have a different range of immediate
+-     operands than the other instructions *)
+-  | (Cand, _) -> self#select_logical Iand args
+-  | (Cor, _) -> self#select_logical Ior args
+-  | (Cxor, _) -> self#select_logical Ixor args
+   (* Recognize (neg-)mult-add and (neg-)mult-sub instructions *)
+   | (Caddf, [Cop(Cmulf, [arg1; arg2]); arg3])
+   | (Caddf, [arg3; Cop(Cmulf, [arg1; arg2])]) ->
+@@ -58,14 +53,6 @@ method! select_operation op args =
+   | _ ->
+       super#select_operation op args
+ 
+-method select_logical op = function
+-  | [arg; Cconst_int n] when n >= 0 && n <= 0xFFF ->
+-      (Iintop_imm(op, n), [arg])
+-  | [Cconst_int n; arg] when n >= 0 && n <= 0xFFF ->
+-      (Iintop_imm(op, n), [arg])
+-  | args ->
+-      (Iintop op, args)
+-
+ (* Instruction selection for conditionals *)
+ 
+ method! select_condition = function
+-- 
+2.9.3
