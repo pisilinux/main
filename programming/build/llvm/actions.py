@@ -63,14 +63,14 @@ def setup():
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                                         %s \
-                                        -DLLVM_ENABLE_FFI=ON \
-                                        -DLLVM_BUILD_DOCS=OFF \
-                                        -DBUILD_SHARED_LIBS=ON \
-                                        -DLLVM_ENABLE_RTTI=ON \
-                                        -DLLVM_INCLUDEDIR=/usr/include \
-                                        -DLLVM_ENABLE_ASSERTIONS=OFF \
+                                        -DCMAKE_INSTALL_PREFIX=/usr           \
+                                        -DLLVM_ENABLE_FFI=ON                  \
+                                        -DCMAKE_BUILD_TYPE=Release            \
+                                        -DLLVM_BUILD_LLVM_DYLIB=ON            \
+                                        -DLLDB_DISABLE_LIBEDIT=1              \
+                                        -DLLVM_INCLUDEDIR=/usr/include         \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
-                                        -DENABLE_SHARED=ON" % options, sourceDir=".." ) 
+                                        -DLLVM_TARGETS_TO_BUILD='host;AMDGPU'" % options, sourceDir=".." ) 
 
 def build():
     shelltools.makedirs("build")
