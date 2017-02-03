@@ -1,0 +1,28 @@
+From d4a20446fc8d00223b0c23726618407e451472e8 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Wed, 9 Nov 2016 11:01:15 -0500
+Subject: [PATCH 05/10] PR#7405: s390x: Fix address of caml_raise_exn in native
+ dynlink modules.
+
+This commit started as Fedora patch e732c39340e86939530a087744caa8d8f1247878.
+
+(cherry picked from commit d6f24c5f4ee9408ac9a00e3de84f417450b41215)
+---
+ asmcomp/s390x/emit.mlp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asmcomp/s390x/emit.mlp b/asmcomp/s390x/emit.mlp
+index 5d233a3..f99380a 100644
+--- a/asmcomp/s390x/emit.mlp
++++ b/asmcomp/s390x/emit.mlp
+@@ -611,7 +611,7 @@ let emit_instr i =
+     | Lraise k ->
+         begin match k with
+         | Cmm.Raise_withtrace ->
+-          `	brasl	%r14, {emit_symbol "caml_raise_exn"}\n`;
++          `	{emit_call "caml_raise_exn"}\n`;
+           let lbl = record_frame Reg.Set.empty true i.dbg in
+           `{emit_label lbl}:\n`
+         | Cmm.Raise_notrace ->
+-- 
+2.9.3
