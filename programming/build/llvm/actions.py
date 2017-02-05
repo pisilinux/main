@@ -34,6 +34,8 @@ def setup():
                 shelltools.export("CC", "gcc")
                 shelltools.export("CXX", "g++")
                 
+    shelltools.system("patch -Np0 -d projects/compiler-rt < msan-prevent-initialization-failure-with-newer-glibc.patch")
+    shelltools.system("patch -Rp1 -i AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch")
     
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
@@ -63,14 +65,17 @@ def setup():
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                                         %s \
-                                        -DCMAKE_INSTALL_PREFIX=/usr           \
-                                        -DLLVM_ENABLE_FFI=ON                  \
-                                        -DCMAKE_BUILD_TYPE=Release            \
-                                        -DLLVM_BUILD_LLVM_DYLIB=ON            \
-                                        -DLLDB_DISABLE_LIBEDIT=1              \
-                                        -DLLVM_INCLUDEDIR=/usr/include         \
+                                        -DCMAKE_BUILD_TYPE=Release           \
+                                        -DCMAKE_INSTALL_PREFIX=/usr          \
+                                        -DLLVM_BUILD_LLVM_DYLIB=ON           \
+                                        -DLLVM_LINK_LLVM_DYLIB=ON            \
+                                        -DLLVM_INSTALL_UTILS=ON              \
+                                        -DLLVM_ENABLE_RTTI=ON                \
+                                        -DLLVM_ENABLE_FFI=ON                 \
+                                        -DLLDB_DISABLE_LIBEDIT=1             \
+                                        -DLLVM_INCLUDEDIR=/usr/include       \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
-                                        -DLLVM_TARGETS_TO_BUILD='host;AMDGPU'" % options, sourceDir=".." ) 
+                                        -DLLVM_BINUTILS_INCDIR=/usr/include" % options, sourceDir=".." ) 
 
 def build():
     shelltools.makedirs("build")
