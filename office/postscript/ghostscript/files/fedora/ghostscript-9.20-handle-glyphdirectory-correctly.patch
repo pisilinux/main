@@ -1,0 +1,51 @@
+From 329e0a6d187cc5b5698689d76636ed3214d7efa7 Mon Sep 17 00:00:00 2001
+From: Chris Liddell <chris.liddell@artifex.com>
+Date: Thu, 3 Nov 2016 13:09:27 +0000
+Subject: [PATCH] Bug 697286: handle GlyphDirectory as an array
+
+For high level devices that need to copy CIDFonts, we need to establish the
+highest CID in a given CIDFont. If the font has a GlyphDirectory dictionary
+the only way to do so is to iterate through the keys to find the highest.
+
+The code handling this ignored that the GlyphDirectory could be an array,
+which confused the dictionary content iterator, and caused a segfault.
+
+In the case of an array, set the high CID to the highest index available in the
+array.
+---
+ psi/zfcid.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/psi/zfcid.c b/psi/zfcid.c
+index ce583af..3098a22 100644
+--- a/psi/zfcid.c
++++ b/psi/zfcid.c
+@@ -76,15 +76,19 @@ cid_font_data_param(os_ptr op, gs_font_cid_data *pdata, ref *pGlyphDirectory)
+          * the number of CIDs in the font. We need to know the maximum CID
+          * when copying fonts, so calculate and store it now.
+          */
+-        index = dict_first(pgdir);
+-        while (index >= 0) {
+-            index = dict_next(pgdir, index, (ref *)&element);
+-            if (index >= 0) {
+-                if (element[0].value.intval > pdata->MaxCID)
+-                    pdata->MaxCID = element[0].value.intval;
++        if (r_has_type(pgdir, t_dictionary)) {
++            index = dict_first(pgdir);
++            while (index >= 0) {
++                index = dict_next(pgdir, index, (ref *)&element);
++                if (index >= 0) {
++                    if (element[0].value.intval > pdata->MaxCID)
++                        pdata->MaxCID = element[0].value.intval;
++                }
+             }
+         }
+-
++        else {
++            pdata->MaxCID = r_size(pgdir) - 1;
++        }
+         return code;
+     } else {
+         return_error(gs_error_typecheck);
+-- 
+2.7.4

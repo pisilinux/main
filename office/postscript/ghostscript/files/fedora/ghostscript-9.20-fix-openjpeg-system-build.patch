@@ -1,0 +1,55 @@
+From 99cf218dbd5f6fbdbda2ce6872eb9ab7f475c353 Mon Sep 17 00:00:00 2001
+From: Chris Liddell <chris.liddell@artifex.com>
+Date: Tue, 27 Sep 2016 11:22:18 +0100
+Subject: [PATCH 1/2] Add pre-processor define for shared OpenJPEG
+
+---
+ Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 25875ad..2ca2a80 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -290,7 +290,7 @@ JBIG2_CFLAGS=@JBIG2_AUTOCONF_CFLAGS@
+ JPX_LIB=@JPX_DECODER@
+ SHARE_JPX=@SHARE_JPX@
+ JPXSRCDIR=@JPXDIR@
+-JPX_CFLAGS=@JPX_AUTOCONF_CFLAGS@ @JPX_SSE_CFLAGS@
++JPX_CFLAGS=-DSHARE_JPX=$(SHARE_JPX) @JPX_AUTOCONF_CFLAGS@ @JPX_SSE_CFLAGS@
+ 
+ # uncomment the following three lines and one of the last two to
+ # compile in the Luratech lwf_jp2 codec
+-- 
+2.7.4
+
+
+From 4f19ab99cac2d8a7d21aea34d8aea0727fad52d3 Mon Sep 17 00:00:00 2001
+From: Didier Raboud <odyx@debian.org>
+Date: Thu, 6 Oct 2016 17:08:41 +0200
+Subject: [PATCH 2/2] Don't pass -DOPJ_STATIC when compiling the OpenJPEG code.
+
+  It makes the symbols hidden when including
+  /usr/include/openjpeg-2.1/openjpeg.h.
+  Fixes a FTBFS against libopenjp2-7 (>= 2.1.1).
+
+  Debian bug: https://bugs.debian.org/832873
+---
+ base/lib.mak | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/base/lib.mak b/base/lib.mak
+index 173e2c6..cffdc9d 100644
+--- a/base/lib.mak
++++ b/base/lib.mak
+@@ -1849,7 +1849,7 @@ $(GLOBJ)sjpx_openjpeg.$(OBJ) : $(GLSRC)sjpx_openjpeg.c $(AK) \
+  $(memory__h) $(gserror_h) $(gserrors_h) \
+  $(gdebug_h) $(strimpl_h) $(sjpx_openjpeg_h) $(LIB_MAK) $(MAKEDIRS)
+ 	$(GLJPXOPJCC) $(GLO_)sjpx_openjpeg.$(OBJ) \
+-		$(C_) -DOPJ_STATIC $(GLSRC)sjpx_openjpeg.c
++		$(C_) $(GLSRC)sjpx_openjpeg.c
+ 
+ # ---------------- Pixel-difference filters ---------------- #
+ # The Predictor facility of the LZW and Flate filters uses these.
+-- 
+2.7.4
