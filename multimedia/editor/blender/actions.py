@@ -33,10 +33,10 @@ def setup():
                       -DWITH_GAMEENGINE=ON \
                       -DWITH_PYTHON_INSTALL=OFF \
                       -DWITH_MOD_OCEANSIM=ON \
-                      -DPYTHON_VERSION=3.4 \
+                      -DPYTHON_VERSION=3.6 \
                       -DPYTHON_LIBPATH=/usr/lib \
-                      -DPYTHON_LIBRARY=python3.4m \
-                      -DPYTHON_INCLUDE_DIRS=/usr/include/python3.4m \
+                      -DPYTHON_LIBRARY=python3.6m \
+                      -DPYTHON_INCLUDE_DIRS=/usr/include/python3.6m \
                       -DWITH_CODEC_SNDFILE=ON ")
 
 def build():
