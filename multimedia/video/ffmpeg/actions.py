@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.rawConfigure("--prefix=/usr \
+    autotools.configure("--prefix=/usr \
                             --mandir=/usr/share/man \
                             --disable-debug \
                             --disable-static \
@@ -55,7 +55,8 @@ def setup():
                             --enable-frei0r \
                             --enable-libcdio \
                             --enable-libvo-amrwbenc \
-                            --enable-nonfree")
+                            --enable-nonfree \
+                            --enable-libfaac")
 
 def build():
     autotools.make()
