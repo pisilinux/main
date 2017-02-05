@@ -55,8 +55,7 @@ def setup():
                             --enable-frei0r \
                             --enable-libcdio \
                             --enable-libvo-amrwbenc \
-                            --enable-nonfree \
-                            --enable-libfaac")
+                            --enable-nonfree")
 
 def build():
     autotools.make()
