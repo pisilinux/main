@@ -86,10 +86,10 @@ def install():
     
     if get.buildTYPE() == "emul32":
         
-        pisitools.domove("/emul32/lib32/", "/usr/")
-        pisitools.insinto("/usr/include/llvm/Config/","%s/emul32/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
-        pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
-        pisitools.removeDir("/emul32")
+        #pisitools.domove("/emul32/lib32/", "/usr/")
+        pisitools.insinto("/usr/include/llvm/Config/","%s/usr/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
+        pisitools.insinto("/usr/bin/","%s/usr/bin/llvm-config" % get.installDIR(),"llvm-config-32")
+        #pisitools.removeDir("/emul32")
    
     shelltools.cd ("..")
     
