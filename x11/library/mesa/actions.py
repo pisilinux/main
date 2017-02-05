@@ -32,7 +32,6 @@ def setup():
               --enable-gles2 \
               --enable-vdpau \
               --enable-osmesa \
-              --enable-sysfs \
               --enable-xvmc \
               --enable-glx-tls \
               --enable-gallium-llvm \
