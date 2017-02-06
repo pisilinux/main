@@ -11,16 +11,23 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr    \
                           -DCMAKE_INSTALL_LIBDIR=lib     \
                           -DCMAKE_BUILD_TYPE=Release     \
                           -DALLOW_IN_SOURCE_BUILD=ON     \
-                          -DCMAKE_SKIP_INSTALL_RPATH=YES")
+                          -DCMAKE_SKIP_INSTALL_RPATH=YES", sourceDir=".." )
 
 def build():
+    shelltools.cd("build")
+    
     cmaketools.make()
 
 def install():
+    shelltools.cd("build")
+    
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("LICENSE", "README")
