@@ -5,25 +5,22 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-fi")
-
-    #libtools.libtoolize("--force --install")
-
-    autotools.configure("--enable-libjpeg \
-                         --enable-opengl \
-                         --enable-shared \
-                         --disable-static")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr    \
+                          -DCMAKE_INSTALL_LIBDIR=lib     \
+                          -DCMAKE_BUILD_TYPE=Release     \
+                          -DALLOW_IN_SOURCE_BUILD=ON     \
+                          -DCMAKE_SKIP_INSTALL_RPATH=YES")
 
 def build():
-    autotools.make()
+    cmaketools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("NEWS", "README", "doc/*")
+    pisitools.dodoc("LICENSE", "README")
