@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
@@ -34,8 +33,8 @@ def setup():
                 shelltools.export("CC", "gcc")
                 shelltools.export("CXX", "g++")
                 
-    shelltools.system("patch -Np0 -d projects/compiler-rt < msan-prevent-initialization-failure-with-newer-glibc.patch")
-    shelltools.system("patch -Rp1 -i AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch")
+            shelltools.system("patch -Np0 -d projects/compiler-rt < msan-prevent-initialization-failure-with-newer-glibc.patch")
+            shelltools.system("patch -Rp1 -i AMDGPU-Fix-an-interaction-between-WQM-and-polygon-stippling.patch")
     
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
@@ -67,15 +66,13 @@ def setup():
                                         %s \
                                         -DCMAKE_BUILD_TYPE=Release           \
                                         -DCMAKE_INSTALL_PREFIX=/usr          \
-                                        -DLLVM_BUILD_LLVM_DYLIB=ON           \
-                                        -DLLVM_LINK_LLVM_DYLIB=ON            \
-                                        -DLLVM_INSTALL_UTILS=ON              \
-                                        -DLLVM_ENABLE_RTTI=ON                \
                                         -DLLVM_ENABLE_FFI=ON                 \
+                                        -DLLVM_LINK_LLVM_DYLIB=ON            \
+                                        -DLLVM_BUILD_LLVM_DYLIB=ON           \
                                         -DLLDB_DISABLE_LIBEDIT=1             \
                                         -DLLVM_INCLUDEDIR=/usr/include       \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
-                                        -DLLVM_BINUTILS_INCDIR=/usr/include" % options, sourceDir=".." ) 
+                                        -DLLVM_TARGETS_TO_BUILD='host;AMDGPU'" % options, sourceDir=".." )
 
 def build():
     shelltools.makedirs("build")
@@ -99,4 +96,3 @@ def install():
     shelltools.cd ("..")
     
     pisitools.dodoc("CREDITS.TXT", "LICENSE.TXT", "README.txt")
-   
