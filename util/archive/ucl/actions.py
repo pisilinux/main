@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.export("CPPFLAGS", "-std=c90 -fPIC")
     autotools.configure("--enable-shared --disable-static")
 
 def build():
