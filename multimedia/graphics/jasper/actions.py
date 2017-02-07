@@ -14,11 +14,17 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr    \
+    if get.buildTYPE() != "emul32":
+        options = "-DCMAKE_INSTALL_PREFIX=/usr"
+    
+    if get.buildTYPE() == "emul32":
+        options = "-DCMAKE_INSTALL_PREFIX=/emul32/lib32"
+    
+    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
+                                        %s \
                           -DCMAKE_INSTALL_LIBDIR=lib     \
-                          -DCMAKE_BUILD_TYPE=Release     \
                           -DALLOW_IN_SOURCE_BUILD=ON     \
-                          -DCMAKE_SKIP_INSTALL_RPATH=YES", sourceDir=".." )
+                          -DCMAKE_SKIP_INSTALL_RPATH=YES" % options, sourceDir=".." )
 
 def build():
     shelltools.cd("build")
@@ -29,6 +35,10 @@ def install():
     shelltools.cd("build")
 
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    if get.buildTYPE() == "emul32":
+        pisitools.domove("/emul32/lib32/", "/usr/")
+        pisitools.removeDir("/emul32")
 
     shelltools.cd("..")
     pisitools.dodoc("LICENSE", "README")
