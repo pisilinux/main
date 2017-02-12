@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
-    autotools.make("CC=%s CFLAGS='%s'" % (get.CC(), get.CFLAGS()))
+    autotools.make("-j1 CC=%s CFLAGS='%s'" % (get.CC(), get.CFLAGS()))
 
 def check():
     autotools.make("-j1 test")
