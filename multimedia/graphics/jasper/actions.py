@@ -15,14 +15,15 @@ def setup():
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
-        options = "-DCMAKE_INSTALL_PREFIX=/usr"
+        options = "-DCMAKE_INSTALL_PREFIX=/usr \
+                   -DCMAKE_INSTALL_LIBDIR=lib"
     
     if get.buildTYPE() == "emul32":
-        options = "-DCMAKE_INSTALL_PREFIX=/emul32/lib32"
+        options = "-DCMAKE_INSTALL_PREFIX=/emul32 \
+                   -DCMAKE_INSTALL_LIBDIR=lib32"
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                                         %s \
-                          -DCMAKE_INSTALL_LIBDIR=lib     \
                           -DALLOW_IN_SOURCE_BUILD=ON     \
                           -DCMAKE_SKIP_INSTALL_RPATH=YES" % options, sourceDir=".." )
 
