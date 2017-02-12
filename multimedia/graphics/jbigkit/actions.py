@@ -9,11 +9,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
-    autotools.make("-j1 CC=%s CFLAGS='%s'" % (get.CC(), get.CFLAGS()))
+    autotools.make("CC=%s CFLAGS='%s'" % (get.CC(), get.CFLAGS()))
 
 def check():
     autotools.make("-j1 test")
-    
+
 def install():
     pisitools.insinto("/usr/include/", "libjbig/jbig*.h")
     pisitools.insinto("/usr/lib/", "libjbig/libjbig*.so")
