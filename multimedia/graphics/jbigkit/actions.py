@@ -13,7 +13,7 @@ def build():
 
 def check():
     autotools.make("-j1 test")
-    
+
 def install():
     pisitools.insinto("/usr/include/", "libjbig/jbig*.h")
     pisitools.insinto("/usr/lib/", "libjbig/libjbig*.so")
