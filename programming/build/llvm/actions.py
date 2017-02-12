@@ -92,4 +92,4 @@ def install():
    
     shelltools.cd ("..")
     
-pisitools.dodoc("CREDITS.TXT", "LICENSE.TXT", "README.txt")
+    pisitools.dodoc("CREDITS.TXT", "LICENSE.TXT", "README.txt")
