@@ -12,7 +12,8 @@ from pisi.actionsapi import autotools
 def setup():
     autotools.configure("--prefix=/usr \
                         --enable-introspection \
-                        --enable-gtk-doc")
+                        --enable-gtk-doc \
+                        --disable-umockdev")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     
