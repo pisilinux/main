@@ -20,6 +20,6 @@ def install():
     shelltools.makedirs("%s/usr/share/man" % get.installDIR())
     shelltools.makedirs("%s/usr/include" % get.installDIR())
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #pisitools.insinto("/usr/lib", "src/lib/*.o")
-    #pisitools.insinto("/usr/share/man", "src/man/*")
+    pisitools.insinto("/usr/lib", "src/lib/*.o")
+    pisitools.insinto("/usr/share/man", "src/man/*")
     pisitools.insinto("/usr/include", "src/include/*.h")
