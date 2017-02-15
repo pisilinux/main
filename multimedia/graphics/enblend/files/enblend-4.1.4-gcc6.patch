@@ -1,0 +1,90 @@
+diff -r 6aec0cc8d22a -r 467a73754dbb include/vigra_ext/impexalpha.hxx
+--- a/include/vigra_ext/impexalpha.hxx	Mon Sep 28 09:41:56 2015 +0200
++++ b/include/vigra_ext/impexalpha.hxx	Sun Jan 24 17:05:51 2016 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2012-2014 Christoph L. Spiel
++ * Copyright (C) 2012-2016 Christoph L. Spiel
+  *
+  * This file is part of Enblend.
+  *
+@@ -26,6 +26,9 @@
+ #include <vigra/imageinfo.hxx>
+ #include <vigra/impex.hxx>
+ 
++#ifndef VIGRA_UNIQUE_PTR
++#define VIGRA_UNIQUE_PTR std::auto_ptr
++#endif
+ 
+ namespace vigra_ext
+ {
+@@ -194,7 +197,7 @@
+                          AlphaIterator alpha_iterator, AlphaAccessor alpha_accessor,
+                          vigra::VigraTrueType)
+         {
+-            std::auto_ptr<vigra::Decoder> decoder(vigra::decoder(import_info));
++            VIGRA_UNIQUE_PTR<vigra::Decoder> decoder(vigra::decoder(import_info));
+ 
+             switch (pixel_t_of_string(decoder->getPixelType()))
+             {
+@@ -249,7 +252,7 @@
+                          AlphaIterator alpha_iterator, AlphaAccessor alpha_accessor,
+                          vigra::VigraFalseType)
+         {
+-            std::auto_ptr<vigra::Decoder> decoder(vigra::decoder(import_info));
++            VIGRA_UNIQUE_PTR<vigra::Decoder> decoder(vigra::decoder(import_info));
+ 
+             switch (pixel_t_of_string(decoder->getPixelType()))
+             {
+@@ -467,7 +470,7 @@
+                          vigra::VigraTrueType)
+         {
+             const std::string pixel_type(export_info.getPixelType());
+-            std::auto_ptr<vigra::Encoder> encoder(vigra::encoder(export_info));
++            VIGRA_UNIQUE_PTR<vigra::Encoder> encoder(vigra::encoder(export_info));
+ 
+             encoder->setPixelType(pixel_type);
+ 
+@@ -525,7 +528,7 @@
+                          vigra::VigraFalseType)
+         {
+             const std::string pixel_type(export_info.getPixelType());
+-            std::auto_ptr<vigra::Encoder> encoder(vigra::encoder(export_info));
++            VIGRA_UNIQUE_PTR<vigra::Encoder> encoder(vigra::encoder(export_info));
+ 
+             encoder->setPixelType(pixel_type);
+ 
+diff -r 596efbff27a8 -r 73e6f16de80a src/filespec.cc
+--- a/src/filespec.cc	Sun Jan 24 17:06:09 2016 +0100
++++ b/src/filespec.cc	Mon Feb 15 10:20:30 2016 +0100
+@@ -37,7 +37,6 @@
+ #include <cctype>
+ 
+ #include <boost/algorithm/string/case_conv.hpp>
+-#include <boost/assign/list_of.hpp>
+ 
+ #include <vigra/imageinfo.hxx>
+ 
+@@ -412,17 +411,12 @@
+ public:
+     Globbing() : algorithm_name_("literal"), algorithm_(NULL)
+     {
+-        installed_algorithms_ =
+-            boost::assign::map_list_of
+-            ("literal", MAKE_ALGORITHM(new LiteralGlobbingAlgorithm))
+-            ("wildcard", MAKE_ALGORITHM(new WildcardGlobbingAlgorithm))
++        installed_algorithms_["literal"] = MAKE_ALGORITHM(new LiteralGlobbingAlgorithm);
++        installed_algorithms_["wildcard"] = MAKE_ALGORITHM(new WildcardGlobbingAlgorithm);
++        setup_alias("literal", "none");
++
+ #ifndef _WIN32
+-            ("shell", MAKE_ALGORITHM(new ShellGlobbingAlgorithm))
+-#endif
+-            ;
+-
+-        setup_alias("literal", "none");
+-#ifndef _WIN32
++        installed_algorithms_["shell"] = MAKE_ALGORITHM(new ShellGlobbingAlgorithm);
+         setup_alias("shell", "sh");
+ #endif
+     }
