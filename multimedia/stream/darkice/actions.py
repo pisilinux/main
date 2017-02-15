@@ -9,13 +9,12 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.cxxflags.add("-fpermissive")
     autotools.configure("--with-alsa \
                          --with-faac \
                          --with-vorbis \
                          --with-lame \
-                         --without-jack \
-                         --disable-static \
-                         --enable-shared")
+                         --without-jack")
 
 def build():
     autotools.make()
