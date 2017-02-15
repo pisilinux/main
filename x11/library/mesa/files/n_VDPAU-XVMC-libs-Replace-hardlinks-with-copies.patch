@@ -1,0 +1,52 @@
+From a9af1af5f1f9aa9fdea9e73135a92f053478f849 Mon Sep 17 00:00:00 2001
+From: Stefan Dirsch <sndirsch@suse.de>
+Date: Wed, 20 Jan 2016 16:10:15 +0100
+Subject: [PATCH] VDPAU/XVMC libs: Replace hardlinks with copies
+
+Since these are packaged separately in (open)SUSE anyway, one can use
+copies as well. This makes debug packages possible again. (bnc #962609)
+
+Signed-off-by: Stefan Dirsch <sndirsch@suse.de>
+---
+ src/gallium/targets/vdpau/Makefile.am | 4 ++--
+ src/gallium/targets/xvmc/Makefile.am  | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/gallium/targets/vdpau/Makefile.am b/src/gallium/targets/vdpau/Makefile.am
+index d388f8b..c9cc534 100644
+--- a/src/gallium/targets/vdpau/Makefile.am
++++ b/src/gallium/targets/vdpau/Makefile.am
+@@ -86,7 +86,7 @@ all-local: $(vdpau_LTLIBRARIES)
+ 		j=libvdpau_gallium.$(LIB_EXT);				\
+ 		k=libvdpau_$${i}.$(LIB_EXT);				\
+ 		l=$${k}.$(VDPAU_MAJOR).$(VDPAU_MINOR).0;		\
+-		ln -f .libs/$${j}.$(VDPAU_MAJOR).$(VDPAU_MINOR).0	\
++		cp -a .libs/$${j}.$(VDPAU_MAJOR).$(VDPAU_MINOR).0	\
+ 		      $${link_dir}/$${l};				\
+ 		ln -sf $${l}						\
+ 		       $${link_dir}/$${k}.$(VDPAU_MAJOR).$(VDPAU_MINOR); \
+@@ -111,7 +111,7 @@ install-data-hook:
+ 		j=libvdpau_gallium.$(LIB_EXT);				\
+ 		k=libvdpau_$${i}.$(LIB_EXT);				\
+ 		l=$${k}.$(VDPAU_MAJOR).$(VDPAU_MINOR).0;		\
+-		ln -f $${dest_dir}/$${j}.$(VDPAU_MAJOR).$(VDPAU_MINOR).0 \
++		cp -a $${dest_dir}/$${j}.$(VDPAU_MAJOR).$(VDPAU_MINOR).0 \
+ 		      $${dest_dir}/$${l};				\
+ 		ln -sf $${l}						\
+ 		       $${dest_dir}/$${k}.$(VDPAU_MAJOR).$(VDPAU_MINOR); \
+diff --git a/src/gallium/targets/xvmc/Makefile.am b/src/gallium/targets/xvmc/Makefile.am
+index fdc5f4b..93ef230 100644
+--- a/src/gallium/targets/xvmc/Makefile.am
++++ b/src/gallium/targets/xvmc/Makefile.am
+@@ -73,7 +73,7 @@ install-data-hook:
+ 		j=libXvMCgallium.$(LIB_EXT);				\
+ 		k=libXvMC$${i}.$(LIB_EXT);				\
+ 		l=$${k}.$(XVMC_MAJOR).$(XVMC_MINOR).0;			\
+-		ln -f $${dest_dir}/$${j}.$(XVMC_MAJOR).$(XVMC_MINOR).0	\
++		cp -a $${dest_dir}/$${j}.$(XVMC_MAJOR).$(XVMC_MINOR).0	\
+ 		      $${dest_dir}/$${l};				\
+ 		ln -sf $${l}						\
+ 		       $${dest_dir}/$${k}.$(XVMC_MAJOR).$(XVMC_MINOR);	\
+-- 
+2.6.2
+
