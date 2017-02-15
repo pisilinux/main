@@ -1,5 +1,23 @@
+From: Ilia Mirkin <imirkin@alum.mit.edu>
+Date: Mon Jun 6 20:30:48 2016 -0400
+Subject: [PATCH 2/5]nouveau: more locking - make sure that fence work is always done with the push mutex acquired
+Patch-mainline: N/A
+References: boo#997171
+Signed-off-by: Max Staudt <mstaudt@suse.de>
+
+Cherry-picked from 2733e5483e1c2b80e4b0ae21187ec5e3e1579397
+                at https://github.com/imirkin/mesa.git
+
+Signed-off-by: Max Staudt <mstaudt@suse.de>
+---
+ src/gallium/drivers/nouveau/nouveau_buffer.c     | 4 ++++
+ src/gallium/drivers/nouveau/nv50/nv50_miptree.c  | 7 +++++--
+ src/gallium/drivers/nouveau/nv50/nv50_query_hw.c | 5 ++++-
+ src/gallium/drivers/nouveau/nvc0/nvc0_query_hw.c | 5 ++++-
+ 4 files changed, 17 insertions(+), 4 deletions(-)
+
 diff --git a/src/gallium/drivers/nouveau/nouveau_buffer.c b/src/gallium/drivers/nouveau/nouveau_buffer.c
-index 58fa453..a006e9f 100644
+index b54c19b..a5a06cf 100644
 --- a/src/gallium/drivers/nouveau/nouveau_buffer.c
 +++ b/src/gallium/drivers/nouveau/nouveau_buffer.c
 @@ -80,6 +80,8 @@ release_allocation(struct nouveau_mm_allocation **mm,
@@ -12,12 +30,12 @@ index 58fa453..a006e9f 100644
        nouveau_fence_work(buf->fence, nouveau_fence_unref_bo, buf->bo);
        buf->bo = NULL;
 @@ -89,6 +91,8 @@ nouveau_buffer_release_gpu_storage(struct nv04_resource *buf)
- 
+
     if (buf->mm)
        release_allocation(&buf->mm, buf->fence);
 +   if (buf->fence)
 +      pipe_mutex_unlock(buf->fence->screen->push_mutex);
- 
+
     if (buf->domain == NOUVEAU_BO_VRAM)
        NOUVEAU_DRV_STAT_RES(buf, buf_obj_current_bytes_vid, -(uint64_t)buf->base.width0);
 diff --git a/src/gallium/drivers/nouveau/nv50/nv50_miptree.c b/src/gallium/drivers/nouveau/nv50/nv50_miptree.c
@@ -27,7 +45,7 @@ index 7450119..38e4faf 100644
 @@ -163,10 +163,13 @@ nv50_miptree_destroy(struct pipe_screen *pscreen, struct pipe_resource *pt)
  {
     struct nv50_miptree *mt = nv50_miptree(pt);
- 
+
 -   if (mt->base.fence && mt->base.fence->state < NOUVEAU_FENCE_STATE_FLUSHED)
 +   if (mt->base.fence && mt->base.fence->state < NOUVEAU_FENCE_STATE_FLUSHED) {
 +      pipe_mutex_lock(nouveau_screen(pscreen)->push_mutex);
@@ -37,7 +55,7 @@ index 7450119..38e4faf 100644
 +   } else {
        nouveau_bo_ref(NULL, &mt->base.bo);
 +   }
- 
+
     nouveau_fence_ref(NULL, &mt->base.fence);
     nouveau_fence_ref(NULL, &mt->base.fence_wr);
 diff --git a/src/gallium/drivers/nouveau/nv50/nv50_query_hw.c b/src/gallium/drivers/nouveau/nv50/nv50_query_hw.c
@@ -75,4 +93,4 @@ index f2584cb..4b51a67 100644
 +         }
        }
     }
-if (size) {
+    if (size) {
