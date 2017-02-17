@@ -13,8 +13,8 @@ from pisi.actionsapi import pythonmodules
 shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
-    shelltools.system("./bootstrap.py") 
-    shelltools.system("python waf configure --prefix=/usr  --confdir=/etc/mpv --enable-zsh-comp --enable-libmpv-shared --enable-cdda")
+    shelltools.system("./bootstrap.py")
+    shelltools.system("python waf configure --prefix=/usr  --confdir=/etc/mpv --enable-zsh-comp --enable-libmpv-shared --enable-cdda --disable-libsmbclient")
 
 def build():
        shelltools.system("python waf build -v")
@@ -22,4 +22,4 @@ def build():
 def install():
     shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
 
-    pisitools.dodoc("Copyright", "RELEASE_NOTES", "README.md", "LICENSE")   
+    pisitools.dodoc("Copyright", "RELEASE_NOTES", "README.md", "LICENSE")
