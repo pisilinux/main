@@ -1,0 +1,21 @@
+Description: Fix waf support for PIE
+Origin: vendor
+Debian-Bug: https://bugs.debian.org/799738
+Forwarded: not-needed
+Author: Simon Ruderich <simon@ruderich.org>
+Reviewed-by: Alessandro Ghedini <ghedo@debian.org>
+Last-Update: 2015-09-24
+
+--- a/waflib/Context.py
++++ b/waflib/Context.py
+@@ -140,6 +140,10 @@
+ 	def exec_command(self,cmd,**kw):
+ 		subprocess=Utils.subprocess
+ 		kw['shell']=isinstance(cmd,str)
++		# FIXME: hacky solution to fix PIC-PIE-conflict
++		if '-shared' in cmd:
++			Logs.debug('runner: old %r'%(cmd,))
++			cmd = [x for x in cmd if x != '-fPIE' and x != '-pie']
+ 		Logs.debug('runner: %r'%(cmd,))
+ 		Logs.debug('runner_env: kw=%s'%kw)
+ 		if self.logger:
