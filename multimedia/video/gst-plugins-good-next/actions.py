@@ -8,9 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.configure("--disable-static \
-                         --enable-experimental \
-                         --with-package-name='PisiLinux gstreamer-plugins-good package' \
+    autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-good package' \
                          --with-package-origin='http://www.pisilinux.org'")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")

@@ -9,11 +9,9 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.configure("--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
-                         --disable-static --enable-experimental --enable-gtk-doc \
+    autotools.configure("--prefix=/usr \
                          --with-package-name='GStreamer VAAPI Plugins (Pisi Linux)' \
-                         --with-package-origin='http://www.pisilinux.org/' \
-                         --with-gtk=3.0")
+                         --with-package-origin='http://www.pisilinux.org/'")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
