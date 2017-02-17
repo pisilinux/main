@@ -1,0 +1,71 @@
+<PISI>
+    <Source>
+        <Name>speexdsp</Name>
+        <Homepage>https://www.speex.org/</Homepage>
+        <Packager>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>DSP library derived from Speex.</Summary>
+        <Description>DSP library derived from Speex</Description>
+        <BuildDependencies>
+            <Dependency>glibc-devel</Dependency>
+        </BuildDependencies>
+        <Archive sha1sum="818403a21ec428feb39fe58f6cb6836d595e639b" type="targz">http://downloads.xiph.org/releases/speex/speexdsp-1.2rc3.tar.gz</Archive>
+        <Patches>
+            <Patch level="1">speexdsp-fixbuilds-774c87d.patch</Patch>
+        </Patches>
+    </Source>
+    
+    <Package>
+        <Name>speexdsp</Name>
+        <Summary>DSP library derived from Speex.</Summary>
+        <RuntimeDependencies>
+            <Dependency>glibc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libspeexdsp*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>speexdsp-devel</Name>
+        <Summary>Development files for speexdsp</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">speexdsp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>speexdsp-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for speexdsp</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">speexdsp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/libspeexdsp*</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2017-02-17</Date>
+            <Version>1.2_rc3</Version>
+            <Comment>First release</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
