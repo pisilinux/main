@@ -6,15 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
     # dont waste time building examples, docs and tests
     pisitools.dosed("Makefile.in", " tests examples docs")
     
-    shelltools.system("./autogen.sh")
-
     autotools.configure("--disable-static")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
