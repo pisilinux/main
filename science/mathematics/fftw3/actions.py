@@ -9,14 +9,14 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir="fftw-%s" % get.srcVERSION()
+WorkDir="fftw-%s-pl1" % get.srcVERSION()
 
 def setup():
     autotools.autoreconf("-fi")
 
-    shelltools.copytree("../fftw-%s" % get.srcVERSION(), "../fftw-%s-double" % get.srcVERSION())
-    shelltools.copytree("../fftw-%s" % get.srcVERSION(), "../fftw-%s-long-double" % get.srcVERSION())
-    shelltools.copytree("../fftw-%s" % get.srcVERSION(), "../fftw-%s-quad" % get.srcVERSION())
+    shelltools.copytree("../fftw-%s-pl1" % get.srcVERSION(), "../fftw-%s-double" % get.srcVERSION())
+    shelltools.copytree("../fftw-%s-pl1" % get.srcVERSION(), "../fftw-%s-long-double" % get.srcVERSION())
+    shelltools.copytree("../fftw-%s-pl1" % get.srcVERSION(), "../fftw-%s-quad" % get.srcVERSION())
 
     autotools.configure("--enable-sse \
                          --enable-shared \
@@ -88,7 +88,7 @@ def install():
     shelltools.cd("../fftw-%s-quad" % get.srcVERSION())
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    shelltools.cd("../fftw-%s" % get.srcVERSION())
+    shelltools.cd("../fftw-%s-pl1" % get.srcVERSION())
 
     pisitools.dohtml("doc/html/*")
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "TODO", "CONVENTIONS")
