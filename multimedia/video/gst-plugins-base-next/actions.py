@@ -11,20 +11,13 @@ from pisi.actionsapi import get
 
 
 def setup():
-    #autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static \
-                         --enable-experimental \
-                         --with-package-name='PisiLinux gstreamer-plugins-base package' \
+    autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-base package' \
                          --with-package-origin='http://www.pisilinux.org'")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
-
-# tests fail sandbox
-#def check():
-#    autotools.make("-C tests/check check")
 
 def install():
     autotools.install()

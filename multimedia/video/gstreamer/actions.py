@@ -16,17 +16,11 @@ def setup():
 
     options = '--with-package-name="GStreamer for PisiLinux" \
                --with-package-origin="http://www.pisilinux.org" \
-               --enable-nls \
-               --disable-dependency-tracking \
-               --disable-examples \
-               --enable-introspection \
-               --disable-static \
-               --disable-rpath \
-               --disable-valgrind \
                --disable-gtk-doc'
 
     if get.buildTYPE() == "emul32":
         options += " --bindir=/usr/bin32 \
+                     --libdir=/usr/lib32 \
                      --libexecdir=/usr/libexec32 \
                      --disable-introspection"
 

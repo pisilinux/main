@@ -10,26 +10,13 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("AUTOPOINT", "true")
-    shelltools.export("NOCONFIGURE", "1")
-    shelltools.system("./autogen.sh")
-    autotools.autoreconf("-vi")
-
-    autotools.configure("--disable-static \
-                         --disable-experimental \
-                         --with-package-name='PisiLinux gstreamer-plugins-bad package' \
-                         --with-package-origin='http://www.pisilinux.org' \
-                         --with-gtk=3.0")
+    autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-bad package' \
+                         --with-package-origin='http://www.pisilinux.org'")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ") 
 
 def build():
     autotools.make()
-
-#FIXME: tests now tries to 
-#def check():
-#    # for sandbox violations
-#    autotools.make("-C tests/check check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())

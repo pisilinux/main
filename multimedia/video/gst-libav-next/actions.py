@@ -9,11 +9,9 @@ from pisi.actionsapi import pisitools
 
 
 def setup():
-    #autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static \
-                         --with-libav-extra-configure='--enable-runtime-cpudetect' \
-                         --with-package-name='PisiLinux gst-libav package' \
-                         --with-package-origin='http://www.pisilinux.org'")
+    autotools.configure("--with-package-name='PisiLinux gst-libav package' \
+                         --with-package-origin='http://www.pisilinux.org' \
+                         --enable-ffmpeg")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ") 
 

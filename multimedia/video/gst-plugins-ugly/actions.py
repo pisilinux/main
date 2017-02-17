@@ -11,24 +11,18 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("AUTOPOINT", "true")
-    autotools.autoreconf("-vfi")
+    pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
 
-    # sidplay is in contrib.
-    autotools.configure("--disable-static \
-                         --disable-rpath \
-                         --disable-sidplay \
-                         --with-package-name=\"PisiLinux gstreamer-plugins-ugly package\" \
+    shelltools.export("NOCONFIGURE", "1")
+    shelltools.system("./autogen.sh")
+
+    autotools.configure("--with-package-name=\"PisiLinux gstreamer-plugins-ugly package\" \
                          --with-package-origin=\"http://www.pisilinux.org/eng\"")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
-
-# causes sandbox violations
-#def check():
-#    # causes sandbox violation
-#    autotools.make("-C tests/check check")
 
 def install():
     autotools.install()

@@ -14,18 +14,13 @@ def setup():
     pisitools.dosed("autogen.sh", "tool_run.*autopoint --force.*")
 
     pisitools.dosed("ext/modplug/gstmodplug.cc", "stdafx.h", "libmodplug/stdafx.h")
+    pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
 
     shelltools.export("NOCONFIGURE", "1")
     shelltools.system("./autogen.sh")
 
-    autotools.configure("--disable-static \
-                         --disable-examples \
-                         --disable-gtk-doc \
-                         --disable-rpath \
-                         --with-package-name='PisiLinux gstreamer-plugins-bad package' \
-                         --with-package-origin='http://www.pisilinux.org' \
-                         --disable-experimental \
-                         --disable-assrender")
+    autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-bad package' \
+                         --with-package-origin='http://www.pisilinux.org'")
 
     # for fix unused dependency
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
@@ -33,11 +28,6 @@ def setup():
 
 def build():
     autotools.make()
-
-#FIXME: tests now tries to 
-#def check():
-#    # for sandbox violations
-#    autotools.make("-C tests/check check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
