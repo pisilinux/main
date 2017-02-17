@@ -15,7 +15,6 @@ def setup():
     autotools.configure("--disable-static \
                          --disable-example-progs \
                          --enable-cpp-progs \
-                         --disable-rpath \
                          --with-cd-paranoia-name=libcdio-paranoia")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -24,6 +23,6 @@ def build():
     autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % (get.installDIR()))
+    autotools.rawInstall("-j1 DESTDIR=%s" % (get.installDIR()))
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README", "THANKS")
