@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("PYTHON", "/usr/bin/python3.4")
+    shelltools.export("PYTHON", "/usr/bin/python3.6")
     autotools.autoreconf("-vfi")
     autotools.configure("--disable-static")
     
