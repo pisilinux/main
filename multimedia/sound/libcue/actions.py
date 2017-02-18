@@ -4,16 +4,17 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr")
 
 def build():
-    autotools.make()
+    cmaketools.make()
 
 def install():
-    autotools.install()
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS")
+    pisitools.dodoc("LICENSE", "ChangeLog", "README*")
