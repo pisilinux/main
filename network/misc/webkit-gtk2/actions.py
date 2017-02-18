@@ -32,8 +32,7 @@ def setup():
                         --enable-geolocation \
                         --enable-glx \
                         --enable-webgl \
-                        --with-gnu-ld \
-                        --with-gstreamer=1.0 \
+                        --with-gnu-ld \                        
                         --with-gtk=2.0 \
                         --enable-x11-target \
                         --enable-video \
