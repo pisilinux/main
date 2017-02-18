@@ -21,5 +21,4 @@ def build():
 def install():
     autotools.rawInstall('DESTDIR="%s" libdir=/usr/lib' % get.installDIR())
 
-    pisitools.insinto("/%s/%s" % (get.docDIR(), get.srcNAME()), "doc/html")
     pisitools.dodoc("LICENSE.txt", "README.txt")
