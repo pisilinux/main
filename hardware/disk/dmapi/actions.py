@@ -13,6 +13,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("OPTIMIZER", get.CFLAGS())
     shelltools.export("DEBUG", "-DNDEBUG")
+    pisitools.cflags.add("-fPIC")
 
     autotools.autoconf()
     autotools.configure("--libexecdir=/usr/lib \
