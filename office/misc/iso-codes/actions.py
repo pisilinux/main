@@ -18,4 +18,4 @@ def install():
     pisitools.domove("/usr/share/pkgconfig/iso-codes.pc","/usr/lib/pkgconfig")
     pisitools.removeDir("/usr/share/pkgconfig")
 
-    pisitools.dodoc("ChangeLog","LICENSE", "README", "TODO")
+    pisitools.dodoc("ChangeLog","TODO")
