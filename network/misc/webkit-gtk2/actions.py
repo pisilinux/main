@@ -22,7 +22,7 @@ docs = ["AUTHORS", "ChangeLog", "COPYING.LIB", "THANKS", \
 def setup():
     shelltools.export("CFLAGS", cflags)
     shelltools.export("CXXFLAGS", cxxflags)
-    autotools.configure("\
+    autotools.configure("--prefix=/usr \
                         --libexecdir=/usr/lib/WebKitGTK \
                         --disable-static \
                         --disable-webkit2 \
