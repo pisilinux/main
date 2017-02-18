@@ -1,0 +1,24 @@
+From: Jeff Mahoney <jeffm@suse.com>
+Subject: dmapi: add missing includes to handle2path
+
+The update to xfsprogs 4.2.0 removed some includes from its own headers, so
+those headers need to be added manually to dmapi.
+
+Signed-off-by: Jeff Mahoney <jeffm@suse.com>
+---
+ libdm/dm_handle2path.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/libdm/dm_handle2path.c
++++ b/libdm/dm_handle2path.c
+@@ -16,6 +16,10 @@
+  * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+ 
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <string.h>
++#include <unistd.h>
+ #include <dmapi.h>
+ #include <dmapi_kern.h>
+ #include "dmapi_lib.h"
