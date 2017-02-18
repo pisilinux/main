@@ -32,13 +32,12 @@ def setup():
                         --enable-geolocation \
                         --enable-glx \
                         --enable-webgl \
-                        --with-gnu-ld \                        
+                        --with-gnu-ld \
                         --with-gtk=2.0 \
                         --enable-x11-target \
                         --enable-video \
                         --enable-web-audio \
-                        --enable-introspection \
-                        ")
+                        --enable-introspection")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
