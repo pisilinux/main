@@ -11,6 +11,8 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
+    shelltools.system("sh autogen.sh")
+    
     autotools.configure("--prefix=/usr \
                          --sysconfdir=/etc \
                          --localstatedir=/var \
