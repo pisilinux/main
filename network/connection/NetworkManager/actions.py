@@ -12,10 +12,10 @@ from pisi.actionsapi import shelltools
 
 def setup():
     # /var/run => /run
-    for f in ["configure.ac", "src/Makefile.am", "src/Makefile.in"]:
-        pisitools.dosed(f, "\$\(?localstatedir\)?(\/run\/(\$PACKAGE|NetworkManager))", "\\1")
-    pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
-    pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
+    # for f in ["configure.ac", "src/Makefile.am", "src/Makefile.in"]:
+    #    pisitools.dosed(f, "\$\(?localstatedir\)?(\/run\/(\$PACKAGE|NetworkManager))", "\\1")
+    # pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
+    # pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
     autotools.autoreconf("-fi")
     shelltools.system("intltoolize --force --copy --automake")
 
@@ -30,6 +30,8 @@ def setup():
                          --enable-ppp=yes \
                          --enable-bluez5=yes \
                          --enable-concheck \
+                         --enable-vala=yes \
+                         --enable-json-validation \
                          --without-netconfig \
                          --with-modem-manager-1 \
                          --with-libsoup=yes \
@@ -49,6 +51,8 @@ def setup():
                          --with-dnsmasq=/usr/sbin/dnsmasq \
                          --with-systemdsystemunitdir=no \
                          --with-nmtui \
+                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7 \
+                         --without-valgrind \
                          --localstatedir=/var \
                          --sysconfdir=/etc \
                          --libexecdir=/usr/lib/NetworkManager \
