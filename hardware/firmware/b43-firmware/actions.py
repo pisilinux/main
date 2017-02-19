@@ -7,10 +7,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
-WorkDir = "broadcom-wl-%s" % get.srcVERSION()
+#WorkDir = "broadcom-wl-%s" % get.srcVERSION()
 
 def install():
     pisitools.dodir("/lib/firmware")
 
-    for obj in ("../wl_apsta-3.130.20.0.o", "linux/wl_apsta.o"):
+    for obj in ("wl_apsta-3.130.20.0.o", "broadcom-wl-6.30.163.46.wl_apsta.o"):
         shelltools.system("b43-fwcutter -w %s/lib/firmware %s" % (get.installDIR(), obj))
