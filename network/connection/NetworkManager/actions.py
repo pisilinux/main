@@ -22,16 +22,22 @@ def setup():
     autotools.configure("--disable-static \
                          --disable-silent-rules \
                          --disable-wimax \
-                         --disable-lto \
-                         --disable-config-plugin-ibft \
+                         --disable-ifcfg-rh \
+                         --disable-ifcfg-suse \
                          --disable-ifnet \
+                         --disable-ifupdown \
+                         --disable-lto \
                          --disable-more-warnings \
+                         --enable-wifi \
                          --enable-modify-system \
                          --enable-ppp=yes \
-                         --enable-bluez5=yes \
+                         --enable-bluez5-dun \
                          --enable-concheck \
+                         --enable-config-plugin-ibft \
                          --enable-vala=yes \
                          --enable-json-validation \
+                         --enable-polkit \
+                         --enable-polkit-agent \
                          --without-netconfig \
                          --with-modem-manager-1 \
                          --with-libsoup=yes \
@@ -39,16 +45,13 @@ def setup():
                          --with-suspend-resume=upower \
                          --with-system-ca-path=/etc/ssl/certs \
                          --with-crypto=nss \
-                         --with-dhcpcd=/sbin/dhcpcd \
+                         --with-config-dhcp-default=/usr/sbin/dhcpcd \
                          --with-pppd=/usr/sbin/pppd \
-                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.6 \
                          --with-dbus-sys-dir=/etc/dbus-1/system.d \
-                         --with-dhclient=/usr/sbin/dhclient \
                          --with-kernel-firmware-dir=/lib/firmware \
                          --with-udev-dir=/lib/udev \
                          --with-resolvconf=/etc/resolv.default.conf \
                          --with-iptables=/usr/sbin/iptables \
-                         --with-dnsmasq=/usr/sbin/dnsmasq \
                          --with-systemdsystemunitdir=no \
                          --with-nmtui \
                          --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7 \
