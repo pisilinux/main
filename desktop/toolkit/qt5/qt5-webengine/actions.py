@@ -13,8 +13,8 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("QT5LINK", "/usr/lib/qt5/bin")
     shelltools.export("QT5DIR", "/usr/lib/qt5")
-    shelltools.export("CFLAGS", "%s -I/usr/lib/sqlite3.11.0.0" % get.CFLAGS())
-    shelltools.system("qmake-qt5 WEBENGINE_CONFIG+=use_proprietary_codecs qtwebengine.pro")
+    shelltools.export("CFLAGS", "%s -I/usr/lib/sqlite3.16.2" % get.CFLAGS())
+    shelltools.system("qmake-qt5 WEBENGINE_CONFIG+=use_proprietary_codecs use_system_ffmpeg use_system_icu qtwebengine.pro")
     
 def build():
     qt5.make()
