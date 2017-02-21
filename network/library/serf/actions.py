@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import scons
 
 def build():
-    scons.make("PREFIX=/usr/ LIBDIR=/usr/lib")
+    scons.make("PREFIX=/usr/ LIBDIR=/usr/lib GSSAPI=/usr/bin/krb5-config")
 
 def install():
     pisitools.insinto("/usr/include/serf-1/", "serf*.h")
