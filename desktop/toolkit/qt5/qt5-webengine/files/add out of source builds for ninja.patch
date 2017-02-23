@@ -1,0 +1,55 @@
+From e70b59112104b72e794c20f7c715482809780d32 Mon Sep 17 00:00:00 2001
+From: Michal Klocek <michal.klocek@theqtcompany.com>
+Date: Thu, 20 Oct 2016 13:09:01 +0200
+Subject: [PATCH] Add out of source builds for ninja bootstrap
+
+Instead of coping the src ninja files to shadow dir,
+do out of source build.
+
+Change-Id: I00c577e5def66c0415681deab63b7c7947a39200
+Reviewed-by: Oswald Buddenhagen <oswald.buddenhagen@qt.io>
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+---
+ tools/qmake/mkspecs/features/functions.prf | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/tools/qmake/mkspecs/features/functions.prf b/tools/qmake/mkspecs/features/functions.prf
+index 94aa617..3741529 100644
+--- a/tools/qmake/mkspecs/features/functions.prf
++++ b/tools/qmake/mkspecs/features/functions.prf
+@@ -264,28 +264,17 @@ defineReplace(findOrBuildNinja) {
+   !exists($$out) {
+     src_3rd_party_dir = $$absolute_path("$${getChromiumSrcDir()}/../", "$$QTWEBENGINE_ROOT")
+ 
+-    out = $$shadowed($$absolute_path("ninja/ninja", "$$src_3rd_party_dir"))
++    out = $$shadowed($$absolute_path(ninja/ninja, $$src_3rd_party_dir))
+     win32: out = $${out}.exe
+ 
+-    out = $$system_path($$out)
+     # If we did not find ninja, then we bootstrap it.
+     !exists($$out) {
+-      # If we are making a shadow build, copy the ninja sources to the build directory.
+-      !equals(PWD, $${OUT_PWD}) {
+-        log("Build directory is different from source directory - copying ninja sources to the build tree...")
+-        shadow_3rd_party_path = $$system_path($$shadowed($$src_3rd_party_dir))
+-
+-        !exists($$dirname(out)): mkpath($$dirname(out))
+-        copy_dir_files {
+-          system("$$QMAKE_COPY_DIR $$system_quote($$system_path($$absolute_path("ninja", "$$src_3rd_party_dir"))) $$system_quote($$dirname(out))")
+-        } else {
+-          system("$$QMAKE_COPY_DIR $$system_quote($$system_path($$absolute_path("ninja", "$$src_3rd_party_dir"))) $$system_quote($$shadow_3rd_party_path)")
+-        }
+-      }
+-      system("cd $$system_quote($$dirname(out)) && python configure.py --bootstrap")
++      mkpath($$dirname(out))
++      ninja_configure = $$absolute_path(ninja/configure.py, $$src_3rd_party_dir)
++      system("cd $$system_quote($$system_path($$dirname(out))) && python $$system_quote($$system_path($$ninja_configure)) --bootstrap")
+     }
+   }
+-  return($$out)
++  return($$system_path($$out))
+ }
+ 
+ defineTest(skipBuild) {
+-- 
+2.7.4 
