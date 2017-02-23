@@ -11,13 +11,13 @@ from pisi.actionsapi import get
 
 
 def build():
-    shelltools.system("python bootstrap.py")
+    shelltools.system("python configure.py --bootstrap")
     shelltools.system("asciidoc doc/manual.asciidoc")
-    shelltools.system("emacs -Q --batch -f batch-byte-compile misc/ninja-mode.el")
+    #shelltools.system("emacs -Q --batch -f batch-byte-compile misc/ninja-mode.el")
 
 def check():
     #needs new package gtest -> ignore it for now
-    shelltools.system("python ./configure.py --with-gtest=/usr/share/gtest")
+    shelltools.system("python ./configure.py")
     shelltools.system("./ninja ninja_test")
     shelltools.system("./ninja_test --gtest_filter=-SubprocessTest.SetWithLots")
 
