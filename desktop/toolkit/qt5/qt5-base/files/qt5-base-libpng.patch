@@ -1,0 +1,33 @@
+--- qtbase-opensource-src-5.7.1/src/src.pro.orig	2016-10-05 19:33:26.000000000 +0200
++++ qtbase-opensource-src-5.7.1/src/src.pro	2016-11-09 12:31:35.781935319 +0100
+@@ -135,8 +135,10 @@
+ contains(QT_CONFIG, zlib)|cross_compile {
+     SUBDIRS += src_qtzlib
+     contains(QT_CONFIG, zlib) {
+-        src_3rdparty_libpng.depends += src_corelib
+-        src_3rdparty_freetype.depends += src_corelib
++        !contains(QT_CONFIG, system-png) {
++            src_3rdparty_libpng.depends += src_corelib
++            src_3rdparty_freetype.depends += src_corelib
++        }
+     }
+ }
+ SUBDIRS += src_tools_bootstrap src_tools_moc src_tools_rcc
+@@ -167,10 +169,13 @@
+         SUBDIRS += src_angle
+         src_gui.depends += src_angle
+     }
+-    contains(QT_CONFIG, png) {
+-        SUBDIRS += src_3rdparty_libpng
+-        src_3rdparty_freetype.depends += src_3rdparty_libpng
+-        src_gui.depends += src_3rdparty_libpng
++
++    !contains(QT_CONFIG, system-png) {
++        contains(QT_CONFIG, png) {
++            SUBDIRS += src_3rdparty_libpng
++            src_3rdparty_freetype.depends += src_3rdparty_libpng
++            src_gui.depends += src_3rdparty_libpng
++        }
+     }
+     contains(QT_CONFIG, freetype) {
+         SUBDIRS += src_3rdparty_freetype 
