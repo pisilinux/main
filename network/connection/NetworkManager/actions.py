@@ -11,12 +11,7 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    # /var/run => /run
-    # for f in ["configure.ac", "src/Makefile.am", "src/Makefile.in"]:
-    #    pisitools.dosed(f, "\$\(?localstatedir\)?(\/run\/(\$PACKAGE|NetworkManager))", "\\1")
-    # pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
-    # pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
-    autotools.autoreconf("-fi")
+    autotools.autoreconf("-fiv")
     shelltools.system("intltoolize --force --copy --automake")
 
     autotools.configure("--disable-static \
@@ -28,6 +23,7 @@ def setup():
                          --disable-ifupdown \
                          --disable-lto \
                          --disable-more-warnings \
+                         --enable-introspection \
                          --enable-wifi \
                          --enable-modify-system \
                          --enable-ppp=yes \
@@ -45,7 +41,7 @@ def setup():
                          --with-suspend-resume=upower \
                          --with-system-ca-path=/etc/ssl/certs \
                          --with-crypto=nss \
-                         --with-config-dhcp-default=/usr/sbin/dhcpcd \
+                         --with-config-dhcp-default=/usr/bin/dhcpcd \
                          --with-pppd=/usr/sbin/pppd \
                          --with-dbus-sys-dir=/etc/dbus-1/system.d \
                          --with-kernel-firmware-dir=/lib/firmware \
@@ -59,9 +55,11 @@ def setup():
                          --localstatedir=/var \
                          --sysconfdir=/etc \
                          --libexecdir=/usr/lib/NetworkManager \
-                        ")
+                         --with-dhcpcd=/usr/bin/dhcpcd \
+                         --without-dhclient \
+                        " )
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", "-shared", "-Wl, --as-needed -shared")
 
 def build():
     autotools.make()
