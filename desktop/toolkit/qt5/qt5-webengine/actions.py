@@ -28,4 +28,4 @@ def install():
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
        pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
-    pisitools.dodoc("LICENSE.LGPLv3")
+    pisitools.dodoc("LICENSE.LGPL3")
