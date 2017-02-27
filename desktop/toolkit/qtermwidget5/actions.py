@@ -27,4 +27,4 @@ def install():
     pisitools.removeDir("/usr/lib64")
 
     shelltools.cd("..")
-    pisitools.dodoc("AUTHORS", "README", "COPYING")
+    pisitools.dodoc("AUTHORS", "README")
