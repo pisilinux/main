@@ -27,4 +27,4 @@ def install():
 
     pisitools.dosym("/usr/share/fonts/dejavu" , "/etc/X11/fontpath.d/dejavu")
 
-    pisitools.dodoc("AUTHORS", "LICENSE", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "LICENSE", "NEWS", "README.md")
