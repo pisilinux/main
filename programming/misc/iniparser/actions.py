@@ -19,4 +19,4 @@ def install():
     pisitools.dodir("/usr/include")
     pisitools.insinto("/usr/include", "src/*.h")
 
-    pisitools.dodoc("README", "AUTHORS", "LICENSE")
+    pisitools.dodoc("README.md", "AUTHORS", "LICENSE")
