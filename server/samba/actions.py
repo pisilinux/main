@@ -60,4 +60,4 @@ def install():
     pisitools.dosym("samba-4.0/libsmbclient.h", "/usr/include/libsmbclient.h")
     
     # remove unneeded files
-    pisitools.removeDir("/usr/share/ctdb-tests")
+    pisitools.removeDir("/usr/share/ctdb")
