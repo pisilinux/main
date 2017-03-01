@@ -13,8 +13,8 @@ from pisi.actionsapi import get
 
 def setup():
     #shelltools.system("sh build/gnuauto/setup.sh")
-    autotools.configure("--disable-static \
-                         --includedir=%s/usr/include/tidy " % get.installDIR())
+    autotools.configure("--disable-static")
+                         #--includedir=%s/usr/include/" % get.installDIR())
 
 def build():
     autotools.make()
