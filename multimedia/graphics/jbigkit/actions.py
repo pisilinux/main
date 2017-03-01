@@ -16,7 +16,7 @@ def check():
 
 def install():
     pisitools.insinto("/usr/include/", "libjbig/jbig*.h")
-    pisitools.insinto("/usr/lib/", "libjbig/libjbig*.so")
+    pisitools.insinto("/usr/lib/", "libjbig/libjbig*.so*")
     pisitools.insinto("/usr/bin/", "pbmtools/jbgtopbm")
     pisitools.insinto("/usr/bin/", "pbmtools/pbmtojbg")
     pisitools.insinto("/usr/bin/", "pbmtools/jbgtopbm85")
