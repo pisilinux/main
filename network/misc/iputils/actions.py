@@ -10,12 +10,12 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
-    autotools.make("USE_GNUTLS=no CCOPT='%s -fpie' CC=%s" % (get.CFLAGS(), get.CC()))
+    autotools.make("USE_NETTLE=no USE_GNUTLS=no CCOPT='%s -fpie' CC=%s" % (get.CFLAGS(), get.CC()))
 
 def install():
     pisitools.dobin("ping")
 
-    for app in ["clockdiff", "rarpd", "tftpd", "arping", "rdisc", "tracepath", "tracepath6", "traceroute6"]:
+    for app in ["clockdiff", "rarpd", "tftpd", "arping", "rdisc", "tracepath", "traceroute6"]:
         pisitools.dosbin(app)
 
     # We will not need these if we set cap on postInstall like Fedora
