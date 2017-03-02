@@ -17,8 +17,8 @@ def setup():
                                     --qsci-api \
                                     --sip /usr/bin/sip \
                                     --qmake='/usr/bin/qmake-qt5' \
-                                    --destdir='/usr/lib/python3.4/site-packages' \
-                                    --sip-incdir='/usr/include/python3.4m' \
+                                    --destdir='/usr/lib/python3.6/site-packages' \
+                                    --sip-incdir='/usr/include/python3.6m' \
                                     CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
