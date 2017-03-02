@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    # autotools.autoreconf("-vif")
+    autotools.autoreconf("-vif")
     autotools.configure("--disable-static \
                          --without-docdir")
                          #FIXME: documentation is temporarily disabled since update release 7.
@@ -20,8 +20,8 @@ def setup():
 def build():
     autotools.make()
 
-def check():
-    autotools.make("check")
+#def check():
+    #autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
