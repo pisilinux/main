@@ -20,4 +20,3 @@ def check():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.rename("/usr/share/doc/libqalculate-%s" % get.srcVERSION(), "libqalculate")
