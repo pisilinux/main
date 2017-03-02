@@ -16,4 +16,4 @@ def build():
 def install():
     autotools.install()
 
-    pisitools.dodoc("README*", "gpl.txt")
+    pisitools.dodoc("NEWS", "README*")
