@@ -31,6 +31,7 @@ def setup():
                          --enable-xvfb \
                          --enable-xnest \
                          --enable-kdrive \
+                         --enable-xfont \
                          --enable-kdrive-evdev \
                          --enable-kdrive-kbd \
                          --enable-kdrive-mouse \
