@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>clucene</Name>
+        <Homepage>http://clucene.sourceforge.net</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <License>Apache-2.0</License>
+        <IsA>library</IsA>
+        <Summary>A high-performance indexing and searching API</Summary>
+        <Description>CLucene is a high-performance, scalable, cross platform, full-featured, open-source indexing and searching API. It is written in C++.</Description>
+        <Archive sha1sum="76d6788e747e78abb5abf8eaad78d3342da5f2a4" type="targz">http://downloads.sourceforge.net/clucene/clucene-core-2.3.3.4.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>zlib-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!--Gentoo-->
+            <Patch>clucene-2.3.3.4-gcc6.patch</Patch>
+            <!--Fedora-->
+            <Patch>clucene-core-2.3.3.4-pkgconfig.patch</Patch>
+            <Patch>clucene-2.3.3.4-contribs_lib-1.patch</Patch>
+            <Patch>fix_zlib_detections.diff</Patch>
+            <Patch>clucene-core-2.3.3.4-usleep.patch</Patch>
+            <!--LibreOffice-->
+            <Patch>clucene-warnings.patch</Patch>
+            <Patch>clucene-gcc-atomics.patch</Patch>
+            <Patch>clucene-debug.patch</Patch>
+            <Patch>clucene-narrowing-conversions.patch</Patch>
+            <Patch>clucene-multimap-put.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>clucene</Name>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>clucene-devel</Name>
+        <Summary>Development files for clucene</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">clucene</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2017-03-02</Date>
+            <Version>2.3.3.4</Version>
+            <Comment>First Release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
