@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 WorkDir = "sip-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.4m\/Python.h/g' {} \;")
+    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.6m\/Python.h/g' {} \;")
     pythonmodules.run('configure.py CFLAGS="%s" CXXFLAGS="%s"' % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
                         
 
