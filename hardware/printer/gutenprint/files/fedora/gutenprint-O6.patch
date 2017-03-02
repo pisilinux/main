@@ -1,7 +1,7 @@
-diff -up gutenprint-5.2.7/configure.ac.O6 gutenprint-5.2.7/configure.ac
---- gutenprint-5.2.7/configure.ac.O6	2011-05-02 03:20:49.000000000 +0200
-+++ gutenprint-5.2.7/configure.ac	2011-05-05 12:40:29.000000000 +0200
-@@ -625,27 +625,6 @@ AH_TEMPLATE(PKGMODULEDIR,, [Package modu
+diff -up gutenprint-5.2.12-pre3/configure.ac.O6 gutenprint-5.2.12-pre3/configure.ac
+--- gutenprint-5.2.12-pre3/configure.ac.O6	2016-10-14 10:41:54.290398824 +0200
++++ gutenprint-5.2.12-pre3/configure.ac	2016-10-14 10:44:04.921328215 +0200
+@@ -638,27 +638,6 @@ AH_TEMPLATE(PKGMODULEDIR,, [Package modu
  PKGMODULEDIR="${PACKAGE_LIB_DIR}/${GUTENPRINT_RELEASE_VERSION}/modules"
  AC_DEFINE_UNQUOTED(PKGMODULEDIR, ["$PKGMODULEDIR"])
  
@@ -9,7 +9,7 @@ diff -up gutenprint-5.2.7/configure.ac.O6 gutenprint-5.2.7/configure.ac
 -if test x$ac_compiler_gnu = "xyes"; then
 -  STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072],, [GNUCFLAGS])
 -  if test x${USE_MAINTAINER_MODE} = xyes ; then
--    STP_ADD_COMPILER_ARGS([-pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
+-    STP_ADD_COMPILER_ARGS([-D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
 -  fi
 -  if test x$ENABLE_DEBUG = xyes ; then
 -    STP_ADD_COMPILER_ARG([-g])
@@ -29,10 +29,10 @@ diff -up gutenprint-5.2.7/configure.ac.O6 gutenprint-5.2.7/configure.ac
  AC_SUBST(GNUCFLAGS)
  
  AH_TEMPLATE([HAVE_GCC_ATTRIBUTES],
-diff -up gutenprint-5.2.7/configure.O6 gutenprint-5.2.7/configure
---- gutenprint-5.2.7/configure.O6	2011-05-02 03:32:21.000000000 +0200
-+++ gutenprint-5.2.7/configure	2011-05-05 12:52:09.000000000 +0200
-@@ -16589,246 +16589,6 @@ cat >>confdefs.h <<_ACEOF
+diff -up gutenprint-5.2.12-pre3/configure.O6 gutenprint-5.2.12-pre3/configure
+--- gutenprint-5.2.12-pre3/configure.O6	2016-10-14 10:41:54.293398800 +0200
++++ gutenprint-5.2.12-pre3/configure	2016-10-14 10:53:25.392709079 +0200
+@@ -17651,246 +17651,6 @@ cat >>confdefs.h <<_ACEOF
  #define PKGMODULEDIR "$PKGMODULEDIR"
  _ACEOF
  
@@ -73,7 +73,7 @@ diff -up gutenprint-5.2.7/configure.O6 gutenprint-5.2.7/configure
 -
 -  if test x${USE_MAINTAINER_MODE} = xyes ; then
 -
--  for stp_ac_arg in -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls ; do
+-  for stp_ac_arg in -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls ; do
 -
 -  { $as_echo "$as_me:${as_lineno-$LINENO}: checking if ${CC} supports ${stp_ac_arg}" >&5
 -$as_echo_n "checking if ${CC} supports ${stp_ac_arg}... " >&6; }
