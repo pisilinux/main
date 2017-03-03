@@ -4,8 +4,6 @@
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
 from pisi.actionsapi import kde5
-from pisi.actionsapi import pisitools
-
 
 
 def setup():
@@ -16,6 +14,3 @@ def build():
 
 def install():
     kde5.install()
-
-
-    #pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "README")
