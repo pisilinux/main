@@ -8,6 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
+    pisitools.ldflags.add("-Wl,-rpath,/usr/lib")
     kde5.configure()
 
 def build():
