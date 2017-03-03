@@ -11,7 +11,14 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("PTHREAD_LIBS", "-lpthread")
+    shelltools.copy("../googletest-release-*/googlemock", "gmock")
+    shelltools.copy("../googletest-release-*/googletest", "googletest")
+    
+    shelltools.system("ln -s ../googletest gmock/gtest")
+    
+    shelltools.export("CC","/usr/bin/clang")
+    shelltools.export("CXX","/usr/bin/clang++")
+    
     shelltools.system("./autogen.sh")
     autotools.autoreconf("-vif")
     autotools.configure("--disable-static")
