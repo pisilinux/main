@@ -11,6 +11,3 @@ import glob
 def install():
     pythonmodules.install(pyVer = "3")
 
-    
-    
-    
