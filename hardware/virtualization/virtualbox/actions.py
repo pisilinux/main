@@ -94,7 +94,7 @@ def install():
     pisitools.dolib("additions/VBoxOGL*")
     pisitools.dosym("../../../VBoxOGL.so", "/usr/lib/xorg/modules/dri/vboxvideo_dri.so")
 
-    pisitools.insinto("/usr/lib/xorg/modules/drivers", "additions/vboxvideo_drv_system.so", "vboxvideo.so")
+    #pisitools.insinto("/usr/lib/xorg/modules/drivers", "additions/vboxvideo_drv_system.so", "vboxvideo.so")
     #pisitools.insinto("/usr/lib/xorg/modules/input",   "additions/vboxmouse_drv_%s.so" % XorgVersion, "vboxmouse_drv.so")
 
     # Python bindings
