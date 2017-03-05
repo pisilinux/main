@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>yali</Name>
+        <Homepage>http://www.pisilinux.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:gui</IsA>
+        <Summary>Yet Another Linux Installer</Summary>
+        <Description>YALI is the graphical installer for PiSi Linux distribution which is written using the Qt framework.</Description>
+        <Archive sha1sum="c162aec1990021c927706d4ad5c97159292c859b" type="targz">https://github.com/forYali/yali/archive/3.0.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>python-qt5</Dependency>
+            <Dependency>e2fsprogs-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!--Patch>no_old_filesdb.patch</Patch-->
+            <Patch>fix_find_device.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>yali</Name>
+        <RuntimeDependencies>
+            <Dependency>python-qt5</Dependency>
+            <Dependency>util-linux</Dependency>
+            <!--<Dependency>gptsync</Dependency> -->
+            <Dependency>mdadm</Dependency>
+            <Dependency>lvm2</Dependency>
+            <Dependency>reiserfsprogs</Dependency>
+            <Dependency>ntfsprogs</Dependency>
+            <Dependency>dosfstools</Dependency>
+            <Dependency>xfsprogs</Dependency>
+            <Dependency>xdm</Dependency>
+            <Dependency>comar</Dependency>
+            <Dependency>panda</Dependency>
+            <Dependency>python-pyaspects</Dependency>
+            <Dependency>pisilinux-python</Dependency>
+            <Dependency>syslinux</Dependency>
+            <Dependency>pyqtermwidget</Dependency>
+            <!-- disable gfx family , find a proper solution for its menu generation -->
+            <!--Dependency>gfxtheme-pisilinux-install</Dependency-->
+            <Dependency>pyparted</Dependency>
+            <Dependency>python-pyblock</Dependency>
+            <Dependency>yali-branding-pisilinux</Dependency>
+            <Dependency>yali-theme-pisilinux</Dependency>
+            <Dependency>python-udev</Dependency>
+            <Dependency>pisilinux-desktop-services</Dependency>
+            <!--
+            pardusman should add locale packages according to the selected languages.
+            IsA tags could be used to decide which packages to be installed.
+            -->
+            <Dependency>glibc-locales-nl</Dependency>
+            <Dependency>glibc-locales-de</Dependency>
+            <Dependency>glibc-locales-es</Dependency>
+            <Dependency>glibc-locales-pt</Dependency>
+            <Dependency>glibc-locales-sv</Dependency>
+            <Dependency>glibc-locales-fr</Dependency>
+            <Dependency>glibc-locales-it</Dependency>
+            <Dependency>glibc-locales-ca</Dependency>
+            <Dependency>glibc-locales-pl</Dependency>
+            <Dependency>glibc-locales-ru</Dependency>
+            <Dependency>glibc-locales-hu</Dependency>
+            <Dependency>glibc-locales-hr</Dependency>
+            <Dependency>droid-fonts</Dependency>
+            <!-- <Dependency>cursor-theme-oxygen-white</Dependency> -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/etc/yali</Path>
+            <Path fileType="data">/lib/udev/rules.d/70-yali.rules</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2017-03-05</Date>
+            <Version>3.0.3</Version>
+            <Comment>First release</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
