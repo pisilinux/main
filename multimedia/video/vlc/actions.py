@@ -27,6 +27,7 @@ def setup():
                             --with-x \
                               LUAC=luac  LUA_LIBS='`pkg-config --libs lua`' \
                               RCC=/usr/bin/rcc-qt5 \
+                            --disable-qt4 \
                             --disable-asdcp \
                             --disable-coverage \
                             --disable-cprof \
