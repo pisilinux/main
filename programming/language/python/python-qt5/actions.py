@@ -32,6 +32,7 @@ def install():
     pisitools.rename("/usr/bin/pylupdate5", "py2lupdate5")
     pisitools.rename("/usr/bin/pyrcc5", "py2rcc5")    
     pisitools.rename("/usr/lib/qt5/plugins/PyQt5/libpyqt5qmlplugin.so", "libpy2qt5qmlplugin.so")
+    pisitools.rename("/usr/lib/qt5/plugins/designer/libpyqt5.so", "libpy2qt5.so")
     pisitools.rename("/usr/share/qt5/qsci/api/python/PyQt5.api", "Py2Qt5.api")
     pisitools.rename("/usr/bin/pyuic5", "py2uic5")    
     pisitools.domove("/usr/share/sip/PyQt5/*", "/usr/share/sip/Py2Qt5")
