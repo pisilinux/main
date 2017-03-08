@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("./autogen.sh")
+    shelltools.export("PTHREAD_LIBS", "-lpthread")
     shelltools.copy("../googletest-release-1.7.0", "gtest")
     autotools.autoreconf("-vif")
     autotools.configure("--disable-static")
