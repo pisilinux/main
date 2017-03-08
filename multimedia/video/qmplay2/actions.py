@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 
 def setup():    
-     qt5.configure("-DUSE_CHIPTUNE_SID=OFF")         
+     qt5.configure()         
     
 
 def build():      
@@ -20,4 +20,4 @@ def build():
 def install():    
     qt5.install()    
 
-    pisitools.dodoc( "README.md", "COPYING", "ChangeLog*")
+    pisitools.dodoc( "README*", "TODO", "ChangeLog*", "AUTHORS")
