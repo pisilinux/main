@@ -6,20 +6,15 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.flags.add("-fomit-frame-pointer", "-ffast-math")
-
-    autotools.configure("--disable-static \
-                         --enable-shared \
-                         --enable-demos \
-                         --with-trimesh=opcode \
-                         --enable-new-trimesh \
-                         --with-drawstuff=X11 \
+    #pisitools.flags.add("-fomit-frame-pointer", "-ffast-math")
+    shelltools.system("./bootstrap")
+    autotools.configure("--enable-shared \
                          --enable-libccd \
-                         --enable-double-precision \
-                         --disable-dependency-tracking")
+                         --enable-double-precision")
 
 def build():
     autotools.make()
