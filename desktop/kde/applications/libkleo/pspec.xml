@@ -14,23 +14,23 @@
         <Description>KDE PIM cryptographic library</Description>
         <Archive sha1sum="70ef57d92cb1dd68885b3d4a2c852c4383ee170e" type="tarxz">mirrors://kde/stable/applications/16.12.0/src/libkleo-16.12.0.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>qt5-base-devel</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-base-devel</Dependency>
             <Dependency>boost-devel</Dependency>
-            <Dependency versionFrom="1.7.1">gpgme-devel</Dependency>
-            <Dependency>qt5-sql-sqlite</Dependency>
-            <Dependency>qt5-sql-mysql</Dependency>
-            <Dependency>qt5-sql-odbc</Dependency>
-            <Dependency>qt5-sql-postgresql</Dependency>
-            <!--<Dependency>prison-qt5-devel</Dependency>-->
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-sql-sqlite</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-sql-mysql</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-sql-odbc</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-sql-postgresql</Dependency>
+            <Dependency>prison-devel</Dependency>
             <Dependency>kmbox-devel</Dependency>
             <Dependency>qt5-phonon-devel</Dependency>
             <Dependency>akonadi-devel</Dependency>
             <Dependency>libical-devel</Dependency>
-            <!--<Dependency>libqjson-devel</Dependency>-->
+            <Dependency>libqjson-devel</Dependency>
             <Dependency>libgpg-error-devel</Dependency>
             <Dependency>libxslt-devel</Dependency>
-            <Dependency versionFrom="2.4.41">openldap-client</Dependency>
-            <Dependency versionFrom="2.1.26">cyrus-sasl-devel</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>cyrus-sasl-devel</Dependency>
             <Dependency>kitemviews-devel</Dependency>
             <Dependency>kio-devel</Dependency>
             <Dependency>kdelibs4-support-devel</Dependency>
@@ -45,15 +45,14 @@
             <Dependency>kcalcore-devel</Dependency>
             <Dependency>kldap-devel</Dependency>
             <Dependency>extra-cmake-modules</Dependency>
-            <Dependency>kpimtextedit-devel</Dependency>
-            <!--<Dependency versionFrom="16.08.3">gpgmepp-devel</Dependency>-->
+            <Dependency>gpgme-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>libkleo</Name>
         <RuntimeDependencies>
-            <Dependency>qt5-base</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-base</Dependency>
             <Dependency>kio</Dependency>
             <Dependency>ki18n</Dependency>
             <Dependency>libgcc</Dependency>
@@ -78,18 +77,30 @@
             <Dependency>kwidgetsaddons</Dependency>
             <Dependency>kdelibs4-support</Dependency>
             <Dependency>qt5-phonon</Dependency>
+            <Dependency>prison</Dependency>
             <Dependency>akonadi</Dependency>
+            <Dependency>gpgme</Dependency>
             <Dependency>kpimtextedit</Dependency>
-            <Dependency versionFrom="1.7.1">gpgme</Dependency>
             <Dependency>kwindowsystem</Dependency>
-            <Dependency versionFrom="2.1.26">cyrus-sasl</Dependency>
+            <Dependency>cyrus-sasl</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc/xdg</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="library">/usr/lib/qt5</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/usr/mkspecs/</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/mime</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="data">/usr/share/kservices5</Path>
+            <Path fileType="data">/usr/share/kservicetypes5</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="data">/usr/share/config.kcfg</Path>
+            <Path fileType="data">/usr/share/kf5</Path>
+            <Path fileType="data">/usr/share/config</Path>
+            <Path fileType="data">/usr/share/akonadi</Path>
+            <Path fileType="data">/usr/share/akonadicontact/grantleetheme/default</Path>
+            <Path fileType="data">/usr/share/libkleopatra</Path>
         </Files>
     </Package>
 
@@ -98,17 +109,26 @@
         <Summary>Development package for libkleo libraries</Summary>
         <Description>Contains development tools and header files for libkleo</Description>
         <RuntimeDependencies>
-            <Dependency>qt5-base-devel</Dependency>
+            <Dependency versionFrom="5.7.1">qt5-base-devel</Dependency>
             <Dependency>boost-devel</Dependency>
             <Dependency release="current">libkleo</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/lib/cmake</Path>
             <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/gpgmepp</Path>
+            <Path fileType="data">/usr/share/kde4/apps/cmake</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2017-03-09</Date>
+            <Version>16.12.0</Version>
+            <Comment>Rebuild for new Toolchain.</Comment>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
         <Update release="5">
             <Date>2016-12-23</Date>
             <Version>16.12.0</Version>
