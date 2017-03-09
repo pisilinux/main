@@ -54,6 +54,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #avoid file conflicts with gegl1.x
+    pisitools.removeDir("/usr/bin")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "COPYING.LESSER", "NEWS", "README")
 
