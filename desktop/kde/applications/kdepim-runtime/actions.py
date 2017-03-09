@@ -7,7 +7,7 @@
 from pisi.actionsapi import kde5
 
 def setup():
-    kde5.configure("-DBUILD_CONTACTS=OFF")
+    kde5.configure()
 
 def build():
     kde5.make()
