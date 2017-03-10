@@ -9,12 +9,15 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import kde5
 
 def setup():
-    cmaketools.configure()
+    cmaketools.configure("-DKDE_INSTALL_LIBDIR=lib")
 
 def build():
     cmaketools.make()
 
 def install():
     cmaketools.install()
+    
+    pisitools.domove("/usr/lib64/*", "/usr/lib")
+    pisitools.removeDir("/usr/lib64")
 
     pisitools.dodoc("COPYING", "INSTALL", "README")
