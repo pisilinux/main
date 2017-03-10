@@ -10,8 +10,8 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                                       -DCMAKE_BUILD_TYPE=Release \
-                                       -DBUILD_TESTS=OFF")
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DBUILD_TESTS=OFF")
 
 def build():
     cmaketools.make()
