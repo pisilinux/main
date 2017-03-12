@@ -22,4 +22,4 @@ def build():
 def install():
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "BUILDING*", "CHANGELOG", "COPYRIGHT", "FAQ", "GPLv3", "README*")
+    pisitools.dodoc("AUTHORS", "BUILDING*", "CHANGELOG", "COPYRIGHT", "FAQ", "README*")
