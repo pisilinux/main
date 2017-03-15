@@ -12,5 +12,6 @@ def build():
     pythonmodules.compile()
 
 def install():
+    pisitools.rename("build/data.rcc-qt5", "data.rcc")
     pythonmodules.install()
-
+    
