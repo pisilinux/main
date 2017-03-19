@@ -18,8 +18,8 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.insinto("/etc/", "doc/nanorc.sample", "nanorc")
+    pisitools.insinto("/etc/", "doc/sample.nanorc", "nanorc")
     pisitools.dosym("/usr/bin/nano", "/bin/nano")
 
     pisitools.dohtml("doc/*.html")
-    pisitools.dodoc("ChangeLog*", "README", "doc/nanorc.sample", "AUTHORS", "NEWS", "TODO", "COPYING*", "THANKS", "UPGRADE")
+    pisitools.dodoc("ChangeLog*", "README", "doc/sample.nanorc", "AUTHORS", "NEWS", "TODO", "COPYING*", "THANKS")
