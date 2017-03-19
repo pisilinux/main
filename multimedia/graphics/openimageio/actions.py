@@ -18,6 +18,8 @@ def setup():
                            -DCMAKE_INSTALL_PREFIX=/usr \
                            -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages \
                            -DUSE_OCIO= OFF \
+                           -DUSE_OPENSSL:BOOL=TRUE \
+                           -DSTOP_ON_WARNING:BOOL=FALSE \
                            -DOIIO_BUILD_TESTS=OFF", sourceDir="..")
      
 def build():
