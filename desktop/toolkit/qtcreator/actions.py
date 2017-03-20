@@ -20,4 +20,5 @@ def build():
 def install():
     qt5.install()
     pisitools.rename("/usr/bin/qtcreator", "qtcreator-bin")
+    pisitools.rename("/usr/share/applications/org.qt-project.qtcreator.desktop", "qtcreator.desktop")
     pisitools.domove("/usr/share/qtcreator/debugger/LICENSE.GPL3-EXCEPT", "/usr/share/licenses/qtcreator")
