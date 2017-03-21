@@ -1,0 +1,19 @@
+--- pyblock-0.53/dm.c.orig	2011-12-08 21:02:03.000000000 +0100
++++ pyblock-0.53/dm.c	2017-03-06 19:06:36.925597603 +0100
+@@ -17,6 +17,7 @@
+  */
+ 
+ #define _GNU_SOURCE
++#include <sys/sysmacros.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+@@ -645,7 +646,7 @@
+ 
+ 	rc = pydm_init_table((PydmTableObject *)self, start, size,
+ 			type, params);
+-	if (!rc < 0) {
++	if (rc >= 0) {
+ 		Py_DECREF(self);
+ 		return NULL;
+ 	}
