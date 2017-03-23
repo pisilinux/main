@@ -39,6 +39,7 @@ def setup():
               --enable-llvm-shared-libs \
               --enable-shared-glapi \
               --enable-texture-float \
+              --enable-sysfs \
              "
 
     if get.buildTYPE() == "emul32":
