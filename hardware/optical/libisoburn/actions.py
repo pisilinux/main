@@ -10,9 +10,10 @@ from pisi.actionsapi import pisitools
 
 
 def setup():
-    autotools.configure(" --prefix=/usr   \
-                      --disable-static  \
-                      --enable-pkg-check-modules")
+    autotools.configure("--prefix=/usr   \
+                         --enable-static  \
+                         --disable-ldconfig-at-install \
+                         --enable-pkg-check-modules")
 
 def build():
     autotools.make()
