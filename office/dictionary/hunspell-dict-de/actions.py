@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-WorkDir = "igerman98-20131206"
+WorkDir = "igerman98-20161207"
 
 def build():
     autotools.make("hunspell/de_AT_small.dic hunspell/de_AT.aff hunspell/de_CH_small.dic hunspell/de_CH.aff hunspell/de_DE.aff")
