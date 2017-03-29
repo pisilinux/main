@@ -6,7 +6,14 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
+
+def setup():
+    shelltools.unlinkDir("libparanoia")
+
+    cmaketools.configure("-DBUILD_SHARED_LIBS:BOOL=ON")
 
 def build():
     autotools.make()
