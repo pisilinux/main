@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-tools = ["sha1pass", "md5pass", "mkdiskimage*", "keytab-lilo", "syslinux2ansi", "lss16toppm","pxelinux-options"]
+#tools = ["sha1pass", "md5pass", "mkdiskimage*", "keytab-lilo", "syslinux2ansi", "lss16toppm","pxelinux-options"]
 datadir = "/usr/lib/syslinux"
 
 NoStrip = ["/sbin", "/usr/lib"]
@@ -39,8 +39,8 @@ def install():
     # pisitools.domove("/usr/lib/syslinux/*.0", "/usr/lib/syslinux/bios")
     # pisitools.domove("/usr/lib/syslinux/memdisk", "/usr/lib/syslinux/bios")
     
-    for f in tools:
-        pisitools.insinto(datadir, "utils/"+f) 
+    #for f in tools:
+    #    pisitools.insinto(datadir, "utils/"+f) 
 
     pisitools.dodoc("README", "NEWS", "doc/*.txt", "doc/logo/LICENSE")
     pisitools.remove("/usr/bin/gethostip")
