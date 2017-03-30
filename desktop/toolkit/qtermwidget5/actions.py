@@ -23,8 +23,10 @@ def build():
 def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.domove("/usr/lib64/*", "usr/lib/")
-    pisitools.removeDir("/usr/lib64")
+    #fixed library path
+    if get.buildTYPE() == "x86_64":
+        pisitools.domove("/usr/lib64/*", "usr/lib/")
+        pisitools.removeDir("/usr/lib64")
 
     shelltools.cd("..")
     pisitools.dodoc("LICENSE", "AUTHORS", "README.md", "CHANGELOG")
