@@ -14,6 +14,7 @@ def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_DESIGNER_PLUGIN=0 \
+                          -DCMAKE_INSTALL_LIBDIR=/usr/lib \
                           -DUSE_QT5=true", sourceDir="..")
 
 def build():
@@ -23,10 +24,6 @@ def build():
 def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #fixed library path
-    if get.buildTYPE() == "x86_64":
-        pisitools.domove("/usr/lib64/*", "usr/lib/")
-        pisitools.removeDir("/usr/lib64")
-
+    
     shelltools.cd("..")
     pisitools.dodoc("LICENSE", "AUTHORS", "README.md", "CHANGELOG")
