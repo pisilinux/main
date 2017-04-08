@@ -59,6 +59,7 @@ def install():
     f.close()
 
     pisitools.removeDir("/usr/share/doc/libgphoto2_port")
+    pisitools.removeDir("/usr/share/libgphoto2_port")
 
     # Remove circular symlink
     pisitools.remove("/usr/include/gphoto2/gphoto2")
