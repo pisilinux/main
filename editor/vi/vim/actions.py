@@ -52,7 +52,6 @@ def setup():
               --enable-acl \
               --enable-cscope \
               --disable-netbeans \
-              --enable-perlinterp \
               --disable-luainterp \
               --with-x=no \
               --with-modified-by=PisiLinux"
