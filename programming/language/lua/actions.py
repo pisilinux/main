@@ -23,7 +23,7 @@ def build():
 def install():
     autotools.rawInstall("INSTALL_TOP=%s/usr INSTALL_MAN=%s/usr/share/man/ INSTALL_LIB=%s/usr/lib/" % (get.installDIR(), get.installDIR(), get.installDIR()))
     
-    pisitools.dolib("src/liblua.so*")
+    pisitools.insinto("/usr/lib", "src/liblua.so*")
     
     pisitools.insinto("/usr/lib/pkgconfig", "lua.pc")
     pisitools.insinto("/usr/lib/pkgconfig", "lua.pc", "lua5.3.pc")
