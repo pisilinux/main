@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir = "motif-2.3.4"
+WorkDir = "motif-2.3.7"
 
 mwmlibdir = "/usr/lib/X11"
 mwmconfigdir = "/etc/X11/mwm"
