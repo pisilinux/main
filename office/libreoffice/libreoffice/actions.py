@@ -106,7 +106,7 @@ def setup():
 
 
 def build():
-    autotools.make("verbose=true build-nocheck")
+    autotools.make("build-nocheck")
 
 def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
