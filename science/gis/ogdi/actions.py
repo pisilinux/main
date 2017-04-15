@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "ogdi-3.2.0.beta2"
+WorkDir = "ogdi-3.2.0"
 
 shelltools.export("TOPDIR", "%s/%s" % (get.workDIR(), WorkDir))
 

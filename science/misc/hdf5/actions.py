@@ -15,7 +15,7 @@ def setup():
                          --enable-hl \
                          --enable-threadsafe \
                          --enable-fortran \
-                         --enable-production \
+                         --enable-build-mode=production \
                          --enable-linux-lfs \
                          --enable-unsupported \
                          --disable-static \
