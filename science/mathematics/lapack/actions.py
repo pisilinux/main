@@ -22,11 +22,13 @@ def setup():
 
     shelltools.makedirs("build")
     shelltools.cd("build")
-    options = "-DBUILD_SHARED_LIBS=ON \
+    options = "-DCMAKE_INSTALL_LIBDIR=lib \
+               -DBUILD_SHARED_LIBS=ON \
                -DBUILD_TESTING=OFF"
 
     if get.buildTYPE() == "static":
-        options = "-DBUILD_SHARED_LIBS=OFF \
+        options = "-DCMAKE_INSTALL_LIBDIR=lib \
+                   -DBUILD_SHARED_LIBS=OFF \
                    -DBUILD_TESTING=OFF"
 
     cmaketools.configure(options, sourceDir="..")
