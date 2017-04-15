@@ -13,7 +13,8 @@ def setup():
     pisitools.ldflags.add("-lgs")
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-DDONT_INSTALL_GCONF_SCHEMAS=1 \
+    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
+                          -DDONT_INSTALL_GCONF_SCHEMAS=1 \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DBINARY_PACKAGE_BUILD=1 \
                           -DBUILD_USERMANUAL=False \
@@ -24,6 +25,7 @@ def setup():
 def build():
     shelltools.cd("build")
     cmaketools.make()
+    
 
 def install():
     shelltools.cd("build")
