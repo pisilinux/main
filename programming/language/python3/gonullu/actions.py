@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 def build():
     pythonmodules.compile(pyVer="3")
     pisitools.dosed("gonullu/docker.py", "Client", "client")
+    pisitools.dosed("gonullu/docker.py", "1.23", "1.24")
 
 def install():
     pythonmodules.install(pyVer="3")
