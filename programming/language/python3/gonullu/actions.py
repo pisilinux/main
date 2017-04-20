@@ -8,6 +8,7 @@ from pisi.actionsapi import pisitools
 
 def build():
     pythonmodules.compile(pyVer="3")
+    pisitools.dosed("gonullu/docker.py", "import Client", "import client")
 
 def install():
     pythonmodules.install(pyVer="3")
