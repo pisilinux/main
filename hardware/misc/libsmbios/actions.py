@@ -7,10 +7,12 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
+from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("./autogen.sh")
     #autotools.autoreconf("-fi")
-    autotools.configure("--disable-static")
+    #autotools.configure()
 
 def build():
     autotools.make()
@@ -23,8 +25,8 @@ def install():
     pisitools.dosym("/usr/sbin/smbios-wireless-ctl", "/usr/sbin/DellWirelessCtl")
 
     # Remove yum specific stuff
-    pisitools.removeDir("/etc/yum")
+    #pisitools.removeDir("/etc/yum")
     #pisitools.removeDir("/usr/bin")
-    pisitools.removeDir("/usr/lib/yum-plugins")
+    #pisitools.removeDir("/usr/lib/yum-plugins")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "TODO")
+    pisitools.dodoc( "NEWS", "TODO")
