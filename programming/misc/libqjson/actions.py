@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure()
-    
+
 def build():
     cmaketools.make()
 
