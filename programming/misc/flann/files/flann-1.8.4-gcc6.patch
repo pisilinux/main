@@ -1,0 +1,20 @@
+diff -up ./src/cpp/flann/algorithms/kdtree_index.h.gcc6 ./src/cpp/flann/algorithms/kdtree_index.h
+--- ./src/cpp/flann/algorithms/kdtree_index.h.gcc6	2013-01-15 22:38:32.000000000 -0500
++++ ./src/cpp/flann/algorithms/kdtree_index.h	2016-02-14 11:26:59.339178023 -0500
+@@ -34,6 +34,7 @@
+ #include <algorithm>
+ #include <map>
+ #include <cassert>
++#include <cmath>
+ #include <cstring>
+ #include <stdarg.h>
+ 
+@@ -663,7 +664,7 @@ private:
+             ElementType max_span = 0;
+             size_t div_feat = 0;
+             for (size_t i=0;i<veclen_;++i) {
+-                ElementType span = abs(point[i]-leaf_point[i]);
++                ElementType span = std::fabs(point[i]-leaf_point[i]);
+                 if (span > max_span) {
+                     max_span = span;
+                     div_feat = i;
