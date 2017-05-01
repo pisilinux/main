@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 def setup():
     autotools.autoreconf("-vif")
     shelltools.system("./autogen.sh")
-    
+
     autotools.configure("--with-tests")
 
 def build():
