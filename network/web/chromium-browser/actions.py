@@ -48,6 +48,7 @@ def setup():
            proprietary_codecs=true \
            link_pulseaudio=true \
            use_pulseaudio=true \
+           use_vulcanize=false \
            use_gtk3=false'
 
     shelltools.system("tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
