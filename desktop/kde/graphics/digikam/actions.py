@@ -16,6 +16,7 @@ def setup():
                     -DWITH_LENSFUN=ON \
                     -DWITH_MarbleWidget=ON \
                     -DENABLE_LCMS2=ON \
+                    -DENABLE_OPENCV3=ON \
                     -DDIGIKAMSC_COMPILE_KIPIPLUGINS=ON \
                     -DDIGIKAMSC_USE_PRIVATE_SHAREDLIBS=ON \
                     -DDIGIKAMSC_COMPILE_LIBKGEOMAP=ON \
