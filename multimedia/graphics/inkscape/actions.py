@@ -7,8 +7,9 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
-
+from pisi.actionsapi import shelltools
 def setup():
+    shelltools.system("./autogen.sh")
     autotools.configure(" \
                          --enable-lcms \
                          --disable-static \
@@ -28,4 +29,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LIB", "ChangeLog", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README")
