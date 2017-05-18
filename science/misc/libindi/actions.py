@@ -11,7 +11,9 @@ from pisi.actionsapi import get
 #WorkDir = "libindi-%s" % get.srcVERSION()
 
 def setup():
-    cmaketools.configure("-DBUILD_ROOT=%s" % get.installDIR())
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DBUILD_ROOT=%s" % get.installDIR())
 
 def build():
     cmaketools.make()
