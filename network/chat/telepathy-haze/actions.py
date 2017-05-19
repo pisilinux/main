@@ -6,10 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static")
+    autotools.configure("--disable-static --libexecdir=/usr/lib")
+    shelltools.export("PYTHON", "/usr/bin/python2.7")
 
 def build():
     autotools.make()
