@@ -9,7 +9,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static")
+    autotools.configure("--prefix=/usr \
+                         --disable-static")
 
 def build():
     autotools.make()
@@ -19,7 +20,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dosym("libinput.so.5.0.0","/usr/lib/libinput.so.0")
+    pisitools.dosym("libinput.so.10","/usr/lib/libinput.so.0")
     
     #pisitools.remove("/usr/lib/udev/rules.d/80-libinput-device-groups.rules")
     #pisitools.remove("/usr/lib/udev/rules.d/90-libinput-model-quirks.rules")
