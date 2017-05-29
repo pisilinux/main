@@ -24,7 +24,8 @@ def setup():
                          --localstatedir=/var \
                          --prefix=/usr \
                          --without-team \
-                         --libexecdir=/usr/lib/NetworkManager")
+                         --libexecdir=/usr/lib/NetworkManager \
+                         --without-selinux")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
