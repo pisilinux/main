@@ -12,11 +12,11 @@ from pisi.actionsapi import shelltools
 
 def setup():
     # /var/run => /run
-    for f in ["configure.ac", "src/Makefile.am", "src/Makefile.in"]:
-        pisitools.dosed(f, "\$\(?localstatedir\)?(\/run\/(\$PACKAGE|NetworkManager))", "\\1")
-    pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
-    pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
-    autotools.autoreconf("-fi")
+    #for f in ["configure.ac", "src/Makefile.am", "src/Makefile.in"]:
+        #pisitools.dosed(f, "\$\(?localstatedir\)?(\/run\/(\$PACKAGE|NetworkManager))", "\\1")
+    #pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
+    #pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
+    autotools.autoreconf("-fiv")
     shelltools.system("intltoolize --force --copy --automake")
 
     autotools.configure("--disable-static \

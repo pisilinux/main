@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 #WorkDir = "mozilla-release"
 ObjDir = "build"
-locales = "az be  bs ca  da  de  el  en-US en-GB en-ZA  es-AR  es-CL  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
+locales = "az bs ca  da  de  el  en-US en-GB en-ZA  es-AR  es-CL  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
 xpidir = "%s/xpi" % get.workDIR()
 arch = get.ARCH()
 ver = ".".join(get.srcVERSION().split(".")[:3])
@@ -29,11 +29,11 @@ def setup():
     shelltools.system("rm -rf langpack-ff/*/browser/defaults")
     if not shelltools.isDirectory(xpidir): shelltools.makedirs(xpidir)
     for locale in locales:
-        #shelltools.system("wget -c -P %s http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/%s/linux-%s/xpi/%s.xpi" % (xpidir, ver, arch, locale))
+        shelltools.system("wget -c -P %s http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/%s/linux-%s/xpi/%s.xpi" % (xpidir, ver, arch, locale))
         shelltools.makedirs("langpack-ff/langpack-%s@firefox.mozilla.org" % locale)
-        #shelltools.system("unzip -uo %s/%s.xpi -d langpack-ff/langpack-%s@firefox.mozilla.org" % (xpidir, locale, locale))
+        shelltools.system("unzip -uo %s/%s.xpi -d langpack-ff/langpack-%s@firefox.mozilla.org" % (xpidir, locale, locale))
         print "Replacing browser.properties for %s locale" % locale
-        #shelltools.copy("browserconfig.properties", "langpack-ff/langpack-%s@firefox.mozilla.org/browser/chrome/%s/locale/branding/" % (locale, locale))
+        shelltools.copy("browserconfig.properties", "langpack-ff/langpack-%s@firefox.mozilla.org/browser/chrome/%s/locale/branding/" % (locale, locale))
         shelltools.copy("browserconfig.properties", "browser/branding/official/locales/")
 
     shelltools.makedirs(ObjDir)
