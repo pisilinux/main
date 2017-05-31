@@ -84,5 +84,7 @@ def install():
 
     pisitools.domove("/usr/man/man3/*", "/usr/share/man/man3")
     pisitools.removeDir("/usr/man/")
+    pisitools.domove("/usr/etc/bash_completion.d/*", "/etc/bash_completion.d")
+    pisitools.removeDir("/usr/etc")
 
     perlmodules.removePodfiles()
