@@ -8,41 +8,11 @@
  
  
  ###############################################################################
-@@ -206,6 +207,8 @@
-                     "The QScintilla version number could not be determined by "
-                     "reading %s." % sciglobal)
- 
-+        return # Debian: do not check for the installed version, we're good this way.
-+
-         lib_dir = target_configuration.qsci_lib_dir
-         if lib_dir is None:
-             lib_dir = target_configuration.qt_lib_dir
-@@ -260,7 +263,7 @@
-         the target configuration.
-         """
- 
--        return 'sip/qscimod5.sip' if target_configuration.pyqt_package == 'PyQt5' else 'sip/qscimod4.sip'
-+        return os.path.join(src_dir, 'sip/qscimod5.sip') if target_configuration.pyqt_package == 'PyQt5' else os.path.join(src_dir, 'sip/qscimod4.sip')
- 
-     def get_sip_installs(self, target_configuration):
-         """ Return a tuple of the installation directory of the module's .sip
 @@ -1411,6 +1414,7 @@
      includepath = qmake_config.get('INCLUDEPATH')
      if includepath:
          pro.write('INCLUDEPATH += %s\n' % includepath)
-+        pro.write('INCLUDEPATH += %s\n' % '/usr/include/qt/QtWidgets /usr/include/qt/QtPrintSupport')
++        pro.write('INCLUDEPATH += %s\n' % '/usr/include/qt5/QtWidgets /usr/include/qt5/QtPrintSupport')
  
      # Make sure the SIP include directory is searched before the Python include
      # directory if they are different.
-@@ -1420,7 +1424,10 @@
- 
-     libs = qmake_config.get('LIBS')
-     if libs:
--        pro.write('LIBS += %s\n' % libs)
-+        if target_config.pyqt_package == 'PyQt5':
-+            pro.write('LIBS += %s -lqt5scintilla2\n' % libs)
-+        else:
-+            pro.write('LIBS += %s -lqscintilla2\n' % libs)
- 
-     if not opts.static:
-         pro.write('''
