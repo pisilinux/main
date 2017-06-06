@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>PHP5 is an HTML-embedded scripting language. The goal of the language is to allow web developers to write dynamically generated pages quickly</Summary>
         <Description>PHP5 is an HTML-embedded scripting language. Much of its syntax is borrowed from C, Java and Perl with a couple of unique PHP-specific features thrown in. The goal of the language is to allow web developers to write dynamically generated pages quickly.</Description>
-        <Archive sha1sum="41fcaf7a61936baf3ea9543697291865f9870a59" type="tarbz2">http://us2.php.net/distributions/php-5.6.20.tar.bz2</Archive>
+        <Archive sha1sum="9ac486b7f86c01a297375cae5728b424ac5790ce" type="tarbz2">http://us2.php.net/distributions/php-5.6.30.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>gd-devel</Dependency>
             <Dependency>harfbuzz-devel</Dependency>
@@ -53,7 +53,13 @@
         <RuntimeDependencies>
             <Dependency version="current">php-common</Dependency>
             <Dependency>gd</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>libpng</Dependency>
             <Dependency>libxslt</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency>mariadb-lib</Dependency>
             <Dependency>libmcrypt</Dependency>
             <Dependency>mit-kerberos</Dependency>
@@ -75,8 +81,10 @@
         <Name>php-common</Name>
         <Summary>Common config files for PHP</Summary>
         <RuntimeDependencies>
-            <Dependency>mit-kerberos</Dependency>
             <Dependency>db</Dependency>
+            <Dependency>pam</Dependency>
+            <Dependency>gdbm</Dependency>
+            <Dependency>mit-kerberos</Dependency>
         </RuntimeDependencies>
 
         <Files>
@@ -106,7 +114,9 @@
         <Name>mod_php</Name>
         <PartOf>server.web</PartOf>
         <RuntimeDependencies>
+            <Dependency>xz</Dependency>
             <Dependency>apache</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
             <Dependency>mariadb-lib</Dependency>
             <Dependency>postgresql-lib</Dependency>
             <Dependency>gd</Dependency>
@@ -150,6 +160,8 @@
         <Name>php-imap</Name>
         <Summary>Module for PHP to enable IMAP support</Summary>
         <RuntimeDependencies>
+            <Dependency>openssl</Dependency>
+            <Dependency>e2fsprogs</Dependency>
             <Dependency>php-common</Dependency>
             <Dependency>libc-client</Dependency>
             <Dependency>mit-kerberos</Dependency>
@@ -168,13 +180,12 @@
         <Name>php-fpm</Name>
         <Summary>FPM for PHP</Summary>
         <RuntimeDependencies>
+            <Dependency>libxslt</Dependency>
+            <Dependency>libmcrypt</Dependency>
             <Dependency>php-common</Dependency>
-            <Dependency>libxslt</Dependency>
-            <Dependency>libxslt</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>postgresql-lib</Dependency>
             <Dependency>openldap-client</Dependency>
-            <Dependency>libmcrypt</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/sbin/php-fpm</Path>
@@ -194,6 +205,13 @@
 
 
     <History>
+        <Update release="3">
+            <Date>2017-06-06</Date>
+            <Version>5.6.30</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2016-06-09</Date>
             <Version>5.6.20</Version>
