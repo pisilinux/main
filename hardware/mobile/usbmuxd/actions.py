@@ -12,6 +12,7 @@ from pisi.actionsapi import shelltools
 def setup():
     shelltools.system("./autogen.sh")
     autotools.configure("\
+                         --without-systemd \
                          --disable-static \
                          --disable-silent-rules \
                         ")
