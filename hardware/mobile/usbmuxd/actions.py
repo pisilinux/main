@@ -8,8 +8,9 @@ from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
+
 def setup():
-    
+    shelltools.system("./autogen.sh")
     autotools.configure("\
                          --disable-static \
                          --disable-silent-rules \
