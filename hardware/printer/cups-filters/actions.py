@@ -26,7 +26,7 @@ def setup():
 
 def build():
     autotools.make("check")
-    
+
 #def check():
     #autotools.make("check")
 
