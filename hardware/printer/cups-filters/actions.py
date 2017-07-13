@@ -15,7 +15,6 @@ def setup():
                          --localstatedir=/var \
                          --enable-dbus \
                          --with-rcdir=no \
-                         --with-mutool=no \
                          --disable-static \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
@@ -27,7 +26,7 @@ def setup():
 
 def build():
     autotools.make("check")
-    
+
 #def check():
     #autotools.make("check")
 
