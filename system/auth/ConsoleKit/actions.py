@@ -29,7 +29,6 @@ def setup():
                          --enable-docbook-docs \
                          --disable-static \
                          --with-dbus-services=/usr/share/dbus-1/services \
-                         --with-logrotate-dir=/etc/logrotate.d \
                          --with-xinitrc-dir=/etc/X11/xinit/xinitrc.d \
                          --with-pam-module-dir=/lib/security \
                          --with-systemdsystemunitdir=no \
