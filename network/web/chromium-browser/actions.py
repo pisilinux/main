@@ -17,6 +17,8 @@ ARCH = "x64"
 
 def setup():
     shelltools.export("LC_ALL", "C")
+    shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
+    shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
 
     for LIB in ["flac", "harfbuzz-ng" "libwebp" ,"libxslt", "yasm"]:
         shelltools.system('find -type f -path "*third_party/$LIB/*" \! -path "*third_party/$LIB/chromium/*" \! -path "*third_party/$LIB/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete')
@@ -48,8 +50,7 @@ def setup():
            proprietary_codecs=true \
            link_pulseaudio=true \
            use_pulseaudio=true \
-           use_vulcanize=false \
-           use_gtk3=false'
+           use_gtk3=true'
 
     shelltools.system("tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
