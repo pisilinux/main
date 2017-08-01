@@ -1,7 +1,24 @@
-diff -Nuar libreoffice-5.3.0.3/configure.ac libreoffice/configure.ac
---- libreoffice-5.3.0.3/configure.ac	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/configure.ac	2017-03-03 11:25:53.765271189 +0300
-@@ -7875,9 +7875,6 @@
+From d5a09cb1c8f61e2cfc60d8a1dfe57c1ed0a45cdc Mon Sep 17 00:00:00 2001
+From: David Tardon <dtardon@redhat.com>
+Date: Thu, 21 Aug 2014 16:10:51 +0200
+Subject: [PATCH] disable libe-book support
+
+Change-Id: Ie915a9bd2acf7f3aeb8b0933252da33c17043bc4
+---
+ configure.ac                                     | 6 ------
+ external/Module_external.mk                      | 1 -
+ filter/Configuration_filter.mk                   | 8 --------
+ writerperfect/Library_wpftwriter.mk              | 2 --
+ writerperfect/qa/unit/WpftImportTestBase.hxx     | 3 ---
+ writerperfect/qa/unit/WpftWriterFilterTest.cxx   | 5 -----
+ writerperfect/source/writer/wpftwriter.component | 5 -----
+ 7 files changed, 30 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 5ec9ae6..7aed2ed 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -7796,9 +7796,6 @@ AS_IF([test "$COM" = "MSC"],
  
  libo_CHECK_SYSTEM_MODULE([libfreehand],[FREEHAND],[libfreehand-0.1])
  
@@ -11,21 +28,23 @@ diff -Nuar libreoffice-5.3.0.3/configure.ac libreoffice/configure.ac
  libo_CHECK_SYSTEM_MODULE([libabw],[ABW],[libabw-0.1])
  
  libo_CHECK_SYSTEM_MODULE([libpagemaker],[PAGEMAKER],[libpagemaker-0.0])
-diff -Nuar libreoffice-5.3.0.3/external/Module_external.mk libreoffice/external/Module_external.mk
---- libreoffice-5.3.0.3/external/Module_external.mk	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/external/Module_external.mk	2017-03-03 11:26:43.746274226 +0300
-@@ -36,7 +36,6 @@
+diff --git a/external/Module_external.mk b/external/Module_external.mk
+index 55fce1f..2f53503 100644
+--- a/external/Module_external.mk
++++ b/external/Module_external.mk
+@@ -37,7 +37,6 @@ $(eval $(call gb_Module_add_moduledirs,external,\
  	$(call gb_Helper_optional,CPPUNIT,cppunit) \
  	$(call gb_Helper_optional,CT2N,ct2n) \
  	$(call gb_Helper_optional,CURL,curl) \
 -	$(call gb_Helper_optional,EBOOK,libebook) \
  	$(call gb_Helper_optional,EPM,epm) \
+ 	$(call gb_Helper_optional,EPOXY,epoxy) \
  	$(call gb_Helper_optional,ETONYEK,libetonyek) \
- 	$(call gb_Helper_optional,EXPAT,expat) \
-diff -Nuar libreoffice-5.3.0.3/filter/Configuration_filter.mk libreoffice/filter/Configuration_filter.mk
---- libreoffice-5.3.0.3/filter/Configuration_filter.mk	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/filter/Configuration_filter.mk	2017-03-03 11:28:16.996279891 +0300
-@@ -345,10 +345,6 @@
+diff --git a/filter/Configuration_filter.mk b/filter/Configuration_filter.mk
+index 5dd20f7..d3dc749 100644
+--- a/filter/Configuration_filter.mk
++++ b/filter/Configuration_filter.mk
+@@ -345,10 +345,6 @@ $(eval $(call filter_Configuration_add_types,fcfg_langpack,fcfg_writer_types.xcu
  	writer_OOXML \
  	writer_OOXML_Template \
  	writer_layout_dump_xml \
@@ -36,7 +55,7 @@ diff -Nuar libreoffice-5.3.0.3/filter/Configuration_filter.mk libreoffice/filter
  	writer_ApplePages \
  	MWAW_Text_Document \
  	Palm_Text_Document \
-@@ -391,10 +387,6 @@
+@@ -390,10 +386,6 @@ $(eval $(call filter_Configuration_add_filters,fcfg_langpack,fcfg_writer_filters
  	OOXML_Text \
  	OOXML_Text_Template \
  	writer_layout_dump \
@@ -47,10 +66,11 @@ diff -Nuar libreoffice-5.3.0.3/filter/Configuration_filter.mk libreoffice/filter
  	ApplePages \
  	MWAW_Text_Document \
  	Palm_Text_Document \
-diff -Nuar libreoffice-5.3.0.3/writerperfect/Library_wpftwriter.mk libreoffice/writerperfect/Library_wpftwriter.mk
---- libreoffice-5.3.0.3/writerperfect/Library_wpftwriter.mk	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/writerperfect/Library_wpftwriter.mk	2017-03-03 11:30:32.317288112 +0300
-@@ -49,7 +49,6 @@
+diff --git a/writerperfect/Library_wpftwriter.mk b/writerperfect/Library_wpftwriter.mk
+index 9ec43c4..48cbd52 100644
+--- a/writerperfect/Library_wpftwriter.mk
++++ b/writerperfect/Library_wpftwriter.mk
+@@ -49,7 +49,6 @@ $(eval $(call gb_Library_use_libraries,wpftwriter,\
  $(eval $(call gb_Library_use_externals,wpftwriter,\
  	abw \
  	boost_headers \
@@ -58,7 +78,7 @@ diff -Nuar libreoffice-5.3.0.3/writerperfect/Library_wpftwriter.mk libreoffice/w
  	etonyek \
  	icu_headers \
  	icui18n \
-@@ -67,7 +66,6 @@
+@@ -65,7 +64,6 @@ $(eval $(call gb_Library_use_externals,wpftwriter,\
  
  $(eval $(call gb_Library_add_exception_objects,wpftwriter,\
  	writerperfect/source/writer/AbiWordImportFilter \
@@ -66,9 +86,10 @@ diff -Nuar libreoffice-5.3.0.3/writerperfect/Library_wpftwriter.mk libreoffice/w
  	writerperfect/source/writer/MSWorksImportFilter \
  	writerperfect/source/writer/MWAWImportFilter \
  	writerperfect/source/writer/PagesImportFilter \
-diff -Nuar libreoffice-5.3.0.3/writerperfect/qa/unit/WpftImportTestBase.hxx libreoffice/writerperfect/qa/unit/WpftImportTestBase.hxx
---- libreoffice-5.3.0.3/writerperfect/qa/unit/WpftImportTestBase.hxx	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/writerperfect/qa/unit/WpftImportTestBase.hxx	2017-03-03 11:31:44.484292497 +0300
+diff --git a/writerperfect/qa/unit/WpftFilterFixture.hxx b/writerperfect/qa/unit/WpftFilterFixture.hxx
+index ce70172..d73d435 100644
+--- a/writerperfect/qa/unit/WpftFilterFixture.hxx
++++ b/writerperfect/qa/unit/WpftFilterFixture.hxx
 @@ -29,9 +29,6 @@
          ((minor) > (req_minor) \
           || ((minor) == (req_minor) && ((micro) >= (req_micro)))))
@@ -79,10 +100,11 @@ diff -Nuar libreoffice-5.3.0.3/writerperfect/qa/unit/WpftImportTestBase.hxx libr
  #define REQUIRE_ETONYEK_VERSION(major, minor, micro) \
      REQUIRE_VERSION(ETONYEK_VERSION_MAJOR, ETONYEK_VERSION_MINOR, ETONYEK_VERSION_MICRO, major, minor, micro)
  
-diff -Nuar libreoffice-5.3.0.3/writerperfect/qa/unit/WpftWriterFilterTest.cxx libreoffice/writerperfect/qa/unit/WpftWriterFilterTest.cxx
---- libreoffice-5.3.0.3/writerperfect/qa/unit/WpftWriterFilterTest.cxx	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/writerperfect/qa/unit/WpftWriterFilterTest.cxx	2017-03-03 11:33:22.738298466 +0300
-@@ -31,10 +31,6 @@
+diff --git a/writerperfect/qa/unit/WpftWriterFilterTest.cxx b/writerperfect/qa/unit/WpftWriterFilterTest.cxx
+index 99a6ab1..7de2c18 100644
+--- a/writerperfect/qa/unit/WpftWriterFilterTest.cxx
++++ b/writerperfect/qa/unit/WpftWriterFilterTest.cxx
+@@ -31,10 +31,6 @@ WpftWriterFilterTest::WpftWriterFilterTest()
  
  void WpftWriterFilterTest::test()
  {
@@ -93,7 +115,7 @@ diff -Nuar libreoffice-5.3.0.3/writerperfect/qa/unit/WpftWriterFilterTest.cxx li
      const writerperfect::test::WpftOptionalMap_t aEtonyekOptional
      {
          {"Pages_4.pages", REQUIRE_ETONYEK_VERSION(0, 1, 2)},
-@@ -58,7 +54,6 @@
+@@ -52,7 +48,6 @@ void WpftWriterFilterTest::test()
      };
  
      doTest("com.sun.star.comp.Writer.AbiWordImportFilter", "/writerperfect/qa/unit/data/writer/libabw/");
@@ -101,9 +123,10 @@ diff -Nuar libreoffice-5.3.0.3/writerperfect/qa/unit/WpftWriterFilterTest.cxx li
      doTest("com.sun.star.comp.Writer.MSWorksImportFilter", "/writerperfect/qa/unit/data/writer/libwps/", aWpsOptional);
      doTest("com.sun.star.comp.Writer.MWAWImportFilter", "/writerperfect/qa/unit/data/writer/libmwaw/", aMWAWOptional);
      doTest("org.libreoffice.comp.Writer.PagesImportFilter", "/writerperfect/qa/unit/data/writer/libetonyek/", aEtonyekOptional);
-diff -Nuar libreoffice-5.3.0.3/writerperfect/source/writer/wpftwriter.component libreoffice/writerperfect/source/writer/wpftwriter.component
---- libreoffice-5.3.0.3/writerperfect/source/writer/wpftwriter.component	2017-01-27 01:22:46.000000000 +0300
-+++ libreoffice/writerperfect/source/writer/wpftwriter.component	2017-03-03 11:34:21.210302018 +0300
+diff --git a/writerperfect/source/writer/wpftwriter.component b/writerperfect/source/writer/wpftwriter.component
+index 4c5f37f..d815802 100644
+--- a/writerperfect/source/writer/wpftwriter.component
++++ b/writerperfect/source/writer/wpftwriter.component
 @@ -38,11 +38,6 @@
      <service name="com.sun.star.document.ExtendedTypeDetection"/>
      <service name="com.sun.star.document.ImportFilter"/>
@@ -116,3 +139,5 @@ diff -Nuar libreoffice-5.3.0.3/writerperfect/source/writer/wpftwriter.component 
    <implementation name="org.libreoffice.comp.Writer.PagesImportFilter"
        constructor="org_libreoffice_comp_Writer_PagesImportFilter_get_implementation">
      <service name="com.sun.star.document.ExtendedTypeDetection"/>
+-- 
+2.9.3
