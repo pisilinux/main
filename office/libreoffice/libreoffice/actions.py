@@ -56,7 +56,6 @@ def setup():
                         --with-system-curl              \
                         --with-system-expat             \
                         --with-system-graphite      \
-                        --with-system-glew \
                         --with-system-glm \
                         --with-system-harfbuzz          \
                         --with-system-hunspell \
@@ -104,7 +103,7 @@ def setup():
                         --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4 \
                         --with-parallelism=%s' % (get.makeJOBS().replace("-j","")))
 
-
+#--with-system-glew \
 def build():
     autotools.make("build-nocheck")
 

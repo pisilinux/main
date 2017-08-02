@@ -28,7 +28,7 @@ def setup():
                          --disable-more-warnings \
                          --enable-modify-system \
                          --enable-ppp=yes \
-                         --enable-bluez5=yes \
+                         --enable-bluez5-dun \
                          --enable-concheck \
                          --without-netconfig \
                          --with-modem-manager-1 \
@@ -37,7 +37,7 @@ def setup():
                          --with-suspend-resume=upower \
                          --with-system-ca-path=/etc/ssl/certs \
                          --with-crypto=nss \
-                         --with-dhcpcd=/sbin/dhcpcd \
+                         --with-dhcpcd=/usr/bin/dhcpcd \
                          --with-pppd=/usr/sbin/pppd \
                          --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7 \
                          --with-dbus-sys-dir=/etc/dbus-1/system.d \
@@ -45,7 +45,7 @@ def setup():
                          --with-kernel-firmware-dir=/lib/firmware \
                          --with-udev-dir=/lib/udev \
                          --with-resolvconf=/etc/resolv.default.conf \
-                         --with-iptables=/usr/sbin/iptables \
+                         --with-iptables=/sbin/iptables \
                          --with-dnsmasq=/usr/sbin/dnsmasq \
                          --with-systemdsystemunitdir=no \
                          --with-nmtui \
