@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("CPPFLAGS", "-DNDEBUG -fPIC")
+    shelltools.export("CFLAGS", "-g -Wall -Wconversion")
     shelltools.export("FC", "gfortran")
     shelltools.export("F90", "gfortran")
     shelltools.export("FFLAGS", "-fPIC %s" % get.CFLAGS())
@@ -28,8 +29,8 @@ def setup():
 def build():
     autotools.make()
 
-#def check():
-    #autotools.make("-j1 check")
+def check():
+    autotools.make("-j1 check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
