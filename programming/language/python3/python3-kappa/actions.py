@@ -22,4 +22,4 @@ def build():
 def install():
     pythonmodules.install(pyVer="3")
 
-    pisitools.dodoc("README*","LISENCE","PKG-INFO","MANIFEST*")
+    pisitools.dodoc("README*","PKG-INFO","MANIFEST*")
