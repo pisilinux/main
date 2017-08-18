@@ -15,9 +15,14 @@ def setup():
     
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_TESTS=OFF \
+                          -DQCA_INSTALL_IN_QT_PREFIX=ON \
+                          -DQCA_MAN_INSTALL_DIR=/usr/share/man \
+                          -DOPENSSL_INCLUDE_DIR=/usr/include/openssl \
+                          -DOPENSSL_SSL_LIBRARY=/usr/lib/libssl.so \
                           -DQCA_SUFFIX=qt5 \
-                          -DQCA_INSTALL_IN_QT_PREFIX=ON", sourceDir="..")
+                          -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/libcrypto.so", sourceDir="..")
  
 
 def build():
@@ -31,5 +36,5 @@ def install():
     shelltools.cd("..")
     pisitools.dodoc("README", "TODO", "COPYING")
     
-    pisitools.domove("/usr/share/qt5/man/man1/qcatool-qt5.1", "/usr/share/man/man1/qcatool-qt5.1")
-    pisitools.removeDir("/usr/share/qt5")
+    #pisitools.domove("/usr/share/qt5/man/man1/qcatool-qt5.1", "/usr/share/man/man1/qcatool-qt5.1")
+    #pisitools.removeDir("/usr/share/qt5")
