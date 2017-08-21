@@ -13,9 +13,6 @@ from pisi.actionsapi import shelltools
 
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
-def setup():
-    shelltools.system("python3 setup.py install")
-
 def build():
     pythonmodules.compile(pyVer="3")
 
