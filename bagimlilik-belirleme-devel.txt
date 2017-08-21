@@ -1,0 +1,46 @@
+Herhangi bir paketin *-devel paketinin ba??ml?l???n?n tam olarak yaz?lmas?, pakete ba??ml? di?er paketlerinde d?zg?n bir ?ekilde derlenmesi sa?layacakt?r. Bu sebeple yap?lan, derlenen paketlerin, derlendikten sonra;
+
+checkelf -s -x *.pisi
+
+??kt?s?n?n haricinde bir yolu daha var ki buda, derlenme dizinine gidip (/var/pisi/*) buradaki install dizinimizde /usr/lib/pkgconfig/*.pc i?erisindeki *.pc dosyas?n?n i?eri?ini okumakt?r. 
+
+Bu dosyan?n i?erisinde;
+
+Requires.private:
+Requires:
+
+yani ba??ml? ve ?zel ba??ml? olarak kar??s?nda ba??ml? paketler yazmaktad?r. burada yazanlar? pisi sf ile sistemde tart?p ne oldu?unu bulabiliriz. 
+
+?rnek;
+
+libaccounts-glib  paketinin :  install dizini /var/pisi/libaccounts-glib-1.21-1/install
+
+pkgconfig dizini : /var/pisi/libaccounts-glib-1.21-1/install/usr/lib/pkgconfig/libaccounts-glib.pc
+
+libaccounts-glib.pc dosyas?n?n i?eri?i;
+
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+applicationfilesdir=${prefix}/share/accounts/applications
+servicefilesdir=${prefix}/share/accounts/services
+servicetypefilesdir=${prefix}/share/accounts/service_types
+providerfilesdir=${prefix}/share/accounts/providers
+
+Name: libaccounts-glib
+Description: A low-level library for managing accounts settings.
+Requires: glib-2.0 gobject-2.0 gio-unix-2.0
+Require.private: libxml-2.0 sqlite3
+Version: 1.21
+Libs: -L${libdir} -laccounts-glib
+Cflags: -I${includedir}
+
+konsolu a??p;
+
+pisi sf glib-2.0 (?ok fazla sonu? ??kacakt?r ama i?lerinden bu glib-2.0 bulmak zor de?il ismiyle ayn? paket olacak)
+
+
+glib2-devel paketi oldu?unu ??reneceksiniz.
+
+-devel ba??ml?l?klar?n? bu ?ekilde bulabiliriz.
