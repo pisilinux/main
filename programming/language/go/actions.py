@@ -42,7 +42,7 @@ def build():
 
 def install():
     shelltools.export("GOROOT_FINAL", "/usr/lib/go")
-    shelltools.cd("%s/go-go1.7.5" % get.workDIR())
+    shelltools.cd("%s/go-go1.7.6" % get.workDIR())
 
     pisitools.dodir("/usr/lib/go")
     shelltools.system("cp -r api bin doc lib pkg src  %s/usr/lib/go" % get.installDIR())
