@@ -1,0 +1,63 @@
+Upstream: yes
+
+From 45f759500ec80a1362deecd3693cbe44a354bf98 Mon Sep 17 00:00:00 2001
+From: Ian Lance Taylor <iant@golang.org>
+Date: Mon, 28 Nov 2016 16:19:03 -0800
+Subject: [PATCH] cmd/link: handle STT_COMMON symbols
+
+Tested by running
+
+GOTRACEBACK=2 CGO_CFLAGS="-Wa,--elf-stt-common=yes" go test -ldflags=-linkmode=internal
+
+in misc/cgo/test. That failed before this CL, succeeded after.
+
+I don't think it's worth doing that as a regular test, though,
+especially since only recent versions of the GNU binutils support the
+--elf-stt-common option.
+
+Fixes #18088.
+
+Change-Id: I893d86181faee217b1504c054b0ed3f7c8d977d3
+Reviewed-on: https://go-review.googlesource.com/33653
+Run-TryBot: Ian Lance Taylor <iant@golang.org>
+TryBot-Result: Gobot Gobot <gobot@golang.org>
+Reviewed-by: Brad Fitzpatrick <bradfitz@golang.org>
+---
+ src/cmd/link/internal/ld/ldelf.go | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/src/cmd/link/internal/ld/ldelf.go b/src/cmd/link/internal/ld/ldelf.go
+index d700aa6..00e8f37 100644
+--- a/src/cmd/link/internal/ld/ldelf.go
++++ b/src/cmd/link/internal/ld/ldelf.go
+@@ -137,6 +137,8 @@ const (
+ 	ElfSymTypeFunc    = 2
+ 	ElfSymTypeSection = 3
+ 	ElfSymTypeFile    = 4
++	ElfSymTypeCommon  = 5
++	ElfSymTypeTLS     = 6
+ )
+ 
+ const (
+@@ -751,10 +753,10 @@ func ldelf(ctxt *Link, f *bio.Reader, pkg string, length int64, pn string) {
+ 			goto bad
+ 		}
+ 		symbols[i] = sym.sym
+-		if sym.type_ != ElfSymTypeFunc && sym.type_ != ElfSymTypeObject && sym.type_ != ElfSymTypeNone {
++		if sym.type_ != ElfSymTypeFunc && sym.type_ != ElfSymTypeObject && sym.type_ != ElfSymTypeNone && sym.type_ != ElfSymTypeCommon {
+ 			continue
+ 		}
+-		if sym.shndx == ElfSymShnCommon {
++		if sym.shndx == ElfSymShnCommon || sym.type_ == ElfSymTypeCommon {
+ 			s = sym.sym
+ 			if uint64(s.Size) < sym.size {
+ 				s.Size = int64(sym.size)
+@@ -1035,7 +1037,7 @@ func readelfsym(ctxt *Link, elfobj *ElfObj, i int, sym *ElfSym, needSym int, loc
+ 	case ElfSymTypeSection:
+ 		s = elfobj.sect[sym.shndx].sym
+ 
+-	case ElfSymTypeObject, ElfSymTypeFunc, ElfSymTypeNone:
++	case ElfSymTypeObject, ElfSymTypeFunc, ElfSymTypeNone, ElfSymTypeCommon:
+ 		switch sym.bind {
+ 		case ElfSymBindGlobal:
+ 			if needSym != 0 {
