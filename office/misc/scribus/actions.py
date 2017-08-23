@@ -14,8 +14,7 @@ def setup():
     pisitools.dosed("CMakeLists.txt", "\"share\/doc\/\$\{MAIN_DIR_NAME\}.*", "\"share/doc/${MAIN_DIR_NAME}/\")")
     
     cmaketools.configure("-DWANT_DISTROBUILD=YES \
-                          -DWANT_QT5SUPPORT=ON \
-                          -DWANT_GRAPHICSMAGICK=1")
+                          -DWANT_QT5SUPPORT=ON")
 
 def build():
     
@@ -25,6 +24,6 @@ def install():
     
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    pisitools.insinto("/usr/share/applications", "vnd.scribus.desktop", "scribus.desktop")
+    pisitools.insinto("/usr/share/applications", "scribus.desktop")
     pisitools.insinto("/usr/share/pixmaps", "resources/iconsets/1_5_1/scribus.png")
     pisitools.insinto("/usr/share/pixmaps", "resources/iconsets/1_5_0/scribusdoc.png", "x-scribus.png")

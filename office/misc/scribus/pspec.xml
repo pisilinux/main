@@ -13,7 +13,7 @@
         <IsA>app:gui</IsA>
         <Summary>Desktop Publishing (DTP) and Layout program</Summary>
         <Description>Scribus is an opensource desktop publishing application with features like CMYK colorspace and PDF output.
-        </Description><Archive sha1sum="87f426863be8057d83e73b58649ccc2a3266c73b" type="tarxz">http://sourceforge.net/projects/scribus/files/scribus-devel/1.5.2/scribus-1.5.2.tar.xz</Archive>
+        </Description><Archive sha1sum="787d427e5e2c1b508e1b0a6cb9cba04075b9e5ca" type="tarxz">http://sourceforge.net/projects/scribus/files/scribus-devel/1.5.3/scribus-1.5.3.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
             <Dependency>cups-devel</Dependency>
@@ -45,18 +45,22 @@
             <Dependency>libcdr-devel</Dependency>
             <Dependency>GraphicsMagick-devel</Dependency>
             <Dependency>libpagemaker-devel</Dependency>
+            <Dependency>harfbuzz-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch>scribus-standard-font-paths.patch</Patch>
-            <Patch>PisiLinux-default-font.patch</Patch>
+            <Patch>scribus-1.5.3-docdir.patch</Patch>
+            <Patch>findOpenSSL.patch</Patch>
+            <Patch>scribus-1.5.3-fpic.patch</Patch>
             <Patch>PisiLinux-correctly_link_to_libxml2.patch</Patch>
-            <!--<Patch>scribus-1.5.0-QObject.patch</Patch>-->
+            <Patch>scribus-standard-font-paths.patch</Patch>
+            <!--Patch>scribus-1.5.2-qt57-build.patch</Patch-->
         </Patches>
     </Source>
 
     <Package>
         <Name>scribus</Name>
         <RuntimeDependencies>
+            <Dependency>icu4c</Dependency>
             <Dependency>cups</Dependency>
             <Dependency>tiff</Dependency>
             <Dependency>zlib</Dependency>
@@ -80,6 +84,7 @@
             <Dependency>GraphicsMagick</Dependency>
             <Dependency>libvisio</Dependency>
             <Dependency>libmspub</Dependency>
+            <Dependency>harfbuzz</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -97,6 +102,13 @@
     </Package>    
 
     <History>
+        <Update release="4">
+            <Date>2017-08-23</Date>
+            <Version>1.5.3</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2017-04-17</Date>
             <Version>1.5.2</Version>
