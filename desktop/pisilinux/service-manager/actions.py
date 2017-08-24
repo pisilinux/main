@@ -14,4 +14,6 @@ def build():
 
 def install():
     pythonmodules.install()
+    
+    pisitools.insinto("/usr/share/pixmaps", "data/flag-yellow.png")
 
