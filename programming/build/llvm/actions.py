@@ -82,6 +82,7 @@ def install():
     shelltools.cd("build")
     
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.remove("/usr/lib/python2.7/site-packages/six.py")
     
     if get.buildTYPE() == "emul32":
         
