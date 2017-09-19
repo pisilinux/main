@@ -28,7 +28,7 @@ def setup():
                           -DWITH_FFMPEG=0 \
                           -DWITH_UNICAP=0 \
                           -DENABLE_OPENMP=0 \
-                          -DNEW_PYTHIN_SUPPORT=1 \
+                          -DNEW_PYTHON_SUPPORT=1 \
                           -DOCTAVE_SUPPORT=0 \
                           -DUSE_MMX=1 \
                           -DUSE_SSE2=1 \
