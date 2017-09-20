@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-verMAJOR = "142"
+verMAJOR = "0"
 verMINOR = "0"
 staticlibfile = "/usr/lib/libx264.a"
 
@@ -48,8 +48,8 @@ def build():
 def install():
     autotools.install()
 
-    #verMINOR = getMinorVersion()
-    pisitools.dosym("libx264.so.%s.%s" % (verMAJOR, verMINOR), "/usr/lib/libx264.so.%s" % verMAJOR)
+    # verMINOR = getMinorVersion()
+    # pisitools.dosym("libx264.so.%s.%s" % (verMAJOR, verMINOR), "/usr/lib/libx264.so.%s" % verMAJOR)
 
     # No static libs
     if shelltools.isFile("%s/%s" % (get.installDIR(), staticlibfile)):
