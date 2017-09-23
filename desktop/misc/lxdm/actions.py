@@ -12,6 +12,7 @@ def setup():
     autotools.configure("--prefix=/usr     \
                          --sysconfdir=/etc \
                          --with-pam        \
+                         --enable-gtk3 \
                          --with-systemdsystemunitdir=no")
 
 def build():
