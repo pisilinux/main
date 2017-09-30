@@ -49,6 +49,8 @@ def build():
 def install():
     shelltools.cd(ObjDir)
     shelltools.system("DESTDIR=%s ../mach install " % get.installDIR())
+    
+    shelltools.cd("..")
 
     # Install language packs
     pisitools.insinto("/usr/lib/firefox/browser/extensions", "./langpack-ff/*")
