@@ -38,14 +38,16 @@ def setup():
 
     shelltools.makedirs(ObjDir)
     shelltools.cd(ObjDir)
+
     shelltools.system("../configure --prefix=/usr --libdir=/usr/lib --disable-strip --disable-install-strip")
     
 
 def build():
-    #shelltools.cd(ObjDir)
-    autotools.make("./mach build")
+    shelltools.cd(ObjDir)
+    shelltools.system("../mach build")
 
 def install():
+    shelltools.cd(ObjDir)
     shelltools.system("DESTDIR=%s ./mach install " % get.installDIR())
 
     # Install language packs
