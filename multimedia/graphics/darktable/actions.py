@@ -19,6 +19,7 @@ def setup():
                           -DBINARY_PACKAGE_BUILD=1 \
                           -DBUILD_USERMANUAL=False \
                           -DUSE_LIBSECRET=On \
+                          -DUSE_OPENJPEG=On \
                           -DUSE_COLORD=On \
                           -DBUILD_USERMANUAL=0", sourceDir="..")
 
