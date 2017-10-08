@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 def build():
     shelltools.system("python configure.py --bootstrap")
     shelltools.system("asciidoc doc/manual.asciidoc")
-    #shelltools.system("emacs -Q --batch -f batch-byte-compile misc/ninja-mode.el")
+    shelltools.system("emacs -Q --batch -f batch-byte-compile misc/ninja-mode.el")
 
 def check():
     #needs new package gtest -> ignore it for now
@@ -25,6 +25,10 @@ def install():
     pisitools.dobin("ninja", "/usr/bin")
 
     pisitools.insinto("/usr/share/bash-completion/completions", "misc/bash-completion", "ninja")
+    pisitools.insinto("/usr/share/emacs/site-lisp", "misc/ninja-mode.el")
+    pisitools.insinto("/usr/share/emacs/site-lisp", "misc/ninja-mode.elc")
+    pisitools.insinto("/usr/share/vim/vimfiles/syntax", "misc/ninja.vim")
+    pisitools.insinto("/usr/share/zsh/site-functions", "misc/zsh-completion", "_ninja")
 
     pisitools.dodoc("HACKING.md", "COPYING", "RELEASING", "README", "doc/manual.asciidoc")
 
