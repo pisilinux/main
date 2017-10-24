@@ -15,6 +15,7 @@ def setup():
                           -DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_DESIGNER_PLUGIN=0 \
                           -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+                          -DPULL_TRANSLATIONS=no \
                           -DUSE_QT5=true", sourceDir="..")
 
 def build():
