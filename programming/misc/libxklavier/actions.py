@@ -14,7 +14,6 @@ def setup():
     shelltools.system("./autogen.sh --prefix=/usr \
                         --with-xkb-bin-base=/usr/bin \
                         --with-xkb-base=/usr/share/X11/xkb \
-                        --enable-gtk-doc \
                         --disable-static")
 
 def build():
