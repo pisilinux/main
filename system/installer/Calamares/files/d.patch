@@ -1,0 +1,57 @@
+diff -Nuar calamares-3.1.7/settings.conf calamares-3.1.70/settings.conf
+--- calamares-3.1.7/settings.conf	2017-10-24 14:46:03.000000000 +0300
++++ calamares-3.1.70/settings.conf	2017-11-10 14:46:45.564199238 +0300
+@@ -77,7 +77,7 @@
+   - unpackfs
+   - machineid
+   - fstab
+-  - locale
++  
+   - keyboard
+   - localecfg
+ #  - luksbootkeyfile
+@@ -92,6 +92,7 @@
+   - hwclock
+   - services
+ #  - dracut
++  - locale
+   - initramfs
+ #  - grubcfg
+   - bootloader
+diff -Nuar calamares-3.1.7/src/modules/localecfg/main.py calamares-3.1.70/src/modules/localecfg/main.py
+--- calamares-3.1.7/src/modules/localecfg/main.py	2017-10-24 14:46:03.000000000 +0300
++++ calamares-3.1.70/src/modules/localecfg/main.py	2017-11-11 02:08:45.927006326 +0300
+@@ -80,16 +80,22 @@
+         print('locale.gen done')
+ 
+     # write /etc/locale.conf
+-    locale_conf_path = os.path.join(install_path, "etc/locale.conf")
+-    with open(locale_conf_path, "w") as lcf:
++   
++    with open("{!s}/etc/mudur/locale".format(install_path), "w") as lcf:
++        lcf.write("{}".format(locale_conf['LANG']))
++    with open("{!s}/etc/mudur/language".format(install_path), "w") as langcf:
++        langcf.write("{}".format(locale_conf['LANG'].split("_")[0]))
++    with open("{!s}/etc/mudur/keymap".format(install_path), "w") as keymapcf:
++        keymapcf.write("{}".format(locale_conf['LANG'].split("_")[0]))
++    # write /etc/default/locale if /etc/default exists and is a di
++    with open("{!s}/etc/env.d/03locale".format(install_path), "w") as edl:
+         for k, v in locale_conf.items():
+-            lcf.write("{!s}={!s}\n".format(k, v))
+-
+-    # write /etc/default/locale if /etc/default exists and is a dir
+-    etc_default_path = os.path.join(install_path, "etc/default")
+-    if os.path.isdir(etc_default_path):
+-        with open(os.path.join(etc_default_path, "locale"), "w") as edl:
+-            for k, v in locale_conf.items():
+-                edl.write("{!s}={!s}\n".format(k, v))
+-
++            edl.write("{!s}={!s}\n".format(k, v))
++    with open("{!s}/etc/conf.d/mudur".format(install_path), "r+") as mcf:
++        read_lines = mcf.readlines()
++        for line in read_lines:
++            if line[:11] == "# language=":
++                  mcf.write('# language="{}"'.format(locale_conf['LANG'].split("_")[0]))
++            else:
++                mcf.write(line)
+     return None
