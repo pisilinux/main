@@ -6,6 +6,8 @@
 
 from pisi.actionsapi import pisitools
 
+WorkDir = "."
+
 def install():
     pisitools.insinto("usr/lib/chromium-browser/PepperFlash/", "manifest.json")
     pisitools.insinto("usr/lib/chromium-browser/PepperFlash/", "libpepflashplayer.so")
