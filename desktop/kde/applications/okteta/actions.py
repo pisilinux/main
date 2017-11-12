@@ -10,6 +10,9 @@ from pisi.actionsapi import cmaketools
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+                          -KDE_INSTALL_LIBDIR=/usr/lib \
+                          -DKDE_INSTALL_BINDIR=/usr/bin \
+                          -DKDE_INSTALL_INCLUDEDIR=/usr/include \
                           -DBUILD_TESTING=OFF")
 
 def build():
