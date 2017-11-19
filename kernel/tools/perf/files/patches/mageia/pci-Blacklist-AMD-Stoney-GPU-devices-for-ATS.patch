@@ -1,0 +1,43 @@
+From: Joerg Roedel <jroedel@suse.de>
+
+ATS is broken on these devices. Under invalidation load, the
+GPU does not reply to invalidations anymore, causing
+Completion-wait loop timeouts on the AMD IOMMU driver side.
+Fix it by not enabling ATS on these devices.
+
+Note that below mentioned commit is not broken, it just
+triggers the issue because it might cause invalidation
+storms on devices.
+
+Fixes: b1516a14657a ('iommu/amd: Implement flush queue')
+Reported-by: Daniel Drake <drake@endlessm.com>
+Cc: Daniel Drake <drake@endlessm.com>
+Cc: Alexander Deucher <Alexander.Deucher@amd.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/pci/ats.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ 
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index eeb9fb2..711bdb2 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -17,10 +17,18 @@
+ 
+ #include "pci.h"
+ 
++static const struct pci_device_id broken_ats_tbl[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, 0x98e4) }, /* AMD Stoney GPU part */
++	{ 0 }
++};
++
+ void pci_ats_init(struct pci_dev *dev)
+ {
+ 	int pos;
+ 
++	if (pci_match_id(broken_ats_tbl, dev))
++		return;
++
+ 	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ATS);
+ 	if (!pos)
+ 		return;

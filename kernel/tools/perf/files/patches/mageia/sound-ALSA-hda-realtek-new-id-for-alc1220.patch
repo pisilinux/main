@@ -1,0 +1,30 @@
+From a7498943b45d43f4a1abf37b75908c1edf840230 Mon Sep 17 00:00:00 2001
+From: Kailang Yang <kailang@realtek.com>
+Date: Tue, 11 Jul 2017 15:15:47 +0800
+Subject: [PATCH] ALSA: hda/realtek - New codec device ID for ALC1220
+
+Codec ID is 0x1168.
+It is another ALC1220 codec.
+
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e2116d2..45d58fc 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -380,6 +380,7 @@ static void alc_fill_eapd_coef(struct hd
+ 		break;
+ 	case 0x10ec0899:
+ 	case 0x10ec0900:
++	case 0x10ec1168:
+ 	case 0x10ec1220:
+ 		alc_update_coef_idx(codec, 0x7, 1<<1, 0);
+ 		break;
+@@ -7331,6 +7332,7 @@ static const struct hda_device_id snd_hd
+ 	HDA_CODEC_ENTRY(0x10ec0892, "ALC892", patch_alc662),
+ 	HDA_CODEC_ENTRY(0x10ec0899, "ALC898", patch_alc882),
+ 	HDA_CODEC_ENTRY(0x10ec0900, "ALC1150", patch_alc882),
++	HDA_CODEC_ENTRY(0x10ec1168, "ALC1220", patch_alc882),
+ 	HDA_CODEC_ENTRY(0x10ec1220, "ALC1220", patch_alc882),
+ 	{} /* terminator */
+ };

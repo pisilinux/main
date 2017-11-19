@@ -38,19 +38,13 @@ x86-increase-default-minimum-vmalloc-area-by-64MB-to-192MB.patch
 # slows down boot
 Revert-cpufreq-pcc-Enable-autoload-of-pcc-cpufreq-fo.patch
 
-#
-Revert-cpufreq-pcc-cpufreq-update-default-value-of-c.patch
-
-# breaks nvidia304
-Revert-x86-mm-mtrr-Remove-kernel-internal-MTRR-inter.patch
-
-#
-x86-power-64-Fix-hibernation-return-address-corrupti.patch
-
 ###
 ### Core
 ###
 base-cacheinfo-silence-DT-warnings.patch
+
+# fixes crash on boot on some Amd systems
+iommu-amd-flush-IOTLB-for-specific-domains-only-v3.patch
 
 ###
 ### i2c
@@ -65,6 +59,9 @@ base-cacheinfo-silence-DT-warnings.patch
 # http://lkml.org/lkml/2008/9/12/52
 pci-add-ALI-M5229-ide-compatibility-mode-quirk.patch
 pci-quirks-drop-devinit-exit.patch
+
+# Stoney iommu hang
+pci-Blacklist-AMD-Stoney-GPU-devices-for-ATS.patch
 
 ###
 ### PNP core
@@ -82,6 +79,12 @@ acpi-processor-M720SR-limit-to-C2.patch
 
 # backlight fixes
 ACPI-video-Add-a-quirk-to-force-acpi-video-backlight.patch
+
+# drop obsolete warn
+acpi-do-not-warn-if-_BQC-does-not-exist.patch
+
+# silence useless acpi warnings
+acpi-ACPICA-Events-Fix-acpi_ev_initialize_region-return-v.patch
 
 ###
 ### Block
@@ -125,11 +128,17 @@ ata-prefer-ata-drivers-over-ide-drivers-when-both-are-built.patch
 # Nice SSD speedup
 block-Make-CFQ-default-to-IOPS-mode-on-SSDs.patch
 
-# ahci ids
-ahci-add-new-Intel-device-IDs.patch
+# Include new BFQ I/O scheduler
+# (See http://algo.ing.unimo.it/people/paolo/disk_sched)
+block-cgroups-kconfig-build-bits-for-BFQ-v7r11-4.5.0.patch
+block-introduce-the-BFQ-v7r11-I-O-sched-for-4.5.0.patch
+block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-v7r11-for.patch
+block-Turn-into-BFQ-v8r7-for-4.9.0.patch
+block-update-bfq-from-v8r7-to-v8r10.patch
+block-update-bfq-from-v8r10-to-v8r11.patch
 
-#
-megaraid_sas-Do-not-fire-MR_DCMD_PD_LIST_QUERY-to-co.patch
+# new macbooks
+block-nvme-detect-NVMe-controller-in-recent-MacBooks.patch
 
 ###
 ### Char
@@ -138,18 +147,25 @@ megaraid_sas-Do-not-fire-MR_DCMD_PD_LIST_QUERY-to-co.patch
 # hard locks Dell R720xd
 Revert-ipmi-Start-the-timer-and-thread-on-internal-m.patch
 
+# tpm_crb fixes for SkyLake
+char-tpm-tpm_crb-implement-tpm-crb-idle-state.patch
+char-tmp-tpm_crb-fix-Intel-PTT-hw-bug-during-idle-state.patch
+char-tpm-tpm_crb-open-code-the-crb_init-into-acpi_add.patch
+char-tmp-tpm_crb-implement-runtime-pm-for-tpm_crb.patch
+
 ###
 ### File-system
 ###
 
 # aufs from: http://aufs.sourceforge.net/ (mga#8314)
-fs-aufs-4.7.patch
-fs-aufs-4.7-modular.patch
-fs-aufs-4.7-ver-fix.patch
+fs-aufs-4.9.patch
+fs-aufs-4.9-modular.patch
 
-# ext4
-fs-ext4-don-t-call-ext4_should_journal_data-on-the-jour.patch
-fs-ext4-fix-deadlock-during-page-writeback.patch
+# needed for mdadm: imsm: enable bad block support for imsm metadata
+fs-seq_file-reset-iterator-to-first-record-for-zero-off.patch
+
+# performance regression fix
+fs-jbd2-Fix-dbench4-performance-regression-for-nobarrier-mounts.patch
 
 ###
 ### FireWire
@@ -183,6 +199,19 @@ gpu-drm-mach64-restore-mach64_PCI_IDS.patch
 gpu-drm-mach64-linux-3.14-buildfix.patch
 gpu-drm-mach64-3.17-buildfix.patch
 gpu-drm-mach64-3.18-buildfix.patch
+
+#
+gpu-drm-i915-don-t-warn-about-Skylake-CPU-KabyPoint-PCH-.patch
+
+# Amd polaris12 support
+gpu-drm-amd-amdgpu-add-Polaris12-PCI-ID.patch
+gpu-drm-amd-amdgpu-add-Polaris12-support-v3.patch
+gpu-drm-amdgpu-powerplay-add-Polaris12-support.patch
+gpu-drm-amd-amdgpu-add-POLARIS12-PCI-ID.patch
+gpu-drm-amdgpu-add-Polaris12-DID.patch
+
+# fix crash
+gpu-drm-amdgpu-pm-check-for-headless-before-calling-comp.patch
 
 ###
 ### Hardware Monitoring
@@ -234,16 +263,21 @@ net-netfilter-IFWLOG-remove-unused-label.patch
 net-netfilter-psd.patch
 net-netfilter-psd-mdv.patch
 net-netfilter-psd-2.6.35-buildfix.patch
+net-netfilter-psd-fix-redefines.patch
 
-#  iwlwifi fixes
-net-wireless-iwlwifi-add-new-8260-PCI-IDs.patch
-net-wireless-iwlwifi-add-new-8265.patch
-net-wireless-iwlwifi-pcie-enable-interrupts-before-releasing-the-NICs-CPU.patch
-net-wireless-iwlwifi-pcie-fix-a-race-in-firmware-loading-flow.patch
+# rtlwifi fixes
+net-wireless-rtlwifi-Use-dev_kfree_skb_irq-instead-of-kfree_skb.patch
+net-wireless-rtlwifi-Fix-kernel-oops-introduced-with-commit-e4965.patch
 
-#
-net-bcma-add-PCI-ID-for-Foxconn-s-BCM43142-device.patch
-net-brcmfmac-restore-stopping-netdev-queue-when-bus-clog.patch
+# update rtl8xxxu for mga#20508
+net-wireless-realtek-rtl8xxxu-linux-4.11-rc.patch
+
+###
+### pinctrl
+###
+
+# fix non-booting Ryzen+ due to interrupt storm
+pinctrl_amd-Use-regular-interrupt-instead-of-chained.patch
 
 ###
 ### Platform drivers
@@ -255,13 +289,8 @@ platform-x86-add-shuttle-wmi-driver.patch
 platform-x86-shuttle-wmi-drop-devinit-exit.patch
 platform-x86-shuttle-wmi-4.2-buildfix.patch
 
-#
-hp-wmi-Fix-wifi-cannot-be-hard-unblocked.patch
-
-Bluetooth-Add-support-of-13d3-3490-AR3012-device.patch
-intel_th-Fix-a-deadlock-in-modprobing.patch
-intel_th-pci-Add-Kaby-Lake-PCH-H-support.patch
-pinctrl-cherryview-prevent-concurrent-access-to-GPIO.patch
+# X302UA no wifi
+platform-x86-asus-nb-wmi-Add-wapf4-quirk-for-the-X30.patch
 
 ###
 ### RTC
@@ -277,6 +306,27 @@ include-kbuild-export-pci_ids.patch
 ###
 ### Sound
 ###
+
+# new codecs
+sound-ALSA-hda-realtek-Add-new-codec-ID-ALC299.patch
+sound-ALSA-hda-realtek-New-codec-support-of-ALC1220.patch
+sound-ALSA-hda-realtek-new-id-for-alc1220.patch
+sound-ALSA-hda-realtek-Remove-ALC285-device-ID.patch
+sound-ALSA-hda-realtek-New-codecs-support-for-ALC215-ALC28.patch
+
+# add support for Gigabyte GA-AX370 Gaming 5 with dual codecs (TTL: 4.12)
+sound-ALSA-hda-A-new-flag-to-enforce-prefix-to-each-pin.patch
+sound-ALSA-hda-Allow-to-enable-disable-vmaster-build-expli.patch
+sound-ALSA-hda-Support-Gigabyte-Gaming-board-with-dual-Rea.patch
+sound-ALSA-hda-Use-a-helper-function-for-renaming-kctl-nam.patch
+# another dual codec system
+sound-ALSA-hda-Apply-dual-codec-quirk-for-MSI-Z270-Gaming-.patch
+sound-ALSA-hda-Fix-applying-MSI-dual-codec-mobo-quirk.patch
+
+# intel
+sound-ALSA-hda-Add-Geminilake-id-to-SKL_PLUS.patch
+sound-ALSA-hda-Add-Coffelake-PCI-ID.patch
+sound-ALSA-hda-Apply-quirks-to-Broxton-T-too.patch
 
 ###
 ### Staging
@@ -300,24 +350,12 @@ hid-usbhid-IBM-BladeCenterHS20-quirk.patch
 usb-storage-unusual_devs-add-id.patch
 usb-storage-unusual_devs-add-id-2.6.37-buildfix.patch
 
-#
-usb-dwc3-fix-for-the-isoc-transfer-EP_BUSY-flag.patch
-usb-renesas_usbhs-fix-NULL-pointer-dereference-in-xf.patch
-
-#
-HID-uhid-fix-timeout-when-probe-races-with-IO.patch
-
 ###
 ### V4L
 ###
 
 # pwc driver name in /proc/bus/devices, /sys fix and "advertisement" removal
 media-usb-pwc-lie-in-proc-usb-devices.patch
-
-#
-media-media-usbtv-prevent-access-to-free-d-resources.patch
-media-vb2-core-Skip-planes-array-verification-if-pb-.patch
-media-videobuf2-v4l2-Verify-planes-array-in-buffer-d.patch
 
 ###
 ### Video
@@ -369,7 +407,9 @@ video-mageia-logo.patch
 
 # add rtl8723bs support (mga#15874)
 3rd-rtl8723bs.patch
-3rd-rtl8723bs-4.7-buildfix.patch
+
+# add rtl8812 support (mga#21043)
+3rd-rtl8812au.patch
 
 ###
 ### Security
@@ -387,10 +427,6 @@ video-mageia-logo.patch
 ### ARM
 ###
 
-# RPi2 support
-# Read MAC address from DT
-arm-0001-ARM-bcm2835-dt-Add-the-ethernet-to-the-device-trees.patch
-
 ###
 ### IA64
 ###
@@ -398,6 +434,14 @@ arm-0001-ARM-bcm2835-dt-Add-the-ethernet-to-the-device-trees.patch
 ###
 ### Tools
 ###
+
+# wipe powerpc refrence so we can nuke dangling symlinks (mga#17676)
+tools-testing-selftest-Makefile-remove-powerpc-reference.patch
+
+# perf build fixes
+tools-build-Make-fixdep-parsing-wait-for-last-target.patch
+tools-perf-tools-Force-fixdep-compilation-at-the-start-of-.patch
+tools-perf-tools-Move-perf-build-related-variables-under-n.patch
 
 ###
 ### UAPI

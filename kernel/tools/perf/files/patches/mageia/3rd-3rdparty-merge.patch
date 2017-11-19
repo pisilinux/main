@@ -83,10 +83,10 @@ diff -Nurp linux-4.2.2/Makefile linux-4.2.2-3rd/Makefile
  net-y		:= net/
  libs-y		:= lib/
  core-y		:= usr/
-diff -Nurp linux-4.6/scripts/kconfig/Makefile linux-4.6-3rd/scripts/kconfig/Makefile
---- linux-4.6/scripts/kconfig/Makefile
-+++ linux-4.6-3rd/scripts/kconfig/Makefile
-@@ -18,26 +18,26 @@ endif
+diff -Nurp linux-4.9/scripts/kconfig/Makefile linux-4.9-3rd/scripts/kconfig/Makefile
+--- linux-4.9/scripts/kconfig/Makefile
++++ linux-4.9-3rd/scripts/kconfig/Makefile
+@@ -18,28 +18,28 @@ endif
  # We need this, in case the user has it in its environment
  unexport CONFIG_
  
@@ -113,6 +113,8 @@ diff -Nurp linux-4.6/scripts/kconfig/Makefile linux-4.6-3rd/scripts/kconfig/Make
 -silentoldconfig: $(obj)/conf
 +silentoldconfig: $(obj)/conf 3rdparty/Makefile
  	$(Q)mkdir -p include/config include/generated
+ 	$(Q)test -e include/generated/autoksyms.h || \
+ 	    touch   include/generated/autoksyms.h
  	$< $(silent) --$@ $(Kconfig)
  
 -localyesconfig localmodconfig: $(obj)/streamline_config.pl $(obj)/conf
@@ -120,7 +122,7 @@ diff -Nurp linux-4.6/scripts/kconfig/Makefile linux-4.6-3rd/scripts/kconfig/Make
  	$(Q)mkdir -p include/config include/generated
  	$(Q)perl $< --$@ $(srctree) $(Kconfig) > .tmp.config
  	$(Q)if [ -f .config ]; then 					\
-@@ -80,7 +80,7 @@ simple-targets := oldconfig allnoconfig
+@@ -82,7 +82,7 @@ simple-targets := oldconfig allnoconfig
  	alldefconfig randconfig listnewconfig olddefconfig
  PHONY += $(simple-targets)
  
@@ -129,7 +131,7 @@ diff -Nurp linux-4.6/scripts/kconfig/Makefile linux-4.6-3rd/scripts/kconfig/Make
  	$< $(silent) --$@ $(Kconfig)
  
  PHONY += oldnoconfig savedefconfig defconfig
-@@ -88,12 +88,12 @@ PHONY += oldnoconfig savedefconfig defco
+@@ -90,12 +90,12 @@ PHONY += oldnoconfig savedefconfig defco
  # oldnoconfig is an alias of olddefconfig, because people already are dependent
  # on its behavior (sets new symbols to their default value but not 'n') with the
  # counter-intuitive name.
@@ -145,7 +147,7 @@ diff -Nurp linux-4.6/scripts/kconfig/Makefile linux-4.6-3rd/scripts/kconfig/Make
  ifeq ($(KBUILD_DEFCONFIG),)
  	$< $(silent) --defconfig $(Kconfig)
  else
-@@ -106,26 +106,26 @@ else
+@@ -108,26 +108,26 @@ else
  endif
  endif
  
@@ -177,7 +179,7 @@ diff -Nurp linux-4.6/scripts/kconfig/Makefile linux-4.6-3rd/scripts/kconfig/Make
  	$(Q)$(MAKE) -f $(srctree)/Makefile allnoconfig tiny.config
  
  # Help text used by make help
-@@ -188,6 +188,9 @@ gconf-objs	:= gconf.o zconf.tab.o
+@@ -190,6 +190,9 @@ gconf-objs	:= gconf.o zconf.tab.o
  
  hostprogs-y := conf nconf mconf kxgettext qconf gconf
  

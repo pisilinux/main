@@ -1,0 +1,78 @@
+From 7480316c265c9fcdbf73b1b8dec061b893b7e987 Mon Sep 17 00:00:00 2001
+From: Takashi Iwai <tiwai@suse.de>
+Date: Mon, 10 Apr 2017 17:37:34 +0200
+Subject: [PATCH 2/4] ALSA: hda - Allow to enable/disable vmaster build
+ explicitly
+
+Another preliminary patch for the dual-codec support: since the
+support of vmaster over multiple codecs is difficult, simply disable
+it by a new flag to hda_codec struct.  A new user hint is added as
+well for consistency.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ Documentation/sound/hd-audio/notes.rst | 2 ++
+ sound/pci/hda/hda_generic.c            | 7 +++++--
+ sound/pci/hda/hda_generic.h            | 1 +
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+#diff --git a/Documentation/sound/hd-audio/notes.rst b/Documentation/sound/hd-audio/notes.rst
+#index 9eeb9b4..f59c3cd 100644
+#--- a/Documentation/sound/hd-audio/notes.rst
+#+++ b/Documentation/sound/hd-audio/notes.rst
+#@@ -494,6 +494,8 @@ add_hp_mic (bool)
+# hp_mic_detect (bool)
+#     enable/disable the hp/mic shared input for a single built-in mic
+#     case; default true
+#+vmaster (bool)
+#+    enable/disable the virtual Master control; default true
+# mixer_nid (int)
+#     specifies the widget NID of the analog-loopback mixer
+# 
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index 4438328..2842c82 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -196,6 +196,9 @@ static void parse_user_hints(struct hda_codec *codec)
+ 	val = snd_hda_get_bool_hint(codec, "hp_mic_detect");
+ 	if (val >= 0)
+ 		spec->suppress_hp_mic_detect = !val;
++	val = snd_hda_get_bool_hint(codec, "vmaster");
++	if (val >= 0)
++		spec->suppress_vmaster = !val;
+ 
+ 	if (!snd_hda_get_int_hint(codec, "mixer_nid", &val))
+ 		spec->mixer_nid = val;
+@@ -5033,7 +5036,7 @@ int snd_hda_gen_build_controls(struct hda_codec *codec)
+ 	}
+ 
+ 	/* if we have no master control, let's create it */
+-	if (!spec->no_analog &&
++	if (!spec->no_analog && !spec->suppress_vmaster &&
+ 	    !snd_hda_find_mixer_ctl(codec, "Master Playback Volume")) {
+ 		err = snd_hda_add_vmaster(codec, "Master Playback Volume",
+ 					  spec->vmaster_tlv, slave_pfxs,
+@@ -5041,7 +5044,7 @@ int snd_hda_gen_build_controls(struct hda_codec *codec)
+ 		if (err < 0)
+ 			return err;
+ 	}
+-	if (!spec->no_analog &&
++	if (!spec->no_analog && !spec->suppress_vmaster &&
+ 	    !snd_hda_find_mixer_ctl(codec, "Master Playback Switch")) {
+ 		err = __snd_hda_add_vmaster(codec, "Master Playback Switch",
+ 					    NULL, slave_pfxs,
+diff --git a/sound/pci/hda/hda_generic.h b/sound/pci/hda/hda_generic.h
+index f66fc7e..6177231 100644
+--- a/sound/pci/hda/hda_generic.h
++++ b/sound/pci/hda/hda_generic.h
+@@ -229,6 +229,7 @@ struct hda_gen_spec {
+ 	unsigned int add_jack_modes:1; /* add i/o jack mode enum ctls */
+ 	unsigned int power_down_unused:1; /* power down unused widgets */
+ 	unsigned int dac_min_mute:1; /* minimal = mute for DACs */
++	unsigned int suppress_vmaster:1; /* don't create vmaster kctls */
+ 
+ 	/* other internal flags */
+ 	unsigned int no_analog:1; /* digital I/O only */
+-- 
+2.10.2
+

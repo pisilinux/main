@@ -1,0 +1,42 @@
+From 56798e6b3a2264b58d50b93cfd66586ede77d661 Mon Sep 17 00:00:00 2001
+From: Takashi Iwai <tiwai@suse.de>
+Date: Tue, 11 Apr 2017 08:10:52 +0200
+Subject: [PATCH 4/4] ALSA: hda - Use a helper function for renaming kctl names
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/pci/hda/patch_realtek.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e81cf83..57eeefd 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4724,7 +4724,6 @@ static void alc282_fixup_asus_tx300(struct hda_codec *codec,
+ 		{ 0x1b, 0x21114000 }, /* dock speaker pin */
+ 		{}
+ 	};
+-	struct snd_kcontrol *kctl;
+ 
+ 	switch (action) {
+ 	case HDA_FIXUP_ACT_PRE_PROBE:
+@@ -4739,12 +4738,10 @@ static void alc282_fixup_asus_tx300(struct hda_codec *codec,
+ 		/* this is a bit tricky; give more sane names for the main
+ 		 * (tablet) speaker and the dock speaker, respectively
+ 		 */
+-		kctl = snd_hda_find_mixer_ctl(codec, "Speaker Playback Switch");
+-		if (kctl)
+-			strcpy(kctl->id.name, "Dock Speaker Playback Switch");
+-		kctl = snd_hda_find_mixer_ctl(codec, "Bass Speaker Playback Switch");
+-		if (kctl)
+-			strcpy(kctl->id.name, "Speaker Playback Switch");
++		rename_ctl(codec, "Speaker Playback Switch",
++			   "Dock Speaker Playback Switch");
++		rename_ctl(codec, "Bass Speaker Playback Switch",
++			   "Speaker Playback Switch");
+ 		break;
+ 	}
+ }
+-- 
+2.10.2
+
