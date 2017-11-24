@@ -1,0 +1,36 @@
+From 12ee4022f67f8854061b46e5c0a7ad6258ab66c2 Mon Sep 17 00:00:00 2001
+From: "Subhransu S. Prusty" <subhransu.s.prusty@intel.com>
+Date: Wed, 12 Apr 2017 09:54:00 +0530
+Subject: [PATCH] ALSA: hda: Add Geminilake id to SKL_PLUS
+
+Geminilake is Skylake family platform. So add it's id to skl_plus check.
+
+Fixes: 126cfa2f5e15 ("ALSA: hda: Add Geminilake HDMI codec ID")
+Signed-off-by: Subhransu S. Prusty <subhransu.s.prusty@intel.com>
+Cc: Senthilnathan Veppur <senthilnathanx.veppur@intel.com>
+Cc: Vinod Koul <vinod.koul@intel.com>
+Cc: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/pci/hda/hda_intel.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 59ab34fa0bc8..b786fbab029f 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -370,8 +370,10 @@ enum {
+ #define IS_KBL_LP(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x9d71)
+ #define IS_KBL_H(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0xa2f0)
+ #define IS_BXT(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x5a98)
++#define IS_GLK(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x3198)
+ #define IS_SKL_PLUS(pci) (IS_SKL(pci) || IS_SKL_LP(pci) || IS_BXT(pci)) || \
+-			IS_KBL(pci) || IS_KBL_LP(pci) || IS_KBL_H(pci)
++			IS_KBL(pci) || IS_KBL_LP(pci) || IS_KBL_H(pci)	|| \
++			IS_GLK(pci)
+ 
+ static char *driver_short_names[] = {
+ 	[AZX_DRIVER_ICH] = "HDA Intel",
+-- 
+2.13.1
+

@@ -1,0 +1,42 @@
+From 853277481178fdf14d1a4e9e6ac7174d6046176f Mon Sep 17 00:00:00 2001
+From: Jani Nikula <jani.nikula@intel.com>
+Date: Wed, 1 Feb 2017 15:46:09 +0200
+Subject: [PATCH] drm/i915: don't warn about Skylake CPU - KabyPoint PCH combo
+
+Apparently there are machines out there with Skylake CPU and KabyPoint
+PCH. Judging from our driver code, there doesn't seem to be any code
+paths that would do anything different between SunrisePoint and
+KabyPoint PCHs, so it would seem okay to accept the combo without
+warnings.
+
+Fixes: 22dea0be50b2 ("drm/i915: Introduce Kabypoint PCH for Kabylake H/DT.")
+References: https://lists.freedesktop.org/archives/intel-gfx/2017-February/118611.html
+Reported-by: Rainer Koenig <Rainer.Koenig@ts.fujitsu.com>
+Cc: Rainer Koenig <Rainer.Koenig@ts.fujitsu.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: <stable@vger.kernel.org> # v4.8+
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/1485956769-26015-1-git-send-email-jani.nikula@intel.com
+(cherry picked from commit 3aac4acb89710fe782c9e78e7b1febf76e112c6c)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+[ rebased for 4.9 / tmb ]
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+---
+ drivers/gpu/drm/i915/i915_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
+index b2c4a0b..8d63098 100644
+--- a/drivers/gpu/drm/i915/i915_drv.c
++++ b/drivers/gpu/drm/i915/i915_drv.c
+@@ -207,7 +207,8 @@ static void intel_detect_pch(struct drm_
+ 			} else if (id == INTEL_PCH_KBP_DEVICE_ID_TYPE) {
+ 				dev_priv->pch_type = PCH_KBP;
+ 				DRM_DEBUG_KMS("Found KabyPoint PCH\n");
+-				WARN_ON(!IS_KABYLAKE(dev));
++				WARN_ON(!IS_SKYLAKE(dev) &&
++					!IS_KABYLAKE(dev));
+ 			} else if ((id == INTEL_PCH_P2X_DEVICE_ID_TYPE) ||
+ 				   (id == INTEL_PCH_P3X_DEVICE_ID_TYPE) ||
+ 				   ((id == INTEL_PCH_QEMU_DEVICE_ID_TYPE) &&

@@ -1,0 +1,49 @@
+From 8ac1eb7bab7c8d9d6f00b3e2a408611c45d9dff0 Mon Sep 17 00:00:00 2001
+From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 6 Dec 2016 14:18:50 +0100
+Subject: [PATCH] perf tools: Move perf build related variables under non
+ fixdep leg
+
+Because there's no need for them in fixdep build.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Link: http://lkml.kernel.org/r/1481030331-31944-4-git-send-email-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.perf | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 33b1d9f..8f1c258 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -164,11 +164,6 @@ BISON   = bison
+ STRIP   = strip
+ AWK     = awk
+ 
+-LIB_DIR		= $(srctree)/tools/lib/api/
+-TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
+-BPF_DIR		= $(srctree)/tools/lib/bpf/
+-SUBCMD_DIR	= $(srctree)/tools/lib/subcmd/
+-
+ # include Makefile.config by default and rule out
+ # non-config cases
+ config := 1
+@@ -210,6 +205,11 @@ sub-make: fixdep
+ 
+ else # force_fixdep
+ 
++LIB_DIR         = $(srctree)/tools/lib/api/
++TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
++BPF_DIR         = $(srctree)/tools/lib/bpf/
++SUBCMD_DIR      = $(srctree)/tools/lib/subcmd/
++
+ # Set FEATURE_TESTS to 'all' so all possible feature checkers are executed.
+ # Without this setting the output feature dump file misses some features, for
+ # example, liberty. Select all checkers so we won't get an incomplete feature
+-- 
+2.10.2
+

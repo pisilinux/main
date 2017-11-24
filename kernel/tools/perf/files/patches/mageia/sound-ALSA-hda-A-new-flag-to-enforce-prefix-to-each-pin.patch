@@ -1,0 +1,68 @@
+From 9f3dadb156692e15933a4a97ef659f65151be4a1 Mon Sep 17 00:00:00 2001
+From: Takashi Iwai <tiwai@suse.de>
+Date: Mon, 10 Apr 2017 17:12:33 +0200
+Subject: [PATCH 1/4] ALSA: hda - A new flag to enforce prefix to each pin
+
+This is a preliminary patch for a smooth multi-codec support, and it
+introduces a new flag, force_pin_prefix, to struct hda_codec.
+This flag is used to force to add the pin location prefix to each
+input pin.  For example, when there is only one microphone pin,
+usually the auto-parser assigns the string "Mic".  With this flag on,
+it'll be like "Front Mic".  Also, the creation of "Master" or "PCM"
+playback volume for a single pin is suppressed, too.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=195305
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/pci/hda/hda_auto_parser.c | 1 +
+ sound/pci/hda/hda_codec.h       | 1 +
+ sound/pci/hda/hda_generic.c     | 2 ++
+ 3 files changed, 4 insertions(+)
+
+diff --git a/sound/pci/hda/hda_auto_parser.c b/sound/pci/hda/hda_auto_parser.c
+index a03cf68..d3ea731 100644
+--- a/sound/pci/hda/hda_auto_parser.c
++++ b/sound/pci/hda/hda_auto_parser.c
+@@ -580,6 +580,7 @@ const char *hda_get_autocfg_input_label(struct hda_codec *codec,
+ 		has_multiple_pins = 1;
+ 	if (has_multiple_pins && type == AUTO_PIN_MIC)
+ 		has_multiple_pins &= check_mic_location_need(codec, cfg, input);
++	has_multiple_pins |= codec->force_pin_prefix;
+ 	return hda_get_input_pin_label(codec, &cfg->inputs[input],
+ 				       cfg->inputs[input].pin,
+ 				       has_multiple_pins);
+diff --git a/sound/pci/hda/hda_codec.h b/sound/pci/hda/hda_codec.h
+index f17f252..d6fb2d5 100644
+--- a/sound/pci/hda/hda_codec.h
++++ b/sound/pci/hda/hda_codec.h
+@@ -256,6 +256,7 @@ struct hda_codec {
+ 	unsigned int dump_coef:1; /* dump processing coefs in codec proc file */
+ 	unsigned int power_save_node:1; /* advanced PM for each widget */
+ 	unsigned int auto_runtime_pm:1; /* enable automatic codec runtime pm */
++	unsigned int force_pin_prefix:1; /* Add location prefix */
+ #ifdef CONFIG_PM
+ 	unsigned long power_on_acct;
+ 	unsigned long power_off_acct;
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index e7c8f4f..4438328 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -1125,6 +1125,7 @@ static const char *get_line_out_pfx(struct hda_codec *codec, int ch,
+ 
+ 	*index = 0;
+ 	if (cfg->line_outs == 1 && !spec->multi_ios &&
++	    !codec->force_pin_prefix &&
+ 	    !cfg->hp_outs && !cfg->speaker_outs)
+ 		return spec->vmaster_mute.hook ? "PCM" : "Master";
+ 
+@@ -1132,6 +1133,7 @@ static const char *get_line_out_pfx(struct hda_codec *codec, int ch,
+ 	 * use it master (or "PCM" if a vmaster hook is present)
+ 	 */
+ 	if (spec->multiout.num_dacs == 1 && !spec->mixer_nid &&
++	    !codec->force_pin_prefix &&
+ 	    !spec->multiout.hp_out_nid[0] && !spec->multiout.extra_out_nid[0])
+ 		return spec->vmaster_mute.hook ? "PCM" : "Master";
+ 
+-- 
+2.10.2
+
