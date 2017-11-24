@@ -27,16 +27,12 @@ def setup():
 
     opt = 'use_sysroot=false \
            is_clang=false enable_nacl=false \
-           enable_nacl_nonsfi=false \
            fieldtrial_testing_like_official_build=true \
            clang_use_chrome_plugins=false \
-           symbol_level=0 \
            fatal_linker_warnings=false \
            treat_warnings_as_errors=false \
-           use_cups=true \
            use_gnome_keyring=false\
            use_gold=false \
-           use_kerberos=true \
            enable_hangout_services_extension=true \
            use_gconf=false \
            enable_widevine=true \
@@ -49,7 +45,8 @@ def setup():
            remove_webcore_debug_symbols=true \
            proprietary_codecs=true \
            link_pulseaudio=true \
-           use_pulseaudio=true \
+           use_custom_libcxx=false \
+           enable_swiftshader=false \
            use_gtk3=true'
 
     shelltools.system("tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
