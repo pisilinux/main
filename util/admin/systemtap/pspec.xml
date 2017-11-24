@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>systemtap</Name>
+        <Homepage>http://sourceware.org/systemtap/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2+</License>
+        <IsA>app:console</IsA>
+        <Summary>Instrumentation System</Summary>
+        <Description>systemtap is an instrumentation system for systems running Linux 2.6. Developers can write instrumentation to collect data on the operation of the system.</Description>
+        <Archive sha1sum="cd4482870015b9429f9945588ea8846d4ace20d1" type="targz">ftp://sourceware.org/pub/systemtap/releases/systemtap-3.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>python-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>python-setuptools</Dependency>
+        </BuildDependencies>
+        <Patches>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>systemtap</Name>
+        <RuntimeDependencies>
+            <Dependency>readline</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>python</Dependency>
+            <Dependency>nspr</Dependency>
+            <Dependency>nss</Dependency>
+            <Dependency>elfutils</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/run/systemtap</Path>
+            <Path fileType="data">/run/stap-server</Path>
+            <Path fileType="data">/etc/logrotate.d</Path>
+            <Path fileType="data">/var/log/stap-server</Path>
+            <Path fileType="data">/var/cache/systemtap</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share/systemtap/tapset</Path>
+            <Path fileType="data">/usr/share/systemtap/runtime</Path>
+            <Path fileType="executable">/usr/libexec/systemtap</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/systemtap.conf</Path>
+            <Path fileType="data">/usr/share/systemtap/examples</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/systemtap.conf">tmpfiles.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>systemtap-testsuite</Name>
+        <Summary>Testsuite allows testing of the entire SystemTap toolchain without having to rebuild from sources</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">systemtap</Dependency>
+            <Dependency release="current">systemtap-sdt-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/systemtap/testsuite</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>systemtap-sdt-devel</Name>
+        <Summary>Static probe support tools</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">systemtap</Dependency>
+            <Dependency>python-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>nss-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/dtrace</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2017-11-24</Date>
+            <Version>3.2</Version>
+            <Comment>First release</Comment>
+            <Name>Osman Erkan</Name>
+            <Email>osman.erkan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
