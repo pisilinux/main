@@ -26,7 +26,8 @@ def build():
 def install():
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/include", "../src/include/smbios")
+    pisitools.insinto("/usr/include", "../src/include/*")
+    pisitools.insinto("/usr/include", "out/public-include/*")
 
     # Symlink to /usr/sbin/DellWirelessCtl for the new HAL
     pisitools.dosym("/usr/sbin/smbios-wireless-ctl", "/usr/sbin/DellWirelessCtl")
