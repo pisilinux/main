@@ -10,23 +10,31 @@ from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("./autogen.sh")
+    shelltools.system("./autogen.sh --no-configure")
     #autotools.autoreconf("-fi")
-    #autotools.configure()
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("../configure --prefix=/usr --sbindir=/usr/sbin --sysconfdir=/etc --disable-static --enable-libsmbios_cxx")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    
 
 def build():
+    shelltools.cd("build")
     autotools.make()
 
 def install():
+    shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/include", "src/include/smbios")
+    pisitools.insinto("/usr/include", "../src/include/smbios")
 
     # Symlink to /usr/sbin/DellWirelessCtl for the new HAL
     pisitools.dosym("/usr/sbin/smbios-wireless-ctl", "/usr/sbin/DellWirelessCtl")
 
     # Remove yum specific stuff
-    #pisitools.removeDir("/etc/yum")
+    pisitools.removeDir("/etc/yum")
     #pisitools.removeDir("/usr/bin")
-    #pisitools.removeDir("/usr/lib/yum-plugins")
-
-    pisitools.dodoc( "NEWS", "TODO")
+    pisitools.removeDir("/usr/lib/yum-plugins")
+    
+    shelltools.cd("..")
+    pisitools.dodoc("NEWS", "TODO")
