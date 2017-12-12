@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pardus.org.tr/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>fwupdate</Name>
+        <Homepage>https://github.com/rhinstaller/fwupdate</Homepage>
+        <Packager>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>Tools for using the ESRT and UpdateCapsule() to apply firmware updates</Summary>
+        <Description>Tools for using the ESRT and UpdateCapsule() to apply firmware updates</Description>
+        <Archive sha1sum="68873b972eff83c360d8e50d0214e354d881f272" type="targz">https://github.com/rhboot/fwupdate/archive/9.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gnu-efi</Dependency>
+            <Dependency>efivar-devel</Dependency>
+            <Dependency>popt-devel</Dependency>
+            <Dependency>libsmbios-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">build.patch</Patch>
+            <Patch level="1">fwupdate-9-objcopy_detection.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>fwupdate</Name>
+        <RuntimeDependencies>
+            <Dependency>popt</Dependency>
+            <Dependency>efivar</Dependency>
+            <Dependency>libsmbios</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>fwupdate-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">fwupdate</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2017-12-11</Date>
+            <Version>9</Version>
+            <Comment>First release</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>

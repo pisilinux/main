@@ -1,0 +1,22 @@
+--- fwupdate-9/efi/Makefile~	2017-03-06 20:36:55.000000000 +0000
++++ fwupdate-9/efi/Makefile	2017-05-12 18:10:02.737950709 +0000
+@@ -14,7 +14,7 @@
+ 	-Wl,--no-undefined -Wl,--fatal-warnings \
+ 	-Wl,-shared -Wl,-Bsymbolic -L$(LIBDIR) -L$(GNUEFIDIR) \
+ 	-Wl,--build-id=sha1 -Wl,--hash-style=sysv \
+-	$(GNUEFIDIR)/crt0-efi-$(ARCH).o
++	$(GNUEFIDIR)/crt0-efi-$(ARCH).o
+ OBJCOPY_GTE224 = $(shell expr `$(OBJCOPY) --version |grep ^"GNU objcopy" | sed 's/^[^0-9]*//g' | cut -f1-2 -d.` \>= 2.24)
+ 
+ FWUP = fwupdate
+--- fwupdate-9/linux/Makefile~	2017-03-06 20:36:55.000000000 +0000
++++ fwupdate-9/linux/Makefile	2017-05-12 20:39:51.049592296 +0000
+@@ -29,7 +29,7 @@
+ 	PKLIBS += libsmbios_c
+ 	CFLAGS += -DFWUPDATE_HAVE_LIBSMBIOS__
+ endif
+-BUILDFLAGS := $(CFLAGS) -Wall -Wextra -Werror -Wno-error=cpp \
++BUILDFLAGS := $(CFLAGS) -Wall -Wextra -Wno-error=cpp \
+ 	-Wno-unused-result -Wno-unused-function \
+ 	-Wsign-compare -Werror=sign-compare \
+ 	-fshort-wchar --std=gnu11 \
