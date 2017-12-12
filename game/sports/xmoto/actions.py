@@ -15,7 +15,11 @@ def setup():
     shelltools.export("CPPFLAGS", "-D_GLIBCXX_USE_CXX11_ABI=0")
     autotools.autoreconf("-vfi")
     autotools.configure("--prefix=/usr \
+                         --enable-threads=posix \
                          --disable-sdltest \
+                         --with-OpenGL \
+                         --with-renderer-sdlGfx=0 \
+                         --with-renderer-openGl=1 \
                          --with-internal-xdg=1")
 
 def build():
