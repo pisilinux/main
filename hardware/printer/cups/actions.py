@@ -43,6 +43,7 @@ def setup():
                --enable-avahi \
                --disable-gnutls \
                --disable-launchd \
+               --disable-libusb \
                --without-rcdir \
                --libdir=/usr/lib \
                --without-perl \
@@ -95,4 +96,4 @@ def install():
     # Serial backend needs to run as root
     #shelltools.chmod("%s/usr/lib/cups/backend/serial" % get.installDIR(), 0700)
 
-    pisitools.dodoc("CHANGES.txt", "CREDITS.txt", "LICENSE.txt", "README.txt")
+    pisitools.dodoc("LICENSE.txt")
