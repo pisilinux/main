@@ -9,14 +9,15 @@
             <Email>admins@pisilinux.org</Email>
         </Packager>
         <License>GPLv2</License>
-        <IsA>app:console</IsA>
+        <IsA>app:gui</IsA>
         <Summary>A printer administration tool</Summary>
         <Description>system-config-printer is a graphical user interface that allows the user to configure a CUPS print server.</Description>
-        <Archive sha1sum="bd79f87de9576a13c2d099181fea01a63b9f19cc" type="tarxz">http://cyberelk.net/tim/data/system-config-printer/1.5/system-config-printer-1.5.7.tar.xz</Archive>
+        <Archive sha1sum="d6233bfb6bec095cff4caf9516ed9c3fd358bdbd" type="targz">https://github.com/zdohnal/system-config-printer/archive/v1.5.9.tar.gz</Archive>
         <AdditionalFiles>
             <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
+            <Dependency>gtk3-devel</Dependency>
             <Dependency>util-linux</Dependency>
             <Dependency>xmlto</Dependency>
             <Dependency>libxslt-devel</Dependency>
@@ -26,19 +27,15 @@
             <Dependency>eudev-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>libusb-devel</Dependency>
-            <Dependency>libgnome-keyring-devel</Dependency>
+            <Dependency>gettext-devel</Dependency>
             <Dependency>desktop-file-utils</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch level="1">40_scp-dbus-service-fix-dbus-signature-typo.patch</Patch> -->
             <!-- Replace emblem-default by dialog-ok -->
             <Patch level="1">fix-icon.patch</Patch>
-<!--             <Patch level="1">system-config-printer-device-sorting.patch</Patch> -->
-            <Patch level="1">system-config-printer-shbang.patch</Patch>
-            <!-- Improvements for check-device-ids from upstream -->
-            <!--Patch level="1">system-config-printer-check-device-ids.patch</Patch-->
-            <!-- Fixed traceback in newprinter.py -->
-            <!--Patch level="1">system-config-printer-self.printers.patch</Patch-->
+            <!--make it actually work without libgnome-keyring -->
+            <Patch>pass_libgnome_keyring_missing.diff</Patch>
         </Patches>
     </Source>
 
@@ -49,10 +46,10 @@
             <Dependency>glib2</Dependency>
             <Dependency>libusb</Dependency>
             <Dependency>libgnome-keyring</Dependency>
-            <Dependency>python-cups</Dependency>
+            <Dependency>python3-cups</Dependency>
             <Dependency>python-smbc</Dependency>
-            <Dependency>dbus-python</Dependency>
-            <Dependency>python-pygobject3</Dependency>
+            <Dependency>dbus-python3</Dependency>
+            <Dependency>python3-pygobject3</Dependency>
             <Dependency>cups</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -98,6 +95,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2017-12-15</Date>
+            <Version>1.5.9</Version>
+            <Comment>Version bump</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
         <Update release="4">
             <Date>2017-03-01</Date>
             <Version>1.5.7</Version>

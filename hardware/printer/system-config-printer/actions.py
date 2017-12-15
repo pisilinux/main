@@ -7,13 +7,17 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
     # we are using different paths
     pisitools.dosed("cupshelpers/cupshelpers.py", "\/lib64\/", "\/lib\/")
     pisitools.dosed("troubleshoot/CheckUSBPermissions.py", "\/usr\/bin\/getfacl", "\/bin\/getfacl")
 
-    pisitools.dosed("Makefile.in", "xmlto man", "xmlto --skip-validation man")
+    pisitools.dosed("Makefile.am", "xmlto man", "xmlto --skip-validation man")
+    for i in ["README", "ChangeLog"]:
+        shelltools.touch(i)
+    autotools.autoreconf("-fi")
     autotools.configure("--with-udev-rules \
                          --with-systemdsystemunitdir=no \
                          --sysconfdir=/etc")
