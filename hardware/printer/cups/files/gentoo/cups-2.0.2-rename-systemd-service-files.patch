@@ -30,19 +30,6 @@ index 3e0884a..b354420 100644
  	elif test "x$(XINETD)" != x; then \
  		echo Installing xinetd configuration file for cups-lpd...; \
  		$(INSTALL_DIR) -m 755 $(BUILDROOT)$(XINETD); \
-diff --git a/scheduler/org.cups.cupsd.path.in b/scheduler/org.cups.cupsd.path.in
-index 1bccc6f..90c8576 100644
---- a/scheduler/org.cups.cupsd.path.in
-+++ b/scheduler/org.cups.cupsd.path.in
-@@ -2,7 +2,7 @@
- Description=CUPS Scheduler
- 
- [Path]
--PathExists=@CUPS_CACHEDIR@/org.cups.cupsd
-+PathExists=@CUPS_CACHEDIR@/d*
- 
- [Install]
- WantedBy=multi-user.target
 diff --git a/scheduler/org.cups.cupsd.service.in b/scheduler/org.cups.cupsd.service.in
 index 0a27c76..7a04248 100644
 --- a/scheduler/org.cups.cupsd.service.in
@@ -54,20 +41,5 @@ index 0a27c76..7a04248 100644
 -Also=org.cups.cupsd.socket org.cups.cupsd.path
 +Also=cups.socket cups.path
  WantedBy=printer.target
-diff --git a/scheduler/org.cups.cupsd.socket.in b/scheduler/org.cups.cupsd.socket.in
---- a/scheduler/org.cups.cupsd.socket.in
-+++ a/scheduler/org.cups.cupsd.socket.in
-@@ -3,6 +3,10 @@
- 
- [Socket]
- ListenStream=@CUPS_DEFAULT_DOMAINSOCKET@
-+ListenStream=[::1]:631
-+ListenStream=127.0.0.1:631
-+BindIPv6Only=ipv6-only
-+ReusePort=true
- 
- [Install]
- WantedBy=sockets.target
 -- 
 2.0.4
- 
