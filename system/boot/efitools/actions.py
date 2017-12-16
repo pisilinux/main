@@ -9,10 +9,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-def setup():
+def build():
+    shelltools.export("ARCH","x86_64")
+    
     autotools.make()
 
 def install():
+    shelltools.export("ARCH","x86_64")
+    
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     #pisitools.dodoc("COPYING", "README")
