@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>id3lib</Name>
+        <Homepage>http://id3lib.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Packager>
+        <License>GPLv1</License>
+        <IsA>driver</IsA>
+        <Summary>ID3v1 ve ID3v2 etiketlerini okumak, yazmak ve değiştirmek için kullanılan kitaplık</Summary>
+        <Description>ID3v1 ve ID3v2 etiketlerini okumak, yazmak ve değiştirmek için kullanılan kitaplık</Description>
+        <Archive sha1sum="c92c880da41d1ec0b242745a901702ae87970838" type="targz">https://sourceforge.net/projects/id3lib/files/id3lib/3.8.3/id3lib-3.8.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>libgcc</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>00-add-libz-to-compilation.patch</Patch>
+            <Patch>05-create-m4-directory.patch</Patch>
+            <Patch>10-fix-compilation-with-cpp-headers.patch</Patch>
+            <Patch>15-fix-headers-of-main-functions.patch</Patch>
+            <Patch>20-create-manpages.patch</Patch>
+            <Patch>30-fix-utf16.patch</Patch>
+            <Patch>40-deal-with-mkstemp.patch</Patch>
+            <Patch>50-remove-outdated-check.patch</Patch>
+            <Patch>60-add-c-wrapper-functions.patch</Patch>
+            <Patch>60-fix_make_check.patch</Patch>
+            <Patch>60-id3lib-missing-nullpointer-check.patch</Patch>
+            <Patch>60-spelling.patch</Patch>
+            <Patch>61-fix_vbr_stack_smash.patch</Patch>
+        </Patches>
+    </Source>
+    <Package>
+        <Name>id3lib</Name>
+        <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    <Package>
+        <Name>id3lib-devel</Name>
+        <Summary>Development files for id3lib</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">id3lib</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+    <History>
+        <Update release="1">
+            <Date>2017-12-17</Date>
+            <Version>3.8.3</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
