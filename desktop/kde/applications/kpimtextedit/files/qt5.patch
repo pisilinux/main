@@ -18,7 +18,7 @@ diff -Nuar a/src/composer-ng/richtextcomposerimages.cpp b/src/composer-ng/richte
          normalImage->image.save(&buffer, "PNG");
  
 -        qsrand(QDateTime::currentDateTimeUtc().toSecsSinceEpoch() + qHash(normalImage->name));
-+        qsrand(QDateTime::currentDateTimeUtc().toTime_t() + qHash(normalImage->name));
++        qsrand(QDateTime::currentDateTimeUtc().toMSecsSinceEpoch() + qHash(normalImage->name));
          QSharedPointer<EmbeddedImage> embeddedImage(new EmbeddedImage());
          retImages.append(embeddedImage);
          embeddedImage->image = KCodecs::Codec::codecForName("base64")->encode(buffer.buffer());
