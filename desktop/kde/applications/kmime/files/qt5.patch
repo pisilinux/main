@@ -1,6 +1,6 @@
 diff -Nuar a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	2017-12-08 04:01:51.000000000 +0300
-+++ b/CMakeLists.txt	2017-12-16 13:52:00.845672814 +0300
++++ b/CMakeLists.txt	2017-12-19 10:32:32.933843067 +0300
 @@ -22,7 +22,7 @@
  
  
@@ -12,7 +12,7 @@ diff -Nuar a/CMakeLists.txt b/CMakeLists.txt
  ecm_setup_version(PROJECT VARIABLE_PREFIX KMIME
 diff -Nuar a/src/kmime_header_parsing.cpp b/src/kmime_header_parsing.cpp
 --- a/src/kmime_header_parsing.cpp	2017-12-02 10:23:33.000000000 +0300
-+++ b/src/kmime_header_parsing.cpp	2017-12-16 14:10:14.307593916 +0300
++++ b/src/kmime_header_parsing.cpp	2017-12-19 10:34:03.406836539 +0300
 @@ -452,7 +452,9 @@
                  scursor = oldscursor;
              }
@@ -35,15 +35,19 @@ diff -Nuar a/src/kmime_header_parsing.cpp b/src/kmime_header_parsing.cpp
          default: //atom
 diff -Nuar a/src/kmime_util.cpp b/src/kmime_util.cpp
 --- a/src/kmime_util.cpp	2017-12-02 10:23:33.000000000 +0300
-+++ b/src/kmime_util.cpp	2017-12-16 14:06:40.956609310 +0300
-@@ -98,10 +98,8 @@
++++ b/src/kmime_util.cpp	2017-12-19 10:35:44.306829259 +0300
+@@ -98,10 +98,14 @@
      switch (cf.type()) {
      case CharFreq::SevenBitText:
          allowed << Headers::CE7Bit;
--        Q_FALLTHROUGH();
++#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
+         Q_FALLTHROUGH();
++#endif
      case CharFreq::EightBitText:
          allowed << Headers::CE8Bit;
--        Q_FALLTHROUGH();
++#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
+         Q_FALLTHROUGH();
++#endif
      case CharFreq::SevenBitData:
          if (cf.printableRatio() > 5.0 / 6.0) {
              // let n the length of data and p the number of printable chars.
