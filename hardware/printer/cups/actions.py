@@ -30,7 +30,6 @@ def setup():
                --enable-acl \
                --enable-ssl=yes \
                --enable-libpaper \
-               --enable-libusb=yes \
                --enable-debug \
                --enable-gssapi \
                --enable-dbus \
