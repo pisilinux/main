@@ -4,24 +4,31 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
+from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import shelltools
+
 
 def setup():
-    autotools.configure("--prefix=/usr \
-                         --disable-static")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson .. --prefix=/usr -Ddocumentation=false")
+    
 
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    shelltools.system("ninja")
     
 #def build():
   #  autotools.make("check")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     pisitools.dosym("libinput.so.10","/usr/lib/libinput.so.0")
     
     #pisitools.remove("/usr/lib/udev/rules.d/80-libinput-device-groups.rules")
     #pisitools.remove("/usr/lib/udev/rules.d/90-libinput-model-quirks.rules")
-    pisitools.dodoc("COPYING", "README.txt")
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING", "README*")
