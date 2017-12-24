@@ -26,4 +26,4 @@ def install():
     pisitools.dodoc("AUTHORS", "NEWS.md", "README.md")
 
     # preserve old header path for compatibility
-    pisitools.dosym("/usr/lib/libzip/include/zipconf.h", "/usr/include/zipconf.h")
+    #pisitools.dosym("/usr/lib/libzip/include/zipconf.h", "/usr/include/zipconf.h")
