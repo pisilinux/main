@@ -65,8 +65,8 @@ def setup():
 
     # Don't touch apache.conf
     for i in pisitools.ls("sapi/*/config.m4"):
-        pisitools.dosed(i, "\\-i \\-a \\-n php5", "-i -n php5")
-        pisitools.dosed(i, "\\-i \\-A \\-n php5", "-i -n php5")
+        pisitools.dosed(i, "\\-i \\-a \\-n php7", "-i -n php7")
+        pisitools.dosed(i, "\\-i \\-A \\-n php7", "-i -n php7")
 
     autotools.autoconf()
 
