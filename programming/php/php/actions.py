@@ -85,6 +85,7 @@ def setup():
                       --with-zend-vm=SWITCH \
                       --with-db4=/usr/lib \
                       --with-pic \
+                      --with-libzip \
                       --with-gnu-ld \
                       --with-system-tzdata=/usr/share/zoneinfo \
                       --with-mcrypt=/usr/bin/mcrypt \
