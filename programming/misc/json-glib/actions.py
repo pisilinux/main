@@ -11,15 +11,13 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    options = "--disable-gtk-doc-html \
-               --disable-gtk-doc \
-               --enable-introspection \
+    options = "-Ddocs=false \
+               -Dintrospection=true \
               "
                
     if get.buildTYPE() == "_emul32":
-        options += " --libdir=/usr/lib32 \
-                     --bindir=/_emul32/bin \
-                     --sbindir=/_emul32/sbin \
+        options += " --prefix='/usr' \
+                     --libdir=/usr/lib32 \
                    "
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
@@ -33,9 +31,11 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
+    
+    
     if get.buildTYPE() == "_emul32":
-        pisitools.removeDir("/_emul32")
+        #pisitools.removeDir("/_emul32")
+        
+        #pisitools.removeDir("/usr/share/gtk-doc")
 
-    pisitools.removeDir("/usr/share/gtk-doc")
-
-    pisitools.dodoc("ChangeLog", "NEWS")
+        pisitools.dodoc("README.md", "NEWS")
