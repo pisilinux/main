@@ -16,8 +16,13 @@ def setup():
               "
                
     if get.buildTYPE() == "_emul32":
-        options += " --prefix='/usr' \
-                     --libdir=/usr/lib32 \
+        options += " --libdir=/usr/lib32 \
+                     --bindir=/usr/lib32/bin \
+                     --sbindir=/usr/lib32/sbin \
+                     --datadir=/usr/lib32/share \
+                     --datarootdir=/usr/lib32/share \
+                     --libexecdir=/usr/lib32/libexec \
+                     --localedir=/usr/lib32/share/locale \
                    "
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
@@ -34,7 +39,10 @@ def install():
     
     
     if get.buildTYPE() == "_emul32":
-        #pisitools.removeDir("/_emul32")
+        pisitools.removeDir("usr/lib32/bin")
+        pisitools.removeDir("usr/lib32/libexec")
+        pisitools.removeDir("usr/lib32/share")
+        #pisitools.removeDir("usr/libexec")
         
         #pisitools.removeDir("/usr/share/gtk-doc")
 
