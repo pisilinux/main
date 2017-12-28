@@ -28,9 +28,9 @@ def setup():
                                     --with-boost-libdir=/usr/lib ")
 
 def build():
-    shelltools.system("./drake")
+    shelltools.system("rake")
 
 def install():
-    shelltools.system('./drake install DESTDIR="%s"' % get.installDIR())
+    shelltools.system('rake install DESTDIR="%s"' % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog",  "NEWS", "COPYING", "README.md",  "README.Windows.md")
+    pisitools.dodoc("AUTHORS", "NEWS*", "README*")
