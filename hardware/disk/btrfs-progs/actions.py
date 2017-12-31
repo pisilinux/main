@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure()
+    autotools.configure("--disable-zstd")
 
 def build():
     autotools.make("CC=%s" % get.CC())
