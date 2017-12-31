@@ -13,6 +13,8 @@ def setup():
                           --disable-static \
                           --disable-gpgsm-test \
                           --enable-languages=cpp,qt,python")
+     
+     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
@@ -23,7 +25,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    #pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfig.cmake")
-    #pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfigVersion.cmake")
+    pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfig.cmake")
+    pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfigVersion.cmake")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "THANKS", "TODO")
