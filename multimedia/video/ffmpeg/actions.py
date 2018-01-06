@@ -17,7 +17,6 @@ def setup():
                             --disable-stripping \
                             --enable-avfilter \
                             --enable-avresample \
-                            --enable-dxva2 \
                             --enable-fontconfig \
                             --enable-gnutls \
                             --enable-gpl \
@@ -49,7 +48,6 @@ def setup():
                             --enable-swresample \
                             --enable-vdpau \
                             --enable-version3 \
-                            --enable-x11grab \
                             --enable-libdc1394 \
                             --enable-libnut \
                             --enable-libcelt \
