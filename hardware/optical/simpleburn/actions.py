@@ -12,6 +12,7 @@ from pisi.actionsapi import cmaketools
 def setup():    
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_INSTALL_PREFIX=/usr \
+      -DGTK3=ON \
       -DBURNING=LIBBURNIA ")
 
 def build():
