@@ -14,6 +14,10 @@ shelltools.export("LC_ALL", "C")
 pixmaps = "/usr/share/pixmaps/"
 LoVersion = "%s" % get.srcVERSION()
 OurWorkDir = "%s/libreoffice-%s" % (get.workDIR(), LoVersion)
+#for support all languages.
+langall= "am ar ast bg bn bn-IN bo bs ca ca-valencia cs da de dz el en-GB en-US en-ZA eo es et eu fi fr gl gu he hi hr hu id is it ja ka km ko lo lt lv mk nb ne nl nn om pl pt pt-BR ro ru si sid sk sl sq sv ta tg tr ug uk vi zh-CN zh-TW"
+#for support some languages.
+lang="ar bg ca cs de el en-US es he hu ja kk ko ru tr tt uz zh-CN zh-TW"
 
 # temporarily disable failing tests, don't run broken tests on i686
 if get.buildTYPE() == "i686":
@@ -33,7 +37,7 @@ def setup():
                         --prefix=/usr      \
                         --sysconfdir=/etc               \
                         --with-vendor="Pisi Linux"         \
-                        --with-lang="ALL"      \
+                        --with-lang="%s"     \
                         --enable-gtk3         \
                         --with-help            \
                         --with-myspell-dicts  \
@@ -61,6 +65,7 @@ def setup():
                         --with-system-hunspell \
                         --with-system-icu               \
                         --with-system-jpeg              \
+                        --with-jdk-home=/usr/lib/jvm/java \
                         --with-system-lcms2             \
                         --with-system-libcdr \
                         --without-system-libcmis \
@@ -101,7 +106,7 @@ def setup():
                         --with-external-tar=external/tarballs \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
                         --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4 \
-                        --with-parallelism=%s' % (get.makeJOBS().replace("-j","")))
+                        --with-parallelism=%s' % (lang,get.makeJOBS().replace("-j","")))
 
 #--with-system-glew \
 def build():
@@ -111,7 +116,7 @@ def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
     
     pisitools.remove("gid_Module*")
-    
+        
     pisitools.insinto("/usr/share/appdata/", "sysui/desktop/appstream-appdata/libreoffice-*.xml")
     
     for pix in ["libreoffice-base.png", "libreoffice-calc.png", "libreoffice-draw.png", "libreoffice-impress.png", "libreoffice-main.png", "libreoffice-math.png", "libreoffice-startcenter.png", "libreoffice-writer.png"]:
