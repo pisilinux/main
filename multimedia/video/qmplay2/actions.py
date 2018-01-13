@@ -4,20 +4,30 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import qt5
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import shelltools
 
+def setup():
+    shelltools.makedirs("build")
+    shelltools.cd("build")    
 
-def setup():    
-     qt5.configure()         
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DUSE_QT5=ON \
+                          -DUSE_QT5=ON \
+                          -DUSE_LINK_TIME_OPTIMIZATION=ON", sourceDir=".." )
+
+def build():
+    shelltools.cd("build")
+
+    cmaketools.make()
+
+def install():
+    shelltools.cd("build")
+
+    cmaketools.install()
     
+    shelltools.cd("..")
 
-def build():      
-    qt5.make()
-
-def install():    
-    qt5.install()    
-
-    pisitools.dodoc( "README*", "TODO", "ChangeLog*", "AUTHORS")
+    pisitools.dodoc("README*", "LICENSE", "TODO*")
