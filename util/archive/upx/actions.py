@@ -15,7 +15,7 @@ def setup():
     shelltools.export("UPX_LZMADIR", get.workDIR())
 
 def build():
-    autotools.make("all")
+    autotools.make("CHECK_WHITESPACE=/bin/true all")
 
 def install():
     pisitools.insinto("/usr/bin", "src/upx.out", "upx")
