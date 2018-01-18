@@ -17,4 +17,4 @@ def build():
 def install():
     qt5.install()
 
-    pisitools.dodoc("LICENSE.GPL", "LICENSE.LGPLv3", "README.md")
+    pisitools.dodoc("LICENSE*")

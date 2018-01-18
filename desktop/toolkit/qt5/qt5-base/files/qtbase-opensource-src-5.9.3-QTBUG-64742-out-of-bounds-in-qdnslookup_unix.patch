@@ -1,0 +1,50 @@
+diff -up qtbase-opensource-src-5.9.3/src/network/kernel/qdnslookup_unix.cpp.orig qtbase-opensource-src-5.9.3/src/network/kernel/qdnslookup_unix.cpp
+--- qtbase-opensource-src-5.9.3/src/network/kernel/qdnslookup_unix.cpp.orig	2017-11-16 06:15:28.000000000 +0100
++++ src/network/kernel/qdnslookup_unix.cpp	2017-11-30 09:22:47.525741040 +0100
+@@ -42,6 +42,7 @@
+ #if QT_CONFIG(library)
+ #include <qlibrary.h>
+ #endif
++#include <qvarlengtharray.h>
+ #include <qscopedpointer.h>
+ #include <qurl.h>
+ #include <private/qnativesocketengine_p.h>
+@@ -58,6 +59,8 @@
+ #  include <gnu/lib-names.h>
+ #endif
+ 
++#include <cstring>
++
+ QT_BEGIN_NAMESPACE
+ 
+ #if QT_CONFIG(library)
+@@ -189,11 +192,25 @@ void QDnsLookupRunnable::query(const int
+     QScopedPointer<struct __res_state, QDnsLookupStateDeleter> state_ptr(&state);
+ 
+     // Perform DNS query.
+-    unsigned char response[PACKETSZ];
+-    memset(response, 0, sizeof(response));
+-    const int responseLength = local_res_nquery(&state, requestName, C_IN, requestType, response, sizeof(response));
++    QVarLengthArray<unsigned char, PACKETSZ> buffer(PACKETSZ);
++    memset(buffer.data(), 0, buffer.size());
++    int responseLength = local_res_nquery(&state, requestName, C_IN, requestType, buffer.data(), buffer.size());
++    if (Q_UNLIKELY(responseLength > PACKETSZ)) {
++        buffer.resize(responseLength);
++        memset(buffer.data(), 0, buffer.size());
++        responseLength = local_res_nquery(&state, requestName, C_IN, requestType, buffer.data(), buffer.size());
++        if (Q_UNLIKELY(responseLength > buffer.size())) {
++            // Ok, we give up.
++            reply->error = QDnsLookup::ResolverError;
++            reply->errorString.clear(); // We cannot be more specific, alas.
++            return;
++        }
++    }
+ 
+-    // Check the response header.
++    unsigned char *response = buffer.data();
++    // Check the response header. Though res_nquery returns -1 as a
++    // responseLength in case of error, we still can extract the
++    // exact error code from the response.
+     HEADER *header = (HEADER*)response;
+     const int answerCount = ntohs(header->ancount);
+     switch (header->rcode) {
