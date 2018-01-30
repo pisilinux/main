@@ -1,0 +1,32 @@
+diff -Nuar a/src/common/classes/alloc.cpp b/src/common/classes/alloc.cpp
+--- a/src/common/classes/alloc.cpp	2017-02-14 12:17:16.000000000 +0300
++++ b/src/common/classes/alloc.cpp	2018-01-30 20:53:56.618391768 +0300
+@@ -2141,3 +2141,11 @@
+ {
+ 	Firebird::MemoryPool::globalFree(mem);
+ }
++void operator delete(void* mem, size_t) throw()
++{
++	Firebird::MemoryPool::globalFree(mem);
++}
++void operator delete[](void* mem, size_t) throw()
++{
++	Firebird::MemoryPool::globalFree(mem);
++}
+diff -Nuar a/src/common/classes/alloc.h b/src/common/classes/alloc.h
+--- a/src/common/classes/alloc.h	2017-02-14 12:17:16.000000000 +0300
++++ b/src/common/classes/alloc.h	2018-01-30 20:55:04.555386866 +0300
+@@ -498,13 +498,6 @@
+ 
+ inline static MemoryPool* getDefaultMemoryPool() { return Firebird::MemoryPool::processMemoryPool; }
+ 
+-// Global versions of operators new and delete
+-void* operator new(size_t s) THROW_BAD_ALLOC;
+-void* operator new[](size_t s) THROW_BAD_ALLOC;
+-
+-void operator delete(void* mem) throw();
+-void operator delete[](void* mem) throw();
+-
+ #ifdef DEBUG_GDS_ALLOC
+ inline void* operator new(size_t s, Firebird::MemoryPool& pool, const char* file, int line)
+ {
