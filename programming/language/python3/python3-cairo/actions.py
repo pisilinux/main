@@ -14,4 +14,4 @@ def setup():
 def install(): 
     pythonmodules.install(pyVer = "3")
 
-    pisitools.dodoc("AUTHORS", "COPYING", "README","COPYING*")
+    pisitools.dodoc("COPYING*", "README*","COPYING*")
