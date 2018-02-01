@@ -11,6 +11,7 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -e '/CONFIG/a QMAKE_CXXFLAGS += -Wno-expansion-to-defined' -i Tools/qmake/mkspecs/features/unix/default_pre.prf")
     qt5.configure()
 
 def build():
