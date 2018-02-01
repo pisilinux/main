@@ -8,55 +8,32 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 
-shelltools.export("XDG_DATA_HOME", get.workDIR())
-#pisitools.flags.replace("-ggdb3", "-g")
-
-cflags = get.CFLAGS().replace("-ggdb3","")
-cxxflags = get.CXXFLAGS().replace("-gddb3", "")
-
-paths = ["JavaScriptCore", "WebCore", "WebKit"]
-docs = ["AUTHORS", "ChangeLog", "COPYING.LIB", "THANKS", \
-        "LICENSE-LGPL-2", "LICENSE-LGPL-2.1", "LICENSE"]
 
 def setup():
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("CXXFLAGS", cxxflags)
-    autotools.configure("--prefix=/usr \
-                        --libexecdir=/usr/lib/WebKitGTK \
-                        --disable-static \
-                        --disable-webkit2 \
-                        --disable-gtk-doc \
-                        --disable-silent-rules \
-                        --disable-wayland-target \
-                        --enable-geolocation \
-                        --enable-glx \
-                        --enable-webgl \
-                        --with-gnu-ld \
-                        --with-gtk=2.0 \
-                        --enable-x11-target \
-                        --enable-video \
-                        --enable-web-audio \
-                        --enable-introspection")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("cmake .. -DPORT=GTK \
+                        -DCMAKE_BUILD_TYPE=Release \
+                        -DCMAKE_SKIP_RPATH=ON \
+                        -DCMAKE_INSTALL_PREFIX=/usr \
+                        -DLIB_INSTALL_DIR=/usr/lib \
+                        -DLIBEXEC_INSTALL_DIR=/usr/lib \
+                        -DENABLE_GTKDOC=NO \
+                        -DPYTHON_EXECUTABLE=/usr/bin/python \
+                        -DUSE_LIBHYPHEN=OFF \
+                        -G Ninja")
 
 def build():
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("CXXFLAGS", cxxflags)
-    autotools.make("-j1 all stamp-po")
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    #autotools.make()
 
 def install():
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("CXXFLAGS", cxxflags)
-    autotools.rawInstall("-j1 DESTDIR=%s" % get.installDIR())
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    #shelltools.cd("..")
 
-    pisitools.domove("/usr/share/gtk-doc/html", "/usr/share/doc/webkit-gtk2")
-
-    pisitools.dodoc("NEWS")
-    shelltools.cd("Source")
-    for path in paths:
-        for doc in docs:
-            if shelltools.isFile("%s/%s" % (path, doc)):
-                pisitools.insinto("%s/%s/%s" % (get.docDIR(), get.srcNAME(), path),
-                                  "%s/%s" % (path, doc))
+    #pisitools.dodoc("LICENSE", "README")
