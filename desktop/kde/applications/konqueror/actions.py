@@ -8,7 +8,10 @@ from pisi.actionsapi import pisitools
 
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_INSTALL_PREFIX=/usr \
+                    -DCMAKE_INSTALL_LIBDIR=lib \
+                    -DBUILD_TESTING=OFF")
 
 def build():
     kde5.make()
