@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>Scalable Vector Graphics (SVG) rendering library</Summary>
         <Description>librsvg is a component used within software applications to enable support for SVG-format scalable vector graphics.</Description>
-        <Archive sha1sum="6d800afa8d886eba9c3039875d4fc89a8004932f" type="tarxz">mirrors://gnome/librsvg/2.40/librsvg-2.40.16.tar.xz</Archive>
+        <Archive sha1sum="244441b0f83ea8b3888cea2e9337eed3426f0149" type="tarxz">mirrors://gnome/librsvg/2.40/librsvg-2.40.20.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>libcroco-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
@@ -31,9 +31,11 @@
         <Name>librsvg</Name>
         <RuntimeDependencies>
             <Dependency>glib2</Dependency>
+            <Dependency>gtk3</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>pango</Dependency>
+            <Dependency>fontconfig</Dependency>
             <Dependency>libcroco</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
         </RuntimeDependencies>
@@ -41,13 +43,26 @@
             <Path fileType="config">/etc/gtk-2.0</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
             <Path fileType="man">/usr/share/man/man1</Path>
             <Path fileType="data">/usr/share/pixmaps</Path>
             <Path fileType="data">/usr/share/themes</Path>
             <Path fileType="data">/usr/share/vala</Path>
-            <Path fileType="doc">/usr/share/gtk-doc</Path>
+<!--             <Path fileType="doc">/usr/share/gtk-doc</Path> -->
             <Path fileType="data">/usr/share/gir-1.0/Rsvg-2.0.gir</Path>
             <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>librsvg-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>librsvg reference documents</Summary>
+        <RuntimeDependencies>
+            <Dependency>librsvg</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
         </Files>
     </Package>
 
@@ -68,6 +83,13 @@
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2018-01-08</Date>
+            <Version>2.40.20</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2017-02-20</Date>
             <Version>2.40.16</Version>

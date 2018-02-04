@@ -6,16 +6,24 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static")
-
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson .. --prefix=/usr --sysconfdir=/etc -Dwith-dbus-service-dir=/usr/share/dbus-1/services \
+        -Dwith-dbus-system-service-dir=/usr/share/dbus-1/system-services -Dwith-gio-modules-dir=/usr/lib/gio/modules \
+        -Denable-gtk-doc=false -Denable-man=true")
+    
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dodoc("COPYING", "NEWS")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING", "NEWS", "README")
 

@@ -130,7 +130,10 @@ int main(int argc, char *argv[])
 		month = mc->hdr.date >> 24;
 		day = (mc->hdr.date >> 16) & 0xff;
 
-		asprintf(&filename, "intel-ucode/%02x-%02x-%02x", family, model, stepping);
+		if (asprintf(&filename, "intel-ucode/%02x-%02x-%02x", family, model, stepping) < 0) {
+			rc = EXIT_FAILURE;
+			goto out;
+		}
 		printf("\n");
 		printf("%s\n", filename);
 		printf("signature: 0x%02x\n", mc->hdr.sig);

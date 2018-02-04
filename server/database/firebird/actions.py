@@ -14,7 +14,8 @@ WorkDir="Firebird-%s-0" % get.srcVERSION()
 
 def setup():
     shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
-    shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
+    #shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
+    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse" % get.CXXFLAGS())
     pisitools.dosed("src/isql/isql.epp", '"isql\s', '"fbsql ')
     pisitools.dosed("src/msgs/history2.sql", 'isql\s', 'fbsql ')
     pisitools.dosed("src/msgs/messages2.sql", 'isql\s', 'fbsql ')
@@ -34,7 +35,8 @@ def setup():
 
 def build():
     #Parallel build is broken
-    shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
+    #shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
+    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse" % get.CXXFLAGS())
     autotools.make("-j1")
     shelltools.cd("gen")
     pisitools.dosed("install/makeInstallImage.sh", "exit 1", "# exit 1")

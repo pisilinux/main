@@ -32,5 +32,5 @@ def install():
     autotools.rawInstall("DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
 
     
-    pisitools.dohtml("doc/html/*")
+    #pisitools.dohtml("doc/html/*")
     pisitools.dodoc("NEWS", "README","LICENSE*")
