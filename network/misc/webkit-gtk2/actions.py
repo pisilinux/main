@@ -20,6 +20,7 @@ docs = ["AUTHORS", "ChangeLog", "COPYING.LIB", "THANKS", \
         "LICENSE-LGPL-2", "LICENSE-LGPL-2.1", "LICENSE"]
 
 def setup():
+    autotools.autoreconf("-fiv")
     shelltools.export("CFLAGS", cflags)
     shelltools.export("CXXFLAGS", cxxflags)
     autotools.configure("--prefix=/usr \
