@@ -6,17 +6,21 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--prefix=/usr \
-                         --disable-static")
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
-def build():
-    autotools.make()
-
-def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson --prefix=/usr -Denable-gtk-doc=true ..")
     
-    pisitools.dodoc("README", "NEWS", "COPYING", "TODO", "AUTHORS", "ChangeLog")
+def build():
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
+def install():
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.dodoc("README", "NEWS", "COPYING", "TODO", "AUTHORS")
