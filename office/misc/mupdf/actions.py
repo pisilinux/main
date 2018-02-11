@@ -14,7 +14,7 @@ def build():
     autotools.make("prefix=/usr")
 
     # remove bundled packages, use our system libraries
-    shelltools.system("rm -rf thirdparty/{curl,freetype,glfw,harfbuzz,jbig2dec,jpeg,openjpeg,zlib}")
+    shelltools.system("rm -rf thirdparty/{curl,freeglut,freetype,harfbuzz,jbig2dec,libjpeg,openjpeg,zlib}")
 
 def install():
     autotools.rawInstall("DESTDIR=%s prefix=/usr" % get.installDIR())
