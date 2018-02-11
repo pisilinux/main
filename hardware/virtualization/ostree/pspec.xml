@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pardus.org.tr/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>ostree</Name>
+        <Homepage>https://github.com/ostreedev/ostree</Homepage>
+        <Packager>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>Operating system and container binary deployment and upgrades</Summary>
+        <Description>OSTree is a tool for managing bootable, immutable, versioned filesystem trees</Description>
+        <Archive sha1sum="35d5aabc940ac09236d3d1b59e67e038c3b24d66" type="targz">https://github.com/ostreedev/ostree/archive/v2018.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>rust</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>fuse-devel</Dependency>
+            <Dependency>libarchive-devel</Dependency>
+            <Dependency>avahi-devel</Dependency>
+            <Dependency>avahi-glib-devel</Dependency>
+            <Dependency>libsoup-devel</Dependency>
+            <Dependency>e2fsprogs-devel</Dependency>
+            <Dependency>libutil-linux-devel</Dependency>
+            <Dependency>gnutls-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">bsdiff_libglnx_submodule.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>ostree</Name>
+        <RuntimeDependencies>
+            <Dependency>xz</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>fuse</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>gpgme</Dependency>
+            <Dependency>libsoup</Dependency>
+            <Dependency>libarchive</Dependency>
+            <Dependency>libgpg-error</Dependency>
+            <Dependency>libutil-linux</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>libgcc</Dependency>            
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="config">/etc/ostree</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/libexec</Path>
+            <Path fileType="library">/usr/share/gir-1.0</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
+            <Path fileType="data">/usr/share/ostree</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>ostree-devel</Name>
+        <Summary>Development files for ostree</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">ostree</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>fuse-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency>libsoup-devel</Dependency>
+            <Dependency>libarchive-devel</Dependency>
+            <Dependency>libgpg-error-devel</Dependency>
+            <Dependency>libutil-linux-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+     
+    <History>
+        <Update release="1">
+            <Date>2018-02-02</Date>
+            <Version>2018.1</Version>
+            <Comment>First release</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>

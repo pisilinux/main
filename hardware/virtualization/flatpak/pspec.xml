@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pardus.org.tr/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>flatpak</Name>
+        <Homepage>http://flatpak.org</Homepage>
+        <Packager>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <Summary>Application distribution framework</Summary>
+        <Description>Linux application sandboxing and distribution framework, formerly xdg-app</Description>
+        <Archive sha1sum="730b3e8a244de2dddecf619e593d2f595ab5f6ca" type="targz">https://github.com/flatpak/flatpak/archive/0.10.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>util-linux</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>libcap-devel</Dependency>
+            <Dependency>bubblewrap</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>libseccomp-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>json-glib-devel</Dependency>
+            <Dependency>appstream-glib-devel</Dependency>
+            <Dependency>ostree-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">bubblewrap_libglnx_submodule.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>flatpak</Name>
+        <RuntimeDependencies>
+            <Dependency>xorg-app</Dependency>
+            <Dependency>bubblewrap</Dependency>
+            <Dependency>fuse</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>gpgme</Dependency>
+            <Dependency>libXau</Dependency> 
+            <Dependency>libxml2</Dependency>
+            <Dependency>libsoup</Dependency>
+            <Dependency>json-glib</Dependency>
+            <Dependency>libarchive</Dependency>
+            <Dependency>libseccomp</Dependency>
+            <Dependency>ostree</Dependency>
+            <Dependency>polkit</Dependency>
+            <Dependency>appstream-glib</Dependency>   
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/libexec</Path>
+            <Path fileType="library">/usr/share/gir-1.0</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="data">/usr/share/polkit-1</Path>
+            <Path fileType="data">/usr/share/flatpak</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="locale">/usr/share/locale</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/gdm</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/profile.d/flatpak-bindir.sh" permission="0644" owner="root">flatpak-bindir.sh</AdditionalFile>
+            <AdditionalFile target="/usr/share/flatpak/flathub.flatpakrepo" permission="0644" owner="root">flathub.flatpakrepo</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    
+    <Package>
+        <Name>flatpak-devel</Name>
+        <Summary>Development files for flatpak</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">flatpak</Dependency>
+            <Dependency>fuse-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency>libXau-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>libsoup-devel</Dependency>
+            <Dependency>json-glib-devel</Dependency>
+            <Dependency>libarchive-devel</Dependency>
+            <Dependency>libseccomp-devel</Dependency>
+            <Dependency>ostree-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>appstream-glib-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2018-02-03</Date>
+            <Version>0.10.3</Version>
+            <Comment>First release</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
