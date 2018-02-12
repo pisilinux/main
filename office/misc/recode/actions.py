@@ -9,9 +9,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.unlink("m4/libtool.m4")
-    shelltools.unlink("acinclude.m4")
-    autotools.autoreconf("-vif")
+    #shelltools.unlink("m4/libtool.m4")
+    #shelltools.unlink("acinclude.m4")
+    #autotools.autoreconf("-vif")
 
     autotools.configure("--enable-nls \
                          --without-included-gettext \
@@ -23,4 +23,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "BACKLOG", "ChangeLog", "NEWS", "README", "THANKS", "TODO")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "THANKS", "TODO")
