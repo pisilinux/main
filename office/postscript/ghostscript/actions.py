@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     # Remove local copies for system libs
-    for directory in ["lcms2", "libpng", "openjpeg", "tiff", "zlib"]:
+    for directory in ["cups/libs", "jpeg", "lcms2", "libpng", "openjpeg", "tiff", "zlib"]:
         shelltools.unlinkDir(directory)
 
     #pisitools.flags.add("-fno-strict-aliasing")
