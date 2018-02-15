@@ -12,7 +12,7 @@
         <License>MIT</License>
         <Summary>HP Linux Imaging and Printing System</Summary>
         <Description>HP Linux Imaging and Printing (HPLIP) System includes printer and scanner drivers and related service tools.</Description>
-        <Archive sha1sum="177252a6c3e508b6d4f9d02663fe3556f37de71e" type="targz">mirrors://sourceforge/hplip/hplip-3.16.11.tar.gz</Archive>
+        <Archive sha1sum="72705f45157227907a79e326da6524317c1aaff6" type="targz">mirrors://sourceforge/hplip/hplip-3.17.11.tar.gz</Archive>
         <AdditionalFiles>
             <!-- PPD patcher -->
             <AdditionalFile permission="0755" target="patch-ppds">patch-ppds.sh</AdditionalFile>
@@ -23,6 +23,7 @@
             <AdditionalFile target="ppd-patches/002-hplip-ppd-ImageableArea.patch">fedora/hplip-ppd-ImageableArea.patch</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
+            <Dependency>zlib-devel</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>foomatic-db</Dependency>
             <Dependency>net-snmp-devel</Dependency>
@@ -37,28 +38,34 @@
         <Patches>
             <Patch level="1">fedora/hplip-avahi-parsing.patch</Patch>
             <Patch level="1">fedora/hplip-bad-low-ink-warning.patch</Patch>
+            <Patch level="1">fedora/hplip-check-cups.patch</Patch>
             <Patch level="1">fedora/hplip-clear-old-state-reasons.patch</Patch>
-<!--             <Patch level="1">fedora/hplip-device-reconnected.patch</Patch> -->
+            <Patch level="1">fedora/hplip-colorlaserjet-mfp-m278-m281.patch</Patch>
+            <Patch level="1">fedora/hplip-device-reconnected.patch</Patch>
             <Patch level="1">fedora/hplip-deviceIDs-drv.patch</Patch>
             <Patch level="1">fedora/hplip-dj990c-margin.patch</Patch>
+            <Patch level="1">fedora/hplip-3165-sourceoption.patch</Patch>
             <Patch level="1">fedora/hplip-hpcups-sigpipe.patch</Patch>
             <Patch level="1">fedora/hplip-hpijs-marker-supply.patch</Patch>
+            <Patch level="1">fedora/hplip-jpeg-compression.patch</Patch>
             <Patch level="1">fedora/hplip-lineart.patch</Patch>
             <Patch level="1">fedora/hplip-log-stderr.patch</Patch>
 	    <Patch level="1">fedora/hplip-logdir.patch</Patch>
             <Patch level="1">fedora/hplip-no-asm.patch</Patch>
             <Patch level="1">fedora/hplip-no-write-bytecode.patch</Patch>
+            <Patch level="1">fedora/hplip-noernie.patch</Patch>
             <!-- The pstotiff filter is rubbish so replace it -->    
-<!--             <Patch level="1">fedora/hplip-pstotiff-is-rubbish.patch</Patch> -->
+            <Patch level="1">fedora/hplip-pstotiff-is-rubbish.patch</Patch>
             <Patch level="1">fedora/hplip-retry-open.patch</Patch>
             <Patch level="1">fedora/hplip-scan-tmp.patch</Patch>
             <Patch level="1">fedora/hplip-silence-ioerror.patch</Patch>
             <Patch level="1">fedora/hplip-snmp-quirks.patch</Patch>
             <Patch level="1">fedora/hplip-strncpy.patch</Patch>
-	    <Patch level="1">fedora/hplip-udev-rules.patch</Patch>
+            <Patch level="1">fedora/hplip-typo.patch</Patch>
+            <Patch level="1">fedora/hplip-udev-rules.patch</Patch>
             <Patch level="1">fedora/hplip-strstr-const.patch</Patch>
             <!-- Make utils.checkPyQtImport() look for the gui sub-package -->
-<!--             <Patch level="1">fedora/hplip-ui-optional.patch</Patch> -->
+            <Patch level="1">fedora/hplip-ui-optional.patch</Patch>
             <!-- Make sure to avoid handwritten asm -->
             <!-- PisiLinuX patches -->
             <Patch level="1">pisilinux/desktop-i18n.patch</Patch>
@@ -74,6 +81,7 @@
             <Patch level="1">Add-include-cups-ppd.h-in-various-places-as-CUPS-2.2.patch</Patch>
         </Patches>
     </Source>
+    </Source>
 
     <Package>
         <Name>hplip</Name>
@@ -81,6 +89,7 @@
         <IsA>library</IsA>
         <IsA>driver</IsA>
         <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>net-snmp</Dependency>
             <Dependency>foomatic-db</Dependency>
@@ -163,6 +172,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2017-04-15</Date>
+            <Version>3.17.11</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2017-04-09</Date>
             <Version>3.16.11</Version>

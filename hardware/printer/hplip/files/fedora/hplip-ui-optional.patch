@@ -1,7 +1,7 @@
-diff -up hplip-3.12.11/base/utils.py.ui-optional hplip-3.12.11/base/utils.py
---- hplip-3.12.11/base/utils.py.ui-optional	2012-11-20 10:55:15.000000000 +0100
-+++ hplip-3.12.11/base/utils.py	2012-11-27 10:03:21.909512264 +0100
-@@ -667,6 +667,13 @@ def checkPyQtImport(): # qt3
+diff -up hplip-3.16.7/base/utils.py.ui-optional hplip-3.16.7/base/utils.py
+--- hplip-3.16.7/base/utils.py.ui-optional	2016-07-15 12:12:28.000000000 +0200
++++ hplip-3.16.7/base/utils.py	2016-08-12 10:12:24.599398769 +0200
+@@ -733,6 +733,13 @@ def checkPyQtImport(): # qt3
          if os.getenv('DISPLAY') and os.getenv('STARTED_FROM_MENU'):
              no_qt_message_gtk()
  
@@ -15,13 +15,40 @@ diff -up hplip-3.12.11/base/utils.py.ui-optional hplip-3.12.11/base/utils.py
          log.error("PyQt not installed. GUI not available. Exiting.")
          return False
  
-@@ -712,7 +719,8 @@ def checkPyQtImport4():
-         import PyQt4
-         import ui4
-     except ImportError:
--        log.error("HPLIP is not installed properly or is installed without graphical support. Please reinstall HPLIP")
-+        # hplip-gui sub-package (Fedora) requires PyQt4
+@@ -783,7 +790,8 @@ def checkPyQtImport4():
+         import PyQt5
+         import ui5
+     else:
+-        log.debug("HPLIP is not installed properly or is installed without graphical support. Please reinstall HPLIP again")
++        # hplip-gui sub-package (Fedora) requires python3-qt5
 +        log.error("Install the hplip-gui package for graphical support.")
          return False
-     else:
-         return True
+     return True
+ 
+@@ -2434,6 +2442,7 @@ def checkPyQtImport45():
+     except ImportError as e:
+         log.debug(e)
+ 
++    log.error("Install the hplip-gui package for graphical support.")
+     raise ImportError("GUI Modules PyQt4 and PyQt5 are not installed")
+ 
+ 
+@@ -2455,6 +2464,7 @@ def import_dialog(ui_toolkit):
+             return  (QApplication, "ui4")
+         except ImportError as e:
+             log.error(e)
++            log.error("Unable to load Qt support. Is hplip-gui package installed?")
+             sys.exit(1)
+     elif ui_toolkit == "qt5":
+         try:
+@@ -2463,9 +2473,7 @@ def import_dialog(ui_toolkit):
+             return (QApplication, "ui5")
+         except ImportError as e:
+             log.error(e)
+-            sys.exit(1)
+-        else:
+-            log.error("Unable to load Qt support. Is it installed?")
++            log.error("Unable to load Qt support. Is hplip-gui package installed?")
+             sys.exit(1)
+ 
+ 
