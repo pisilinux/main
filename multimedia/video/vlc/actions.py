@@ -25,6 +25,7 @@ def setup():
                             --with-default-font=/usr/share/fonts/dejavu/DejaVuSans.ttf \
                             --with-default-monospace-font=/usr/share/fonts/dejavu/DejaVuSansMono.ttf \
                             --with-x \
+                              BUILDCC=gcc \
                               LUAC=luac  LUA_LIBS='`pkg-config --libs lua`' \
                               RCC=/usr/bin/rcc-qt5 \
                             --disable-qt4 \
