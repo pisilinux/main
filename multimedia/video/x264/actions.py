@@ -33,6 +33,7 @@ def setup():
     # Not delete --bit-depth=8 \
     autotools.rawConfigure("--prefix=/usr \
                             --enable-pic \
+                            --disable-asm \
                             --enable-shared \
                             --disable-avs \
                             --disable-ffms \
