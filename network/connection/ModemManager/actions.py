@@ -16,6 +16,8 @@ def setup():
                          --with-udev-base-dir=/lib/udev \
                          --enable-gtk-doc \
                          --with-polkit=permissive")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
