@@ -15,7 +15,9 @@ def build():
 def install():
     pythonmodules.install(pyVer="3")
     
-    pisitools.insinto("/usr/share/vim/vimfiles", "syntax-highlighting/vim/*")
+    pisitools.insinto("/usr/share/vim/vimfiles", "data/syntax-highlighting/vim/*")
+    pisitools.insinto("/usr/share/emacs/site-lisp", "data/syntax-highlighting/emacs/*")
+    pisitools.insinto("/usr/share/zsh/site-functions", "data/shell-completions/zsh/*")
     pisitools.remove("/usr/share/vim/vimfiles/README")
     
     pisitools.dodoc("COPYING", "README*")
