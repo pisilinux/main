@@ -13,10 +13,11 @@ from pisi.actionsapi import get
     
 
 def build():
+    pisitools.dosed("cryptopp.pc", "@VERSION@", get.srcVERSION())
+    
     cmaketools.make()
     
-    pisitools.dosed("cryptopp.pc", "@VERSION@", get.srcVERSION())
-
+    
 def install():
     cmaketools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
 
