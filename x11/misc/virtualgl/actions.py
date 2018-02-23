@@ -22,6 +22,7 @@ def setup():
       
       options += "-DVGL_LIBDIR=/usr/lib32 \
                   -DCMAKE_INSTALL_PREFIX=/emul32 \
+                  -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
                   -DVGL_BINDIR=/emul32/bin \
                   -DTJPEG_LIBRARY=/usr/lib32/libturbojpeg.so \
                   -DVGL_FAKELIBDIR=/usr/lib32/fakelib \
@@ -29,9 +30,9 @@ def setup():
     elif get.ARCH() == "x86_64":
       
       options += "-DVGL_LIBDIR=/usr/lib \
-                  -DCMAKE_INSTALL_PREFIX=/usr/share \
+                  -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+                  -DCMAKE_INSTALL_PREFIX=/usr \
                   -DVGL_FAKELIBDIR=/usr/lib/fakelib \
-                  -DCMAKE_INSTALL_PREFIX=/usr/share \
                   -DTJPEG_LIBRARY=/usr/lib/libturbojpeg.so \
                   -DVGL_BINDIR=/usr/bin"
       
