@@ -11,5 +11,7 @@ def build():
 
 def install():
     pythonmodules.install()
+    
+    pisitools.rename("/usr/bin/wsdump.py", "wsdump2.py")
 
     pisitools.dodoc("MANIFEST*", "ChangeLog", "README*", "LICENSE")
