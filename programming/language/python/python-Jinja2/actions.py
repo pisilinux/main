@@ -27,4 +27,4 @@ def install():
     #autotools.make("html")
     #shelltools.cd("..")
     #pisitools.dohtml("Jinja2-%s/docs/_build/html/*" % get.srcVERSION())
-    pisitools.dodoc("CHANGES")
+    pisitools.dodoc("CHANGES*", "README*")
