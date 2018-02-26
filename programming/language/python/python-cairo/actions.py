@@ -8,16 +8,13 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
-
-shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
+from pisi.actionsapi import pythonmodules
 
 def setup():
-    shelltools.system("python waf configure --prefix=/usr")
-
-def build():
-    shelltools.system("python waf build -v")
-
+    pythonmodules.compile()
+    
+    
 def install():
-    shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
+    pythonmodules.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING", "README","COPYING-*")
+    pisitools.dodoc("COPYING*", "README*","NEWS*")
