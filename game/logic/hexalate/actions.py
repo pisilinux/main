@@ -6,7 +6,12 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import qt5
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import autotools
+from pisi.actionsapi import get
 
+def setup():
+    qt5.configure(parameters="PREFIX=/usr")
 
 def build():
     qt5.make()
