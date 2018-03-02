@@ -7,8 +7,6 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import qt5
 
-def setup():
-    qt5.configure()
 
 def build():
     qt5.make()
