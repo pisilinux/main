@@ -1,0 +1,155 @@
+diff -Nuar a/src/modules/localecfg/main.py b/src/modules/localecfg/main.py
+--- a/src/modules/localecfg/main.py	2017-12-20 12:22:06.000000000 +0300
++++ b/src/modules/localecfg/main.py	2017-12-26 21:20:05.000000000 +0300
+@@ -83,7 +83,7 @@
+     locale_conf_path = os.path.join(install_path, "etc/locale.conf")
+     with open(locale_conf_path, "w") as lcf:
+         for k, v in locale_conf.items():
+-            lcf.write("{!s}={!s}\n".format(k, v))
++            lcf.write("{!s}\n".format(v))
+ 
+     # write /etc/default/locale if /etc/default exists and is a dir
+     etc_default_path = os.path.join(install_path, "etc/default")
+diff -Nuar a/src/modules/mudur/main.py b/src/modules/mudur/main.py
+--- a/src/modules/mudur/main.py	1970-01-01 02:00:00.000000000 +0200
++++ b/src/modules/mudur/main.py	2017-11-25 06:15:16.000000000 +0300
+@@ -0,0 +1,64 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++#
++# === This file is part of Calamares - <http://github.com/calamares> ===
++#
++#   Copyright 2014, Anke Boersma <demm@kaosx.us>
++#   Copyright 2015, Philip Müller <philm@manjaro.org>
++#
++#   Calamares is free software: you can redistribute it and/or modify
++#   it under the terms of the GNU General Public License as published by
++#   the Free Software Foundation, either version 3 of the License, or
++#   (at your option) any later version.
++#
++#   Calamares is distributed in the hope that it will be useful,
++#   but WITHOUT ANY WARRANTY; without even the implied warranty of
++#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++#   GNU General Public License for more details.
++#
++#   You should have received a copy of the GNU General Public License
++#   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
++
++import os
++import shutil
++
++import libcalamares
++
++
++
++def run():
++
++    install_path = libcalamares.globalstorage.value("rootMountPoint")
++    
++    
++    path = os.path.join(install_path, "etc/locale.conf")
++    
++    mloc = open(path,"r")
++    
++    languages = mloc.readline(2)
++
++  
++    mudur_file_path = os.path.join(install_path, "etc/conf.d/mudur")
++    lines = []
++    for l in open(mudur_file_path, "r").readlines():
++        if l.strip().startswith('language=') or l.strip().startswith('# language='):
++            if languages == "pt":
++                l = 'language="pt_BR"\n'
++            else:
++                l = 'language="%s"\n' % languages
++        lines.append(l)
++
++    open(mudur_file_path, "w").writelines(lines)
++    
++    if os.path.exists(os.path.join(install_path, "etc/sudoers")):
++        os.unlink(os.path.join(install_path, "etc/sudoers"))
++    
++
++    source = os.path.join(install_path, "etc/sudoers.orig")
++    target = os.path.join(install_path, "etc/sudoers")
++    
++    shutil.copy(source, target)
++    
++    libcalamares.utils.target_env_call(['chmod', '440', '/etc/sudoers'])
++
++    return None
+diff -Nuar a/src/modules/mudur/module.desc b/src/modules/mudur/module.desc
+--- a/src/modules/mudur/module.desc	1970-01-01 02:00:00.000000000 +0200
++++ b/src/modules/mudur/module.desc	2016-05-09 14:24:30.000000000 +0300
+@@ -0,0 +1,5 @@
++---
++type:       "job"
++name:       "mudur"
++interface:  "python"
++script:     "main.py"
+diff -Nuar a/src/modules/sil/main.py b/src/modules/sil/main.py
+--- a/src/modules/sil/main.py	1970-01-01 02:00:00.000000000 +0200
++++ b/src/modules/sil/main.py	2017-12-31 15:05:16.622215846 +0300
+@@ -0,0 +1,53 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++#
++# === This file is part of Calamares - <http://github.com/calamares> ===
++#
++#   Copyright 2014, Anke Boersma <demm@kaosx.us>
++#   Copyright 2015, Philip Müller <philm@manjaro.org>
++#
++#   Calamares is free software: you can redistribute it and/or modify
++#   it under the terms of the GNU General Public License as published by
++#   the Free Software Foundation, either version 3 of the License, or
++#   (at your option) any later version.
++#
++#   Calamares is distributed in the hope that it will be useful,
++#   but WITHOUT ANY WARRANTY; without even the implied warranty of
++#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++#   GNU General Public License for more details.
++#
++#   You should have received a copy of the GNU General Public License
++#   along with Calamares. If not, see <http://www.gnu.org/licenses/>.
++
++import os
++import shutil
++
++import libcalamares
++
++
++
++
++def run():
++
++   install_path = libcalamares.globalstorage.value("rootMountPoint")
++   
++   
++   path = os.path.join(install_path, "etc/calamares")
++   if os.path.exists(path):
++        shutil.rmtree(path)
++   path1 = os.path.join(install_path, "usr/lib/calamares")
++   if os.path.exists(path1):
++        shutil.rmtree(path1)
++   path2 = os.path.join(install_path, "usr/bin/calamares")
++   if os.path.exists(path2):
++        os.remove(path2)
++   path3 = os.path.join(install_path, "usr/share/man/man8/calamares.8")
++   if os.path.exists(path3):
++        os.remove(path3)
++   path4 = os.path.join(install_path, "usr/share/applications/calamares.desktop")
++   if os.path.exists(path4):
++        os.remove(path4)
++   path5 = os.path.join(install_path, "usr/share/calamares")
++   if os.path.exists(path5):
++        shutil.rmtree(path5)        
++   return None
+diff -Nuar a/src/modules/sil/module.desc b/src/modules/sil/module.desc
+--- a/src/modules/sil/module.desc	1970-01-01 02:00:00.000000000 +0200
++++ b/src/modules/sil/module.desc	2017-12-26 21:21:52.000000000 +0300
+@@ -0,0 +1,5 @@
++---
++type:       "job"
++name:       "sil"
++interface:  "python"
++script:     "main.py"
