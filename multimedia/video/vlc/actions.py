@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     # Make it build with libtool 1.5
-    shelltools.system("rm -rf m4/lt* m4/libtool.m4")
+    #shelltools.system("rm -rf m4/lt* m4/libtool.m4")
 
     shelltools.export("AUTOPOINT", "true")
     shelltools.system("./bootstrap")
@@ -28,7 +28,6 @@ def setup():
                               BUILDCC=gcc \
                               LUAC=luac  LUA_LIBS='`pkg-config --libs lua`' \
                               RCC=/usr/bin/rcc-qt5 \
-                            --disable-qt4 \
                             --disable-asdcp \
                             --disable-coverage \
                             --disable-cprof \
@@ -38,21 +37,15 @@ def setup():
                             --disable-kai \
                             --disable-kva \
                             --disable-maintainer-mode \
-                            --disable-mmal-codec \
-                            --disable-mmal-vout \
                             --disable-opensles \
                             --disable-rpi-omxil \
                             --disable-shine \
                             --disable-sndio \
-                            --disable-vda \
                             --disable-vsxu \
                             --disable-wasapi \
                             --disable-altivec \
-                            --disable-bonjour \
                             --disable-dependency-tracking \
                             --disable-optimizations \
-                            --disable-gnomevfs \
-                            --disable-growl \
                             --disable-jack \
                             --disable-oss \
                             --disable-opencv \
@@ -86,7 +79,6 @@ def setup():
                             --enable-live555 \
                             --enable-lua \
                             --enable-mad \
-                            --enable-mkv \
                             --enable-mod \
                             --enable-mpc \
                             --enable-nls \
@@ -97,7 +89,6 @@ def setup():
                             --enable-pulse \
                             --enable-realrtsp \
                             --enable-screen \
-                            --enable-sdl \
                             --enable-sftp \
                             --enable-schroedinger \
                             --enable-shared \
@@ -112,17 +103,15 @@ def setup():
                             --enable-vlc \
                             --enable-vcd \
                             --enable-mtp \
-                            --enable-vcdx \
                             --enable-vlm \
                             --enable-vorbis \
                             --enable-x264 \
                             --enable-x265 \
                             --enable-xvideo \
-                            --enable-qt5 \
                            ")
     #enable-skins2 \ --disable-qt4 \
-    shelltools.export("CFLAGS", "%s -fPIC -O2 -Wall -Wextra -DLUA_COMPAT_5_1" % get.CFLAGS())
-
+    #shelltools.export("CFLAGS", "%s -fPIC -O2 -Wall -Wextra -DLUA_COMPAT_5_1" % get.CFLAGS())
+    
     # for fix unused dependency
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
