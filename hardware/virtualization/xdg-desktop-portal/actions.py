@@ -11,9 +11,10 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sh autogen.sh")
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     
-    autotools.configure("--with-systemduserunitdir=none")
+    autotools.configure("--with-systemduserunitdir=none \
+                         --disable-pipewire")
 
 def build():
     autotools.make()

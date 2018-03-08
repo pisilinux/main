@@ -7,26 +7,29 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
-    autotools.configure("--enable-print-profiles \
-                         --disable-examples \
-                         --disable-static \
-                         --disable-rpath \
-                         --disable-silent-rules \
-                         --enable-polkit \
-                         --enable-systemd-login=no \
-                         --with-daemon-user=colord \
-                         --with-systemdsystemunitdir=no \
-                         --enable-introspection \
-                         --enable-vala ")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson .. --prefix=/usr \
+                                --sysconfdir=/etc \
+                                -Dwith-daemon-user=colord \
+                                -Denable-systemd=false \
+                                -Denable-docs=false \
+                                -Denable-man=false")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
+    
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    shelltools.system("ninja")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    pisitools.insinto("/etc/dbus-1/system.d/","%s/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf" % get.installDIR())
+    pisitools.removeDir("/usr/share/dbus-1/system.d")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "TODO", "README.md")
+    shelltools.cd("..")
+    pisitools.dodoc("AUTHORS", "MAINTAINERS", "COPYING", "RELEASE", "NEWS", "README.md")

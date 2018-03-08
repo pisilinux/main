@@ -10,19 +10,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-def setup():
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                          -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DBUILD_SHARED=ON \
-                          -DBUILD_STATIC=OFF \
-                          -DBUILD_TESTING=OFF \
-                          -DCMAKE_INSTALL_LIBDIR=lib")
     
-    pisitools.dosed("cryptopp.pc", "@VERSION@", get.srcVERSION())
 
 def build():
+    pisitools.dosed("cryptopp.pc", "@VERSION@", get.srcVERSION())
+    
     cmaketools.make()
-
+    
+    
 def install():
     cmaketools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
 

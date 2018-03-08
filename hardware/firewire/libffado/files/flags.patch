@@ -1,12 +1,10 @@
-Index: libffado-2.1.0/SConstruct
-===================================================================
---- libffado-2.1.0.orig/SConstruct
-+++ libffado-2.1.0/SConstruct
-@@ -84,6 +84,30 @@ buildenv=os.environ
+diff -Nuar a/SConstruct b/SConstruct
+--- a/SConstruct	2017-12-23 13:43:57.000000000 +0300
++++ b/SConstruct	2018-02-24 16:24:14.959394193 +0300
+@@ -90,6 +90,29 @@
  
- env = Environment( tools=['default','scanreplace','pyuic','pyuic4','dbus','doxygen','pkgconfig'], toolpath=['admin'], ENV = buildenv, options=opts )
+ env = Environment( tools=['default','scanreplace','pyuic','pyuic4','pyuic5','dbus','doxygen','pkgconfig'], toolpath=['admin'], ENV = buildenv, options=opts )
  
-+
 +if os.environ.has_key('CC'):
 +	env['CC'] = os.environ['CC']
 +
@@ -30,6 +28,6 @@ Index: libffado-2.1.0/SConstruct
 +	env['OS_CPPFLAGS'] = os.environ['CPPFLAGS']
 +	env['CPPFLAGS'] = os.environ['CPPFLAGS']
 +
- if env.has_key('COMPILE_FLAGS') and len(env['COMPILE_FLAGS']) > 0:
-     print '''
-  * Usage of additional flags is not supported by the ffado-devs.
+ custom_flags = False
+ 
+ if 'COMPILE_FLAGS' in env and len(env['COMPILE_FLAGS']) > 0:

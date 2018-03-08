@@ -61,5 +61,5 @@ def install():
 
     pisitools.dodoc("docs/AUTHORS", "docs/README", "docs/TODO")
 
-    pisitools.removeDir("var/run")
+    #pisitools.removeDir("var/run")
     pisitools.removeDir("/usr/lib/avahi")

@@ -11,6 +11,7 @@ from pisi.actionsapi import autotools
 def setup():
     #  do not link with installed old library
     pisitools.dosed("cython/Makefile.*", "(plist_la_LDFLAGS\s=.*)(\s-L\$\(libdir\))(.*)", r"\1\3")
+    autotools.autoreconf("-fiv")
 
     autotools.configure("\
                          --disable-static \
