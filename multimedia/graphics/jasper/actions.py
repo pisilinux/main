@@ -25,6 +25,7 @@ def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                                         %s \
                           -DALLOW_IN_SOURCE_BUILD=ON     \
+                          -DCMAKE_JAS_ENABLE_AUTOMATIC_DEPENDENCIES=false \
                           -DCMAKE_SKIP_INSTALL_RPATH=YES" % options, sourceDir=".." )
 
 def build():
