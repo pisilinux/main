@@ -53,7 +53,7 @@ def setup():
                         --enable-release-build=yes      \
                         --enable-python=system          \
                         --with-system-apr           \
-                        --with-system-boost             \
+                        --without-system-boost             \
                         --with-system-cairo             \
                         --with-system-clucene   \
                         --with-system-cppunit \
@@ -106,7 +106,7 @@ def setup():
                         --with-external-tar=external/tarballs \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
                         --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4 \
-                        --with-parallelism=%s' % (lang,get.makeJOBS().replace("-j","")))
+                        --with-parallelism=%s' % (langall, get.makeJOBS().replace("-j","")))
 
 #--with-system-glew \
 def build():
