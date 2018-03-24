@@ -15,9 +15,12 @@ def setup():
 
     #temporary workaround for error: "'UINT64_C' was not declared in this scope"
     shelltools.export("CXXFLAGS", "%s -D__STDC_CONSTANT_MACROS" % get.CXXFLAGS())
-
+    
+    shelltools.makedirs("build")
+    shelltools.cd("build")
     cmaketools.configure("-D CMAKE_BUILD_TYPE=Release \
                           -D CMAKE_INSTALL_PREFIX=/usr \
+                          -D CMAKE_INSTALL_LIBDIR=lib \
                           -D CMAKE_SKIP_RPATH=ON \
                            DESTDIR=%s  \
                           -DBUILD_EXAMPLES=1 \
@@ -45,15 +48,17 @@ def setup():
                           -DWITH_TIFF=1 \
                           -DWITH_V4L=1 \
                           -DWITH_XINE=1 \
-                          -DCMAKE_SKIP_RPATH=1" % get.installDIR())
+                          -DCMAKE_SKIP_RPATH=1", sourceDir="..")
                           #  -DUSE_O3=OFF
                           #  -DUSE_OMIT_FRAME_POINTER=OFF
 
 
 def build():
-    cmaketools.make("VERBOSE=1")
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
+    shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     # Move other docs and samples under standart doc dir
@@ -61,6 +66,8 @@ def install():
 
     #pisitools.domove("usr/share/opencv/doc", doc_dir)
     #pisitools.domove("usr/share/opencv/samples", doc_dir)
+    
+    shelltools.cd("..")
 
     pisitools.dodoc("README.md", "LICENSE", )
 
