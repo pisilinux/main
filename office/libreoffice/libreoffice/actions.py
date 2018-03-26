@@ -63,7 +63,7 @@ def setup():
                         --with-system-glm \
                         --with-system-harfbuzz          \
                         --with-system-hunspell \
-                        --without-system-icu               \
+                        --with-system-icu               \
                         --with-system-jpeg              \
                         --with-jdk-home=/usr/lib/jvm/java \
                         --with-system-lcms2             \
