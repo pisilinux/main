@@ -9,6 +9,9 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
 
     if not os.path.lexists("/usr/lib32/libGL.so.1"):
         os.symlink("libGL.so.1.2.0", "/usr/lib32/libGL.so.1")
+        
+    if not os.path.lexists("/usr/lib32/libGL.so.1.2"):
+        os.symlink("libGL.so.1.2.0", "/usr/lib32/libGL.so.1.2")
 
 def preRemove():
     # FIXME This is not needed when upgrading package; but pisi does not
