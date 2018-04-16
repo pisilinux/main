@@ -12,14 +12,16 @@ from pisi.actionsapi import get
 
 
 def build():
-    shelltools.system("python ./x.py --verbose")
+    shelltools.system("python ./x.py build")
     
 
 def install():
-    pisitools.insinto("/", "build/x86_64-unknown-linux-gnu/stage0/etc")
-    pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/bin")
-    pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/lib")
-    pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/share")
+    shelltools.system("DESTDIR=%s python ./x.py install" % get.installDIR())
+    
+    #pisitools.insinto("/", "build/x86_64-unknown-linux-gnu/stage0/etc")
+    #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/bin")
+    #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/lib")
+    #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/share")
     #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/manifest.in")
         
     #pisitools.dodoc("LICENSE","AUTHORS","README*")
