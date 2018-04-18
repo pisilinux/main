@@ -32,7 +32,6 @@ def setup():
                             --enable-libopus \
                             --enable-libpulse \
                             --enable-librtmp \
-                            --enable-libschroedinger \
                             --enable-libspeex \
                             --enable-libtheora \
                             --enable-libv4l2 \
@@ -49,7 +48,6 @@ def setup():
                             --enable-vdpau \
                             --enable-version3 \
                             --enable-libdc1394 \
-                            --enable-libnut \
                             --enable-libcelt \
                             --enable-frei0r \
                             --enable-libcdio \
@@ -59,6 +57,7 @@ def setup():
 def build():
     autotools.make()
     autotools.make('tools/qt-faststart')
+    #autotools.make("doc/ffmpeg-utils.1") üst sürümde kullan
     autotools.make("doc/ff{mpeg,play,server}.1")
 
 def install():
