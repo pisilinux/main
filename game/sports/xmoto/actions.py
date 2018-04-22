@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("./bootstrap")
-    shelltools.system("rm -r src/ode")
+    #shelltools.system("rm -r src/ode")
     shelltools.export("CPPFLAGS", "-D_GLIBCXX_USE_CXX11_ABI=0")
     autotools.autoreconf("-vfi")
     autotools.configure("--prefix=/usr \
