@@ -50,6 +50,9 @@ def install():
     # Simple test tools
     for i in ["bluezutils.py",
                 "dbusdef.py",
+                "example-advertisement",
+                "example-gatt-client",
+                "example-gatt-server",
                 "ftp-client",
                 "list-devices",
                 "map-client",
@@ -61,21 +64,17 @@ def install():
                 "simple-endpoint",
                 "simple-player",
                 "test-adapter",
-                "test-alert",
-                "test-cyclingspeed",
                 "test-device",
                 "test-discovery",
+                "test-gatt-profile",
                 "test-health",
                 "test-health-sink",
-                "test-heartrate",
                 "test-hfp",
                 "test-manager",
                 "test-nap",
                 "test-network",
                 "test-profile",
-                "test-proximity",
-                "test-sap-server",
-                "test-thermometer"]:
+                "test-sap-server"]:
         pisitools.dobin("test/%s" % i)
    # for i in 
       #  pisitools.dodoc("doc/%s" % i)
