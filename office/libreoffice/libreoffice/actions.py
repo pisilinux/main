@@ -15,7 +15,7 @@ pixmaps = "/usr/share/pixmaps/"
 LoVersion = "%s" % get.srcVERSION()
 OurWorkDir = "%s/libreoffice-%s" % (get.workDIR(), LoVersion)
 #for support all languages.
-langall= "am ar ast bg bn bn-IN bo bs ca ca-valencia cs da de dz el en-GB en-US en-ZA eo es et eu fi fr gl gu he hi hr hu id is it ja ka km ko lo lt lv mk nb ne nl nn om pl pt pt-BR ro ru si sid sk sl sq sv ta tg tr ug uk vi zh-CN zh-TW"
+langall= "am ar ast bg bn bn-IN bo brx bs ca ca-valencia cs da de dgo dz el en-GB en-US en-ZA eo es et eu fi fr gl gu he hi hr hu id is it ja ka km kmr-Latn ko kok ks lo lt lv mk mni nb ne nl nn om or pl pt pt-BR ro ru sat si sid sk sl sq sv ta tg tr ug uk vi zh-CN zh-TW"
 #for support some languages.
 lang="ar bg ca cs de el en-US es he hu ja kk ko ru tr tt uz zh-CN zh-TW"
 
@@ -29,6 +29,9 @@ def setup():
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
     shelltools.export("LO_PREFIX", "/usr")    
     shelltools.export("PYTHON", "python3.6")
+    
+    # http://site.icu-project.org/download/61#TOC-Migration-Issues
+    shelltools.export("CPPFLAGS", "-DU_USING_ICU_NAMESPACE=1")
     shelltools.cd(OurWorkDir)   
   
     shelltools.touch("autogen.lastrun")
