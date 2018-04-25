@@ -10,9 +10,6 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import shelltools
 
 def setup():
-    libtools.libtoolize("-fc")
-    pisitools.dosed("configure.ac", "AM_GLIB", deleteLine=True)
-    #autotools.aclocal()
     shelltools.system("./autogen.sh")
     autotools.configure()
 
