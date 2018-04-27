@@ -12,8 +12,6 @@ from pisi.actionsapi import shelltools
 def setup():
     # Make it build with libtool 1.5
     #shelltools.system("rm -rf m4/lt* m4/libtool.m4")
-    shelltools.system("sed -e 's:truetype/ttf-dejavu:TTF:g' -i modules/visualization/projectm.cpp")
-    shelltools.system("sed -e 's|-Werror-implicit-function-declaration||g' -i configure")
     shelltools.system("sed -i '/DEPRECATED/s:^://:'  modules/text_renderer/freetype/text_layout.c")
     shelltools.system("export CFLAGS+=-I/usr/include/samba-4.0")
     shelltools.system("export CPPFLAGS+=-I/usr/include/samba-4.0")
