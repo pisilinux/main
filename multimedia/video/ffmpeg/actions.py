@@ -57,10 +57,10 @@ def setup():
 def build():
     autotools.make()
     autotools.make('tools/qt-faststart')
-    #autotools.make("doc/ffmpeg-utils.1") üst sürümde kullan
-    autotools.make("doc/ff{mpeg,play,server}.1")
+    autotools.make("doc/ff{mpeg,play}.1")
 
 def install():
     autotools.rawInstall("DESTDIR=%s install-man" % get.installDIR())
     pisitools.dobin("tools/qt-faststart")
+    
     pisitools.dodoc("Changelog", "README.md", "LICENSE.md", "COPYING*")
