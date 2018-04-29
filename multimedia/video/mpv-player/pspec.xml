@@ -12,7 +12,7 @@
         <IsA>app:gui</IsA>
         <Summary>mpv is based on mplayer2</Summary>
         <Description>mpv  has Wayland support, Improved OpenGL output,  Support for libavfilter (for video->video and audio->audio). This allows using most of FFmpeg's filters, which improve greatly on the old MPlayer filters in features, performance, and correctness.is a movie player that can run on many platforms. Improved OpenGL output. More correct color reproduction (color matrix generation), including support for BT.2020 (Ultra HD) and linear XYZ (Digital Cinema) inputs.</Description>        
-        <Archive sha1sum="764e23136ccec9dc8743f2c63b3d5fbd8a1bf427" type="targz">https://github.com/mpv-player/mpv/archive/v0.27.2.tar.gz</Archive>
+        <Archive sha1sum="2dfc6a68ee5d99ff510e417d60ff939ddf9ec08f" type="targz">https://github.com/mpv-player/mpv/archive/v0.28.2.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>ffmpeg-devel</Dependency>
             <Dependency>gnutls-devel</Dependency>
@@ -24,6 +24,7 @@
             <Dependency>zlib-devel</Dependency>
             <Dependency>libass-devel</Dependency>
             <Dependency>lua52-devel</Dependency>
+            <Dependency>libsdl2-devel</Dependency>
             <Dependency>yasm</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>rubberband-devel</Dependency>
@@ -48,23 +49,20 @@
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libvdpau-devel</Dependency>
             <Dependency>libXrandr-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
             <Dependency>wayland-cursor</Dependency>
-            <Dependency>wayland-client</Dependency>
+            <Dependency>wayland-protocols-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
             <Dependency>libcdio-paranoia-devel</Dependency>
             <Dependency>jack-audio-connection-kit-devel</Dependency>
             <Dependency>libvdpau-devel</Dependency>
             <Dependency>libavc1394-devel</Dependency>
+            <Dependency>libarchive-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">0001-opengl-backend-support-multiple-backends.patch</Patch>
-            <Patch level="1">0002-vaapi-Use-libva-message-callbacks.patch</Patch>
-            <Patch level="1">0003-demux_lavf-return-AVERROR_EOF-on-file-end.patch</Patch>
-<!--             <Patch level="1">03_waf.patch</Patch> -->
+            <Patch level="1">hwdec-vaegl.patch</Patch>
             <Patch level="1">02_fix-config-path.patch</Patch>
-<!--             <Patch level="1">04_waf-pie.patch</Patch> -->
             <Patch level="1">05_add-keywords.patch</Patch>
-            <Patch level="1">06_ffmpeg-abi.patch</Patch>
         </Patches>
         </Source>
 
@@ -127,6 +125,13 @@
         </RuntimeDependencies>
     </Package>
     <History>
+        <Update release="9">
+            <Date>2018-04-29</Date>
+            <Version>0.28.2</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2018-04-27</Date>
             <Version>0.27.2</Version>
