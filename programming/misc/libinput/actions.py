@@ -13,7 +13,7 @@ from pisi.actionsapi import shelltools
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
-    shelltools.system("meson .. --prefix=/usr -Ddocumentation=false")
+    shelltools.system("meson .. --prefix=/usr -Dudev-dir=/lib/udev -Ddocumentation=false")
     
 
 def build():
