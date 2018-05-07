@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-#WorkDir = "mozilla-release"
+WorkDir = "mozilla-release-6b51784853e47e091d213d421a19cb623af718f0"
 ObjDir = "build"
 locales = "az bs ca  da  de  el  en-US en-GB en-ZA  es-AR  es-CL  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
 xpidir = "%s/xpi" % get.workDIR()
@@ -41,7 +41,8 @@ def setup():
 
     shelltools.system("../configure --prefix=/usr --libdir=/usr/lib --disable-strip --disable-install-strip")
     
-
+    #shelltools.cd("mozilla-release-6b51784853e47e091d213d421a19cb623af718f0")
+    
 def build():
     shelltools.cd(ObjDir)
     shelltools.system("../mach build")
