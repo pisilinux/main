@@ -12,8 +12,10 @@
         <IsA>library</IsA>
         <Summary>A library for configuring and customizing font access</Summary>
         <Description>Fontconfig is a library designed to provide system-wide font configuration, customization and application access.</Description>
-        <Archive sha1sum="30d832b754fb10a3b70ebac750a38a0275438ad8" type="tarbz2">https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.bz2</Archive>
+        <Archive sha1sum="b7bcc5d47211b7bbac35bb221860407db3601f5b" type="tarbz2">https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.0.tar.bz2</Archive>
         <BuildDependencies>
+            <Dependency>libutil-linux-devel</Dependency>
+            <Dependency>gperf</Dependency>
             <Dependency>freetype-devel</Dependency>
             <Dependency>expat-devel</Dependency>
         </BuildDependencies>
@@ -21,7 +23,7 @@
             <!-- prefer dejavu over bitstream -->
             <Patch level="1">0001-fix-test-with-freetype2-2.7.1.patch</Patch>
             <Patch level="1">prefer_dejavu.patch</Patch>
-            <Patch level="1">anymetrics_urw.patch</Patch>
+<!--             <Patch level="1">anymetrics_urw.patch</Patch> -->
             <Patch level="1">use_legacy_lcdfilter_on_small_monospace.patch</Patch>
 <!--             <Patch level="1">add_hinting_and_antialiasing_to_proper_fonts.patch</Patch> -->
             <!-- Sleep less in fc-cache -->
@@ -34,7 +36,8 @@
     <Package>
         <Name>fontconfig</Name>
         <RuntimeDependencies>
-	    <Dependency>freetype</Dependency>
+            <Dependency>libutil-linux</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency>expat</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -56,6 +59,7 @@
         <Summary>Development files for fontconfig</Summary>
         <RuntimeDependencies>
             <Dependency release="current">fontconfig</Dependency>
+            <Dependency>libutil-linux-devel</Dependency>
             <Dependency>freetype-devel</Dependency>
             <Dependency>expat-devel</Dependency>
         </RuntimeDependencies>
@@ -76,11 +80,13 @@
         <BuildDependencies>
             <Dependency>expat-32bit</Dependency>
             <Dependency>freetype-32bit</Dependency>
+            <Dependency>libutil-linux-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">fontconfig</Dependency>
             <Dependency>expat-32bit</Dependency>
             <Dependency>freetype-32bit</Dependency>
+            <Dependency>libutil-linux-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
@@ -88,6 +94,13 @@
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2018-05-07</Date>
+            <Version>2.13.0</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="5">
             <Date>2017-02-13</Date>
             <Version>2.12.1</Version>
