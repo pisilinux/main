@@ -13,10 +13,10 @@ from pisi.actionsapi import get
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
-    options = "meson .. --prefix=/usr -D enable_docs=true"
+    options = "meson --prefix=/usr --libexec=/usr/libexec/at-spi2 -D enable_docs=true"
     
     if get.buildTYPE() == "emul32":
-        options += "meson --prefix=/usr --libexec=tmp --sysconfdir=tmp --libdir=lib32 -D enable_docs=false"
+        options += "meson --prefix=/usr --libexec=tmp --sysconfdir=tmp --libdir=lib32 -D enable_docs=false .."
         
         
     shelltools.system(options)
@@ -30,7 +30,9 @@ def install():
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     
     if get.buildTYPE() == "emul32":
-        #pisitools.dosed("%s/usr/share/dbus-1/services" % get.installDIR(), "^(Exec=)\/tmp", r"\1/usr/libexec/at-spi2")
+        pisitools.dosed("%s/usr/share/dbus-1/services" % get.installDIR(), "^(Exec=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
+        pisitools.dosed("%s/usr/share/dbus-1/accessibility-services" % get.installDIR(), "^(Exec=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
+        pisitools.dosed("%s/usr/lib/systemd/user" % get.installDIR(), "^(ExecStart=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
         pisitools.removeDir("/usr/tmp")
         return
     
