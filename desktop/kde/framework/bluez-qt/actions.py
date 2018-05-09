@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d")
+    kde5.configure("-DUDEV_RULES_INSTALL_DIR=/lib/udev/rules.d")
 
 def build():
     kde5.make()
