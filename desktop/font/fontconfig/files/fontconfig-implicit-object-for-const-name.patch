@@ -1,0 +1,31 @@
+From 4699406a68321179b14fae7412f828e2f37a7033 Mon Sep 17 00:00:00 2001
+From: Akira TAGOH <akira@tagoh.org>
+Date: Wed, 14 Mar 2018 18:31:30 +0900
+Subject: [PATCH 2/5] Add the value of the constant name to the implicit object
+ in the pattern
+
+For objects which has been changed the object type to FcTypeRange.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=105415
+---
+ src/fcname.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/fcname.c b/src/fcname.c
+index 15fb659..c9320ae 100644
+--- a/src/fcname.c
++++ b/src/fcname.c
+@@ -490,6 +490,10 @@ FcNameParse (const FcChar8 *name)
+ 			if (!FcPatternAddBool (pat, c->object, c->value))
+ 			    goto bail2;
+ 			break;
++		    case FcTypeRange:
++			if (!FcPatternAddInteger (pat, c->object, c->value))
++			    goto bail2;
++			break;
+ 		    default:
+ 			break;
+ 		    }
+-- 
+2.14.3
+
