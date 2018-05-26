@@ -12,7 +12,7 @@
         <IsA>app:gui</IsA>
         <Summary>A printer administration tool</Summary>
         <Description>system-config-printer is a graphical user interface that allows the user to configure a CUPS print server.</Description>
-        <Archive sha1sum="d6233bfb6bec095cff4caf9516ed9c3fd358bdbd" type="targz">https://github.com/zdohnal/system-config-printer/archive/v1.5.9.tar.gz</Archive>
+        <Archive sha1sum="2375c76f695165b7b976390abd55aaf721285df8" type="targz">https://github.com/zdohnal/system-config-printer/archive/1.5.11.tar.gz</Archive>
         <AdditionalFiles>
             <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
         </AdditionalFiles>
@@ -35,7 +35,8 @@
             <!-- Replace emblem-default by dialog-ok -->
             <Patch level="1">fix-icon.patch</Patch>
             <!--make it actually work without libgnome-keyring -->
-            <Patch>pass_libgnome_keyring_missing.diff</Patch>
+<!--             <Patch>pass_libgnome_keyring_missing.diff</Patch> -->
+            <Patch>0001-Fix-constructing-the-auth-dialog.patch</Patch>
         </Patches>
     </Source>
 
@@ -45,6 +46,7 @@
             <Dependency>eudev</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>libusb</Dependency>
+            <Dependency>libsecret</Dependency>
             <Dependency>libgnome-keyring</Dependency>
             <Dependency>python3-cups</Dependency>
             <Dependency>python-smbc</Dependency>
@@ -70,6 +72,7 @@
             <Path fileType="executable">/lib/udev</Path>
             <Path fileType="executable">/usr/libexec</Path>
             <Path fileType="config">/usr/lib/tmpfiles.d/system-config-printer.conf</Path>
+            <Path fileType="data">/usr/share/metainfo/system-config-printer.appdata.xml</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/system-config-printer.conf">tmpfiles.conf</AdditionalFile>
@@ -96,6 +99,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2018-05-22</Date>
+            <Version>1.5.11</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="6">
             <Date>2018-03-03</Date>
             <Version>1.5.9</Version>

@@ -16,6 +16,7 @@ def install():
     autotools.install()
 
     pisitools.insinto("/", "install/usr")
+    pisitools.dobin("install/usr/lib/libADM*", "/usr/lib")
     pisitools.insinto("/usr/share/pixmaps", "avidemux_icon.png", "avidemux.png")
 
     pisitools.dodoc("COPYING", "AUTHORS", "License*")
