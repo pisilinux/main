@@ -14,7 +14,7 @@ def start():
     os.environ["PATH"] = "/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/local/bin"
     os.system("/sbin/modprobe -va bridge nf_nat br_netfilter")
 
-    startService(command="/usr/bin/docker",
+    startService(command="/usr/bin/dockerd",
                 args="daemon -p %s %s" % (pidfile, config.get("DOCKER_OPTS")),
                 detach=True,
                 pidfile=pidfile,
@@ -22,7 +22,7 @@ def start():
 
 @synchronized
 def stop():
-    stopService(command="/usr/bin/docker",
+    stopService(command="/usr/bin/dockerd",
                 donotify=True)
 
 def status():
