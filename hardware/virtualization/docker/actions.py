@@ -19,7 +19,6 @@ shelltools.export("GOPATH", "%s" % get.workDIR())
 shelltools.export("CGO_CFLAGS", "-I/usr/include")
 shelltools.export("CGO_LDFLAGS", "-L/usr/lib")
 shelltools.export("DOCKER_BUILDTAGS","seccomp")
-shelltools.export("GOWORK","src/github.com/docker")
   
 NoStrip=["/"]
 
@@ -27,7 +26,6 @@ def setup():
     shelltools.makedirs("components/cli/src/github.com/docker")
     shelltools.cd("components/cli/src/github.com/docker")
     shelltools.system("ln -s ../../../../cli . ")
-
 
 def build():
     shelltools.cd("%s" % get.workDIR())
@@ -53,6 +51,4 @@ def install():
     
     pisitools.dobin("components/engine/contrib/check-config.sh")
 
-
     pisitools.dodoc("VERSION", "README.md","CONTRIBUTING.md", "CHANGELOG.md")
-
