@@ -15,7 +15,7 @@ def start():
     os.system("/sbin/modprobe -va bridge nf_nat br_netfilter")
 
     startService(command="/usr/bin/dockerd",
-                args="daemon -p %s %s" % (pidfile, config.get("DOCKER_OPTS")),
+                args="%s %s" % (pidfile, config.get("DOCKER_OPTS")),
                 detach=True,
                 pidfile=pidfile,
                 donotify=True)
