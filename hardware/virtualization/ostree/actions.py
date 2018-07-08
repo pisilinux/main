@@ -15,6 +15,7 @@ def setup():
     shelltools.system("env NOCONFIGURE=1 ./autogen.sh")
     
     autotools.configure("--enable-rust \
+                         --enable-trivial-httpd-cmdline \
                          --with-openssl \
                          --disable-static \
                          --without-dracut \
