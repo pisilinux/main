@@ -16,12 +16,15 @@ def build():
     shelltools.cd("%s" % get.workDIR())
     shelltools.move("containerd-*", "containerd")
     
-    shelltools.makedirs("src/github.com/docker")
-    shelltools.system("ln -rsf containerd*  src/github.com/docker")
-
-    shelltools.cd("src/github.com/docker/containerd")
+    shelltools.cd("containerd")
+    shelltools.move("vendor", "src")
     
-    shelltools.system("LDFLAGS= make")
+    shelltools.makedirs("src/github.com/containerd")
+    shelltools.system("ln -rsf %s/containerd*  src/github.com/containerd" % get.workDIR())
+
+    shelltools.cd("src/github.com/containerd/containerd")
+    
+    shelltools.system("LDFLAGS= GOPATH=%s make GIT_COMMIT=209a7fc" % get.curDIR())
 
 def install():
     shelltools.cd("%s/containerd" % get.workDIR())
