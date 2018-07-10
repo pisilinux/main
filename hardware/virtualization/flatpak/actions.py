@@ -18,6 +18,7 @@ def setup():
                          --enable-xauth \
                          --with-system-bubblewrap \
                          --enable-docbook-docs \
+                         --disable-static \
                          --enable-sandboxed-triggers")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
