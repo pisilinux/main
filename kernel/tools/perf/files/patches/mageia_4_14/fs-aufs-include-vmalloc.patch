@@ -1,0 +1,27 @@
+
+arm build fails with:
+
+n file included from fs/aufs/aufs.h:31:0,
+                 from fs/aufs/module.c:11:
+fs/aufs/file.h: In function 'au_do_vm_file_reset':
+fs/aufs/file.h:273:9: error: dereferencing pointer to incomplete type 'struct vm_area_struct'
+  f = vma->vm_file;
+         ^
+
+on x86(64) we seem to get covered by implict inclusion.
+
+So explicitly include it to avoid subtle breakage
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+---
+
+--- ./fs/aufs/file.h.orig
++++ ./fs/aufs/file.h
+@@ -15,6 +15,7 @@
+ #include <linux/fs.h>
+ #include <linux/mm_types.h>
+ #include <linux/poll.h>
++#include <linux/vmalloc.h>
+ #include "rwsem.h"
+ 
+ struct au_branch;
