@@ -5,12 +5,15 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.system("./autogen.sh")
     pisitools.ldflags.add("-lX11")
     autotools.configure()
+    
 def build():
     autotools.make()
 
