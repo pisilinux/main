@@ -8,13 +8,20 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 
+#WorkDir = "boost-%s" % get.srcVERSION()
+
     
 def setup():
-    shelltools.system("./bootstrap.sh --with-toolset=gcc --with-icu --with-python=/usr/bin/python2.7 --prefix=%s/usr" % get.installDIR())
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.move("boost_*", "boost-%s" % get.srcVERSION())
     
-    #hata vermemesi icin  doysa isminin alt tire isaretinden ayıklanması boost-1.63.0 gibi düzeltilmesi gerekli 
+    shelltools.cd("boost-%s" % get.srcVERSION())
     
     shelltools.copytree("../boost-%s" % (get.srcVERSION().replace("_", "~")), "../boost-%s-36" % get.srcVERSION())
+    
+    shelltools.system("./bootstrap.sh --with-toolset=gcc --with-icu --with-python=/usr/bin/python2.7 --prefix=%s/usr" % get.installDIR())
+    
+    #shelltools.copytree("../boost-%s" % (get.srcVERSION().replace("_", "~")), "../boost-%s-36" % get.srcVERSION())
     shelltools.cd("../boost-%s-36" % get.srcVERSION())
     shelltools.system("sed -e '/using python/ s@;@: /usr/include/python${PYTHON_VERSION/3*/${PYTHON_VERSION}m} ;@' \
     -i bootstrap.sh")
