@@ -19,9 +19,9 @@ def setup():
 
     options ="\
               --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl \
+              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl,swr \
               --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
-              --with-egl-platforms=x11,drm,wayland \
+              --with-platforms=x11,drm,wayland \
               --enable-xa \
               --enable-dri \
               --enable-egl \
@@ -34,13 +34,12 @@ def setup():
               --enable-osmesa \
               --enable-xvmc \
               --enable-glx-tls \
-              --enable-gallium-llvm \
+              --enable-llvm \
               --enable-nine \
               --enable-llvm-shared-libs \
               --enable-shared-glapi \
               --enable-texture-float \
-              --enable-sysfs \
-             "
+            "
 
     if get.buildTYPE() == "emul32":
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
