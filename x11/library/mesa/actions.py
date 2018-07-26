@@ -51,7 +51,7 @@ def setup():
 
     elif get.ARCH() == "x86_64":
         options += " --with-clang-libdir=/usr/lib \
-                            --enable-omx \
+                            --enable-omx-bellagio \
                             --enable-opencl-icd "
 
     autotools.configure(options)
@@ -67,7 +67,13 @@ def install():
     pisitools.dosym("libGL.so.1.2.0", "%s/libGL.so.1.2" % Libdir)
 
     if get.buildTYPE() == "emul32":
+        pisitools.remove("/usr/lib32/pkgconfig/wayland-egl.pc")
+        pisitools.remove("/usr/lib32/libwayland-egl.so*")
         return
 
     #pisitools.dodoc("docs/COPYING")
     pisitools.dohtml("docs/*")
+    
+    pisitools.remove("/usr/lib/libwayland-egl.so*")
+    pisitools.remove("/usr/lib/pkgconfig/wayland-egl.pc")
+    
