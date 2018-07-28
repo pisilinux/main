@@ -5,7 +5,7 @@ diff -u xinit.orig/startx.cpp xinit/startx.cpp
 @@ -290,9 +290,9 @@
      XCOMM now add the same credentials to the client authority file
      XCOMM if '$displayname' already exists do not overwrite it as another
-     XCOMM server man need it. Add them to the '$xserverauthfile' instead.
+     XCOMM server may need it. Add them to the '$xserverauthfile' instead.
 -    for displayname in $authdisplay $hostname$authdisplay; do
 +    for displayname in $authdisplay $hostname/unix$authdisplay; do
          authcookie=`XAUTH list "$displayname" @@
@@ -14,3 +14,4 @@ diff -u xinit.orig/startx.cpp xinit/startx.cpp
          if [ "z${authcookie}" = "z" ] ; then
              XAUTH -q << EOF 
  add $displayname . $mcookie
+
