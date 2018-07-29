@@ -19,5 +19,5 @@ def install():
 
     pisitools.removeDir("/usr/share/doc")
 
-    pisitools.dodoc("AUTHORS", "README", "todo.txt", "doc/*.txt")
+    pisitools.dodoc("AUTHORS", "CHANGES", "COPYING", "doc/*.txt")
     pisitools.dohtml("doc/*")
