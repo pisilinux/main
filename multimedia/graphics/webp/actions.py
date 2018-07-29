@@ -12,10 +12,10 @@ from pisi.actionsapi import shelltools
 def setup():
     autotools.configure("\
                          --disable-static \
-                         --enable-experimental \
                          --enable-libwebpdecoder \
                          --enable-libwebpdemux \
                          --enable-libwebpmux \
+                         --enable-libwebpextras  \
                          --enable-swap-16bit-csp \
                         ")
 
