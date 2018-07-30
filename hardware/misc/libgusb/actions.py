@@ -9,16 +9,19 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-
 def setup():
-    autotools.configure("--prefix=/usr \
-			 --disable-static \
-                         --enable-vala \
-                         --enable-introspection")
-
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson .. --prefix=/usr -Ddocs=false")
+    
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING", "NEWS", "README*")
+
