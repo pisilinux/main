@@ -15,6 +15,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.rawConfigure("--prefix=/usr \
+                            --with-intl=system-icu \
                             --shared-openssl")
 
 def build():
