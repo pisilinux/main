@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("./bootstrap")
+    #shelltools.system("./bootstrap")
     autotools.configure("--disable-static")
 
 def build():
@@ -19,4 +19,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog", "AUTHORS", "NEWS", "README", "TODO", "docs/libfaac.pdf")
+    pisitools.dodoc("ChangeLog", "AUTHORS", "NEWS", "README", "TODO")
