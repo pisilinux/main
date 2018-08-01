@@ -15,10 +15,13 @@ def setup():
     options = "-DALSA=1 \
                -DPULSEAUDIO=1 \
                -DOSS=1 \
+               -DCMAKE_INSTALL_PREFIX=/usr \
+               -DCMAKE_INSTALL_LIBDIR=/usr/lib \
                -DEXAMPLES=OFF"
 
     if get.buildTYPE() == "emul32":
         options += " -DCMAKE_INSTALL_PREFIX=/emul32 \
+                     -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
                      -DLIB_SUFFIX=32"
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
 
@@ -33,7 +36,7 @@ def install():
     # is there any "libdir" prefix for cmake ?
     if get.buildTYPE() == "emul32":
         from distutils.dir_util import copy_tree
-        copy_tree("%s/emul32/lib32/" % get.installDIR(), "%s/usr/lib32" % get.installDIR())
+        #copy_tree("%s/emul32/lib32/" % get.installDIR(), "%s/usr/lib32" % get.installDIR())
         pisitools.removeDir("/emul32")
         pisitools.dosed("%s/usr/lib32/pkgconfig/openal.pc" % get.installDIR(), "emul32", "usr")
         return
