@@ -10,6 +10,7 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
+    autotools.autoreconf("-fiv")
     autotools.configure("--with-pic \
                          --enable-sndfile \
                          --disable-static \
