@@ -10,11 +10,11 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("AUTOPOINT", "true")
-    pisitools.dosed("autogen.sh", "tool_run.*autopoint --force.*")
+    #shelltools.export("AUTOPOINT", "true")
+    #pisitools.dosed("autogen.sh", "tool_run.*autopoint --force.*")
 
-    pisitools.dosed("ext/modplug/gstmodplug.cc", "stdafx.h", "libmodplug/stdafx.h")
-    pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
+    #pisitools.dosed("ext/modplug/gstmodplug.cc", "stdafx.h", "libmodplug/stdafx.h")
+    #pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
 
     shelltools.export("NOCONFIGURE", "1")
     shelltools.system("./autogen.sh")
