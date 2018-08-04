@@ -8,11 +8,9 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
     autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-good package' \
-                         --with-package-origin='http://www.pisilinux.org' \
-                         --with-gtk=3.0")
-
+                         --with-package-origin='http://www.pisilinux.org'")
+    
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
