@@ -29,10 +29,10 @@ def install():
     autotools.rawInstall('DESTDIR=%s libexecdir="/usr/libexec"' % get.installDIR())
 
     # Compat symlinks
-    pisitools.dosym("gpg2", "/usr/bin/gpg")
-    pisitools.dosym("gpgv2", "/usr/bin/gpgv")
-    pisitools.dosym("gpg2.1", "/usr/share/man/man1/gpg.1")
-    pisitools.dosym("gpgv2.1", "/usr/share/man/man1/gpgv.1")
+    pisitools.dosym("gpg", "/usr/bin/gpg2")
+    pisitools.dosym("gpgv", "/usr/bin/gpgv2")
+    pisitools.dosym("gpg.1", "/usr/share/man/man1/gpg2.1")
+    pisitools.dosym("gpgv.1", "/usr/share/man/man1/gpgv2.1")
 
     # Lets make doc
     pisitools.dohtml("doc/*")
