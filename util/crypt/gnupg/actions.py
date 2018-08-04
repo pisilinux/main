@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
     #shelltools.export("CFLAGS","%s -fPIE" % get.CFLAGS())
     #shelltools.export("LDFLAGS", "%s -pie -Wl,-z,relro,-z,now"  % get.LDFLAGS())
-
+    shelltools.system("sed -e '/noinst_SCRIPTS = gpg-zip/c sbin_SCRIPTS += gpg-zip' -i tools/Makefile.in")
     autotools.configure("--enable-symcryptrun \
                          --disable-rpath \
                          --enable-gpgtar \
