@@ -39,7 +39,6 @@ def setup():
                           -DWITH_READLINE=ON \
                           -DWITH_ZLIB=system \
                           -DWITH_SSL=system \
-                          -DWITH_PCRE=system \
                           -DWITH_LIBWRAP=OFF \
                           -DWITH_JEMALLOC=ON \
                           -DWITH_EXTRA_CHARSETS=complex \
@@ -71,7 +70,7 @@ def install():
 
     # Documents
     pisitools.dodoc("%s/%s/support-files/my-*.cnf" % (get.workDIR(), get.srcDIR()))
-    pisitools.dodoc("COPYING", "INSTALL-SOURCE", "README", "VERSION")
+    pisitools.dodoc("COPYING", "INSTALL-SOURCE", "README*", "VERSION")
 
     # Remove not needed files
     pisitools.removeDir("/usr/data")
