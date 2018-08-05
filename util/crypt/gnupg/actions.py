@@ -22,8 +22,9 @@ def build():
     autotools.make("-j1")
     autotools.make("-C doc html")
 
-def check():
-    autotools.make("check")
+# IMPORTANT: for packagers check disabled for build in farm. please test local if passed, commit
+#def check():
+#    autotools.make("check")
 
 def install():
     autotools.rawInstall('DESTDIR=%s libexecdir="/usr/libexec"' % get.installDIR())
