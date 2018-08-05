@@ -8,7 +8,10 @@ from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.configure()
+    autotools.configure("--disable-3g-source \
+                         --disable-modem-gps-source \
+                         --disable-cdma-source \
+                         --with-systemdsystemunitdir=no")
     
     # for remove unused
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
