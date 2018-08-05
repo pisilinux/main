@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 import os
 
-WorkDir = "qtbase-opensource-src-%s" % get.srcVERSION().replace('_','-').replace('pre1', 'tp')
+WorkDir = "qtbase-everywhere-src-%s" % get.srcVERSION().replace('_','-').replace('pre1', 'tp')
 
 qtbase = qt5.prefix
 absoluteWorkDir = "%s/%s" % (get.workDIR(), WorkDir)
