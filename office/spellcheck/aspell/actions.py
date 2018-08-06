@@ -6,9 +6,13 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i '/ top.do_check ==/s/top.do_check/*&/' modules/filter/tex.cpp")
+    shelltools.system("sed -i '/word ==/s/word/*&/' prog/check_funs.cpp")
+    
     autotools.autoreconf()
     autotools.configure("--disable-static \
                          --sysconfdir=/etc/aspell \
