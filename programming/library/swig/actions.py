@@ -6,10 +6,14 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
+    shelltools.system("sed -i 's/\$(PERL5_SCRIPT/-I. &/' Examples/Makefile.in")
+    shelltools.system("sed -i 's/\$command 2/-I. &/' Examples/test-suite/perl5/run-perl-test.pl")
+    autotools.configure("--without-clisp \
+                         --without-maximum-compile-warnings")
 
 def build():
     autotools.make()
