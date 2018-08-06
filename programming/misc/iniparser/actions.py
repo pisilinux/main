@@ -13,8 +13,8 @@ def build():
     autotools.make("CC=%s CFLAGS='%s -fPIC' LDFLAGS='%s'" % (get.CC(), get.CFLAGS(), get.LDFLAGS()))
 
 def install():
-    pisitools.dolib_so("libiniparser.so.0")
-    pisitools.dosym("libiniparser.so.0", "/usr/lib/libiniparser.so")
+    pisitools.dolib_so("libiniparser.so.1")
+    pisitools.dosym("libiniparser.so.1", "/usr/lib/libiniparser.so")
 
     pisitools.dodir("/usr/include")
     pisitools.insinto("/usr/include", "src/*.h")
