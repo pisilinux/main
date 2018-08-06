@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
         #autotools.autoreconf("-vfi")
     options = "--disable-static \
-               --disable-rpath \ 
+               --disable-rpath \
               "
               
     if get.buildTYPE() == "emul32":
