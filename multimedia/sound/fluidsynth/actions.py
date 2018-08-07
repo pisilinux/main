@@ -21,4 +21,4 @@ def build():
 def install():
     cmaketools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "THANKS", "TODO")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README*", "THANKS", "TODO")
