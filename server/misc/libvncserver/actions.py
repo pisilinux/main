@@ -8,9 +8,10 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "LibVNCServer-%s" % get.srcVERSION()
+WorkDir = "libvncserver-LibVNCServer-%s" % get.srcVERSION()
 
 def setup():
+    autotools.autoreconf("-vif")
     autotools.configure("--disable-static \
                          --disable-dependency-tracking \
                          --with-24bpp \
@@ -24,4 +25,4 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.remove("/usr/bin/linuxvnc")
+    #pisitools.remove("/usr/bin/linuxvnc")
