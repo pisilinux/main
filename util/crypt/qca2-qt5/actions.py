@@ -11,6 +11,8 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("sed -i 's@ca-bundle.pem@ca-bundle.crt@' CMakeLists.txt")
+    
     shelltools.makedirs("build")
     
     shelltools.cd("build")
