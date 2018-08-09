@@ -8,45 +8,40 @@ from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
 
 
 def setup():
-    options = "--disable-static \
-               --disable-poppler-qt \
-               --disable-gtk-doc-html \
-               --disable-zlib \
-               --enable-libcurl \
-               --disable-gtk-test \
-               --disable-poppler-qt4 \
-               --enable-cairo-output \
-               --enable-xpdf-headers \
-               --enable-libjpeg \
-               --enable-libopenjpeg=openjpeg1"
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+
+    options = "-DCMAKE_BUILD_TYPE=Release \
+               -DCMAKE_INSTALL_PREFIX=/usr \
+               -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+               -DENABLE_XPDF_HEADERS=ON \
+              "
 
     if get.buildTYPE() == "emul32":
-        options = " --libdir=/usr/lib32 \
-                     --disable-libcurl \
-                     --disable-utils \
-                     --disable-gtk-test \
-                     --disable-poppler-cpp \
-                     --disable-libopenjpeg \
-                     --disable-poppler-qt5"
+        options = " -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
+                    -DENABLE_QT5=OFF \
+                    -DENABLE_LIBCURL=OFF"
 
-    autotools.configure(options)
+    cmaketools.configure(options, sourceDir="..")
 
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     if get.buildTYPE() == "emul32":
-        pisitools.insinto("/usr/lib32", "poppler/.libs/libpoppler.so*")
-        pisitools.insinto("/usr/lib32", "glib/.libs/libpoppler-glib.so*")
+        #pisitools.insinto("/usr/lib32", "poppler/.libs/libpoppler.so*")
+        #pisitools.insinto("/usr/lib32", "glib/.libs/libpoppler-glib.so*")
         for f in ["poppler.pc", "poppler-glib.pc"]:
             pisitools.insinto("/usr/lib32/pkgconfig", f)
             pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), get.emul32prefixDIR(), get.defaultprefixDIR())
         return
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-
-    pisitools.removeDir("/usr/share/gtk-doc")
-    pisitools.dodoc("README", "AUTHORS", "ChangeLog", "NEWS", "README-XPDF", "TODO")
+    
+        pisitools.removeDir("/usr/share/gtk-doc")
+        pisitools.dodoc("README", "AUTHORS", "ChangeLog", "NEWS", "README-XPDF", "TODO")
