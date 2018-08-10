@@ -72,7 +72,7 @@ def install():
         pisitools.dosym(src, dest)
 
     # Documentation
-    pisitools.dodoc("CHANGES", "COPYRIGHT", "FAQ", "README")
+    pisitools.dodoc("CHANGES", "COPYRIGHT", "README")
     pisitools.dodoc("doc/misc/*", "contrib/scripts/named-bootconf.sh", "contrib/scripts/nanny.pl")
     pisitools.dohtml("doc/arm/*")
     pisitools.remove("/usr/share/doc/%s/Makefile*" % get.srcNAME())

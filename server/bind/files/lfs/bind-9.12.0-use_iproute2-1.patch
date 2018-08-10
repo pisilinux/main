@@ -1,0 +1,36 @@
+Submitted By: Bruce Dubbs <bdubbs_AT_linuxfromscratch_DOT_org>
+Date: 2011-11-16
+Origin: DJ Lucas <dj_AT_linuxfromscratch_DOT_org>
+Initial Package Version: 9.10.3
+Description: allow use of ip command instead of ifconfig for test suite
+Upstream Status: Not applicable
+
+diff -Naur bind-9.10.3.orig/bin/tests/system/ifconfig.sh bind-9.10.3/bin/tests/system/ifconfig.sh
+--- bind-9.10.3.orig/bin/tests/system/ifconfig.sh	2015-09-09 04:23:40.000000000 +0200
++++ bind-9.10.3/bin/tests/system/ifconfig.sh	2015-09-26 17:59:04.456649396 +0200
+@@ -97,8 +97,10 @@
+ 			fi
+ 			;;
+ 		    *-*-linux*)
+-			ifconfig lo:$int 10.53.0.$ns up netmask 255.255.255.0
+-			ifconfig lo inet6 add fd92:7065:b8e:ffff::$ns/64
++			#ifconfig lo:$int 10.53.0.$ns up netmask 255.255.255.0
++			#ifconfig lo inet6 add fd92:7065:b8e:ffff::$ns/64
++			ip addr add 10.53.0.$ns/24             label lo:$int  dev lo
++			ip addr add fd92:7065:b8e:ffff::$ns/64 label lo:$int6 dev lo
+ 			;;
+ 		    *-unknown-freebsd*)
+ 			ifconfig lo0 10.53.0.$ns alias netmask 0xffffffff
+@@ -178,8 +180,10 @@
+ 			fi
+ 			;;
+ 		    *-*-linux*)
+-			ifconfig lo:$int 10.53.0.$ns down
+-			ifconfig lo inet6 del fd92:7065:b8e:ffff::$ns/64
++			#ifconfig lo:$int 10.53.0.$ns down
++			#ifconfig lo inet6 del fd92:7065:b8e:ffff::$ns/64
++			ip addr del 10.53.0.$ns/24             label lo:$int  dev lo
++			ip addr del fd92:7065:b8e:ffff::$ns/64 label lo:$int6 dev lo
+ 			;;
+ 		    *-unknown-freebsd*)
+ 			ifconfig lo0 10.53.0.$ns delete
