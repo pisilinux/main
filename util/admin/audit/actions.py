@@ -37,4 +37,4 @@ def install():
     pisitools.remove("/usr/share/man/man8/audispd-zos-remote.8")
     pisitools.remove("/usr/share/man/man5/zos-remote.conf.5")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "THANKS", "TODO", "README", "COPYING")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "THANKS", "README", "COPYING")
