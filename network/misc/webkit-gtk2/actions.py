@@ -45,7 +45,7 @@ def setup():
 def build():
     shelltools.export("CFLAGS", cflags)
     shelltools.export("CXXFLAGS", cxxflags)
-    autotools.make("all stamp-po")
+    autotools.make("-j1 all stamp-po")
 
 def install():
     shelltools.export("CFLAGS", cflags)
