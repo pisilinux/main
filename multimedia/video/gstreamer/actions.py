@@ -12,8 +12,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("AUTOPOINT", "true")
     autotools.autoreconf("-vfi")
-    #shelltools.system("./autogen.sh --disable-gtk-doc --disable-docbook")
-
+    
     options = '--with-package-name="GStreamer for PisiLinux" \
                --with-package-origin="http://www.pisilinux.org" \
                --disable-gtk-doc'
@@ -22,24 +21,23 @@ def setup():
         options += " --bindir=/usr/bin32 \
                      --libdir=/usr/lib32 \
                      --libexecdir=/usr/libexec32 \
+                     --with-bash-completion-dir=no \
                      --disable-introspection"
 
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
 
     autotools.configure(options)
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")    
 
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
+    
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/usr/bin32")
         pisitools.removeDir("/usr/libexec32")
-
-    pisitools.removeDir("/usr/share/gtk-doc")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README")
