@@ -10,7 +10,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
     opts = {
             "introspection": "no" if get.buildTYPE() == "emul32" else "yes",
            }
