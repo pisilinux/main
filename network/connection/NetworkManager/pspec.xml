@@ -12,7 +12,7 @@
         <IsA>app:console</IsA>
         <Summary>Network connection manager powered by D-Bus and UDEV</Summary>
         <Description>NetworkManager attempts to keep an active network connection available at all times.</Description>
-        <Archive sha1sum="152845a0641f15b5aeba66ab523120d4ab93d4de" type="tarxz">https://download.gnome.org/sources/NetworkManager/1.8/NetworkManager-1.8.4.tar.xz</Archive>
+        <Archive sha1sum="6df97b73aea7b2ffe3aa3924e796d6fb8e87736f" type="tarxz">https://download.gnome.org/sources/NetworkManager/1.10/NetworkManager-1.10.10.tar.xz</Archive>
         <AdditionalFiles>
             <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
         </AdditionalFiles>
@@ -30,6 +30,7 @@
             <Dependency>newt-devel</Dependency>
             <Dependency>nspr-devel</Dependency>
             <Dependency>libnl-devel</Dependency>
+            <Dependency>jansson-devel</Dependency>
             <Dependency>libsoup-devel</Dependency>
             <Dependency>bluez-libs-devel</Dependency>
             <Dependency>iptables-devel</Dependency>
@@ -47,11 +48,12 @@
             <Dependency versionFrom="0.9.2">ConsoleKit-devel</Dependency>
             <Dependency>python-pygobject3-devel</Dependency>
             <Dependency>libxslt-devel</Dependency>
+             <Dependency>python-six</Dependency>
         </BuildDependencies>
         <Patches>
 	  <!--<Patch>0001-dns-Fix-falling-back-in-the-resolv.conf-methods.patch</Patch>-->
             <!--Patch>0001-core-fix-failure-to-configure-routes-due-to-wrong-de.patch</Patch-->
-            <!--Patch>disable_set_hostname.patch</Patch-->
+<!--             <Patch>0001-nmp-netns-Mount-proc-in-the-new-namespace.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -66,6 +68,7 @@
             <Dependency>polkit</Dependency>
             <Dependency>readline</Dependency>
             <Dependency>dbus-glib</Dependency>
+            <Dependency>jansson</Dependency>
             <Dependency>libutil-linux</Dependency>
             <Dependency>nss</Dependency>
             <Dependency>newt</Dependency>
@@ -132,6 +135,16 @@
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2018-08-13</Date>
+            <Version>1.10.10</Version>
+            <Comment>Version Bump</Comment>
+            <Requires>
+                <Action package="NetworkManager">systemRestart</Action>
+            </Requires>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2017-11-04</Date>
             <Version>1.8.4</Version>

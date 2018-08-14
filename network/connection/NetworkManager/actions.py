@@ -21,7 +21,6 @@ def setup():
 
     autotools.configure("--disable-static \
                          --disable-silent-rules \
-                         --disable-wimax \
                          --disable-lto \
                          --disable-config-plugin-ibft \
                          --disable-ifnet \
@@ -32,7 +31,6 @@ def setup():
                          --enable-concheck \
                          --without-netconfig \
                          --with-modem-manager-1 \
-                         --with-libsoup=yes \
                          --with-session-tracking=consolekit \
                          --with-suspend-resume=upower \
                          --with-system-ca-path=/etc/ssl/certs \
