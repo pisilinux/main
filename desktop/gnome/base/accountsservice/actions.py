@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--disable-static \
+                         --enable-systemd=no \
                          --libexecdir=/usr/lib/accountsservice")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")

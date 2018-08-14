@@ -22,4 +22,4 @@ def install():
     shelltools.chmod("%s/usr/bin/ping" % get.installDIR(), 04711)
     #shelltools.chmod("%s/usr/bin/ping6" % get.installDIR(), 04711)
 
-    pisitools.dodoc("RELNOTES")
+    pisitools.dodoc("RELNOTES*")
