@@ -22,6 +22,8 @@ def check():
     shelltools.system("./test_all.sh")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s prefix=/usr" % get.installDIR())
+    
+    pisitools.dosed("%s/usr/lib/pkgconfig/libqrencode.pc" % get.installDIR(), "/local", "")
 
     pisitools.dodoc("COPYING", "NEWS", "README")
