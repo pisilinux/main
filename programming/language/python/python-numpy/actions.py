@@ -23,6 +23,10 @@ def build():
 
 def install():
     pythonmodules.install(NUMPY_FCONFIG)
+    
+    pisitools.rename("/usr/bin/f2py", "f2py2")
+    pisitools.rename("/usr/bin/from-template", "from-template2")
+    pisitools.rename("/usr/bin/conv-template", "conv-template2")
 
     #pisitools.doman("doc/f2py/f2py.1")
 
