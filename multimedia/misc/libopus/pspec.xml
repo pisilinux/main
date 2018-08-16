@@ -13,6 +13,9 @@
         <Summary>Opus is a totally open, royalty-free, highly versatile audio codec</Summary>
         <Description>Opus is unmatched for interactive speech and music transmission over the Internet, but is also intended for storage and streaming applications. It is standardized by the Internet Engineering Task Force (IETF) as RFC 6716 which incorporated technology from Skype's SILK codec and Xiph.Org's CELT codec.</Description>
         <Archive sha1sum="35d108ca9d6a8d05e52d06c5421a5f95b39fdac9" type="targz">http://downloads.xiph.org/releases/opus/opus-1.2.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>doxygen</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
@@ -33,6 +36,7 @@
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib32/pkgconfig</Path>
         </Files>
     </Package>
     
@@ -46,8 +50,28 @@
             <Path fileType="doc">/usr/share/doc/</Path>
         </Files>
     </Package>
+    
+    <Package>
+        <Name>libopus-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libopus</Summary>
+        <BuildType>emul32</BuildType>
+        <RuntimeDependencies>
+            <Dependency release="current">libopus</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
 
     <History>
+        <Update release="4">
+            <Date>2018-08-16</Date>
+            <Version>1.2.1</Version>
+            <Comment>Rebuild 32bit.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2018-08-01</Date>
             <Version>1.2.1</Version>
