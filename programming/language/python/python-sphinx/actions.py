@@ -21,8 +21,8 @@ def install():
 load_grammar('%s/usr/lib/%s/site-packages/sphinx/pycode/Grammar-py2.txt')\"" %(get.installDIR(), get.curPYTHON(), ) )
 
     # create sphinx documentation using itself
-    pythonmodules.run("sphinx-build.py doc doc/_build/html")
-    pisitools.dohtml("doc/_build/html/*")
+    #pythonmodules.run("sphinx-build.py doc doc/_build/html")
+    #pisitools.dohtml("doc/_build/html/*")
 
     pisitools.dodoc("CHANGES", "EXAMPLES")
 
