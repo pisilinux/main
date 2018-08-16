@@ -24,13 +24,14 @@ def setup():
                             --with-parallel-jobs=%s \
                             --enable-nss \
                             --with-rhino \
+                            --bindir=/usr/bin \
                             --disable-system-kerberos \
                             --disable-system-pcsc \
                             --disable-system-sctp \
                             --enable-bootstrap \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
                             --with-jdk-home=/usr/lib/jvm/java-7-openjdk \
-                            --with-pkgversion='PisiLinux build 7.u121_2.6.8' \
+                            --with-pkgversion='PisiLinux build 7u_181.2.6.14' \
                            " % get.makeJOBS().replace("-j", ""))
 
 def build():
