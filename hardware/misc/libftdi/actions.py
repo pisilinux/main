@@ -36,6 +36,6 @@ def install():
     # Install udev rule
     pisitools.insinto("/lib/udev/rules.d", "packages/99-libftdi.rules")
 
-    pisitools.doman("doc/man/man3/*.3")
+    #pisitools.doman("doc/man/man3/*.3")
 
     pisitools.dodoc("AUTHORS", "COPYING.LIB", "ChangeLog", "LICENSE", "README")

@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i 's/bitrate_table.1..i./lame_get_bitrate(1, i)/g' utils/toc2mp3.cc")
     shelltools.export("CXXFLAGS", "%s -DUSE_STATIC_CONF" % get.CFLAGS())
 
     autotools.autoconf()
