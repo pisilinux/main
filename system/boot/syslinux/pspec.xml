@@ -12,7 +12,7 @@
         <IsA>app:console</IsA>
         <Summary>SysLinux, IsoLinux and PXELinux bootloader</Summary>
         <Description>Lightweight bootloaders for floppy media (SYSLINUX), network booting (PXELINUX), and bootable "El Torito" CD-ROMs (ISOLINUX). The project also includes MEMDISK, a tool to boot legacy operating systems (such as DOS) from nontraditional media; it is usually used in conjunction with PXELINUX and ISOLINUX.</Description>
-        <Archive sha1sum="1bea76b97b4e32a017dd4168e819934b7c6592cc" type="tarxz">https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.xz</Archive>
+        <Archive sha1sum="599b7a85d522b1b6658a1fe290e4d23dc64b1470" type="tarxz">https://mirrors.edge.kernel.org/pub/linux/utils/boot/syslinux/Testing/6.04/syslinux-6.04-pre1.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>nasm</Dependency>
             <Dependency>asciidoc</Dependency>
@@ -23,25 +23,18 @@
             <Dependency>upx</Dependency><!--1-->
             <Dependency>libutil-linux-devel</Dependency>
             <Dependency>util-linux</Dependency>
+			<Dependency>python-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <!--Patch level="1">0001-Add-install-all-target-to-top-side-of-HAVE_FIRMWARE.patch</Patch>
-            <Patch level="1">0035-SYSAPPEND-Fix-space-stripping.patch</Patch-->
-            <Patch level="1">gcc-fix-alignment.patch</Patch>
-            <Patch level="1">dont-guess-alignment.patch</Patch>
-            <Patch level="1">btrfs-fix.patch</Patch>
             <Patch>syslinux.git-138e850fab106b5235178848b3e0d33e25f4d3a2.patch</Patch><!--kbd patch-->
-            <Patch>syslinux.git-83aad4f.patch</Patch><!--set-base patch-->
-            <Patch>syslinux.git-0a2dbb3.patch</Patch><!--set-mod patch-->
             <Patch>syslinux-6.03-sysmacros.patch</Patch>
-<!--             <Patch>syslinux-6.02-add-fno-stack-protector.patch</Patch> -->
+			<Patch>0002-ext4-64bit-feature.patch</Patch>
         </Patches>
     </Source>
 
     <Package>
         <Name>syslinux</Name>
         <RuntimeDependencies>
-            <Dependency>mtools</Dependency>
             <Dependency>libutil-linux</Dependency>
             <Dependency>mtools</Dependency>
             <Dependency>efibootmgr</Dependency>
@@ -61,11 +54,18 @@
         <AdditionalFiles>
             <AdditionalFile target="/usr/lib/syslinux/isolinux.cfg" permission="0644" owner="root">pisi-iso/isolinux.cfg</AdditionalFile>
             <AdditionalFile target="/usr/lib/syslinux/background.png" permission="0644" owner="root">pisi-iso/background.png</AdditionalFile>
-            <!--AdditionalFile target="/usr/bin/syslinux-install_update" permission="0755" owner="root">syslinux-install_update</AdditionalFile-->
+<!--             <AdditionalFile target="/usr/bin/syslinux-install_update" permission="0755" owner="root">syslinux-install_update</AdditionalFile> -->
         </AdditionalFiles>
     </Package>
 
     <History>
+		<Update release="5">
+            <Date>2018-08-24</Date>
+            <Version>6.04</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="4">
             <Date>2018-08-13</Date>
             <Version>6.03</Version>
