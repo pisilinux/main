@@ -1,0 +1,165 @@
+From 9395f35cb18725995910531ca8b09f1d84efa96c Mon Sep 17 00:00:00 2001
+From: Christian Ehrlicher <ch.ehrlicher@gmx.de>
+Date: Sat, 17 Feb 2018 10:02:19 +0100
+Subject: QHeaderView: Preserve settings on layoutChange with empty model
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Do not clear the settings of QHeaderView during layoutChange when the
+model is empty and the section count did not change. This will not work
+when a section is moved or a section is replaced with a new one during
+layoutChange. But since layoutChanged is also called on sorting, this
+patch ensures that the settings are not cleared in this case.
+This restores the behavior to the same as before 5.9.4.
+
+Task-number: QTBUG-66444
+Task-number: QTBUG-65478
+Change-Id: I39989cfd45b42e58f49d18ec014d3a941cadb6c9
+Reviewed-by: Thorbjørn Lund Martsum <tmartsum@gmail.com>
+---
+ src/widgets/itemviews/qheaderview.cpp              | 24 ++++++++
+ .../itemviews/qheaderview/tst_qheaderview.cpp      | 71 ++++++++++++++++++++++
+ 2 files changed, 95 insertions(+)
+
+diff --git a/src/widgets/itemviews/qheaderview.cpp b/src/widgets/itemviews/qheaderview.cpp
+index edef2e9bf8..b0359de3ea 100644
+--- a/src/widgets/itemviews/qheaderview.cpp
++++ b/src/widgets/itemviews/qheaderview.cpp
+@@ -2205,6 +2205,30 @@ void QHeaderViewPrivate::_q_sectionsChanged()
+         return;
+     }
+ 
++    bool hasPersistantIndexes = false;
++    for (const auto &item : oldPersistentSections) {
++        if (item.index.isValid()) {
++            hasPersistantIndexes = true;
++            break;
++        }
++    }
++
++    // Though far from perfect we here try to retain earlier/existing behavior
++    // ### See QHeaderViewPrivate::_q_layoutAboutToBeChanged()
++    // When we don't have valid hasPersistantIndexes it can be due to
++    // - all sections are default sections
++    // - the row/column 0 which is used for persistent indexes is gone
++    // - all non-default sections were removed
++    // case one is trivial, in case two we assume nothing else changed (it's the best
++    // guess we can do - everything else can not be handled correctly for now)
++    // case three can not be handled correctly with layoutChanged - removeSections
++    // should be used instead for this
++    if (!hasPersistantIndexes) {
++        if (oldCount != newCount)
++            q->initializeSections();
++        return;
++    }
++
+     // adjust section size
+     if (newCount != oldCount) {
+         const int min = qBound(0, oldCount, newCount - 1);
+diff --git a/tests/auto/widgets/itemviews/qheaderview/tst_qheaderview.cpp b/tests/auto/widgets/itemviews/qheaderview/tst_qheaderview.cpp
+index c69c0de949..97aa8a0299 100644
+--- a/tests/auto/widgets/itemviews/qheaderview/tst_qheaderview.cpp
++++ b/tests/auto/widgets/itemviews/qheaderview/tst_qheaderview.cpp
+@@ -206,6 +206,7 @@ private slots:
+     void task248050_hideRow();
+     void QTBUG6058_reset();
+     void QTBUG7833_sectionClicked();
++    void checkLayoutChangeEmptyModel();
+     void QTBUG8650_crashOnInsertSections();
+     void QTBUG12268_hiddenMovedSectionSorting();
+     void QTBUG14242_hideSectionAutoSize();
+@@ -286,6 +287,13 @@ public:
+         endInsertColumns();
+     }
+ 
++    void removeFirstRow()
++    {
++        beginRemoveRows(QModelIndex(), 0, 0);
++        --rows;
++        endRemoveRows();
++    }
++
+     void removeLastRow()
+     {
+         beginRemoveRows(QModelIndex(), rows - 1, rows - 1);
+@@ -328,6 +336,24 @@ public:
+         emit layoutChanged();
+     }
+ 
++    void emitLayoutChanged()
++    {
++        emit layoutAboutToBeChanged();
++        emit layoutChanged();
++    }
++
++    void emitLayoutChangedWithRemoveFirstRow()
++    {
++        emit layoutAboutToBeChanged();
++        QModelIndexList milNew;
++        const auto milOld = persistentIndexList();
++        milNew.reserve(milOld.size());
++        for (int i = 0; i < milOld.size(); ++i)
++            milNew += QModelIndex();
++        changePersistentIndexList(milOld, milNew);
++        emit layoutChanged();
++    }
++
+     int cols, rows;
+     mutable bool wrongIndex;
+ };
+@@ -2332,6 +2358,51 @@ void tst_QHeaderView::QTBUG7833_sectionClicked()
+     QCOMPARE(pressedSpy.at(2).at(0).toInt(), 0);
+ }
+ 
++void tst_QHeaderView::checkLayoutChangeEmptyModel()
++{
++    QtTestModel tm;
++    tm.cols = 11;
++    QTableView tv;
++    tv.setModel(&tm);
++
++    const int section4Size = tv.horizontalHeader()->sectionSize(4) + 1;
++    const int section5Size = section4Size + 1;
++    tv.horizontalHeader()->resizeSection(4, section4Size);
++    tv.horizontalHeader()->resizeSection(5, section5Size);
++    tv.setColumnHidden(5, true);
++    tv.setColumnHidden(6, true);
++    tv.horizontalHeader()->swapSections(8, 10);
++
++    tv.sortByColumn(1, Qt::AscendingOrder);
++    tm.emitLayoutChanged();
++
++    QCOMPARE(tv.isColumnHidden(5), true);
++    QCOMPARE(tv.isColumnHidden(6), true);
++    QCOMPARE(tv.horizontalHeader()->sectionsMoved(), true);
++    QCOMPARE(tv.horizontalHeader()->logicalIndex(8), 10);
++    QCOMPARE(tv.horizontalHeader()->logicalIndex(10), 8);
++    QCOMPARE(tv.horizontalHeader()->sectionSize(4), section4Size);
++    tv.setColumnHidden(5, false);   // unhide, section size must be properly restored
++    QCOMPARE(tv.horizontalHeader()->sectionSize(5), section5Size);
++    tv.setColumnHidden(5, true);
++
++    // adjust
++    tm.rows = 3;
++    tm.emitLayoutChanged();
++
++    // remove the row used for QPersistenModelIndexes
++    tm.emitLayoutChangedWithRemoveFirstRow();
++    QCOMPARE(tv.isColumnHidden(5), true);
++    QCOMPARE(tv.isColumnHidden(6), true);
++    QCOMPARE(tv.horizontalHeader()->sectionsMoved(), true);
++    QCOMPARE(tv.horizontalHeader()->logicalIndex(8), 10);
++    QCOMPARE(tv.horizontalHeader()->logicalIndex(10), 8);
++    QCOMPARE(tv.horizontalHeader()->sectionSize(4), section4Size);
++    tv.setColumnHidden(5, false);   // unhide, section size must be properly restored
++    QCOMPARE(tv.horizontalHeader()->sectionSize(5), section5Size);
++    tv.setColumnHidden(5, true);
++}
++
+ void tst_QHeaderView::QTBUG8650_crashOnInsertSections()
+ {
+     QStringList headerLabels;
+-- 
+cgit v1.2.1
+

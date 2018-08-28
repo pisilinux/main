@@ -1,0 +1,115 @@
+From 4a04eea4f4316684e20c509352c6c533cf39306e Mon Sep 17 00:00:00 2001
+From: David Faure <david.faure@kdab.com>
+Date: Thu, 1 Mar 2018 11:04:00 +0100
+Subject: QHeaderView: fix inconsistent saved state, ignored during restore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The code that updates a section size must also update length,
+otherwise saveState can end up saving inconsistent state, and
+restoreState() goes to an early-return, not doing anything.
+
+The actual bug was fixed meanwhile because _q_sectionsChanged is called
+again, which recalculates length. I still see this only as a safety
+measure, every other code path that changes section sizes updates length
+right away.
+
+Change-Id: I6cc16261692d93b3640afafef600a5bdff8dca0c
+Reviewed-by: Thorbjørn Lund Martsum <tmartsum@gmail.com>
+---
+ src/widgets/itemviews/qheaderview.cpp              |  6 ++-
+ .../widgets/itemviews/qtreeview/tst_qtreeview.cpp  | 53 ++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 1 deletion(-)
+
+diff --git a/src/widgets/itemviews/qheaderview.cpp b/src/widgets/itemviews/qheaderview.cpp
+index 5cbf642802..b7048d1616 100644
+--- a/src/widgets/itemviews/qheaderview.cpp
++++ b/src/widgets/itemviews/qheaderview.cpp
+@@ -2191,7 +2191,11 @@ void QHeaderViewPrivate::_q_sectionsAboutToBeChanged(const QList<QPersistentMode
+     if (stretchLastSection && lastSectionLogicalIdx >= 0 && lastSectionLogicalIdx < sectionItems.count()) {
+         const int visual = visualIndex(lastSectionLogicalIdx);
+         if (visual >= 0 && visual < sectionItems.size()) {
+-            sectionItems[visual].size = lastSectionSize;
++            auto &itemRef = sectionItems[visual];
++            if (itemRef.size != lastSectionSize) {
++                length += lastSectionSize - itemRef.size;
++                itemRef.size = lastSectionSize;
++            }
+         }
+     }
+     for (int i = 0; i < sectionItems.size(); ++i) {
+diff --git a/tests/auto/widgets/itemviews/qtreeview/tst_qtreeview.cpp b/tests/auto/widgets/itemviews/qtreeview/tst_qtreeview.cpp
+index 5293ba487a..347d2a81e6 100644
+--- a/tests/auto/widgets/itemviews/qtreeview/tst_qtreeview.cpp
++++ b/tests/auto/widgets/itemviews/qtreeview/tst_qtreeview.cpp
+@@ -162,6 +162,7 @@ private slots:
+     void renderToPixmap();
+     void styleOptionViewItem();
+     void keyboardNavigationWithDisabled();
++    void saveRestoreState();
+ 
+     void statusTip_data();
+     void statusTip();
+@@ -4076,6 +4077,58 @@ void tst_QTreeView::keyboardNavigationWithDisabled()
+     QCOMPARE(view.currentIndex(), model.index(6, 0));
+ }
+ 
++class RemoveColumnOne : public QSortFilterProxyModel
++{
++public:
++    bool filterAcceptsColumn(int source_column, const QModelIndex &) const override
++    {
++        if (m_removeColumn)
++            return source_column != 1;
++        return true;
++    }
++    void removeColumn()
++    {
++        m_removeColumn = true;
++        invalidate();
++    }
++private:
++    bool m_removeColumn = false;
++};
++
++
++void tst_QTreeView::saveRestoreState()
++{
++    QStandardItemModel model;
++    for (int i = 0; i < 100; i++) {
++        QList<QStandardItem *> items;
++        items << new QStandardItem(QLatin1String("item ") + QString::number(i)) << new QStandardItem(QStringLiteral("hidden by proxy")) << new QStandardItem(QStringLiteral("hidden by user"));
++        model.appendRow(items);
++    }
++    QCOMPARE(model.columnCount(), 3);
++
++    RemoveColumnOne proxy;
++    proxy.setSourceModel(&model);
++    QCOMPARE(proxy.columnCount(), 3);
++
++    QTreeView view;
++    view.setModel(&proxy);
++    view.resize(500, 500);
++    view.show();
++    view.header()->hideSection(2);
++    QVERIFY(view.header()->isSectionHidden(2));
++    proxy.removeColumn();
++    QCOMPARE(proxy.columnCount(), 2);
++    QVERIFY(view.header()->isSectionHidden(1));
++    const QByteArray data = view.header()->saveState();
++
++    QTreeView view2;
++    view2.setModel(&proxy);
++    view2.resize(500, 500);
++    view2.show();
++    view2.header()->restoreState(data);
++    QVERIFY(view2.header()->isSectionHidden(1));
++}
++
+ class Model_11466 : public QAbstractItemModel
+ {
+     Q_OBJECT
+-- 
+cgit v1.2.1
+
