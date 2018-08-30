@@ -18,7 +18,7 @@ def install():
     pythonmodules.install(pyVer="3")
 
     for header in ["Imaging.h","ImPlatform.h"]:
-        pisitools.insinto("/usr/include/%s" % get.curPYTHON(), "libImaging/%s" % header)
+        pisitools.insinto("/usr/include/%s" % get.curPYTHON(), "src/libImaging/%s" % header)
 
     pisitools.dodoc("README.rst")
 
