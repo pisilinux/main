@@ -10,12 +10,12 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    for f in ["src/Makefile.am", "src/Makefile.in", "daemon/Makefile.am", "daemon/Makefile.in"]:
-        pisitools.dosed(f, "\$\(localstatedir\)(\/run\/libvirt)", "\\1")
-    for f in ["daemon/libvirtd.c", "daemon/libvirtd.conf", "daemon/test_libvirtd.aug.in"]:
-        pisitools.dosed(f, "\/var(\/run\/libvirt)", "\\1")
-    for f in ["src/locking/virtlockd.pod", "src/virtlockd.8.in", "daemon/libvirtd.8.in", "daemon/libvirtd.pod", ]:
-        pisitools.dosed(f, "LOCALSTATEDIR(\/run\/libvirt)", "\\1")
+    #for f in ["src/Makefile.am", "src/Makefile.in", "daemon/Makefile.am", "daemon/Makefile.in"]:
+        #pisitools.dosed(f, "\$\(localstatedir\)(\/run\/libvirt)", "\\1")
+    #for f in ["daemon/libvirtd.c", "daemon/libvirtd.conf", "daemon/test_libvirtd.aug.in"]:
+        #pisitools.dosed(f, "\/var(\/run\/libvirt)", "\\1")
+    #for f in ["src/locking/virtlockd.pod", "src/virtlockd.8.in", "daemon/libvirtd.8.in", "daemon/libvirtd.pod", ]:
+        #pisitools.dosed(f, "LOCALSTATEDIR(\/run\/libvirt)", "\\1")
     autotools.configure("--with-init-script=none \
                          --with-remote-pid-file=/run/libvirtd.pid \
                          --with-qemu-user=qemu \
@@ -26,7 +26,6 @@ def setup():
                          --with-sasl \
                          --with-audit \
                          --with-numactl \
-                         --with-yajl \
                          --with-avahi \
                          --with-netcf \
                          --with-libssh2=/usr/lib \
