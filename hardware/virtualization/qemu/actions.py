@@ -58,6 +58,8 @@ def printfancy(msg):
     print
 
 def setup():
+    shelltools.system("sed -i 's/ memfd_create/ qemu_memfd_create/' util/memfd.c")
+    
     # disable fdt until dtc is in repo
     # pisitools.dosed("configure", 'fdt="yes"', 'fdt="no"')
 
