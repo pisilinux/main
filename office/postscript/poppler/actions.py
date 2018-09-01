@@ -17,12 +17,13 @@ def setup():
 
     options = "-DCMAKE_BUILD_TYPE=Release \
                -DCMAKE_INSTALL_PREFIX=/usr \
-               -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+               -DCMAKE_INSTALL_LIBDIR=lib \
                -DENABLE_XPDF_HEADERS=ON \
               "
 
     if get.buildTYPE() == "emul32":
         options = " -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
+                    -DCMAKE_INSTALL_PREFIX=/emul32 \
                     -DENABLE_QT5=OFF \
                     -DENABLE_LIBCURL=OFF"
 
@@ -36,6 +37,7 @@ def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     if get.buildTYPE() == "emul32":
+        pisitools.removeDir("/emul32")
         #pisitools.insinto("/usr/lib32", "poppler/.libs/libpoppler.so*")
         #pisitools.insinto("/usr/lib32", "glib/.libs/libpoppler-glib.so*")
         for f in ["poppler.pc", "poppler-glib.pc"]:
