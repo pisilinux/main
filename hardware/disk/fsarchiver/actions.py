@@ -9,7 +9,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.configure()
+    autotools.configure("--disable-lz4 \
+                         --disable-zstd")
     
 def build():
     autotools.make()
