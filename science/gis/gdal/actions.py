@@ -45,7 +45,7 @@ def setup():
                          --with-python \
                          --without-poppler \
                          --with-xerces \
-                         --without-openjpeg \
+                         --with-openjpeg \
                          --without-libtool \
                          --without-hdf4 \
                          --without-fme \
@@ -82,8 +82,8 @@ def install():
     #remove egg
 #    pisitools.removeDir("/usr/lib/python2.7/site-packages/GDAL-*")
 
-    pisitools.domove("/usr/man/man3/*", "/usr/share/man/man3")
-    pisitools.removeDir("/usr/man/")
+    #pisitools.domove("/usr/man/man3/*", "/usr/share/man/man3")
+    #pisitools.removeDir("/usr/man/")
     #pisitools.domove("/usr/etc/bash_completion.d/*", "/etc/bash_completion.d")
     #pisitools.removeDir("/usr/etc")
 
