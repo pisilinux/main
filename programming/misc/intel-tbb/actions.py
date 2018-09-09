@@ -9,10 +9,15 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-WorkDir="tbb%soss" % (get.srcVERSION().replace(".", ""))
 
+#WorkDir="tbb%soss" % (get.srcVERSION().replace(".", ""))
+WorkDir="tbb-2018_U5"
+
+
+def build():
+    autotools.make("CXXFLAGS='%s' tbb_build_prefix=obj" % get.CXXFLAGS())
 
 def install():
     shelltools.system("./install.sh %s" % get.installDIR())
 
-    pisitools.dodoc("README", "COPYING")
+    pisitools.dodoc("README")
