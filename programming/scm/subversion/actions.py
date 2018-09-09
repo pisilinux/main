@@ -27,6 +27,8 @@ def setup():
                          --with-sqlite=/usr \
                          --with-zlib=/usr \
                          --with-jikes=no \
+                         --with-lz4=internal \
+                         --with-utf8proc=internal \
                          --without-berkeley-db \
                          --disable-mod-activation")
 
