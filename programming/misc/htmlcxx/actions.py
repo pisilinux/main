@@ -9,7 +9,8 @@ from pisi.actionsapi import get
 NoStrip = "/"
 
 def setup():
-    shelltools.export("LDFLAGS", "%s -lm" % get.LDFLAGS())    
+    shelltools.export("LDFLAGS", "%s -lm" % get.LDFLAGS())
+    autotools.autoreconf("-fiv")
     autotools.configure("--prefix=/usr")
    
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
