@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#
+
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file http://www.gnu.org/copyleft/gpl.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
@@ -10,12 +10,17 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("./configure --prefix=/usr LDFLAGS=-lm")
-
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson --prefix=/usr ..")
+    
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dodoc("NEWS", "THANKS", "COPYING", "README", "AUTHORS")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.dodoc("README", "NEWS", "COPYING", "AUTHORS")
