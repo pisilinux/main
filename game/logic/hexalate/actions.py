@@ -19,4 +19,4 @@ def build():
 def install():
     qt5.install()
 
-    pisitools.dodoc("CREDITS", "INSTALL", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("CREDITS", "INSTALL", "ChangeLog", "COPYING", "README")
