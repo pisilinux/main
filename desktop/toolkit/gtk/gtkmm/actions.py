@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     autotools.configure("--disable-demos \
                          --disable-docs")
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
     pisitools.dosed("libtool", "^(runpath_var=)LD_RUN_PATH", "\\1DIE_RPATH_DIE")
 
