@@ -17,7 +17,7 @@ def setup():
                          --localedir=/usr/share/locale \
                          --disable-update-xdg-database")
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()

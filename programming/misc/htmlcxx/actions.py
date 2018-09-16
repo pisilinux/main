@@ -13,7 +13,7 @@ def setup():
     autotools.autoreconf("-fiv")
     autotools.configure("--prefix=/usr")
    
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():  
     autotools.make()
