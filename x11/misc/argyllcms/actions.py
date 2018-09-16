@@ -14,7 +14,7 @@ def setup():
     autotools.configure("--disable-static")
     
     # for fix unused dependency
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")  
 
 def build():
     autotools.make()

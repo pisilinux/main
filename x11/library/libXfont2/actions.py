@@ -12,7 +12,7 @@ def setup():
     autotools.configure("--disable-static \
                          --disable-devel-docs")
 
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()

@@ -32,7 +32,7 @@ def setup():
                          --without-berkeley-db \
                          --disable-mod-activation")
 
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     # svn
