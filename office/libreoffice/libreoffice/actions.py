@@ -117,10 +117,10 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
-    
+
     pisitools.remove("gid_Module*")
-        
+
     pisitools.insinto("/usr/share/appdata/", "sysui/desktop/appstream-appdata/libreoffice-*.xml")
-    
+
     for pix in ["libreoffice-base.png", "libreoffice-calc.png", "libreoffice-draw.png", "libreoffice-impress.png", "libreoffice-main.png", "libreoffice-math.png", "libreoffice-startcenter.png", "libreoffice-writer.png"]:
         pisitools.dosym("/usr/share/icons/hicolor/32x32/apps/%s" % pix, "/usr/share/pixmaps/%s" %pix)
