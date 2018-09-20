@@ -34,7 +34,6 @@ def setup():
            use_gnome_keyring=false\
            use_gold=false \
            enable_hangout_services_extension=true \
-           use_gconf=false \
            enable_widevine=true \
            linux_use_bundled_binutils=false \
            is_debug=false \
@@ -46,8 +45,7 @@ def setup():
            proprietary_codecs=true \
            link_pulseaudio=true \
            use_custom_libcxx=false \
-           enable_swiftshader=false \
-           use_gtk3=true'
+           enable_swiftshader=false'
 
     shelltools.system("tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
