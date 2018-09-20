@@ -1,0 +1,554 @@
+--- chromium-69.0.3472.3/third_party/webrtc/video/video_receive_stream.cc.gcc7	2018-06-26 06:35:08.000000000 +0200
++++ chromium-69.0.3472.3/third_party/webrtc/video/video_receive_stream.cc	2018-07-07 12:13:45.579733235 +0200
+@@ -320,10 +320,6 @@
+     const CodecSpecificInfo* codec_specific_info,
+     const RTPFragmentationHeader* fragmentation) {
+   stats_proxy_.OnPreDecode(encoded_image, codec_specific_info);
+-  size_t simulcast_idx = 0;
+-  if (codec_specific_info->codecType == kVideoCodecVP8) {
+-    simulcast_idx = codec_specific_info->codecSpecific.VP8.simulcastIdx;
+-  }
+   {
+     rtc::CritScope lock(&ivf_writer_lock_);
+     if (ivf_writer_.get()) {
+--- chromium-69.0.3472.3/third_party/crashpad/crashpad/compat/non_win/dbghelp.h.gcc7	2018-06-26 06:33:19.000000000 +0200
++++ chromium-69.0.3472.3/third_party/crashpad/crashpad/compat/non_win/dbghelp.h	2018-07-07 12:30:05.410672630 +0200
+@@ -29,7 +29,7 @@
+ //!
+ //! A hex dump of a little-endian minidump file will begin with the string
+ //! “MDMP”.
+-#define MINIDUMP_SIGNATURE ('PMDM')  // 0x4d444d50
++#define MINIDUMP_SIGNATURE (0x4d444d50)  // 'PMDM'
+ 
+ //! \brief The version of a minidump file, stored in MINIDUMP_HEADER::Version.
+ #define MINIDUMP_VERSION (42899)
+--- chromium-69.0.3472.3/chrome/browser/chrome_browser_main.cc.gcc7	2018-06-26 06:32:57.000000000 +0200
++++ chromium-69.0.3472.3/chrome/browser/chrome_browser_main.cc	2018-07-07 13:30:10.409446615 +0200
+@@ -740,9 +740,8 @@
+       chrome::AttemptExit();
+       return false;
+   }
+-#else
+-  return true;
+ #endif
++  return true;
+ }
+ 
+ }  // namespace
+--- chromium-69.0.3472.3/chrome/browser/resource_coordinator/tab_lifecycle_unit.cc.gcc7	2018-06-26 06:32:58.000000000 +0200
++++ chromium-69.0.3472.3/chrome/browser/resource_coordinator/tab_lifecycle_unit.cc	2018-07-07 13:47:27.816647653 +0200
+@@ -154,6 +154,7 @@
+       }
+     }
+   }
++  return false;
+ }
+ 
+ StateChangeReason DiscardReasonToStateChangeReason(DiscardReason reason) {
+@@ -165,6 +166,7 @@
+     case DiscardReason::kUrgent:
+       return StateChangeReason::SYSTEM_MEMORY_PRESSURE;
+   }
++  return StateChangeReason::BROWSER_INITIATED;
+ }
+ 
+ struct FeatureUsageEntry {
+--- chromium-69.0.3472.3/chrome/browser/ui/views/harmony/material_refresh_layout_provider.cc.gcc7	2018-06-26 06:32:58.000000000 +0200
++++ chromium-69.0.3472.3/chrome/browser/ui/views/harmony/material_refresh_layout_provider.cc	2018-07-07 14:36:14.447584185 +0200
+@@ -33,9 +33,6 @@
+     views::EmphasisMetric emphasis_metric,
+     const gfx::Size& size) const {
+   switch (emphasis_metric) {
+-    case views::EMPHASIS_NONE:
+-      NOTREACHED();
+-      return 0;
+     case views::EMPHASIS_LOW:
+     case views::EMPHASIS_MEDIUM:
+       return 4;
+@@ -43,15 +40,15 @@
+       return 8;
+     case views::EMPHASIS_MAXIMUM:
+       return std::min(size.width(), size.height()) / 2;
++    case views::EMPHASIS_NONE:
++      NOTREACHED();
+   }
++  return 0;
+ }
+ 
+ int MaterialRefreshLayoutProvider::GetShadowElevationMetric(
+     views::EmphasisMetric emphasis_metric) const {
+   switch (emphasis_metric) {
+-    case views::EMPHASIS_NONE:
+-      NOTREACHED();
+-      return 0;
+     case views::EMPHASIS_LOW:
+       return 1;
+     case views::EMPHASIS_MEDIUM:
+@@ -60,7 +57,10 @@
+       return 3;
+     case views::EMPHASIS_MAXIMUM:
+       return 16;
++    case views::EMPHASIS_NONE:
++      NOTREACHED();
+   }
++  return 0;
+ }
+ 
+ gfx::ShadowValues MaterialRefreshLayoutProvider::MakeShadowValues(
+--- chromium-69.0.3472.3/chrome/browser/ui/views/passwords/password_generation_popup_view_views.cc.gcc7	2018-06-26 06:32:58.000000000 +0200
++++ chromium-69.0.3472.3/chrome/browser/ui/views/passwords/password_generation_popup_view_views.cc	2018-07-07 15:04:10.502088288 +0200
+@@ -55,8 +55,8 @@
+     views::Label* suggestion_label = new views::Label(
+         suggestion, ChromeTextContext::CONTEXT_BODY_TEXT_LARGE,
+         state == PasswordGenerationPopupController::kOfferGeneration
+-            ? views::style::STYLE_PRIMARY
+-            : STYLE_SECONDARY);
++            ? int(views::style::STYLE_PRIMARY)
++            : int(STYLE_SECONDARY));
+     layout->AddView(suggestion_label);
+ 
+     DCHECK(!password_label_);
+--- chromium-69.0.3472.3/components/data_reduction_proxy/core/browser/data_reduction_proxy_util.cc.gcc7-7	2018-06-26 06:33:00.000000000 +0200
++++ chromium-69.0.3472.3/components/data_reduction_proxy/core/browser/data_reduction_proxy_util.cc	2018-07-07 15:22:43.289751740 +0200
+@@ -313,8 +313,6 @@
+ PageloadMetrics_ConnectionType ProtoConnectionTypeFromConnectionType(
+     net::NetworkChangeNotifier::ConnectionType connection_type) {
+   switch (connection_type) {
+-    case net::NetworkChangeNotifier::CONNECTION_UNKNOWN:
+-      return PageloadMetrics_ConnectionType_CONNECTION_UNKNOWN;
+     case net::NetworkChangeNotifier::CONNECTION_ETHERNET:
+       return PageloadMetrics_ConnectionType_CONNECTION_ETHERNET;
+     case net::NetworkChangeNotifier::CONNECTION_WIFI:
+@@ -329,7 +327,10 @@
+       return PageloadMetrics_ConnectionType_CONNECTION_NONE;
+     case net::NetworkChangeNotifier::CONNECTION_BLUETOOTH:
+       return PageloadMetrics_ConnectionType_CONNECTION_BLUETOOTH;
++    case net::NetworkChangeNotifier::CONNECTION_UNKNOWN:
++      break;
+   }
++  return PageloadMetrics_ConnectionType_CONNECTION_UNKNOWN;
+ }
+ 
+ RequestInfo_Protocol ProtoRequestInfoProtocolFromRequestInfoProtocol(
+@@ -342,8 +343,9 @@
+     case DataReductionProxyData::RequestInfo::Protocol::QUIC:
+       return RequestInfo_Protocol_QUIC;
+     case DataReductionProxyData::RequestInfo::Protocol::UNKNOWN:
+-      return RequestInfo_Protocol_UNKNOWN;
++      break;
+   }
++  return RequestInfo_Protocol_UNKNOWN;
+ }
+ 
+ net::ProxyServer::Scheme SchemeFromProxyScheme(
+--- chromium-69.0.3472.3/components/previews/core/previews_black_list.cc.gcc7	2018-06-26 06:33:01.000000000 +0200
++++ chromium-69.0.3472.3/components/previews/core/previews_black_list.cc	2018-07-07 15:41:14.295381780 +0200
+@@ -34,6 +34,7 @@
+     case blacklist::BlacklistReason::kAllowed:
+       return PreviewsEligibilityReason::ALLOWED;
+   }
++  return PreviewsEligibilityReason::LAST;
+ }
+ 
+ }
+--- chromium-69.0.3472.3/base/callback_helpers.h.gcc7	2018-06-26 06:32:56.000000000 +0200
++++ chromium-69.0.3472.3/base/callback_helpers.h	2018-07-07 16:00:33.724127746 +0200
+@@ -91,7 +91,7 @@
+   void ReplaceClosure(OnceClosure closure);
+ 
+   // Releases the Closure without calling.
+-  OnceClosure Release() WARN_UNUSED_RESULT;
++  OnceClosure Release();
+ 
+  private:
+   OnceClosure closure_;
+--- chromium-69.0.3472.3/content/browser/frame_host/frame_tree_node.cc.gcc7	2018-06-26 06:33:02.000000000 +0200
++++ chromium-69.0.3472.3/content/browser/frame_host/frame_tree_node.cc	2018-07-07 18:37:53.236178023 +0200
+@@ -624,6 +624,7 @@
+       return NotifyUserActivation();
+   }
+   NOTREACHED() << "Invalid update_type.";
++  return false;
+ }
+ 
+ void FrameTreeNode::OnSetHasReceivedUserGestureBeforeNavigation(bool value) {
+--- chromium-69.0.3472.3/device/bluetooth/bluetooth_remote_gatt_characteristic.cc.gcc7	2018-06-26 06:33:02.000000000 +0200
++++ chromium-69.0.3472.3/device/bluetooth/bluetooth_remote_gatt_characteristic.cc	2018-07-07 21:00:37.557253268 +0200
+@@ -362,14 +362,15 @@
+   Properties properties = GetProperties();
+   bool hasNotify = (properties & PROPERTY_NOTIFY) != 0;
+   bool hasIndicate = (properties & PROPERTY_INDICATE) != 0;
+-  if (!notification_type)
+-    return hasNotify || hasIndicate;
+-  switch (notification_type.value()) {
+-    case NotificationType::kNotification:
+-      return hasNotify;
+-    case NotificationType::kIndication:
+-      return hasIndicate;
++  if (notification_type) {
++    switch (notification_type.value()) {
++      case NotificationType::kNotification:
++        return hasNotify;
++      case NotificationType::kIndication:
++        return hasIndicate;
++    }
+   }
++  return hasNotify || hasIndicate;
+ }
+ 
+ }  // namespace device
+--- chromium-69.0.3472.3/ui/base/mojo/clipboard_struct_traits.h.gcc7	2018-06-26 06:33:23.000000000 +0200
++++ chromium-69.0.3472.3/ui/base/mojo/clipboard_struct_traits.h	2018-07-07 22:02:21.462873681 +0200
+@@ -21,6 +21,7 @@
+       case ui::CLIPBOARD_TYPE_DRAG:
+         return ui::mojom::ClipboardType::DRAG;
+     }
++    return ui::mojom::ClipboardType(int(ui::mojom::ClipboardType::kMaxValue) + 1);
+   }
+ 
+   static bool FromMojom(ui::mojom::ClipboardType type, ui::ClipboardType* out) {
+--- chromium-69.0.3472.3/pdf/out_of_process_instance.cc.gcc7	2018-06-26 06:33:05.000000000 +0200
++++ chromium-69.0.3472.3/pdf/out_of_process_instance.cc	2018-07-07 22:24:15.654709688 +0200
+@@ -471,7 +471,6 @@
+ 
+   text_input_ = std::make_unique<pp::TextInput_Dev>(this);
+ 
+-  bool enable_javascript = false;
+   const char* stream_url = nullptr;
+   const char* original_url = nullptr;
+   const char* top_level_url = nullptr;
+@@ -491,8 +490,6 @@
+     } else if (strcmp(argn[i], "top-toolbar-height") == 0) {
+       success =
+           base::StringToInt(argv[i], &top_toolbar_height_in_viewport_coords_);
+-    } else if (strcmp(argn[i], "javascript") == 0) {
+-      enable_javascript = (strcmp(argv[i], "allow") == 0);
+     }
+     if (!success)
+       return false;
+--- chromium-69.0.3472.3/ui/views/layout/layout_provider.cc.gcc7	2018-06-26 06:33:24.000000000 +0200
++++ chromium-69.0.3472.3/ui/views/layout/layout_provider.cc	2018-07-07 22:46:19.302390595 +0200
+@@ -148,7 +148,7 @@
+   switch (emphasis_metric) {
+     case views::EMPHASIS_NONE:
+       NOTREACHED();
+-      return 0;
++      break;
+     case EMPHASIS_LOW:
+     case EMPHASIS_MEDIUM:
+       return is_touch ? 4 : 2;
+@@ -157,6 +157,7 @@
+     case EMPHASIS_MAXIMUM:
+       return is_touch ? std::min(size.width(), size.height()) / 2 : 4;
+   }
++  return 0;
+ }
+ 
+ int LayoutProvider::GetShadowElevationMetric(
+--- chromium-69.0.3472.3/content/renderer/input/input_event_prediction.cc.gcc7	2018-06-26 06:33:02.000000000 +0200
++++ chromium-69.0.3472.3/content/renderer/input/input_event_prediction.cc	2018-07-07 23:26:14.070643691 +0200
+@@ -77,6 +77,7 @@
+     case PredictorType::kKalman:
+       return std::make_unique<ui::KalmanPredictor>();
+   }
++  return 0;
+ }
+ 
+ void InputEventPrediction::UpdatePrediction(const WebInputEvent& event) {
+--- chromium-69.0.3472.3/third_party/blink/renderer/platform/heap/heap_stats_collector.h.gcc7	2018-06-26 06:33:19.000000000 +0200
++++ chromium-69.0.3472.3/third_party/blink/renderer/platform/heap/heap_stats_collector.h	2018-07-08 02:47:57.843418842 +0200
+@@ -95,6 +95,7 @@
+       case Id::kVisitStackRoots:
+         return "BlinkGC.VisitStackRoots";
+     }
++    return 0;
+   }
+ 
+   static constexpr int kNumScopeIds = kLastScopeId + 1;
+--- chromium-69.0.3472.3/third_party/blink/renderer/platform/scheduler/main_thread/page_scheduler_impl.cc.gcc7	2018-06-26 06:33:19.000000000 +0200
++++ chromium-69.0.3472.3/third_party/blink/renderer/platform/scheduler/main_thread/page_scheduler_impl.cc	2018-07-08 10:57:14.446270568 +0200
+@@ -622,7 +622,7 @@
+   switch (old_state) {
+     case PageLifecycleState::kUnknown:
+       // We don't track the initial transition.
+-      return base::nullopt;
++    break;
+     case PageLifecycleState::kActive:
+       switch (new_state) {
+         case PageLifecycleState::kHiddenForegrounded:
+@@ -631,7 +631,7 @@
+           return PageLifecycleStateTransition::kActiveToHiddenBackgrounded;
+         default:
+           NOTREACHED();
+-          return base::nullopt;
++          break;
+       }
+     case PageLifecycleState::kHiddenForegrounded:
+       switch (new_state) {
+@@ -644,7 +644,7 @@
+           return PageLifecycleStateTransition::kHiddenForegroundedToFrozen;
+         default:
+           NOTREACHED();
+-          return base::nullopt;
++          break;
+       }
+     case PageLifecycleState::kHiddenBackgrounded:
+       switch (new_state) {
+@@ -657,8 +657,8 @@
+           return PageLifecycleStateTransition::kHiddenBackgroundedToFrozen;
+         default:
+           NOTREACHED();
+-          return base::nullopt;
+-      }
++          break;
++     }
+     case PageLifecycleState::kFrozen:
+       switch (new_state) {
+         case PageLifecycleState::kActive:
+@@ -669,9 +669,10 @@
+           return PageLifecycleStateTransition::kFrozenToHiddenBackgrounded;
+         default:
+           NOTREACHED();
+-          return base::nullopt;
++          break;
+       }
+   }
++  return base::nullopt;
+ }
+ 
+ // static
+--- chromium-69.0.3497.4/third_party/pdfium/core/fpdfapi/render/cpdf_scaledrenderbuffer.cpp.gcc7	2018-07-21 09:14:59.000000000 +0200
++++ chromium-69.0.3497.4/third_party/pdfium/core/fpdfapi/render/cpdf_scaledrenderbuffer.cpp	2018-07-21 18:57:05.372328475 +0200
+@@ -50,10 +50,8 @@
+   }
+   m_pBitmapDevice = pdfium::MakeUnique<CFX_DefaultRenderDevice>();
+   FXDIB_Format dibFormat = FXDIB_Rgb;
+-  int32_t bpp = 24;
+   if (m_pDevice->GetDeviceCaps(FXDC_RENDER_CAPS) & FXRC_ALPHA_OUTPUT) {
+     dibFormat = FXDIB_Argb;
+-    bpp = 32;
+   }
+   while (1) {
+     FX_RECT bitmap_rect =
+--- chromium-69.0.3497.4/third_party/pdfium/fxjs/cjs_field.cpp.gcc7	2018-07-21 09:14:59.000000000 +0200
++++ chromium-69.0.3497.4/third_party/pdfium/fxjs/cjs_field.cpp	2018-07-21 20:25:41.470285320 +0200
+@@ -703,14 +703,16 @@
+ 
+   CPDF_FormField* pFormField = GetFirstFormField();
+   if (!pFormField)
++  {
+     return CJS_Return(JSMessage::kBadObjectError);
+-
+-    return CJS_Return(JSMessage::kBadObjectError);
++  }
+ 
+   CPDFSDK_Widget* pWidget =
+       GetWidget(m_pFormFillEnv.Get(), GetSmartFieldControl(pFormField));
+   if (!pWidget)
++  {
+     return CJS_Return(JSMessage::kBadObjectError);
++  }
+ 
+   switch (pWidget->GetBorderStyle()) {
+     case BorderStyle::SOLID:
+--- chromium-69.0.3497.4/components/policy/core/common/policy_proto_decoders.cc.gcc7	2018-07-21 09:12:56.000000000 +0200
++++ chromium-69.0.3497.4/components/policy/core/common/policy_proto_decoders.cc	2018-07-21 21:38:32.566870921 +0200
+@@ -43,6 +43,7 @@
+     case em::PolicyOptions::UNSET:
+       return false;
+   }
++  return false;
+ }
+ 
+ // Convert a BooleanPolicyProto to a bool base::Value.
+@@ -186,4 +187,4 @@
+   }
+ }
+ 
+-}  // namespace policy
+\ No newline at end of file
++}  // namespace policy
+--- chromium-69.0.3497.4/components/password_manager/core/browser/browser_save_password_progress_logger.cc.gcc7	2018-07-21 09:12:55.000000000 +0200
++++ chromium-69.0.3497.4/components/password_manager/core/browser/browser_save_password_progress_logger.cc	2018-07-21 23:21:48.274812853 +0200
+@@ -87,6 +87,7 @@
+     case AutofillUploadContents::Field::FIRST_USE:
+       return "First use";
+   }
++  return "";
+ }
+ 
+ }  // namespace
+--- chromium-69.0.3497.4/components/previews/content/previews_hints.cc.gcc7	2018-07-21 09:12:56.000000000 +0200
++++ chromium-69.0.3497.4/components/previews/content/previews_hints.cc	2018-07-21 23:28:56.375131778 +0200
+@@ -95,6 +95,7 @@
+     case optimization_guide::proto::RESOURCE_LOADING:
+       return PreviewsType::RESOURCE_LOADING_HINTS;
+   }
++  return base::Optional<PreviewsType>();
+ }
+ 
+ void RecordProcessHintsResult(PreviewsProcessHintsResult result) {
+--- chromium-69.0.3497.4/content/browser/renderer_host/input/mouse_wheel_event_queue.cc.gcc7	2018-07-21 09:13:03.000000000 +0200
++++ chromium-69.0.3497.4/content/browser/renderer_host/input/mouse_wheel_event_queue.cc	2018-07-21 23:53:41.085484269 +0200
+@@ -178,13 +178,11 @@
+     bool current_phase_ended = false;
+     bool scroll_phase_ended = false;
+     bool momentum_phase_ended = false;
+-    bool has_phase_info = false;
+ 
+     if (event_sent_for_gesture_ack_->event.phase !=
+             blink::WebMouseWheelEvent::kPhaseNone ||
+         event_sent_for_gesture_ack_->event.momentum_phase !=
+             blink::WebMouseWheelEvent::kPhaseNone) {
+-      has_phase_info = true;
+       scroll_phase_ended = event_sent_for_gesture_ack_->event.phase ==
+                                blink::WebMouseWheelEvent::kPhaseEnded ||
+                            event_sent_for_gesture_ack_->event.phase ==
+--- chromium-69.0.3497.4/content/browser/web_package/signed_exchange_handler.cc.gcc7	2018-07-21 20:30:02.788552807 +0200
++++ chromium-69.0.3497.4/content/browser/web_package/signed_exchange_handler.cc	2018-07-22 00:32:42.325559060 +0200
+@@ -499,7 +499,7 @@
+         base::StringPrintf(
+             "CT verification failed. result: %s, policy compliance: %d",
+             net::ErrorToShortString(ct_result).c_str(),
+-            ct_verify_result.policy_compliance),
++            int(ct_verify_result.policy_compliance)),
+         std::make_pair(0 /* signature_index */,
+                        SignedExchangeError::Field::kSignatureCertUrl));
+     RunErrorCallback(net::ERR_INVALID_SIGNED_EXCHANGE);
+--- chromium-69.0.3497.4/net/third_party/quic/core/quic_framer.cc.gcc7	2018-07-21 09:13:13.000000000 +0200
++++ chromium-69.0.3497.4/net/third_party/quic/core/quic_framer.cc	2018-07-22 01:30:27.093813461 +0200
+@@ -3634,7 +3634,6 @@
+     return false;
+   }
+ 
+-  size_t num_timestamps_offset = 0;
+   size_t max_num_ack_blocks = available_timestamp_and_ack_block_bytes /
+                               (ack_block_length + PACKET_1BYTE_PACKET_NUMBER);
+ 
+@@ -3652,7 +3651,6 @@
+ 
+     // Write a placeholder for the number of timestamps which will be
+     // overwritten after the ack blocks have been written.
+-    num_timestamps_offset = writer->length();
+     uint8_t num_timestamps = 0;
+     if (!writer->WriteUInt8(num_timestamps)) {
+       return false;
+--- chromium-69.0.3497.4/services/ui/public/cpp/gpu/command_buffer_metrics.cc.gcc7	2018-07-21 09:13:14.000000000 +0200
++++ chromium-69.0.3497.4/services/ui/public/cpp/gpu/command_buffer_metrics.cc	2018-07-22 02:02:14.833006828 +0200
+@@ -87,6 +87,7 @@
+     case ContextType::FOR_TESTING:
+       return "ForTesting";
+   }
++  return "Unexpected";
+ }
+ 
+ void UmaRecordContextInitFailed(ContextType type) {
+--- chromium-69.0.3497.4/third_party/blink/renderer/modules/peerconnection/rtc_rtp_transceiver.cc.gcc7	2018-07-21 09:13:41.000000000 +0200
++++ chromium-69.0.3497.4/third_party/blink/renderer/modules/peerconnection/rtc_rtp_transceiver.cc	2018-07-22 02:11:31.506330451 +0200
+@@ -29,6 +29,7 @@
+     case webrtc::RtpTransceiverDirection::kInactive:
+       return "inactive";
+   }
++  return "";
+ }
+ 
+ String OptionalTransceiverDirectionToString(
+--- chromium-69.0.3497.4/media/blink/watch_time_reporter.cc.gcc7	2018-07-21 09:13:09.000000000 +0200
++++ chromium-69.0.3497.4/media/blink/watch_time_reporter.cc	2018-07-22 03:13:23.483720815 +0200
+@@ -572,6 +572,7 @@
+     case DisplayType::kPictureInPicture:
+       return DISPLAY_TYPE_KEY(DisplayPictureInPicture);
+   }
++  return DISPLAY_TYPE_KEY(All);
+ }
+ 
+ #undef DISPLAY_TYPE_KEY
+--- chromium-69.0.3497.4/third_party/blink/renderer/core/css/style_environment_variables.cc.gcc7	2018-07-21 09:13:40.000000000 +0200
++++ chromium-69.0.3497.4/third_party/blink/renderer/core/css/style_environment_variables.cc	2018-07-22 10:53:45.772448293 +0200
+@@ -63,6 +63,7 @@
+     case UADefinedVariable::kSafeAreaInsetRight:
+       return "safe-area-inset-right";
+     default:
++      return "";
+       break;
+   }
+ 
+--- chromium-69.0.3497.4/third_party/blink/renderer/core/frame/local_frame_view.cc.gcc7	2018-07-21 20:30:02.719554057 +0200
++++ chromium-69.0.3497.4/third_party/blink/renderer/core/frame/local_frame_view.cc	2018-07-22 12:07:12.229220576 +0200
+@@ -3211,7 +3211,7 @@
+ 
+ FloatPoint LocalFrameView::ConvertToContainingEmbeddedContentView(
+     const FloatPoint& local_point) const {
+-  if (LocalFrameView* parent = ParentFrameView()) {
++  if (ParentFrameView() != 0) {
+     auto* layout_object = frame_->OwnerLayoutObject();
+     if (!layout_object)
+       return local_point;
+--- chromium-69.0.3497.4/third_party/blink/renderer/core/xmlhttprequest/xml_http_request.cc.gcc7	2018-07-21 09:13:41.000000000 +0200
++++ chromium-69.0.3497.4/third_party/blink/renderer/core/xmlhttprequest/xml_http_request.cc	2018-07-22 12:12:33.199377829 +0200
+@@ -1753,9 +1753,6 @@
+     unsigned long identifier,
+     const ResourceResponse& response,
+     std::unique_ptr<WebDataConsumerHandle> handle) {
+-  // TODO(yhirano): Remove this CHECK: see https://crbug.com/570946.
+-  CHECK(&response);
+-
+   ALLOW_UNUSED_LOCAL(handle);
+   DCHECK(!handle);
+   NETWORK_DVLOG(1) << this << " didReceiveResponse(" << identifier << ")";
+--- chromium-69.0.3497.4/third_party/blink/renderer/modules/cookie_store/cookie_change_event.cc.gcc7	2018-07-21 09:13:41.000000000 +0200
++++ chromium-69.0.3497.4/third_party/blink/renderer/modules/cookie_store/cookie_change_event.cc	2018-07-22 12:42:37.155347296 +0200
+@@ -56,6 +56,7 @@
+   }
+ 
+   NOTREACHED();
++  return "";
+ }
+ 
+ }  // namespace
+--- chromium-69.0.3497.4/third_party/blink/renderer/platform/text/character_property_data_generator.h.gcc7	2018-07-22 13:38:55.938619906 +0200
++++ chromium-69.0.3497.4/third_party/blink/renderer/platform/text/character_property_data_generator.h	2018-07-22 13:39:12.271315025 +0200
+@@ -247,7 +247,7 @@
+     0xFFA0, 0xFFDC,
+ };
+ 
+-static const UChar32 kIsHangulArray[] = {};
++static const UChar32 kIsHangulArray[] = {0};
+ 
+ }  // namespace blink
+ 
+--- chromium-69.0.3497.42/chrome/browser/resource_coordinator/local_site_characteristics_webcontents_observer.cc.gcc7	2018-08-17 03:05:19.000000000 +0200
++++ chromium-69.0.3497.42/chrome/browser/resource_coordinator/local_site_characteristics_webcontents_observer.cc	2018-08-18 23:31:30.084822331 +0200
+@@ -254,9 +254,11 @@
+   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+ 
+   if (ShouldIgnoreFeatureUsageEvent(feature_type))
++  {
+     return;
++  }
+ 
+-    (writer_.get()->*method)();
++  (writer_.get()->*method)();
+ }
+ 
+ void LocalSiteCharacteristicsWebContentsObserver::OnSiteLoaded() {
+--- chromium-69.0.3497.42/content/renderer/media/webrtc/peer_connection_tracker.cc.gcc7	2018-08-17 03:05:35.000000000 +0200
++++ chromium-69.0.3497.42/content/renderer/media/webrtc/peer_connection_tracker.cc	2018-08-19 10:00:21.171828248 +0200
+@@ -113,6 +113,7 @@
+     case webrtc::RtpTransceiverDirection::kInactive:
+       return "'inactive'";
+   }
++  return "";
+ }
+ 
+ static const char* SerializeOptionalDirection(
+--- chromium-69.0.3497.42/third_party/blink/renderer/core/html/media/media_controls.cc.gcc7	2018-08-17 03:06:24.000000000 +0200
++++ chromium-69.0.3497.42/third_party/blink/renderer/core/html/media/media_controls.cc	2018-08-19 12:30:24.128429583 +0200
+@@ -39,6 +39,7 @@
+   }
+ 
+   NOTREACHED();
++  return AtomicString();
+ }
+ 
+ MediaControls::MediaControls(HTMLMediaElement& media_element)
