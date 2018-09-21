@@ -1,0 +1,49 @@
+rom fd9ab446d8479360d2c1c8252508d97d58ed3e0e Mon Sep 17 00:00:00 2001
+From: Jeremy Cline <jeremy@jcline.org>
+Date: Mon, 19 Jun 2017 16:09:02 -0400
+Subject: [PATCH] Patch requests/certs.py to use the system CA bundle
+
+Signed-off-by: Jeremy Cline <jeremy@jcline.org>
+---
+ requests/certs.py | 11 ++++++++++-
+ setup.py          |  1 -
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/requests/certs.py b/requests/certs.py
+index d1a378d..7b103ba 100644
+--- a/requests/certs.py
++++ b/requests/certs.py
+@@ -11,8 +11,17 @@ only one — the one from the certifi package.
+ If you are packaging Requests, e.g., for a Linux distribution or a managed
+ environment, you can change the definition of where() to return a separately
+ packaged CA bundle.
++
++This Fedora-patched package returns "/etc/ssl/certs/ca-certificates.crt" provided
++by the ca-certificates RPM package.
+ """
+-from certifi import where
++try:
++    from certifi import where
++except ImportError:
++    def where():
++        """Return the absolute path to the system CA bundle."""
++        return '/etc/ssl/certs/ca-certificates.crt'
++
+ 
+ if __name__ == '__main__':
+     print(where())
+diff --git a/setup.py b/setup.py
+index 93a8507..2db9569 100755
+--- a/setup.py
++++ b/setup.py
+@@ -45,7 +45,6 @@ requires = [
+     'chardet>=3.0.2,<3.1.0',
+     'idna>=2.5,<2.8',
+     'urllib3>=1.21.1,<1.24',
+-    'certifi>=2017.4.17'
+ 
+ ]
+ test_requirements = ['pytest-httpbin==0.0.7', 'pytest-cov', 'pytest-mock', 'pytest-xdist', 'PySocks>=1.5.6, !=1.5.7', 'pytest>=2.8.0']
+-- 
+2.9.4
+
