@@ -1,0 +1,12 @@
+--- chromium-69.0.3497.42/third_party/blink/renderer/platform/heap/heap_stats_collector.cc.gcc8	2018-08-17 03:06:26.000000000 +0200
++++ chromium-69.0.3497.42/third_party/blink/renderer/platform/heap/heap_stats_collector.cc	2018-08-19 13:50:34.455693170 +0200
+@@ -83,7 +83,9 @@
+   // Reset the current state.
+   static_assert(!std::is_polymorphic<Event>::value,
+                 "Event should not be polymorphic");
++#pragma GCC diagnostic ignored "-Wclass-memaccess"
+   memset(&current_, 0, sizeof(current_));
++#pragma GCC diagnostic pop
+ }
+ 
+ void ThreadHeapStatsCollector::UpdateReason(BlinkGC::GCReason reason) {

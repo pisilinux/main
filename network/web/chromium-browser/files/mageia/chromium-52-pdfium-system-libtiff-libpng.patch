@@ -1,0 +1,228 @@
+diff -up chromium-60.0.3112.40/third_party/pdfium/BUILD.gn.pdfium-system-libtiff-libpng chromium-60.0.3112.40/third_party/pdfium/BUILD.gn
+--- chromium-60.0.3112.40/third_party/pdfium/BUILD.gn.pdfium-system-libtiff-libpng	2017-06-22 00:04:09.000000000 +0200
++++ chromium-60.0.3112.40/third_party/pdfium/BUILD.gn	2017-06-24 00:05:50.521671902 +0200
+@@ -19,7 +19,6 @@ config("pdfium_common_config") {
+   ldflags = []
+   include_dirs = [ "." ]
+   defines = [
+-    "OPJ_STATIC",
+     "PNG_PREFIX",
+     "PNG_USE_READ_MACROS",
+   ]
+@@ -668,6 +667,7 @@
+   deps = [
+     ":fxcrt",
+     "third_party:lcms2",
++    "third_party:fx_libopenjpeg",
+   ]
+ }
+ 
+@@ -685,6 +685,7 @@
+   configs += [ ":pdfium_core_config" ]
+   deps = [
+     ":fxcrt",
++    "third_party:fx_libopenjpeg",
+   ]
+ }
+ 
+diff -up chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/ccodec_tiffmodule.cpp.pdfium-system-libtiff-libpng chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/ccodec_tiffmodule.cpp
+--- chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/ccodec_tiffmodule.cpp.pdfium-system-libtiff-libpng	2017-06-22 00:04:10.000000000 +0200
++++ chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/ccodec_tiffmodule.cpp	2017-06-24 00:05:50.524671846 +0200
+@@ -19,9 +19,7 @@
+ #include "third_party/base/logging.h"
+ #include "third_party/base/ptr_util.h"
+ 
+-extern "C" {
+-#include "third_party/libtiff/tiffiop.h"
+-}  // extern C
++#include <tiffio.h>
+ 
+ namespace {
+ 
+@@ -188,7 +186,7 @@
+                              tiff_write, tiff_seek, tiff_close, tiff_get_size,
+                              tiff_map, tiff_unmap);
+   if (tif) {
+-    tif->tif_fd = (int)(intptr_t)context;
++    (void)TIFFSetFileno(tif, (int)(intptr_t)context);
+   }
+   return tif;
+ }
+diff -up chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/cjpx_decoder.h.pdfium-system-libtiff-libpng chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/cjpx_decoder.h
+--- chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/cjpx_decoder.h.pdfium-system-libtiff-libpng	2017-06-24 00:05:50.526671809 +0200
++++ chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/cjpx_decoder.h	2017-06-25 12:29:14.039984794 +0200
+@@ -13,7 +13,7 @@
+ #include "core/fxcodec/codec/codec_int.h"
+ #include "core/fxcrt/unowned_ptr.h"
+ #include "third_party/base/span.h"
+-#include "third_party/libopenjpeg20/openjpeg.h"
++#include <openjpeg.h>
+ 
+ class CPDF_ColorSpace;
+ 
+diff -up chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/codec_int.h.pdfium-system-libtiff-libpng chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/codec_int.h
+--- chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/codec_int.h.pdfium-system-libtiff-libpng	2017-06-22 00:04:10.000000000 +0200
++++ chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/codec_int.h	2017-06-24 00:05:50.521671902 +0200
+@@ -15,7 +15,7 @@
+ #include <vector>
+ 
+ #include "core/fxcodec/jbig2/JBig2_Context.h"
+-#include "third_party/libopenjpeg20/openjpeg.h"
++#include <openjpeg.h>
+ 
+ class CPDF_ColorSpace;
+ 
+diff -up chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/fx_codec_jpx_opj.cpp.pdfium-system-libtiff-libpng chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/fx_codec_jpx_opj.cpp
+--- chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/fx_codec_jpx_opj.cpp.pdfium-system-libtiff-libpng	2017-06-22 00:04:10.000000000 +0200
++++ chromium-60.0.3112.40/third_party/pdfium/core/fxcodec/codec/fx_codec_jpx_opj.cpp	2017-06-24 00:26:21.330902789 +0200
+@@ -16,8 +16,12 @@
+ #include "core/fxcrt/fx_memory.h"
+ #include "core/fxcrt/fx_safe_types.h"
+ #include "third_party/base/ptr_util.h"
+-#include "third_party/libopenjpeg20/openjpeg.h"
+-#include "third_party/libopenjpeg20/opj_malloc.h"
++#include <openjpeg.h>
++//#include <opj_malloc.h>
++extern "C" {
++extern void * opj_calloc(size_t, size_t);
++extern void opj_free(void *);
++}
+ 
+ namespace {
+ 
+@@ -514,7 +518,7 @@
+     return false;
+ 
+   m_Image = pTempImage;
+-  m_Image->pdfium_use_colorspace = !!m_ColorSpace;
++//  m_Image->pdfium_use_colorspace = !!m_ColorSpace;
+ 
+   if (!m_Parameters.nb_tile_to_decode) {
+     if (!opj_set_decode_area(m_Codec.Get(), m_Image.Get(), m_Parameters.DA_x0,
+diff -up chromium-60.0.3112.40/third_party/pdfium/third_party/BUILD.gn.pdfium-system-libtiff-libpng chromium-60.0.3112.40/third_party/pdfium/third_party/BUILD.gn
+--- chromium-60.0.3112.40/third_party/pdfium/third_party/BUILD.gn.pdfium-system-libtiff-libpng	2017-06-22 00:04:10.000000000 +0200
++++ chromium-60.0.3112.40/third_party/pdfium/third_party/BUILD.gn	2017-06-24 22:25:18.901585830 +0200
+@@ -356,49 +356,14 @@
+   }
+ }
+ 
+-config("fx_libopenjpeg_warnings") {
+-  visibility = [ ":*" ]
+-  if (is_win) {
+-    cflags = [
+-      # Signed/unsigned comparisons.
+-      "/wd4018",
+-    ]
+-  }
++pkg_config("openjpeg_config") {
++  packages = [
++    "libopenjp2",
++  ]
+ }
+ 
+-static_library("fx_libopenjpeg") {
+-  configs -= [ "//build/config/compiler:chromium_code" ]
+-  configs += [
+-    "//build/config/compiler:no_chromium_code",
+-    "//build/config/sanitizers:cfi_icall_generalize_pointers",
+-    ":pdfium_third_party_config",
+-
+-    # Must be after no_chromium_code for warning flags to be ordered correctly.
+-    ":fx_libopenjpeg_warnings",
+-  ]
+-  sources = [
+-    "libopenjpeg20/bio.c",
+-    "libopenjpeg20/cio.c",
+-    "libopenjpeg20/dwt.c",
+-    "libopenjpeg20/event.c",
+-    "libopenjpeg20/function_list.c",
+-    "libopenjpeg20/image.c",
+-    "libopenjpeg20/invert.c",
+-    "libopenjpeg20/j2k.c",
+-    "libopenjpeg20/jp2.c",
+-    "libopenjpeg20/mct.c",
+-    "libopenjpeg20/mqc.c",
+-    "libopenjpeg20/openjpeg.c",
+-    "libopenjpeg20/opj_clock.c",
+-    "libopenjpeg20/pi.c",
+-    "libopenjpeg20/sparse_array.c",
+-    "libopenjpeg20/sparse_array.h",
+-    "libopenjpeg20/t1.c",
+-    "libopenjpeg20/t2.c",
+-    "libopenjpeg20/tcd.c",
+-    "libopenjpeg20/tgt.c",
+-    "libopenjpeg20/thread.c",
+-  ]
++source_set("fx_libopenjpeg") {
++  public_configs = [ ":openjpeg_config" ]
+ }
+ 
+ config("system_libpng_config") {
+@@ -477,61 +442,13 @@
+   }
+ }
+ 
++config("fx_tiff_config") {
++  libs = [ "tiff" ]
++}
++
+ if (pdf_enable_xfa) {
+-  static_library("fx_tiff") {
+-    configs -= [ "//build/config/compiler:chromium_code" ]
+-    configs += [
+-      "//build/config/compiler:no_chromium_code",
+-      ":pdfium_third_party_config",
+-    ]
+-    if (is_win) {
+-      # Need to undefine the macro since it is redefined in
+-      # tif_ojpeg.c and tif_jpeg.c.
+-      configs -= [ "//build/config/win:lean_and_mean" ]
+-    }
+-    deps = [
+-      ":zlib",
+-      "//third_party:jpeg",
+-    ]
+-    sources = [
+-      "libtiff/tif_aux.c",
+-      "libtiff/tif_close.c",
+-      "libtiff/tif_codec.c",
+-      "libtiff/tif_color.c",
+-      "libtiff/tif_compress.c",
+-      "libtiff/tif_dir.c",
+-      "libtiff/tif_dirinfo.c",
+-      "libtiff/tif_dirread.c",
+-      "libtiff/tif_dirwrite.c",
+-      "libtiff/tif_dumpmode.c",
+-      "libtiff/tif_error.c",
+-      "libtiff/tif_extension.c",
+-      "libtiff/tif_fax3.c",
+-      "libtiff/tif_fax3sm.c",
+-      "libtiff/tif_flush.c",
+-      "libtiff/tif_getimage.c",
+-      "libtiff/tif_jpeg.c",
+-      "libtiff/tif_luv.c",
+-      "libtiff/tif_lzw.c",
+-      "libtiff/tif_next.c",
+-      "libtiff/tif_ojpeg.c",
+-      "libtiff/tif_open.c",
+-      "libtiff/tif_packbits.c",
+-      "libtiff/tif_pixarlog.c",
+-      "libtiff/tif_predict.c",
+-      "libtiff/tif_print.c",
+-      "libtiff/tif_read.c",
+-      "libtiff/tif_strip.c",
+-      "libtiff/tif_swab.c",
+-      "libtiff/tif_thunder.c",
+-      "libtiff/tif_tile.c",
+-      "libtiff/tif_version.c",
+-      "libtiff/tif_warning.c",
+-      "libtiff/tif_write.c",
+-      "libtiff/tif_zip.c",
+-      "libtiff/tiffiop.h",
+-      "libtiff/tiffvers.h",
+-    ]
++  source_set("fx_tiff") {
++    public_configs = [ ":fx_tiff_config" ]
+   }
+ }
+ 
