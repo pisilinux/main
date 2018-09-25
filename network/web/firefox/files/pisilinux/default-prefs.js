@@ -28,6 +28,7 @@ pref("general.useragent.vendorSub", "2011");
 pref("middlemouse.contentLoadURL", false);
 pref("spellchecker.dictionary", "tr-TR");
 pref("startup.homepage_override_url", "chrome://browserconfig.properties");
+pref("intl.locale.requested", "");
 pref("intl.locale.matchOS", true);
 pref("media.peerconnection.enabled", true);
 
