@@ -26,9 +26,11 @@ def setup():
                --disable-static \
                --disable-bluez4 \
                --disable-rpath \
-               --disable-systemd \
+               --with-systemduserunitdir=no \
                --disable-oss-output \
                --enable-largefile \
+               --enable-gconf \
+               --with-speex \
                --with-system-user=pulse \
                --with-system-group=pulse \
                --with-access-group=pulse-access \
