@@ -15,6 +15,7 @@ def setup():
                          --localstatedir=/var \
                          --enable-dbus \
                          --with-rcdir=no \
+                         --disable-mutool \
                          --disable-static \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
