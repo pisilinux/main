@@ -13,16 +13,11 @@ from pisi.actionsapi import get
 def setup():
     autotools.autoreconf("-fi")
     autotools.configure("--localstatedir=/run \
-                         --enable-sandboxed \
                          --with-systemdsystemunitdir=no \
                          --enable-shared \
                          --disable-static \
-                         --disable-debug \
                          --disable-dependency-tracking \
-                         --with-transmitter \
-                         --with-x \
-                         --with-driver=userspace \
-                         --with-syslog=LOG_DAEMON")
+                         --with-x")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
