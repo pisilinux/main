@@ -42,5 +42,5 @@ def install():
     pisitools.insinto("/lib/udev/rules.d", "contrib/*.rules", "60-lirc.rules")
     
     pisitools.domove("/run/lib/lirc/*", "/var/lib/lirc")
-    pisitools.removeDir("/run/lib"
+    pisitools.removeDir("/run/lib")
 
