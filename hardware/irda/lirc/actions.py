@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.autoreconf("-fi")
-    autotools.configure("--localstatedir=/var \
+    autotools.configure("--localstatedir=/run \
                          --enable-sandboxed \
                          --with-systemdsystemunitdir=no \
                          --enable-shared \
