@@ -10,8 +10,12 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i 's|gstreamer-0.10|gstreamer-1.0|g' configure")
+    shelltools.system("sed -i 's|gstreamer-0.10|gstreamer-1.0|g' configure.ac")
     shelltools.system("sed -i -e 's/$GNUCHESS/gcompris-gnuchess/' configure")
-    autotools.configure("--prefix=/usr")
+    
+    shelltools.export("LDFLAGS", "%s -lgmodule-2.0" % get.LDFLAGS())
+    autotools.configure("--prefix=/usr --enable-py-build-only")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")    
 
