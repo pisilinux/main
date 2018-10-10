@@ -17,6 +17,7 @@ def setup():
                                 -Dwith-daemon-user=colord \
                                 -Denable-systemd=false \
                                 -Denable-docs=false \
+                                -Denable-libcolordcompat=true \
                                 -Denable-man=false")
 
     
