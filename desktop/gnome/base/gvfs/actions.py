@@ -14,22 +14,19 @@ def setup():
     
     autotools.configure("\
                          --with-dbus-service-dir=/usr/share/dbus-1/services \
-                         --disable-hal \
                          --disable-silent-rules \
                          --disable-static \
                          --enable-afc \
                          --enable-archive \
-                         --enable-bash-completion \
                          --enable-bluray \
                          --enable-gphoto2 \
-                         --enable-gtk=3 \
                          --enable-keyring \
                          --enable-samba \
                          --enable-udev \
                          --enable-udisks2 \
                         ")
 
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()

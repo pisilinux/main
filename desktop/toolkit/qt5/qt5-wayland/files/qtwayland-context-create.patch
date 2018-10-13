@@ -1,0 +1,44 @@
+From 7ce033cbf9a80d2ea5d687956da668cf4567d361 Mon Sep 17 00:00:00 2001
+From: Johan Klokkhammer Helsing <johan.helsing@qt.io>
+Date: Fri, 9 Mar 2018 10:30:52 +0100
+Subject: Don't try to create compatibility GL context when profile is unset
+
+Context creation would sometimes fail because of this.
+
+Change-Id: Icf73a42ee2bb984ebfc09b7ed98f094d544134b8
+Reviewed-by: Pier Luigi Fiorini <pierluigi.fiorini@liri.io>
+Reviewed-by: Andy Nichols <andy.nichols@qt.io>
+---
+ .../client/wayland-egl/qwaylandglcontext.cpp             | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
+index 740e9641..6e48659d 100644
+--- a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
++++ b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
+@@ -259,10 +259,18 @@ QWaylandGLContext::QWaylandGLContext(EGLDisplay eglDisplay, QWaylandDisplay *dis
+         }
+         // Profiles are OpenGL only and mandatory in 3.2+. The value is silently ignored for < 3.2.
+         if (m_format.renderableType() == QSurfaceFormat::OpenGL) {
+-            eglContextAttrs.append(EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR);
+-            eglContextAttrs.append(format.profile() == QSurfaceFormat::CoreProfile
+-                                ? EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR
+-                                : EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR);
++            switch (format.profile()) {
++            case QSurfaceFormat::NoProfile:
++                break;
++            case QSurfaceFormat::CoreProfile:
++                eglContextAttrs.append(EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR);
++                eglContextAttrs.append(EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR);
++                break;
++            case QSurfaceFormat::CompatibilityProfile:
++                eglContextAttrs.append(EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR);
++                eglContextAttrs.append(EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR);
++                break;
++            }
+         }
+     }
+     eglContextAttrs.append(EGL_NONE);
+-- 
+cgit v1.2.1
+

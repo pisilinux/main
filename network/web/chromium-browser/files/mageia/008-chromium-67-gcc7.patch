@@ -1,0 +1,155 @@
+--- chromium-67.0.3396.10/third_party/crashpad/crashpad/client/crashpad_info.h.gcc7	2018-04-18 21:05:43.000000000 +0200
++++ chromium-67.0.3396.10/third_party/crashpad/crashpad/client/crashpad_info.h	2018-04-22 14:48:58.402613864 +0200
+@@ -220,7 +220,7 @@
+                                  size_t size);
+ 
+   enum : uint32_t {
+-    kSignature = 'CPad',
++    kSignature = 0x43506164, // 'CPad'
+   };
+ 
+  private:
+--- chromium-67.0.3396.10/third_party/crashpad/crashpad/client/settings.cc.gcc7	2018-04-18 21:05:43.000000000 +0200
++++ chromium-67.0.3396.10/third_party/crashpad/crashpad/client/settings.cc	2018-04-22 14:56:49.200391358 +0200
+@@ -84,7 +84,7 @@
+ #endif  // OS_FUCHSIA
+ 
+ struct Settings::Data {
+-  static const uint32_t kSettingsMagic = 'CPds';
++  static const uint32_t kSettingsMagic = 0x43506473; //'CPds'
+   static const uint32_t kSettingsVersion = 1;
+ 
+   enum Options : uint32_t {
+--- chromium-67.0.3396.10/third_party/crashpad/crashpad/util/misc/pdb_structures.h.gcc7	2018-04-18 21:05:43.000000000 +0200
++++ chromium-67.0.3396.10/third_party/crashpad/crashpad/util/misc/pdb_structures.h	2018-04-22 15:25:05.626833340 +0200
+@@ -41,7 +41,7 @@
+   //!
+   //! In a hex dump, this will appear as “NB10” when produced by a little-endian
+   //! machine.
+-  static const uint32_t kSignature = '01BN';
++  static const uint32_t kSignature = 0x3031424e; // '01BN'
+ 
+   //! \brief The magic number identifying this structure version, the value of
+   //!     #kSignature.
+@@ -102,7 +102,7 @@
+   //!
+   //! In a hex dump, this will appear as “RSDS” when produced by a little-endian
+   //! machine.
+-  static const uint32_t kSignature = 'SDSR';
++  static const uint32_t kSignature = 0x53445352; // 'SDSR'
+ 
+   //! \brief The magic number identifying this structure version, the value of
+   //!     #kSignature.
+--- chromium-67.0.3396.10/headless/lib/browser/protocol/browser_handler.cc.gcc7	2018-04-18 21:04:50.000000000 +0200
++++ chromium-67.0.3396.10/headless/lib/browser/protocol/browser_handler.cc	2018-04-22 17:26:04.113469026 +0200
+@@ -71,7 +71,7 @@
+ Response BrowserHandler::SetWindowBounds(
+     int window_id,
+     std::unique_ptr<Browser::Bounds> window_bounds) {
+-  HeadlessWebContentsImpl* web_contents = web_contents =
++  HeadlessWebContentsImpl* web_contents =
+       browser()->GetWebContentsForWindowId(window_id);
+   if (!web_contents)
+     return Response::Error("Browser window not found");
+--- chromium-67.0.3396.10/chrome/browser/ui/webui/discards/discards_ui.cc.gcc7	2018-04-18 21:04:40.000000000 +0200
++++ chromium-67.0.3396.10/chrome/browser/ui/webui/discards/discards_ui.cc	2018-04-22 18:15:26.594324206 +0200
+@@ -44,7 +44,7 @@
+     case content::Visibility::VISIBLE:
+       return mojom::LifecycleUnitVisibility::VISIBLE;
+   }
+-#if defined(COMPILER_MSVC)
++#if defined(COMPILER_MSVC) || defined(COMPILER_GCC)
+   NOTREACHED();
+   return mojom::LifecycleUnitVisibility::VISIBLE;
+ #endif
+--- chromium-67.0.3396.10/third_party/blink/renderer/core/frame/local_frame_view.cc.gcc7	2018-04-18 21:05:39.000000000 +0200
++++ chromium-67.0.3396.10/third_party/blink/renderer/core/frame/local_frame_view.cc	2018-04-22 21:37:37.030626382 +0200
+@@ -4096,8 +4095,7 @@
+     scrollable_areas_ = new ScrollableAreaSet;
+   scrollable_areas_->insert(scrollable_area);
+ 
+-  if (ScrollingCoordinator* scrolling_coordinator =
+-          this->GetScrollingCoordinator()) {
++  if (this->GetScrollingCoordinator() != NULL) {
+     ScrollableAreasDidChange();
+   }
+ }
+@@ -4107,8 +4105,7 @@
+     return;
+   scrollable_areas_->erase(scrollable_area);
+ 
+-  if (ScrollingCoordinator* scrolling_coordinator =
+-          this->GetScrollingCoordinator()) {
++  if (this->GetScrollingCoordinator() != NULL) {
+     ScrollableAreasDidChange();
+   }
+ }
+@@ -4132,7 +4129,9 @@
+   // TODO(crbug.com/729196): Trace why LocalFrameView::DetachFromLayout crashes.
+   CHECK(!is_attached_);
+   if (frame_->GetDocument())
++  {
+     CHECK_NE(Lifecycle().GetState(), DocumentLifecycle::kStopping);
++  }
+   is_attached_ = true;
+   parent_ = ParentFrameView();
+   if (!parent_) {
+@@ -5296,8 +5295,7 @@
+ void LocalFrameView::Show() {
+   if (!IsSelfVisible()) {
+     SetSelfVisible(true);
+-    if (ScrollingCoordinator* scrolling_coordinator =
+-            this->GetScrollingCoordinator()) {
++    if (this->GetScrollingCoordinator() != NULL) {
+       GetScrollingContext()->SetScrollGestureRegionIsDirty(true);
+     }
+     SetNeedsCompositingUpdate(kCompositingUpdateRebuildTree);
+@@ -5325,8 +5323,7 @@
+           });
+     }
+     SetSelfVisible(false);
+-    if (ScrollingCoordinator* scrolling_coordinator =
+-            this->GetScrollingCoordinator()) {
++    if (this->GetScrollingCoordinator() != NULL) {
+       GetScrollingContext()->SetScrollGestureRegionIsDirty(true);
+     }
+     SetNeedsCompositingUpdate(kCompositingUpdateRebuildTree);
+--- chromium-67.0.3396.10/third_party/blink/renderer/core/html/parser/html_tree_builder.cc.gcc7	2018-04-18 21:05:39.000000000 +0200
++++ chromium-67.0.3396.10/third_party/blink/renderer/core/html/parser/html_tree_builder.cc	2018-04-22 22:29:51.951074679 +0200
+@@ -943,7 +943,7 @@
+   }
+   if (token->GetName() == colTag) {
+     ProcessFakeStartTag(colgroupTag);
+-    DCHECK(kInColumnGroupMode);
++    DCHECK(kInColumnGroupMode != 0);
+     ProcessStartTag(token);
+     return;
+   }
+--- chromium-67.0.3396.10/third_party/blink/renderer/core/page/focus_controller.cc.gcc7	2018-04-18 21:05:40.000000000 +0200
++++ chromium-67.0.3396.10/third_party/blink/renderer/core/page/focus_controller.cc	2018-04-22 23:10:03.717765400 +0200
+@@ -333,25 +333,6 @@
+   return nullptr;
+ }
+ 
+-bool ScopedFocusNavigation::IsSlotFallbackScoped(const Element& element) {
+-  return ScopedFocusNavigation::FindFallbackScopeOwnerSlot(element);
+-}
+-
+-bool ScopedFocusNavigation::IsSlotFallbackScopedForThisSlot(
+-    const HTMLSlotElement& slot,
+-    const Element& current) {
+-  Element* parent = current.parentElement();
+-  while (parent) {
+-    if (IsHTMLSlotElement(parent) &&
+-        ToHTMLSlotElement(parent)->AssignedNodes().IsEmpty()) {
+-      return !SlotScopedTraversal::IsSlotScoped(current) &&
+-             ToHTMLSlotElement(parent) == slot;
+-    }
+-    parent = parent->parentElement();
+-  }
+-  return false;
+-}
+-
+ inline void DispatchBlurEvent(const Document& document,
+                               Element& focused_element) {
+   focused_element.DispatchBlurEvent(nullptr, kWebFocusTypePage);

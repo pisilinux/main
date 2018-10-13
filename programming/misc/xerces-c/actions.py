@@ -20,4 +20,4 @@ def install():
     autotools.rawInstall("DESTDIR=%s install" % get.installDIR())
 
     pisitools.dohtml("doc/html/*")
-    pisitools.dodoc("CREDITS", "KEYS", "LICENSE*", "NOTICE", "README", "version.incl")
+    pisitools.dodoc("CREDITS", "KEYS", "LICENSE*", "NOTICE", "README")

@@ -22,7 +22,7 @@ def setup():
     shelltools.touch("%s/style.css" % get.curDIR())
     pisitools.dosed("docs/Makefile", "CSS_FILES = .*", "CSS_FILES = %s/style.css" % get.curDIR())
 
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()

@@ -1,0 +1,96 @@
+From e4e87a2ece1e0c9901514fea094f31863b64b570 Mon Sep 17 00:00:00 2001
+From: Andy Shaw <andy.shaw@qt.io>
+Date: Wed, 7 Mar 2018 15:12:13 +0100
+Subject: sqlite: Prevent a crash when sqlite does not detect any parameters
+
+When using a virtual table inside a SQLite database it is possible that
+it does not report the right number of parameters. Therefore we need
+to account for this case to prevent it from crashing when trying to
+bind parameters it thinks does not exist.
+
+Task-number: QTBUG-66816
+Change-Id: I3ff70bb1fe73091f43c3df53616f75858e451cfd
+Reviewed-by: Jarek Kobus <jaroslaw.kobus@qt.io>
+Reviewed-by: Edward Welbourne <edward.welbourne@qt.io>
+---
+ src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp     |  5 ++-
+ tests/auto/sql/kernel/qsqlquery/tst_qsqlquery.cpp | 41 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+), 1 deletion(-)
+
+diff --git a/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp b/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp
+index d1a6582c5a..f715d3cba3 100644
+--- a/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp
++++ b/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp
+@@ -467,7 +467,10 @@ bool QSQLiteResult::exec()
+ 
+ #if (SQLITE_VERSION_NUMBER >= 3003011)
+     // In the case of the reuse of a named placeholder
+-    if (paramCount < values.count()) {
++    // We need to check explicitly that paramCount is greater than 1, as sqlite
++    // can end up in a case where for virtual tables it returns 0 even though it
++    // has parameters
++    if (paramCount > 1 && paramCount < values.count()) {
+         const auto countIndexes = [](int counter, const QList<int>& indexList) {
+                                       return counter + indexList.length();
+                                   };
+diff --git a/tests/auto/sql/kernel/qsqlquery/tst_qsqlquery.cpp b/tests/auto/sql/kernel/qsqlquery/tst_qsqlquery.cpp
+index a51865897f..c4a27a3175 100644
+--- a/tests/auto/sql/kernel/qsqlquery/tst_qsqlquery.cpp
++++ b/tests/auto/sql/kernel/qsqlquery/tst_qsqlquery.cpp
+@@ -176,6 +176,8 @@ private slots:
+     void emptyTableNavigate();
+     void timeStampParsing_data() { generic_data(); }
+     void timeStampParsing();
++    void sqliteVirtualTable_data() { generic_data("QSQLITE"); }
++    void sqliteVirtualTable();
+ 
+ #ifdef NOT_READY_YET
+     void task_229811();
+@@ -4623,5 +4625,44 @@ void tst_QSqlQuery::dateTime()
+     }
+ }
+ 
++void tst_QSqlQuery::sqliteVirtualTable()
++{
++    // Virtual tables can behave differently when it comes to prepared
++    // queries, so we need to check these explicitly
++    QFETCH(QString, dbName);
++    QSqlDatabase db = QSqlDatabase::database(dbName);
++    CHECK_DATABASE(db);
++    const auto tableName = qTableName("sqliteVirtual", __FILE__, db);
++    QSqlQuery qry(db);
++    QVERIFY_SQL(qry, exec("create virtual table " + tableName + " using fts3(id, name)"));
++
++    // Delibrately malform the query to try and provoke a potential crash situation
++    QVERIFY_SQL(qry, prepare("select * from " + tableName + " where name match '?'"));
++    qry.addBindValue("Andy");
++    QVERIFY(!qry.exec());
++
++    QVERIFY_SQL(qry, prepare("insert into " + tableName + "(id, name) VALUES (?, ?)"));
++    qry.addBindValue(1);
++    qry.addBindValue("Andy");
++    QVERIFY_SQL(qry, exec());
++
++    QVERIFY_SQL(qry, exec("select * from " + tableName));
++    QVERIFY(qry.next());
++    QCOMPARE(qry.value(0).toInt(), 1);
++    QCOMPARE(qry.value(1).toString(), "Andy");
++
++    QVERIFY_SQL(qry, prepare("insert into " + tableName + "(id, name) values (:id, :name)"));
++    qry.bindValue(":id", 2);
++    qry.bindValue(":name", "Peter");
++    QVERIFY_SQL(qry, exec());
++
++    QVERIFY_SQL(qry, prepare("select * from " + tableName + " where name match ?"));
++    qry.addBindValue("Peter");
++    QVERIFY_SQL(qry, exec());
++    QVERIFY(qry.next());
++    QCOMPARE(qry.value(0).toInt(), 2);
++    QCOMPARE(qry.value(1).toString(), "Peter");
++}
++
+ QTEST_MAIN( tst_QSqlQuery )
+ #include "tst_qsqlquery.moc"
+-- 
+cgit v1.2.1
+

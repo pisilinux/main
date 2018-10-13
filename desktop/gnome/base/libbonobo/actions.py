@@ -14,7 +14,8 @@ def setup():
     autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
                          --enable-bonobo-activation-debug=no")
-    pisitools.dosed("libtool"," -shared "," -Wl,--as-needed -shared ")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()

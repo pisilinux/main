@@ -36,6 +36,6 @@ def build():
 
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dosym("libinput.so.5.0.0","/usr/lib/libinput.so.0")
+    #pisitools.dosym("libinput.so.5.0.0","/usr/lib/libinput.so.0")
     
     #pisitools.dodoc("COPYING", "README")

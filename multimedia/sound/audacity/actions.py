@@ -19,8 +19,9 @@ def setup():
     autotools.aclocal("-I m4")
     autotools.autoconf()
     shelltools.export("LIBS", "-lavcodec")
-    shelltools.export("WX_CONFIG=wx-config-gtk3 ./configure", "/usr/bin/wxconfig")
+    #shelltools.export("WX_CONFIG=wx-config-gtk3 ./configure", "/usr/bin/wxconfig")
     autotools.configure("--enable-unicode \
+                         WX_CONFIG=wx-config-gtk3 \
                          --enable-nyquist \
                          --enable-ladspa \
                          --with-lib-preference='system local' \

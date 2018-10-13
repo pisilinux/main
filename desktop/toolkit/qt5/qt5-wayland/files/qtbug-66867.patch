@@ -1,0 +1,30 @@
+From e283cc059c83cbb4fe677beaca8aebb99156ccc5 Mon Sep 17 00:00:00 2001
+From: Antonio Larrosa <alarrosa@suse.com>
+Date: Mon, 5 Mar 2018 13:56:15 +0100
+Subject: Test for null pointer before using it
+
+Task-number: QTBUG-66867
+Change-Id: Ibbe407fa3ac32141b52fa0086e9f1ebfd27052ba
+Done-with: Fabian Vogt <fvogt@suse.de>
+Reviewed-by: Johan Helsing <johan.helsing@qt.io>
+Reviewed-by: Jan Grulich <jgrulich@redhat.com>
+---
+ src/client/qwaylandwindow.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
+index ecab8ffc..7d868b30 100644
+--- a/src/client/qwaylandwindow.cpp
++++ b/src/client/qwaylandwindow.cpp
+@@ -785,7 +785,7 @@ static QWaylandWindow *closestShellSurfaceWindow(QWindow *window)
+ {
+     while (window) {
+         auto w = static_cast<QWaylandWindow *>(window->handle());
+-        if (w->shellSurface())
++        if (w && w->shellSurface())
+             return w;
+         window = window->transientParent() ? window->transientParent() : window->parent();
+     }
+-- 
+cgit v1.2.1
+

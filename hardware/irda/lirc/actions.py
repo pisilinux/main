@@ -12,17 +12,12 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.autoreconf("-fi")
-    autotools.configure("--localstatedir=/var \
-                         --enable-sandboxed \
+    autotools.configure("--localstatedir=/run \
                          --with-systemdsystemunitdir=no \
                          --enable-shared \
                          --disable-static \
-                         --disable-debug \
                          --disable-dependency-tracking \
-                         --with-transmitter \
-                         --with-x \
-                         --with-driver=userspace \
-                         --with-syslog=LOG_DAEMON")
+                         --with-x")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -45,4 +40,7 @@ def install():
 
     pisitools.insinto("/%s/lirc/contrib" % get.docDIR(), "contrib/*")
     pisitools.insinto("/lib/udev/rules.d", "contrib/*.rules", "60-lirc.rules")
+    
+    pisitools.domove("/run/lib/lirc/*", "/var/lib/lirc")
+    pisitools.removeDir("/run/lib")
 

@@ -18,7 +18,7 @@ def setup():
                          --disable-silent-rules \
                         ")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make("-j1")

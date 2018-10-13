@@ -1,0 +1,35 @@
+--- NVIDIA-Linux-x86_64-304.137/kernel/nv-drm.c.orig	2017-09-14 23:51:09.000000000 +0300
++++ NVIDIA-Linux-x86_64-304.137/kernel/nv-drm.c	2017-11-13 16:24:05.604118167 +0200
+@@ -14,6 +14,8 @@
+ #include "os-interface.h"
+ #include "nv-linux.h"
+ 
++#include <linux/version.h>
++
+ #if defined(NV_DRM_AVAILABLE)
+ 
+ #include <drm/drmP.h>
+@@ -121,8 +123,12 @@ int __init nv_drm_init(
+ {
+     int ret = 0;
+ #if defined(NV_DRM_AVAILABLE)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
++    ret = drm_legacy_pci_init(&nv_drm_driver, pci_driver);
++#else
+     ret = drm_pci_init(&nv_drm_driver, pci_driver);
+ #endif
++#endif
+     return ret;
+ }
+ 
+@@ -131,6 +137,10 @@ void nv_drm_exit(
+ )
+ {
+ #if defined(NV_DRM_AVAILABLE)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
++    drm_legacy_pci_exit(&nv_drm_driver, pci_driver);
++#else
+     drm_pci_exit(&nv_drm_driver, pci_driver);
+ #endif
++#endif
+ }

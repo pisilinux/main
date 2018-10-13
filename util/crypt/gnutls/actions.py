@@ -14,20 +14,20 @@ def setup():
                --disable-silent-rules \
                --disable-guile \
                --enable-heartbeat-support \
-               --with-zlib \
                --without-tpm \
-               --without-dane \
                --disable-valgrind-tests"
 
     if get.buildTYPE() == "emul32":
         options += " --disable-hardware-acceleration \
-                    --with-included-unistring \
+                     --libdir=/usr/lib32 \
+                     --bindir=/usr/emul32/bin \
+                     --with-included-unistring \
                      --enable-local-libopts \
                    "
 
     autotools.configure(options)
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
@@ -39,3 +39,9 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    if get.buildTYPE() == "emul32":
+        pisitools.removeDir("/usr/emul32")
+        return
+    pisitools.dodoc("AUTHORS*", "README*")
+        

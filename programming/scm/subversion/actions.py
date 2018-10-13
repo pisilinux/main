@@ -27,10 +27,12 @@ def setup():
                          --with-sqlite=/usr \
                          --with-zlib=/usr \
                          --with-jikes=no \
+                         --with-lz4=internal \
+                         --with-utf8proc=internal \
                          --without-berkeley-db \
                          --disable-mod-activation")
 
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     # svn

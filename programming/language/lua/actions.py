@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 major = ".".join(get.srcVERSION().split(".")[:2])
 
 def setup():
+    shelltools.system('sed "s/^R= \$V.4/R= \$V.5/" -i Makefile')
     pisitools.dosed("src/Makefile", "^CFLAGS.*$", "CFLAGS=%s -fPIC -DLUA_USE_LINUX -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1" % get.CFLAGS())
     pisitools.dosed("src/Makefile", "^MYLDFLAGS.*$", "MYLDFLAGS=%s" % get.LDFLAGS())
     pisitools.dosed("lua.pc", "%VER%", "%s" % major)

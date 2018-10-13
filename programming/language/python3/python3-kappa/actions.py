@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 
 
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
+shelltools.export("LC_ALL", "en_US.UTF-8")
 
 def build():
     pythonmodules.compile(pyVer="3")

@@ -12,8 +12,8 @@ from pisi.actionsapi import get
 #WorkDir="Imaging-%s" % get.srcVERSION()
 
 def install():
-    pisitools.dosed("_imagingft.c", "<freetype/freetype.h>", "<freetype2/freetype.h>")
-    pisitools.dosed("_imagingft.c", "<freetype/fterrors.h>", "<freetype2/fterrors.h>")
+    #pisitools.dosed("_imagingft.c", "<freetype/freetype.h>", "<freetype2/freetype.h>")
+    #pisitools.dosed("_imagingft.c", "<freetype/fterrors.h>", "<freetype2/fterrors.h>")
     pythonmodules.install()
 
     #shelltools.cd("Sane")
@@ -21,7 +21,7 @@ def install():
     #shelltools.cd("..")
 
     for header in ["Imaging.h","ImPlatform.h"]:
-        pisitools.insinto("/usr/include/%s" % get.curPYTHON(), "libImaging/%s" % header)
+        pisitools.insinto("/usr/include/%s" % get.curPYTHON(), "src/libImaging/%s" % header)
 
     pisitools.dodoc("README.rst")
 
