@@ -14,15 +14,17 @@ from pisi.actionsapi import get
 def setup():
     shelltools.system("env NOCONFIGURE=1 ./autogen.sh")
     
-    autotools.configure("--enable-rust \
-                         --enable-trivial-httpd-cmdline \
+    autotools.configure("--disable-silent-rules \
+                         --without-selinux \
+                         --with-curl \
                          --with-openssl \
                          --disable-static \
+                         --enable-trivial-httpd-cmdline \
+                         --disable-http2 \
                          --without-dracut \
                          --without-mkinitcpio")
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
