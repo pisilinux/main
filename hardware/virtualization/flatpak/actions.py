@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 
 def setup():
-     autotools.configure("--with-priv-mode=setuid \
+    autotools.configure("--with-priv-mode=setuid \
                           --enable-xauth \
                           --with-system-bubblewrap \
                           --disable-static \
