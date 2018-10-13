@@ -11,7 +11,7 @@
         <License>LGPLv2</License>
         <Summary>Application distribution framework</Summary>
         <Description>Linux application sandboxing and distribution framework, formerly xdg-app</Description>
-        <Archive sha1sum="f09a3f1378695654e8a51506f7d7e5dc1d62af2e" type="targz">https://github.com/flatpak/flatpak/archive/1.0.0.tar.gz</Archive>
+        <Archive sha1sum="15f8ba295012bb0b0b109e9b07e46fa722e0d2f8" type="tarxz">https://github.com/flatpak/flatpak/releases/download/1.0.4/flatpak-1.0.4.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>util-linux</Dependency>
             <Dependency>gtk-doc</Dependency>
@@ -22,11 +22,13 @@
             <Dependency>dbus-devel</Dependency>
             <Dependency>json-glib-devel</Dependency>
             <Dependency>appstream-glib-devel</Dependency>
+            <Dependency>docbook-xsl</Dependency>
+            <Dependency>python-six</Dependency>
             <Dependency versionFrom="2018.8">ostree-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">bubblewrap_libglnx_submodule.patch</Patch>
-            <Patch>flatpak-1.0.0-glib_fix.patch</Patch>
+            <!--Patch level="1">bubblewrap_libglnx_submodule.patch</Patch-->
+            <!--Patch>flatpak-1.0.2-var_symlink_fix.diff</Patch-->
         </Patches>
     </Source>
 
@@ -61,7 +63,9 @@
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="locale">/usr/share/locale</Path>
             <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
             <Path fileType="data">/usr/share/gdm</Path>
+            <Path fileType="doc">/usr/share/zsh</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile target="/etc/profile.d/flatpak-bindir.sh" permission="0644" owner="root">flatpak-bindir.sh</AdditionalFile>
@@ -94,6 +98,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2018-10-13</Date>
+            <Version>1.0.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2018-08-23</Date>
             <Version>1.0.0</Version>
