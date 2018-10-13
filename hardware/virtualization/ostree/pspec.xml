@@ -12,9 +12,8 @@
         <IsA>app:console</IsA>
         <Summary>Operating system and container binary deployment and upgrades</Summary>
         <Description>OSTree is a tool for managing bootable, immutable, versioned filesystem trees</Description>
-        <Archive sha1sum="3248dda7bf73007f8bae0cf3c6007a425994a307" type="targz">https://github.com/ostreedev/ostree/archive/v2018.8.tar.gz</Archive>
+        <Archive sha1sum="c8dabfe09e987a15d99e4723be23f23da9f7bbb3" type="tarxz">https://github.com/ostreedev/ostree/releases/download/v2018.8/libostree-2018.8.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>gtk-doc</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>xz-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
@@ -32,7 +31,7 @@
             <Dependency>gnutls-devel</Dependency-->
         </BuildDependencies>
         <Patches>
-            <Patch level="1">bsdiff_libglnx_submodule.patch</Patch>
+            <Patch level="1">disable_werror_implicit_funtion_declaraction.patch</Patch>
         </Patches>
     </Source>
 
@@ -40,6 +39,9 @@
         <Name>ostree</Name>
         <RuntimeDependencies>
             <Dependency>xz</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>avahi-glib</Dependency>
+            <Dependency>avahi-libs</Dependency>
             <Dependency>zlib</Dependency>
             <Dependency>fuse</Dependency>
             <Dependency>glib2</Dependency>
@@ -48,8 +50,7 @@
             <Dependency>libarchive</Dependency>
             <Dependency>libgpg-error</Dependency>
             <Dependency>libutil-linux</Dependency>
-            <Dependency>openssl</Dependency>
-            <Dependency>libgcc</Dependency>            
+            <Dependency>openssl</Dependency>         
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -70,6 +71,7 @@
         <RuntimeDependencies>
             <Dependency release="current">ostree</Dependency>
             <Dependency>xz-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>fuse-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
