@@ -20,7 +20,7 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    #pisitools.doman("doc/doxywizard.1")
+    pisitools.doman("doc/doxygen.1")
 
     # The makefile included is there to generate the html files
     # The user itself should execute it
