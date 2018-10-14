@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>flickcurl</Name>
+        <Homepage>http://librdf.org/flickcurl/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>C library for the Flickr API</Summary>
+        <Description>Flickcurl is a C library for the Flickr API, handling creating the requests, signing, token management, calling the API, marshalling request parameters and decoding responses.</Description>
+        <Archive sha1sum="547480030ce4f777bb35d98b43fe15ee3eeae0e0" type="targz">http://download.dajobe.org/flickcurl/flickcurl-1.26.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>raptor2-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>a5cc2a5d2fc7074f50fbaa772232b6e0fea7ce89.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>flickcurl</Name>
+        <RuntimeDependencies>
+            <Dependency>curl</Dependency>
+            <Dependency>raptor2</Dependency>
+            <Dependency>libxml2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>flickcurl-devel</Name>
+        <Summary>flickurl için geliştirme dosyaları</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">flickcurl</Dependency>
+            <Dependency>raptor2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+         <Update release="1">
+           <Date>2018-10-14</Date>
+            <Version>1.26</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
