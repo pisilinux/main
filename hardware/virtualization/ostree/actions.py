@@ -16,7 +16,6 @@ def setup():
     
     autotools.configure("--disable-silent-rules \
                          --without-selinux \
-                         --with-curl \
                          --with-openssl \
                          --disable-static \
                          --enable-trivial-httpd-cmdline \
