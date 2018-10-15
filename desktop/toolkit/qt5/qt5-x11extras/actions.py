@@ -24,4 +24,4 @@ def install():
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
         pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
-    pisitools.insinto("/usr/share/licenses/qt5-x11extras/", "LGPL_EXCEPTION.txt")
+    pisitools.insinto("/usr/share/licenses/qt5-x11extras/", "LICENSE*")
