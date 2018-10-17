@@ -7,21 +7,30 @@
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -e '/CONFIG/a QMAKE_CXXFLAGS += -Wno-expansion-to-defined' -i Tools/qmake/mkspecs/features/unix/default_pre.prf")
-    qt5.configure()
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DUSE_LIBHYPHEN=OFF \
+                          -DPORT=Qt \
+                          -DENABLE_TOOLS=OFF", sourceDir="..")
 
 def build():
-    qt5.make()
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
-    qt5.install("INSTALL_ROOT=%s install" % get.installDIR())
-
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
     #I hope qtchooser will manage this issue
     for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
         pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
-
+    
+    shelltools.cd("..")
     pisitools.dodoc("LICENSE*")
