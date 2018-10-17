@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("sed -i 's|5.11.0|5.10.0|g' CMakeLists.txt")
+    #shelltools.system("sed -i 's|5.11.0|5.10.0|g' CMakeLists.txt")
     kde5.configure()
 
 def build():
