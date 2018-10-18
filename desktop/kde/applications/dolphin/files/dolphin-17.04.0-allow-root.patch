@@ -1,10 +1,9 @@
- 
-diff -Naur dolphin-17.04.0.old/src/main.cpp dolphin-17.04.0/src/main.cpp
---- dolphin-17.04.0.old/src/main.cpp	2017-04-25 02:44:57.440557635 -0400
-+++ dolphin-17.04.0/src/main.cpp	2017-04-25 02:45:22.535328410 -0400
-@@ -35,21 +35,8 @@
- #include <KLocalizedString>
- #include <Kdelibs4ConfigMigrator>
+diff -Nuar a/src/main.cpp b/src/main.cpp
+--- a/src/main.cpp	2018-10-07 20:41:54.000000000 +0300
++++ b/src/main.cpp	2018-10-14 16:54:12.975544992 +0300
+@@ -35,26 +35,8 @@
+ #include <QApplication>
+ #include <QCommandLineParser>
  
 -#ifndef Q_OS_WIN
 -#include <unistd.h>
@@ -14,10 +13,15 @@ diff -Naur dolphin-17.04.0.old/src/main.cpp dolphin-17.04.0/src/main.cpp
  extern "C" Q_DECL_EXPORT int kdemain(int argc, char **argv)
  {
 -#ifndef Q_OS_WIN
--    // Check whether we are running as root
+-    // Prohibit using sudo or kdesu (but allow using the root user directly)
 -    if (getuid() == 0) {
--        std::cout << "Executing Dolphin as root is not possible." << std::endl;
--        return EXIT_FAILURE;
+-        if (!qEnvironmentVariableIsEmpty("SUDO_USER")) {
+-            std::cout << "Executing Dolphin with sudo is not possible due to unfixable security vulnerabilities." << std::endl;
+-            return EXIT_FAILURE;
+-        } else if (!qEnvironmentVariableIsEmpty("KDESU_USER")) {
+-            std::cout << "Executing Dolphin with kdesu is not possible due to unfixable security vulnerabilities." << std::endl;
+-            return EXIT_FAILURE;
+-        }
 -    }
 -#endif
 -
