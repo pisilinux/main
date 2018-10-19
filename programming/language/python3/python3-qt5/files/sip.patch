@@ -1,0 +1,62 @@
+diff -Nuar a/configure.py b/configure.py
+--- a/configure.py	2018-10-01 16:38:10.000000000 +0300
++++ b/configure.py	2018-02-27 13:43:42.000000000 +0300
+@@ -2440,7 +2364,7 @@
+     the target configuration.
+     """
+ 
+-    sip_flags = ['-n', 'PyQt5.sip']
++    sip_flags = []
+ 
+     # If we don't check for signed interpreters, we exclude the 'VendorID'
+     # feature
+@@ -2477,7 +2401,7 @@
+         sip_flags.append('-x')
+         sip_flags.append('Py_v3')
+ 
+-    return sip_flags
++    return ' '.join(sip_flags)
+ 
+ 
+ def mk_clean_dir(name):
+@@ -2513,7 +2437,7 @@
+     the number of parts the generated code should be split into.  tracing is
+     set if the generated code should include tracing calls.  mname is the name
+     of the module to generate the code for.  fatal_warnings is set if warnings
+-    are fatal.  sip_flags is the list of flags to pass to sip.  doc_support
++    are fatal.  sip_flags is the string of flags to pass to sip.  doc_support
+     is set if documentation support is to be generated for the module.
+     qpy_sources is the optional list of QPy support code source files.
+     qpy_headers is the optional list of QPy support code header files.
+@@ -2524,9 +2448,7 @@
+     mk_clean_dir(mname)
+ 
+     # Build the SIP command line.
+-    argv = [target_config.sip, '-w']
+-
+-    argv.extend(sip_flags)
++    argv = [quote(target_config.sip), '-w', sip_flags]
+ 
+     if fatal_warnings:
+         argv.append('-f')
+@@ -2580,7 +2502,7 @@
+     # Add the name of the .sip file.
+     argv.append('%s/%s/%smod.sip' % (sip_dir, mname, mname))
+ 
+-    run_command(' '.join([quote(a) for a in argv]), verbose)
++    run_command(' '.join(argv), verbose)
+ 
+     # Check the result.
+     if mname == 'Qt':
+@@ -2600,7 +2522,7 @@
+                 os.path.join('QtCore', 'qpycore_post_init.cpp'))
+ 
+         for line in in_f:
+-            line = line.replace('@@PYQT_SIP_FLAGS@@', ' '.join(sip_flags))
++            line = line.replace('@@PYQT_SIP_FLAGS@@', sip_flags)
+             out_f.write(line)
+ 
+         in_f.close()
+ 
+ 
+ ###############################################################################
