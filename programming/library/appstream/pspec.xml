@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>appstream</Name>
+        <Homepage>http://distributions.freedesktop.org/wiki/AppStream</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Provides a standard for creating app stores across distributions</Summary>
+        <Description>Provides a standard for creating app stores across distributions</Description>
+        <Archive sha1sum="d2e1c696b0104635e13308a25110b490e175acdb" type="tarxz">https://www.freedesktop.org/software/appstream/releases/AppStream-0.12.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>xmlto</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>vala-devel</Dependency> -->
+<!--             <Dependency>libstemmer</Dependency> -->
+            <Dependency>docbook-xsl</Dependency>
+            <Dependency>docbook-xml</Dependency>
+<!--             <Dependency>gettext-devel</Dependency> -->
+            <Dependency versionFrom="2.54.3">glib2-devel</Dependency>
+            <Dependency>python-six</Dependency>
+            <Dependency>python-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>libyaml-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-linguist</Dependency>
+            <Dependency>gperf</Dependency>
+            <Dependency versionFrom="1.54.1">gobject-introspection-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>appstream</Name>
+        <RuntimeDependencies>
+            <Dependency>libxml2</Dependency>
+            <Dependency>libyaml</Dependency>
+            <Dependency>glib2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="info">/usr/share/metainfo</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/gettext</Path>
+            <Path fileType="data">/usr/share/vala</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <Path fileType="data">/usr/share/libalpm</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+    
+    <Package>
+        <Name>appstream-qt5</Name>
+        <RuntimeDependencies>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>appstream</Dependency>
+            <Dependency>glib2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libAppStreamQt.*</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>appstream-qt5-devel</Name>
+        <Summary>Development files for appstream</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">appstream-qt5</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/AppStreamQt</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>appstream-devel</Name>
+        <Summary>Development files for appstream</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">appstream</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2018-10-20</Date>
+            <Version>0.12.0</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
