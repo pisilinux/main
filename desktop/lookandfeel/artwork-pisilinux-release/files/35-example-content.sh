@@ -1,5 +1,5 @@
-XDG_CONFIG=$HOME/.config5/user-dirs.dirs
-EXAMPLE_CREATION_FILE=$HOME/.local5/example-content-created
+XDG_CONFIG=$HOME/.config/user-dirs.dirs
+EXAMPLE_CREATION_FILE=$HOME/.local/example-content-created
 
 mksym()
 {
