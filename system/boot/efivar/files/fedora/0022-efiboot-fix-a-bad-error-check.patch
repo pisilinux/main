@@ -1,0 +1,26 @@
+From 6d87113fc3d9b2b0f520fc97eab9f5a60fda7d30 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 21 Jun 2018 13:55:45 -0400
+Subject: [PATCH 22/34] efiboot: fix a bad error check
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/linux-acpi.c b/src/linux-acpi.c
+index 3eac526525f..88f0084a37e 100644
+--- a/src/linux-acpi.c
++++ b/src/linux-acpi.c
+@@ -93,7 +93,7 @@ hid_err:
+         errno = 0;
+         fbuf = NULL;
+         rc = read_sysfs_file(&fbuf, "%s/firmware_node/uid", path);
+-        if ((rc <= 0 && errno != ENOENT) || fbuf == NULL) {
++        if ((rc < 0 && errno != ENOENT) || (rc > 0 && fbuf == NULL)) {
+                 efi_error("could not read %s/firmware_node/uid", path);
+                 return -1;
+         }
+-- 
+2.17.1
+

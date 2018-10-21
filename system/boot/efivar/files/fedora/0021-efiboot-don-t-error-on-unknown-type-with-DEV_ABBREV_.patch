@@ -1,0 +1,35 @@
+From 22b1a7477c5ef72821e6491c67ad85ca52c1ae85 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 21 Jun 2018 13:55:32 -0400
+Subject: [PATCH 21/34] efiboot: don't error on unknown type with
+ DEV_ABBREV_ONLY
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/linux.c b/src/linux.c
+index 6d20c2dbe25..7fac339c50e 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -494,10 +494,15 @@ slash_err:
+                         dev->flags |= DEV_ABBREV_ONLY;
+                         i = last_successful_probe;
+                         current += pos;
++
++                        if (!*current || !strncmp(current, "block/", 6))
++                                break;
+                 }
+         }
+ 
+-        if (dev->interface_type == unknown) {
++        if (dev->interface_type == unknown &&
++            !(dev->flags & DEV_ABBREV_ONLY) &&
++            !strcmp(current, "block/")) {
+                 efi_error("unknown storage interface");
+                 errno = ENOSYS;
+                 goto err;
+-- 
+2.17.1
+

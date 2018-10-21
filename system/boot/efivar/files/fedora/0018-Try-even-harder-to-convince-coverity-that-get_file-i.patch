@@ -1,0 +1,32 @@
+From 576b89de7d1a49d64efab9d494eeea5a296bdccd Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 21 Jun 2018 12:23:20 -0400
+Subject: [PATCH 18/34] Try even harder to convince coverity that get_file
+ isn't leaking memory...
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/util.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/util.h b/src/util.h
+index ef85a4c277e..441ced84fcf 100644
+--- a/src/util.h
++++ b/src/util.h
+@@ -332,6 +332,13 @@ get_file(uint8_t **result, const char * const fmt, ...)
+         errno = error;
+ 
+         if (rc < 0 || bufsize < 1) {
++                /*
++                 * I don't think this can happen, but I can't convince
++                 * cov-scan
++                 */
++                if (buf)
++                        free(buf);
++                *result = NULL;
+                 efi_error("could not read file \"%s\"", path);
+                 return -1;
+         }
+-- 
+2.17.1
+

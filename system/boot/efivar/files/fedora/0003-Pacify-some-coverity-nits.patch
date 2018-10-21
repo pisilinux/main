@@ -1,0 +1,45 @@
+From bd609a59369574c95f7f31b15caae8bb86b71f39 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Tue, 12 Jun 2018 14:36:20 -0400
+Subject: [PATCH 03/34] Pacify some coverity nits.
+
+Coverity has trouble tracking data flow sometimes, and believes that
+sysfs_readlink() and read_sysfs_file() will sometimes return >= 0 when
+the buffer has not been filled out.  This changes the check to also test
+for a NULL pointer, hopefully pacifying it.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-pci.c | 2 +-
+ src/linux.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/linux-pci.c b/src/linux-pci.c
+index 87878c39c94..0d2a90ab166 100644
+--- a/src/linux-pci.c
++++ b/src/linux-pci.c
+@@ -166,7 +166,7 @@ parse_pci(struct device *dev, const char *current)
+                 tmp[devpart - current] = '\0';
+                 rc = sysfs_readlink(&linkbuf, "class/block/%s/driver", tmp);
+                 free(tmp);
+-                if (rc < 0) {
++                if (rc < 0 || !linkbuf) {
+                         efi_error("Could not find driver for pci device");
+                         return -1;
+                 }
+diff --git a/src/linux.c b/src/linux.c
+index c8d1b3a9285..fe45c6004b9 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -356,7 +356,7 @@ struct device HIDDEN
+ 
+         if (dev->part == -1) {
+                 rc = read_sysfs_file(&tmpbuf, "dev/block/%s/partition", dev->link);
+-                if (rc < 0) {
++                if (rc < 0 || !tmpbuf) {
+                         efi_error("device has no /partition node; not a partition");
+                 } else {
+                         rc = sscanf((char *)tmpbuf, "%d\n", &dev->part);
+-- 
+2.17.1
+

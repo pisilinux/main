@@ -1,0 +1,71 @@
+From ca71ba77abee7cea805e71a7faded706d19e4c58 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 20 Jun 2018 16:16:00 -0400
+Subject: [PATCH 14/34] Make a way to say "-e 3" isn't viable for a kind of
+ device.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/creator.c | 7 +++++++
+ src/linux.c   | 5 ++++-
+ src/linux.h   | 2 ++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/src/creator.c b/src/creator.c
+index 76c1c1f7a99..55b411ee3da 100644
+--- a/src/creator.c
++++ b/src/creator.c
+@@ -243,6 +243,13 @@ efi_va_generate_file_device_path_from_esp(uint8_t *buf, ssize_t size,
+ 		va_end(aq);
+ 	}
+ 
++        if (!(options & (EFIBOOT_ABBREV_FILE|EFIBOOT_ABBREV_HD)) &&
++            (dev->flags & DEV_ABBREV_ONLY)) {
++                errno = EINVAL;
++                efi_error("Device must use File() or HD() device path");
++                goto err;
++        }
++
+ 	if ((options & EFIBOOT_ABBREV_EDD10)
+ 			&& (!(options & EFIBOOT_ABBREV_FILE)
+ 			    && !(options & EFIBOOT_ABBREV_HD))) {
+diff --git a/src/linux.c b/src/linux.c
+index 436fb882a98..83adc510944 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -448,8 +448,11 @@ struct device HIDDEN
+                         continue;
+                 }
+                 debug(DEBUG, "%s matched %s", probe->name, current);
++                dev->flags |= probe->flags;
+ 
+-                if (probe->flags & DEV_PROVIDES_HD || probe->flags & DEV_PROVIDES_ROOT)
++                if (probe->flags & DEV_PROVIDES_HD ||
++                    probe->flags & DEV_PROVIDES_ROOT ||
++                    probe->flags & DEV_ABBREV_ONLY)
+                         needs_root = false;
+                 dev->probes[n++] = dev_probes[i];
+                 current += pos;
+diff --git a/src/linux.h b/src/linux.h
+index 7b18bda31c6..ef7dba769bd 100644
+--- a/src/linux.h
++++ b/src/linux.h
+@@ -106,6 +106,7 @@ struct dev_probe;
+ 
+ struct device {
+         enum interface_type interface_type;
++        uint32_t flags;
+         char *link;
+         char *device;
+         char *driver;
+@@ -246,6 +247,7 @@ extern ssize_t HIDDEN make_mac_path(uint8_t *buf, ssize_t size,
+ 
+ #define DEV_PROVIDES_ROOT       1
+ #define DEV_PROVIDES_HD         2
++#define DEV_ABBREV_ONLY         4
+ 
+ struct dev_probe {
+         char *name;
+-- 
+2.17.1
+

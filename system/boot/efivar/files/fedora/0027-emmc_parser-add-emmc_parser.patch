@@ -1,0 +1,255 @@
+From d6a526a0c819c439a894af625f45b657576f8744 Mon Sep 17 00:00:00 2001
+From: Alek Du <alek.du@intel.com>
+Date: Fri, 27 Jul 2018 21:31:01 +0800
+Subject: [PATCH 27/34] emmc_parser: add emmc_parser
+
+Signed-off-by: Alek Du <alek.du@intel.com>
+---
+ src/dp-message.c               |  18 +++++
+ src/linux-emmc.c               | 129 +++++++++++++++++++++++++++++++++
+ src/linux.c                    |   1 +
+ src/include/efivar/efivar-dp.h |   2 +
+ src/linux.h                    |   7 ++
+ src/libefivar.map.in           |   1 +
+ 6 files changed, 158 insertions(+)
+ create mode 100644 src/linux-emmc.c
+
+diff --git a/src/dp-message.c b/src/dp-message.c
+index 5af66438bfc..3724e5f57bd 100644
+--- a/src/dp-message.c
++++ b/src/dp-message.c
+@@ -826,3 +826,21 @@ efidp_make_nvdimm(uint8_t *buf, ssize_t size, efi_guid_t *uuid)
+ 
+ 	return sz;
+ }
++
++ssize_t PUBLIC
++efidp_make_emmc(uint8_t *buf, ssize_t size, uint32_t slot_id)
++{
++	efidp_emmc *emmc = (efidp_emmc *)buf;
++	ssize_t req = sizeof (*emmc);
++	ssize_t sz;
++
++	sz = efidp_make_generic(buf, size, EFIDP_MESSAGE_TYPE,
++					EFIDP_MSG_NVME, sizeof (*emmc));
++	if (size && sz == req)
++		emmc->slot = slot_id;
++
++	if (sz < 0)
++		efi_error("efidp_make_generic failed");
++
++	return sz;
++}
+diff --git a/src/linux-emmc.c b/src/linux-emmc.c
+new file mode 100644
+index 00000000000..f0c9e635cb6
+--- /dev/null
++++ b/src/linux-emmc.c
+@@ -0,0 +1,129 @@
++/*
++ * libefiboot - library for the manipulation of EFI boot variables
++ * Copyright 2012-2018 Red Hat, Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License as
++ * published by the Free Software Foundation; either version 2.1 of the
++ * License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, see
++ * <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "fix_coverity.h"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <inttypes.h>
++#include <stdint.h>
++#include <unistd.h>
++
++#include "efiboot.h"
++
++/*
++ * support for emmc devices
++ *
++ * /sys/dev/block/$major:$minor looks like:
++ * 179:0 -> ../../devices/pci0000:00/0000:00:1c.0/mmc_host/mmc0/mmc0:0001/block/mmcblk0
++ * 179:1 -> ../../devices/pci0000:00/0000:00:1c.0/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1
++ *
++ * /sys/dev/block/179:0/device looks like:
++ * device -> ../../../mmc0:0001
++ *
++ * /sys/dev/block/179:1/partition looks like:
++ * $ cat partition
++ * 1
++ *
++ */
++
++static ssize_t
++parse_emmc(struct device *dev, const char *current, const char *root UNUSED)
++{
++        int rc;
++        int32_t tosser0, tosser1, tosser2, tosser3, slot_id, partition;
++        int pos0 = 0, pos1 = 0;
++        char *spaces;
++
++        pos0 = strlen(current);
++        spaces = alloca(pos0+1);
++        memset(spaces, ' ', pos0+1);
++        spaces[pos0] = '\0';
++        pos0 = 0;
++
++        debug(DEBUG, "entry");
++
++        debug(DEBUG, "searching for mmc_host/mmc0/mmc0:0001/block/mmcblk0 or mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1");
++        rc = sscanf(current, "mmc_host/mmc%d/mmc%d:%d/block/mmcblk%d%n/mmcblk%dp%d%n",
++                    &tosser0, &tosser1, &tosser2, &slot_id,
++                    &pos0, &tosser3, &partition, &pos1);
++        debug(DEBUG, "current:\"%s\" rc:%d pos0:%d pos1:%d\n", current, rc, pos0, pos1);
++        arrow(DEBUG, spaces, 9, pos0, rc, 4);
++        arrow(DEBUG, spaces, 9, pos1, rc, 6);
++        /*
++         * If it isn't of that form, it's not one of our emmc devices.
++         */
++        if (rc != 4 && rc != 6)
++                return 0;
++
++        dev->emmc_info.slot_id = slot_id;
++        dev->interface_type = emmc;
++
++        if (rc == 6) {
++                if (dev->part == -1)
++                        dev->part = partition;
++
++                pos0 = pos1;
++        }
++
++        return pos0;
++}
++
++static ssize_t
++dp_create_emmc(struct device *dev,
++               uint8_t *buf,  ssize_t size, ssize_t off)
++{
++        ssize_t sz;
++
++        debug(DEBUG, "entry");
++
++        sz = efidp_make_emmc(buf + off, size ? size - off : 0,
++                             dev->emmc_info.slot_id);
++        return sz;
++}
++
++static char *
++make_part_name(struct device *dev)
++{
++        char *ret = NULL;
++        ssize_t rc;
++
++        if (dev->part < 1)
++                return NULL;
++
++        rc = asprintf(&ret, "%sp%d", dev->disk_name, dev->part);
++        if (rc < 0) {
++                efi_error("could not allocate memory");
++                return NULL;
++        }
++
++        return ret;
++}
++
++static enum interface_type emmc_iftypes[] = { emmc, unknown };
++
++struct dev_probe HIDDEN emmc_parser = {
++        .name = "emmc",
++        .iftypes = emmc_iftypes,
++        .flags = DEV_PROVIDES_HD,
++        .parse = parse_emmc,
++        .create = dp_create_emmc,
++        .make_part_name = make_part_name,
++};
+diff --git a/src/linux.c b/src/linux.c
+index 7fac339c50e..ff8db812ad3 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -246,6 +246,7 @@ static struct dev_probe *dev_probes[] = {
+         &ata_parser,
+         &scsi_parser,
+         &i2o_parser,
++        &emmc_parser,
+         NULL
+ };
+ 
+diff --git a/src/include/efivar/efivar-dp.h b/src/include/efivar/efivar-dp.h
+index 1b05775ae7e..f9ebb059d06 100644
+--- a/src/include/efivar/efivar-dp.h
++++ b/src/include/efivar/efivar-dp.h
+@@ -689,6 +689,8 @@ typedef struct {
+ 	uint8_t		slot;
+ } EFIVAR_PACKED efidp_emmc;
+ 
++extern ssize_t efidp_make_emmc(uint8_t *buf, ssize_t size, uint32_t slot_id);
++
+ #define EFIDP_MSG_BTLE		0x1e
+ typedef struct {
+ 	efidp_header	header;
+diff --git a/src/linux.h b/src/linux.h
+index 99d61013e02..7c7ea91e771 100644
+--- a/src/linux.h
++++ b/src/linux.h
+@@ -93,6 +93,10 @@ struct nvdimm_info {
+         efi_guid_t nvdimm_label;
+ };
+ 
++struct emmc_info {
++       int32_t slot_id;
++};
++
+ enum interface_type {
+         unknown,
+         isa, acpi_root, pci_root, soc_root, pci, network,
+@@ -100,6 +104,7 @@ enum interface_type {
+         usb, i1394, fibre, i2o,
+         md, virtblk,
+         nvme, nd_pmem,
++        emmc,
+ };
+ 
+ struct dev_probe;
+@@ -139,6 +144,7 @@ struct device {
+                                 struct sata_info sata_info;
+                                 struct ata_info ata_info;
+                                 struct nvme_info nvme_info;
++                                struct emmc_info emmc_info;
+                                 struct nvdimm_info nvdimm_info;
+                         };
+                 };
+@@ -277,5 +283,6 @@ extern struct dev_probe virtblk_parser;
+ extern struct dev_probe i2o_parser;
+ extern struct dev_probe scsi_parser;
+ extern struct dev_probe ata_parser;
++extern struct dev_probe emmc_parser;
+ 
+ #endif /* _EFIBOOT_LINUX_H */
+diff --git a/src/libefivar.map.in b/src/libefivar.map.in
+index 31f696d3cb5..b5ee1ce334a 100644
+--- a/src/libefivar.map.in
++++ b/src/libefivar.map.in
+@@ -51,6 +51,7 @@ libefivar.so.0 {
+ 		efidp_make_sata;
+ 		efidp_make_scsi;
+ 		efidp_make_vendor;
++		efidp_make_emmc;
+ 		efidp_parse_device_node;
+ 		efidp_parse_device_path;
+ 		efidp_set_node_data;
+-- 
+2.17.1
+

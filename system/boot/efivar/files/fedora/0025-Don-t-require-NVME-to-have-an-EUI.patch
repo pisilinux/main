@@ -1,0 +1,28 @@
+From d8d7e54fe01a7a255e649a7734820800edf82633 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Mon, 16 Jul 2018 15:40:22 -0400
+Subject: [PATCH 25/34] Don't require NVME to have an EUI
+
+Resolves: rhbz#1593784
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-nvme.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/linux-nvme.c b/src/linux-nvme.c
+index ce931b7e237..d68d11a3409 100644
+--- a/src/linux-nvme.c
++++ b/src/linux-nvme.c
+@@ -117,8 +117,6 @@ parse_nvme(struct device *dev, const char *current, const char *root UNUSED)
+                 }
+                 dev->nvme_info.has_eui = 1;
+                 memcpy(dev->nvme_info.eui, eui, sizeof(eui));
+-        } else {
+-                return -1;
+         }
+ 
+         return pos0;
+-- 
+2.17.1
+

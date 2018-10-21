@@ -1,0 +1,88 @@
+From bd8fc0ebe86da82468b40a4998c3000819e73afe Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Tue, 12 Jun 2018 14:36:20 -0400
+Subject: [PATCH 05/34] Promote _make_hd_dn() to make_hd_dn() and get rid of
+ the wrapper.
+
+The wrapper is just hiding what the code's doing, and all the other code
+around where we use it does the same thing anyway.  This hopefully
+convinces coverity we're not really dereferencing "buf" there unless
+it's nonzero.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/creator.c  | 3 ++-
+ src/disk.c     | 4 ++--
+ src/dp-media.c | 2 ++
+ src/disk.h     | 7 ++-----
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/creator.c b/src/creator.c
+index 93f185fc0bc..76c1c1f7a99 100644
+--- a/src/creator.c
++++ b/src/creator.c
+@@ -281,7 +281,8 @@ efi_va_generate_file_device_path_from_esp(uint8_t *buf, ssize_t size,
+ 			goto err;
+ 		}
+ 
+-		sz = make_hd_dn(buf, size, off, disk_fd, dev->part, options);
++		sz = make_hd_dn(buf+off, size?size-off:0,
++                                disk_fd, dev->part, options);
+ 		saved_errno = errno;
+ 		close(disk_fd);
+ 		errno = saved_errno;
+diff --git a/src/disk.c b/src/disk.c
+index deac512cf71..3efee03b804 100644
+--- a/src/disk.c
++++ b/src/disk.c
+@@ -257,8 +257,8 @@ is_partitioned(int fd)
+ }
+ 
+ ssize_t HIDDEN
+-_make_hd_dn(uint8_t *buf, ssize_t size, int fd, int32_t partition,
+-	    uint32_t options)
++make_hd_dn(uint8_t *buf, ssize_t size, int fd, int32_t partition,
++           uint32_t options)
+ {
+ 	uint64_t part_start=0, part_size = 0;
+ 	uint8_t signature[16]="", format=0, signature_type=0;
+diff --git a/src/dp-media.c b/src/dp-media.c
+index 0a0993ec3f4..cec6b8bb58d 100644
+--- a/src/dp-media.c
++++ b/src/dp-media.c
+@@ -161,6 +161,7 @@ efidp_make_file(uint8_t *buf, ssize_t size, char *filepath)
+ 	ssize_t sz;
+ 	ssize_t len = utf8len(lf, -1) + 1;
+ 	ssize_t req = sizeof (*file) + len * sizeof (uint16_t);
++
+ 	sz = efidp_make_generic(buf, size, EFIDP_MEDIA_TYPE, EFIDP_MEDIA_FILE,
+ 				req);
+ 	if (size && sz == req) {
+@@ -182,6 +183,7 @@ efidp_make_hd(uint8_t *buf, ssize_t size, uint32_t num, uint64_t part_start,
+ 	efidp_hd *hd = (efidp_hd *)buf;
+ 	ssize_t sz;
+ 	ssize_t req = sizeof (*hd);
++
+ 	sz = efidp_make_generic(buf, size, EFIDP_MEDIA_TYPE, EFIDP_MEDIA_HD,
+ 				req);
+ 	if (size && sz == req) {
+diff --git a/src/disk.h b/src/disk.h
+index c040cc92a91..f0fa7f9f42d 100644
+--- a/src/disk.h
++++ b/src/disk.h
+@@ -23,10 +23,7 @@
+ 
+ extern bool HIDDEN is_partitioned(int fd);
+ 
+-extern HIDDEN ssize_t _make_hd_dn(uint8_t *buf, ssize_t size, int fd,
+-                                  int32_t partition, uint32_t options);
+-#define make_hd_dn(buf, size, off, fd, partition, option) \
+-	_make_hd_dn(((buf)+(off)), ((size)?((size)-(off)):0), (fd),\
+-		    (partition), (options))
++extern HIDDEN ssize_t make_hd_dn(uint8_t *buf, ssize_t size, int fd,
++                                 int32_t partition, uint32_t options);
+ 
+ #endif /* _EFIBOOT_DISK_H */
+-- 
+2.17.1
+

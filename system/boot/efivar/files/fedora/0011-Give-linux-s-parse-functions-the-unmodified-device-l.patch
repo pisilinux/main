@@ -1,0 +1,177 @@
+From ba0655c62978ba64c227f1f87d9da3e1dea4f821 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 20 Jun 2018 14:37:14 -0400
+Subject: [PATCH 11/34] Give linux-*'s ->parse() functions the unmodified
+ device link as well
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-ata.c     | 2 +-
+ src/linux-i2o.c     | 2 +-
+ src/linux-nvme.c    | 2 +-
+ src/linux-pci.c     | 2 +-
+ src/linux-pmem.c    | 2 +-
+ src/linux-sas.c     | 2 +-
+ src/linux-sata.c    | 2 +-
+ src/linux-scsi.c    | 2 +-
+ src/linux-virtblk.c | 2 +-
+ src/linux.c         | 4 ++--
+ src/linux.h         | 3 ++-
+ 11 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/src/linux-ata.c b/src/linux-ata.c
+index 6a47ff3f279..dab02f3d224 100644
+--- a/src/linux-ata.c
++++ b/src/linux-ata.c
+@@ -58,7 +58,7 @@ is_pata(struct device *dev)
+  * 11:0 -> ../../devices/pci0000:00/0000:00:11.5/ata3/host2/target2:0:0/2:0:0:0/block/sr0
+  */
+ static ssize_t
+-parse_ata(struct device *dev, const char *current)
++parse_ata(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         uint32_t scsi_host, scsi_bus, scsi_device, scsi_target;
+         uint64_t scsi_lun;
+diff --git a/src/linux-i2o.c b/src/linux-i2o.c
+index e57c0cb344f..4fe79e5719f 100644
+--- a/src/linux-i2o.c
++++ b/src/linux-i2o.c
+@@ -33,7 +33,7 @@
+  * ... probably doesn't work.
+  */
+ static ssize_t
+-parse_i2o(struct device *dev, const char *current UNUSED)
++parse_i2o(struct device *dev, const char *current UNUSED, const char *root UNUSED)
+ {
+         debug(DEBUG, "entry");
+         /* I2O disks can have up to 16 partitions, or 4 bits worth. */
+diff --git a/src/linux-nvme.c b/src/linux-nvme.c
+index 6d5196fc082..00f53d5a9a7 100644
+--- a/src/linux-nvme.c
++++ b/src/linux-nvme.c
+@@ -48,7 +48,7 @@
+  */
+ 
+ static ssize_t
+-parse_nvme(struct device *dev, const char *current)
++parse_nvme(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         int rc;
+         int32_t tosser0, tosser1, tosser2, ctrl_id, ns_id, partition;
+diff --git a/src/linux-pci.c b/src/linux-pci.c
+index 0d2a90ab166..4fbd108e3ed 100644
+--- a/src/linux-pci.c
++++ b/src/linux-pci.c
+@@ -41,7 +41,7 @@
+  *
+  */
+ static ssize_t
+-parse_pci(struct device *dev, const char *current)
++parse_pci(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         int rc;
+         int pos;
+diff --git a/src/linux-pmem.c b/src/linux-pmem.c
+index 045650bc471..9a075716f7f 100644
+--- a/src/linux-pmem.c
++++ b/src/linux-pmem.c
+@@ -70,7 +70,7 @@
+  */
+ 
+ static ssize_t
+-parse_pmem(struct device *dev, const char *current)
++parse_pmem(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         uint8_t *filebuf = NULL;
+         uint8_t system, sysbus, acpi_id;
+diff --git a/src/linux-sas.c b/src/linux-sas.c
+index 4a11147aef1..5f44f2c1f7b 100644
+--- a/src/linux-sas.c
++++ b/src/linux-sas.c
+@@ -45,7 +45,7 @@
+  * I'm not sure at the moment if they're the same or not.
+  */
+ static ssize_t
+-parse_sas(struct device *dev, const char *current)
++parse_sas(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         struct stat statbuf = { 0, };
+         int rc;
+diff --git a/src/linux-sata.c b/src/linux-sata.c
+index a670ad9907e..d9a62efdbe6 100644
+--- a/src/linux-sata.c
++++ b/src/linux-sata.c
+@@ -138,7 +138,7 @@ sysfs_sata_get_port_info(uint32_t print_id, struct device *dev)
+ }
+ 
+ static ssize_t
+-parse_sata(struct device *dev, const char *devlink)
++parse_sata(struct device *dev, const char *devlink, const char *root UNUSED)
+ {
+         const char *current = devlink;
+         uint32_t print_id;
+diff --git a/src/linux-scsi.c b/src/linux-scsi.c
+index 87f2f7f7c92..153a4ff87ad 100644
+--- a/src/linux-scsi.c
++++ b/src/linux-scsi.c
+@@ -160,7 +160,7 @@ parse_scsi_link(const char *current, uint32_t *scsi_host,
+ }
+ 
+ static ssize_t
+-parse_scsi(struct device *dev, const char *current)
++parse_scsi(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         uint32_t scsi_host, scsi_bus, scsi_device, scsi_target;
+         uint64_t scsi_lun;
+diff --git a/src/linux-virtblk.c b/src/linux-virtblk.c
+index 6dedf0f27ee..9ee7994aeb3 100644
+--- a/src/linux-virtblk.c
++++ b/src/linux-virtblk.c
+@@ -45,7 +45,7 @@
+  * But usually we just write the HD() entry, of course.
+  */
+ static ssize_t
+-parse_virtblk(struct device *dev, const char *current)
++parse_virtblk(struct device *dev, const char *current, const char *root UNUSED)
+ {
+         uint32_t tosser;
+         int pos;
+diff --git a/src/linux.c b/src/linux.c
+index fe45c6004b9..ef560753481 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -352,7 +352,7 @@ struct device HIDDEN
+                 efi_error("strdup(\"%s\") failed", linkbuf);
+                 goto err;
+         }
+-        debug(DEBUG, "dev->link: %s\n", dev->link);
++        debug(DEBUG, "dev->link: %s", dev->link);
+ 
+         if (dev->part == -1) {
+                 rc = read_sysfs_file(&tmpbuf, "dev/block/%s/partition", dev->link);
+@@ -431,7 +431,7 @@ struct device HIDDEN
+                 }
+ 
+                 debug(DEBUG, "trying %s", probe->name);
+-                pos = probe->parse(dev, current);
++                pos = probe->parse(dev, current, dev->link);
+                 if (pos < 0) {
+                         efi_error("parsing %s failed", probe->name);
+                         goto err;
+diff --git a/src/linux.h b/src/linux.h
+index 39826224a53..35951bb4d16 100644
+--- a/src/linux.h
++++ b/src/linux.h
+@@ -244,7 +244,8 @@ struct dev_probe {
+         char *name;
+         enum interface_type *iftypes;
+         uint32_t flags;
+-        ssize_t (*parse)(struct device *dev, const char * const current);
++        ssize_t (*parse)(struct device *dev,
++                         const char * const current, const char * const root);
+         ssize_t (*create)(struct device *dev,
+                           uint8_t *buf, ssize_t size, ssize_t off);
+         char *(*make_part_name)(struct device *dev);
+-- 
+2.17.1
+
