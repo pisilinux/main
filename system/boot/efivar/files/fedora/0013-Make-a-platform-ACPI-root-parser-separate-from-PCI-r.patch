@@ -1,0 +1,425 @@
+From 6b62aa40cfa1feb924609a065098da98c99e925c Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 20 Jun 2018 14:45:14 -0400
+Subject: [PATCH 13/34] Make a platform ACPI root parser separate from PCI
+ roots.
+
+Because apparently PNP0A03 and PNP0A0C weren't good enough.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-acpi-root.c | 199 ++++++++++++++++++++++++++++++++++++++++++
+ src/linux-pci-root.c  | 136 +++++++++++++++++++++++++++++
+ src/linux-pci.c       |   1 -
+ src/linux.c           |   4 +-
+ src/linux.h           |   4 +-
+ 5 files changed, 341 insertions(+), 3 deletions(-)
+ create mode 100644 src/linux-acpi-root.c
+ create mode 100644 src/linux-pci-root.c
+
+diff --git a/src/linux-acpi-root.c b/src/linux-acpi-root.c
+new file mode 100644
+index 00000000000..c7d8276a642
+--- /dev/null
++++ b/src/linux-acpi-root.c
+@@ -0,0 +1,199 @@
++/*
++ * libefiboot - library for the manipulation of EFI boot variables
++ * Copyright 2012-2018 Red Hat, Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License as
++ * published by the Free Software Foundation; either version 2.1 of the
++ * License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, see
++ * <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "fix_coverity.h"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <inttypes.h>
++#include <stdint.h>
++#include <unistd.h>
++
++#include "efiboot.h"
++
++/*
++ * support for ACPI-like platform root hub and devices
++ *
++ * various devices /sys/dev/block/$major:$minor start with:
++ * maj:min -> ../../devices/ACPI0000:00/$PCI_DEVICES/$BLOCKDEV_STUFF/block/$DISK/$PART
++ * i.e.:                    APMC0D0D:00/ata1/host0/target0:0:0/0:0:0:0/block/sda
++ *                          ^ root hub ^blockdev stuff
++ * or:
++ * maj:min -> ../../devices/ACPI0000:00/$PCI_DEVICES/$BLOCKDEV_STUFF/block/$DISK/$PART
++ * i.e.:                    APMC0D0D:00/0000:00:1d.0/0000:05:00.0/ata1/host0/target0:0:0/0:0:0:0/block/sda
++ *                          ^ root hub ^pci dev      ^pci dev     ^ blockdev stuff
++ */
++static ssize_t
++parse_acpi_root(struct device *dev, const char *current, const char *root UNUSED)
++{
++        int rc;
++        int pos;
++        uint16_t pad0;
++        uint8_t pad1;
++        char *acpi_header = NULL;
++        char *colon;
++
++        const char *devpart = current;
++        char *spaces;
++
++        pos = strlen(current);
++        spaces = alloca(pos+1);
++        memset(spaces, ' ', pos+1);
++        spaces[pos] = '\0';
++        pos = 0;
++
++        debug(DEBUG, "entry");
++
++        /*
++         * find the ACPI root dunno0 and dunno1; they basically look like:
++         * ABCD0000:00/
++         *     ^d0  ^d1
++         * This is annoying because "/%04ms%h:%hhx/" won't bind from the right
++         * side in sscanf.
++         */
++        rc = sscanf(devpart, "../../devices/platform/%n", &pos);
++        debug(DEBUG, "devpart:\"%s\" rc:%d pos:%d", devpart, rc, pos);
++        if (rc != 0 || pos < 1)
++                return 0;
++        devpart += pos;
++
++        /*
++         * If it's too short to be A0000:00, it's not an ACPI string
++         */
++        if (strlen(devpart) < 8)
++                return 0;
++
++        colon = strchr(devpart, ':');
++        if (!colon)
++                return 0;
++        pos = colon - devpart;
++
++        /*
++         * If colon doesn't point at something between one of these:
++         * A0000:00 ACPI0000:00
++         *      ^ 5         ^ 8
++         * Then it's not an ACPI string.
++         */
++        if (pos < 5 || pos > 8)
++                return 0;
++
++        dev->acpi_root.acpi_hid_str = strndup(devpart, pos + 1);
++        if (!dev->acpi_root.acpi_hid_str) {
++                efi_error("Could not allocate memory");
++                return -1;
++        }
++        dev->acpi_root.acpi_hid_str[pos] = 0;
++        debug(DEBUG, "acpi_hid_str:\"%s\"", dev->acpi_root.acpi_hid_str);
++
++        pos -= 4;
++        debug(DEBUG, "devpart:\"%s\" rc:%d pos:%d", devpart, rc, pos);
++        acpi_header = strndupa(devpart, pos);
++        if (!acpi_header)
++                return 0;
++        acpi_header[pos] = 0;
++        debug(DEBUG, "devpart:\"%s\" acpi_header:\"%s\"", devpart, acpi_header);
++        devpart += pos;
++
++        /*
++         * If we can't find these numbers, it's not an ACPI string
++         */
++        rc = sscanf(devpart, "%hx:%hhx/%n", &pad0, &pad1, &pos);
++        if (rc != 2) {
++                efi_error("Could not parse ACPI path \"%s\"", devpart);
++                return 0;
++        }
++        debug(DEBUG, "devpart:\"%s\" parsed:%04hx:%02hhx pos:%d rc:%d",
++              devpart, pad0, pad1, pos, rc);
++
++        devpart += pos;
++
++        rc = parse_acpi_hid_uid(dev, "devices/platform/%s%04hX:%02hhX",
++                                acpi_header, pad0, pad1);
++        debug(DEBUG, "rc:%d acpi_header:%s pad0:%04hX pad1:%02hhX",
++              rc, acpi_header, pad0, pad1);
++        if (rc < 0 && errno == ENOENT) {
++                rc = parse_acpi_hid_uid(dev, "devices/platform/%s%04hx:%02hhx",
++                                acpi_header, pad0, pad1);
++                debug(DEBUG, "rc:%d acpi_header:%s pad0:%04hx pad1:%02hhx",
++                      rc, acpi_header, pad0, pad1);
++        }
++        if (rc < 0) {
++                efi_error("Could not parse hid/uid");
++                return rc;
++        }
++        debug(DEBUG, "Parsed HID:0x%08x UID:0x%"PRIx64" uidstr:\"%s\" path:\"%s\"",
++              dev->acpi_root.acpi_hid, dev->acpi_root.acpi_uid,
++              dev->acpi_root.acpi_uid_str,
++              dev->acpi_root.acpi_cid_str);
++
++        return devpart - current;
++}
++
++static ssize_t
++dp_create_acpi_root(struct device *dev,
++                    uint8_t *buf, ssize_t size, ssize_t off)
++{
++        ssize_t sz = 0, new = 0;
++
++        debug(DEBUG, "entry buf:%p size:%zd off:%zd", buf, size, off);
++
++        if (dev->acpi_root.acpi_uid_str || dev->acpi_root.acpi_cid_str) {
++                debug(DEBUG, "creating acpi_hid_ex dp hid:0x%08x uid:0x%"PRIx64" uidstr:\"%s\" cidstr:\"%s\"",
++                      dev->acpi_root.acpi_hid, dev->acpi_root.acpi_uid,
++                      dev->acpi_root.acpi_uid_str, dev->acpi_root.acpi_cid_str);
++                new = efidp_make_acpi_hid_ex(buf + off, size ? size - off : 0,
++                                            dev->acpi_root.acpi_hid,
++                                            dev->acpi_root.acpi_uid,
++                                            dev->acpi_root.acpi_cid,
++                                            dev->acpi_root.acpi_hid_str,
++                                            dev->acpi_root.acpi_uid_str,
++                                            dev->acpi_root.acpi_cid_str);
++                if (new < 0) {
++                        efi_error("efidp_make_acpi_hid_ex() failed");
++                        return new;
++                }
++        } else {
++                debug(DEBUG, "creating acpi_hid dp hid:0x%08x uid:0x%0"PRIx64,
++                      dev->acpi_root.acpi_hid,
++                      dev->acpi_root.acpi_uid);
++                new = efidp_make_acpi_hid(buf + off, size ? size - off : 0,
++                                         dev->acpi_root.acpi_hid,
++                                         dev->acpi_root.acpi_uid);
++                if (new < 0) {
++                        efi_error("efidp_make_acpi_hid() failed");
++                        return new;
++                }
++        }
++        off += new;
++        sz += new;
++
++        debug(DEBUG, "returning %zd", sz);
++        return sz;
++}
++
++enum interface_type acpi_root_iftypes[] = { acpi_root, unknown };
++
++struct dev_probe HIDDEN acpi_root_parser = {
++        .name = "acpi_root",
++        .iftypes = acpi_root_iftypes,
++        .flags = DEV_PROVIDES_ROOT,
++        .parse = parse_acpi_root,
++        .create = dp_create_acpi_root,
++};
+diff --git a/src/linux-pci-root.c b/src/linux-pci-root.c
+new file mode 100644
+index 00000000000..8f556a066f3
+--- /dev/null
++++ b/src/linux-pci-root.c
+@@ -0,0 +1,136 @@
++/*
++ * libefiboot - library for the manipulation of EFI boot variables
++ * Copyright 2012-2018 Red Hat, Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License as
++ * published by the Free Software Foundation; either version 2.1 of the
++ * License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, see
++ * <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "fix_coverity.h"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <inttypes.h>
++#include <stdint.h>
++#include <unistd.h>
++
++#include "efiboot.h"
++
++/*
++ * support for PCI root hub and devices
++ *
++ * various devices /sys/dev/block/$major:$minor start with:
++ * maj:min -> ../../devices/pci$PCIROOT/$PCI_DEVICES/$BLOCKDEV_STUFF/block/$DISK/$PART
++ * i.e.:                    pci0000:00/0000:00:1d.0/0000:05:00.0/
++ *                          ^ root hub ^device      ^device
++ *
++ * for network devices, we also get:
++ * /sys/class/net/$IFACE -> ../../devices/$PCI_STUFF/net/$IFACE
++ *
++ */
++static ssize_t
++parse_pci_root(struct device *dev, const char *current, const char *root UNUSED)
++{
++        int rc;
++        int pos;
++        uint16_t root_domain;
++        uint8_t root_bus;
++        const char *devpart = current;
++        char *spaces;
++
++        pos = strlen(current);
++        spaces = alloca(pos+1);
++        memset(spaces, ' ', pos+1);
++        spaces[pos] = '\0';
++        pos = 0;
++
++        debug(DEBUG, "entry");
++
++        /*
++         * find the pci root domain and port; they basically look like:
++         * pci0000:00/
++         *    ^d   ^p
++         */
++        rc = sscanf(devpart, "../../devices/pci%hx:%hhx/%n", &root_domain, &root_bus, &pos);
++        /*
++         * If we can't find that, it's not a PCI device.
++         */
++        if (rc != 2)
++                return 0;
++        devpart += pos;
++
++        dev->pci_root.pci_domain = root_domain;
++        dev->pci_root.pci_bus = root_bus;
++
++        rc = parse_acpi_hid_uid(dev, "devices/pci%04hx:%02hhx",
++                                root_domain, root_bus);
++        if (rc < 0)
++                return -1;
++
++        errno = 0;
++        return devpart - current;
++}
++
++static ssize_t
++dp_create_pci_root(struct device *dev UNUSED,
++                   uint8_t *buf, ssize_t size, ssize_t off)
++{
++        debug(DEBUG, "entry buf:%p size:%zd off:%zd", buf, size, off);
++        debug(DEBUG, "returning 0");
++#if 0
++        if (dev->acpi_root.acpi_uid_str) {
++                debug(DEBUG, "creating acpi_hid_ex dp hid:0x%08x uid:\"%s\"",
++                      dev->acpi_root.acpi_hid,
++                      dev->acpi_root.acpi_uid_str);
++                new = efidp_make_acpi_hid_ex(buf + off, size ? size - off : 0,
++                                            dev->acpi_root.acpi_hid,
++                                            0, 0, "",
++                                            dev->acpi_root.acpi_uid_str,
++                                            "");
++                if (new < 0) {
++                        efi_error("efidp_make_acpi_hid_ex() failed");
++                        return new;
++                }
++        } else {
++                debug(DEBUG, "creating acpi_hid dp hid:0x%08x uid:0x%0"PRIx64,
++                      dev->acpi_root.acpi_hid,
++                      dev->acpi_root.acpi_uid);
++                new = efidp_make_acpi_hid(buf + off, size ? size - off : 0,
++                                         dev->acpi_root.acpi_hid,
++                                         dev->acpi_root.acpi_uid);
++                if (new < 0) {
++                        efi_error("efidp_make_acpi_hid() failed");
++                        return new;
++                }
++        }
++        off += new;
++        sz += new;
++
++        debug(DEBUG, "returning %zd", sz);
++        return sz;
++#else
++        return 0;
++#endif
++}
++
++enum interface_type pci_root_iftypes[] = { pci_root, unknown };
++
++struct dev_probe HIDDEN pci_root_parser = {
++        .name = "pci_root",
++        .iftypes = pci_root_iftypes,
++        .flags = DEV_PROVIDES_ROOT,
++        .parse = parse_pci_root,
++        .create = dp_create_pci_root,
++};
+diff --git a/src/linux-pci.c b/src/linux-pci.c
+index aa3e40c0f7c..0f59d3e840d 100644
+--- a/src/linux-pci.c
++++ b/src/linux-pci.c
+@@ -147,7 +147,6 @@ enum interface_type pci_iftypes[] = { pci, unknown };
+ struct dev_probe HIDDEN pci_parser = {
+         .name = "pci",
+         .iftypes = pci_iftypes,
+-        .flags = DEV_PROVIDES_ROOT,
+         .parse = parse_pci,
+         .create = dp_create_pci,
+ };
+diff --git a/src/linux.c b/src/linux.c
+index 9f3a22f7025..436fb882a98 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -235,6 +235,8 @@ static struct dev_probe *dev_probes[] = {
+          * be found first.
+          */
+         &pmem_parser,
++        &acpi_root_parser,
++        &pci_root_parser,
+         &pci_parser,
+         &virtblk_parser,
+         &sas_parser,
+@@ -447,7 +449,7 @@ struct device HIDDEN
+                 }
+                 debug(DEBUG, "%s matched %s", probe->name, current);
+ 
+-                if (probe->flags & DEV_PROVIDES_HD)
++                if (probe->flags & DEV_PROVIDES_HD || probe->flags & DEV_PROVIDES_ROOT)
+                         needs_root = false;
+                 dev->probes[n++] = dev_probes[i];
+                 current += pos;
+diff --git a/src/linux.h b/src/linux.h
+index aa9e3d14a83..7b18bda31c6 100644
+--- a/src/linux.h
++++ b/src/linux.h
+@@ -95,7 +95,7 @@ struct nvdimm_info {
+ 
+ enum interface_type {
+         unknown,
+-        isa, pci, network,
++        isa, acpi_root, pci_root, pci, network,
+         ata, atapi, scsi, sata, sas,
+         usb, i1394, fibre, i2o,
+         md, virtblk,
+@@ -264,6 +264,8 @@ extern ssize_t parse_scsi_link(const char *current, uint32_t *host,
+ 
+ /* device support implementations */
+ extern struct dev_probe pmem_parser;
++extern struct dev_probe pci_root_parser;
++extern struct dev_probe acpi_root_parser;
+ extern struct dev_probe pci_parser;
+ extern struct dev_probe sas_parser;
+ extern struct dev_probe sata_parser;
+-- 
+2.17.1
+

@@ -1,0 +1,110 @@
+From bc215d06720b346ba0d888a6149cf90f544a90ad Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 20 Jun 2018 17:00:24 -0400
+Subject: [PATCH 16/34] If we can't parse part of the device link, skip it and
+ set DEV_ABBREV_ONLY
+
+If we can't parse some part of the device symlink, we can't write a full
+device path, but we can write an abbreviated HD() or File() path.  So if
+we've exausted all possibilities, skip to the next node, set
+DEV_ABBREV_ONLY in the device's flags, and try parsing again.  Then when
+creator.c checks if that flag conflicts, it'll throw an error if it
+does.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux.c | 62 ++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 15 deletions(-)
+
+diff --git a/src/linux.c b/src/linux.c
+index 1e7db4e3f61..8fe21f19f78 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -429,14 +429,17 @@ struct device HIDDEN
+ 
+         const char *current = dev->link;
+         bool needs_root = true;
++        int last_successful_probe = -1;
+ 
+         debug(DEBUG, "searching for device nodes in %s", dev->link);
+         for (i = 0; dev_probes[i] && dev_probes[i]->parse; i++) {
+                 struct dev_probe *probe = dev_probes[i];
+                 ssize_t pos;
+ 
+-                if (!needs_root && (probe->flags & DEV_PROVIDES_ROOT)) {
+-                        debug(DEBUG, "not testing %s because flags is 0x%x", probe->name, probe->flags);
++                if (!needs_root &&
++                    (probe->flags & DEV_PROVIDES_ROOT)) {
++                        debug(DEBUG, "not testing %s because flags is 0x%x",
++                              probe->name, probe->flags);
+                         continue;
+                 }
+ 
+@@ -445,22 +448,51 @@ struct device HIDDEN
+                 if (pos < 0) {
+                         efi_error("parsing %s failed", probe->name);
+                         goto err;
+-                } else if (pos == 0) {
++                } else if (pos > 0) {
++                        debug(DEBUG, "%s matched %s", probe->name, current);
++                        dev->flags |= probe->flags;
++
++                        if (probe->flags & DEV_PROVIDES_HD ||
++                            probe->flags & DEV_PROVIDES_ROOT ||
++                            probe->flags & DEV_ABBREV_ONLY)
++                                needs_root = false;
++
++                        dev->probes[n++] = dev_probes[i];
++                        current += pos;
++                        debug(DEBUG, "current:%s", current);
++                        last_successful_probe = i;
++
++                        if (!*current || !strncmp(current, "block/", 6))
++                                break;
++
+                         continue;
+                 }
+-                debug(DEBUG, "%s matched %s", probe->name, current);
+-                dev->flags |= probe->flags;
+ 
+-                if (probe->flags & DEV_PROVIDES_HD ||
+-                    probe->flags & DEV_PROVIDES_ROOT ||
+-                    probe->flags & DEV_ABBREV_ONLY)
+-                        needs_root = false;
+-                dev->probes[n++] = dev_probes[i];
+-                current += pos;
+-                debug(DEBUG, "current:%s", current);
+-
+-                if (!*current || !strncmp(current, "block/", 6))
+-                        break;
++                debug(DEBUG, "dev_probes[i+1]: %p dev->interface_type: %d\n",
++                      dev_probes[i+1], dev->interface_type);
++                if (dev_probes[i+1] == NULL && dev->interface_type == unknown) {
++                        int new_pos = 0;
++                        rc = sscanf(current, "%*[^/]/%n", &new_pos);
++                        if (rc < 0) {
++                                efi_error(
++                                     "Cannot parse device link segment \"%s\"",
++                                     current);
++                                goto err;
++                        }
++                        debug(DEBUG,
++                              "Cannot parse device link segment \"%s\"",
++                              current);
++                        debug(DEBUG, "Skipping to \"%s\"", current + new_pos);
++                        debug(DEBUG,
++                              "This means we can only write abbreviated paths");
++                        if (rc < 0)
++                                goto err;
++                        if (new_pos == 0)
++                                goto err;
++                        dev->flags |= DEV_ABBREV_ONLY;
++                        i = last_successful_probe;
++                        current += new_pos;
++                }
+         }
+ 
+         if (dev->interface_type == unknown) {
+-- 
+2.17.1
+

@@ -1,0 +1,53 @@
+From daf3b6c6ae8a766f362c87dc80e40005428a1b2a Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Tue, 12 Jun 2018 14:36:20 -0400
+Subject: [PATCH 02/34] Move verbosity headers to be public
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/include/efivar/efivar.h | 8 ++++++++
+ src/util.h                  | 4 ----
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/src/include/efivar/efivar.h b/src/include/efivar/efivar.h
+index ddcc6771bdb..316891ccae9 100644
+--- a/src/include/efivar/efivar.h
++++ b/src/include/efivar/efivar.h
+@@ -25,6 +25,7 @@
+ #include <stdarg.h>
+ #include <stdint.h>
+ #include <string.h>
++#include <stdio.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+@@ -227,6 +228,13 @@ efi_error_clear(void)
+ #define efi_error_val(errval, msg, args...) \
+ 	efi_error_real__(errval, __FILE__, __func__, __LINE__, (fmt), ## args)
+ 
++extern void efi_set_verbose(int verbosity, FILE *errlog)
++        __attribute__((__visibility__("default")));
++extern int efi_get_verbose(void)
++        __attribute__((__visibility__("default")));
++extern FILE * efi_get_logfile(void)
++        __attribute__((__visibility__("default")));
++
+ #include <efivar/efivar-dp.h>
+ 
+ #endif /* EFIVAR_H */
+diff --git a/src/util.h b/src/util.h
+index 96ca66bd54d..cc5f669e6ec 100644
+--- a/src/util.h
++++ b/src/util.h
+@@ -369,8 +369,4 @@ swizzle_guid_to_uuid(efi_guid_t *guid)
+ 
+ #define DEBUG 1
+ 
+-extern void PUBLIC efi_set_verbose(int verbosity, FILE *errlog);
+-extern int PUBLIC efi_get_verbose(void);
+-extern FILE PUBLIC *efi_get_logfile(void);
+-
+ #endif /* EFIVAR_UTIL_H */
+-- 
+2.17.1
+

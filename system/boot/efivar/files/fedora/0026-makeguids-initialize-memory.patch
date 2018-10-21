@@ -1,0 +1,27 @@
+From 50d7b979d1aa1c4afbb60a702bd16f9ff3066c50 Mon Sep 17 00:00:00 2001
+From: "Bernhard M. Wiedemann" <bwiedemann@suse.de>
+Date: Tue, 24 Jul 2018 09:34:21 +0200
+Subject: [PATCH 26/34] makeguids: initialize memory
+
+so that we do not write uninitialized memory into guids.bin and names.bin
+which made the resulting libefivar.so.1.36 unreproducible.
+See https://reproducible-builds.org/ for why this matters.
+---
+ src/makeguids.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/makeguids.c b/src/makeguids.c
+index f84fbb81166..a15356b152e 100644
+--- a/src/makeguids.c
++++ b/src/makeguids.c
+@@ -147,6 +147,7 @@ main(int argc, char *argv[])
+ 		outbuf = realloc(outbuf, line * sizeof (struct guidname));
+ 		if (!outbuf)
+ 			err(1, "makeguids");
++		memset(outbuf + line - 1, 0, sizeof(struct guidname));
+ 
+ 		char *symbol = strchr(guidstr, '\t');
+ 		if (symbol == NULL)
+-- 
+2.17.1
+

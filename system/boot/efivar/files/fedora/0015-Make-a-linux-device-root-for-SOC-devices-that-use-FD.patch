@@ -1,0 +1,131 @@
+From d8637ea2b540fc9d16f1d1c1312e49a24082eefe Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 20 Jun 2018 16:16:35 -0400
+Subject: [PATCH 15/34] Make a linux device root for SOC devices that use FDT.
+
+Add parsing for FDT devices in sysfs.  These devices have to use HD() or
+File() because we don't have a way to express FDT nodes in a Device
+Path.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-soc-root.c | 72 ++++++++++++++++++++++++++++++++++++++++++++
+ src/linux.c          |  1 +
+ src/linux.h          |  3 +-
+ 3 files changed, 75 insertions(+), 1 deletion(-)
+ create mode 100644 src/linux-soc-root.c
+
+diff --git a/src/linux-soc-root.c b/src/linux-soc-root.c
+new file mode 100644
+index 00000000000..57dd9b04f2c
+--- /dev/null
++++ b/src/linux-soc-root.c
+@@ -0,0 +1,72 @@
++/*
++ * libefiboot - library for the manipulation of EFI boot variables
++ * Copyright 2012-2018 Red Hat, Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License as
++ * published by the Free Software Foundation; either version 2.1 of the
++ * License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, see
++ * <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "fix_coverity.h"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <inttypes.h>
++#include <stdint.h>
++#include <unistd.h>
++
++#include "efiboot.h"
++
++/*
++ * support for soc platforms
++ *
++ * various devices /sys/dev/block/$major:$minor start with:
++ * maj:min ->  ../../devices/platform/soc/$DEVICETREE_NODE/$BLOCKDEV_STUFF/block/$DISK/$PART
++ * i.e.:                              soc/1a400000.sata/ata1/host0/target0:0:0/0:0:0:0/block/sda/sda1
++ *                                        ^ dt node     ^ blockdev stuff                     ^ disk
++ * I don't *think* the devicetree nodes stack.
++ */
++static ssize_t
++parse_soc_root(struct device *dev UNUSED, const char *current, const char *root UNUSED)
++{
++        int rc;
++        int pos;
++        const char *devpart = current;
++        char *spaces;
++
++        pos = strlen(current);
++        spaces = alloca(pos+1);
++        memset(spaces, ' ', pos+1);
++        spaces[pos] = '\0';
++        pos = 0;
++
++        debug(DEBUG, "entry");
++
++        rc = sscanf(devpart, "../../devices/platform/soc/%*[^/]/%n", &pos);
++        if (rc != 0)
++                return 0;
++        devpart += pos;
++        debug(DEBUG, "new position is \"%s\"", devpart);
++
++        return devpart - current;
++}
++
++enum interface_type soc_root_iftypes[] = { soc_root, unknown };
++
++struct dev_probe HIDDEN soc_root_parser = {
++        .name = "soc_root",
++        .iftypes = soc_root_iftypes,
++        .flags = DEV_ABBREV_ONLY|DEV_PROVIDES_ROOT,
++        .parse = parse_soc_root,
++};
+diff --git a/src/linux.c b/src/linux.c
+index 83adc510944..1e7db4e3f61 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -237,6 +237,7 @@ static struct dev_probe *dev_probes[] = {
+         &pmem_parser,
+         &acpi_root_parser,
+         &pci_root_parser,
++        &soc_root_parser,
+         &pci_parser,
+         &virtblk_parser,
+         &sas_parser,
+diff --git a/src/linux.h b/src/linux.h
+index ef7dba769bd..99d61013e02 100644
+--- a/src/linux.h
++++ b/src/linux.h
+@@ -95,7 +95,7 @@ struct nvdimm_info {
+ 
+ enum interface_type {
+         unknown,
+-        isa, acpi_root, pci_root, pci, network,
++        isa, acpi_root, pci_root, soc_root, pci, network,
+         ata, atapi, scsi, sata, sas,
+         usb, i1394, fibre, i2o,
+         md, virtblk,
+@@ -268,6 +268,7 @@ extern ssize_t parse_scsi_link(const char *current, uint32_t *host,
+ extern struct dev_probe pmem_parser;
+ extern struct dev_probe pci_root_parser;
+ extern struct dev_probe acpi_root_parser;
++extern struct dev_probe soc_root_parser;
+ extern struct dev_probe pci_parser;
+ extern struct dev_probe sas_parser;
+ extern struct dev_probe sata_parser;
+-- 
+2.17.1
+

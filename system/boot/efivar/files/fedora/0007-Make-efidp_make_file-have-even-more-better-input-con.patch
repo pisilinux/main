@@ -1,0 +1,58 @@
+From 9bc1e24859630c933410bfb77658bd69ee400e16 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 13 Jun 2018 09:25:58 -0400
+Subject: [PATCH 07/34] Make efidp_make_file() have even more, better input
+ constraints.
+
+This is all in the effort to convince coverity that it doesn't
+dereference buf when size==0, which it already doesn't.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/dp-media.c |  6 ++++++
+ src/dp.c       | 10 +++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/src/dp-media.c b/src/dp-media.c
+index cec6b8bb58d..96a576fdc2a 100644
+--- a/src/dp-media.c
++++ b/src/dp-media.c
+@@ -162,6 +162,12 @@ efidp_make_file(uint8_t *buf, ssize_t size, char *filepath)
+ 	ssize_t len = utf8len(lf, -1) + 1;
+ 	ssize_t req = sizeof (*file) + len * sizeof (uint16_t);
+ 
++	if (len == 0) {
++		errno = EINVAL;
++		efi_error("%s() called with %s file path", __func__,
++			  filepath == NULL ? "NULL" : "empty");
++		return -1;
++	}
+ 	sz = efidp_make_generic(buf, size, EFIDP_MEDIA_TYPE, EFIDP_MEDIA_FILE,
+ 				req);
+ 	if (size && sz == req) {
+diff --git a/src/dp.c b/src/dp.c
+index 4e76e25b1a1..82d60b4f9be 100644
+--- a/src/dp.c
++++ b/src/dp.c
+@@ -443,9 +443,17 @@ efidp_make_generic(uint8_t *buf, ssize_t size, uint8_t type, uint8_t subtype,
+ 
+ 	if (!size)
+ 		return total_size;
++
++	if (!buf) {
++		errno = EINVAL;
++		efi_error("%s was called with nonzero size and NULL buffer",
++			  __func__);
++		return -1;
++	}
++
+ 	if (size < total_size) {
++		errno = ENOSPC;
+ 		efi_error("total size is bigger than size limit");
+-		errno = ENOSPC;
+ 		return -1;
+ 	}
+ 
+-- 
+2.17.1
+

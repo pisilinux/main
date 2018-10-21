@@ -1,0 +1,138 @@
+From 5e2174acaf1a51ead0a079776229e0df89c7fd81 Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 13 Jun 2018 09:15:17 -0400
+Subject: [PATCH 06/34] Try to convince covscan that sysfs_read_file() doesn't
+ leak on error.
+
+Basically, covscan gets confused about some of our return paths and
+doesn't  think the error condition correlates with not having allocated
+(or having freed) the ram we're using to pass the file data back.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux.h |  5 +++++
+ src/util.h  | 38 ++++++++++++++++++++------------------
+ 2 files changed, 25 insertions(+), 18 deletions(-)
+
+diff --git a/src/linux.h b/src/linux.h
+index 2f9eb0fe66f..39826224a53 100644
+--- a/src/linux.h
++++ b/src/linux.h
+@@ -173,6 +173,11 @@ extern ssize_t HIDDEN make_mac_path(uint8_t *buf, ssize_t size,
+                         free(buf_);                                     \
+                         *(buf) = (__typeof__(*(buf)))buf2_;             \
+                         errno = error_;                                 \
++                } else if (buf_) {                                      \
++                        /* covscan is _sure_ we leak buf_ if bufsize_ */\
++                        /* is <= 0, which is wrong, but appease it.   */\
++                        free(buf_);                                     \
++                        buf_ = NULL;                                    \
+                 }                                                       \
+                 bufsize_;                                               \
+         })
+diff --git a/src/util.h b/src/util.h
+index cc5f669e6ec..ef85a4c277e 100644
+--- a/src/util.h
++++ b/src/util.h
+@@ -149,22 +149,24 @@
+ #endif
+ 
+ static inline int UNUSED
+-read_file(int fd, uint8_t **buf, size_t *bufsize)
++read_file(int fd, uint8_t **result, size_t *bufsize)
+ {
+         uint8_t *p;
+         size_t size = 4096;
+         size_t filesize = 0;
+         ssize_t s = 0;
++        uint8_t *buf, *newbuf;
+ 
+-        uint8_t *newbuf;
+         if (!(newbuf = calloc(size, sizeof (uint8_t)))) {
+                 efi_error("could not allocate memory");
++                *result = buf = NULL;
++                *bufsize = 0;
+                 return -1;
+         }
+-        *buf = newbuf;
++        buf = newbuf;
+ 
+         do {
+-                p = *buf + filesize;
++                p = buf + filesize;
+                 /* size - filesize shouldn't exceed SSIZE_MAX because we're
+                  * only allocating 4096 bytes at a time and we're checking that
+                  * before doing so. */
+@@ -179,8 +181,8 @@ read_file(int fd, uint8_t **buf, size_t *bufsize)
+                         continue;
+                 } else if (s < 0) {
+                         int saved_errno = errno;
+-                        free(*buf);
+-                        *buf = NULL;
++                        free(buf);
++                        *result = buf = NULL;
+                         *bufsize = 0;
+                         errno = saved_errno;
+                         efi_error("could not read from file");
+@@ -194,38 +196,38 @@ read_file(int fd, uint8_t **buf, size_t *bufsize)
+                         /* See if we're going to overrun and return an error
+                          * instead. */
+                         if (size > (size_t)-1 - 4096) {
+-                                free(*buf);
+-                                *buf = NULL;
++                                free(buf);
++                                *result = buf = NULL;
+                                 *bufsize = 0;
+                                 errno = ENOMEM;
+                                 efi_error("could not read from file");
+                                 return -1;
+                         }
+-                        newbuf = realloc(*buf, size + 4096);
++                        newbuf = realloc(buf, size + 4096);
+                         if (newbuf == NULL) {
+                                 int saved_errno = errno;
+-                                free(*buf);
+-                                *buf = NULL;
++                                free(buf);
++                                *result = buf = NULL;
+                                 *bufsize = 0;
+                                 errno = saved_errno;
+                                 efi_error("could not allocate memory");
+                                 return -1;
+                         }
+-                        *buf = newbuf;
+-                        memset(*buf + size, '\0', 4096);
++                        buf = newbuf;
++                        memset(buf + size, '\0', 4096);
+                         size += 4096;
+                 }
+         } while (1);
+ 
+-        newbuf = realloc(*buf, filesize+1);
++        newbuf = realloc(buf, filesize+1);
+         if (!newbuf) {
+-                free(*buf);
+-                *buf = NULL;
++                free(buf);
++                *result = buf = NULL;
+                 efi_error("could not allocate memory");
+                 return -1;
+         }
+         newbuf[filesize] = '\0';
+-        *buf = newbuf;
++        *result = newbuf;
+         *bufsize = filesize+1;
+         return 0;
+ }
+@@ -329,7 +331,7 @@ get_file(uint8_t **result, const char * const fmt, ...)
+         close(fd);
+         errno = error;
+ 
+-        if (rc < 0) {
++        if (rc < 0 || bufsize < 1) {
+                 efi_error("could not read file \"%s\"", path);
+                 return -1;
+         }
+-- 
+2.17.1
+

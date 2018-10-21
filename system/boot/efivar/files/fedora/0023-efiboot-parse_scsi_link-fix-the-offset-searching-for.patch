@@ -1,0 +1,27 @@
+From 50e8c66f92b2d93d20c2524936f6858fd2b07afe Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 21 Jun 2018 14:23:40 -0400
+Subject: [PATCH 23/34] efiboot: parse_scsi_link(): fix the offset searching
+ for the port
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-scsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/linux-scsi.c b/src/linux-scsi.c
+index 80c2fb7d82e..2e4f710badf 100644
+--- a/src/linux-scsi.c
++++ b/src/linux-scsi.c
+@@ -92,7 +92,7 @@ parse_scsi_link(const char *current, uint32_t *scsi_host,
+         pos0 = 0;
+ 
+         debug("searching for port-4:0 or port-4:0:0");
+-        rc = sscanf(current, "port-%d:%d%n:%d%n", &tosser0,
++        rc = sscanf(current+sz, "port-%d:%d%n:%d%n", &tosser0,
+                     &tosser1, &pos0, &tosser2, &pos1);
+         debug("current:\"%s\" rc:%d pos0:%d pos1:%d\n", current+sz, rc, pos0, pos1);
+         arrow(LOG_DEBUG, spaces, 9, pos0, rc, 2);
+-- 
+2.17.1
+

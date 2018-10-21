@@ -1,0 +1,28 @@
+From c2223eb4638c6d8562626917651a11b8aa1e8f9e Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Thu, 21 Jun 2018 16:18:32 -0400
+Subject: [PATCH 24/34] Coverity still doesn't believe in error codes...
+
+So also test fbuf here.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ src/linux-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/linux-acpi.c b/src/linux-acpi.c
+index 88f0084a37e..346eba09041 100644
+--- a/src/linux-acpi.c
++++ b/src/linux-acpi.c
+@@ -49,7 +49,7 @@ parse_acpi_hid_uid(struct device *dev, const char *fmt, ...)
+                 return -1;
+ 
+         rc = read_sysfs_file(&fbuf, "%s/firmware_node/path", path);
+-        if (rc > 0) {
++        if (rc > 0 && fbuf) {
+                 size_t l = strlen(fbuf);
+                 if (l > 1) {
+                         fbuf[l-1] = 0;
+-- 
+2.17.1
+
