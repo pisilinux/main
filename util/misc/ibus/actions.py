@@ -10,14 +10,11 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    #sandbox error fixed
-    #pisitools.dosed("data/dconf/Makefile.am", "dconf update", "")
-    #pisitools.dosed("data/dconf/Makefile.in", "dconf update", "")
-    
     autotools.configure("--prefix=/usr \
                          --sysconfdir=/etc \
                          --libexecdir=/usr/lib/ibus \
                          --disable-gconf \
+                         --disable-unicode-dict \
                          --disable-emoji-dict \
                          --enable-dconf \
                          --enable-wayland \
@@ -25,7 +22,7 @@ def setup():
                          --enable-ui \
                          --enable-gtk-doc \
                          --enable-python-library \
-                         --with-python=python \
+                         --with-python=python3 \
                          --enable-gtk3 \
                          --enable-gtk2")
     
