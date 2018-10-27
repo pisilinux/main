@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 
 
 def build():
+    shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.system("python ./x.py build")
     
 
