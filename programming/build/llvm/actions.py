@@ -64,8 +64,7 @@ def setup():
                                         %s \
                                         -DLLVM_ENABLE_FFI=ON \
                                         -DLLVM_BUILD_DOCS=OFF \
-                                        -DLLVM_BUILD_LLVM_DYLIB=ON \
-                                        -DLLVM_LINK_LLVM_DYLIB=ON \
+                                        -DBUILD_SHARED_LIBS=ON \
                                         -DLLVM_ENABLE_RTTI=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
