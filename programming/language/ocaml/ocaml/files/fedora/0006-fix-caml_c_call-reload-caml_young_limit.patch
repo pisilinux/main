@@ -1,0 +1,25 @@
+From 207fbbc2616ee44e048dd5bb133e52f252cd1caf Mon Sep 17 00:00:00 2001
+From: Nicolas Ojeda Bar <n.oje.bar@gmail.com>
+Date: Sat, 2 Dec 2017 10:44:41 +0100
+Subject: [PATCH 6/8] fix caml_c_call: reload caml_young_limit
+
+---
+ asmrun/riscv.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/asmrun/riscv.S b/asmrun/riscv.S
+index 88d7ab924..121f8ba71 100644
+--- a/asmrun/riscv.S
++++ b/asmrun/riscv.S
+@@ -187,7 +187,7 @@ caml_c_call:
+         jalr    ARG
+         /* Reload alloc ptr and alloc limit */
+         load    ALLOC_PTR, caml_young_ptr
+-        load    TRAP_PTR, caml_exception_pointer
++        load    ALLOC_LIMIT, caml_young_limit
+         /* Return */
+         jr      s2
+         .size   caml_c_call, .-caml_c_call
+-- 
+2.17.1
+
