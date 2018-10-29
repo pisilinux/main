@@ -1,0 +1,40 @@
+From af276d83f41cb9eb9f1e50a75a9be205c9b2fee6 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 5 Jun 2018 19:48:08 +0000
+Subject: [PATCH 8/8] riscv: Emit debug info.
+
+---
+ asmcomp/riscv/emit.mlp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/asmcomp/riscv/emit.mlp b/asmcomp/riscv/emit.mlp
+index 718dca080..e42ee9770 100644
+--- a/asmcomp/riscv/emit.mlp
++++ b/asmcomp/riscv/emit.mlp
+@@ -261,6 +261,7 @@ let tailrec_entry_point = ref 0
+ (* Output the assembly code for an instruction *)
+ 
+ let emit_instr i =
++  emit_debug_info i.dbg;
+   match i.desc with
+     Lend -> ()
+   | Lop(Imove | Ispill | Ireload) ->
+@@ -560,6 +561,7 @@ let fundecl fundecl =
+   emit_stack_adjustment (-n);
+   if !contains_calls then store_ra n;
+   `{emit_label !tailrec_entry_point}:\n`;
++  emit_debug_info fundecl.fun_dbg;
+   emit_all fundecl.fun_body;
+   List.iter emit_call_gc !call_gc_sites;
+   List.iter emit_call_bound_error !bound_error_sites;
+@@ -619,6 +621,7 @@ let data l =
+ 
+ let begin_assembly() =
+   `	.file \"\"\n`; (* PR#7073 *)
++  reset_debug_info ();
+   (* Emit the beginning of the segments *)
+   let lbl_begin = Compilenv.make_symbol (Some "data_begin") in
+   `	{emit_string data_space}\n`;
+-- 
+2.17.1
+

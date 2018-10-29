@@ -1,0 +1,67 @@
+From a89427d52a20633be40056fe008b7eeec5ded7dd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Nicol=C3=A1s=20Ojeda=20B=C3=A4r?= <n.oje.bar@gmail.com>
+Date: Tue, 15 May 2018 07:17:06 +0000
+Subject: [PATCH 7/8] Adapt to 4.07
+
+---
+ asmcomp/riscv/emit.mlp     | 28 +++++++++++++++++-----------
+ asmcomp/riscv/selection.ml |  2 +-
+ 2 files changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/asmcomp/riscv/emit.mlp b/asmcomp/riscv/emit.mlp
+index 51165d0f1..718dca080 100644
+--- a/asmcomp/riscv/emit.mlp
++++ b/asmcomp/riscv/emit.mlp
+@@ -461,19 +461,25 @@ let emit_instr i =
+           `	{emit_string name}	{emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}, {emit_label lbl}\n`
+       | Iinttest_imm _ ->
+           fatal_error "Emit.emit_instr (Iinttest_imm _)"
+-      | Ifloattest(cmp, neg) ->
+-          let neg = match cmp with
+-            | Ceq -> `	feq.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`; neg
+-            | Cne -> `	feq.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`; not neg
+-            | Clt -> `	flt.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`; neg
+-            | Cgt -> `	flt.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(1)}, {emit_reg i.arg.(0)}\n`; neg
+-            | Cle -> `	fle.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`; neg
+-            | Cge -> `	fle.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(1)}, {emit_reg i.arg.(0)}\n`; neg
+-          in
+-          if neg then
++      | Ifloattest cmp ->
++          begin match cmp with
++          | CFeq | CFneq ->
++	    `	feq.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`
++          | CFlt | CFnlt ->
++	    `	flt.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`
++          | CFgt | CFngt ->
++	    `	flt.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(1)}, {emit_reg i.arg.(0)}\n`
++          | CFle | CFnle ->
++	    `	fle.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, {emit_reg i.arg.(1)}\n`
++          | CFge | CFnge ->
++	    `	fle.d	{emit_reg reg_tmp1}, {emit_reg i.arg.(1)}, {emit_reg i.arg.(0)}\n`
++	  end;
++	  begin match cmp with
++	  | CFneq | CFnlt | CFngt | CFnle | CFnge ->
+             `	beqz	{emit_reg reg_tmp1}, {emit_label lbl}\n`
+-          else
++	  | CFeq | CFlt | CFgt | CFle | CFge ->
+             `	bnez	{emit_reg reg_tmp1}, {emit_label lbl}\n`
++	  end
+       | Ioddtest ->
+           `	andi	{emit_reg reg_tmp1}, {emit_reg i.arg.(0)}, 1\n`;
+           `	bnez	{emit_reg reg_tmp1}, {emit_label lbl}\n`
+diff --git a/asmcomp/riscv/selection.ml b/asmcomp/riscv/selection.ml
+index 092ca88aa..1f0af6abc 100644
+--- a/asmcomp/riscv/selection.ml
++++ b/asmcomp/riscv/selection.ml
+@@ -61,7 +61,7 @@ method! select_condition = function
+   | Cop(Ccmpa cmp, args, _) ->
+       (Iinttest(Iunsigned cmp), Ctuple args)
+   | Cop(Ccmpf cmp, args, _) ->
+-      (Ifloattest(cmp, false), Ctuple args)
++      (Ifloattest cmp, Ctuple args)
+   | Cop(Cand, [arg; Cconst_int 1], _) ->
+       (Ioddtest, arg)
+   | arg ->
+-- 
+2.17.1
+
