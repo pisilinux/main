@@ -11,7 +11,9 @@ from pisi.actionsapi import shelltools
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_INSTALL_LIBDIR=lib", sourceDir="..")
+    
 def build():
     shelltools.cd("build")
     cmaketools.make()
@@ -19,7 +21,7 @@ def build():
 def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.domove("/usr/lib64/*", "/usr/lib")
-    pisitools.removeDir("/usr/lib64")
+    #pisitools.domove("/usr/lib64/*", "/usr/lib")
+    #pisitools.removeDir("/usr/lib64")
     shelltools.cd("..")
     pisitools.dodoc("LICENSE.FDL", "LICENSE.GPL", "LICENSE.LGPL", "README.md")
