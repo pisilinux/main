@@ -13,6 +13,7 @@ def setup():
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
+                          -DCMAKE_INSTALL_LIBDIR=lib \
                           -DCMAKE_LIBDIR=/usr/lib", sourceDir="..")
 def build():
     shelltools.cd("build")
@@ -22,8 +23,8 @@ def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    pisitools.domove("/usr/lib64/*", "/usr/lib")
-    pisitools.removeDir("/usr/lib64")
+    #pisitools.domove("/usr/lib64/*", "/usr/lib")
+    #pisitools.removeDir("/usr/lib64")
     
     shelltools.cd("..")
     pisitools.dodoc("LICENSE*", "README.md")
