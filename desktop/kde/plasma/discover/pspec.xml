@@ -42,7 +42,6 @@
         <Name>discover</Name>
         <RuntimeDependencies>
             <Dependency versionFrom="5.7.1">qt5-base</Dependency>
-            <Dependency>glib2</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>kio</Dependency>
             <Dependency>attica</Dependency>
@@ -50,8 +49,6 @@
             <Dependency>kitemmodels</Dependency>
             <Dependency>kcoreaddons</Dependency>
             <Dependency>kdbusaddons</Dependency>
-            <Dependency>kiconthemes</Dependency>
-            <Dependency>kdeclarative</Dependency>
             <Dependency>kconfigwidgets</Dependency>
             <Dependency>knotifications</Dependency>
             <Dependency>kwidgetsaddons</Dependency>
@@ -60,9 +57,6 @@
             <Dependency>kxmlgui</Dependency>
             <Dependency versionFrom="5.7.1">qt5-declarative</Dependency>
             <Dependency>knewstuff</Dependency>
-            <Dependency>kirigami</Dependency>
-            <Dependency>appstream-qt5</Dependency>
-            <Dependency>flatpak</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -75,8 +69,31 @@
             <Path fileType="localedata">/usr/share/locale</Path>
         </Files>
     </Package>
+    <Package>
+        <Name>discover-plugin-flatpak</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">discover</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>flatpak</Dependency>
+            <Dependency>appstream-qt5</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/qt5/plugins/discover-notifier/FlatpakNotifier.so</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/discover/flatpak-backend.so</Path>
+            <Path fileType="data">/usr/share/applications/org.kde.discover-flatpak</Path>
+            <Path fileType="data">/usr/share/libdiscover/categories/flatpak-backend-categories.xml</Path>
+            <Path fileType="data">/usr/share/metainfo/org.kde.discover.flatpak.appdata.xml</Path>
+        </Files>
+    </Package>
 
     <History>
+        <Update release="24">
+            <Date>2018-11-03</Date>
+            <Version>5.14.1</Version>
+            <Comment>discover-flatpak.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="23">
             <Date>2018-10-17</Date>
             <Version>5.14.1</Version>
