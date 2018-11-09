@@ -10,15 +10,17 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.copy("po/fur.po", "po/ur.po")
+    shelltools.system("sed -i 's/fur/ur/' po/LINGUAS")
     shelltools.makedirs("build")
     shelltools.cd("build")
     shelltools.system("meson .. --prefix=/usr \
                                 --sysconfdir=/etc \
-                                -Dwith-daemon-user=colord \
-                                -Denable-systemd=false \
-                                -Denable-docs=false \
-                                -Denable-libcolordcompat=true \
-                                -Denable-man=false")
+                                -Ddaemon_user=colord \
+                                -Dsystemd=false \
+                                -Ddocs=false \
+                                -Dlibcolordcompat=true \
+                                -Dman=false")
 
     
 def build():
