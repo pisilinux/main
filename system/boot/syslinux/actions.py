@@ -28,16 +28,16 @@ def build():
 def install():
     autotools.rawInstall('INSTALLROOT=%s MANDIR="/usr/share/man" AUXDIR="/usr/lib/syslinux"' % get.installDIR())
 
-    #pisitools.removeDir("/usr/lib/syslinux/com32")
-    #pisitools.removeDir("/usr/lib/syslinux/dosutil")
-    #pisitools.remove("/usr/lib/syslinux/syslinux.com")
+    pisitools.removeDir("/usr/lib/syslinux/com32")
+    pisitools.removeDir("/usr/lib/syslinux/dosutil")
+    pisitools.remove("/usr/lib/syslinux/syslinux.com")
     
-    # pisitools.dodir("/usr/lib/syslinux/bios")
+    pisitools.dodir("/usr/lib/syslinux/bios")
     
-    # pisitools.domove("/usr/lib/syslinux/*.c32", "/usr/lib/syslinux/bios")
-    # pisitools.domove("/usr/lib/syslinux/*.bin", "/usr/lib/syslinux/bios")
-    # pisitools.domove("/usr/lib/syslinux/*.0", "/usr/lib/syslinux/bios")
-    # pisitools.domove("/usr/lib/syslinux/memdisk", "/usr/lib/syslinux/bios")
+    pisitools.domove("/usr/lib/syslinux/*.c32", "/usr/lib/syslinux/bios")
+    pisitools.domove("/usr/lib/syslinux/*.bin", "/usr/lib/syslinux/bios")
+    pisitools.domove("/usr/lib/syslinux/*.0", "/usr/lib/syslinux/bios")
+    pisitools.domove("/usr/lib/syslinux/memdisk", "/usr/lib/syslinux/bios")
     
     #for f in tools:
     #    pisitools.insinto(datadir, "utils/"+f) 
