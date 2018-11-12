@@ -1,0 +1,187 @@
+diff -Nuar a/src/widgets/kpropertiesdialog.cpp b/src/widgets/kpropertiesdialog.cpp
+--- a/src/widgets/kpropertiesdialog.cpp	2018-11-03 21:02:08.000000000 +0300
++++ b/src/widgets/kpropertiesdialog.cpp	2018-08-04 14:23:09.000000000 +0300
+@@ -80,6 +80,7 @@
+ #include <QTextStream>
+ #include <QUrl>
+ #include <QVector>
++#include <qplatformdefs.h>
+ 
+ #if HAVE_POSIX_ACL
+ extern "C" {
+@@ -774,10 +775,9 @@
+     QString mimeType;
+     QString oldFileName;
+     KLineEdit *m_lined;
+-    QLabel *m_fileNameLabel = nullptr;
+-    QGridLayout *m_grid = nullptr;
+ 
+     QWidget *iconArea;
++    QWidget *nameArea;
+ 
+     QLabel *m_sizeLabel;
+     QPushButton *m_sizeDetermineButton;
+@@ -849,7 +849,6 @@
+     vbl->setMargin(0);
+     vbl->setObjectName(QStringLiteral("vbl"));
+     QGridLayout *grid = new QGridLayout(); // unknown rows
+-    d->m_grid = grid;
+     grid->setColumnStretch(0, 0);
+     grid->setColumnStretch(1, 0);
+     grid->setColumnStretch(2, 1);
+@@ -980,24 +979,30 @@
+         iconLabel->setAlignment(Qt::AlignCenter);
+         int bsize = 66 + 2 * iconLabel->style()->pixelMetric(QStyle::PM_ButtonMargin);
+         iconLabel->setFixedSize(bsize, bsize);
+-        iconLabel->setPixmap(QIcon::fromTheme(iconStr).pixmap(48));
++        iconLabel->setPixmap(KIconLoader::global()->loadIcon(iconStr, KIconLoader::Desktop, 48));
+         d->iconArea = iconLabel;
+     }
+     grid->addWidget(d->iconArea, curRow, 0, Qt::AlignCenter);
+ 
+-    KFileItemListProperties itemList(KFileItemList() << item);
+-    if (d->bMultiple || isTrash || hasRoot || !(d->m_bFromTemplate || itemList.supportsMoving())) {
+-        setFileNameReadOnly(true);
++    if (d->bMultiple || isTrash || hasRoot) {
++        QLabel *lab = new QLabel(d->m_frame);
+         if (d->bMultiple) {
+-            d->m_fileNameLabel->setText(KIO::itemsSummaryString(iFileCount + iDirCount, iFileCount, iDirCount, 0, false));
++            lab->setText(KIO::itemsSummaryString(iFileCount + iDirCount, iFileCount, iDirCount, 0, false));
++        } else {
++            lab->setText(filename);
+         }
+-
++        d->nameArea = lab;
+     } else {
+         d->m_lined = new KLineEdit(d->m_frame);
+         d->m_lined->setObjectName("KFilePropsPlugin::nameLineEdit");
+         d->m_lined->setText(filename);
++        d->nameArea = d->m_lined;
+         d->m_lined->setFocus();
+ 
++        //if we don't have permissions to rename, we need to make "m_lined" read only.
++        KFileItemListProperties itemList(KFileItemList() << item);
++        setFileNameReadOnly(!itemList.supportsMoving());
++
+         // Enhanced rename: Don't highlight the file extension.
+         QString extension = db.suffixForFileName(filename);
+         if (!extension.isEmpty()) {
+@@ -1011,9 +1016,9 @@
+ 
+         connect(d->m_lined, SIGNAL(textChanged(QString)),
+                 this, SLOT(nameFileChanged(QString)));
+-        grid->addWidget(d->m_lined, curRow, 2);
+     }
+-    ++curRow;
++
++    grid->addWidget(d->nameArea, curRow++, 2);
+ 
+     KSeparator *sep = new KSeparator(Qt::Horizontal, d->m_frame);
+     grid->addWidget(sep, curRow, 0, 1, 3);
+@@ -1158,30 +1163,13 @@
+ 
+         if (isLocal) {
+             KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByPath(url.toLocalFile());
+-
+-            l = new QLabel(i18n("File System:"), d->m_frame);
+-            grid->addWidget(l, curRow, 0, Qt::AlignRight);
+-
+-            l = new QLabel(d->m_frame);
+-            grid->addWidget(l, curRow++, 2);
+-            l->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+-            l->setText(mp->mountType());
+-
+-            if (mp) {
++            if (mp && mp->mountPoint() != QLatin1String("/")) {
+                 l = new QLabel(i18n("Mounted on:"), d->m_frame);
+                 grid->addWidget(l, curRow, 0, Qt::AlignRight);
+ 
+                 l = new KSqueezedTextLabel(mp->mountPoint(), d->m_frame);
+                 l->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+                 grid->addWidget(l, curRow++, 2);
+-
+-                l = new QLabel(i18n("Mounted from:"), d->m_frame);
+-                grid->addWidget(l, curRow, 0, Qt::AlignRight);
+-
+-                l = new QLabel(d->m_frame);
+-                grid->addWidget(l, curRow++, 2);
+-                l->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+-                l->setText(mp->mountedFrom());
+             }
+         }
+ 
+@@ -1219,15 +1207,12 @@
+ 
+ void KFilePropsPlugin::setFileNameReadOnly(bool ro)
+ {
+-    Q_ASSERT(ro); // false isn't supported
+-    if (ro && !d->m_fileNameLabel) {
+-        Q_ASSERT(!d->m_bFromTemplate);
+-        delete d->m_lined;
+-        d->m_lined = nullptr;
+-        d->m_fileNameLabel = new QLabel(d->m_frame);
+-        d->m_fileNameLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+-        d->m_fileNameLabel->setText(d->oldName); // will get overwritten if d->bMultiple
+-        d->m_grid->addWidget(d->m_fileNameLabel, 0, 2);
++    if (d->m_lined && !d->m_bFromTemplate) {
++        d->m_lined->setReadOnly(ro);
++        if (ro) {
++            // Don't put the initial focus on the line edit when it is ro
++            properties->buttonBox()->button(QDialogButtonBox::Ok)->setFocus();
++        }
+     }
+ }
+ 
+@@ -1390,8 +1375,8 @@
+ 
+     // qDebug() << "KFilePropsPlugin::applyChanges";
+ 
+-    if (d->m_lined) {
+-        QString n = d->m_lined->text();
++    if (qobject_cast<QLineEdit *>(d->nameArea)) {
++        QString n = ((QLineEdit *) d->nameArea)->text();
+         // Remove trailing spaces (#4345)
+         while (! n.isEmpty() && n[n.length() - 1].isSpace()) {
+             n.truncate(n.length() - 1);
+@@ -1682,6 +1667,8 @@
+     d->cbRecursive = nullptr;
+     d->grpCombo = nullptr; d->grpEdit = nullptr;
+     d->usrEdit = nullptr;
++    QString path = properties->url().path();
++    QString fname = properties->url().fileName();
+     bool isLocal = properties->url().isLocalFile();
+     bool isTrash = (properties->url().scheme() == QLatin1String("trash"));
+     KUser myself(KUser::UseEffectiveUID);
+@@ -1707,6 +1694,7 @@
+         KFileItemList::const_iterator it = items.begin();
+         const KFileItemList::const_iterator kend = items.end();
+         for (++it /*no need to check the first one again*/; it != kend; ++it) {
++            const QUrl url = (*it).url();
+             if (!d->isIrregular)
+                 d->isIrregular |= isIrregular((*it).permissions(),
+                                               (*it).isDir() == isDir,
+@@ -1884,6 +1872,7 @@
+     /*** Set Group ***/
+ 
+     QStringList groupList;
++    QByteArray strUser;
+     KUser user(KUser::UseEffectiveUID);
+     const bool isMyGroup = user.groupNames().contains(d->strGroup);
+ 
+@@ -2783,7 +2772,7 @@
+ 
+     const QString checksum = cachedChecksum(algorithm);
+ 
+-    // Checksum already in cache.
++    // Checksum alread in cache.
+     if (!checksum.isEmpty()) {
+         const bool isMatch = (checksum == input);
+         if (isMatch) {
+@@ -3113,7 +3102,7 @@
+     const QUrl url = job->mostLocalUrl();
+ 
+     if (!url.isLocalFile()) {
+-        KMessageBox::sorry(nullptr, i18n("Could not save properties. Only entries on local file systems are supported."));
++        //FIXME: 4.2 add this: KMessageBox::sorry(0, i18n("Could not save properties. Only entries on local file systems are supported."));
+         return;
+     }
