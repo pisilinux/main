@@ -1,0 +1,60 @@
+diff -Nuar a/src/convertDlg.cpp b/src/convertDlg.cpp
+--- a/src/convertDlg.cpp	2016-02-01 05:55:55.000000000 +0200
++++ b/src/convertDlg.cpp	2018-11-14 11:16:21.000000000 +0300
+@@ -25,6 +25,7 @@
+ #include <QFileDialog>
+ #include <QMimeType>
+ #include <QMimeDatabase>
++#include <QStyle>
+ //ImageMagick
+ #include <Magick++.h>
+ 
+@@ -61,11 +62,11 @@
+     QString writeFilter = QString("*%1|%5 (%1)\n*%2|%6 (%2)\n*%3 *%4|%7 (%3 %4)").arg(".png", ".tga", ".jpg", ".jpeg", db.mimeTypeForName("image/png").comment(), db.mimeTypeForName("image/x-tga").comment(), db.mimeTypeForName("image/jpeg").comment());
+ 
+     ui->kurlrequester_image->setMode(KFile::File | KFile::ExistingOnly | KFile::LocalOnly);
+-    ui->kurlrequester_image->fileDialog()->setAcceptMode(QFileDialog::AcceptOpen);
+-    ui->kurlrequester_image->fileDialog()->setNameFilter(readFilter);
++    ui->kurlrequester_image->setAcceptMode(QFileDialog::AcceptOpen);
++    ui->kurlrequester_image->setFilter(readFilter);
+     ui->kurlrequester_converted->setMode(KFile::File | KFile::LocalOnly);
+-    ui->kurlrequester_converted->fileDialog()->setAcceptMode(QFileDialog::AcceptSave);
+-    ui->kurlrequester_converted->fileDialog()->setNameFilter(writeFilter);
++    ui->kurlrequester_converted->setAcceptMode(QFileDialog::AcceptSave);
++    ui->kurlrequester_converted->setFilter(writeFilter);
+ }
+ ConvertDialog::~ConvertDialog()
+ {
+@@ -96,11 +97,11 @@
+         }
+         Magick::Geometry resolution(ui->spinBox_width->value(), ui->spinBox_height->value());
+         resolution.aspect(ui->checkBox_force->isChecked());
+-        Magick::Image image(std::string(ui->kurlrequester_image->url().toLocalFile().toUtf8()));
++        Magick::Image image(ui->kurlrequester_image->url().toLocalFile().toStdString());
+         image.zoom(resolution);
+         image.depth(8);
+         image.classType(Magick::DirectClass);
+-        image.write(std::string(ui->kurlrequester_converted->url().toLocalFile().toUtf8()));
++        image.write(ui->kurlrequester_converted->url().toLocalFile().toStdString());
+         if (ui->checkBox_wallpaper->isChecked()) {
+             emit splashImageCreated(ui->kurlrequester_converted->url().toLocalFile());
+         }
+diff -Nuar a/src/userDlg.cpp b/src/userDlg.cpp
+--- a/src/userDlg.cpp	2016-02-01 05:55:55.000000000 +0200
++++ b/src/userDlg.cpp	2018-11-14 11:14:53.000000000 +0300
+@@ -22,6 +22,8 @@
+ #include <KMessageBox>
+ //Qt
+ #include <QPushButton>
++#include <QStyle>
++#include <QRegExpValidator>
+ //Ui
+ #include "ui_userDlg.h"
+ 
+@@ -100,4 +102,4 @@
+         return true;
+     else
+         return false;
+-}
+\ Dosya sonunda yenisatır yok.
++}
