@@ -19,7 +19,7 @@ def setup():
 
     options ="\
               --with-dri-driverdir=/usr/lib/xorg/modules/dri \
-              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl,swr \
+              --with-gallium-drivers=r300,r600,radeonsi,nouveau,svga,swrast,virgl \
               --with-dri-drivers=i915,i965,r200,radeon,nouveau,swrast \
               --with-platforms=x11,drm,wayland \
               --enable-xa \
@@ -36,6 +36,7 @@ def setup():
               --enable-glx-tls \
               --enable-llvm \
               --enable-nine \
+              --enable-libunwind \
               --enable-llvm-shared-libs \
               --enable-shared-glapi \
               --enable-texture-float \
@@ -66,13 +67,13 @@ def install():
     pisitools.dosym("libGL.so.1.2.0", "%s/libGL.so.1.2" % Libdir)
 
     if get.buildTYPE() == "emul32":
-        pisitools.remove("/usr/lib32/pkgconfig/wayland-egl.pc")
-        pisitools.remove("/usr/lib32/libwayland-egl.so*")
+        #pisitools.remove("/usr/lib32/pkgconfig/wayland-egl.pc")
+        #pisitools.remove("/usr/lib32/libwayland-egl.so*")
         return
 
     #pisitools.dodoc("docs/COPYING")
     pisitools.dohtml("docs/*")
     
-    pisitools.remove("/usr/lib/libwayland-egl.so*")
-    pisitools.remove("/usr/lib/pkgconfig/wayland-egl.pc")
+    #pisitools.remove("/usr/lib/libwayland-egl.so*")
+    #pisitools.remove("/usr/lib/pkgconfig/wayland-egl.pc")
     
