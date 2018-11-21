@@ -8,6 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
+    autotools.autoreconf("-fiv")
     autotools.configure("\
                          --disable-static \
                          --disable-dri \
@@ -18,4 +19,4 @@ def build():
 
 def install():
     autotools.install()
-    pisitools.dodoc("COPYING", "ChangeLog", "README")
+    pisitools.dodoc("COPYING", "README*")
