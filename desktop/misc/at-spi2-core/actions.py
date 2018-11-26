@@ -13,12 +13,17 @@ from pisi.actionsapi import get
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
-    options = "meson --prefix=/usr --sysconfdir=/etc --libexec=/usr/libexec/at-spi2 \
+    options = "meson --prefix=/usr --sysconfdir=/etc \
+                     --libexec=/usr/libexec/at-spi2 \
                      -D enable_docs=true \
               "
     
     if get.buildTYPE() == "emul32":
-        options += "--prefix=/usr --libdir=lib32 -D enable_docs=false .."
+        options += "--prefix=/usr --datadir=/usr/emul32 \
+                    --libexec=/usr/emul32 \
+                    --sysconfdir=/usr/emul32 \
+                    --libdir=lib32 \
+                    -D enable_docs=false .."
         
         
     shelltools.system(options)
@@ -34,10 +39,9 @@ def install():
     if get.buildTYPE() == "emul32":
         #pisitools.dosed("%s/usr/share/dbus-1/services" % get.installDIR(), "^(Exec=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
         #pisitools.dosed("%s/usr/share/dbus-1/accessibility-services" % get.installDIR(), "^(Exec=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
-        #pisitools.dosed("%s/etc/dbus-1/system.d" % get.installDIR(), "^(ExecStart=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
-        #pisitools.removeDir("/usr/tmp")
+        pisitools.dosed("%s/usr/lib/systemd/user" % get.installDIR(), "^(ExecStart=)\/usr/emul32", r"\1/usr/libexec/at-spi2")
+        pisitools.removeDir("/usr/emul32")
         return
     
     shelltools.cd("..")
     pisitools.dodoc("COPYING", "NEWS", "README")
-
