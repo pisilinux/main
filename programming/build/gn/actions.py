@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def build():
     shelltools.cd("build")
-    shelltools.system("python ./gen.py --no-sysroot")
+    shelltools.system("python ./gen.py")
     
     shelltools.cd("..")
     shelltools.system("ninja -C out gn")
