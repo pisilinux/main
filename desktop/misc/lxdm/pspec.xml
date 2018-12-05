@@ -13,27 +13,26 @@
         <IsA>app:gui</IsA>
         <Summary>LXDE Display Manager</Summary>
         <Description>LXDM is the future display manager of LXDE.</Description>
-        <Archive sha1sum="8c4f7439fa7b56a97e8b19dc62af02a88ae12b45" type="tarxz">mirrors://sourceforge/lxdm/lxdm-0.5.3.tar.xz</Archive>  
+        <Archive sha1sum="8c4f7439fa7b56a97e8b19dc62af02a88ae12b45" type="tarxz">mirrors://sourceforge/lxdm/lxdm-0.5.3.tar.xz</Archive>
         
         <!--Archive sha1sum="1934b7f22adc50445a935db817febe4b6ec1a5f2" target="lxdm-0.5.0" type="tarxz">http://source.pisilinux.org/1.0/lxdm-pisilinux-theme.tar.xz</Archive-->  
         <BuildDependencies>
             <Dependency>intltool</Dependency>
             <Dependency>iso-codes</Dependency>
             <Dependency>gtk3-devel</Dependency>
-<!--             <Dependency>gtk2-devel</Dependency> -->
             <Dependency>cairo-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>libX11-devel</Dependency>
             <Dependency>libxcb-devel</Dependency>
-            <Dependency>ConsoleKit-devel</Dependency>
+            <Dependency>gettext-devel</Dependency>
             <Dependency>pam-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
-            <Dependency>at-spi2-atk-devel</Dependency>
-            <Dependency>at-spi2-core-devel</Dependency>
         </BuildDependencies>
         <Patches>
+            <Patch level="1">lxdm-0.5.3-pam_console-disable.patch</Patch>
+            <Patch level="1">lxdm-0.5.3-upstream-fixes.patch</Patch>
             <Patch level="1">default_config.patch</Patch>
             <Patch level="1">default_session.patch</Patch>
         </Patches>
@@ -52,17 +51,13 @@
             <Dependency>pam</Dependency>
             <Dependency>iso-codes</Dependency>
             <Dependency>gtk3</Dependency>
-<!--             <Dependency>gtk2</Dependency> -->
             <Dependency>cairo</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>at-spi2-atk</Dependency>
-            <Dependency>at-spi2-core</Dependency>
             <Dependency>dbus</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>libxcb</Dependency>
-            <Dependency>ConsoleKit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -84,6 +79,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2018-12-05</Date>
+            <Version>0.5.3</Version>
+            <Comment>build without ConsoleKit.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="6">
             <Date>2018-08-10</Date>
             <Version>0.5.3</Version>
