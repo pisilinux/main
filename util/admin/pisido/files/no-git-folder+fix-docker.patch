@@ -1,0 +1,21 @@
+--- pisido.orig/cpp/mainwindow.cpp	2018-11-18 19:32:14.000000000 +0100
++++ pisido/cpp/mainwindow.cpp	2018-11-24 12:14:12.364065612 +0100
+@@ -270,7 +270,7 @@
+     //connect(ui->actionOpen_Log,SIGNAL(triggered()),SLOT(on_actionOpen_Log_triggered()));
+ 
+     connect(ui->tb_docker_container,SIGNAL(triggered(QAction*)),this,SLOT(container_triggered(QAction*)));
+-
++    docker_is_running = false;
+     //connect(ui->le_package_name,SIGNAL(returnPressed()),this,SLOT(on_le_package_name_textChanged(QString)));
+ }
+ 
+@@ -2117,7 +2117,8 @@
+ 
+ 
+ void MainWindow::on_action_Start_Daemon_triggered(){
+-    QString command="docker -d -s overlay\n";
++    docker_is_running = true;
++    QString command="dockerd -s overlay\n";
+     docker_daemon_terminal->sendText(command);
+ }
+ 
