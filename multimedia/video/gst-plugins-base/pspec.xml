@@ -12,10 +12,12 @@
         <IsA>library</IsA>
         <Summary>Basepack of plugins for gstreamer</Summary>
         <Description>GStreamer base plugins are a well-groomed and well-maintained collection of GStreamer plugins and elements, spanning the range of possible types of elements one would want to write for GStreamer. It also contains helper libraries and base classes useful for writing elements. A wide range of video and audio decoders, encoders, and filters are included.</Description>
-        <Archive sha1sum="8b87967aa2feb36b8028e39163d5de2533674b0f" type="tarxz">http://ftp.gnome.org/pub/gnome/sources/gst-plugins-base/1.12/gst-plugins-base-1.12.4.tar.xz</Archive>
+        <Archive sha1sum="c7dbe4804f6b14f2da5579dfdc179650a68730a0" type="tarxz">http://ftp.gnome.org/pub/gnome/sources/gst-plugins-base/1.14/gst-plugins-base-1.14.2.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency>zlib-devel</Dependency>
             <Dependency>orc-devel</Dependency>
-            <Dependency>cdparanoia</Dependency>
+            <Dependency>iso-codes</Dependency>
+            <Dependency>cdparanoia-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
             <Dependency>libXv-devel</Dependency>
@@ -26,7 +28,10 @@
             <Dependency>libvorbis-devel</Dependency>
             <Dependency>libtheora-devel</Dependency>
             <Dependency>libvisual-devel</Dependency>
-            <Dependency>gstreamer-devel</Dependency>
+            <Dependency>wayland-cursor</Dependency>
+            <Dependency>wayland-devel</Dependency>
+            <Dependency>xorg-proto</Dependency>
+            <Dependency versionFrom="1.14.2">gstreamer-devel</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
         </BuildDependencies>
     </Source>
@@ -39,9 +44,13 @@
             <Dependency>glib2</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>cairo</Dependency>
+            <Dependency>mesa</Dependency>
             <Dependency>libXv</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>libogg</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libxcb</Dependency>
+            <Dependency>wayland</Dependency>
             <Dependency>libXext</Dependency>
             <Dependency>libopus</Dependency>
             <Dependency>alsa-lib</Dependency>
@@ -49,13 +58,14 @@
             <Dependency>libvisual</Dependency>
             <Dependency>libtheora</Dependency>
             <Dependency>cdparanoia</Dependency>
-            <Dependency>gstreamer</Dependency>
+            <Dependency>wayland-client</Dependency>
+            <Dependency versionFrom="1.14.2">gstreamer</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="doc">/usr/share/gtk-doc</Path>
+<!--             <Path fileType="doc">/usr/share/gtk-doc</Path> -->
             <Path fileType="data">/usr/share/gir-1.0</Path>
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
@@ -90,8 +100,12 @@
             <Dependency>orc-32bit</Dependency>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>cairo-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
             <Dependency>glib2-32bit</Dependency>
             <Dependency>libXv-32bit</Dependency>
+            <Dependency>libpng-32bit</Dependency>
+            <Dependency>libxcb-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
             <Dependency>pango-32bit</Dependency>
             <Dependency>libogg-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
@@ -118,6 +132,7 @@
         <Summary>Development files for gst-plugins-base</Summary>
         <RuntimeDependencies>
             <Dependency release="current">gst-plugins-base</Dependency>
+            <Dependency>orc-devel</Dependency>
             <Dependency>gstreamer-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
         </RuntimeDependencies>
@@ -132,8 +147,24 @@
             <Package>gst-plugins-base-next-devel</Package>
         </Replaces>
     </Package>
+    
+    <Package>
+        <Name>gst-plugins-base-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>gst-plugins-base reference documents</Summary>
+        <Files>
+            <Path fileType="data">/usr/share/gtk-doc</Path>
+        </Files>
+    </Package>
 
     <History>
+        <Update release="7">
+            <Date>2018-12-16</Date>
+            <Version>1.14.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="6">
             <Date>2018-09-28</Date>
             <Version>1.12.0</Version>
