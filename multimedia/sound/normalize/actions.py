@@ -6,15 +6,19 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
-
+    shelltools.system("touch {AUTHORS,NEWS,ChangeLog}")
+    autotools.autoreconf("-vi")
+    autotools.configure("--with-audiofile \
+                         --with-mad")
+    
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("COPYING", "NEWS", "TODO", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "ChangeLog", "TODO", "README")
