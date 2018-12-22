@@ -3,7 +3,7 @@
 
 import os
 
-files = ("VBoxHeadless", "VBoxNetAdpCtl", "VBoxNetDHCP", "VBoxSDL", "VirtualBox")
+files = ("VBoxHeadless", "VBoxNetAdpCtl", "VBoxNetDHCP", "VBoxSDL", "VirtualBoxVM")
 vboxgroup = "vboxusers"
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
@@ -12,3 +12,4 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
         os.system("/bin/chown :%s %s" % (vboxgroup, f))
         os.chmod(f, 04755)
 
+#VirtualBox 6.0.0 sürümde slindi VirtualBoxVM eklendi SetUID hatası verdiriyor
