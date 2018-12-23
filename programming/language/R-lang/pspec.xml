@@ -13,7 +13,7 @@
         <IsA>app:console</IsA>
         <Summary>A free software environment for statistical computing and graphics</Summary>
         <Description>This package includes the core R userspace and all R development components.</Description>
-        <Archive sha1sum="9314d3d372b05546a33791fbc8dd579c92ebd16b" type="targz">http://cran.r-project.org/src/base/R-3/R-3.5.1.tar.gz</Archive>
+        <Archive sha1sum="057ea91daed3e68a12b2a473ee1283cf26f360e2" type="targz">http://cran.r-project.org/src/base/R-3/R-3.5.2.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>libXmu-devel</Dependency>
             <Dependency>icu4c-devel</Dependency>
@@ -31,14 +31,11 @@
             <Dependency>xz-devel</Dependency>
             <Dependency>readline-devel</Dependency>
             <Dependency>curl-devel</Dependency>
+            <Dependency>minizip-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <!--<Patch level="1">Rscript.patch</Patch>-->
-            <!--<Patch level="1">dont_use_atlas.patch</Patch>
-            <Patch level="1">config_site.patch</Patch-->
-            <Patch level="0">R-2.11.1-parallel.patch</Patch>
-            <Patch level="0">R-2.13.1-zlib_header_fix.patch</Patch>
-            <!--Patch level="1">lib64.patch</Patch-->
+            <Patch>R-3.4.1-parallel.patch</Patch>
+            <Patch>R-3.4.1-rmath-shared.patch</Patch>
         </Patches>
     </Source>
 
@@ -74,6 +71,7 @@
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib/R</Path>
             <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/R</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile target="/etc/env.d/99R" owner="root" permission="0644">99R</AdditionalFile>
@@ -94,6 +92,7 @@
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="header">/usr/include/Rmath.h</Path>
+            <Path fileType="header">/usr/include/R/Rmath.h</Path>
             <Path fileType="library">/usr/lib/pkgconfig/libRmath.pc</Path>
         </Files>
     </Package>
@@ -120,6 +119,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2018-12-23</Date>
+            <Version>3.5.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
         <Update release="6">
             <Date>2018-09-09</Date>
             <Version>3.5.1</Version>

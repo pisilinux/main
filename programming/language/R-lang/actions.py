@@ -17,6 +17,9 @@ def setup():
     autotools.aclocal("-I m4")
     autotools.autoconf()
     autotools.configure("--prefix=/usr \
+                         --libdir=/usr/lib \
+                         --sysconfdir=/etc/R \
+                         --datarootdir=/usr/share \
                          --with-recommended-packages \
                          --enable-R-profiling \
                          --enable-R-shlib \
@@ -27,12 +30,9 @@ def setup():
                          --with-lapack \
                          --without-tcltk \
                          --with-readline \
-                         --with-system-pcre \
-                         --with-system-zlib \
-                         --with-system-bzlib \
-                         --with-system-xz \
+                         rsharedir=/usr/share/R/ \
                          rdocdir=/usr/share/doc/R \
-                         rincludedir=/usr/include \
+                         rincludedir=/usr/include/R \
                          --with-x")
 
 def build():
@@ -41,7 +41,7 @@ def build():
 
     # build math library
     shelltools.cd("src/nmath/standalone")
-    autotools.make("-j1")
+    autotools.make("shared")
 
 #def check():
     #shelltools.export("R_HOME","")
@@ -51,11 +51,11 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     # install math library remove static libs
-    autotools.install("-C src/nmath/standalone")
+    autotools.rawInstall("-C src/nmath/standalone DESTDIR=%s" % get.installDIR())
+    
     pisitools.rename("/usr/lib/libRmath.so","libRmath.so.0.0.0")
     pisitools.dosym("/usr/lib/libRmath.so.0.0.0","/usr/lib/libRmath.so.0")
     pisitools.dosym("/usr/lib/libRmath.so.0.0.0","/usr/lib/libRmath.so")
 
-    pisitools.remove("/usr/lib/libRmath.a")
 
 
