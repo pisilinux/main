@@ -10,10 +10,11 @@ PIDFILE = "/run/virtualbox.pid"
 
 @synchronized
 def start():
-        os.system("/sbin/modprobe vboxguest")
-        os.system("/sbin/modprobe vboxvideo") 
-        os.system("/sbin/modprobe vboxsf")
-        os.system("/sbin/modprobe vboxdrv")
+        os.system("/usr/bin/vboxreload")
+        #os.system("/sbin/modprobe vboxguest")
+        #os.system("/sbin/modprobe vboxvideo") 
+        #os.system("/sbin/modprobe vboxsf")
+        #os.system("/sbin/modprobe vboxdrv")
         
 
 @synchronized
