@@ -3,7 +3,7 @@
 
 import os
 
-files = ("VBoxHeadless", "VBoxNetAdpCtl", "VBoxNetDHCP", "VBoxSDL", "VirtualBoxVM")
+files = ("VBoxHeadless", "VBoxNetAdpCtl", "VBoxNetDHCP", "VBoxSDL", "VBoxNetNAT", "VirtualBoxVM")
 vboxgroup = "vboxusers"
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
