@@ -18,4 +18,4 @@ def install():
     qt5.install()
 
 
-    pisitools.dodoc("LICENSE.GPL3-EXCEPT", "LICENSE.GPLv3", "LICENSE.LGPLv3", "LICENSE.GPL3", "LICENSE.LGPL3", "LICENSE.GPL", "LICENSE.GPL2", "LICENSE.LGPLv3", "README")
+    pisitools.dodoc("LICENSE.GPL*")

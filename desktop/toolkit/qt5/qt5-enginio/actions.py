@@ -21,7 +21,7 @@ def install():
     qt5.install("INSTALL_ROOT=%s install_docs" % get.installDIR())
 
     #I hope qtchooser will manage this issue
-    for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
-        pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
+    #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
+        #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
     pisitools.insinto("/usr/share/licenses/qt5-enginio/", "LGPL_EXCEPTION.txt")
