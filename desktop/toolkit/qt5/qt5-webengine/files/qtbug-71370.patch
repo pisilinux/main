@@ -1,0 +1,121 @@
+From 20238f2c472af7b94d48a837d7723a209a87fd9e Mon Sep 17 00:00:00 2001
+From: Allan Sandfeld Jensen <allan.jensen@qt.io>
+Date: Wed, 14 Nov 2018 16:29:35 +0100
+Subject: Fix autoscrolling
+
+We were missing the connection between on begin frame and progressing
+auto-scroll.
+
+Change-Id: I651b35c031afedc9aeef1dc6a16547757b869633
+Fixes: QTBUG-71370
+Reviewed-by: Alexandru Croitor <alexandru.croitor@qt.io>
+---
+ src/core/compositor.cpp                 | 11 +++++++----
+ src/core/compositor.h                   |  4 +++-
+ src/core/render_widget_host_view_qt.cpp |  7 ++++++-
+ src/core/render_widget_host_view_qt.h   |  1 +
+ 4 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/src/core/compositor.cpp b/src/core/compositor.cpp
+index 5dd05371..f7a5e651 100644
+--- a/src/core/compositor.cpp
++++ b/src/core/compositor.cpp
+@@ -40,15 +40,17 @@
+ #include "compositor.h"
+ 
+ #include "delegated_frame_node.h"
++#include "render_widget_host_view_qt.h"
+ 
+-#include <components/viz/common/resources/returned_resource.h>
+-#include <content/public/browser/browser_thread.h>
+-#include <services/viz/public/interfaces/compositing/compositor_frame_sink.mojom.h>
++#include "components/viz/common/resources/returned_resource.h"
++#include "content/public/browser/browser_thread.h"
++#include "services/viz/public/interfaces/compositing/compositor_frame_sink.mojom.h"
+ 
+ namespace QtWebEngineCore {
+ 
+-Compositor::Compositor()
++Compositor::Compositor(RenderWidgetHostViewQt *hostView)
+     : m_chromiumCompositorData(new ChromiumCompositorData)
++    , m_view(hostView)
+ {
+     DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
+ 
+@@ -163,6 +165,7 @@ bool Compositor::OnBeginFrameDerivedImpl(const viz::BeginFrameArgs &args)
+ {
+     DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
+ 
++    m_view->OnBeginFrame(args.frame_time);
+     m_beginFrameSource->OnUpdateVSyncParameters(args.frame_time, args.interval);
+     if (m_frameSinkClient)
+         m_frameSinkClient->OnBeginFrame(args);
+diff --git a/src/core/compositor.h b/src/core/compositor.h
+index 4852d059..7d7db5d0 100644
+--- a/src/core/compositor.h
++++ b/src/core/compositor.h
+@@ -60,6 +60,7 @@ class CompositorFrameSinkClient;
+ 
+ namespace QtWebEngineCore {
+ 
++class RenderWidgetHostViewQt;
+ class RenderWidgetHostViewQtDelegate;
+ class ChromiumCompositorData;
+ 
+@@ -84,7 +85,7 @@ class ChromiumCompositorData;
+ class Compositor final : private viz::BeginFrameObserverBase
+ {
+ public:
+-    explicit Compositor();
++    explicit Compositor(RenderWidgetHostViewQt *hostView);
+     ~Compositor() override;
+ 
+     void setViewDelegate(RenderWidgetHostViewQtDelegate *viewDelegate);
+@@ -105,6 +106,7 @@ private:
+ 
+     std::vector<viz::ReturnedResource> m_resourcesToRelease;
+     QExplicitlySharedDataPointer<ChromiumCompositorData> m_chromiumCompositorData;
++    RenderWidgetHostViewQt *m_view;
+     RenderWidgetHostViewQtDelegate *m_viewDelegate = nullptr;
+     std::unique_ptr<viz::SyntheticBeginFrameSource> m_beginFrameSource;
+     viz::mojom::CompositorFrameSinkClient *m_frameSinkClient = nullptr;
+diff --git a/src/core/render_widget_host_view_qt.cpp b/src/core/render_widget_host_view_qt.cpp
+index 9706ac07..4ed62504 100644
+--- a/src/core/render_widget_host_view_qt.cpp
++++ b/src/core/render_widget_host_view_qt.cpp
+@@ -260,7 +260,7 @@ RenderWidgetHostViewQt::RenderWidgetHostViewQt(content::RenderWidgetHost *widget
+     , m_gestureProvider(QtGestureProviderConfig(), this)
+     , m_sendMotionActionDown(false)
+     , m_touchMotionStarted(false)
+-    , m_compositor(new Compositor)
++    , m_compositor(new Compositor(this))
+     , m_loadVisuallyCommittedState(NotCommitted)
+     , m_adapterClient(0)
+     , m_imeInProgress(false)
+@@ -1637,6 +1637,11 @@ void RenderWidgetHostViewQt::SetNeedsBeginFrames(bool needs_begin_frames)
+     m_compositor->setNeedsBeginFrames(needs_begin_frames);
+ }
+ 
++void RenderWidgetHostViewQt::OnBeginFrame(base::TimeTicks frame_time)
++{
++    host()->ProgressFlingIfNeeded(frame_time);
++}
++
+ content::RenderFrameHost *RenderWidgetHostViewQt::getFocusedFrameHost()
+ {
+     content::RenderViewHostImpl *viewHost = content::RenderViewHostImpl::From(host());
+diff --git a/src/core/render_widget_host_view_qt.h b/src/core/render_widget_host_view_qt.h
+index 8db3351f..6dd4d57e 100644
+--- a/src/core/render_widget_host_view_qt.h
++++ b/src/core/render_widget_host_view_qt.h
+@@ -112,6 +112,7 @@ public:
+     RenderWidgetHostViewQtDelegate *delegate() { return m_delegate.get(); }
+     void setDelegate(RenderWidgetHostViewQtDelegate *delegate);
+     void setAdapterClient(WebContentsAdapterClient *adapterClient);
++    void OnBeginFrame(base::TimeTicks frame_time);
+ 
+     void InitAsChild(gfx::NativeView) override;
+     void InitAsPopup(content::RenderWidgetHostView*, const gfx::Rect&) override;
+-- 
+cgit v1.2.1
+

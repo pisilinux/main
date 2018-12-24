@@ -14,7 +14,7 @@ def setup():
     #shelltools.export("QT5LINK", "/usr/lib/qt5/bin")
     #shelltools.export("QT5DIR", "/usr/lib/qt5")
     #shelltools.export("CFLAGS", "%s -I/usr/lib/sqlite3.16.2" % get.CFLAGS())
-    shelltools.system("qmake-qt5 WEBENGINE_CONFIG+=use_proprietary_codecs WEBENGINE_CONFIG+=use_system_icu WEBENGINE_CONFIG+=use_system_protobuf WEBENGINE_CONFIG+=use_system_ffmpeg qtwebengine.pro")
+    shelltools.system("qmake WEBENGINE_CONFIG+=use_proprietary_codecs WEBENGINE_CONFIG+=use_system_icu WEBENGINE_CONFIG+=use_system_protobuf WEBENGINE_CONFIG+=use_system_ffmpeg qtwebengine.pro")
     #pisitools.ldflags.add("-Wl,--no-keep-memory ")
     qt5.configure()
     
@@ -25,7 +25,7 @@ def install():
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
     #I hope qtchooser will manage this issue
-    for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
-       pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
+    #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
+       #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
     pisitools.dodoc("LICENSE*")
