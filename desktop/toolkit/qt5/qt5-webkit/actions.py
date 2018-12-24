@@ -29,8 +29,8 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     #I hope qtchooser will manage this issue
-    for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
-        pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
+    #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
+        #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
     
     shelltools.cd("..")
     pisitools.dodoc("LICENSE*")

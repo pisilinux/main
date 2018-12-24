@@ -1,0 +1,101 @@
+From 721cd2d24995df8f7960cc5e8a96be1d2cd05f29 Mon Sep 17 00:00:00 2001
+From: Michal Klocek <michal.klocek@qt.io>
+Date: Tue, 27 Nov 2018 12:07:00 +0100
+Subject: Fix missing TransportSecurityPersister
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Commit d603b7055 introduced TrasnsportSecurityPersister,
+however it did not survive merge form 5.11 to 5.12.
+
+Task-number: QTBUG-69605
+Change-Id: I6357af25afcfd5c08aae77695bd2131f1cef6b71
+Reviewed-by: Jüri Valdmann <juri.valdmann@qt.io>
+---
+ src/core/profile_io_data_qt.cpp | 19 +++++++++++++++++--
+ src/core/profile_io_data_qt.h   |  3 +++
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/src/core/profile_io_data_qt.cpp b/src/core/profile_io_data_qt.cpp
+index 7aaddc35..0a0d242a 100644
+--- a/src/core/profile_io_data_qt.cpp
++++ b/src/core/profile_io_data_qt.cpp
+@@ -59,6 +59,7 @@
+ #include "net/http/http_cache.h"
+ #include "net/http/http_server_properties_impl.h"
+ #include "net/http/http_network_session.h"
++#include "net/http/transport_security_persister.h"
+ #include "net/proxy_resolution/dhcp_pac_file_fetcher_factory.h"
+ #include "net/proxy_resolution/pac_file_fetcher_impl.h"
+ #include "net/proxy_resolution/proxy_config_service.h"
+@@ -267,6 +268,7 @@ void ProfileIODataQt::generateStorage()
+         // we need to get rid of dangling pointer due to coming storage deletion
+         m_urlRequestContext->set_http_transaction_factory(0);
+         m_httpNetworkSession.reset();
++        m_transportSecurityPersister.reset();
+     }
+ 
+     m_storage.reset(new net::URLRequestContextStorage(m_urlRequestContext.get()));
+@@ -299,8 +301,20 @@ void ProfileIODataQt::generateStorage()
+                                                 m_networkDelegate.get()));
+ 
+     m_storage->set_ssl_config_service(std::make_unique<net::SSLConfigServiceDefaults>());
+-    m_storage->set_transport_security_state(std::unique_ptr<net::TransportSecurityState>(
+-                                                new net::TransportSecurityState()));
++    m_storage->set_transport_security_state(std::make_unique<net::TransportSecurityState>());
++
++    if (!m_dataPath.isEmpty()) {
++        scoped_refptr<base::SequencedTaskRunner> background_task_runner(
++                    base::CreateSequencedTaskRunnerWithTraits(
++        {base::MayBlock(),
++         base::TaskPriority::BACKGROUND,
++         base::TaskShutdownBehavior::BLOCK_SHUTDOWN}));
++        m_transportSecurityPersister =
++                std::make_unique<net::TransportSecurityPersister>(
++                    m_urlRequestContext->transport_security_state(),
++                    toFilePath(m_dataPath),
++                    background_task_runner);
++    };
+ 
+     if (!m_httpAuthPreferences)
+         m_httpAuthPreferences.reset(new net::HttpAuthPreferences());
+@@ -566,6 +580,7 @@ void ProfileIODataQt::setFullConfiguration()
+     m_httpCachePath = m_profileAdapter->httpCachePath();
+     m_httpCacheMaxSize = m_profileAdapter->httpCacheMaxSize();
+     m_customUrlSchemes = m_profileAdapter->customUrlSchemes();
++    m_dataPath = m_profileAdapter->dataPath();
+ }
+ 
+ void ProfileIODataQt::updateStorageSettings()
+diff --git a/src/core/profile_io_data_qt.h b/src/core/profile_io_data_qt.h
+index 60f4d2d1..6961e2ad 100644
+--- a/src/core/profile_io_data_qt.h
++++ b/src/core/profile_io_data_qt.h
+@@ -58,6 +58,7 @@ class ProxyConfigService;
+ class URLRequestContext;
+ class URLRequestContextStorage;
+ class URLRequestJobFactoryImpl;
++class TransportSecurityPersister;
+ }
+ 
+ namespace QtWebEngineCore {
+@@ -113,6 +114,7 @@ private:
+     std::unique_ptr<net::DhcpPacFileFetcherFactory> m_dhcpPacFileFetcherFactory;
+     std::unique_ptr<net::HttpAuthPreferences> m_httpAuthPreferences;
+     std::unique_ptr<net::URLRequestJobFactory> m_jobFactory;
++    std::unique_ptr<net::TransportSecurityPersister> m_transportSecurityPersister;
+     base::WeakPtr<ProfileIODataQt> m_weakPtr;
+     scoped_refptr<CookieMonsterDelegateQt> m_cookieDelegate;
+     content::URLRequestInterceptorScopedVector m_requestInterceptors;
+@@ -141,6 +143,7 @@ private:
+     bool m_updateUserAgent = false;
+     bool m_ignoreCertificateErrors = false;
+     base::WeakPtrFactory<ProfileIODataQt> m_weakPtrFactory; // this should be always the last member
++    QString m_dataPath;
+     DISALLOW_COPY_AND_ASSIGN(ProfileIODataQt);
+ };
+ } // namespace QtWebEngineCore
+-- 
+cgit v1.2.1
+
