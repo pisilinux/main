@@ -20,10 +20,10 @@ def install():
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
     #I hope qtchooser will manage this issue
-    for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
-        pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
+    #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
+        #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
     # kde5 need qdbus and qtpaths in /usr/bin
-    pisitools.dosym("/usr/bin/qdbus-qt5", "/usr/bin/qdbus")
-    pisitools.dosym("/usr/bin/qtpaths-qt5", "/usr/bin/qtpaths")
+    #pisitools.dosym("/usr/bin/qdbus-qt5", "/usr/bin/qdbus")
+    #pisitools.dosym("/usr/bin/qtpaths-qt5", "/usr/bin/qtpaths")
 
