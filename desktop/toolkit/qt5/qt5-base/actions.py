@@ -18,7 +18,8 @@ qtbase = qt5.prefix
 absoluteWorkDir = "%s/%s" % (get.workDIR(), WorkDir)
 
 #Temporary bindir to avoid qt4 conflicts
-bindirQt5="/usr/lib/qt5/bin"
+#bindirQt5="/usr/lib/qt5/bin"
+bindirQt5="/usr/bin"
 
 def setup():
     checkdeletepath="%s/qtbase/src/3rdparty"  % absoluteWorkDir
@@ -112,9 +113,9 @@ def install():
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
     #I hope qtchooser will manage this issue
-    for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
-        pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
+    #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
+        #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
     mkspecPath = "%s/mkspecs" %  qt5.archdatadir
 
-    pisitools.dodoc("LGPL_EXCEPTION.txt", "LICENSE.*")
+    pisitools.dodoc("LICENSE.*")
