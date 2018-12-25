@@ -16,7 +16,7 @@ def setup():
     pythonmodules.run("configure.py --confirm-license \
                                     --qsci-api \
                                     --sip /usr/bin/sip \
-                                    --qmake='/usr/bin/qmake-qt5' \
+                                    --qmake='/usr/bin/qmake' \
                                     --destdir='/usr/lib/python3.6/site-packages' \
                                     --sip-incdir='/usr/include/python3.6m' \
                                     CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
