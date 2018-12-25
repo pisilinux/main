@@ -18,7 +18,7 @@ def setup():
                                     --destdir='/usr/lib/python2.7/site-packages' \
                                     --sip-incdir='/usr/include/python2.7' \
                                     --sip /usr/bin/py2sip \
-                                    --qmake='/usr/bin/qmake-qt5' ")
+                                    --qmake='/usr/bin/qmake' ")
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
 def build():
