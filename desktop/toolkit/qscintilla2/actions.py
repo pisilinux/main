@@ -16,7 +16,7 @@ NoStrip = ["/usr/share/doc"]
 
 def setup():
     shelltools.cd("Qt4Qt5")
-    shelltools.system("qmake-qt5 qscintilla.pro")
+    shelltools.system("qmake qscintilla.pro")
 
     # Change C/XXFLAGS
     pisitools.dosed("Makefile", "^CFLAGS.*\\$\\(DEFINES\\)", "CFLAGS   = %s -fPIC $(DEFINES)" % get.CFLAGS())
