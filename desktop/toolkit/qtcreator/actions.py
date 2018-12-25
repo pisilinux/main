@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 WorkDir="qt-creator-opensource-src-%s" % get.srcVERSION()
 def setup():
-    shelltools.system("qmake-qt5 qtcreator.pro CONFIG+=release QTC_PREFIX=/usr")
+    shelltools.system("qmake qtcreator.pro CONFIG+=release QTC_PREFIX=/usr")
 
 
 def build():
