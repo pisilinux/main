@@ -24,7 +24,7 @@ def setup():
 
     # Get designer plugin's Makefile
     shelltools.cd("../designer-Qt4Qt5/")
-    shelltools.system("qmake-qt5 designer.pro INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5")
+    shelltools.system("qmake designer.pro INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5")
 
     # Change C/XXFLAGS of designer plugin's makefile
     pisitools.dosed("Makefile", "^CFLAGS.*\\$\\(DEFINES\\)", "CFLAGS   = %s -fPIC $(DEFINES)" % get.CFLAGS())
@@ -40,13 +40,13 @@ def build():
 
     # Get Makefile of qscintilla-python via sip
     shelltools.cd("../Python")
-    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --pyqt-sipdir=/usr/share/sip/Py2Qt5 --qsci-sipdir=/usr/share/sip/Py2Qt5 --sip-incdir=/usr/lib/python2.7/site-packages --qmake /usr/bin/qmake-qt5")
+    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --pyqt-sipdir=/usr/share/sip/Py2Qt5 --qsci-sipdir=/usr/share/sip/Py2Qt5 --sip-incdir=/usr/lib/python2.7/site-packages --qmake /usr/bin/qmake")
     pisitools.dosed("Makefile", "/usr/include/qt/QtPrintSupport", "/usr/include/qt5/QtPrintSupport")
     pisitools.dosed("Makefile", "/usr/include/qt/QtWidgets", "/usr/include/qt5/QtWidgets")
     autotools.make()
 
     shelltools.cd("../Python3")
-    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --qmake /usr/bin/qmake-qt5", pyVer = "3")
+    pythonmodules.run("configure.py -n ../Qt4Qt5 -o ../Qt4Qt5 -c --pyqt=PyQt5 --qmake /usr/bin/qmake", pyVer = "3")
     pisitools.dosed("Makefile", "/usr/include/qt/QtPrintSupport", "/usr/include/qt5/QtPrintSupport")
     pisitools.dosed("Makefile", "/usr/include/qt/QtWidgets", "/usr/include/qt5/QtWidgets")
     autotools.make()
