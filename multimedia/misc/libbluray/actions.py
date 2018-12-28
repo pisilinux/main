@@ -14,7 +14,7 @@ shelltools.export("JAVA_HOME","/usr/lib/jvm/java-7-openjdk")
 def setup():
     autotools.autoreconf("-vif")
     autotools.configure("--disable-static \
-                         --disable-bdjava")
+                         --disable-bdjava-jar")
 
 def build():
     autotools.make()
