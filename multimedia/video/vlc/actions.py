@@ -13,13 +13,13 @@ def setup():
     # Make it build with libtool 1.5
     #shelltools.system("rm -rf m4/lt* m4/libtool.m4")
     shelltools.system("sed -i '/DEPRECATED/s:^://:'  modules/text_renderer/freetype/text_layout.c")
-    shelltools.system("export CFLAGS+=-I/usr/include/samba-4.0")
-    shelltools.system("export CPPFLAGS+=-I/usr/include/samba-4.0")
-    shelltools.system("export CXXFLAGS+=-std=c++11")
+    #shelltools.system("export CFLAGS+=-I/usr/include/samba-4.0")
+    #shelltools.system("export CPPFLAGS+=-I/usr/include/samba-4.0")
+    #shelltools.system("export CXXFLAGS+=-std=c++11")
 
     shelltools.export("AUTOPOINT", "true")
     shelltools.system("./bootstrap")
-    autotools.autoreconf("-vfi")
+    #autotools.autoreconf("-vfi")
     autotools.rawConfigure("\
                             --prefix=/usr \
                             --libdir=/usr/lib \
@@ -31,7 +31,7 @@ def setup():
                             --with-x \
                               BUILDCC=gcc \
                               LUAC=luac  LUA_LIBS='`pkg-config --libs lua`' \
-                              RCC=/usr/bin/rcc-qt5 \
+                              RCC=/usr/bin/rcc \
                             --disable-asdcp \
                             --disable-coverage \
                             --disable-cprof \
