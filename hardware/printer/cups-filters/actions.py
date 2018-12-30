@@ -10,13 +10,15 @@ from pisi.actionsapi import shelltools
 
 def setup():
     pisitools.dosed("configure", "localstatedir/run/cups", "localstatedir/cups")
-    #shelltools.system("./autogen.sh")
+    shelltools.system("./autogen.sh")
     autotools.configure("--sbindir=/usr/bin \
                          --localstatedir=/var \
                          --enable-dbus \
                          --with-rcdir=no \
                          --disable-mutool \
                          --disable-static \
+                         --enable-driverless \
+                         --enable-auto-setup-driverless \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
                          --docdir=/usr/share/doc/cups-filters-1.0.76 \
