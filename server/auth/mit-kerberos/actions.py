@@ -31,7 +31,7 @@ def setup():
     shelltools.system("sed -i -e 's/^YYSTYPE yylval/&={0}/' lib/krb5/krb/deltat.c")
     pisitools.dosed("util/ac_check_krb5.m4", "(KRB5ROOT=\/usr)\/local", r"\1")
 
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
 
     # Fix pthread linking
     #pisitools.dosed("configure", "-lthread", "-lpthread")
