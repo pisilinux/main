@@ -6,10 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure()
 
 def build():
