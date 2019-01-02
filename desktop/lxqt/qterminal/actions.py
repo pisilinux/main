@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import qt5
 
 def setup():
-    shelltools.system("qmake-qt5 qterminal.pro")
+    shelltools.system("qmake qterminal.pro")
     
     shelltools.makedirs("build")
     shelltools.cd("build")
