@@ -9,8 +9,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+shelltools.export("python2", "/usr/bin/python2.7")
+
 def setup():
-    #shelltools.system("./autogen.sh")
+    shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure("--without-gtk-doc \
                          --without-nvdimm \
                          --without-dm")
@@ -20,5 +22,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    pisitools.domove("/gi/overrides/BlockDev.py", "/usr/lib/python2.7/site-packages/gi/overrides")
+    pisitools.removeDir("/gi")
 
     pisitools.dodoc("LICENSE")
