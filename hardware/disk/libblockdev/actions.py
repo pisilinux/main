@@ -16,6 +16,8 @@ def setup():
     autotools.configure("--without-gtk-doc \
                          --without-nvdimm \
                          --without-dm")
+    
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
