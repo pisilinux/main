@@ -52,7 +52,7 @@ def setup():
     options = "meson --prefix=/usr \
                      --sysconfdir=/etc \
                      --buildtype=release \
-                     -Ddri-drivers-path=/usr/lib/xorg/modules/dri \
+                     -Ddri-drivers-path=lib/xorg/modules/dri \
                      -Db_ndebug=true \
                      -Dplatforms=x11,wayland,drm,surfaceless \
                      -Ddri3=true \
@@ -90,8 +90,8 @@ def setup():
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32")        
-        options += " --libdir=/usr/lib32 \
-                     -Ddri-drivers-path=/usr/lib32/xorg/modules/dri \
+        options += " --prefix=/usr --libdir=lib32 \
+                     -Ddri-drivers-path=lib32/xorg/modules/dri \
                      -Dclang-libdir-path=/usr/lib32 \
                      -Dgallium-opencl=disabled"
 
