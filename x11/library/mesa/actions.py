@@ -56,12 +56,12 @@ def setup():
                      -Db_ndebug=true \
                      -Dplatforms=x11,wayland,drm,surfaceless \
                      -Ddri3=true \
-                     -Ddri-drivers=i915,i965,r200,nouveau \
+                     -Ddri-drivers=i915,i965,r100,r200,nouveau \
                      -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swrast,virgl \
                      -Dgallium-extra-hud=true \
                      -Dgallium-vdpau=true \
                      -Dgallium-xvmc=true \
-                     -Dgallium-va=false \
+                     -Dgallium-va=true \
                      -Dgallium-xa=true \
                      -Dgallium-nine=true \
                      -Dvulkan-drivers=amd,intel \
