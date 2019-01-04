@@ -61,7 +61,7 @@ def setup():
                      -Dgallium-extra-hud=true \
                      -Dgallium-vdpau=true \
                      -Dgallium-xvmc=true \
-                     -Dgallium-va=true \
+                     -Dgallium-va=false \
                      -Dgallium-xa=true \
                      -Dgallium-nine=true \
                      -Dvulkan-drivers=amd,intel \
