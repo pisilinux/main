@@ -1,0 +1,151 @@
+From 52e0d9e23c3f7a1b0faf6649cf3dd825bcfd4f08 Mon Sep 17 00:00:00 2001
+From: Christian Ehrlicher <ch.ehrlicher@gmx.de>
+Date: Thu, 3 Jan 2019 20:33:57 +0100
+Subject: Drag'n'Drop: fix dnd when dragMoveEvent() is not implemented
+
+The refactoring of dnd with f8944a7f07112c85dc4f66848cabb490514cd28e
+added a regression which results in a need to reimplement
+dragMoveEvent() on the drop side. Before this change it was possible to
+accept the dnd in dragEnterEvent() without again accepting it in
+dragMoveEvent().
+Fix it in a similar way it's done in
+QGuiApplicationPrivate::processDrag() by prefilling the first simulated
+QDragMoveEvent with the values from the previous QDragEnterEvent before
+it is sent to the drop receiver.
+
+Fixes: QTBUG-72844
+Change-Id: I1300dd02b7f1d9dcd44ecefa8335f92ad6c6cafa
+Reviewed-by: Gatis Paeglis <gatis.paeglis@qt.io>
+---
+ src/widgets/kernel/qwidgetwindow.cpp               |  7 +++--
+ .../kernel/qwidget_window/tst_qwidget_window.cpp   | 36 +++++++++++++++++++---
+ 2 files changed, 37 insertions(+), 6 deletions(-)
+
+diff --git a/src/widgets/kernel/qwidgetwindow.cpp b/src/widgets/kernel/qwidgetwindow.cpp
+index 279c6c0282..991a05fa02 100644
+--- a/src/widgets/kernel/qwidgetwindow.cpp
++++ b/src/widgets/kernel/qwidgetwindow.cpp
+@@ -899,10 +899,10 @@ void QWidgetWindow::handleDragMoveEvent(QDragMoveEvent *event)
+         const QPoint mapped = widget->mapFromGlobal(m_widget->mapToGlobal(event->pos()));
+         QDragMoveEvent translated(mapped, event->possibleActions(), event->mimeData(),
+                                   event->mouseButtons(), event->keyboardModifiers());
+-        translated.setDropAction(event->dropAction());
+-        translated.setAccepted(event->isAccepted());
+ 
+         if (widget == m_dragTarget) { // Target widget unchanged: Send DragMove
++            translated.setDropAction(event->dropAction());
++            translated.setAccepted(event->isAccepted());
+             QGuiApplication::forwardEvent(m_dragTarget, &translated, event);
+         } else {
+             if (m_dragTarget) { // Send DragLeave to previous
+@@ -912,6 +912,9 @@ void QWidgetWindow::handleDragMoveEvent(QDragMoveEvent *event)
+             }
+             // Send DragEnter to new widget.
+             handleDragEnterEvent(static_cast<QDragEnterEvent*>(event), widget);
++            // Handling 'DragEnter' should suffice for the application.
++            translated.setDropAction(event->dropAction());
++            translated.setAccepted(event->isAccepted());
+             // The drag enter event is always immediately followed by a drag move event,
+             // see QDragEnterEvent documentation.
+             QGuiApplication::forwardEvent(m_dragTarget, &translated, event);
+diff --git a/tests/auto/widgets/kernel/qwidget_window/tst_qwidget_window.cpp b/tests/auto/widgets/kernel/qwidget_window/tst_qwidget_window.cpp
+index f4da4c3e5f..431d6ba960 100644
+--- a/tests/auto/widgets/kernel/qwidget_window/tst_qwidget_window.cpp
++++ b/tests/auto/widgets/kernel/qwidget_window/tst_qwidget_window.cpp
+@@ -470,6 +470,10 @@ static const char *expectedLogC[] = {
+     "Event at 11,241 accepted",
+     "acceptingDropsWidget2::dropEvent at 1,51 action=1 MIME_DATA_ADDRESS 'testmimetext'",
+     "Event at 11,261 accepted",
++    "acceptingDropsWidget3::dragEnterEvent at 1,21 action=1 MIME_DATA_ADDRESS 'testmimetext'",
++    "Event at 11,281 accepted",
++    "acceptingDropsWidget3::dragLeaveEvent QDragLeaveEvent",
++    "Event at 11,301 ignored",
+     "acceptingDropsWidget1::dragEnterEvent at 10,10 action=1 MIME_DATA_ADDRESS 'testmimetext'",
+     "Event at 0,0 accepted",
+     "acceptingDropsWidget1::dragMoveEvent at 11,11 action=1 MIME_DATA_ADDRESS 'testmimetext'",
+@@ -482,8 +486,9 @@ static const char *expectedLogC[] = {
+ class DnDEventLoggerWidget : public QWidget
+ {
+ public:
+-    DnDEventLoggerWidget(QStringList *log, QWidget *w = 0) : QWidget(w), m_log(log) {}
+-
++    DnDEventLoggerWidget(QStringList *log, QWidget *w = nullptr, bool ignoreDragMove = false)
++        : QWidget(w), m_log(log), m_ignoreDragMove(ignoreDragMove)
++    {}
+ protected:
+     void dragEnterEvent(QDragEnterEvent *);
+     void dragMoveEvent(QDragMoveEvent *);
+@@ -493,6 +498,7 @@ protected:
+ private:
+     void formatDropEvent(const char *function, const QDropEvent *e, QTextStream &str) const;
+     QStringList *m_log;
++    bool m_ignoreDragMove;
+ };
+ 
+ void DnDEventLoggerWidget::formatDropEvent(const char *function, const QDropEvent *e, QTextStream &str) const
+@@ -513,6 +519,8 @@ void DnDEventLoggerWidget::dragEnterEvent(QDragEnterEvent *e)
+ 
+ void DnDEventLoggerWidget::dragMoveEvent(QDragMoveEvent *e)
+ {
++    if (m_ignoreDragMove)
++        return;
+     e->accept();
+     QString message;
+     QTextStream str(&message);
+@@ -580,7 +588,17 @@ void tst_QWidget_window::tst_dnd()
+     dropsRefusingWidget2->resize(160, 60);
+     dropsRefusingWidget2->move(10, 10);
+ 
++    QWidget *dropsAcceptingWidget3 = new DnDEventLoggerWidget(&log, &dndTestWidget, true);
++    dropsAcceptingWidget3->setAcceptDrops(true);
++    dropsAcceptingWidget3->setObjectName(QLatin1String("acceptingDropsWidget3"));
++    // 260 + 40 = 300 = widget size, must not be more than that.
++    // otherwise it will break WinRT because there the tlw is maximized every time
++    // and this window will receive one more event
++    dropsAcceptingWidget3->resize(180, 40);
++    dropsAcceptingWidget3->move(10, 260);
++
+     dndTestWidget.show();
++    QVERIFY(QTest::qWaitForWindowExposed(&dndTestWidget));
+     qApp->setActiveWindow(&dndTestWidget);
+     QVERIFY(QTest::qWaitForWindowActive(&dndTestWidget));
+ 
+@@ -595,16 +613,17 @@ void tst_QWidget_window::tst_dnd()
+     log.push_back(msgEventAccepted(e));
+     while (true) {
+         position.ry() += 20;
+-        if (position.y() >= 250) {
++        if (position.y() >= 250 && position.y() < 270) {
+             QDropEvent e(position, Qt::CopyAction, &mimeData, Qt::LeftButton, Qt::NoModifier);
+             qApp->sendEvent(window, &e);
+             log.push_back(msgEventAccepted(e));
+-            break;
+         } else {
+             QDragMoveEvent e(position, Qt::CopyAction, &mimeData, Qt::LeftButton, Qt::NoModifier);
+             qApp->sendEvent(window, &e);
+             log.push_back(msgEventAccepted(e));
+         }
++        if (position.y() > 290)
++            break;
+     }
+ 
+     window = nativeWidget->windowHandle();
+@@ -628,6 +647,15 @@ void tst_QWidget_window::tst_dnd()
+     for (int i= 0; i < expectedLogSize; ++i)
+         expectedLog.push_back(QString::fromLatin1(expectedLogC[i]).replace(mimeDataAddressPlaceHolder, mimeDataAddress));
+ 
++    if (log.size() != expectedLog.size()) {
++        for (int i = 0; i < log.size() && i < expectedLog.size(); ++i)
++            QCOMPARE(log.at(i), expectedLog.at(i));
++        const int iMin = std::min(log.size(), expectedLog.size());
++        for (int i = iMin; i < log.size(); ++i)
++            qDebug() << "log[" << i << "]:" << log.at(i);
++        for (int i = iMin; i < expectedLog.size(); ++i)
++            qDebug() << "exp[" << i << "]:" << log.at(i);
++    }
+     QCOMPARE(log, expectedLog);
+ }
+ 
+-- 
+cgit v1.2.1
+
