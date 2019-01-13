@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     kde5.configure("-DCMAKE_BUILD_TYPE=Release \
                    -DCMAKE_INSTALL_PREFIX=/usr \
-                   -DLIB_INSTALL_DIR=lib \
+                   -DKDE_INSTALL_LIBDIR=lib \
                    -DINCLUDE_DIR=/include/gtk-3.0/gtk \
                    -DLIBEXEC_INSTALL_DIR=lib \
                    -DSYSCONF_INSTALL_DIR=/etc \
