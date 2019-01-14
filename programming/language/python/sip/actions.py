@@ -10,15 +10,29 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import get
 
-WorkDir = "sip-%s" % get.srcVERSION()
+#WorkDir = "sip-%s" % get.srcVERSION()
 
 
-def setup():    
+def setup():
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.cd("sip-%s" % get.srcVERSION())
+    shelltools.copytree("../sip-%s" % (get.srcVERSION().replace("_", "~")), "../sip-%s-pyqt5" % get.srcVERSION())
+    
     pythonmodules.run('configure.py CFLAGS+="%s" CXXFLAGS+="%s"' % (get.CFLAGS(), get.CXXFLAGS()))
+    
+    shelltools.cd("../sip-%s-pyqt5" % get.srcVERSION())
+    pythonmodules.run('configure.py CFLAGS+="%s" CXXFLAGS+="%s" --sip-module PyQt5.sip --no-tools' % (get.CFLAGS(), get.CXXFLAGS()))
 
 def build():
+    autotools.make()
+    
+    shelltools.cd("../sip-%s-pyqt5" % get.srcVERSION())
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    shelltools.cd("../sip-%s-pyqt5" % get.srcVERSION())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
     pisitools.rename("/usr/bin/sip", "py2sip") 
