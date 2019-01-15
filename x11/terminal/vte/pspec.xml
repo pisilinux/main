@@ -12,10 +12,11 @@
         <License>LGPLv2</License>
         <Summary>Xft powered terminal widget</Summary>
         <Description>The VTE package contains a termcap file implementation for terminal emulators.</Description>
-        <Archive sha1sum="b0af0701ef9d6c7ede9c578366b12a70ac47ab66" type="tarxz">mirrors://gnome/vte/0.28/vte-0.28.2.tar.xz</Archive>
+        <Archive sha1sum="ea498d334e341738ef03d4d2d2c99b8bb1c1570e" type="tarxz">mirrors://gnome/vte/0.54/vte-0.54.3.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>gobject-introspection-devel</Dependency>
             <Dependency>fontconfig-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
@@ -29,13 +30,17 @@
             <Dependency>harfbuzz-devel</Dependency>
             <Dependency>graphite2-devel</Dependency>
             <Dependency>python-six</Dependency>
+            <Dependency>gnutls-devel</Dependency>
+            <Dependency>libpcre2-devel</Dependency>
+            <Dependency>libglade-devel</Dependency>
+            <Dependency>vala-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">vte-0.28.2-limit-arguments.patch</Patch>
-            <Patch level="1">vte-alt-meta-confusion.patch</Patch>
-            <Patch level="1">vte-python-bugfixes.patch</Patch>
-            <Patch level="1">vte-0.28.0-link.patch</Patch>
-            <Patch level="1">vte-0.28.2-scale.patch</Patch>
+<!--             <Patch level="1">vte-0.28.2-limit-arguments.patch</Patch> -->
+<!--             <Patch level="1">vte-alt-meta-confusion.patch</Patch> -->
+<!--             <Patch level="1">vte-python-bugfixes.patch</Patch> -->
+<!--             <Patch level="1">vte-0.28.0-link.patch</Patch> -->
+<!--             <Patch level="1">vte-0.28.2-scale.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -44,21 +49,27 @@
         <IsA>library</IsA>
         <RuntimeDependencies>
             <Dependency>gobject-introspection</Dependency>
-            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
             <Dependency>atk</Dependency>
+            <Dependency>zlib</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
             <Dependency>pango</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>gnutls</Dependency>
+            <Dependency>libpcre2</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>libX11</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc/profile.d</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="executable">/usr/libexec</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share</Path>
             <Path fileType="data">/usr/share/vte</Path>
             <Path fileType="data">/usr/share/pygtk</Path>
             <Path fileType="data">/usr/share/gir-1.0/Vte-0.0.gir</Path>
@@ -79,7 +90,7 @@
         <Summary>Development files for vte</Summary>
         <RuntimeDependencies>
             <Dependency release="current">vte</Dependency>
-            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
@@ -92,6 +103,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2019-01-15</Date>
+            <Version>0.54.3</Version>
+            <Comment>Rebuild</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2018-07-31</Date>
             <Version>0.28.2</Version>

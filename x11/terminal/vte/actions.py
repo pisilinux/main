@@ -17,8 +17,7 @@ def setup():
                          --libexecdir=/usr/lib/vte \
                          --localstatedir=/var \
                          --without-glX \
-                         --disable-gtk-doc \
-                         --with-gtk=2.0")
+                         --disable-gtk-doc")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")    
 
@@ -28,4 +27,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "HACKING", "MAINTAINERS", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS")
