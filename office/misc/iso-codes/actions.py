@@ -6,16 +6,19 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
-    autotools.configure()
+    shelltools.system("sed -i 's|$(datadir)/pkgconfig|$(libdir)/pkgconfig|g' Makefile.in")
+    shelltools.system("sed -i 's|$(datadir)/pkgconfig|$(libdir)/pkgconfig|g' Makefile.am")
+    autotools.configure("--prefix=/usr")
 
 def build():
     autotools.make()
 
 def install():
     autotools.install()
-    pisitools.domove("/usr/share/pkgconfig/iso-codes.pc","/usr/lib/pkgconfig")
-    pisitools.removeDir("/usr/share/pkgconfig")
+    #pisitools.domove("/usr/share/pkgconfig/iso-codes.pc","/usr/lib/pkgconfig")
+    #pisitools.removeDir("/usr/share/pkgconfig")
 
     pisitools.dodoc("ChangeLog","TODO")
