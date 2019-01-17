@@ -9,6 +9,7 @@ from pisi.actionsapi import shelltools
 import glob
 
 def install():
+    shelltools.system("sed -i 's|lrelease-qt5|lrelease|g' setup.py")
     pythonmodules.install(pyVer = "3")
 
     
