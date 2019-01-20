@@ -25,7 +25,10 @@ def setup():
     shelltools.system("sh NVIDIA-Linux-%s-%s.run -x --target tmp"
                       % (arch, get.srcVERSION()))
     shelltools.move("tmp/*", ".")
-
+    
+    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.19.patch")
+    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.20.patch")
+    
     # Our libc is TLS enabled so use TLS library
     #shelltools.unlink("*-tls.so*")
     #shelltools.move("tls/*", ".")
@@ -86,7 +89,8 @@ def install():
     pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
     pisitools.dolib("libGL.so.%s" % version, libdir)
     
-    pisitools.dolib("libEGL.so.1", nvlibdir)
+    pisitools.dolib("libEGL.so.1.1.0", nvlibdir)
+    pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so.1" % nvlibdir)
     pisitools.dolib("libEGL_nvidia.so.%s" % version, libdir)
     pisitools.dolib("libGLESv1_CM_nvidia.so.%s" % version, libdir)
     pisitools.dolib("libGLESv2_nvidia.so.%s" % version, libdir)
