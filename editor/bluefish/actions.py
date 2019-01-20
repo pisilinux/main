@@ -10,8 +10,8 @@ from pisi.actionsapi import get
 
 def setup():    
     autotools.configure("--disable-static \
-                        --disable-update-databases \
-                        --disable-xml-catalog-update")
+                         --disable-update-databases \
+                         --disable-xml-catalog-update")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
