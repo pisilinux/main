@@ -17,7 +17,7 @@ from pisi.actionsapi import get
 #    shelltools.system("sed 's@ -Werror\([[:space:]]\|\n\)@\1@' -i linux/Makefile")
 
 def build():
-    autotools.make("V=1 EFIDIR=org.pisilinux GNUEFIDIR=/usr/lib")
+    autotools.make("V=1 EFIDIR=org.pisilinux GNUEFIDIR=/usr/lib LIBDIR=/usr/lib")
 
 def install():
     pisitools.dodir("/usr/include")
