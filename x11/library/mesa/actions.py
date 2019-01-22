@@ -90,7 +90,7 @@ def setup():
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32")        
-        options += " --prefix=/usr --libdir=lib32 \
+        options += " --libdir=lib32 \
                      -Ddri-drivers-path=lib32/xorg/modules/dri \
                      -Dclang-libdir-path=/usr/lib32 \
                      -Dgallium-opencl=disabled"
