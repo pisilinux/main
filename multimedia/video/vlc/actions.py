@@ -111,6 +111,7 @@ def setup():
                             --enable-vorbis \
                             --enable-x264 \
                             --enable-x265 \
+                            --enable-aribsub \
                             --enable-xvideo \
                            ")
     #enable-skins2 \ --disable-qt4 \
