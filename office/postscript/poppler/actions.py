@@ -40,8 +40,7 @@ def install():
         pisitools.removeDir("/emul32")
         #pisitools.insinto("/usr/lib32", "poppler/.libs/libpoppler.so*")
         #pisitools.insinto("/usr/lib32", "glib/.libs/libpoppler-glib.so*")
-        for f in ["poppler.pc", "poppler-glib.pc"]:
-            pisitools.insinto("/usr/lib32/pkgconfig", f)
+        for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
             pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), get.emul32prefixDIR(), get.defaultprefixDIR())
         return
     
