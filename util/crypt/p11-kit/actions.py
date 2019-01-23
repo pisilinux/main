@@ -14,16 +14,13 @@ def setup():
               "
               
     if get.buildTYPE() == "emul32":
-        options += "--sysconfdir=/usr/emul32/etc \
-                    --bindir=/usr/emul32/bin \
-                    --libdir=/usr/lib32 \
-                    --datadir=/usr/emul32/share \
-                    --with-module-path=/usr/lib32/pkcs11 \
-                    --libexecdir=/usr/emul32/libexec"
-        
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        options += "--prefix=/_emul32 \
+                    --libdir=/usr/lib32 \
+                    --libexecdir=/_emul32/libexec \
+                    --with-module-path=/usr/lib32/pkcs11"
                  
                  
     autotools.configure(options)
@@ -36,7 +33,7 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     if get.buildTYPE() == "emul32":
-        pisitools.removeDir("/usr/emul32")
+        pisitools.removeDir("_emul32")
         return
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README")
