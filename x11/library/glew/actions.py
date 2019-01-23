@@ -16,7 +16,7 @@ def build():
     if get.buildTYPE() == "emul32":
         pisitools.dosed("config/Makefile.linux", "LD = cc", "LD = gcc -m32")
         shelltools.system("sed -i 's|lib64|lib32|' config/Makefile.linux")
-        autotools.make('CC="%s -m32" CXXFLAGS="%s"' % (get.CC(), get.CXXFLAGS()))
+        autotools.make('CC="%s -m32" CXXFLAGS="%s" LIBDIR=/usr/lib32' % (get.CC(), get.CXXFLAGS()))
         return
     else:
         autotools.make('CC=%s CXXFLAGS="%s"' % (get.CC(), get.CXXFLAGS()))
@@ -31,7 +31,7 @@ def install():
                               PKGDIR=%s/usr/lib32/pkgconfig" % (get.installDIR() , get.installDIR(), get.installDIR(), get.installDIR(), get.installDIR()))
 
         pisitools.remove("/usr/lib32/libGLEW.a")
-        pisitools.dosed("%s/usr/lib32/pkgconfig/glew.pc" % get.installDIR(), "/usr/lib", "/usr/lib32")
+        #pisitools.dosed("%s/usr/lib32/pkgconfig/glew.pc" % get.installDIR(), "/usr/lib", "/usr/lib32")
         return
 
     autotools.rawInstall("GLEW_DEST=%s/usr/ \
