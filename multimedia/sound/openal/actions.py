@@ -22,6 +22,7 @@ def setup():
     if get.buildTYPE() == "emul32":
         options += " -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
+                     -DALSOFT_NO_QT5=TRUE \
                      -DLIB_SUFFIX=32"
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
 
@@ -39,6 +40,7 @@ def install():
         #copy_tree("%s/emul32/lib32/" % get.installDIR(), "%s/usr/lib32" % get.installDIR())
         pisitools.removeDir("/emul32")
         pisitools.dosed("%s/usr/lib32/pkgconfig/openal.pc" % get.installDIR(), "emul32", "usr")
+        pisitools.dosed("%s/usr/lib32/cmake/OpenAL/OpenALConfig.cmake" % get.installDIR(), "emul32", "usr")
         return
 
     pisitools.dodoc("COPYING", "alsoftrc.sample")
