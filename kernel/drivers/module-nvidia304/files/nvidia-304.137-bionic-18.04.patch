@@ -1,0 +1,99 @@
+diff -Naur NVIDIA-Linux-x86_64-304.137.orig/kernel/conftest.sh NVIDIA-Linux-x86_64-304.137/kernel/conftest.sh
+--- NVIDIA-Linux-x86_64-304.137.orig/kernel/conftest.sh	2017-09-14 15:51:09.000000000 -0500
++++ NVIDIA-Linux-x86_64-304.137/kernel/conftest.sh	2018-06-02 20:36:12.036907574 -0500
+@@ -2106,6 +2106,18 @@
+ 
+             compile_check_conftest "$CODE" "NV_DRM_DRIVER_UNLOAD_HAS_INT_RETURN_TYPE" "" "types"
+         ;;
++        use_timer_setup)
++            #
++            # Determine if timer_setup() must be used instead of init_timer().
++            #
++            CODE="
++            #include <linux/timer.h>
++                void conftest_use_timer_setup() {
++                timer_setup();
++            }"
++
++            compile_check_conftest "$CODE" "NV_USE_TIMER_SETUP" "" "functions"
++        ;;
+     esac
+ }
+ 
+diff -Naur NVIDIA-Linux-x86_64-304.137.orig/kernel/Makefile.kbuild NVIDIA-Linux-x86_64-304.137/kernel/Makefile.kbuild
+--- NVIDIA-Linux-x86_64-304.137.orig/kernel/Makefile.kbuild	2017-09-14 15:51:09.000000000 -0500
++++ NVIDIA-Linux-x86_64-304.137/kernel/Makefile.kbuild	2018-06-02 20:35:37.020666934 -0500
+@@ -194,7 +194,8 @@
+ 	cpuhp_setup_state \
+ 	vm_fault_present \
+ 	vm_fault_has_address \
+-	drm_driver_unload_has_int_return_type
++	drm_driver_unload_has_int_return_type \
++	use_timer_setup
+ #
+ # Miscellaneous NVIDIA kernel module build support targets. They are needed
+ # to satisfy KBUILD requirements and to support NVIDIA specifics.
+diff -Naur NVIDIA-Linux-x86_64-304.137.orig/kernel/nv.c NVIDIA-Linux-x86_64-304.137/kernel/nv.c
+--- NVIDIA-Linux-x86_64-304.137.orig/kernel/nv.c	2017-09-14 15:51:09.000000000 -0500
++++ NVIDIA-Linux-x86_64-304.137/kernel/nv.c	2018-06-02 20:38:49.777712175 -0500
+@@ -301,7 +301,6 @@
+ #else
+ irqreturn_t   nv_kern_isr(int, void *);
+ #endif
+-void          nv_kern_rc_timer(unsigned long);
+ #if defined(NV_PM_SUPPORT_OLD_STYLE_APM)
+ static int    nv_kern_apm_event(struct pm_dev *, pm_request_t, void *);
+ #endif
+@@ -2075,10 +2074,18 @@
+ }
+ 
+ void nv_kern_rc_timer(
++#ifdef NV_USE_TIMER_SETUP
++    struct timer_list *t
++#else
+     unsigned long data
++#endif
+ )
+ {
++#ifdef NV_USE_TIMER_SETUP
++    nv_linux_state_t *nvl = from_timer(nvl, t, rc_timer);
++#else
+     nv_linux_state_t *nvl = (nv_linux_state_t *) data;
++#endif
+     nv_state_t *nv = NV_STATE_PTR(nvl);
+ 
+     NV_CHECK_PCI_CONFIG_SPACE(nvl->timer_sp, nv, TRUE, TRUE, FALSE);
+@@ -3029,9 +3036,13 @@
+         return -1;
+ 
+     nv_printf(NV_DBG_INFO, "NVRM: initializing rc timer\n");
++#ifdef NV_USE_TIMER_SETUP
++    timer_setup(&nvl->rc_timer, nv_kern_rc_timer, 0);
++#else
+     init_timer(&nvl->rc_timer);
+     nvl->rc_timer.function = nv_kern_rc_timer;
+     nvl->rc_timer.data = (unsigned long) nv;
++#endif
+     nv->rc_timer_enabled = 1;
+     mod_timer(&nvl->rc_timer, jiffies + HZ); /* set our timeout for 1 second */
+     nv_printf(NV_DBG_INFO, "NVRM: rc timer initialized\n");
+diff -Naur NVIDIA-Linux-x86_64-304.137.orig/kernel/nv-drm.c NVIDIA-Linux-x86_64-304.137/kernel/nv-drm.c
+--- NVIDIA-Linux-x86_64-304.137.orig/kernel/nv-drm.c	2017-09-14 15:51:09.000000000 -0500
++++ NVIDIA-Linux-x86_64-304.137/kernel/nv-drm.c	2018-06-02 20:34:46.936323877 -0500
+@@ -22,6 +22,15 @@
+ #include <drm/drm_gem.h>
+ #endif
+ 
++/*
++ * drm_pci_(init|exit) were renamed to drm_legacy_pci_(init|exit)
++ * in 4.14; map the new interface names to the old ones.
++ */
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
++# define drm_pci_init drm_legacy_pci_init
++# define drm_pci_exit drm_legacy_pci_exit
++#endif
++
+ extern nv_linux_state_t *nv_linux_devices;
+ 
+ static int nv_drm_load(
+
