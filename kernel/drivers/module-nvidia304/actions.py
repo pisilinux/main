@@ -32,6 +32,7 @@ def setup():
     shelltools.move("tmp/*", ".")
 
     shelltools.system("patch -p1 < kernel-4.14.patch")
+    shelltools.system("patch -p1 < nvidia-304.137-bionic-18.04.patch")
     #shelltools.system("patch -p0 < nv-drm.patch")
 
     # Our libc is TLS enabled so use TLS library
