@@ -15,7 +15,7 @@ def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_INSTALL_LIBDIR=/usr/lib\
-                          -DPULL_TRANSLATIONS=no",  sourceDir="..")
+                          -DPULL_TRANSLATIONS=yes",  sourceDir="..")
 
 def build():
     shelltools.cd("build")

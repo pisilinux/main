@@ -16,7 +16,7 @@ def setup():
                           -DUSE_QT5=ON \
                           -DNETWORKMONITOR_PLUGIN=yes \
                           -DCMAKE_BUILD_TYPE=release  \
-                          -DPULL_TRANSLATIONS=no", sourceDir="..")
+                          -DPULL_TRANSLATIONS=yes", sourceDir="..")
 
 def build():
     shelltools.cd("build")
