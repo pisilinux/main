@@ -1,0 +1,72 @@
+From f8f0f3eef1151c9377a5c76ccfa6432e930e1307 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?M=C3=A5rten=20Nordheim?= <marten.nordheim@qt.io>
+Date: Mon, 14 Jan 2019 10:37:42 +0100
+Subject: QSyntaxHighlighter: cancel delayed highlight if done manually
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+It was an implicit effect before which stopped working after
+dec7961709c90f6977d2447f7fa6c6625af41cb2. Reintroduce it as some
+projects used this side-effect as a way to abort the initial
+highlighting.
+
+Change-Id: I5340ee9882a242bc8b5f7f843f1cfe793a65d357
+Reviewed-by: Jędrzej Nowacki <jedrzej.nowacki@qt.io>
+---
+ src/gui/text/qsyntaxhighlighter.cpp                   |  1 +
+ .../qsyntaxhighlighter/tst_qsyntaxhighlighter.cpp     | 19 +++++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/src/gui/text/qsyntaxhighlighter.cpp b/src/gui/text/qsyntaxhighlighter.cpp
+index b09f8b565a..0e07b69868 100644
+--- a/src/gui/text/qsyntaxhighlighter.cpp
++++ b/src/gui/text/qsyntaxhighlighter.cpp
+@@ -376,6 +376,7 @@ void QSyntaxHighlighter::rehighlight()
+ 
+     QTextCursor cursor(d->doc);
+     d->rehighlight(cursor, QTextCursor::End);
++    d->rehighlightPending = false; // user manually did a full rehighlight
+ }
+ 
+ /*!
+diff --git a/tests/auto/gui/text/qsyntaxhighlighter/tst_qsyntaxhighlighter.cpp b/tests/auto/gui/text/qsyntaxhighlighter/tst_qsyntaxhighlighter.cpp
+index 9d6ce78b24..c683ecd424 100644
+--- a/tests/auto/gui/text/qsyntaxhighlighter/tst_qsyntaxhighlighter.cpp
++++ b/tests/auto/gui/text/qsyntaxhighlighter/tst_qsyntaxhighlighter.cpp
+@@ -82,6 +82,7 @@ private slots:
+     void preservePreeditArea();
+     void task108530();
+     void avoidUnnecessaryRehighlight();
++    void avoidUnnecessaryDelayedRehighlight();
+     void noContentsChangedDuringHighlight();
+     void rehighlight();
+     void rehighlightBlock();
+@@ -478,6 +479,24 @@ void tst_QSyntaxHighlighter::avoidUnnecessaryRehighlight()
+     QTRY_VERIFY(!hl->highlighted);
+ }
+ 
++void tst_QSyntaxHighlighter::avoidUnnecessaryDelayedRehighlight()
++{
++    // Having text in the document before creating the highlighter starts the delayed rehighlight
++    cursor.insertText("Hello World");
++
++    TestHighlighter *hl = new TestHighlighter(doc);
++    QVERIFY(!hl->highlighted);
++
++    hl->rehighlight();
++    QVERIFY(hl->highlighted);
++
++    hl->highlighted = false;
++    // Process events, including delayed rehighlight emission
++    QCoreApplication::processEvents();
++    // Should be cancelled and no extra rehighlight should be done
++    QVERIFY(!hl->highlighted);
++}
++
+ void tst_QSyntaxHighlighter::noContentsChangedDuringHighlight()
+ {
+     QVector<QTextLayout::FormatRange> formats;
+-- 
+cgit v1.2.1
+
