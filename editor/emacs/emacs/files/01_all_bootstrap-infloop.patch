@@ -1,0 +1,34 @@
+https://bugs.gentoo.org/660448
+
+From 13726cbac681e442649de1dfd73fcc7f889e87d9 Mon Sep 17 00:00:00 2001
+From: Paul Eggert <eggert@cs.ucla.edu>
+Date: Sat, 7 Jul 2018 10:59:22 -0700
+Subject: [PATCH] Fix bootstrap infloop in GNU/Linux alpha
+
+* src/emacs.c (main): Do not re-exec if EMACS_HEAP_EXEC
+is already set (Bug#32083).
+---
+ src/emacs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/emacs.c b/src/emacs.c
+index 017c62308c..f5e47428ef 100644
+--- a/src/emacs.c
++++ b/src/emacs.c
+@@ -707,10 +707,12 @@ main (int argc, char **argv)
+   bool disable_aslr = dumping;
+ # endif
+ 
+-  if (disable_aslr && disable_address_randomization ())
++  if (disable_aslr && disable_address_randomization ()
++      && !getenv ("EMACS_HEAP_EXEC"))
+     {
+       /* Set this so the personality will be reverted before execs
+-	 after this one.  */
++	 after this one, and to work around an re-exec loop on buggy
++	 kernels (Bug#32083).  */
+       xputenv ("EMACS_HEAP_EXEC=true");
+ 
+       /* Address randomization was enabled, but is now disabled.
+-- 
+2.17.1

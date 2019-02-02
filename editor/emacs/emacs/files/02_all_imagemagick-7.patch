@@ -1,0 +1,96 @@
+Support ImageMagick version 7.
+https://bugs.gentoo.org/665058
+https://debbugs.gnu.org/25967
+
+This backports and consolidates the following commits from upstream git:
+
+commit 3cc42bb60099c32f64e57d2ee33c8321adba7942
+Author: Glenn Morris <rgm@gnu.org>
+Date:   Thu Aug 30 13:56:08 2018 -0400
+
+    * configure.ac: Fix goofs in my recent ImageMagick change.
+
+commit 42ed35c68b7c199aa797e655fdc3547c5c3087d2
+Author: Paul Eggert <eggert@cs.ucla.edu>
+Date:   Thu Aug 30 10:03:43 2018 -0700
+
+    Pacify -Wdouble-promotion in ImageMagick code
+
+commit bf1b147b55e1328efca6e40181e79dd9a369895d
+Author: Glenn Morris <rgm@gnu.org>
+Date:   Mon Aug 27 22:03:25 2018 -0400
+
+    * configure.ac, src/image.c: Tweak previous ImageMagick change.
+
+commit 5729486951e6a60db55ea17ee3bac9baf8b54f6a
+Author: Karl Otness <karl@karlotness.com>
+Date:   Mon Aug 27 21:57:44 2018 -0400
+
+    Support ImageMagick version 7 (bug#25967)
+
+--- emacs-26.1-orig/configure.ac
++++ emacs-26.1/configure.ac
+@@ -2521,11 +2521,14 @@
+ HAVE_IMAGEMAGICK=no
+ if test "${HAVE_X11}" = "yes" || test "${HAVE_NS}" = "yes" || test "${HAVE_W32}" = "yes"; then
+   if test "${with_imagemagick}" != "no"; then
+-    ## 6.3.5 is the earliest version known to work; see Bug#17339.
+-    ## 6.8.2 makes Emacs crash; see Bug#13867.
+-    ## 7 and later have not been ported to; See Bug#25967.
+-    IMAGEMAGICK_MODULE="Wand >= 6.3.5 Wand != 6.8.2 Wand < 7"
+-    EMACS_CHECK_MODULES([IMAGEMAGICK], [$IMAGEMAGICK_MODULE])
++    EMACS_CHECK_MODULES([IMAGEMAGICK], [MagickWand >= 7])
++    if test $HAVE_IMAGEMAGICK = yes; then
++       AC_DEFINE([HAVE_IMAGEMAGICK7], 1, [Define to 1 if using ImageMagick7.])
++    else
++       ## 6.3.5 is the earliest version known to work; see Bug#17339.
++       ## 6.8.2 makes Emacs crash; see Bug#13867.
++       EMACS_CHECK_MODULES([IMAGEMAGICK], [Wand >= 6.3.5 Wand != 6.8.2])
++    fi
+ 
+     if test $HAVE_IMAGEMAGICK = yes; then
+       OLD_CFLAGS=$CFLAGS
+@@ -5399,7 +5402,7 @@
+   Does Emacs use -lrsvg-2?                                ${HAVE_RSVG}
+   Does Emacs use cairo?                                   ${HAVE_CAIRO}
+   Does Emacs use -llcms2?                                 ${HAVE_LCMS2}
+-  Does Emacs use imagemagick (version 6)?                 ${HAVE_IMAGEMAGICK}
++  Does Emacs use imagemagick?                             ${HAVE_IMAGEMAGICK}
+   Does Emacs support sound?                               ${HAVE_SOUND}
+   Does Emacs use -lgpm?                                   ${HAVE_GPM}
+   Does Emacs use -ldbus?                                  ${HAVE_DBUS}
+--- emacs-26.1-orig/src/image.c
++++ emacs-26.1/src/image.c
+@@ -8270,11 +8270,20 @@
+ /* The GIF library also defines DrawRectangle, but its never used in Emacs.
+    Therefore rename the function so it doesn't collide with ImageMagick.  */
+ #define DrawRectangle DrawRectangleGif
+-#include <wand/MagickWand.h>
++
++#ifdef HAVE_IMAGEMAGICK7
++# include <MagickWand/MagickWand.h>
++# include <MagickCore/version.h>
++/* ImageMagick 7 compatibility definitions.  */
++# define PixelSetMagickColor PixelSetPixelColor
++typedef PixelInfo MagickPixelPacket;
++#else
++# include <wand/MagickWand.h>
++# include <magick/version.h>
++#endif
+ 
+ /* ImageMagick 6.5.3 through 6.6.5 hid PixelGetMagickColor for some reason.
+    Emacs seems to work fine with the hidden version, so unhide it.  */
+-#include <magick/version.h>
+ #if 0x653 <= MagickLibVersion && MagickLibVersion <= 0x665
+ extern WandExport void PixelGetMagickColor (const PixelWand *,
+ 					    MagickPixelPacket *);
+@@ -8799,7 +8808,8 @@
+ #endif /* HAVE_MAGICKEXPORTIMAGEPIXELS */
+     {
+       size_t image_height;
+-      MagickRealType color_scale = 65535.0 / QuantumRange;
++      double quantum_range = QuantumRange;
++      MagickRealType color_scale = 65535.0 / quantum_range;
+ 
+       /* Try to create a x pixmap to hold the imagemagick pixmap.  */
+       if (!image_create_x_image_and_pixmap (f, img, width, height, 0,

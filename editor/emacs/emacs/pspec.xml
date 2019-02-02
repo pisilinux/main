@@ -3,7 +3,7 @@
 <PISI>
     <Source>
         <Name>emacs</Name>
-        <Homepage>http://www.gnu.org/software/emacs</Homepage>
+        <Homepage>https://www.gnu.org/software/emacs</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -14,7 +14,7 @@
         <IsA>app:console</IsA>
         <Summary>An extensible console-mode editor</Summary>
         <Description>Emacs is the extensible, customizable, self-documenting real-time console-mode editor. It has many features to increase productivity when programming.</Description>
-        <Archive sha1sum="3960d0b64031c645d98aafd4dc9ebf6f6ef4cf50" type="tarxz">ftp://mirrors.kernel.org/gnu/emacs/emacs-25.2.tar.xz</Archive>
+        <Archive sha1sum="53c01d987b2613701f42d9f941c2d5225a5874c4" type="tarxz">ftp://ftp.gnu.org/gnu/emacs/emacs-26.1.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>acl-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
@@ -35,7 +35,15 @@
             <Dependency>tiff-devel</Dependency>
             <Dependency>gnutls-devel</Dependency>
             <Dependency>imagemagick-devel</Dependency>
+            <Dependency>lcms2-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch>01_all_bootstrap-infloop.patch</Patch>
+            <Patch>02_all_imagemagick-7.patch</Patch>
+            <Patch>0001-Ignore-color-fonts-when-using-Xft.patch</Patch>
+            <Patch>0001-Port-FC_COLOR-change-to-older-fontconfig.patch</Patch>
+            <Patch>0001-src-ftfont.c-ftfont_spec_pattern-Fix-whitespace.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
@@ -71,6 +79,8 @@
             <Dependency>gtk3</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>pango</Dependency>
+            <Dependency>lcms2</Dependency>
+            <Dependency>libXext</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -78,6 +88,7 @@
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="info">/usr/share/info</Path>
+            <Path fileType="data">/usr/lib/systemd</Path>
             <Path fileType="data">/usr/share/emacs</Path>
             <Path fileType="data">/usr/share/icons</Path>
             <Path fileType="data">/var/games/emacs</Path>
@@ -98,6 +109,13 @@
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2019-02-01</Date>
+            <Version>26.1</Version>
+            <Comment>Version Bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="3">
             <Date>2017-05-10</Date>
             <Version>25.2</Version>
