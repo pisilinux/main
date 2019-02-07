@@ -23,7 +23,7 @@ def build():
     shelltools.export("TARGET", "Linux")
     shelltools.export("CFG", "release")
     autotools.make("-j1")
-    autotools.make("-C contrib/gdal")
+    #autotools.make("-C contrib/gdal")
     
 def install():
     pisitools.dolib_so("bin/Linux/*.so")
