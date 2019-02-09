@@ -12,8 +12,6 @@ def setup():
     #pisitools.dosed("configure.ac", "pthread-stubs", deleteLine=True)
     autotools.autoreconf("-fi")
     autotools.configure("--enable-udev")
-    
-    
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -21,4 +19,4 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dodoc("README")
+    #pisitools.dodoc("README")
