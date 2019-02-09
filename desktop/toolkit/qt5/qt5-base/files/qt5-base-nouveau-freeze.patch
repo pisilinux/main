@@ -1,0 +1,107 @@
+From 97600d2c2885e667ced0926815b5a12a7f25285c Mon Sep 17 00:00:00 2001
+From: Allan Sandfeld Jensen <allan.jensen@qt.io>
+Date: Mon, 19 Feb 2018 10:23:15 +0100
+Subject: White-list more recent Mesa version for multi-threading
+
+The issue we had has been fixed for years, but was unfortunately in
+libxcb which we can't check at runtime. Instead assume very recent
+Mesa drivers works.
+
+Change-Id: I5fdd726b480b77edbedc0f369ae82ab4acbb77c9
+Reviewed-by: Frederik Gladhorn <frederik.gladhorn@qt.io>
+Reviewed-by: Laszlo Agocs <laszlo.agocs@qt.io>
+---
+ .../gl_integrations/xcb_glx/qglxintegration.cpp    | 60 +++++++++-------------
+ 1 file changed, 25 insertions(+), 35 deletions(-)
+
+diff --git a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
+index 741885e321..6316aa2d99 100644
+--- a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
++++ b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
+@@ -51,6 +51,7 @@
+ #undef register
+ #include <GL/glx.h>
+ 
++#include <QtCore/QRegularExpression>
+ #include <QtGui/QOpenGLContext>
+ #include <QtGui/QOffscreenSurface>
+ 
+@@ -692,32 +693,6 @@ static const char *qglx_threadedgl_blacklist_renderer[] = {
+     0
+ };
+ 
+-// This disables threaded rendering on anything using mesa, e.g.
+-// - nvidia/nouveau
+-// - amd/gallium
+-// - intel
+-// - some software opengl implementations
+-//
+-// The client glx vendor string is used to identify those setups as that seems to show the least
+-// variance between the bad configurations. It's always "Mesa Project and SGI". There are some
+-// configurations which don't use mesa and which can do threaded rendering (amd and nvidia chips
+-// with their own proprietary drivers).
+-//
+-// This, of course, is very broad and disables threaded rendering on a lot of devices which would
+-// be able to use it. However, the bugs listed below don't follow any easily recognizable pattern
+-// and we should rather be safe.
+-//
+-// http://cgit.freedesktop.org/xcb/libxcb/commit/?id=be0fe56c3bcad5124dcc6c47a2fad01acd16f71a will
+-// fix some of the issues. Basically, the proprietary drivers seem to have a way of working around
+-// a fundamental flaw with multithreaded access to xcb, but mesa doesn't. The blacklist should be
+-// reevaluated once that patch is released in some version of xcb.
+-static const char *qglx_threadedgl_blacklist_vendor[] = {
+-    "Mesa Project and SGI",                // QTCREATORBUG-10875 (crash in creator)
+-                                           // QTBUG-34492 (flickering in fullscreen)
+-                                           // QTBUG-38221
+-    0
+-};
+-
+ void QGLXContext::queryDummyContext()
+ {
+     if (m_queriedDummyContext)
+@@ -777,18 +752,33 @@ void QGLXContext::queryDummyContext()
+         }
+     }
+ 
+-    if (glxvendor) {
+-        for (int i = 0; qglx_threadedgl_blacklist_vendor[i]; ++i) {
+-            if (strstr(glxvendor, qglx_threadedgl_blacklist_vendor[i]) != 0) {
+-                qCDebug(lcQpaGl).nospace() << "Multithreaded OpenGL disabled: "
+-                                             "blacklisted vendor \""
+-                                          << qglx_threadedgl_blacklist_vendor[i]
+-                                          << "\"";
++    if (glxvendor && m_supportsThreading) {
++        // Blacklist Mesa drivers due to QTCREATORBUG-10875 (crash in creator),
++        // QTBUG-34492 (flickering in fullscreen) and QTBUG-38221
++        const char *mesaVersionStr = nullptr;
++        if (strstr(glxvendor, "Mesa Project") != 0) {
++            mesaVersionStr = (const char *) glGetString(GL_VERSION);
++            m_supportsThreading = false;
++        }
+ 
+-                m_supportsThreading = false;
+-                break;
++        if (mesaVersionStr) {
++            // The issue was fixed in Xcb 1.11, but we can't check for that
++            // at runtime, so instead assume it fixed with recent Mesa versions
++            // released several years after the Xcb fix.
++            QRegularExpression versionTest(QStringLiteral("Mesa (\\d+)"));
++            QRegularExpressionMatch result = versionTest.match(QString::fromLatin1(mesaVersionStr));
++            int versionNr = 0;
++            if (result.hasMatch())
++                versionNr = result.captured(1).toInt();
++            if (versionNr >= 17) {
++                // White-listed
++                m_supportsThreading = true;
+             }
+         }
++        if (!m_supportsThreading) {
++            qCDebug(lcQpaGl).nospace() << "Multithreaded OpenGL disabled: "
++                                          "blacklisted vendor \"Mesa Project\"";
++        }
+     }
+ 
+     context.doneCurrent();
+-- 
+cgit v1.2.1
+
