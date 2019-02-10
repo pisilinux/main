@@ -1,18 +1,13 @@
 [Unit]
 Description=ACPI Event Daemon
-After=syslog.target
-
-# This could probably benefit from socket activation, but honestly I think it
-# is time for acpid to go away, and hence I am not planning to spend the time
-# to add socket activation here. We use Type=forking to ensure that the
-# communication sockets are in place before boot proceeds with any service
-# needing this service. Would acpid support socket activation we could use
-# Type=simple here.
+Documentation=man:acpid(8)
+Requires=acpid.socket
 
 [Service]
-Type=forking
-EnvironmentFile=/etc/conf.d/acpid
-ExecStart=/usr/sbin/acpid $OPTIONS
+StandardInput=socket
+EnvironmentFile=/etc/sysconfig/acpid
+ExecStart=/usr/sbin/acpid -f $OPTIONS
 
 [Install]
+Also=acpid.socket
 WantedBy=multi-user.target
