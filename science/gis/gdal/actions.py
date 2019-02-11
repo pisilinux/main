@@ -18,7 +18,6 @@ def setup():
     autotools.configure("--disable-static \
                          --enable-shared \
                          --datadir=/usr/share/gdal \
-                         --with-ogdi \
                          --with-threads \
                          --with-jasper \
                          --with-odbc=/usr/lib/unixODBC \
@@ -65,6 +64,8 @@ def setup():
                          --without-sde \
                          --mandir=/usr/share/man \
                          --without-ruby")
+                         #--with-ogdi error: rpc/rpc.h
+                    
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     

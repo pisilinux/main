@@ -12,7 +12,7 @@ from pisi.actionsapi import shelltools
 WorkDir = "goldendict-1.5.0-RC2"
 
 def setup():
-    shelltools.system("PREFIX=/usr qmake-qt5  CONFIG+=no_epwing_support")
+    shelltools.system("PREFIX=/usr qmake  CONFIG+=no_epwing_support")
 
 
 def build():

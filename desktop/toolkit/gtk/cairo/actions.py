@@ -15,14 +15,15 @@ def setup():
     autotools.configure("--disable-static \
                          --enable-xlib \
                          --disable-drm \
-                         --enable-xml \
+                         --enable-xml=yes \
                          --enable-ft \
                          --enable-ps \
                          --enable-pdf \
                          --enable-svg \
-                         --enable-tee \
-                         --enable-gl \
+                         --enable-tee=yes \
+                         --enable-gl=yes \
                          --enable-gobject \
+                         --enable-xcb \
                          --disable-gtk-doc")
 
     pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')

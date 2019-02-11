@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "ogdi-3.2.0"
+WorkDir = "ogdi-ogdi_3_2_1"
 
 shelltools.export("TOPDIR", "%s/%s" % (get.workDIR(), WorkDir))
 
@@ -23,7 +23,8 @@ def build():
     shelltools.export("TARGET", "Linux")
     shelltools.export("CFG", "release")
     autotools.make("-j1")
-
+    #autotools.make("-C contrib/gdal")
+    
 def install():
     pisitools.dolib_so("bin/Linux/*.so")
     pisitools.dosym("/usr/lib/libogdi.so", "/usr/lib/libogdi.so.3")

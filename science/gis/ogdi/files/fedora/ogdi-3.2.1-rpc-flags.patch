@@ -1,0 +1,37 @@
+From eca8d50827e2085df41950117bc295ec99ebdfaf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Wed, 4 Apr 2018 10:51:03 +0200
+Subject: [PATCH] set CPPFLAGS so check for rpc/pmap_clnt.h doesn't fail when
+ libtirpc is used
+
+---
+ configure    | 2 +-
+ configure.in | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure b/configure
+index 54a75c0..c7dfbea 100755
+--- a/configure
++++ b/configure
+@@ -3689,7 +3689,7 @@ else
+ 	RPC_LIBS=$pkg_cv_RPC_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-
++	CPPFLAGS="$CPPFLAGS $RPC_CFLAGS"
+ fi
+ fi
+ 
+diff --git a/configure.in b/configure.in
+index ccdc7f3..8aae6e4 100644
+--- a/configure.in
++++ b/configure.in
+@@ -43,7 +43,7 @@ dnl ---------------------------------------------------------------------------
+ dnl	Do we have rpc/rpc.h
+ dnl ---------------------------------------------------------------------------
+ AC_CHECK_HEADERS([rpc/rpc.h],,
+-	[PKG_CHECK_MODULES([RPC], [libtirpc])])
++	[PKG_CHECK_MODULES([RPC], [libtirpc], [CPPFLAGS="$CPPFLAGS $RPC_CFLAGS"])])
+ 
+ dnl ---------------------------------------------------------------------------
+ dnl	Do we have rpc/pmap_clnt.h, float.h, dlfcn.h?

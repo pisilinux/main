@@ -11,8 +11,12 @@ from pisi.actionsapi import shelltools
 def setup():
     #pisitools.dosed("configure.ac", "pthread-stubs", deleteLine=True)
     autotools.autoreconf("-fi")
-    autotools.configure("--enable-udev")
+    options = " --enable-udev"
+     
+    if get.buildTYPE() == "_emul32":
+        options += " --libdir=/usr/lib32"
     
+    autotools.configure(options)
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -21,4 +25,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dodoc("README")
+    if get.buildTYPE() == "_emul32":
+        return
+        
+    #pisitools.dodoc("README")
