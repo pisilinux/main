@@ -20,4 +20,10 @@ def build():
 def install():
     kde5.install()
 
+    # Conflicts with plasma-workspace
+    pisitools.remove("/usr/share/doc/HTML")
+    pisitools.remove("/usr/share/locale/")
+    pisitools.remove("/usr/lib/qt5/plugins/kcms/kcm_translations.so")
+    pisitools.remove("/usr/share/kpackage/kcms/kcm_translations/*")
+
     pisitools.dodoc("HACKING", "COPYING")
