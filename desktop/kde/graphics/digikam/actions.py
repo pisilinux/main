@@ -30,5 +30,5 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("COPYING", "COPYING-CMAKE-SCRIPTS", "README.LOCAL", "README", "README.MACOS", "NEWS")
+    pisitools.dodoc("COPYING", "COPYING-CMAKE-SCRIPTS", "README*", "NEWS")
     
