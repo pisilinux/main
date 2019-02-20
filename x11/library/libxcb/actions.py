@@ -11,13 +11,18 @@ def setup():
     pisitools.flags.add("-DNDEBUG")
 
     autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static \
+    options = " --disable-static \
                          --enable-xevie \
                          --enable-xprint \
                          --enable-xinput \
                          --enable-xkb \
                          --without-launchd \
-                         --without-doxygen")
+                         --without-doxygen"
+    
+    if get.buildTYPE() == "emul32":
+        options += " --libdir=/usr/lib32"
+                         
+    autotools.configure(options)
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -26,5 +31,8 @@ def build():
 
 def install():
     autotools.rawInstall("-j1 DESTDIR=%s" % get.installDIR())
+    
+    if get.buildTYPE() == "emul32":
+        return
 
     pisitools.dodoc("COPYING", "NEWS", "README")

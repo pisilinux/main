@@ -9,13 +9,21 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.configure("--disable-static \
-                         --with-pic")
+    autotools.autoreconf("-vif")
+    options = "--disable-static \
+                    --with-pic"
+                    
+    if get.buildTYPE() == "emul32":
+        options += " --libdir=/usr/lib32"
+    
+    autotools.configure(options)
 
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    if get.buildTYPE() == "emul32":
+        return
 
     pisitools.dodoc("README")
