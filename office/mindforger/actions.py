@@ -14,6 +14,7 @@ def build():
 
 def install():
     qt5.install()
+    pisitools.remove("/usr/lib/libdiscount.a")
 
 
     pisitools.dodoc("LICENSE", "README*")
