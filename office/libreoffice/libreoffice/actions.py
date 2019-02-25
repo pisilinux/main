@@ -14,18 +14,14 @@ shelltools.export("LC_ALL", "C")
 pixmaps = "/usr/share/pixmaps/"
 LoVersion = "%s" % get.srcVERSION()
 OurWorkDir = "%s/libreoffice-%s" % (get.workDIR(), LoVersion)
-#for support all languages.
-langall= "am ar ast bg bn bn-IN bo brx bs ca ca-valencia cs da de dgo dz el en-GB en-US en-ZA eo es et eu fi fr gl gu he hi hr hu id is it ja ka km kmr-Latn ko kok ks lo lt lv mk mni nb ne nl nn om or pl pt pt-BR ro ru sat si sid sk sl sq sv ta tg tr ug uk vi zh-CN zh-TW"
-#for support some languages.
-lang="ar bg ca cs de el en-US es he hu ja kk ko ru tr tt uz zh-CN zh-TW"
 
-# temporarily disable failing tests, don't run broken tests on i686
-if get.buildTYPE() == "i686":
-    shelltools.system('sed -i "/CppunitTest_sw_ooxmlexport7/d" sw/Module_sw.mk')
-    shelltools.system('sed -i -e /CppunitTest_sd_import_tests/d sd/Module_sd.mk')
+#for support all languages.
+langall="en-US af am ar as ast be bg bn bn-IN bo br brx bs ca ca-valencia cs cy da de dgo dsb dz el en-GB en-ZA eo es et eu fa fi fr fy ga gd gl gu gug he hsb hi hr hu id is it ja ka kab kk km kmr-Latn kn ko kok ks lb lo lt lv mai mk ml mn mni mr my nb ne nl nn nr nso oc om or pa-IN pl pt pt-BR ro ru rw sa-IN sat sd sr-Latn si sid sk sl sq sr ss st sv sw-TZ ta te tg th tn tr ts tt ug uk uz ve vec vi xh zh-CN zh-TW zu"
+
+#only Turkish and English.
+lang="tr"
 
 def setup():
-    #shelltools.system('sed -i "s:mdds >= 0.12.0:mdds-1.0 >= 0.12.0:g" configure.ac')
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
     shelltools.export("LO_PREFIX", "/usr")    
     shelltools.export("PYTHON", "python3.6")
@@ -41,17 +37,17 @@ def setup():
                         --sysconfdir=/etc               \
                         --with-vendor="Pisi Linux"         \
                         --with-lang="%s"     \
-                        --enable-gtk3         \
+                        --enable-qt5         \
+                        --enable-gtk3   \
+                        --disable-gtk    \
                         --with-help            \
                         --with-myspell-dicts  \
-                        --with-alloc=system      \
                         --with-java                     \
                         --without-system-dicts          \
                         --without-fonts    \
                         --disable-postgresql-sdbc       \
                         --disable-firebird-sdbc     \
                         --disable-coinmp \
-                        --disable-systray \
                         --without-system-hsqldb \
                         --enable-release-build=yes      \
                         --enable-python=system          \
@@ -107,20 +103,31 @@ def setup():
                         --enable-ext-nlpsolver          \
                         --with-jdk-home=/usr/lib/jvm/java-7-openjdk \
                         --with-external-tar=external/tarballs \
-                        --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
-                        --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4 \
+                        --with-gdrive-client-id=457862564325.apps.googleusercontent.com \
+                        --with-gdrive-client-secret=GYWrDtzyZQZ0_g5YoBCC6F0I \
                         --with-parallelism=%s' % (langall, get.makeJOBS().replace("-j","")))
+#--disable-fetch-external \
 
-#--with-system-glew \
 def build():
     autotools.make("build-nocheck")
 
 def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
-
+    
+    # cleanup gid_Module
     pisitools.remove("gid_Module*")
-
+    
+    # add application descriptions    
     pisitools.insinto("/usr/share/appdata/", "sysui/desktop/appstream-appdata/libreoffice-*.xml")
-
+    
+    # put configuration files into place
+    pisitools.dosym("/usr/lib/libreoffice/program/bootstraprc", "/etc/libreoffice/bootstraprc")
+    pisitools.dosym("/usr/lib/libreoffice/program/sofficerc", "/etc/libreoffice/sofficerc")
+    pisitools.dosym("/usr/lib/libreoffice/share/psprint/psprint.conf", "/etc/libreoffice/psprint.conf")
+    
+    # make pyuno find its modules
+    pisitools.dosym("/usr/lib/libreoffice/program/uno.py", "/usr/lib/python3.6/site-packages/uno.py")
+    pisitools.dosym("/usr/lib/libreoffice/program/unohelper.py", "/usr/lib/python3.6/site-packages/unohelper.py")
+    
     for pix in ["libreoffice-base.png", "libreoffice-calc.png", "libreoffice-draw.png", "libreoffice-impress.png", "libreoffice-main.png", "libreoffice-math.png", "libreoffice-startcenter.png", "libreoffice-writer.png"]:
         pisitools.dosym("/usr/share/icons/hicolor/32x32/apps/%s" % pix, "/usr/share/pixmaps/%s" %pix)
