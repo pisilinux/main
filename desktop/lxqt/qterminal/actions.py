@@ -13,12 +13,12 @@ from pisi.actionsapi import qt5
 
 def setup():
     shelltools.system("qmake qterminal.pro")
-    
+
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                                        -DCMAKE_BUILD_TYPE=Release \
-                                        -DPULL_TRANSLATIONS=yes", sourceDir="..")
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DPULL_TRANSLATIONS=yes", sourceDir="..")
 def build():
     shelltools.cd("build")
     qt5.make()
@@ -26,6 +26,6 @@ def build():
 def install():
     shelltools.cd("build")
     qt5.install()
-    
+
     shelltools.cd("..")
     pisitools.dodoc("AUTHORS")
