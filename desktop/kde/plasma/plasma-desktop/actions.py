@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("rm -rf po/id")
+    #shelltools.system("rm -rf po/id")
     kde5.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                     -DCMAKE_INSTALL_LIBDIR=lib \
                     -DBUILD_TESTING=OFF")
