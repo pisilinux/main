@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.cd("lib-src/portmixer")
-    autotools.autoreconf("-vi")
+    autotools.autoreconf("-vfi")
     shelltools.cd("../..")
 
     autotools.aclocal("-I m4")
@@ -34,7 +34,7 @@ def setup():
                          --with-libvorbis \
                          --with-libmad \
                          --with-libflac \
-                         --without-libid3tag \
+                         --with-libid3tag \
                          --with-sbsms \
                          --with-soundtouch \
                          --with-libvamp \
