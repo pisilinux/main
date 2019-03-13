@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("rm -rf po/id")
+    #shelltools.system("rm -rf po/id")
     kde5.configure()
 
 def build():
