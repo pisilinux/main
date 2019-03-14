@@ -33,7 +33,7 @@ def setup():
 
         autotools.configure("--disable-dependency-tracking \
                              --disable-devel-docs \
-                             --with-cpp=/usr/bin/mcpp")
+                             --with-cpp=/usr/bin/cpp,/usr/bin/mcpp")
         shelltools.cd("../")
 
 def build():
