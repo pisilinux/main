@@ -6,11 +6,14 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import shelltools
 
 def setup():
-     pythonmodules.configure()
-     pythonmodules.compile()
+    shelltools.system("sed -i 's|python2|python2.7|g' {setup.py,virt-convert,virt-clone,virt-install,virt-manager,virt-xml}")
+    
+    pythonmodules.configure()
+    pythonmodules.compile()
 
 def install():
     pythonmodules.install()
-    pisitools.dodoc("COPYING", "NEWS", "README*", "PKG-INFO")
+    #pisitools.dodoc("COPYING", "NEWS", "README*", "PKG-INFO")
