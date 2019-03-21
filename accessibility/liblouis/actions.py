@@ -11,7 +11,7 @@ from pisi.actionsapi import pythonmodules
 
 def setup():
  #   autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static")
+    autotools.configure("--disable-static --enable-ucs4")
 
 def build():
     autotools.make("-j1")
