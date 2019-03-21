@@ -19,7 +19,7 @@ def setup():
               "
     
     if get.buildTYPE() == "emul32":
-        options += "--prefix=/usr --datadir=/usr/emul32 \
+        options += "--datadir=/usr/emul32 \
                     --libexec=/usr/emul32 \
                     --sysconfdir=/usr/emul32 \
                     --libdir=lib32 \
