@@ -6,16 +6,29 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static \
-                         --libexecdir=/usr/libexec/at-spi2")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    options = "meson --prefix=/usr --sysconfdir=/etc \
+              "
+                     
+    if get.buildTYPE() == "emul32":
+        options += "--libdir=lib32 .."
+                
+    shelltools.system(options)
 
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    shelltools.system("ninja")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dodoc("AUTHORS", "COPYING", "README", "NEWS")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    if get.buildTYPE() == "emul32":
+        return
+    
+        shelltools.cd("build")
+        pisitools.dodoc("AUTHORS", "COPYING", "README", "NEWS")
