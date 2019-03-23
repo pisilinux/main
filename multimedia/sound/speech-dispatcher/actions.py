@@ -21,6 +21,8 @@ def setup():
                          --with-espeak \
                          --with-libao \
                          --with-pulse \
+                         --with-baratinoo=no \
+                         --with-kali=no \
                          --with-default-audio-method=alsa")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -29,7 +31,8 @@ def build():
     autotools.make()
 
 def install():
-    autotools.install()
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #autotools.install()
 
     # Conflicts with openTTS
     pisitools.remove("/usr/share/info/ssip.info")
@@ -41,4 +44,4 @@ def install():
     pisitools.dodir("/var/log/speech-dispatcher")
     shelltools.chmod("%s/var/log/speech-dispatcher" % get.installDIR(), 0700)
 
-    pisitools.dodoc("AUTHORS", "COPYING", "README")
+    pisitools.dodoc("AUTHORS", "COPYING*", "README*")

@@ -1,0 +1,45 @@
+From 5ede80b0713c75b21925203c3ef389c86cb69e6d Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Fri, 20 Jul 2018 15:04:48 +0200
+Subject: [PATCH] Remove pyxdg dependency
+
+And use the same algorithm as GLib to determine the base user config
+directory (XDG_CONFIG_HOME, then ~/.config then /tmp/$USERNAME/.config)
+---
+ src/api/python/speechd_config/config.py.in | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/src/api/python/speechd_config/config.py.in b/src/api/python/speechd_config/config.py.in
+index ccf8803..e8393e5 100644
+--- a/src/api/python/speechd_config/config.py.in
++++ b/src/api/python/speechd_config/config.py.in
+@@ -30,8 +30,6 @@ import socket
+ import sys
+ import time
+ 
+-from xdg import BaseDirectory
+-
+ # Locale/gettext configuration
+ 
+ locale.setlocale(locale.LC_ALL, '')
+@@ -167,7 +165,16 @@ class Tests:
+ 
+     def user_conf_dir(self):
+         """Return user configuration directory"""
+-        return os.path.join(BaseDirectory.xdg_config_home, "speech-dispatcher")
++        config_dir = os.environ['XDG_CONFIG_HOME']
++        if not config_dir:
++            home_dir = os.environ['HOME']
++            if home_dir:
++                config_dir = os.path.join(home_dir, ".config")
++            else:
++                tmpdir = os.environ['TMPDIR'] or "/tmp/"
++                config_dir = os.path.join(tmpdir, os.getlogin(), ".config")
++
++        return os.path.join(config_dir, "speech-dispatcher")
+ 
+     def system_conf_dir(self):
+         """Determine system configuration directory"""
+-- 
+2.17.1
+
