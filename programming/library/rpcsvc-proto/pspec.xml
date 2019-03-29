@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>rpcsvc-proto</Name>
+        <Homepage>https://github.com/thkukuk/rpcsvc-proto</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>This package contains rpcsvc proto.x files from glibc, which are
+missing in libtirpc.</Summary>
+        <Description>This package contains rpcsvc proto.x files from glibc, which are
+missing in libtirpc. Additional it contains rpcgen, which is needed
+to create header files and sources from protocol files.</Description>
+        <Archive sha1sum="e986a8077f9b2581f284d2e049d4d9be7a18bd85" type="tarxz">https://github.com/thkukuk/rpcsvc-proto/releases/download/v1.4/rpcsvc-proto-1.4.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>glibc-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>rpcsvc-proto</Name>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+<!--             <Path fileType="library">/usr/lib</Path> -->
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man/man1/rpcgen.1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>rpcsvc-proto-devel</Name>
+        <Summary>Development headers for rpcsvc-proto</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">rpcsvc-proto</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/share/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-03-29</Date>
+            <Version>1.4</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
