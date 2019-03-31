@@ -17,8 +17,7 @@ def setup():
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-        options += "--prefix=/_emul32 \
-                    --libdir=/usr/lib32 \
+        options += "--libdir=/usr/lib32 \
                     --libexecdir=/_emul32/libexec \
                     --with-module-path=/usr/lib32/pkcs11"
                  
