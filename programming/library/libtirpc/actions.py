@@ -10,8 +10,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed '/stdlib.h/a#include <stdint.h>' -i src/xdr_sizeof.c")
-    shelltools.system("sed '/key_secret_is/s/secret/secretkey/' -i src/libtirpc.map")
+    #shelltools.system("sed '/stdlib.h/a#include <stdint.h>' -i src/xdr_sizeof.c")
+    #shelltools.system("sed '/key_secret_is/s/secret/secretkey/' -i src/libtirpc.map")
     autotools.configure("--disable-static")
 
 def build():
