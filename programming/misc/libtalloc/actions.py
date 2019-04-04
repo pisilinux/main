@@ -24,8 +24,8 @@ def setup():
                 
     if get.buildTYPE() == "emul32":
         options += " --libdir=/usr/lib32 \
-        
                    "
+                   
     elif get.ARCH() == "x86_64":
         options += " --extra-python=/usr/bin/python \
         
