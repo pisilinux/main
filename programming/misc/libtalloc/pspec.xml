@@ -3,7 +3,7 @@
 <PISI>
     <Source>
         <Name>libtalloc</Name>
-        <Homepage>http://talloc.samba.org</Homepage>
+        <Homepage>https://talloc.samba.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -12,20 +12,27 @@
         <IsA>library</IsA>
         <Summary>Hierarchical pool based memory allocator</Summary>
         <Description>libtalloc is a library which implements a hierarchical allocator with destructors which is the core memory allocator in samba.</Description>
-        <Archive sha1sum="9d563b768148b620bdae1c97b36cfc30928a1044" type="targz">http://www.samba.org/ftp/talloc/talloc-2.1.14.tar.gz</Archive>
+        <Archive sha1sum="69fe815888eddcbe2fb6fc3270ff9e977461000d" type="targz">http://www.samba.org/ftp/talloc/talloc-2.1.16.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>docbook-xsl</Dependency>
             <Dependency>libxslt-devel</Dependency>
             <Dependency>python-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
             <Dependency>libbsd-devel</Dependency>
             <Dependency>attr-devel</Dependency>
+            <Dependency>libtirpc-devel</Dependency>
+            <Dependency>rpcsvc-proto-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1">fix_test_path.patch</Patch> -->
+        </Patches>
     </Source>
 
     <Package>
         <Name>libtalloc</Name>
         <RuntimeDependencies>
             <Dependency>python</Dependency>
+            <Dependency>python3</Dependency>
             <Dependency>libbsd</Dependency>
             <Dependency>attr</Dependency>
         </RuntimeDependencies>
@@ -56,7 +63,7 @@
         <Summary>32-bit shared libraries for libtalloc</Summary>
         <BuildType>emul32</BuildType>
          <BuildDependencies>
-            
+            <Dependency>libxslt-32bit</Dependency>
             <Dependency>attr-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
@@ -70,6 +77,13 @@
     </Package>
 
     <History>
+        <Update release="8">
+            <Date>2019-04-04</Date>
+            <Version>2.1.16</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="7">
             <Date>2018-08-06</Date>
             <Version>2.1.14</Version>
