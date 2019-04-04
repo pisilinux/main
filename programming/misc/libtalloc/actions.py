@@ -28,8 +28,8 @@ def setup():
                    
     elif get.ARCH() == "x86_64":
         options += " --extra-python=/usr/bin/python \
-        
-                   " 
+                   "
+                   
     autotools.configure(options)
 
 def build():
