@@ -14,6 +14,7 @@ def setup():
     autotools.configure("\
                          --builtin-libraries=replace \
                          --bundled-libraries=NONE \
+                         --extra-python=/usr/bin/python \
                          --disable-rpath \
                         ")
 
