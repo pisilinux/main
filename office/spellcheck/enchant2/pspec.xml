@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>enchant2</Name>
+        <Homepage>https://www.abisource.com/enchant/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Spellchecker wrapping library</Summary>
+        <Description>enchant is a library that wraps other spell checking backends.</Description>
+        <Archive sha1sum="7ac67b90b95004471fbc7992263bdc70613ad591" type="targz">https://github.com/AbiWord/enchant/archive/v2.2.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>git</Dependency>
+            <Dependency>gnupg</Dependency>
+            <Dependency>aspell-devel</Dependency>
+            <Dependency>hunspell-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>enchant2</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>hunspell</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/enchant</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>enchant2-aspell</Name>
+        <Summary>aspell backend for Enchant</Summary>
+        <RuntimeDependencies>
+            <Dependency>enchant2</Dependency>
+            <Dependency>aspell</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/enchant-2/enchant_aspell.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>enchant2-zemberek</Name>
+        <Summary>zemberek backend for Enchant</Summary>
+        <RuntimeDependencies>
+            <Dependency>enchant2</Dependency>
+            <Dependency>zemberek-office</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/enchant-2/enchant_zemberek.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>enchant2-devel</Name>
+        <Summary>Development files for enchant2</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">enchant2</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-04-06</Date>
+            <Version>2.2.3</Version>
+            <Comment>First release.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
