@@ -1,0 +1,377 @@
+diff -Nuar src_old/ui/gui/oneway.ui src/ui/gui/oneway.ui
+--- src_old/ui/gui/oneway.ui	2018-11-06 16:38:12.000000000 +0300
++++ src/ui/gui/oneway.ui	2019-03-25 10:21:34.915884000 +0300
+@@ -226,6 +226,151 @@
+       </object>
+     </child>
+   </object>
++<!--Posthoc dialog-->
++  <object class="PsppireDialog" id="posthoc-dialog">
++    <property name="can_focus">False</property>
++    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++    <property name="title" translatable="yes">One-Way ANOVA: Post-Hoc</property>
++    <property name="modal">True</property>
++    <child>
++      <object class="GtkBox" id="dialog-hbox3">
++        <property name="visible">True</property>
++        <property name="can_focus">False</property>
++        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++        <property name="orientation">vertical</property>
++        <property name="spacing">2</property>
++        <child>
++          <object class="GtkBox" id="vbox3">
++            <property name="visible">True</property>
++            <property name="can_focus">False</property>
++            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++            <property name="orientation">vertical</property>
++            <property name="homogeneous">True</property>
++            <child>
++              <object class="GtkCheckButton" id="bonferroni-button">
++                <property name="label" translatable="yes">BONFERRONI</property>
++                <property name="visible">True</property>
++                <property name="can_focus">True</property>
++                <property name="receives_default">False</property>
++                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                <property name="use_underline">True</property>
++                <property name="xalign">0.5</property>
++                <property name="draw_indicator">True</property>
++              </object>
++              <packing>
++                <property name="expand">True</property>
++                <property name="fill">True</property>
++                <property name="position">0</property>
++              </packing>
++            </child>
++            <child>
++              <object class="GtkCheckButton" id="gh-button">
++                <property name="label" translatable="yes">GAMES HOWELL</property>
++                <property name="visible">True</property>
++                <property name="can_focus">True</property>
++                <property name="receives_default">False</property>
++                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                <property name="use_underline">True</property>
++                <property name="xalign">0.5</property>
++                <property name="draw_indicator">True</property>
++              </object>
++              <packing>
++                <property name="expand">True</property>
++                <property name="fill">True</property>
++                <property name="position">1</property>
++              </packing>
++            </child>
++            <child>
++              <object class="GtkCheckButton" id="lsd-button">
++                <property name="label" translatable="yes">LSD</property>
++                <property name="visible">True</property>
++                <property name="can_focus">True</property>
++                <property name="receives_default">False</property>
++                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                <property name="use_underline">True</property>
++                <property name="xalign">0.5</property>
++                <property name="draw_indicator">True</property>
++              </object>
++              <packing>
++                <property name="expand">True</property>
++                <property name="fill">True</property>
++                <property name="position">2</property>
++              </packing>
++            </child>
++            <child>
++              <object class="GtkCheckButton" id="scheffe-button">
++                <property name="label" translatable="yes">SCHEFFE</property>
++                <property name="visible">True</property>
++                <property name="can_focus">True</property>
++                <property name="receives_default">False</property>
++                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                <property name="use_underline">True</property>
++                <property name="xalign">0.5</property>
++                <property name="draw_indicator">True</property>
++              </object>
++              <packing>
++                <property name="expand">True</property>
++                <property name="fill">True</property>
++                <property name="position">3</property>
++              </packing>
++            </child>
++            <child>
++              <object class="GtkCheckButton" id="sidak-button">
++                <property name="label" translatable="yes">SIDAK</property>
++                <property name="visible">True</property>
++                <property name="can_focus">True</property>
++                <property name="receives_default">False</property>
++                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                <property name="use_underline">True</property>
++                <property name="xalign">0.5</property>
++                <property name="draw_indicator">True</property>
++              </object>
++              <packing>
++                <property name="expand">True</property>
++                <property name="fill">True</property>
++                <property name="position">4</property>
++              </packing>
++            </child>
++            <child>
++              <object class="GtkCheckButton" id="tukey-button">
++                <property name="label" translatable="yes">TUKEY HSD</property>
++                <property name="visible">True</property>
++                <property name="can_focus">True</property>
++                <property name="receives_default">False</property>
++                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                <property name="use_underline">True</property>
++                <property name="xalign">0.5</property>
++                <property name="draw_indicator">True</property>
++              </object>
++              <packing>
++                <property name="expand">True</property>
++                <property name="fill">True</property>
++                <property name="position">5</property>
++              </packing>
++            </child>
++          </object>
++        </child>
++        <child>
++          <object class="PsppireButtonbox" id="psppire-hbuttonbox1">
++            <property name="orientation">horizontal</property>
++            <property name="visible">True</property>
++            <property name="can_focus">False</property>
++            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++            <property name="border_width">5</property>
++            <property name="layout_style">spread</property>
++            <property name="buttons">PSPPIRE_BUTTON_CONTINUE_MASK | PSPPIRE_BUTTON_CANCEL_MASK | PSPPIRE_BUTTON_HELP_MASK</property>
++          </object>
++          <packing>
++            <property name="expand">False</property>
++            <property name="fill">False</property>
++            <property name="pack_type">end</property>
++            <property name="position">1</property>
++          </packing>
++        </child>
++      </object>
++    </child>
++  </object> 
++<!--Posthoc dioalog bitti-->
+   <object class="PsppireDialog" id="oneway-anova-dialog">
+     <property name="can_focus">False</property>
+     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+@@ -476,6 +621,32 @@
+                     <property name="position">0</property>
+                   </packing>
+                 </child>
++<!--Added Posthoc button-->
++                <child>
++                <object class="GtkButtonBox" id="vbuttonbox3">
++                  <property name="orientation">vertical</property>
++                  <property name="visible">True</property>
++                  <property name="can_focus">False</property>
++                  <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                  <property name="hexpand">True</property>
++                     <child>
++                     <object class="GtkButton" id="posthoc-button">
++                       <property name="label" translatable="yes">Post-Hoc...</property>
++                       <property name="visible">True</property>
++                       <property name="can_focus">True</property>
++                       <property name="receives_default">True</property>
++                       <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
++                       <property name="use_underline">True</property>
++                    </object>
++                    <packing>
++                      <property name="expand">False</property>
++                      <property name="fill">False</property>
++                      <property name="position">0</property>
++                    </packing>
++                  </child>
++                </object>
++                </child>
++<!--Posthoc button finished-->
+                 <child>
+                   <object class="GtkButtonBox" id="vbuttonbox2">
+                     <property name="orientation">vertical</property>
+diff -Nuar src_old/ui/gui/psppire-dialog-action-oneway.c src/ui/gui/psppire-dialog-action-oneway.c
+--- src_old/ui/gui/psppire-dialog-action-oneway.c	2018-11-06 16:38:12.000000000 +0300
++++ src/ui/gui/psppire-dialog-action-oneway.c	2019-03-25 10:24:21.574883603 +0300
+@@ -33,9 +33,16 @@
+ #define _(msgid) gettext (msgid)
+ #define N_(msgid) msgid
+ 
++#define     POSTHOC_BONFERRONI  0x01
++#define     POSTHOC_GH          0x02
++#define     POSTHOC_LSD         0x03
++#define     POSTHOC_SCHEFFE     0x04
++#define     POSTHOC_SIDAK       0x05
++#define     POSTHOC_TUKEY       0x06
+ 
+ static void next (GtkWidget *widget, PsppireDialogActionOneway *);
+ static void prev (GtkWidget *widget, PsppireDialogActionOneway *);
++static void run_posthoc_dialog (PsppireDialogActionOneway *ow);
+ static void run_contrasts_dialog (PsppireDialogActionOneway *csd);
+ static void push_new_store (GArray *contrast_stack, PsppireDialogActionOneway *csd);
+ 
+@@ -55,6 +62,12 @@
+ 
+   gboolean descriptives = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->descriptives));
+   gboolean homogeneity = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->homogeneity));
++  gboolean bonferroni = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->bonferroni_button));
++  gboolean gh = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->gh_button));
++  gboolean lsd = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->lsd_button));
++  gboolean scheffe = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->scheffe_button));
++  gboolean sidak = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->sidak_button));
++  gboolean tukey = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->tukey_button));
+   struct string dss;
+ 
+   ds_init_cstr (&dss, "ONEWAY /VARIABLES=");
+@@ -64,14 +77,26 @@
+   ds_put_cstr (&dss, " BY ");
+ 
+   ds_put_cstr (&dss, gtk_entry_get_text (GTK_ENTRY (ow->factor_entry)));
+-
+-  if (descriptives || homogeneity )
++ 
++  if (descriptives || homogeneity || bonferroni || gh || lsd || scheffe || sidak || tukey)
+     {
+       ds_put_cstr (&dss, "\n\t/STATISTICS=");
+       if (descriptives)
+ 	ds_put_cstr (&dss, "DESCRIPTIVES ");
+       if (homogeneity)
+ 	ds_put_cstr (&dss, "HOMOGENEITY ");
++      if (bonferroni)
++	ds_put_cstr (&dss, "\n\t/POSTHOC=BONFERRONI ");
++      if (gh)
++	ds_put_cstr (&dss, "\n\t/POSTHOC=GH ");
++      if (lsd)
++	ds_put_cstr (&dss, "\n\t/POSTHOC=LSD ");
++      if (scheffe)
++	ds_put_cstr (&dss, "\n\t/POSTHOC=SCHEFFE ");
++      if (sidak)
++	ds_put_cstr (&dss, "\n\t/POSTHOC=SIDAK ");
++      if (tukey)
++	ds_put_cstr (&dss, "\n\t/POSTHOC=TUKEY ");
+     }
+ 
+   for (i = 0 ; i < ow->contrasts_array->len ; ++i )
+@@ -226,8 +251,9 @@
+ 
+   GtkBuilder *xml = builder_new ( "oneway.ui");
+ 
+-  GtkWidget *contrasts_button =
+-    get_widget_assert (xml, "contrasts-button");
++  GtkWidget *contrasts_button = get_widget_assert (xml, "contrasts-button");
++/*Posthoc button */
++  GtkWidget *posthoc_button= get_widget_assert (xml, "posthoc-button");
+   GtkEntry *entry = GTK_ENTRY (get_widget_assert (xml, "entry1"));
+ 
+   pda->dialog = get_widget_assert   (xml, "oneway-anova-dialog");
+@@ -239,6 +265,20 @@
+   act->descriptives =  get_widget_assert (xml, "checkbutton1");
+   act->homogeneity =  get_widget_assert (xml, "checkbutton2");
+ 
++/*Posthoc tests dialog */
++  act->posthoc_dialog = get_widget_assert (xml, "posthoc-dialog");
++
++  act->bonferroni_button = get_widget_assert (xml, "bonferroni-button");
++  act->gh_button = get_widget_assert (xml, "gh-button");
++  act->lsd_button = get_widget_assert (xml, "lsd-button");
++  act->scheffe_button = get_widget_assert (xml, "scheffe-button");
++  act->sidak_button = get_widget_assert (xml, "sidak-button");
++  act->tukey_button = get_widget_assert (xml, "tukey-button");
++
++  g_signal_connect_swapped (posthoc_button, "clicked",
++		    G_CALLBACK (run_posthoc_dialog), act);
++
++/*Contrast dialog*/
+   act->contrasts_dialog = get_widget_assert (xml, "contrasts-dialog");
+ 
+   act->next = get_widget_assert (xml, "next-button");
+@@ -282,9 +322,54 @@
+   act->c = -1;
+ 
+ }
++/*Posthoc dialog */
++static void
++run_posthoc_dialog (PsppireDialogActionOneway *ow)
++{
++  gint response;
++
++  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ow->bonferroni_button),
++				ow->posthoc & POSTHOC_BONFERRONI);
++
++  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ow->gh_button),
++				ow->posthoc & POSTHOC_GH);
++
++  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ow->lsd_button),
++				ow->posthoc & POSTHOC_LSD);
++
++  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ow->scheffe_button),
++				ow->posthoc & POSTHOC_SCHEFFE);
+ 
++  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ow->sidak_button),
++				ow->posthoc & POSTHOC_SIDAK);
+ 
+-
++  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ow->tukey_button),
++				ow->posthoc & POSTHOC_TUKEY);
++
++  response = psppire_dialog_run (PSPPIRE_DIALOG (ow->posthoc_dialog));
++
++  if ( response == PSPPIRE_RESPONSE_CONTINUE )
++    {
++      ow->posthoc= 0;
++      if ( gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->bonferroni_button) ))
++	ow->posthoc |= POSTHOC_BONFERRONI;
++
++      if ( gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->gh_button) ))
++	ow->posthoc |= POSTHOC_GH;
++
++      if ( gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->lsd_button) ))
++	ow->posthoc |= POSTHOC_LSD;
++
++      if ( gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->scheffe_button) ))
++	ow->posthoc |= POSTHOC_SCHEFFE;
++
++      if ( gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->sidak_button) ))
++	ow->posthoc |= POSTHOC_SIDAK;
++
++      if ( gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ow->tukey_button) ))
++	ow->posthoc |= POSTHOC_TUKEY;
++    }
++}
+ 
+ static void
+ run_contrasts_dialog (PsppireDialogActionOneway *csd)
+diff -Nuar src_old/ui/gui/psppire-dialog-action-oneway.h src/ui/gui/psppire-dialog-action-oneway.h
+--- src_old/ui/gui/psppire-dialog-action-oneway.h	2018-11-06 16:38:12.000000000 +0300
++++ src/ui/gui/psppire-dialog-action-oneway.h	2019-03-25 08:49:48.745899175 +0300
+@@ -63,7 +63,18 @@
+   GtkWidget *descriptives;
+   GtkWidget *homogeneity;
+ 
++/*Post-Hoc dialog*/
++  GtkWidget *posthoc_dialog;
++  
++  GtkWidget *bonferroni_button;
++  GtkWidget *gh_button;
++  GtkWidget *lsd_button;
++  GtkWidget *scheffe_button;
++  GtkWidget *sidak_button;
++  GtkWidget *tukey_button;
++  guint posthoc;
+ 
++/*Contrasts dialog*/
+   GtkWidget *contrasts_dialog;
+ 
+   GtkWidget *next;
+@@ -72,7 +83,6 @@
+   GtkWidget *vars_treeview;
+   GtkWidget *factor_entry;
+ 
+-
+   /* Gets copied into contrasts when "Continue"
+      is clicked */
+   GArray *temp_contrasts;
+@@ -82,7 +92,6 @@
+ 
+ 
+   GArray *contrasts_array;
+-
+   GtkWidget *ctotal;
+   GtkWidget *stack_label;
+ };
