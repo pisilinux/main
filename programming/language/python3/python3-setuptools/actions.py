@@ -11,9 +11,12 @@ from pisi.actionsapi import shelltools
 WorkDir="setuptools-%s" % get.srcVERSION()
 
     
-def install():    
+def install():
+    pisitools.dosed("setuptools/command/easy_install.py", "env python", "env python3")
+    
     pythonmodules.run("bootstrap.py", pyVer="3")
     pythonmodules.install(pyVer = "3")
     pisitools.rename("/usr/bin/easy_install", "py3easy-install")
+    
     #avoid python-setuptools conflict
-    pisitools.removeDir("/usr/share")
+    #pisitools.removeDir("/usr/share")
