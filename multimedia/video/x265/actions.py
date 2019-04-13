@@ -21,4 +21,6 @@ def build():
 def install():
     shelltools.cd("source")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    pisitools.remove("/usr/lib/libx265.a")
 
