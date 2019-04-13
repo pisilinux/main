@@ -24,16 +24,15 @@ def setup():
         pisitools.dosed(i, "^CXX=g\+\+ ", "CXX=%s " % get.CXX())
 
 def build():
-    # do not force CC and CXX here since asm build fails
-    autotools.make('OPTFLAGS="%s -DHAVE_GCCVISIBILITYPATCH -fvisibility=hidden -fvisibility-inlines-hidden" \
-                    all3' % get.CFLAGS())
+    autotools.make('OPTFLAGS="%s" all3' % get.CFLAGS())
 
 def install():
-    pisitools.insinto("/usr/lib/p7zip","bin/*")
+    pisitools.insinto("/usr/lib/p7zip", "bin/*")
 
     # p7zip wrapper
     pisitools.dobin("contrib/gzip-like_CLI_wrapper_for_7z/p7zip")
     pisitools.doman("contrib/gzip-like_CLI_wrapper_for_7z/man1/p7zip.1")
+    pisitools.doman("man1/*")
 
     pisitools.dohtml("DOC/MANUAL/*")
     pisitools.dodoc("ChangeLog", "README", "TODO", "DOC/*.txt")
