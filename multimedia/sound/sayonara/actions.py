@@ -15,5 +15,10 @@ def build():
     kde5.make()
 
 def install():
-    kde5.install()    
-    pisitools.dodoc("README.txt", "license.txt", "MANUAL")
+    kde5.install()
+
+    pisitools.remove("usr/share/icons/sayonara.png")
+    pisitools.dodoc("COPYING", \
+    "LICENSE", \
+    "MANUAL", \
+    "README.txt")
