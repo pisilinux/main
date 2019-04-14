@@ -12,8 +12,6 @@ from pisi.actionsapi import get
 
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    
     autotools.configure()
 
 def build():
@@ -21,5 +19,3 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
