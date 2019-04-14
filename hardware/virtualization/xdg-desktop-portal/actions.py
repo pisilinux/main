@@ -14,6 +14,7 @@ def setup():
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     
     autotools.configure("--with-systemduserunitdir=none \
+                         --disable-geoclue \
                          --disable-pipewire")
 
 def build():
