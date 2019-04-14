@@ -22,7 +22,7 @@ absoluteWorkDir = "%s/%s" % (get.workDIR(), WorkDir)
 bindirQt5="/usr/bin"
 
 def setup():
-    shelltools.system("patch -Rp1 < qt5-base-nouveau-freeze.patch")
+    #shelltools.system("patch -Rp1 < qt5-base-nouveau-freeze.patch")
     
     checkdeletepath="%s/qtbase/src/3rdparty"  % absoluteWorkDir
     for dir in ('libjpeg', 'freetype', 'libpng', 'zlib', "xcb", "sqlite"):
