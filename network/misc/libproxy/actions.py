@@ -15,6 +15,7 @@ def setup():
                           -DPERL_VENDORINSTALL=yes \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DWITH_WEBKIT=ON \
+                          -DWITH_VALA=yes \
                           -DWITH_MOZJS=ON")
 
 def build():
