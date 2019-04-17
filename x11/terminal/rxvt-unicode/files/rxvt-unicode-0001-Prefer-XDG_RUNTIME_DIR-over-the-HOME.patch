@@ -1,0 +1,27 @@
+From 30fb93760c0bb0bea2bca1ac17c4d9709fb95e1c Mon Sep 17 00:00:00 2001
+From: Peter Lemenkov <lemenkov@gmail.com>
+Date: Wed, 10 Dec 2014 15:20:14 +0300
+Subject: [PATCH] Prefer XDG_RUNTIME_DIR over the HOME
+
+Signed-off-by: Peter Lemenkov <lemenkov@gmail.com>
+
+diff --git a/src/rxvtdaemon.C b/src/rxvtdaemon.C
+index 7986c5f..7337f51 100644
+--- a/src/rxvtdaemon.C
++++ b/src/rxvtdaemon.C
+@@ -43,9 +43,13 @@ char *rxvt_connection::unix_sockname ()
+       struct utsname u;
+       uname (&u);
+ 
+-      path = getenv ("HOME");
++      path = getenv ("XDG_RUNTIME_DIR");
+       if (!path)
+-        path = "/tmp";
++        {
++          path = getenv ("HOME");
++          if (!path)
++            path = "/tmp";
++        }
+ 
+       snprintf (name, PATH_MAX, "%s/.urxvt", path);
+       mkdir (name, 0777);
