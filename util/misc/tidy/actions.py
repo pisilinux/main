@@ -26,4 +26,7 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     shelltools.cd("..")
+    pisitools.insinto("/usr/include", "include/platform.h")
+    pisitools.insinto("/usr/include", "include/buffio.h")
+    
     pisitools.dodoc("README.md")
