@@ -16,4 +16,4 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("COPYING*",  "ChangeLog", "AUTHORS", "README*", "TESTING")
+    pisitools.dodoc("COPYING*",  "ChangeLog", "AUTHORS", "README*", "TESTING*")
