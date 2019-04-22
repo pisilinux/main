@@ -22,6 +22,7 @@ def setup():
                          --enable-nested-tables \
                          --enable-read-eta \
                          --with-zlib \
+                         --with-ssl \
                          --enable-nls \
                          --enable-ipv6 \
                          --mandir=/usr/share/man")
