@@ -13,12 +13,15 @@ from pisi.actionsapi import get
     
 
 def build():
+    pisitools.flags.add("-DNDEBUG -fPIC")
     pisitools.dosed("cryptopp.pc", "@VERSION@", get.srcVERSION())
     
-    cmaketools.make()
+    cmaketools.make("dynamic cryptest.exe")
     
     
 def install():
     cmaketools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
+    
+    pisitools.remove("/usr/lib/libcryptopp.a")
 
     pisitools.insinto("/usr/lib/pkgconfig", "cryptopp.pc")
