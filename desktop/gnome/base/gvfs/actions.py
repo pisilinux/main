@@ -2,37 +2,33 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt.
+# See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vfi")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson --prefix=/usr \
+                                -Ddbus_service_dir=/usr/share/dbus-1/services \
+                                -Dlogind=false \
+                                -Dnfs=false \
+                                -Dgoa=false \
+                                -Dman=true \
+                                -Dgoogle=false \
+                                -Dtmpfilesdir=lib/tmpfiles.d \
+                                -Dsystemduserunitdir=no ..")
     
-    autotools.configure("\
-                         --with-dbus-service-dir=/usr/share/dbus-1/services \
-                         --disable-silent-rules \
-                         --disable-static \
-                         --enable-afc \
-                         --enable-archive \
-                         --enable-bluray \
-                         --enable-gphoto2 \
-                         --enable-keyring \
-                         --enable-samba \
-                         --enable-udev \
-                         --enable-udisks2 \
-                        ")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    shelltools.copy("daemon/trashlib/COPYING", "COPYING.GPL3")
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING*", "AUTHORS", "NEWS", "README")
