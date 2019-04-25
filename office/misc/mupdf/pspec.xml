@@ -11,8 +11,12 @@
         <License>AGPL3</License>
         <IsA>app:gui</IsA>
         <Summary>Lightweight PDF and XPS viewer</Summary>
-        <Description>MuPDF is a lightweight open source software framework for viewing and converting PDF, XPS, and E-book documents.</Description>
-        <Archive sha1sum="0daee66600023de2bda2f1928a97a8515c17d2d2" type="targz"> http://www.mupdf.com/downloads/archive/mupdf-1.12.0-source.tar.gz</Archive>
+        <Description>
+            MuPDF is a lightweight open source software framework for viewing and converting PDF, XPS, and E-book documents.
+        </Description>
+        <Archive sha1sum="b55179569716b9fd85655f6018ffd999b101f3c5" type="targz">
+            https://mupdf.com/downloads/archive/mupdf-1.14.0-source.tar.gz
+        </Archive>
         <BuildDependencies>
             <Dependency>mesa-devel</Dependency>
             <Dependency>curl-devel</Dependency>
@@ -31,9 +35,11 @@
             <Dependency>libXinerama-devel</Dependency>
         </BuildDependencies>
         <Patches>
+            <!--
             <Patch>mupdf-1.12.0-security-roundup.patch</Patch>
             <Patch>mupdf-CVE-2017-17858.patch</Patch>
-<!--             <Patch>mupdf-1.12.0-security_fix-1.patch</Patch> -->
+            <Patch>mupdf-1.12.0-security_fix-1.patch</Patch>
+            -->
         </Patches>
     </Source>
 
@@ -48,9 +54,10 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="library">/usr/lib/libmupdf-third.a</Path>
+            <Path fileType="library">/usr/lib/libmupdf.a</Path>
+            <Path fileType="doc">/usr/share/doc/mupdf/*</Path>
+            <Path fileType="man">/usr/share/man/man1</Path>
         </Files>
     </Package>
 
@@ -61,12 +68,20 @@
             <Dependency release="current">mupdf</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include/mupdf</Path>
+            <Path fileType="header">/usr/include/mupdf/fitz</Path>
+            <Path fileType="header">/usr/include/mupdf/pdf</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2019-04-25</Date>
+            <Version>1.14.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>wascheme@tuta.io</Email>
+        </Update>
         <Update release="3">
             <Date>2018-08-09</Date>
             <Version>1.12.0</Version>
