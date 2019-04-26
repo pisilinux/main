@@ -1,69 +1,34 @@
-diff -uprb pidgin-2.10.12.orig/libpurple/purple-remote pidgin-2.10.12/libpurple/purple-remote
---- pidgin-2.10.12.orig/libpurple/purple-remote	2016-01-01 01:19:41.000000000 +0200
-+++ pidgin-2.10.12/libpurple/purple-remote	2016-01-02 06:23:14.082831498 +0200
-@@ -3,13 +3,20 @@
- import codecs
- import dbus
- import re
--import urllib
- import sys
-+try:
-+    from urllib.parse import unquote
-+except ImportError:
-+    from urllib import unquote
+# HG changeset patch
+# User Evangelos Foutras <evangelos@foutrelis.com>
+# Date 1520583640 -7200
+#      Fri Mar 09 10:20:40 2018 +0200
+# Branch release-2.x.y
+# Node ID ac2e05444162f1dc0fd60e4d5c8b4cbe2969b695
+# Parent  02df346d26d00cb9a1420c11a59fccb35d92f04e
+Adjust purple-remote to work with Python 3
+
+Fixes the following error:
+
+    Traceback (most recent call last):
+      File "./libpurple/purple-remote", line 241, in <module>
+        print("No existing libpurple instance detected.")
+      File "/usr/lib/python3.6/codecs.py", line 377, in write
+        self.stream.write(data)
+    TypeError: write() argument must be str, not bytes
+
+diff -r 02df346d26d0 -r ac2e05444162 libpurple/purple-remote
+--- a/libpurple/purple-remote	Thu Mar 08 22:51:37 2018 -0600
++++ b/libpurple/purple-remote	Fri Mar 09 10:20:40 2018 +0200
+@@ -13,8 +13,10 @@
  
  import xml.dom.minidom 
  
 -sys.stdin = codecs.getwriter('utf-8')(sys.stdin);
 -sys.stdout = codecs.getwriter('utf-8')(sys.stdout);
-+if sys.version_info[0] >= 3:
-+    sys.stdin = codecs.getwriter('utf-8')(sys.stdin.buffer)
++if hasattr(sys.stdout, 'buffer'):
 +    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer)
 +else:
-+    sys.stdin = codecs.getwriter('utf-8')(sys.stdin)
 +    sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
  
  xml.dom.minidom.Element.all   = xml.dom.minidom.Element.getElementsByTagName
  
-@@ -41,7 +48,7 @@ class CheckedAttribute:
-         return result
-             
- def show_help(requested=False):
--    print """This program uses D-Bus to communicate with purple.
-+    print("""This program uses D-Bus to communicate with purple.
- 
- Usage:
- 
-@@ -72,7 +79,7 @@ Examples of commands:
- 
-     PurpleAccountsFindConnected?name=&protocol=prpl-jabber
-     PurpleAccountsFindConnected(,prpl-jabber)
--""" % sys.argv[0]
-+""" % sys.argv[0])
-     if (requested):
-         sys.exit(0)
-     else:
-@@ -120,7 +127,7 @@ def execute(uri):
-     if paramstring is not None:
-         for param in paramstring.split("&"):
-             key, value = extendlist(param.split("=",1), 2, "")
--            params[key] = urllib.unquote(value)
-+            params[key] = unquote(value)
- 
-     accountname = params.get("account", "")
- 
-@@ -233,12 +240,11 @@ if len(sys.argv) == 1:
- elif (sys.argv[1] == "--help" or sys.argv[1] == "-h"):
-     show_help(True)
- elif (obj == None):
--    print "No existing libpurple instance detected."
-+    print("No existing libpurple instance detected.")
-     sys.exit(1);
-     
- for arg in sys.argv[1:]:
-     output = execute(arg)
- 
-     if (output != None):
--        print output
--
-+        print(output)
