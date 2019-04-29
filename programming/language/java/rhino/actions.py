@@ -20,5 +20,5 @@ def install():
     pisitools.doman("rhino.1")
     pisitools.doman("rhino-jsc.1")
     pisitools.doman("rhino-debugger.1")
-    pisitools.insinto("/usr/share/java", "build/rhino1.7.7.1/js.jar")
-    pisitools.insinto("/usr/share/java", "build/rhino1.7.7.1/js.jar", "js-1.7.7.1.jar")
+    pisitools.insinto("/usr/share/java", "build/rhino1.7.7.2/js.jar")
+    pisitools.insinto("/usr/share/java", "build/rhino1.7.7.2/js.jar", "js-1.7.7.2.jar")
