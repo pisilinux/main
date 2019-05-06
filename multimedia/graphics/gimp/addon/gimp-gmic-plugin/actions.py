@@ -22,8 +22,9 @@ def install():
     pisitools.insinto("/etc/bash_completion.d/", "resources/gmic_bashcompletion.sh", destinationFile = "gmic")
     shelltools.cd("gmic-qt")
     #pisitools.dobin("gmic")
-    #pisitools.doexe("gmic_gimp_qt", "/usr/lib/gimp/2.0/plug-ins/")
-    pisitools.insinto("/usr/lib/gimp/2.0/plug-ins/", "gmic_gimp_qt", "gmic_gimp")
+    pisitools.doexe("gmic_gimp_qt", "/usr/lib/gimp/2.0/plug-ins/")
+    #pisitools.insinto("/usr/lib/gimp/2.0/plug-ins/", "gmic_gimp_qt", "gmic_gimp")
+    pisitools.dosym("/usr/lib/gimp/2.0/plug-ins/gmic_gimp_qt", "/usr/lib/gimp/2.0/plug-ins/gmic_gimp")
     
     shelltools.cd("..")
     shelltools.cd("src")
