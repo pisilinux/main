@@ -125,3 +125,7 @@ def install():
     
     #seems we need to add this symlink into ca-certificates-java package ?
     pisitools.dosym("/etc/ssl/certs/java/cacerts", "%s/jre/lib/security/cacerts" % jvmdir)
+    
+    pisitools.dosed("%s/usr/share/applications/policytool.desktop" % get.installDIR(), "_BINDIR_", "/usr/lib/jvm/java-7-openjdk/jre/bin")
+    pisitools.dosed("%s/usr/share/applications/jconsole.desktop" % get.installDIR(), "_BINDIR_", "/usr/lib/jvm/java-7-openjdk/bin")
+
