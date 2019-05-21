@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pcsc-lite</Name>
+        <Homepage>https://pcsclite.apdu.fr</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>as-is</License>
+        <IsA>app:console</IsA>
+        <Summary>PC/SC drivers for smart card readers</Summary>
+        <Description>pcsc-lite is middleware to access a smart card using SCard API (PC/SC).</Description>
+        <Archive sha1sum="a5d48615cddb2b7050b4dc195e938a5d39ef62c4" type="tarbz2">https://pcsclite.apdu.fr/files/pcsc-lite-1.8.24.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>eudev-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>pcsc-lite</Name>
+        <RuntimeDependencies>
+            <Dependency>eudev</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/reader.conf.d</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="library">/usr/lib/pcsc/drivers</Path>
+        </Files>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>pcsc-lite-devel</Name>
+        <Summary>Development files for pcsc-lite</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">pcsc-lite</Dependency>
+            <Dependency>eudev-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-05-19</Date>
+            <Version>1.8.24</Version>
+            <Comment>First release</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
