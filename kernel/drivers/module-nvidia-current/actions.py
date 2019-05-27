@@ -26,8 +26,8 @@ def setup():
                       % (arch, get.srcVERSION()))
     shelltools.move("tmp/*", ".")
     
-    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.19.patch")
-    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.20.patch")
+    #shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.19.patch")
+    #shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.20.patch")
     
     # Our libc is TLS enabled so use TLS library
     #shelltools.unlink("*-tls.so*")
