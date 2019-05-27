@@ -9,9 +9,6 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-#USBDROPDIR   = "/usr/lib%s/pcsc/drivers" % ("32" if \
-#        get.buildTYPE() == "emul32" else "")
-
 USBDROPDIR = "/usr/lib/pcsc/drivers"
 
 def setup():
@@ -20,12 +17,6 @@ def setup():
                --disable-dependency-tracking \
                --disable-static" % USBDROPDIR
 
-    """
-    if get.buildTYPE() == "emul32":
-        options += " --prefix=/emul32 \
-                     --libdir=/usr/lib32"
-        shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
-    """
 
     autotools.autoreconf("-fi")
     autotools.configure(options)
@@ -40,13 +31,13 @@ def install():
 
     pisitools.dodir(USBDROPDIR)
 
-    """
-    if get.buildTYPE() == "emul32":
-        pisitools.removeDir("/emul32")
-        return
-    """
-
     pisitools.dodir("/etc/reader.conf.d")
+
+    #for fixing UYAP e-Sign problem
+    pisitools.dodir("/usr/lib/x86_64-linux-gnu/")
+    libs=["libpcsclite.so","libpcsclite.so.1", "libpcsclite.so.1.0.0"]
+    for i in libs:
+        pisitools.dosym("/usr/lib/%s" % i, "/usr/lib/x86_64-linux-gnu/%s" % i)
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "HELP", "NEWS",
                     "README", "SECURITY", "doc/README.DAEMON")
