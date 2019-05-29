@@ -18,7 +18,8 @@ def install():
     kde5.install()
 
     pisitools.remove("usr/share/icons/sayonara.png")
-    pisitools.dodoc("COPYING", \
+    pisitools.dodoc("CHANGES", \
+    "COPYING", \
     "LICENSE", \
     "MANUAL", \
     "README.txt")
