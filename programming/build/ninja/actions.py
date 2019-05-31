@@ -11,6 +11,13 @@ from pisi.actionsapi import get
 
 
 def build():
+    shelltools.system("""sed -i '/int Guess/a \
+                       int   j = 0;\
+                       char* jobs = getenv( "NINJAJOBS" );\
+                       if ( jobs != NULL ) j = atoi( jobs );\
+                       if ( j > 0 ) return j;\
+                       ' src/ninja.cc""")
+    
     shelltools.system("python configure.py --bootstrap")
     shelltools.system("asciidoc doc/manual.asciidoc")
     shelltools.system("emacs -Q --batch -f batch-byte-compile misc/ninja-mode.el")
