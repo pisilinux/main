@@ -1,0 +1,82 @@
+From 59c38a2216f4467b53970bb6b010bc4fe0b8d1d3 Mon Sep 17 00:00:00 2001
+From: serge-sans-paille <sguelton@redhat.com>
+Date: Fri, 25 Jan 2019 17:32:54 +0000
+Subject: [PATCH 1/2] [PATCH] Filter out cxxflags not supported by clang
+
+---
+ cmake/modules/AddLLVM.cmake       | 6 +++++-
+ cmake/modules/CMakeLists.txt      | 3 +++
+ cmake/modules/LLVMConfig.cmake.in | 2 ++
+ tools/llvm-config/CMakeLists.txt  | 4 ++++
+ 4 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/modules/AddLLVM.cmake b/cmake/modules/AddLLVM.cmake
+index 4dbc0ddaf4f..c408377cd2e 100644
+--- a/cmake/modules/AddLLVM.cmake
++++ b/cmake/modules/AddLLVM.cmake
+@@ -664,7 +664,11 @@ macro(add_llvm_library name)
+ 
+       if(${name} IN_LIST LLVM_DISTRIBUTION_COMPONENTS OR
+           NOT LLVM_DISTRIBUTION_COMPONENTS)
+-        set(export_to_llvmexports EXPORT LLVMExports)
++        if (ARG_SHARED)
++          set(export_to_llvmexports EXPORT LLVMExports)
++        else()
++          set(export_to_llvmexports EXPORT LLVMStaticExports)
++        endif()
+         set_property(GLOBAL PROPERTY LLVM_HAS_EXPORTS True)
+       endif()
+ 
+diff --git a/cmake/modules/CMakeLists.txt b/cmake/modules/CMakeLists.txt
+index f5cc0006fa0..6605dc729c2 100644
+--- a/cmake/modules/CMakeLists.txt
++++ b/cmake/modules/CMakeLists.txt
+@@ -97,6 +97,7 @@ set(LLVM_CONFIG_BINARY_DIR "\${LLVM_INSTALL_PREFIX}")
+ set(LLVM_CONFIG_TOOLS_BINARY_DIR "\${LLVM_INSTALL_PREFIX}/${LLVM_TOOLS_INSTALL_DIR}")
+ set(LLVM_CONFIG_EXPORTS_FILE "\${LLVM_CMAKE_DIR}/LLVMExports.cmake")
+ set(LLVM_CONFIG_EXPORTS "${LLVM_EXPORTS}")
++set(LLVM_CONFIG_STATIC_EXPORTS_FILE "\${LLVM_CMAKE_DIR}/LLVMStaticExports.cmake")
+ configure_file(
+   LLVMConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/LLVMConfig.cmake
+@@ -113,6 +114,8 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+   if(llvm_has_exports)
+     install(EXPORT LLVMExports DESTINATION ${LLVM_INSTALL_PACKAGE_DIR}
+             COMPONENT cmake-exports)
++    install(EXPORT LLVMStaticExports DESTINATION ${LLVM_INSTALL_PACKAGE_DIR}
++            COMPONENT cmake-exports)
+   endif()
+ 
+   install(FILES
+diff --git a/cmake/modules/LLVMConfig.cmake.in b/cmake/modules/LLVMConfig.cmake.in
+index 7ca06381d90..44d042c9b11 100644
+--- a/cmake/modules/LLVMConfig.cmake.in
++++ b/cmake/modules/LLVMConfig.cmake.in
+@@ -84,6 +84,8 @@ if(NOT TARGET LLVMSupport)
+   set(LLVM_EXPORTED_TARGETS "@LLVM_CONFIG_EXPORTS@")
+   include("@LLVM_CONFIG_EXPORTS_FILE@")
+   @llvm_config_include_buildtree_only_exports@
++
++  include("@LLVM_CONFIG_STATIC_EXPORTS_FILE@" OPTIONAL)
+ endif()
+ 
+ # By creating intrinsics_gen here, subprojects that depend on LLVM's
+diff --git a/tools/llvm-config/CMakeLists.txt b/tools/llvm-config/CMakeLists.txt
+index a7db17386fb..8a796d03b5a 100644
+--- a/tools/llvm-config/CMakeLists.txt
++++ b/tools/llvm-config/CMakeLists.txt
+@@ -42,7 +42,11 @@ set(LLVM_SRC_ROOT ${LLVM_MAIN_SRC_DIR})
+ set(LLVM_OBJ_ROOT ${LLVM_BINARY_DIR})
+ set(LLVM_CPPFLAGS "${LLVM_DEFINITIONS}")
+ set(LLVM_CFLAGS "${LLVM_C_STD_FLAG} ${LLVM_DEFINITIONS}")
++STRING(REGEX REPLACE "-mcet" "" LLVM_CFLAGS ${LLVM_CFLAGS})
++STRING(REGEX REPLACE "-fcf-protection" "" LLVM_CFLAGS ${LLVM_CFLAGS})
+ set(LLVM_CXXFLAGS "${LLVM_CXX_STD_FLAG} ${COMPILE_FLAGS} ${LLVM_DEFINITIONS}")
++STRING(REGEX REPLACE "-mcet" "" LLVM_CXXFLAGS ${LLVM_CXXFLAGS})
++STRING(REGEX REPLACE "-fcf-protection" "" LLVM_CXXFLAGS ${LLVM_CXXFLAGS})
+ set(LLVM_BUILD_SYSTEM cmake)
+ set(LLVM_HAS_RTTI ${LLVM_CONFIG_HAS_RTTI})
+ set(LLVM_DYLIB_VERSION "${LLVM_VERSION_MAJOR}${LLVM_VERSION_SUFFIX}")
+-- 
+2.19.2
+
