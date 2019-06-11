@@ -13,11 +13,12 @@ from pisi.actionsapi import get
 
 def build():
     shelltools.export("LC_ALL", "en_US.UTF-8")
-    shelltools.system("python ./x.py build")
+    shelltools.system("python ./x.py build -j6")
     
 
 def install():
-    shelltools.system("DESTDIR=%s python ./x.py install" % get.installDIR())
+	shelltools.export("LANG", "en_US")
+    shelltools.system("DESTDIR=%s LANG=en_US  python ./x.py -u install" % get.installDIR())
     
     #pisitools.insinto("/", "build/x86_64-unknown-linux-gnu/stage0/etc")
     #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/bin")
