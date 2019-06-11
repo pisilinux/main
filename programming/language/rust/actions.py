@@ -17,7 +17,7 @@ def build():
     
 
 def install():
-	shelltools.export("LANG", "en_US")
+    shelltools.export("LANG", "en_US")
     shelltools.system("DESTDIR=%s LANG=en_US  python ./x.py -u install" % get.installDIR())
     
     #pisitools.insinto("/", "build/x86_64-unknown-linux-gnu/stage0/etc")
