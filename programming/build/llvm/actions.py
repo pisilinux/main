@@ -13,8 +13,7 @@ libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 
 
-def setup():
-	
+def setup():        
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
                 shelltools.system("tar xf ../cfe-%s.src.tar.xz -C tools" % get.srcVERSION())
@@ -25,18 +24,10 @@ def setup():
                 
                 shelltools.system("tar xf ../lldb-%s.src.tar.xz -C tools" % get.srcVERSION())
                 shelltools.move("tools/lldb-*", "tools/lldb")
-                
-                shelltools.system("tar xf ../lld-%s.src.tar.xz -C tools" % get.srcVERSION())
-                shelltools.move("tools/lld-*", "tools/lld")
-                
-                shelltools.system("tar xf ../polly-%s.src.tar.xz -C tools" % get.srcVERSION())
-                shelltools.move("tools/polly-*", "tools/polly")
 
             if not shelltools.can_access_directory("projects/compiler-rt"):
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
-                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
-                
-
+                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")    
         
         
                 shelltools.export("CC", "gcc")
@@ -76,7 +67,6 @@ def setup():
                                         -DLLVM_BUILD_LLVM_DYLIB=ON \
                                         -DLLVM_LINK_LLVM_DYLIB=ON \
                                         -DLLVM_ENABLE_RTTI=ON \
-                                        -DLLVM_ENABLE_EH=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \

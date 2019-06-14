@@ -47,7 +47,7 @@ def setup():
     
 def build():
     shelltools.cd(ObjDir)
-    shelltools.system("../mach build -j5")
+    shelltools.system("../mach build")
 
 def install():
     shelltools.cd(ObjDir)

@@ -11,13 +11,11 @@
         <License>NCSA</License>
         <Summary>The Low Level Virtual Machine</Summary>
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
-       <Archive sha1sum="0689345d73911e24a07b24cc82dab4fb46b8c323" type="tarxz">http://releases.llvm.org/8.0.0/llvm-8.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="3cb1e10af3955174a3ca5e560f674f24fac2a02f" type="binary">http://releases.llvm.org/8.0.0/cfe-8.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="f341ba17494ba756fd404b2744e6f5991b50389f" type="binary">http://releases.llvm.org/8.0.0/clang-tools-extra-8.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="ca188f74b4896cd243ed1c3797d27c3371185146" type="binary">http://releases.llvm.org/8.0.0/lldb-8.0.0.src.tar.xz</Archive>
-	   <Archive sha1sum="b9062249ef61316e3450fc26e7238432673036bb" type="binary">http://releases.llvm.org/8.0.0/lld-8.0.0.src.tar.xz</Archive>
-	   <Archive sha1sum="ca34b2be7c362844db089f0114af11333c2ebfcb" type="binary">http://releases.llvm.org/8.0.0/polly-8.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="5af387779120bb2a9fad5d6fff1a3d6f4fa6c352" type="binary">http://releases.llvm.org/8.0.0/compiler-rt-8.0.0.src.tar.xz</Archive>
+       <Archive sha1sum="d43bfea58a35e058b93a6af36a728cfc64add33d" type="tarxz">http://llvm.org/releases/7.1.0/llvm-7.1.0.src.tar.xz</Archive>
+       <Archive sha1sum="68673777f938bbd4ca2f05f2af670e19ffddcf0a" type="binary">http://llvm.org/releases/7.1.0/cfe-7.1.0.src.tar.xz</Archive>
+       <Archive sha1sum="1b8e08faff9545140defd53c15c56b3f6ca02c9b" type="binary">http://releases.llvm.org/7.1.0/clang-tools-extra-7.1.0.src.tar.xz</Archive>
+       <Archive sha1sum="6d11a36cc3969b9822cfb90ba659424da976a047" type="binary">http://releases.llvm.org/7.1.0/lldb-7.1.0.src.tar.xz</Archive>
+       <Archive sha1sum="bca06369f2f8b08e18ae095c362859b4033ae87d" type="binary">http://llvm.org/releases/7.1.0/compiler-rt-7.1.0.src.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>zlib-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
@@ -32,10 +30,6 @@
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
             <Dependency>binutils</Dependency>
         </BuildDependencies>
-		<Patches>
-			<Patch level="1">0001-Fix-the-buildbot-issue-introduced-by-r351421.patch</Patch>
-			<Patch level="1">0001-PATCH-Filter-out-cxxflags-not-supported-by-clang.patch</Patch>
-		</Patches>
     </Source>
 
      <Package>
@@ -54,7 +48,6 @@
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/bin/llvm-config</Path>
             <Path fileType="header">/usr/include/llvm*</Path>
-			<Path fileType="header">/usr/include/polly*</Path>
             <Path fileType="library">/usr/lib/llvm</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="conf">/etc/ld.so.conf.d</Path>
@@ -84,7 +77,6 @@
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
             <Path fileType="library">/usr/lib/LLVMgold.*</Path>
             <Path fileType="library">/usr/lib/libLTO.*</Path>
-			<Path fileType="library">/usr/lib/libPolly*.a</Path>
             <Path fileType="library">/usr/lib/bfd-plugins/LLVMgold.so</Path>
             <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
         </Files>
@@ -116,8 +108,7 @@
             <Path fileType="library">/usr/lib/liblldbPluginObjCLanguage.a</Path>
         </Files>
     </Package>
-	
-   
+    
     <Package>
         <Name>lldb-devel</Name>
         <Summary>Development headers lldb</Summary>
@@ -128,53 +119,8 @@
             <Path fileType="header">/usr/include/lldb/*</Path>
         </Files>
     </Package>
-	
-	<Package>
-        <Name>lld</Name>
-        <Summary> Linker from the LLVM project</Summary>
-        <RuntimeDependencies>
-            <Dependency release="current">llvm-libs</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>libffi</Dependency>
-            <Dependency>libedit</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>ncurses</Dependency>
-            <Dependency>python</Dependency>
-            <Dependency>libxml2</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="executable">/usr/bin/ld.lld</Path>
-			<Path fileType="executable">/usr/bin/ld64.lld</Path>
-			<Path fileType="executable">/usr/bin/lld</Path>
-			<Path fileType="executable">/usr/bin/lld-link</Path>
-			<Path fileType="executable">/usr/bin/wasm-ld</Path>		
-            <Path fileType="library">/usr/lib/liblldCOFF.a*</Path>
-			<Path fileType="library">/usr/lib/liblldCommon.a*</Path>
-			<Path fileType="library">/usr/lib/liblldCore.a*</Path>
-			<Path fileType="library">/usr/lib/liblldDriver.a*</Path>
-			<Path fileType="library">/usr/lib/liblldELF.a*</Path>
-			<Path fileType="library">/usr/lib/liblldMachO.a*</Path>
-			<Path fileType="library">/usr/lib/liblldMinGW.a*</Path>
-			<Path fileType="library">/usr/lib/liblldReaderWriter.a*</Path>
-			<Path fileType="library">/usr/lib/liblldWasm.a*</Path>
-			<Path fileType="library">/usr/lib/liblldYAML.a*</Path>
-			<Path fileType="doc">/usr/share/doc/lld</Path>
-        </Files>
-    </Package>
-	
-	<Package>
-        <Name>lld-devel</Name>
-        <Summary>Development headers lld</Summary>
-        <RuntimeDependencies>
-            <Dependency release="current">lld</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="header">/usr/include/lld/*</Path>
-        </Files>
-    </Package>
     
 
-	
     <Package>
         <Name>llvm-clang-analyzer</Name>
         <IsA>app:console</IsA>
@@ -266,13 +212,6 @@
     </Package>
 
     <History>
-		<Update release="11">
-            <Date>2019-06-09</Date>
-            <Version>8.0.0</Version>
-            <Comment>Version bump and add LLD linker, Polly and OpenMP runtime libraries for Clang</Comment>
-            <Name>Idris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
-        </Update>
         <Update release="10">
             <Date>2019-05-23</Date>
             <Version>7.1.0</Version>
