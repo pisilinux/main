@@ -15,6 +15,7 @@ def setup():
                          CONF_LDPATH_NVIDIA=/usr/lib/nvidia-current:/usr/lib32/nvidia-current \
                          CONF_MODPATH_NVIDIA=//usr/lib/nvidia-current,/usr/lib/xorg/modules \
                          CONF_PRIMUS_LD_PATH=/usr/lib/primus:/usr/lib32/primus \
+                         CONF_BRIDGE=primus \
                          --with-udev-rules=/lib/udev/rules.d/ \
                          --without-pidfile \
                          ")
