@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libc++</Name>
+        <Homepage>http://www.kde.org</Homepage>
+        <Packager>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>LLVM C++ standard library.</Summary>
+        <Description>libc++ provides standard c++ library by LLVM</Description>
+        <Archive sha1sum="ad384693ec4ec8ef7875755e09242418170eb114" type="tarxz">http://releases.llvm.org/8.0.0/libcxx-8.0.0.src.tar.xz</Archive>
+		<Archive sha1sum="735c6daeb489c2e02a1cedcf045d70a35d7ee026" type="tarxz">http://releases.llvm.org/8.0.0/libcxxabi-8.0.0.src.tar.xz</Archive>
+        <BuildDependencies>
+	        <Dependency>llvm</Dependency>
+            <Dependency>llvm-libs</Dependency>
+			<Dependency>llvm-clang</Dependency>
+			<Dependency>lld</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libc++</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+        <Files>
+	        <Path fileType="library">/usr/lib</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>libc++-32bit</Name>
+	    <Summary>libc++ 32bit shared libraries.</Summary>
+	    <PartOf>emul32</PartOf>
+        <Files>
+	       <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>libc++-devel</Name>
+	   <Summary>Development files for libc++</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libc++</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-06-16</Date>
+            <Version>8.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>        
+    </History>
+</PISI>
