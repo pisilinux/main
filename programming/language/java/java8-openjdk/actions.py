@@ -89,7 +89,7 @@ def install():
 
     for size in [16, 24, 32, 48]:
         fullsize = "%dx%d" % ((size, ) * 2)
-        pisitools.insinto("/usr/share/icons/hicolor/%s/apps/" % fullsize, "../openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon%d.png" % size, "java.png")
+        pisitools.insinto("/usr/share/icons/hicolor/%s/apps/" % fullsize, "../openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon%d.png" % size, "java8.png")
 
     #---- install jre8-openjdk-headless
     pisitools.insinto("%s/jre/" % jvmdir , "images/j2sdk-image/jre/lib")
