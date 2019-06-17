@@ -32,11 +32,11 @@ def setup():
                             --disable-system-pcsc \
                             --disable-system-sctp \
                             --enable-bootstrap \
+                            --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
                             --with-pkgversion='PisiLinux build 8.u212_3.12.0' \
                            " % get.makeJOBS().replace("-j", ""))
     
-                            #--with-jdk-home=/usr/lib/jvm/java-8-openjdk \
 
 def build():
     autotools.make()
