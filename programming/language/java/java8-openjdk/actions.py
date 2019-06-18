@@ -137,3 +137,7 @@ def install():
     
     pisitools.dosed("%s/usr/share/applications/policytool-jdk8.desktop" % get.installDIR(), "_JREBINDIR_", "/usr/lib/jvm/java-8-openjdk/jre/bin")
     pisitools.dosed("%s/usr/share/applications/jconsole-jdk8.desktop" % get.installDIR(), "_SDKBINDIR_", "/usr/lib/jvm/java-8-openjdk/bin")
+    
+    #icons
+    pisitools.dosed("%s/usr/share/applications/policytool-jdk8.desktop" % get.installDIR(), "Icon=java-1.8.0-openjdk", "Icon=java8-1.8.0-openjdk")
+    pisitools.dosed("%s/usr/share/applications/jconsole-jdk8.desktop" % get.installDIR(), "Icon=java-1.8.0-openjdk", "Icon=java8-1.8.0-openjdk")
