@@ -210,12 +210,11 @@ def install():
 
 		# X modules
 		pisitools.dolib("nvidia_drv.so", "%s/modules/drivers" % xorglibdir)
-		pisitools.dolib("libGLX.so.0", "%s/libglx.so" % nvlibdir)
-		pisitools.dosym("libGLX.so.0", "%s/libglx.so.1" % nvlibdir)
-		pisitools.dosym("libGLX.so.0", "%s/libglx.so.0" % nvlibdir)
-		pisitools.dosym("libGLX.so.0", "%s/modules/extensions/libglx.so.1" % xorglibdir)
-		pisitools.dosym("libGLX.so.0", "%s/modules/extensions/libglx.so.0" % xorglibdir)
-    
+		pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s" % nvlibdir)
+		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/libglx.so.1" % nvlibdir)
+		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/libglx.so" % nvlibdir)
+		pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s/modules/extensions" % xorglibdir)
+		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/modules/extensions/libglx.so.1" % xorglibdir)
 		pisitools.dolib("libGLX_nvidia.so.%s" % version, libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so.0" % libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so" % libdir)
