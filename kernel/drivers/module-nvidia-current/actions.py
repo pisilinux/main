@@ -143,7 +143,7 @@ def install():
 		pisitools.dolib("libGL.so.%s" % version, nvlibdir)
 		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
 		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
-		pisitools.dolib("libGL.so.%s" % version, libdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so" % nvlibdir)
     
 		pisitools.dolib("libEGL.so.1.1.0", nvlibdir)
 		pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so.1" % nvlibdir)
@@ -213,7 +213,6 @@ def install():
 		pisitools.dolib("libGLX.so.0", "%s/libglx.so" % nvlibdir)
 		pisitools.dosym("libGLX.so.0", "%s/libglx.so.1" % nvlibdir)
 		pisitools.dosym("libGLX.so.0", "%s/libglx.so.0" % nvlibdir)
-		pisitools.dolib("libGLX.so.0", "%s/modules/extensions/libglx.so" % xorglibdir)
 		pisitools.dosym("libGLX.so.0", "%s/modules/extensions/libglx.so.1" % xorglibdir)
 		pisitools.dosym("libGLX.so.0", "%s/modules/extensions/libglx.so.0" % xorglibdir)
     
