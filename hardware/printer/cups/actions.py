@@ -97,4 +97,4 @@ def install():
     # Serial backend needs to run as root
     #shelltools.chmod("%s/usr/lib/cups/backend/serial" % get.installDIR(), 0700)
 
-    pisitools.dodoc("LICENSE")
+    pisitools.dodoc("LICENSE.txt")
