@@ -5,14 +5,12 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import autotools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure()
+    autotools.configure("--prefix=/usr --disable-oss")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -22,9 +20,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("about.txt", \
-    "AUTHORS", \
+    pisitools.dodoc("AUTHORS", \
     "ChangeLog", \
     "COPYING*", \
-    "README*")
-
+    "README")
