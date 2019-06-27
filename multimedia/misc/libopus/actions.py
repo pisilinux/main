@@ -13,6 +13,8 @@ def setup():
     autotools.autoreconf("-fiv")
     options = "\
                 --disable-static \
+                --enable-custom-modes \
+                --enable-float-approx \
               "
 
     if get.buildTYPE() == "_emul32":
