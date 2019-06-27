@@ -13,7 +13,10 @@ from pisi.actionsapi import pythonmodules
 pisitools.flags.sub("-O[\ds]+", "-O3")
 
 def setup():
-    autotools.rawConfigure('\
+	
+	shelltools.system("git clone https://git.ffmpeg.org/ffmpeg.git")
+	
+	autotools.rawConfigure('\
                         --prefix=/usr \
                         --confdir=/usr/share/mplayer   \
                         --enable-dynamic-plugins \
@@ -35,7 +38,7 @@ def install():
                        MANDIR=%(D)s/usr/share/man" % {"D": get.installDIR()})
 
     # set the default skin for gui
-    shelltools.copytree("mplayer-1.2_pre37124/Blue-multilingual", "%s/usr/share/mplayer/skins/default" % get.installDIR())
+    shelltools.copytree("interface/Blue-multilingual", "%s/usr/share/mplayer/skins/default" % get.installDIR())
     
     # codecs conf, not something user will interact with
     pisitools.insinto("/etc/mplayer", "etc/*.conf")
