@@ -6,18 +6,22 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static \
-                         --disable-dependency-tracking \
-                         --enable-video \
-                         --disable-rpath")
+                            
+	cmaketools.configure("-DEXIV2_BUILD_PO=ON \
+		                  -DEXIV2_BUILD_SAMPLES=OFF \
+		                  -DEXIV2_ENABLE_VIDEO=ON \
+		                  -DCMAKE_INSTALL_LIBDIR=lib \
+		                  ")
 
 def build():
-    autotools.make()
+    cmaketools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("COPYING", "README", "doc/ChangeLog")
+    pisitools.dodoc("ABOUT-NLS", "AUTHORS", "COPYING", "README.md")
