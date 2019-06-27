@@ -20,7 +20,7 @@ def setup():
 
     shelltools.export("CFLAGS", get.CFLAGS().replace("-fomit-frame-pointer",""))
 
-    if get.buildTYPE() == "emul32":
+    if get.buildTYPE() == "_emul32":
         options += " --libdir=/usr/lib32 \
                      --bindir=/usr/bin32 \
                      --sbindir=/usr/sbin32 \
@@ -51,8 +51,12 @@ def install():
     pisitools.removeDir("/usr/share/man")
     pisitools.dodoc("AUTHORS", "README*", "HACKING", "ChangeLog*", "NEWS*")
 
-    if get.buildTYPE() == "emul32":
+    if get.buildTYPE() == "_emul32":
         for binaries in ["gtk-query-immodules-3.0"]:
             pisitools.domove("/usr/bin/%s" % binaries, "/usr/bin/", "%s-32bit" % binaries)
         pisitools.removeDir("/usr/bin32")
-    pisitools.rename("/usr/bin/gtk-update-icon-cache", "gtk3-update-icon-cache")
+        
+    if get.buildTYPE() != "_emul32":
+		pisitools.rename("/usr/bin/gtk-update-icon-cache", "gtk3-update-icon-cache")
+    
+    
