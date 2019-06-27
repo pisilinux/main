@@ -39,8 +39,7 @@ def setup():
                             --disable-ffms \
                             --disable-lavf \
                             --disable-swscale \
-                            --bit-depth=10 \
-                            --bit-depth=8 \
+                            --bit-depth=all \
                            ")
 
 def build():
