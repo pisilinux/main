@@ -11,7 +11,10 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-bad package' \
-                         --with-package-origin='http://www.pisilinux.org'")
+                         --with-package-origin='http://www.pisilinux.org' \
+                         --disable-cuda \
+                         --disable-nvdec \
+                         --disable-nvenc")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ") 
 
