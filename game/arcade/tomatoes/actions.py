@@ -8,6 +8,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
+ketchup = "/usr/share/tomatoes"
+WorkDir="tomatoes-%s" %get.srcVERSION()
 
 def setup():
     pisitools.dosed("makefile", "_pardus_cflags", get.CFLAGS())
@@ -19,4 +21,8 @@ def build():
 def install():
     pisitools.dobin("tomatoes")
     pisitools.insinto("/usr/share/pixmaps", "icon.png", "tomatoes.png")
+    
+    pisitools.dodir("%s/music" % ketchup)
+    pisitools.insinto(ketchup, "tomatoes-1.5/tomatoes.mpk")
+    pisitools.insinto("%s/music" % ketchup, "tomatoes-1.5/music/IHaveNoTomatoes.it")
 
