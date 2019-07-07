@@ -16,6 +16,7 @@ def setup():
                           --enable-xauth \
                           --with-system-bubblewrap \
                           --disable-static \
+                          --disable-selinux-module \
                           --enable-sandboxed-triggers")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -25,5 +26,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.removeDir("/usr/share/selinux")
 
     #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
