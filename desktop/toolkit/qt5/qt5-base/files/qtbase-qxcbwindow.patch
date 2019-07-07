@@ -1,0 +1,95 @@
+From 0c1831178540462da31fd7a4b6d2e446bc84498b Mon Sep 17 00:00:00 2001
+From: Erik Kurzinger <ekurzinger@nvidia.com>
+Date: Thu, 13 Jun 2019 08:15:50 -0700
+Subject: Track swap interval in QXcbWindow
+
+As per GLX_EXT_swap_control, the GLX swap interval is specified on a
+per-drawable basis. However, QGLXContext only tracks it per-context
+using the m_swapInterval member. If a new drawable is made current to a
+context, it is still necessary to call glXSwapIntervalEXT to change the
+swap interval, even if it has been previously called for the same
+context with a different drawable.  However, currently,
+QGLXContext::makeCurrent doesn't do this if its m_swapInterval field
+matches the new swap interval. This change removes m_swapInterval from
+QGLXContext, instead tracking it in QXcbWindow. This still avoids
+unnecessary calls to glXSwapIntervalEXT, while ensuring the swap
+interval is always set for new window drawables.
+
+Change-Id: Idc34101476c6af618059f6f3d8925dee743994a3
+Reviewed-by: Giuseppe D'Angelo <giuseppe.dangelo@kdab.com>
+Reviewed-by: Laszlo Agocs <laszlo.agocs@qt.io>
+---
+ .../platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp       | 6 +++---
+ src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.h | 1 -
+ src/plugins/platforms/xcb/qxcbwindow.h                              | 4 ++++
+ 3 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
+index 4adf662152..f26f698e76 100644
+--- a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
++++ b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
+@@ -204,7 +204,6 @@ QGLXContext::QGLXContext(QXcbScreen *screen, const QSurfaceFormat &format, QPlat
+     , m_shareContext(0)
+     , m_format(format)
+     , m_isPBufferCurrent(false)
+-    , m_swapInterval(-1)
+     , m_ownsContext(nativeHandle.isNull())
+     , m_getGraphicsResetStatus(0)
+     , m_lost(false)
+@@ -567,9 +566,9 @@ bool QGLXContext::makeCurrent(QPlatformSurface *surface)
+ 
+     if (success && surfaceClass == QSurface::Window) {
+         int interval = surface->format().swapInterval();
++        QXcbWindow *window = static_cast<QXcbWindow *>(surface);
+         QXcbScreen *screen = screenForPlatformSurface(surface);
+-        if (interval >= 0 && m_swapInterval != interval && screen) {
+-            m_swapInterval = interval;
++        if (interval >= 0 && interval != window->swapInterval() && screen) {
+             typedef void (*qt_glXSwapIntervalEXT)(Display *, GLXDrawable, int);
+             typedef void (*qt_glXSwapIntervalMESA)(unsigned int);
+             static qt_glXSwapIntervalEXT glXSwapIntervalEXT = 0;
+@@ -588,6 +587,7 @@ bool QGLXContext::makeCurrent(QPlatformSurface *surface)
+                 glXSwapIntervalEXT(m_display, glxDrawable, interval);
+             else if (glXSwapIntervalMESA)
+                 glXSwapIntervalMESA(interval);
++            window->setSwapInterval(interval);
+         }
+     }
+ 
+diff --git a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.h b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.h
+index be9d3f5dcb..2a88fd6e59 100644
+--- a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.h
++++ b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.h
+@@ -87,7 +87,6 @@ private:
+     GLXContext m_shareContext;
+     QSurfaceFormat m_format;
+     bool m_isPBufferCurrent;
+-    int m_swapInterval;
+     bool m_ownsContext;
+     GLenum (APIENTRY * m_getGraphicsResetStatus)();
+     bool m_lost;
+diff --git a/src/plugins/platforms/xcb/qxcbwindow.h b/src/plugins/platforms/xcb/qxcbwindow.h
+index f98cd8a74d..8258cc2dfa 100644
+--- a/src/plugins/platforms/xcb/qxcbwindow.h
++++ b/src/plugins/platforms/xcb/qxcbwindow.h
+@@ -184,6 +184,9 @@ public:
+     static void setWindowTitle(const QXcbConnection *conn, xcb_window_t window, const QString &title);
+     static QString windowTitle(const QXcbConnection *conn, xcb_window_t window);
+ 
++    int swapInterval() const { return m_swapInterval; }
++    void setSwapInterval(int swapInterval) { m_swapInterval = swapInterval; }
++
+ public Q_SLOTS:
+     void updateSyncRequestCounter();
+ 
+@@ -276,6 +279,7 @@ protected:
+     SyncState m_syncState = NoSyncNeeded;
+ 
+     QXcbSyncWindowRequest *m_pendingSyncRequest = nullptr;
++    int m_swapInterval = -1;
+ };
+ 
+ class QXcbForeignWindow : public QXcbWindow
+-- 
+cgit v1.2.1
+

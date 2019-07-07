@@ -1,0 +1,39 @@
+From cbdc9a7786278c31fdb6eb465f32d0374349c1ef Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Thu, 20 Jun 2019 09:36:46 -0700
+Subject: RCC: Change the default compression to Zlib
+
+Codebases using QResource::isCompressed() and assuming it is Zlib break
+if zstd is enabled. So change the default back to Zlib until Qt 6.0.
+
+[ChangeLog][Important Behavior Changes] RCC's default compression
+algorithm was changed back to Zlib, as it was in all previous releases
+until 5.13.0. The default will remain Zlib for all Qt 5.x releases but
+will change in Qt 6.0. To activate Zstd compression for your resources,
+either pass the --compress-algo=zstd option to the rcc tool or add the
+XML attribute compression-algorithm="zstd" to the <file> tags in the
+.qrc file.
+
+Task-number: QTBUG-76521
+Change-Id: Ief874765cd7b43798de3fffd15a9f56fd9ad1ad4
+Reviewed-by: Simon Hausmann <simon.hausmann@qt.io>
+---
+ src/tools/rcc/rcc.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/tools/rcc/rcc.cpp b/src/tools/rcc/rcc.cpp
+index 862e574f2d..011a7db810 100644
+--- a/src/tools/rcc/rcc.cpp
++++ b/src/tools/rcc/rcc.cpp
+@@ -58,7 +58,7 @@ enum {
+     CONSTANT_COMPRESSTHRESHOLD_DEFAULT = 70
+ };
+ 
+-#if QT_CONFIG(zstd)
++#if QT_CONFIG(zstd) && QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+ #  define CONSTANT_COMPRESSALGO_DEFAULT     RCCResourceLibrary::CompressionAlgorithm::Zstd
+ #elif !defined(QT_NO_COMPRESS)
+ #  define CONSTANT_COMPRESSALGO_DEFAULT     RCCResourceLibrary::CompressionAlgorithm::Zlib
+-- 
+cgit v1.2.1
+
