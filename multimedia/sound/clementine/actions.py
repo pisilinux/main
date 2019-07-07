@@ -10,12 +10,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -i 's|lastfm5/ws.h|lastfm/ws.h|g' CMakeLists.txt")
-    shelltools.system("sed -i 's|lastfm5/Track.h|lastfm/Track.h|g' CMakeLists.txt")
-    shelltools.system("sed -i 's|<lastfm5/|<lastfm/|g' src/internet/lastfm/lastfmcompat.h")
-    shelltools.system("sed -i 's|<lastfm5/|<lastfm/|g' src/internet/lastfm/lastfmservice.cpp")
-    shelltools.system("sed -i 's|<lastfm5/|<lastfm/|g' src/internet/lastfm/lastfmsettingspage.cpp")
-    shelltools.system("sed -i 's|<lastfm5/Track.h>|<lastfm/Track.h>|g' src/core/song.cpp")
     shelltools.system("sed -i 's|Exec=clementine %U|Exec=clementine|g' dist/clementine.desktop")
     cmaketools.configure(" \
                           -DCMAKE_INSTALL_PREFIX=/usr \

@@ -21,17 +21,10 @@ def setup():
                          --enable-sse \
                          --enable-mp \
                          --with-linux-input \
-                         --with-poppler \
-                         --with-libjpeg \
-                         --with-libexif \
-                         --with-librsvg \
-                         --with-libtiff \
                          --with-libmng \
-                         --with-libpng \
                          --with-webkit \
-                         --with-lcms \
+                         --with-openexr \
                          --with-alsa \
-                         --with-dbus \
                          --with-aa \
                          --with-x")
 

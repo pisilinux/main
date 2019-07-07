@@ -55,6 +55,7 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += '  \
+                     --prefix=/usr \
                      --enable-libusb=no \
                      --disable-avahi \
                      --disable-dnssd \
@@ -85,6 +86,7 @@ def install():
         #pisitools.remove("/usr/share/cups/data/testprint")
         pisitools.removeDir("/usr/share/cups/banners")
         pisitools.dodir("/usr/share/cups/banners")
+        pisitools.dosed("%s/usr/bin/cups-config-32bit" % get.installDIR(), "bin32", "bin")
         return
 
     autotools.rawInstall("BUILDROOT=%s install-headers install-libs install-data install-exec" % get.installDIR())

@@ -35,17 +35,17 @@ def install():
                        MANDIR=%(D)s/usr/share/man" % {"D": get.installDIR()})
 
     # set the default skin for gui
-    shelltools.copytree("mplayer-1.2_pre37124/default_skin", "%s/usr/share/mplayer/skins/default" % get.installDIR())
+    shelltools.copytree("mplayer-1.2_pre37124/Blue-multilingual", "%s/usr/share/mplayer/skins/default" % get.installDIR())
     
     # codecs conf, not something user will interact with
-    pisitools.insinto("/usr/share/mplayer", "etc/codecs.conf")
+    pisitools.insinto("/etc/mplayer", "etc/*.conf")
 
     # example dvb conf
-    pisitools.insinto("/usr/share/mplayer", "etc/dvb-menu.conf")
+    #pisitools.insinto("/usr/share/mplayer", "etc/dvb-menu.conf")
 
     # just for fast access to conf
-    pisitools.dosym("/etc/mplayer.conf", "/usr/share/mplayer/mplayer.conf")
-    pisitools.dosym("/etc/mencoder.conf", "/usr/share/mplayer/mencoder.conf")
+    #pisitools.dosym("/etc/mplayer.conf", "/usr/share/mplayer/mplayer.conf")
+    #pisitools.dosym("/etc/mencoder.conf", "/usr/share/mplayer/mencoder.conf")
 
     # install docs, tools, examples
     pisitools.dodoc("AUTHORS", "Changelog", "README", "LICENSE")

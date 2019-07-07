@@ -18,6 +18,7 @@ def setup():
     options = "-DCMAKE_BUILD_TYPE=Release \
                -DCMAKE_INSTALL_PREFIX=/usr \
                -DCMAKE_INSTALL_LIBDIR=lib \
+               -DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
                -DENABLE_XPDF_HEADERS=ON \
               "
 

@@ -12,7 +12,7 @@ from pisi.actionsapi import qt5
 
 def setup():
     #qt5.configure("pgmodeler.pro")
-    shelltools.system("qmake-qt5 -r pgmodeler.pro PREFIX+=/usr BINDIR+=/usr/bin LIBDIR+=/usr/lib RESDIR+=/usr/share")
+    shelltools.system("qmake -r pgmodeler.pro PREFIX+=/usr BINDIR+=/usr/bin LIBDIR+=/usr/lib RESDIR+=/usr/share")
 
 def build():
     qt5.make()

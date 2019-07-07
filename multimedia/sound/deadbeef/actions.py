@@ -6,13 +6,11 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 
 def setup():
-    #if compile against gtk3=yes then a libtool compile error, so now build against gtk2
-    shelltools.system("./autogen.sh")
-    autotools.configure("--enable-gtk3=no --enable-staticlink=no")
+    autotools.configure("--prefix=/usr --disable-oss")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -20,7 +18,9 @@ def build():
     autotools.make()
 
 def install():
-    autotools.install()
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "README")
-
+    pisitools.dodoc("AUTHORS", \
+    "ChangeLog", \
+    "COPYING*", \
+    "README")

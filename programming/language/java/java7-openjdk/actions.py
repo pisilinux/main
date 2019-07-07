@@ -14,6 +14,7 @@ shelltools.export("HOTSPOT_BUILD_JOBS", get.makeJOBS())
 shelltools.export("LC_ALL", "C")
 
 def setup():
+    
     shelltools.system('export DISTRIBUTION_PATCHES="patches/fontconfig-paths.diff \
                                patches/openjdk7_nonreparenting-wm.diff"')
                                #patches/giflib_5.1.diff 
@@ -30,7 +31,7 @@ def setup():
                             --enable-bootstrap \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
                             --with-jdk-home=/usr/lib/jvm/java-7-openjdk \
-                            --with-pkgversion='PisiLinux build 7.u181_2.6.14' \
+                            --with-pkgversion='PisiLinux build 7.u201_2.6.17' \
                            " % get.makeJOBS().replace("-j", ""))
 
 def build():
@@ -124,3 +125,7 @@ def install():
     
     #seems we need to add this symlink into ca-certificates-java package ?
     pisitools.dosym("/etc/ssl/certs/java/cacerts", "%s/jre/lib/security/cacerts" % jvmdir)
+    
+    pisitools.dosed("%s/usr/share/applications/policytool.desktop" % get.installDIR(), "_BINDIR_", "/usr/lib/jvm/java-7-openjdk/jre/bin")
+    pisitools.dosed("%s/usr/share/applications/jconsole.desktop" % get.installDIR(), "_BINDIR_", "/usr/lib/jvm/java-7-openjdk/bin")
+

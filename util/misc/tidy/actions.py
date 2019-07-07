@@ -4,22 +4,29 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-#WorkDir = "tidy-%s" % get.srcVERSION().split("_", 1)[1]
-
 def setup():
-    #shelltools.system("sh build/gnuauto/setup.sh")
-    autotools.configure("--disable-static")
-                         #--includedir=%s/usr/include/" % get.installDIR())
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DBUILD_TAB2SPACE=ON \
+                          -DCMAKE_BUILD_TYPE=Release", sourceDir="..")
 
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    cmaketools.make()
+    
 
 def install():
-    autotools.install()
-
-    #pisitools.dodoc("readme.txt")
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.insinto("/usr/include", "include/platform.h")
+    pisitools.insinto("/usr/include", "include/buffio.h")
+    
+    pisitools.dodoc("README.md")

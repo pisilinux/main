@@ -17,7 +17,7 @@ def setup():
 
     if get.buildTYPE() == "_emul32":
         options += "  --libdir=/usr/lib32 \
-                  "
+                   "
     shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
 
     autotools.configure(options)
@@ -31,5 +31,5 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 
-    if get.buildTYPE() == "_emul32":
-        pisitools.dodoc("README", "NEWS", "AUTHORS")
+    if get.buildTYPE() != "_emul32":
+        pisitools.dodoc("AUTHORS", "COPYING", "INSTALL", "README")
