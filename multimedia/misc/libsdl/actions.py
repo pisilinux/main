@@ -52,7 +52,8 @@ def setup():
                --disable-video-ggi \
                --disable-video-svga \
                --disable-video-x11-xme \
-               --disable-static"
+               --disable-static \
+               --disable-input-tslib"
 
     if get.buildTYPE() == "emul32":
         options += " --libdir=/usr/lib32 \
