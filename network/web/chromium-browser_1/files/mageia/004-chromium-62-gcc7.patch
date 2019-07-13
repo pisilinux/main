@@ -1,0 +1,111 @@
+--- chromium-62.0.3192.0/third_party/webrtc/modules/video_processing/video_denoiser.cc.gcc7	2017-08-22 21:06:40.000000000 +0200
++++ chromium-62.0.3192.0/third_party/webrtc/modules/video_processing/video_denoiser.cc	2017-09-08 23:17:25.755051027 +0200
+@@ -183,7 +183,7 @@
+       // artifacts.
+       if (mb_filter_decision_[mb_index] != FILTER_BLOCK ||
+           IsTrailingBlock(moving_edge_, mb_row, mb_col) ||
+-          (x_density_[mb_col] * y_density_[mb_row] &&
++          ((x_density_[mb_col] * y_density_[mb_row] != 0) &&
+            moving_object_[mb_row * mb_cols_ + mb_col])) {
+         // Copy y source.
+         filter_->CopyMem16x16(mb_src, stride_src, mb_dst, stride_dst);
+--- chromium-62.0.3192.0/extensions/common/permissions/settings_override_permission.cc.gcc7	2017-08-22 21:04:44.000000000 +0200
++++ chromium-62.0.3192.0/extensions/common/permissions/settings_override_permission.cc	2017-09-09 00:43:40.708568094 +0200
+@@ -43,7 +43,9 @@
+ 
+ bool SettingsOverrideAPIPermission::Equal(const APIPermission* rhs) const {
+   if (this != rhs)
++  {
+     CHECK_EQ(info(), rhs->info());
++  }
+   return true;
+ }
+ 
+--- chromium-62.0.3192.0/third_party/cacheinvalidation/src/google/cacheinvalidation/include/types.h.gcc7	2017-08-22 21:05:01.000000000 +0200
++++ chromium-62.0.3192.0/third_party/cacheinvalidation/src/google/cacheinvalidation/include/types.h	2017-09-09 00:47:09.190945226 +0200
+@@ -174,7 +174,7 @@
+  */
+ class ObjectId {
+  public:
+-  ObjectId() : is_initialized_(false) {}
++  ObjectId() : is_initialized_(false), source_(0) {}
+ 
+   /* Creates an object id for the given source and name (the name is copied). */
+   ObjectId(int source, const string& name)
+--- chromium-62.0.3192.0/extensions/common/permissions/api_permission.cc.gcc7	2017-08-22 21:04:44.000000000 +0200
++++ chromium-62.0.3192.0/extensions/common/permissions/api_permission.cc	2017-09-09 01:26:10.983202025 +0200
+@@ -36,7 +36,9 @@
+ 
+   bool Equal(const APIPermission* rhs) const override {
+     if (this != rhs)
++    {
+       CHECK_EQ(info(), rhs->info());
++    }
+     return true;
+   }
+ 
+--- chromium-62.0.3192.0/content/browser/frame_host/navigation_controller_impl.cc.gcc7	2017-08-22 21:04:43.000000000 +0200
++++ chromium-62.0.3192.0/content/browser/frame_host/navigation_controller_impl.cc	2017-09-09 01:53:03.860647419 +0200
+@@ -980,7 +980,9 @@
+   // TODO(creis): This check won't pass for subframes until we create entries
+   // for subframe navigations.
+   if (!rfh->GetParent())
++  {
+     CHECK_EQ(active_entry->site_instance(), rfh->GetSiteInstance());
++  }
+ 
+   // Remember the bindings the renderer process has at this point, so that
+   // we do not grant this entry additional bindings if we come back to it.
+--- chromium-62.0.3192.0/content/browser/frame_host/navigator_impl.cc.gcc7	2017-08-22 21:04:43.000000000 +0200
++++ chromium-62.0.3192.0/content/browser/frame_host/navigator_impl.cc	2017-09-09 02:05:15.758922091 +0200
+@@ -411,11 +411,15 @@
+ 
+   // Make sure no code called via RFH::Navigate clears the pending entry.
+   if (is_pending_entry)
++  {
+     CHECK_EQ(nav_entry_id, controller_->GetPendingEntry()->GetUniqueID());
++  }
+ 
+   // Notify observers about navigation.
+   if (delegate_ && is_pending_entry)
++  {
+     delegate_->DidStartNavigationToPendingEntry(dest_url, reload_type);
++  }
+ }
+ 
+ void NavigatorImpl::RequestOpenURL(
+--- chromium-62.0.3192.0/content/browser/frame_host/render_frame_host_manager.cc.gcc7	2017-08-22 21:04:43.000000000 +0200
++++ chromium-62.0.3192.0/content/browser/frame_host/render_frame_host_manager.cc	2017-09-09 02:07:40.371353881 +0200
+@@ -1030,7 +1030,9 @@
+   // SiteInstance and the same frame, breaking lookup of RenderFrameHosts by
+   // SiteInstance.
+   if (force_swap)
++  {
+     CHECK_NE(new_instance, current_instance);
++  }
+ 
+   if (new_instance == current_instance) {
+     // If we're navigating to the same site instance, we won't need to use the
+--- chromium-62.0.3192.0/media/cast/receiver/video_decoder.cc.gcc7	2017-08-22 21:04:45.000000000 +0200
++++ chromium-62.0.3192.0/media/cast/receiver/video_decoder.cc	2017-09-09 05:02:17.907818439 +0200
+@@ -133,7 +133,9 @@
+  private:
+   ~Vp8Impl() final {
+     if (ImplBase::operational_status_ == STATUS_INITIALIZED)
++    {
+       CHECK_EQ(VPX_CODEC_OK, vpx_codec_destroy(&context_));
++    }
+   }
+ 
+   scoped_refptr<VideoFrame> Decode(uint8_t* data, int len) final {
+--- chromium-62.0.3202.9/third_party/skia/src/ports/SkTLS_pthread.cpp.gcc7	2017-09-11 04:39:22.554714295 +0200
++++ chromium-62.0.3202.9/third_party/skia/src/ports/SkTLS_pthread.cpp	2017-09-11 04:39:45.663296012 +0200
+@@ -16,7 +16,7 @@
+     // should we use forceCreateTheSlot to potentially just return nullptr if
+     // we've never been called with forceCreateTheSlot==true ?
+     static SkOnce once;
+-    once(pthread_key_create, &gSkTLSKey, SkTLS::Destructor);
++    once(&pthread_key_create, &gSkTLSKey, SkTLS::Destructor);
+     return pthread_getspecific(gSkTLSKey);
+ }
+ 

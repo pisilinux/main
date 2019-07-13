@@ -1,0 +1,84 @@
+--- chromium-64.0.3282.71/third_party/blink/renderer/platform/wtf/text/text_codec_icu.cc.gcc7	2018-01-04 00:06:33.000000000 +0100
++++ chromium-64.0.3282.71/third_party/blink/renderer/platform/wtf/text/text_codec_icu.cc	2018-01-07 10:30:57.354614167 +0100
+@@ -594,24 +594,6 @@
+   UCNV_FROM_U_CALLBACK_ESCAPE(context, from_unicode_args, code_units, length,
+                               code_point, reason, err);
+ }
+-
+-static void GbkCallbackSubstitute(const void* context,
+-                                  UConverterFromUnicodeArgs* from_unicode_args,
+-                                  const UChar* code_units,
+-                                  int32_t length,
+-                                  UChar32 code_point,
+-                                  UConverterCallbackReason reason,
+-                                  UErrorCode* err) {
+-  UChar out_char;
+-  if (reason == UCNV_UNASSIGNED && (out_char = FallbackForGBK(code_point))) {
+-    const UChar* source = &out_char;
+-    *err = U_ZERO_ERROR;
+-    ucnv_cbFromUWriteUChars(from_unicode_args, &source, source + 1, 0, err);
+-    return;
+-  }
+-  UCNV_FROM_U_CALLBACK_SUBSTITUTE(context, from_unicode_args, code_units,
+-                                  length, code_point, reason, err);
+-}
+ #endif  // USING_SYSTEM_ICU
+ 
+ class TextCodecInput final {
+--- chromium-64.0.3282.71/third_party/blink/renderer/core/paint/paint_property_tree_builder.cc.gcc7	2018-01-04 00:06:29.000000000 +0100
++++ chromium-64.0.3282.71/third_party/blink/renderer/core/paint/paint_property_tree_builder.cc	2018-01-07 21:47:33.628080370 +0100
+@@ -2297,17 +2297,14 @@ bool PaintPropertyTreeBuilder::ObjectTyp
+ }
+ 
+ void PaintPropertyTreeBuilder::UpdatePaintingLayer() {
+-  bool changed_painting_layer = false;
+   if (object_.HasLayer() &&
+       ToLayoutBoxModelObject(object_).HasSelfPaintingLayer()) {
+     context_.painting_layer = ToLayoutBoxModelObject(object_).Layer();
+-    changed_painting_layer = true;
+   } else if (object_.IsColumnSpanAll() ||
+              object_.IsFloatingWithNonContainingBlockParent()) {
+     // See LayoutObject::paintingLayer() for the special-cases of floating under
+     // inline and multicolumn.
+     context_.painting_layer = object_.PaintingLayer();
+-    changed_painting_layer = true;
+   }
+   DCHECK(context_.painting_layer == object_.PaintingLayer());
+ }
+--- chromium-64.0.3282.71/third_party/blink/renderer/platform/graphics/highcontrast/highcontrast_classifier.cc.gcc7	2018-01-04 00:06:32.000000000 +0100
++++ chromium-64.0.3282.71/third_party/blink/renderer/platform/graphics/highcontrast/highcontrast_classifier.cc	2018-01-07 22:06:16.757401299 +0100
+@@ -1127,7 +1127,6 @@
+     ,
+     FixedAllocations* __restrict fixed) {
+   const int32_t input0_shape[] = {1, 4};
+-  int32_t logits_MatMul_merged_with_dnn_logits_BiasAdd0_shape[2];
+ 
+   // dnn/hiddenlayer_0/MatMul_merged_with_dnn/hiddenlayer_0/BiasAdd
+   FullyConnected<float>(input0_shape, input0,
+@@ -1150,8 +1149,6 @@
+       dnn_logits_weights_part_0.values, dnn_logits_biases_part_0_shape,
+       dnn_logits_biases_part_0.values,
+       logits_MatMul_merged_with_dnn_logits_BiasAdd0);
+-  logits_MatMul_merged_with_dnn_logits_BiasAdd0_shape[0] = 1;
+-  logits_MatMul_merged_with_dnn_logits_BiasAdd0_shape[1] = 1;
+ }
+ 
+ }  // namespace highcontrast_tfnative_model
+--- chromium-64.0.3282.71/extensions/renderer/runtime_custom_bindings.cc.gcc7	2018-01-04 00:06:04.000000000 +0100
++++ chromium-64.0.3282.71/extensions/renderer/runtime_custom_bindings.cc	2018-01-08 01:59:41.213107482 +0100
+@@ -60,11 +60,15 @@
+   ViewType view_type = VIEW_TYPE_INVALID;
+   bool parsed_view_type = GetViewTypeFromString(view_type_string, &view_type);
+   if (!parsed_view_type)
++  {
+     CHECK_EQ("ALL", view_type_string);
++  }
+ 
+   const std::string& extension_id = context()->GetExtensionID();
+   if (extension_id.empty())
++  {
+     return;
++  }
+ 
+   v8::Local<v8::Context> v8_context = args.GetIsolate()->GetCurrentContext();
+   // We ignore iframes here. (Returning subframes can cause broken behavior by
