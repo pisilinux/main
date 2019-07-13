@@ -24,6 +24,7 @@ def build():
 def install():
     pisitools.dobin("build/x86_64/release/teeworlds")
     pisitools.dobin("build/x86_64/release/teeworlds_srv")
+    pisitools.insinto("/usr/share/teeworlds/data", "build/x86_64/release/data/*")
     pisitools.rename("/usr/bin/teeworlds_srv", "teeworlds-server")
 
     pisitools.insinto(DATADIR, "data")
