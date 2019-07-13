@@ -20,13 +20,22 @@ def setup():
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
 
-    for LIB in ["flac", "harfbuzz-ng" "libwebp" ,"libxslt", "yasm"]:
+    for LIB in ["freetype", "flac", "harfbuzz-ng", "libxml" ,"libxslt", "re2", "yasm"]:
         shelltools.system('find -type f -path "*third_party/$LIB/*" \! -path "*third_party/$LIB/chromium/*" \! -path "*third_party/$LIB/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete')
 
-    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac harfbuzz-ng libwebp libxslt yasm")
+    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac freetype harfbuzz-ng libxml libxslt re2 yasm")
+    
+    shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
+                       third_party/blink/renderer/core/xml/*.cc \
+                       third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
+					   third_party/libxml/chromium/libxml_utils.cc")
 
     opt = 'use_sysroot=false \
-           is_clang=false enable_nacl=false \
+           enable_nacl=true \
+           enable_nacl_nonsfi=true \
+           use_custom_libcxx=false \
+           clang_use_chrome_plugins=false \
+           is_official_build=true \
            fieldtrial_testing_like_official_build=true \
            clang_use_chrome_plugins=false \
            fatal_linker_warnings=false \
@@ -44,9 +53,23 @@ def setup():
            remove_webcore_debug_symbols=true \
            proprietary_codecs=true \
            link_pulseaudio=true \
-           use_custom_libcxx=false \
-           enable_swiftshader=false'
+           enable_swiftshader=false \
+           use_vaapi=true \
+           closure_compile=false'
+           
+        
+    #clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin/" %(get.workDIR(), get.srcVERSION())
 
+    shelltools.export("CC", "clang" )
+    shelltools.export("CXX", "clang++" )
+    shelltools.export("AR", "llvm-ar" )
+    
+    shelltools.export("CFLAGS", "-Wno-builtin-macro-redefined")
+    shelltools.export("CXXFLAGS", "-Wno-builtin-macro-redefined")
+    shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
+    
+    shelltools.system("build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
+    shelltools.system("tools/clang/scripts/update.py")
     shelltools.system("tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
 
@@ -56,13 +79,14 @@ def build():
     shelltools.system("ninja -C out/Release chrome")
     shelltools.system("ninja -C out/Release chrome_sandbox")
     shelltools.system("ninja -C out/Release chromedriver")
-    shelltools.system("ninja -C out/Release widevinecdmadapter")
+    #shelltools.system("ninja -C out/Release widevinecdmadapter")
 
 def install():
     shelltools.cd("out/Release")
 
     #should be checked should for the missing folder "out/Release"
-    for vla in ["*.pak", "*.json", "chrome", "locales", "resources", "icudtl.dat", "mksnapshot", "chromedriver", "natives_blob.bin", "snapshot_blob.bin", "character_data_generator"]:
+    for vla in ["*.pak", "*.json", "chrome", "locales", "resources", "icudtl.dat", "mksnapshot", "chromedriver", "natives_blob.bin", "snapshot_blob.bin", "character_data_generator", \
+			    "libEGL.so", "libGLESv2.so", "libVk*.so", "swiftshader", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_helper_nonsfi", "nacl_irt_x86_64.nexe"]:
         pisitools.insinto("/usr/lib/chromium-browser", "%s" % vla)
 
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
