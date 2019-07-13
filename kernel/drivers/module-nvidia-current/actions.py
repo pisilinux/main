@@ -144,47 +144,50 @@ def install():
 		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
 		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
 		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so" % nvlibdir)
-    
+		
 		pisitools.dolib("libEGL.so.1.1.0", nvlibdir)
 		pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so.1" % nvlibdir)
 		pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so" % nvlibdir)
 		pisitools.dolib("libEGL_nvidia.so.%s" % version, libdir)
 		pisitools.dolib("libGLESv1_CM_nvidia.so.%s" % version, libdir)
 		pisitools.dolib("libGLESv2_nvidia.so.%s" % version, libdir)
-
+		
+		pisitools.dolib("libGLdispatch.so.0", libdir)
+		pisitools.dosym("libGLdispatch.so.0", "%s/libGLdispatch.so" % libdir)
+		
 		# OpenCL
 		pisitools.insinto("/etc/OpenCL/vendors", "nvidia.icd")
 		pisitools.dolib("libnvidia-compiler.so.%s" % version, libdir)
 		pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
 		pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
-    
+		
 		pisitools.dolib("libOpenCL.so.1.0.0", libdir)
 		pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
 		pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
 		pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so" % libdir)
-    
+		
 		pisitools.dolib("libnvidia-opencl.so.%s" % version, libdir)
 		pisitools.dosym("libnvidia-opencl.so.%s" % version, "%s/libnvidia-opencl.so.1" % libdir)
 		pisitools.dosym("libnvidia-opencl.so.1", "%s/libnvidia-opencl.so" % libdir)
-
+		
     # CUDA
 		pisitools.dolib("libcuda.so.%s" % version, libdir)
 		pisitools.dosym("libcuda.so.%s" % version, "%s/libcuda.so.1" % libdir)
 		pisitools.dosym("libcuda.so.1", "%s/libcuda.so" % libdir)
-
+		
 		pisitools.dolib("libnvcuvid.so.%s" % version, libdir)
 		pisitools.dosym("libnvcuvid.so.%s" % version, "%s/libnvcuvid.so.1" % libdir)
 		pisitools.dosym("libnvcuvid.so.1", "%s/libnvcuvid.so" % libdir)
-
+		
 		# NVML
 		# Provides programmatic access to static information and monitoring
 		# data for NVIDIA GPUs, as well as limited managment capabilities
 		pisitools.dolib("libnvidia-ml.so.%s" % version, libdir)
 		pisitools.dosym("libnvidia-ml.so.%s" % version, "%s/libnvidia-ml.so.1" % libdir)
-
+		
 		pisitools.dolib("libnvidia-cfg.so.%s" % version, libdir)
 		pisitools.dosym("libnvidia-cfg.so.%s" % version, "%s/libnvidia-cfg.so.1" % libdir)
-    
+		
 		pisitools.dolib("libnvoptix.so.%s" % version, libdir)
 		pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
 		pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so" % libdir)
@@ -192,9 +195,7 @@ def install():
 		pisitools.dolib("libnvidia-egl-wayland.so.1.1.2", libdir)
 		pisitools.dosym("libnvidia-egl-wayland.so.1.1.2", "%s/libnvidia-egl-wayland.so.1" % libdir)
 		pisitools.dosym("libnvidia-egl-wayland.so.1.1.2", "%s/libnvidia-egl-wayland.so" % libdir)
-
-    
-
+		
 		# OpenGL core library and others
 		for lib in ("cbl", "eglcore", "encode", "fatbinaryloader", "fbc", "glcore",  "glsi", \
 		         "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
@@ -204,9 +205,7 @@ def install():
 
 		# VDPAU driver
 		pisitools.dolib("libvdpau_nvidia.so.%s" % version, "%s/vdpau" % libdir)
-		pisitools.dosym("libvdpau_nvidia.so.%s" % version, "%s/libvdpau_nvidia.so" % libdir)
-    
-    
+		pisitools.dosym("libvdpau_nvidia.so.%s" % version, "%s/libvdpau_nvidia.so" % libdir)    
 
 		# X modules
 		pisitools.dolib("nvidia_drv.so", "%s/modules/drivers" % xorglibdir)
@@ -218,13 +217,12 @@ def install():
 		pisitools.dolib("libGLX_nvidia.so.%s" % version, libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so.0" % libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so" % libdir)
-    
-  
+		
 		pisitools.insinto("/usr/share/X11/xorg.conf.d", "nvidia-drm-outputclass.conf")
 	#  pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-367.27-rc")
    # pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-367.27-key-documentation")
 		pisitools.insinto("/usr/share/pixmaps", "nvidia-settings.png")
-    
+		
 		pisitools.dolib("libnvidia-gtk2.so.%s" % version, libdir)
 		pisitools.dolib("libnvidia-gtk3.so.%s" % version, libdir)
 
