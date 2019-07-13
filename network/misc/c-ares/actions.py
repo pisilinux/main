@@ -21,4 +21,4 @@ def build():
 def install():
     autotools.install()
 
-    pisitools.dodoc("AUTHORS", "README*", "NEWS", "CHANGES", "RELEASE-NOTES", "TODO", "*.pdf")
+    pisitools.dodoc("AUTHORS", "README*", "NEWS", "CHANGES", "RELEASE-NOTES", "LICENSE.md")
