@@ -7,17 +7,23 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("CXXFLAGS", '%s -DEXPDATADIR=\\\"/usr/share/abuse\\\"' % get.CXXFLAGS())
+	#shelltools.export("CXXFLAGS", '%s -DEXPDATADIR=\\\"/usr/share/abuse\\\"' % get.CXXFLAGS())
     #pisitools.dosed("src/sdlport/setup.cpp", "/var/games/abuse", "/usr/share/abuse")
-    autotools.configure("--datadir=/usr/share/abuse --with-x")
+    #autotools.configure("--datadir=/usr/share/abuse \
+		                 #--with-x \
+		                 #--enable-debug")
+		                 
+	cmaketools.configure("-DBUILD_SHARED_LIBS=OFF")
 
 def build():
-    autotools.make("-j1")
+    cmaketools.make()
 
 def install():
     autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
+    pisitools.domove("/usr/share/games/abuse/*", "/usr/share/abuse/games/abuse/")
 
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README", "TODO")
+    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README.md", "TODO.md")
