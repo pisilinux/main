@@ -17,17 +17,19 @@ def setup():
     shelltools.cd("build")
     
     options = "meson --prefix=/usr --libdir=lib \
-                         -Denable-introspection=true \
+                         -Dintrospection=true \
               "
               
     if get.buildTYPE() == "emul32":
-        options += "--libdir=lib32 .."
+        options += "--libdir=lib32 \
+                    -Dintrospection=false \
+                    -Ddocs=false .."
     
     shelltools.system(options)
 
 def build():
     shelltools.cd("build")
-    shelltools.system
+    shelltools.system("ninja")
 
 def install():
     shelltools.cd("build")
@@ -36,5 +38,5 @@ def install():
         #pisitools.removeDir("/usr/share/gtk-doc")
         return
     
-        shelltools.cd("build")
+        shelltools.cd("..")
         pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
