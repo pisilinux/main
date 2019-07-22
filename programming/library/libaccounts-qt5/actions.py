@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("sed -i 's|SUBDIRS  += Accounts tests|SUBDIRS += Accounts|' accounts-qt.pro")
-    shelltools.system("qmake-qt5 PREFIX=/usr LIBDIR=/usr/lib")
+    shelltools.system("qmake PREFIX=/usr LIBDIR=/usr/lib")
 
 def build():
     autotools.make()
