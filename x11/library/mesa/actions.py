@@ -98,7 +98,7 @@ def setup():
     elif get.ARCH() == "x86_64":
         options += " -Dclang-libdir-path=/usr/lib \
                      -Dgallium-omx=bellagio \
-                     -Dgallium-opencl=disabled .."
+                     -Dgallium-opencl=icd .."
 
     shelltools.system(options)
     #pisitools.dosed("libtool","( -shared )", " -Wl,--as-needed\\1")
