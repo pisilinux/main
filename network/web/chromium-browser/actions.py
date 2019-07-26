@@ -20,10 +20,10 @@ def setup():
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
 
-    for LIB in ["freetype", "flac", "harfbuzz-ng", "libxml" ,"libxslt", "re2", "yasm"]:
+    for LIB in ["freetype", "flac", "ffmpeg", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg", "libxml" ,"libxslt", "libwebp", "opus", "re2", "snappy", "yasm"]:
         shelltools.system('find -type f -path "*third_party/$LIB/*" \! -path "*third_party/$LIB/chromium/*" \! -path "*third_party/$LIB/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete')
 
-    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac freetype harfbuzz-ng libxml libxslt re2 yasm")
+    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac ffmpeg fontconfig freetype harfbuzz-ng libdrm libjpeg libxml libxslt libwebp opus re2 snappy yasm")
     
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
@@ -62,7 +62,7 @@ def setup():
 
     shelltools.export("CC", "clang" )
     shelltools.export("CXX", "clang++" )
-    shelltools.export("AR", "llvm-ar" )
+    #shelltools.export("AR", "llvm-ar" )
     
     shelltools.export("CFLAGS", "-Wno-builtin-macro-redefined")
     shelltools.export("CXXFLAGS", "-Wno-builtin-macro-redefined")
@@ -86,7 +86,7 @@ def install():
 
     #should be checked should for the missing folder "out/Release"
     for vla in ["*.pak", "*.json", "chrome", "locales", "resources", "icudtl.dat", "mksnapshot", "chromedriver", "natives_blob.bin", "snapshot_blob.bin", "character_data_generator", \
-			    "libEGL.so", "libGLESv2.so", "libVk*.so", "swiftshader", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_helper_nonsfi", "nacl_irt_x86_64.nexe"]:
+			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_helper_nonsfi", "nacl_irt_x86_64.nexe"]:
         pisitools.insinto("/usr/lib/chromium-browser", "%s" % vla)
 
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
@@ -94,7 +94,7 @@ def install():
  
     shelltools.system("chmod -v 4755 %s/usr/lib/chromium-browser/chrome-sandbox" %get.installDIR())
 
-    pisitools.newman("chrome.1", "chromium-browser.1")
+    #pisitools.newman("chrome.1", "chromium-browser.1")
 
     shelltools.cd("../..")
     for size in ["22", "24", "48", "64", "128", "256"]:
