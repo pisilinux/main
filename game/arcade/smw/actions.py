@@ -16,5 +16,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    shelltools.system("chmod -R 0755 %s/usr/share/smw" %get.installDIR())
 
     pisitools.dodoc("DOES_WORK", "THANKS*", "README*")
