@@ -34,10 +34,7 @@ def setup():
 
             if not shelltools.can_access_directory("projects/compiler-rt"):
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
-                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
-                
-
-        
+                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")     
         
                 shelltools.export("CC", "clang")
                 shelltools.export("CXX", "clang++")
@@ -73,8 +70,7 @@ def setup():
                                         %s \
                                         -DLLVM_ENABLE_FFI=ON \
                                         -DLLVM_BUILD_DOCS=OFF \
-                                        -DLLVM_BUILD_LLVM_DYLIB=ON \
-                                        -DLLVM_LINK_LLVM_DYLIB=ON \
+                                        -DBUILD_SHARED_LIBS=ON \
                                         -DLLVM_ENABLE_RTTI=ON \
                                         -DLLVM_ENABLE_EH=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
