@@ -16,7 +16,7 @@ def setup():
     pisitools.dosed("makefile", "_pardus_ldflags", "-lm -lstdc++ %s" % get.LDFLAGS())
 
 def build():
-    autotools.make()
+    autotools.make("MPKDIR=/usr/share/tomatoes/ MUSICDIR=/usr/share/tomatoes/music/ CONFIGDIR=/usr/share/tomatoes/ OVERRIDEDIR=./")
 
 def install():
     pisitools.dobin("tomatoes")
@@ -25,4 +25,5 @@ def install():
     pisitools.dodir("%s/music" % ketchup)
     pisitools.insinto(ketchup, "tomatoes-1.5/tomatoes.mpk")
     pisitools.insinto("%s/music" % ketchup, "tomatoes-1.5/music/IHaveNoTomatoes.it")
+    pisitools.insinto("/usr/share/tomatoes", "tomatoes-1.5/config.cfg")
 
