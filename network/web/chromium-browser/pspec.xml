@@ -13,7 +13,7 @@
         <IsA>app:gui</IsA>
         <Summary>A WebKit powered web browser</Summary>
         <Description>Chromium-browser is an open-source web browser, powered by WebKit.</Description>
-        <Archive type="tarxz" sha1sum="79c8fb089e8f344dce40c6495a006a172d4fc4ac">https://commondatastorage.googleapis.com/chromium-browser-official/chromium-69.0.3497.100.tar.xz</Archive>
+        <Archive type="tarxz" sha1sum="80b6f953dc16af024e584ff36d1f1a39e79cc0c1">http://gsdview.appspot.com/chromium-browser-official/chromium-75.0.3770.144.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>at-spi2-atk-devel</Dependency>
@@ -24,7 +24,6 @@
             <Dependency>desktop-file-utils</Dependency>
             <Dependency>faac-devel</Dependency>
             <Dependency>flac-devel</Dependency>
-            <Dependency>fontconfig-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>glibc-devel</Dependency>
@@ -59,6 +58,7 @@
             <Dependency>libopus-devel</Dependency>
             <Dependency>libsecret-devel</Dependency>
             <Dependency>libtheora-devel</Dependency>
+			<Dependency>libva-devel</Dependency>
             <Dependency>libvdpau-devel</Dependency>
             <Dependency>libvorbis-devel</Dependency>
             <Dependency>libxcb-devel</Dependency>
@@ -88,29 +88,19 @@
             <Dependency>python-devel</Dependency>
             <Dependency>json-c-devel</Dependency>
             <Dependency>openjpeg2-devel</Dependency>
+			<Dependency>re2-devel</Dependency>
+			<Dependency>ffmpeg-devel</Dependency>
+			<Dependency>freetype-devel</Dependency>
+			<Dependency>libopus-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">chromium-compiler-r4.patch</Patch>
-            <Patch level="1">chromium-skia-harmony.patch</Patch>
-            <Patch level="1">chromium-widevine-r2.patch</Patch>
-            <Patch level="1">fix-cfi-icall-failure-with-use_system_libjpeg-true.patch</Patch>
-            <Patch level="1">mageia/001-chromium-59-gcc5.patch</Patch>
-            <Patch level="1">mageia/002-chromium-61-gcc5.patch</Patch>
-            <Patch level="1">mageia/003-chromium-62-gcc5.patch</Patch>
-            <Patch level="1">mageia/004-chromium-62-gcc7.patch</Patch>
-            <Patch level="1">mageia/005-chromium-64-gcc7.patch</Patch>
-            <Patch level="1">mageia/006-chromium-65-gcc7.patch</Patch>
-            <Patch level="1">mageia/007-chromium-66-gcc7.patch</Patch>
-            <Patch level="1">mageia/008-chromium-67-gcc7.patch</Patch>
-            <Patch level="1">mageia/009-chromium-68-gcc7.patch</Patch>
-            <Patch level="1">mageia/011-chromium-69-gcc7.patch</Patch>
-            <Patch level="1">mageia/chromium-45-no-external-components.patch</Patch>
-            <Patch level="1">mageia/chromium-52-pdfium-system-libtiff-libpng.patch</Patch>
-            <Patch level="1">mageia/chromium-53-gn-system-icu-jsoncpp.patch</Patch>
-            <Patch level="1">mageia/chromium-53-gn-system-opus.patch</Patch>
-            <Patch level="1">mageia/chromium-69-gn-bootstrap.patch</Patch>
-            <Patch level="1">marcos.patch</Patch>
-            <Patch level="1">only-disable-cfi-icall-when-use_system_libjpeg-true.patch</Patch>
+            <Patch level="1">chromium-fix-window-flash-for-some-WMs.patch</Patch>
+			<Patch level="0">chromium-skia-harmony.patch</Patch>
+<!-- 			<Patch level="1">chromium-system-icu.patch</Patch> -->
+			<Patch level="1">chromium-widevine.patch</Patch>
+			<Patch level="1">libstdc-do-not-assume-unique_ptr-has-ostream-operator.patch</Patch>
+			<Patch level="1">disallow-partial-swaps-for-linux-based-on-gl_version.patch</Patch>
+			<Patch level="1">chromium-non-const-deltas.patch</Patch>
         </Patches>
     </Source>
     <Package>
@@ -141,6 +131,7 @@
             <Dependency>libXtst</Dependency>
             <Dependency>libxcb</Dependency>
             <Dependency>libxslt</Dependency>
+			<Dependency>libva</Dependency>
             <!--Dependency>minizip</Dependency-->
             <!--Dependency>mit-kerberos</Dependency-->
             <Dependency>nss</Dependency>
@@ -161,6 +152,15 @@
             <!--Dependency>snappy</Dependency-->
             <!--Dependency>freetype</Dependency-->
             <Dependency>harfbuzz</Dependency>
+			<Dependency>re2</Dependency>
+			<Dependency>ffmpeg</Dependency>
+			<Dependency>freetype</Dependency>
+			<Dependency>libopus</Dependency>
+			<Dependency>snappy</Dependency>
+			<Dependency>webp</Dependency>
+			<Dependency>freetype</Dependency>
+			<Dependency>libdrm</Dependency>
+			<Dependency>libjpeg-turbo</Dependency>
             <!--Dependency>glibc</Dependency-->
         </RuntimeDependencies>
         <Files>
@@ -180,6 +180,13 @@
     </Package>
 
     <History>
+		<Update release="14">
+            <Date>2019-07-26</Date>
+            <Version>75.0.3770.144</Version>
+            <Comment>Version Bump.</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="13">
             <Date>2018-09-11</Date>
             <Version>69.0.3497.100</Version>

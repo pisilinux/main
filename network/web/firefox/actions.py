@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 #WorkDir = "mozilla-release-6b51784853e47e091d213d421a19cb623af718f0"
 ObjDir = "build"
-locales = "az bs ca  da  de  el  en-US en-GB en-ZA  es-AR  es-CL  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
+locales = "az bs ca  da  de  el  en-US en-GB  es-AR  es-CL  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
 xpidir = "%s/xpi" % get.workDIR()
 arch = get.ARCH()
 ver = ".".join(get.srcVERSION().split(".")[:3])
@@ -47,7 +47,7 @@ def setup():
     
 def build():
     shelltools.cd(ObjDir)
-    shelltools.system("../mach build")
+    shelltools.system("../mach build -j5")
 
 def install():
     shelltools.cd(ObjDir)
