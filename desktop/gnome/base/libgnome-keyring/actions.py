@@ -6,10 +6,13 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("""sed -i -r 's:"(/desktop):"/org/gnome\1:' schema/*.xml""")
     autotools.configure("--disable-static \
+                         --with-pam-dir=/lib/security \
                          --disable-doc")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")

@@ -6,18 +6,21 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--sbindir=/sbin \
-                         --disable-maintainer-mode \
-                         --disable-schemas-compile")
-
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson .. --prefix=/usr")
+    
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dodoc("README","NEWS","MAINTAINERS")
-
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+     
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING", "NEWS", "README")
