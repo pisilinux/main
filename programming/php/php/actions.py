@@ -49,14 +49,16 @@ def setup():
     shelltools.makedirs("fcgi")
     shelltools.makedirs("apache")
     shelltools.makedirs("fpm")
+    shelltools.makedirs("common")
 
     # link configure script
     shelltools.sym("../configure", "fcgi/configure")
     shelltools.sym("../configure", "apache/configure")
     shelltools.sym("../configure", "fpm/configure")
+    shelltools.sym("../configure", "common/configure")
 
     shelltools.export("LC_ALL", "C")
-    shelltools.export("CFLAGS", "%s -fwrapv -lkrb5 -lgssapi_krb5 -lpam" % get.CFLAGS())
+    shelltools.export("CFLAGS", "%s -fwrapv -lkrb5 -lgssapi_krb5 -lpam -DU_USING_ICU_NAMESPACE=1" % get.CFLAGS())
     shelltools.export("NO_INTERACTION", "1")
     shelltools.export("EXTENSION_DIR", "/usr/lib/php/modules")
 
@@ -80,7 +82,6 @@ def setup():
                       --with-jpeg-dir=/usr/lib/ \
                       --with-png-dir=/usr/lib/ \
                       --with-freetype-dir=/usr \
-                      --without-pear \
                       --with-zend-vm=GOTO \
                       --with-zend-vm=SWITCH \
                       --with-db4=/usr/lib \
@@ -93,6 +94,7 @@ def setup():
                       --with-openssl=shared \
                       --with-imap-ssl \
                       --with-mysql-sock=/run/mysqld/mysqld.sock \
+                      --without-pear \
                       --disable-rpath \
                      "
 
@@ -123,6 +125,13 @@ def setup():
                          --with-config-file-scan-dir=/etc/php/apache2/ext \
                          %s \
                          %s" % (common_options, extensions()))
+	
+    # Enable common
+    shelltools.cd("../common")
+    autotools.configure("--enable-cli \
+		                 --enable-phpdbg \
+                         %s \
+                         %s" % (common_options, extensions()))
 
 
 def build():
@@ -134,6 +143,9 @@ def build():
     autotools.make()
 
     shelltools.cd("../fpm")
+    autotools.make()
+    
+    shelltools.cd("../common")
     autotools.make()
 
 
@@ -151,6 +163,9 @@ def install():
 
     shelltools.cd("../fpm")
     autotools.rawInstall("INSTALL_ROOT=\"%s\"" % get.installDIR(), "install-fpm")
+    
+    shelltools.cd("../common")
+    autotools.rawInstall("INSTALL_ROOT=\"%s\"" % get.installDIR(), "install")
 
     shelltools.cd("..")
 
