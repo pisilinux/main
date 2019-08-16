@@ -1,0 +1,35 @@
+From a0e6d2abeed9d64fe7862a7664ba80a6178bf3f2 Mon Sep 17 00:00:00 2001
+From: David Tardon <dtardon@redhat.com>
+Date: Tue, 8 Nov 2016 11:50:06 +0100
+Subject: [PATCH] don't suppress crashes
+
+An automatic restart after a crash makes the crash invisible to abrt.
+
+Change-Id: I3854e619356049b144b08575879d289a3c12e4c9
+---
+ desktop/source/app/app.cxx | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/desktop/source/app/app.cxx b/desktop/source/app/app.cxx
+index 53365f4..3a3bac8 100644
+--- a/desktop/source/app/app.cxx
++++ b/desktop/source/app/app.cxx
+@@ -1312,14 +1312,12 @@ void Desktop::Exception(ExceptionCategory nCategory)
+             if( bRestart )
+             {
+                 RequestHandler::Disable();
+-                if( pSignalHandler )
+-                    osl_removeSignalHandler( pSignalHandler );
+ 
+                 restartOnMac(false);
+                 if ( m_rSplashScreen.is() )
+                     m_rSplashScreen->reset();
+ 
+-                _exit( EXITHELPER_CRASH_WITH_RESTART );
++                return;
+             }
+             else
+             {
+-- 
+2.9.3
+
