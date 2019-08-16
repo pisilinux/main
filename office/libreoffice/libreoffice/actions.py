@@ -101,7 +101,7 @@ def setup():
                         --disable-odk                   \
                         --enable-ext-wiki-publisher     \
                         --enable-ext-nlpsolver          \
-                        --with-jdk-home=/usr/lib/jvm/java-7-openjdk \
+                        --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                         --with-external-tar=external/tarballs \
                         --with-gdrive-client-id=457862564325.apps.googleusercontent.com \
                         --with-gdrive-client-secret=GYWrDtzyZQZ0_g5YoBCC6F0I \
