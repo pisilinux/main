@@ -20,10 +20,11 @@ def setup():
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
 
-    for LIB in ["freetype", "flac", "ffmpeg", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg", "libxml" ,"libxslt", "libwebp", "opus", "re2", "snappy", "yasm"]:
-        shelltools.system('find -type f -path "*third_party/$LIB/*" \! -path "*third_party/$LIB/chromium/*" \! -path "*third_party/$LIB/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete')
-
-    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac ffmpeg fontconfig freetype harfbuzz-ng libdrm libjpeg libxml libxslt libwebp opus re2 snappy yasm")
+    #for LIB in ["freetype", "flac", "ffmpeg", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg", "libxml" ,"libxslt", "libwebp", "opus", "re2", "snappy", "yasm"]:
+        #shelltools.system('find -type f -path "*third_party/$LIB/*" \! -path "*third_party/$LIB/chromium/*" \! -path "*third_party/$LIB/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete')
+	
+	
+    #shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac ffmpeg fontconfig freetype harfbuzz-ng libdrm libjpeg libxml libxslt libwebp opus re2 snappy yasm")
     
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
