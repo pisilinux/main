@@ -10,4 +10,4 @@ WorkDir = "."
 
 def install():
     pisitools.insinto("usr/lib/chromium-browser/PepperFlash/", "manifest.json")
-    pisitools.insinto("usr/lib/chromium-browser/PepperFlash/", "libpepflashplayer.so")
+    pisitools.doexe("libpepflashplayer.so", "/usr/lib/chromium-browser/PepperFlash/")
