@@ -20,6 +20,7 @@ def setup():
                          --enable-sixaxis \
                          --enable-experimental \
                          --disable-android \
+                         --enable-cups \
                          --enable-datafiles \
                          --enable-optimization \
                          --enable-pie \
