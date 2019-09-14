@@ -12,7 +12,10 @@ from pisi.actionsapi import get
 def setup():
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--disable-static \
+                         CYTHONEXEC='/usr/bin/cython3' \
                          --sysconfdir=/etc \
+                         --disable-schemas-compile \
+                         --with-dhcp-config='/etc/dhcp/dhcpd.conf' \
                          --enable-polkit")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
