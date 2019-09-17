@@ -18,12 +18,22 @@ def setup():
     #shelltools.system("export CXXFLAGS+=-std=c++11")
 
     shelltools.export("AUTOPOINT", "true")
+    #shelltools.export("CC", "clang")
+    #shelltools.export("CXX", "clang++")
+    shelltools.export("LDFLAGS", "-L/usr/lib -llua")
+    shelltools.export("CFLAGS", "-I/usr/include/samba-4.0")
+    shelltools.export("CPPFLAGS", "-I/usr/include/samba-4.0")
+    shelltools.export("CXXFLAGS", "-I/usr/include/samba-4.0 -std=c++11")
+    shelltools.export("LUAC", "/usr/bin/luac")
+    shelltools.export("LUA_LIBS", "$(pkg-config --libs lua)")
+    shelltools.export("RCC", "/usr/bin/rcc")
     shelltools.system("./bootstrap")
     #autotools.autoreconf("-vfi")
     autotools.rawConfigure("\
                             --prefix=/usr \
                             --libdir=/usr/lib \
                             --sysconfdir=/etc \
+                            --with-kde-solid=/usr/share/solid/actions/ \
                             --with-default-font-family=Sans \
                             --with-default-monospace-font-family=Monospace \
                             --with-default-font=/usr/share/fonts/dejavu/DejaVuSans.ttf \
@@ -62,6 +72,10 @@ def setup():
                             --enable-a52 \
                             --enable-aa \
                             --enable-alsa \
+                            --enable-archive \
+                            --enable-avcodec \
+                            --enable-avformat \
+                            --enable-postproc \
                             --enable-bluray \
                             --enable-dc1394 \
                             --enable-dbus \
