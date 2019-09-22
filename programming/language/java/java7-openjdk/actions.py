@@ -31,7 +31,7 @@ def setup():
                             --enable-bootstrap \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
                             --with-jdk-home=/usr/lib/jvm/java-7-openjdk \
-                            --with-pkgversion='PisiLinux build 7.u201_2.6.17' \
+                            --with-pkgversion='PisiLinux build 7.u231_2.6.19' \
                            " % get.makeJOBS().replace("-j", ""))
 
 def build():
