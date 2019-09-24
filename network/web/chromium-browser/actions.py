@@ -34,7 +34,7 @@ def setup():
     opt = 'use_sysroot=false \
            enable_nacl=true \
            enable_nacl_nonsfi=true \
-           use_custom_libcxx=false \
+           use_custom_libcxx=true \
            clang_use_chrome_plugins=false \
            is_official_build=true \
            fieldtrial_testing_like_official_build=true \
