@@ -98,7 +98,7 @@ def install():
     #pisitools.newman("chrome.1", "chromium-browser.1")
 
     shelltools.cd("../..")
-    for size in ["22", "24", "48", "64", "128", "256"]:
+    for size in ["24", "48", "64", "128", "256"]:
         pisitools.insinto("/usr/share/icons/hicolor/%sx%s/apps" %(size, size), "chrome/app/theme/chromium/product_logo_%s.png" % size, "chromium-browser.png")
 
     pisitools.dosym("/usr/share/icons/hicolor/256x256/apps/chromium-browser.png", "/usr/share/pixmaps/chromium-browser.png")
