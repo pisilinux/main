@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 def setup():
     options = "-DCMAKE_BUILD_TYPE=Release \
                -DWITH_JPEG8=TRUE \
+               -DENABLE_STATIC=FALSE \
                -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib \
                -DCMAKE_INSTALL_PREFIX=/usr"
                
@@ -40,4 +41,5 @@ def install():
         return
     
     # provide jpegint.h as it is required by various software
-    pisitools.insinto("/usr/lib/include", "jpegint.h")
+    #pisitools.insinto("/usr/lib/include", "jpegint.h")
+    pisitools.insinto("/usr/include", "jpegint.h")
