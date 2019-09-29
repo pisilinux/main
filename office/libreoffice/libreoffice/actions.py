@@ -30,83 +30,84 @@ def setup():
     shelltools.export("CPPFLAGS", "-DU_USING_ICU_NAMESPACE=1")
     shelltools.cd(OurWorkDir)   
   
+    #set toolbars default icon theme as colibre
+    pisitools.dosed("officecfg/registry/schema/org/openoffice/Office/Common.xcs", "<value>auto</value>", "<value>colibre</value>")
+    
     shelltools.touch("autogen.lastrun")
     shelltools.system('sed -e "/distro-install-file-lists/d" -i Makefile.in')
-    shelltools.system('./autogen.sh         \
-                        --prefix=/usr      \
-                        --sysconfdir=/etc               \
-                        --with-vendor="Pisi Linux"         \
-                        --with-lang="%s"     \
-                        --enable-qt5         \
-                        --enable-gtk3   \
-                        --disable-gtk    \
-                        --with-help            \
-                        --with-myspell-dicts  \
-                        --with-java                     \
-                        --without-system-dicts          \
-                        --without-fonts    \
-                        --disable-postgresql-sdbc       \
-                        --disable-firebird-sdbc     \
-                        --disable-coinmp \
-                        --without-system-hsqldb \
-                        --enable-release-build=yes      \
-                        --enable-python=system          \
-                        --with-system-apr           \
-                        --without-system-boost             \
-                        --with-system-cairo             \
-                        --with-system-clucene   \
-                        --with-system-cppunit \
-                        --with-system-curl              \
-                        --with-system-expat             \
-                        --with-system-graphite      \
-                        --with-system-glm \
-                        --with-system-harfbuzz          \
-                        --with-system-hunspell \
-                        --with-system-icu               \
-                        --with-system-jpeg              \
+    shelltools.system('./autogen.sh                       \
+                        --prefix=/usr                     \
+                        --sysconfdir=/etc                 \
+                        --with-vendor="Pisi Linux"        \
+                        --with-lang="%s"                  \
+                        --disable-gtk                     \
+                        --disable-postgresql-sdbc         \
+                        --disable-firebird-sdbc           \
+                        --disable-coinmp                  \
+                        --disable-odk                     \
+                        --enable-gtk3                     \
+                        --enable-release-build=yes        \
+                        --enable-python=system            \
+                        --enable-scripting-beanshell      \
+                        --enable-scripting-javascript     \
+                        --enable-ext-wiki-publisher       \
+                        --enable-ext-nlpsolver            \
+                        --with-help                       \
+                        --with-myspell-dicts              \
+                        --with-java                       \
+                        --with-system-apr                 \
+                        --with-system-cairo               \
+                        --with-system-clucene             \
+                        --with-system-cppunit             \
+                        --with-system-curl                \
+                        --with-system-expat               \
+                        --with-system-graphite            \
+                        --with-system-glm                 \
+                        --with-system-harfbuzz            \
+                        --with-system-hunspell            \
+                        --with-system-icu                 \
+                        --with-system-jpeg                \
                         --with-jdk-home=/usr/lib/jvm/java \
-                        --with-system-lcms2             \
-                        --with-system-libcdr \
-                        --without-system-libcmis \
-                        --with-system-libetonyek     \
-                        --with-system-libmspub \
-                        --with-system-libodfgen \
-                        --with-system-libpagemaker \
-                        --with-system-libpng            \
-                        --with-system-librevenge \
-                        --with-system-libvisio           \
-                        --with-system-libwpd  \
-                        --with-system-libwpg  \
-                        --with-system-libwps  \
-                        --with-system-libxml            \
-                        --with-system-mdds            \
-                        --with-system-liblangtag  \
-                        --without-system-libstaroffice \
-                        --without-system-libzmf \
-                        --with-system-neon          \
-                        --with-system-nss               \
-                        --with-system-odbc          \
-                        --with-system-openldap      \
-                        --with-system-openssl           \
-                        --without-system-orcus \
-                        --with-system-poppler           \
-                        --with-system-postgresql    \
-                        --with-system-redland  \
-                        --with-system-serf          \
-                        --without-system-ucpp \
-                        --with-system-zlib              \
-                        --with-system-libetonyek \
-                        --enable-scripting-beanshell    \
-                        --enable-scripting-javascript   \
-                        --disable-odk                   \
-                        --enable-ext-wiki-publisher     \
-                        --enable-ext-nlpsolver          \
+                        --with-system-lcms2               \
+                        --with-system-libcdr              \
+                        --with-system-libetonyek          \
+                        --with-system-libmspub            \
+                        --with-system-libodfgen           \
+                        --with-system-libpagemaker        \
+                        --with-system-libpng              \
+                        --with-system-librevenge          \
+                        --with-system-libvisio            \
+                        --with-system-libwpd              \
+                        --with-system-libwpg              \
+                        --with-system-libwps              \
+                        --with-system-libxml              \
+                        --with-system-mdds                \
+                        --with-system-liblangtag          \
+                        --with-system-neon                \
+                        --with-system-nss                 \
+                        --with-system-odbc                \
+                        --with-system-openldap            \
+                        --with-system-openssl             \
+                        --with-system-poppler             \
+                        --with-system-postgresql          \
+                        --with-system-redland             \
+                        --with-system-serf                \
+                        --with-system-zlib                \
+                        --with-system-libetonyek          \
+                        --without-system-dicts            \
+                        --without-fonts                   \
+                        --without-system-hsqldb           \
+                        --without-system-libstaroffice    \
+                        --without-system-libzmf           \
+                        --without-system-ucpp             \
+                        --without-system-boost            \
+                        --without-system-libcmis          \
+                        --without-system-orcus            \
                         --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
-                        --with-external-tar=external/tarballs \
-                        --with-gdrive-client-id=457862564325.apps.googleusercontent.com \
-                        --with-gdrive-client-secret=GYWrDtzyZQZ0_g5YoBCC6F0I \
+                        --with-external-tar=external/tarballs       \
+                        --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
+                        --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4            \
                         --with-parallelism=%s' % (langall, get.makeJOBS().replace("-j","")))
-#--disable-fetch-external \
 
 def build():
     autotools.make("build-nocheck")
