@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 WorkDir = "yaml-%s" % get.srcVERSION()
 
 def setup():
+    autotools.autoreconf("-fvi")
     autotools.configure("--disable-static")
 
 def build():
