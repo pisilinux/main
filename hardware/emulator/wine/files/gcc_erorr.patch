@@ -1,8 +1,6 @@
-diff --git a/tools/winebuild/main.c b/tools/winebuild/main.c
-index 16b4165..5c77267 100644
---- a/tools/winebuild/main.c
-+++ b/tools/winebuild/main.c
-@@ -48,10 +48,13 @@ int link_ext_symbols = 0;
+--- a/tools/winebuild/main.c	2019-05-10 21:04:22.946749869 +0300
++++ b/tools/winebuild/main.c	2019-05-10 21:11:45.232992256 +0300
+@@ -47,10 +47,13 @@
  int force_pointer_size = 0;
  int unwind_tables = 0;
  
@@ -16,7 +14,7 @@ index 16b4165..5c77267 100644
  #elif defined(__powerpc__)
  enum target_cpu target_cpu = CPU_POWERPC;
  #elif defined(__arm__)
-@@ -611,6 +614,10 @@ int main(int argc, char **argv)
+@@ -619,6 +622,10 @@
      signal( SIGTERM, exit_on_signal );
      signal( SIGINT, exit_on_signal );
  
@@ -24,14 +22,12 @@ index 16b4165..5c77267 100644
 +    force_pointer_size = sizeof(size_t);
 +#endif
 +
-     output_file = stdout;
      argv = parse_options( argc, argv, spec );
+     atexit( cleanup );  /* make sure we remove the output file on exit */
  
-diff --git a/tools/winegcc/winegcc.c b/tools/winegcc/winegcc.c
-index 06aa200..c44d2e3 100644
---- a/tools/winegcc/winegcc.c
-+++ b/tools/winegcc/winegcc.c
-@@ -213,10 +213,13 @@ struct options
+--- a/tools/winegcc/winegcc.c	2019-05-10 21:04:22.951749823 +0300
++++ b/tools/winegcc/winegcc.c	2019-05-10 21:12:46.477428568 +0300
+@@ -224,10 +224,13 @@
      strarray* files;
  };
  
@@ -45,13 +41,14 @@ index 06aa200..c44d2e3 100644
  #elif defined(__powerpc__)
  static const enum target_cpu build_cpu = CPU_POWERPC;
  #elif defined(__arm__)
-@@ -1258,6 +1261,9 @@ int main(int argc, char **argv)
-     opts.linker_args = strarray_alloc();
-     opts.compiler_args = strarray_alloc();
+@@ -1351,6 +1354,10 @@
      opts.winebuild_args = strarray_alloc();
+     opts.pic = 1;
+ 
 +#ifdef FORCE_POINTER_SIZE
 +    opts.force_pointer_size = sizeof(size_t);
 +#endif
- 
++
      /* determine the processor type */
      if (strendswith(argv[0], "winecpp")) opts.processor = proc_cpp;
+     else if (strendswith(argv[0], "++")) opts.processor = proc_cxx;
