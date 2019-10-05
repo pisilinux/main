@@ -1,0 +1,38 @@
+Submitted by: Xi Ruoyao <xry111 at mengyan1223 dot wang>
+Date: 2019-08-18
+Initial Package Version: 1.16.0
+Upstream Status: Comitted
+Origin: Upstream Git Repository
+Description: Fix a bug in buffer size resetting code.
+
+diff --git a/gst/gstbufferpool.c b/gst/gstbufferpool.c
+index e5c7a5872ab7d0c81a7772b1c95d306714f792c0..619860e63ffa976251329ce89a86bcade364c5d3 100644
+--- a/gst/gstbufferpool.c
++++ b/gst/gstbufferpool.c
+@@ -1222,8 +1222,11 @@ default_reset_buffer (GstBufferPool * pool, GstBuffer * buffer)
+   GST_BUFFER_OFFSET_END (buffer) = GST_BUFFER_OFFSET_NONE;
+ 
+   /* if the memory is intact reset the size to the full size */
+-  if (!GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_TAG_MEMORY))
+-    gst_buffer_resize (buffer, 0, pool->priv->size);
++  if (!GST_BUFFER_FLAG_IS_SET (buffer, GST_BUFFER_FLAG_TAG_MEMORY)) {
++    gsize offset;
++    gst_buffer_get_sizes (buffer, &offset, NULL);
++    gst_buffer_resize (buffer, -offset, pool->priv->size);
++  }
+ 
+   /* remove all metadata without the POOLED flag */
+   gst_buffer_foreach_meta (buffer, remove_meta_unpooled, pool);
+diff --git a/tests/check/gst/gstbufferpool.c b/tests/check/gst/gstbufferpool.c
+index f0c3c8d8e725ba48ef79eb7437fc6ed1fdfb57d1..dd9b2dc033099426ed5ee9626827fb9577acbce2 100644
+--- a/tests/check/gst/gstbufferpool.c
++++ b/tests/check/gst/gstbufferpool.c
+@@ -190,7 +190,7 @@ GST_START_TEST (test_buffer_modify_discard)
+   gst_buffer_pool_acquire_buffer (pool, &buf, NULL);
+   buffer_track_destroy (buf, &dcount);
+   /* do resize, as we didn't modify the memory, pool should reuse this buffer */
+-  gst_buffer_resize (buf, 5, 2);
++  gst_buffer_resize (buf, 8, 2);
+   gst_buffer_unref (buf);
+ 
+   /* buffer should've gone back into pool */ 
