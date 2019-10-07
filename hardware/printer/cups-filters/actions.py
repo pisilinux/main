@@ -15,13 +15,12 @@ def setup():
                          --localstatedir=/var \
                          --enable-dbus \
                          --with-rcdir=no \
-                         --disable-mutool \
                          --disable-static \
                          --enable-driverless \
                          --enable-auto-setup-driverless \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
-                         --docdir=/usr/share/doc/cups-filters-1.0.76 \
+                         --docdir=/usr/share/doc/cups-filters-1.25.2 \
                          --with-browseremoteprotocols=DNSSD,CUPS ")
                          #--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf")
 
