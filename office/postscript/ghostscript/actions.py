@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     # Remove local copies for system libs
-    for directory in ["cups/libs", "jpeg", "lcms2", "libpng", "openjpeg", "tiff", "zlib"]:
+    for directory in ["cups/libs", "jpeg", "lcms2mt", "libpng", "openjpeg", "tiff", "zlib"]:
         shelltools.unlinkDir(directory)
 
     #pisitools.flags.add("-fno-strict-aliasing")
@@ -56,4 +56,4 @@ def install():
     if not get.buildTYPE() == "emul32": autotools.rawInstall("-C ijs DESTDIR=%s" % get.installDIR())
 
     pisitools.dohtml("doc/*")
-    pisitools.dodoc("doc/AUTHORS", "doc/COPYING")
+    pisitools.dodoc("LICENSE", "doc/COPYING")
