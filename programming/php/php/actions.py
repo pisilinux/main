@@ -43,7 +43,7 @@ def extensions():
     return ' '.join(conf)
 
 def setup():
-    shelltools.unlinkDir("ext/openssl")
+    #shelltools.unlinkDir("ext/openssl")
 
     # create directories for apache, fcgi and fpm's Makefiles
     shelltools.makedirs("fcgi")
@@ -91,7 +91,6 @@ def setup():
                       --with-system-tzdata=/usr/share/zoneinfo \
                       --with-mcrypt=/usr/bin/mcrypt \
                       --with-imap=shared \
-                      --with-openssl=shared \
                       --with-imap-ssl \
                       --with-mysql-sock=/run/mysqld/mysqld.sock \
                       --without-pear \
