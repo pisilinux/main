@@ -6,7 +6,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--prefix=/usr --enable-gtk3=no")
+	autotools.configure("--prefix=/usr --enable-gtk3=no --enable-binreloc")
 	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
