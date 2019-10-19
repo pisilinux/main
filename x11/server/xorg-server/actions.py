@@ -73,4 +73,4 @@ def install():
     # Remove empty dir
     pisitools.removeDir("/var/log")
 
-    pisitools.dodoc("COPYING", "README")
+    pisitools.dodoc("COPYING", "README*")
