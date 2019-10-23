@@ -10,8 +10,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -i 's:cups_sbindir=\"\/usr\/sbin\":cups_sbindir=\"\/usr\/bin\":g' m4/stp_cups.m4")
-    shelltools.system("sed -i  's:cups_sbindir=\"\${cups_prefix}\/sbin\":cups_sbindir=\"\${cups_prefix}\/bin\":' m4/stp_cups.m4")  
+    #shelltools.system("sed -i 's:cups_sbindir=\"\/usr\/sbin\":cups_sbindir=\"\/usr\/bin\":g' m4/stp_cups.m4")
+    #shelltools.system("sed -i  's:cups_sbindir=\"\${cups_prefix}\/sbin\":cups_sbindir=\"\${cups_prefix}\/bin\":' m4/stp_cups.m4")  
     shelltools.system("sed -i 's:m4local:m4extra:' Makefile.am")
 
     autotools.autoreconf("-fi")
