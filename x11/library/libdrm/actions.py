@@ -11,7 +11,8 @@ from pisi.actionsapi import shelltools
 def setup():
     #pisitools.dosed("configure.ac", "pthread-stubs", deleteLine=True)
     autotools.autoreconf("-fi")
-    options = " --enable-udev"
+    options = " --enable-udev \
+                --disable-cairo-tests"
      
     if get.buildTYPE() == "_emul32":
         options += " --libdir=/usr/lib32"
