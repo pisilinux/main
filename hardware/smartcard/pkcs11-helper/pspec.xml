@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pkcs11-helper</Name>
+        <Homepage>http://www.opensc-project.org/opensc/wiki/pkcs11-helper</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>Library that simplifies interaction with PKCS#11 providers</Summary>
+        <Description>PKCS#11 is a published, de-facto standard to access cryptographic devices. pkcs11-helper is a library that simplifies the interaction with PKCS#11 providers for end-user applications using a simple API and optional OpenSSL engine.</Description>
+        <Archive sha1sum="40a51b277113760641cef658f2bfdfb61d9f550c" type="tarbz2">https://github.com/OpenSC/pkcs11-helper/releases/download/pkcs11-helper-1.25.1/pkcs11-helper-1.25.1.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>nspr-devel</Dependency>
+            <Dependency>gnutls-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">fix-pkgconfig.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>pkcs11-helper</Name>
+        <RuntimeDependencies>
+            <Dependency>nss</Dependency>
+            <Dependency>gnutls</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pkcs11-helper-devel</Name>
+        <Summary>Development files for pkcs11-helper</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">pkcs11-helper</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-10-24</Date>
+            <Version>1.25.1</Version>
+            <Comment>First release</Comment>
+            <Name>Osman Erkan</Name>
+            <Email>osman.erkan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
