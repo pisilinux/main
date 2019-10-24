@@ -22,6 +22,7 @@ def setup():
                             --enable-gpl \
                             --enable-libass \
                             --enable-libbluray \
+                            --enable-libbs2b \
                             --enable-libfreetype \
                             --enable-libgsm \
                             --enable-libmodplug \
