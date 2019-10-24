@@ -8,6 +8,8 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 
+Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
+
 def setup():
     autotools.autoreconf("-vif")
     autotools.configure("--disable-static")
