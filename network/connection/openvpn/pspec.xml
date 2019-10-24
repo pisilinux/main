@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>openvpn</Name>
+        <Homepage>http://openvpn.net/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>service</IsA>
+        <Summary>A full featured SSL VPN solution</Summary>
+        <Description>OpenVPN is a full-featured SSL VPN solution which can accomodate a wide range of configurations, including remote access, site-to-site VPNs, WiFi security, and enterprise-scale remote access solutions with load balancing, failover, and fine-grained access-controls.</Description>
+        <Archive sha1sum="465163ddc2ee60971b70ee5d8104a7dd0d60a929" type="targz">https://github.com/OpenVPN/openvpn/archive/v2.4.7.tar.gz</Archive>
+		<Archive sha1sum="056057782325134b76d1931c48f2c7e6595d7ef4" type="targz" target="openvpn-2.4.7">ftp://ftp.openssl.org/source/openssl-1.1.1d.tar.gz</Archive>
+        <!--<AdditionalFiles>
+            <AdditionalFile permission="0755" target="openvpn-test.sh">openvpn-test.sh</AdditionalFile>
+        </AdditionalFiles>-->
+        <BuildDependencies>
+            <Dependency>pkcs11-helper-devel</Dependency>
+            <Dependency>lzo-devel</Dependency>
+            <Dependency>iproute2</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--            <Patch>peercred.patch</Patch>
+            <Patch>pkcs11.patch</Patch>-->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>openvpn</Name>
+        <RuntimeDependencies>
+            <Dependency>iproute2</Dependency>
+            <Dependency>pkcs11-helper</Dependency>
+			<Dependency>easy-rsa</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="library">/usr/lib</Path>
+			<Path fileType="header">/usr/include</Path>
+			<Path fileType="config">/etc/openvpn</Path>
+			<Path fileType="config">/usr/share/openvpn</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/openvpn.conf</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/openvpn.conf">tmpfiles.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/openvpn/sample-config-files/roadwarrior-client.conf">roadwarrior-client.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/openvpn/sample-config-files/roadwarrior-server.conf">roadwarrior-server.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-10-24</Date>
+            <Version>2.4.7</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
