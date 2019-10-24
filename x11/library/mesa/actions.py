@@ -52,12 +52,12 @@ def setup():
     options = "meson --prefix=/usr \
                      --sysconfdir=/etc \
                      --buildtype=release \
-                     -Ddri-drivers-path=lib/xorg/modules/dri \
+                     -Ddri-drivers-path=/usr/lib/xorg/modules/dri \
                      -Db_ndebug=true \
                      -Dplatforms=x11,wayland,drm,surfaceless \
                      -Ddri3=true \
                      -Ddri-drivers=i915,i965,r100,r200,nouveau \
-                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swrast,virgl \
+                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swrast,swr,virgl,iris \
                      -Dgallium-extra-hud=true \
                      -Dgallium-vdpau=true \
                      -Dgallium-xvmc=true \
@@ -91,14 +91,14 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32")        
         options += " --libdir=lib32 \
-                     -Ddri-drivers-path=lib32/xorg/modules/dri \
+                     -Ddri-drivers-path=/usr/lib32/xorg/modules/dri \
                      -Dclang-libdir-path=/usr/lib32 \
                      -Dgallium-opencl=disabled"
 
     elif get.ARCH() == "x86_64":
         options += " -Dclang-libdir-path=/usr/lib \
                      -Dgallium-omx=bellagio \
-                     -Dgallium-opencl=disabled .."
+                     -Dgallium-opencl=icd .."
 
     shelltools.system(options)
     #pisitools.dosed("libtool","( -shared )", " -Wl,--as-needed\\1")
