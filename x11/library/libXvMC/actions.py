@@ -10,7 +10,15 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.autoreconf("-vif")
-    autotools.configure("--disable-static")
+    
+    options = "--disable-static \
+              "
+    
+    if get.buildTYPE() == "_emul32":
+        options += "  --libdir=/usr/lib32 \
+                   "
+    
+    autotools.configure(options)
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -19,5 +27,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    if get.buildTYPE() != "_emul32":
+        return
 
-    pisitools.dodoc("ChangeLog", "COPYING", "README")
+    pisitools.dodoc("ChangeLog", "COPYING", "README*")
