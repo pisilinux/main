@@ -17,13 +17,17 @@ def setup():
                -DOSS=1 \
                -DCMAKE_INSTALL_PREFIX=/usr \
                -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-               -DEXAMPLES=OFF"
+               -DEXAMPLES=OFF \
+               -DALSOFT_TESTS=OFF"
 
     if get.buildTYPE() == "emul32":
         options += " -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
                      -DALSOFT_NO_QT5=TRUE \
-                     -DLIB_SUFFIX=32"
+                     -DLIB_SUFFIX=32 \
+                     -DALSOFT_TESTS=OFF \
+                     -DALSOFT_EXAMPLES=OFF \
+                     -DALSOFT_UTILS=OFF"
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
 
     cmaketools.configure(options)
