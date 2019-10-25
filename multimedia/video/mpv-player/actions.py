@@ -14,7 +14,7 @@ shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
     shelltools.system("./bootstrap.py")
-    shelltools.system("python waf configure --prefix=/usr  --confdir=/etc/mpv --enable-zsh-comp --enable-libmpv-shared --enable-cdda --disable-libsmbclient")
+    shelltools.system("python waf configure --prefix=/usr  --confdir=/etc/mpv --enable-libmpv-shared --enable-cdda --disable-libsmbclient")
 
 def build():
        shelltools.system("python waf build -v")
