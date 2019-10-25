@@ -1,32 +1,36 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2010 TUBITAK/BILGEM
-# Licensed under the GNU General Public License, version 2.
-# See the file http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+# Licensed under the GNU General Public License, version 3.
+# See the file http://www.gnu.org/licenses/gpl.txt
 
+from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import shelltools
 
 def setup():
-    autotools.autoreconf("-vif")
-    
-    options = " --disable-static \
+    shelltools.makedirs("build")
+    shelltools.cd("build") 
+    options = "meson --prefix=/usr -Denable-docs=false \
               "
     
     if get.buildTYPE() == "emul32":
-        options += " --libdir=/usr/lib32 \
-                   "
-        
-    autotools.configure(options)
-
+        options += "--libdir=lib32 .."
+                
+    shelltools.system(options)
+    
+   
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    if not get.buildTYPE() == "emul32":
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    if get.buildTYPE() == "emul32":
         return
-
-    pisitools.dodoc("NEWS", "README.md", "LICENSE")
+    
+    shelltools.cd("..")
+    pisitools.dodoc("README*", "NEWS", "LICENSE")
