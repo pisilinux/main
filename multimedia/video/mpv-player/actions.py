@@ -17,7 +17,7 @@ def setup():
     shelltools.system("python waf configure --prefix=/usr  --confdir=/etc/mpv --enable-zsh-comp --enable-libmpv-shared --enable-cdda --disable-libsmbclient")
 
 def build():
-       shelltools.system("python waf build -v")
+    shelltools.system("python waf build -v")
 
 def install():
     shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
