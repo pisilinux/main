@@ -15,6 +15,7 @@ def setup():
 	shelltools.cd("build/linux")
 	autotools.configure("--extra-ldflags='-Wl,-z,noexecstack' \
 						 --chroma-format='all' \
+						 --enable-shared \
 		               ")
 
 def build():
