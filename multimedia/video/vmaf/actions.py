@@ -15,10 +15,7 @@ def build():
 	autotools.make()
 
 def install():
-	shelltools.system("g++ -shared -o wrapper/libvmaf.so wrapper/obj/*.o")
-	pisitools.insinto("/usr/lib", "wrapper/libvmaf.so")
 	autotools.rawInstall("DESTDIR=%s INSTALL_PREFIX=/usr" % get.installDIR())
 	pisitools.insinto("/usr/bin", "wrapper/vmafossexec")
-	pisitools.remove("/usr/lib/libvmaf.a")
 	pisitools.dodoc("CHANGELOG.md", "LICENSE", "NOTICE.md", "FAQ.md", "README.md")
 
