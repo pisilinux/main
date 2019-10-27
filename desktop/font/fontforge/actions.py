@@ -14,10 +14,11 @@ from pisi.actionsapi import get
 #WorkDir = "fontforge-%s-b" % get.srcVERSION().split('_')[-1]
 
 def setup():
+    shelltools.export("PYTHON", "/usr/bin/python3")
     #pisitools.dosed("configure.ac", "fontforge_package_name", "fontforge")
     shelltools.system("./bootstrap --force")
 
-    autotools.configure()
+    autotools.configure("--without-libuninameslist")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
