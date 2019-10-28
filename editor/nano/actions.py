@@ -26,3 +26,6 @@ def install():
 
     pisitools.dohtml("doc/*.html")
     pisitools.dodoc("ChangeLog*", "README", "doc/sample.nanorc", "AUTHORS", "NEWS", "TODO", "COPYING*", "THANKS")
+    
+    # Enable colorization by default
+    pisitools.dosed("%s/etc/nanorc" % get.installDIR(), '## include "/path/to/syntax_file.nanorc"', ' include "/usr/share/nano/*.nanorc"')
