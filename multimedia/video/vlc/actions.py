@@ -42,6 +42,7 @@ def setup():
                               BUILDCC=gcc \
                               LUAC=luac  LUA_LIBS='`pkg-config --libs lua`' \
                               RCC=/usr/bin/rcc \
+							--disable-aom \
                             --disable-asdcp \
                             --disable-coverage \
                             --disable-cprof \
