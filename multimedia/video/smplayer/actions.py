@@ -15,6 +15,9 @@ def setup():
 
 def build():
     autotools.make("PREFIX=/usr QMAKE=/usr/bin/qmake -j1 LRELEASE=/usr/bin/lrelease")
+    
+    shelltools.cd("smplayer-skins-15.2.0")
+    autotools.make("PREFIX=/usr")
 
 def install():
     autotools.rawInstall("PREFIX=/usr DESTDIR=%s DOC_PATH=/usr/share/doc/%s" % (get.installDIR(),get.srcNAME()))
@@ -44,3 +47,6 @@ def install():
     pisitools.copytree("../smplayer-themes-18.6.0/themes/PapirusDark", "%s/usr/share/smplayer/themes/PapirusDark" % get.installDIR())
     pisitools.copytree("../smplayer-themes-18.6.0/themes/Silk", "%s/usr/share/smplayer/themes/Silk" % get.installDIR())
     pisitools.copytree("../smplayer-themes-18.6.0/themes/Tango", "%s/usr/share/smplayer/themes/Tango" % get.installDIR())
+    
+    shelltools.cd("smplayer-skins-15.2.0")
+    autotools.rawInstall("DESTDIR=%s PREFIX=/usr install" % get.installDIR())
