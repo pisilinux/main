@@ -10,6 +10,9 @@ def setup():
     autotools.configure("--disable-rpath \
                          --enable-utf8 \
                          --enable-altrcname \
+                         --enable-color \
+                         --enable-nanorc \
+                         --enable-multibuffer \
                          --disable-speller")
 
 def build():
