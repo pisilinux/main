@@ -32,5 +32,7 @@ def install():
     shelltools.cd("build")
 
     cmaketools.install()
+    
+    pisitools.insinto("/usr/share/sddm/themes/pisi-linux-gray", "../pisi-linux-gray-0.1/*")
 
     pisitools.dodoc("../LICENSE")
