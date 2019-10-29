@@ -12,7 +12,7 @@ def setup():
     pisitools.dosed("Makefile", "^DOC_PATH=.*$", "DOC_PATH=$(PREFIX)/share/doc/smplayer")
 
 def build():
-    autotools.make("PREFIX=/usr QMAKE=/usr/lib/qt5/bin/qmake LRELEASE=/usr/lib/qt5/bin/lrelease")
+    autotools.make("PREFIX=/usr QMAKE=/usr/bin/qmake LRELEASE=/usr/bin/lrelease")
 
 def install():
     autotools.rawInstall("PREFIX=/usr DESTDIR=%s DOC_PATH=/usr/share/doc/%s" % (get.installDIR(),get.srcNAME()))
