@@ -18,34 +18,6 @@ def setup():
 # --enable-sysfs option provides better hardware information support with "lspci"
 # --enable-32-bit option is not present anymore. Although build fails in emul32. With --disable-asm option, not fail. Needs to be tested.
 
-    shelltools.system("sed -i 's|python2|python|g' \
-                       meson.build \
-                       src/meson.build")
-    shelltools.system("sed -i 's|prog_python2|prog_python|g' \
-                       src/util/xmlpool/meson.build \
-                       src/util/meson.build \
-                       src/mapi/glapi/gen/meson.build \
-                       src/mapi/shared-glapi/meson.build \
-                       src/mapi/es1api/meson.build \
-                       src/mapi/es2api/meson.build \
-                       src/compiler/meson.build \
-                       src/compiler/spirv/meson.build \
-                       src/compiler/nir/meson.build \
-                       src/compiler/glsl/meson.build \
-                       src/vulkan/util/meson.build \
-                       src/amd/common/meson.build \
-                       src/amd/vulkan/meson.build \
-                       src/intel/genxml/meson.build \
-                       src/intel/isl/meson.build \
-                       src/intel/compiler/meson.build \
-                       src/intel/vulkan/meson.build \
-                       src/mesa/main/meson.build \
-                       src/mesa/meson.build \
-                       src/mesa/drivers/dri/i965/meson.build \
-                       src/egl/meson.build \
-                       src/gallium/auxiliary/meson.build \
-                       src/gallium/drivers/r600/meson.build \
-                       src/gallium/drivers/radeonsi/meson.build") 
 
     shelltools.makedirs("build")
     shelltools.cd("build")
@@ -78,7 +50,6 @@ def setup():
                      -Dvalgrind=false \
                      -Dlibunwind=true \
                      -Dbuild-tests=false \
-                     -Dtexture-float=true \
                      -Dosmesa=gallium \
                      -Dlmsensors=false \
                      -Dswr-arches=avx,avx2"

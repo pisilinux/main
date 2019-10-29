@@ -14,12 +14,19 @@ shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
     shelltools.system("./bootstrap.py")
-    shelltools.system("python waf configure --prefix=/usr  --confdir=/etc/mpv --enable-libmpv-shared --enable-cdda --disable-libsmbclient")
-
+    shelltools.system("python waf configure --prefix=/usr \
+                                            --confdir=/etc/mpv \
+                                            --enable-dvb \
+                                            --enable-cdda \
+                                            --enable-dvdnav \
+                                            --enable-libarchive \
+                                            --enable-libmpv-shared \
+                                            --disable-libsmbclient")
 def build():
-       shelltools.system("python waf build -v")
+    shelltools.system("python waf build -v")
 
 def install():
     shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
+    pisitools.insinto("/usr/share/mpv/scripts", "TOOLS/lua/*")
 
     pisitools.dodoc("Copyright", "RELEASE_NOTES", "README.md")
