@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -i 's/com.gitlab.jurassicplayer.SnowyNightMiku/pisilinux.splash/g' metadata.json")
+    shelltools.system("sed -i 's/com.gitlab.jurassicplayer.SnowyNightMiku/org.kde.pisilinux.desktop/g' metadata.json")
     #autotools.configure()
 
 #def build():
