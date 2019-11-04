@@ -10,7 +10,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir="PyQt5_gpl-%s" % get.srcVERSION()
+#WorkDir="PyQt5_gpl-%s" % get.srcVERSION()
 
 def setup():
     pythonmodules.run("configure.py --confirm-license \

@@ -11,7 +11,7 @@ from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import get
 from pisi.actionsapi import qt5
 
-WorkDir = "QScintilla_gpl-%s" % get.srcVERSION()
+#WorkDir = "QScintilla_gpl-%s" % get.srcVERSION()
 NoStrip = ["/usr/share/doc"]
 
 def setup():
@@ -72,4 +72,4 @@ def install():
     pisitools.dohtml("doc/html-Qt4Qt5/")
     pisitools.insinto("/usr/share/doc/%s/Scintilla" % get.srcNAME(), "doc/Scintilla/*")
 
-    pisitools.dodoc("LICENSE*", "NEWS", "README")
+    pisitools.dodoc("LICENSE*", "NEWS")
