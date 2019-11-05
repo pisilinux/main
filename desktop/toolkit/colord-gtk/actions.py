@@ -4,23 +4,26 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import get
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
-    autotools.configure("--disable-gtk-doc \
-                         --disable-vala \
-                         --disable-static \
-                         --disable-rpath \
-                         --disable-dependency-tracking")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson .. --prefix=/usr \
+                                --sysconfdir=/etc \
+                                -Dman=false")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
+    
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    shelltools.system("ninja")
 
 def install():
-    autotools.install()
-
-    pisitools.dodoc("ABOUT-NLS", "AUTHORS", "COPYING", "MAINTAINERS", "NEWS", "README", "TODO")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    
+    shelltools.cd("..")
+    pisitools.dodoc("AUTHORS", "MAINTAINERS", "COPYING", "RELEASE", "NEWS")
