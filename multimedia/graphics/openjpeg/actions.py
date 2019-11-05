@@ -14,6 +14,7 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         shelltools.export("PKG_CONFIG_LIBDIR", "/usr/lib32/pkgconfig")
+        options += " --libdir=/usr/lib32"
         
     shelltools.system("./bootstrap.sh")    
 
@@ -23,15 +24,16 @@ def build():
     autotools.make()
 
 def install():
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     if get.buildTYPE() == "emul32":
-        pisitools.insinto("/usr/lib32", "libopenjpeg/.libs/libopenjpeg.so*")
-        pisitools.insinto("/usr/lib32/pkgconfig", "libopenjpeg1.pc")
-        pisitools.dosed("%s//usr/lib32/pkgconfig/libopenjpeg1.pc" % get.installDIR(),
-                        get.emul32prefixDIR(),
-                        get.defaultprefixDIR())
+        #pisitools.insinto("/usr/lib32", "libopenjpeg/.libs/libopenjpeg.so*")
+        #pisitools.insinto("/usr/lib32/pkgconfig", "libopenjpeg1.pc")
+        #pisitools.dosed("%s//usr/lib32/pkgconfig/libopenjpeg1.pc" % get.installDIR(),
+                        #get.emul32prefixDIR(),
+                        #get.defaultprefixDIR())
         return
 
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dosym("openjpeg-1.5/openjpeg.h", "/usr/include/openjpeg.h")
 
