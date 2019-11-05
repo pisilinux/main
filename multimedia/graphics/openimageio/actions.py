@@ -16,6 +16,7 @@ def setup():
      shelltools.cd("build")
      cmaketools.configure("-DUSE_QT=0  \
                            -DUSE_PYTHON=ON \
+                           -DPYTHON_VERSION=2.7 \
                            -DCMAKE_INSTALL_PREFIX=/usr \
                            -DCMAKE_INSTALL_LIBDIR=lib \
                            -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages \
