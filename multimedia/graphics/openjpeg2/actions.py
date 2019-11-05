@@ -17,6 +17,8 @@ def setup():
     options = "-DCMAKE_BUILD_TYPE=Release \
                -DCMAKE_INSTALL_LIBDIR=/usr/lib \
                -DCMAKE_INSTALL_PREFIX=/usr \
+               -DBUILD_SHARED_LIBS=ON \
+               -DBUILD_STATIC_LIBS=OFF \
                -DBUILD_DOC=on"
                
     if get.buildTYPE() == "emul32":
