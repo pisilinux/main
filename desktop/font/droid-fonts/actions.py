@@ -16,9 +16,9 @@ def install():
 
     pisitools.insinto("/usr/share/fonts/droid","*.ttf")
 
-    pisitools.dosym("/etc/conf.avail/65-droid-fonts-sans-fontconfig.conf", "/etc/fonts/conf.d/65-droid-fonts-sans-fontconfig.conf")
-    pisitools.dosym("/etc/conf.avail/60-droid-fonts-sans-mono-fontconfig.conf", "/etc/fonts/conf.d/60-droid-fonts-sans-mono-fontconfig.conf")
-    pisitools.dosym("/etc/conf.avail/59-droid-fonts-serif-fontconfig.conf", "/etc/fonts/conf.d/59-droid-fonts-serif-fontconfig.conf")
+    pisitools.dosym("../conf.avail/65-droid-fonts-sans-fontconfig.conf", "/etc/fonts/conf.d/65-droid-fonts-sans-fontconfig.conf")
+    pisitools.dosym("../conf.avail/60-droid-fonts-sans-mono-fontconfig.conf", "/etc/fonts/conf.d/60-droid-fonts-sans-mono-fontconfig.conf")
+    pisitools.dosym("../conf.avail/59-droid-fonts-serif-fontconfig.conf", "/etc/fonts/conf.d/59-droid-fonts-serif-fontconfig.conf")
     
     pisitools.remove("/usr/share/fonts/droid/Ahem.ttf")
 
