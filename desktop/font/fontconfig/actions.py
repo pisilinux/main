@@ -10,6 +10,8 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
+    #Make sure the system regenerates src/fcobjshash.h.
+    shelltools.system("rm -rf src/fcobjshash.h")
     # Do not rebuild docs
     shelltools.export("HASDOCBOOK", "no")
     
@@ -35,7 +37,8 @@ def install():
     disabled_configs = ("10-no-sub-pixel.conf",)
 
     for cfg in enabled_configs:
-        pisitools.dosym("../conf.avail/%s" % cfg, "/etc/fonts/conf.d/%s" % cfg)
+        pisitools.dosym("/usr/share/fontconfig/conf.avail/%s" % cfg, "/etc/fonts/conf.d/%s" % cfg)
+        #pisitools.dosym("../conf.avail/%s" % cfg, "/etc/fonts/conf.d/%s" % cfg)
 
     for cfg in disabled_configs:
         pisitools.remove("/usr/share/fontconfig/conf.avail/%s" % cfg)
