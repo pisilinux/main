@@ -12,15 +12,21 @@
         <IsA>data:font</IsA>
         <Summary>Google Noto TTF fonts</Summary>
         <Description>Noto fonts are open source. All Noto fonts are published under the SIL Open Font License, Version 1.1. Language data and some sample texts are from the Unicode CLDR project.</Description>
-        <Archive sha1sum="3e4ce66b114d87c05433f2dbdfabf50f8231ce14" type="targz">https://github.com/googlei18n/noto-fonts/archive/v2015-09-29-license-adobe.tar.gz</Archive>
+        <Archive sha1sum="b27e5f1868585ce4baba5c1b8e8ed3a517c9385e" type="tarxz">https://sourceforge.net/projects/pisilinux/files/source/noto-fonts-20190623.tar.xz</Archive>
     </Source>
 
     <Package>
         <Name>noto-fonts</Name>
         <Files>
+            <Path fileType="config">/etc/fonts</Path>
             <Path fileType="data">/usr/share/doc</Path>
             <Path fileType="doc">/usr/share/fonts/noto</Path>
         </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/fonts/conf.avail/66-noto-sans.conf">archlinux/66-noto-sans.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/fonts/conf.avail/66-noto-serif.conf">archlinux/66-noto-serif.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/fonts/conf.avail/66-noto-mono.conf">archlinux/66-noto-mono.conf</AdditionalFile>
+        </AdditionalFiles>
     </Package>
 
     <Package>
@@ -30,8 +36,30 @@
             <Path fileType="data">/usr/share/fonts/TTF</Path>
         </Files>
     </Package>
+    
+    <Package>
+        <Name>noto-fonts-extra</Name>
+        <Summary>noto-fonts-ttf-croscore, Chrome OS core fonts Condensed SemiBold Medium Black Light</Summary>
+        <Files>
+            <Path fileType="data">/usr/share/fonts/noto/*-Condensed*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-SemiBold*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-SemiCondensed*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-Medium*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-Thin*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-Black*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-Light*.ttf</Path>
+            <Path fileType="data">/usr/share/fonts/noto/*-Extra*.ttf</Path>
+        </Files>
+    </Package>
 
     <History>
+        <Update release="5">
+            <Date>2019-11-09</Date>
+            <Version>20190623</Version>
+            <Comment>Rebuild for New Toolchain</Comment>
+            <Name>Stefan Gronewold</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
         <Update release="4">
             <Date>2018-07-31</Date>
             <Version>20150929</Version>
