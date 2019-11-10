@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    #shelltools.system("sed -i 's|5.11.0|5.10.0|g' CMakeLists.txt")
+    shelltools.system("tar xf ../blue.tar.gz")
     kde5.configure()
 
 def build():
@@ -17,5 +17,7 @@ def build():
 
 def install():
     kde5.install()
+    
+    pisitools.insinto("/usr/share/wallpapers/pisilinux-blue", "blue/*")
 
     pisitools.dodoc("COPYING", "AUTHORS")
