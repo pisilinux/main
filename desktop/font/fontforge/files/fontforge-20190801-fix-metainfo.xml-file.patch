@@ -1,0 +1,41 @@
+From b26f33f178d1049070537166e3fac08b690de4d1 Mon Sep 17 00:00:00 2001
+From: muelli <muelli@cryptobitch.de>
+Date: Tue, 6 Aug 2019 12:58:30 +0200
+Subject: [PATCH] appdata: remove spaces to comply with xml syntax
+
+The attribute had an illegal whitespace. appstream-glib validate complained:
+
+org.fontforge.FontForge.metainfo.xml: failed to parse org.fontforge.FontForge.metainfo.xml: Error on line 56 char 15: Odd character ?l?, expected a ?=? after attribute name ?xml:? of element ?p?
+
+
+Now it does not complain about the syntax anymore, but instead about the description:
+org.fontforge.FontForge.metainfo.xml: FAILED:
+? style-invalid         : Not enough <p> tags for a good description [0/1]
+Validation of files failed
+---
+ desktop/org.fontforge.FontForge.metainfo.xml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/desktop/org.fontforge.FontForge.metainfo.xml b/desktop/org.fontforge.FontForge.metainfo.xml
+index 1ff9ea03e..3583e6da2 100644
+--- a/desktop/org.fontforge.FontForge.metainfo.xml
++++ b/desktop/org.fontforge.FontForge.metainfo.xml
+@@ -49,15 +49,15 @@
+     <p xml:lang="fr">
+   Apprendre à utiliser FontForge est facile, et il y a plusieurs tutoriels disponibles en commençant
+   par les bases jusqu'à des fonctionnalités plus avancées telles que la fabrication et l'utilisation de scripts.</p>
+-    <p xml: lang = "hr">
++    <p xml:lang = "hr">
+   FontForge je program za uređivanje konturnih i bitmap fontova. Omogućuje stvaranje,
+   uređivanje ili konvertiranje raznih vrsta fontova, uključujući PostScript, TrueType,
+   OpenType, CID, multiple-master, CFF, SVG i BitMap (bdf, FON, NFNT) fontove.</p>
+-     <p xml: lang = "hr">
++     <p xml:lang = "hr">
+   FontForge je slobodan softver otvorenog kȏda te je izrađen za razne operacijske
+   sustave. FontForge se može koristiti u grafičkom načinu rada ili putem naredbenog
+   retka.</p>
+-     <p xml: lang = "hr">
++     <p xml:lang = "hr">
+   FontForge je lako naučiti. Na raspolaganju stoje različiti priručnici – od osnovnih
+   vježbi, sve do naprednijih funkcija, kao što su izrada i upotreba skriptova.</p>
+     <p xml:lang="uk">
