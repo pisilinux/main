@@ -18,7 +18,8 @@ def setup():
     #pisitools.dosed("configure.ac", "fontforge_package_name", "fontforge")
     shelltools.system("./bootstrap --force")
 
-    autotools.configure("--without-libuninameslist")
+    autotools.configure("--without-libuninameslist \
+                         --disable-static")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
