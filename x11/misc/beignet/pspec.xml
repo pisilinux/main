@@ -12,11 +12,15 @@
         <IsA>library</IsA>
        <Summary>Open source implementation of the OpenCL for Intel GPUs</Summary>
        <Description>Open source implementation of the OpenCL for Intel GPUs</Description>
-       <Archive sha1sum="b3536b27549938954a48ca67cdf5ffb7d40e2911" type="tarxz">https://sourceforge.net/projects/pisilinux/files/source/beignet-1.3.2_12.tar.xz</Archive>
+       <Archive sha1sum="c3a689ec504c2d28e856a62bf97e5abb0da4a797" type="tarxz">https://sourceforge.net/projects/pisilinux/files/source/beignet-1.3.2_12.tar.xz</Archive>
        <BuildDependencies>
-			<Dependency>mesa-devel</Dependency>
+		    <Dependency>libX11-devel</Dependency>
+			<Dependency>libXext-devel</Dependency>
+			<Dependency>libXfixes-devel</Dependency>
+			<Dependency>llvm-clang-devel</Dependency>
 			<Dependency>libdrm-devel</Dependency>
-			<Dependency>llvm</Dependency>
+			<Dependency>llvm-libs</Dependency>
+			<Dependency>opencl-icd-devel</Dependency>
        </BuildDependencies>
        <Patches>
 			<Patch level="0">llvm8.patch</Patch>
@@ -27,8 +31,14 @@
     <Package>
       <Name>beignet</Name>
       <RuntimeDependencies>
+		<Dependency>libX11</Dependency>
+		<Dependency>libXext</Dependency>
+		<Dependency>libXfixes</Dependency>
+		<Dependency>llvm-clang</Dependency>
 		<Dependency>mesa</Dependency>
+		<Dependency>opencl-icd</Dependency>
 		<Dependency>libdrm</Dependency>
+		<Dependency>libdrm-intel</Dependency>
 		<Dependency>llvm</Dependency>
        </RuntimeDependencies>
         <Files>
@@ -39,14 +49,7 @@
         </Files>
     </Package>
         
-    <Package>
-      <Name>beignet-devel</Name>
-	  <Summary>Development files for beignet</Summary>
-        <Files>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
-	    <Path fileType="header">/usr/include</Path>
-        </Files>
-    </Package>
+    
     
     <History>
       <Update release="1">

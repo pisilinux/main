@@ -14,7 +14,7 @@ from pisi.actionsapi import get
 def setup():
     
 	cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
-						  -DOCLICD_COMPAT=0")
+						  -DOCLICD_COMPAT=1")
     
 def build():
     cmaketools.make()
@@ -22,5 +22,7 @@ def build():
 def install():
     
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())
+    pisitools.remove("/usr/include/CL/*")
+    pisitools.removeDir("/usr/include")
     
      
