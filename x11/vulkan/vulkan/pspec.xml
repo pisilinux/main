@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>vulkan</Name>
+        <Homepage>https://github.com/KhronosGroup</Homepage>
+        <Packager>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Vulkan headers, loaders and validations layers</Summary>
+        <Description>Vulkan headers, loaders and validations layers</Description>
+		<Archive sha1sum="3ca55ffe2c23a3f34de153d81dd11b525bca735e" type="targz">https://srv-file5.gofile.io/download/KSDcJ5/Vulkan-Loader-1.1.127.tar.gz</Archive>
+		<Archive sha1sum="28f486b1b65dca0afed0ff35dabb6d8912e2480c" type="targz">https://srv-file5.gofile.io/download/KSDcJ5/Vulkan-ValidationLayers-1.1.127.tar.gz</Archive>
+		<BuildDependencies>
+			<Dependency>python-lxml</Dependency>
+			<Dependency>libX11-devel</Dependency>
+			<Dependency>libXrandr-devel</Dependency>
+			<Dependency>wayland-devel</Dependency>
+			<Dependency>vulkan-headers</Dependency>
+			<Dependency>git</Dependency>
+		</BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>vulkan</Name>
+		<RuntimeDependencies>
+			<Dependency>libX11</Dependency>
+			<Dependency>libXrandr</Dependency>
+			<Dependency>wayland</Dependency>
+		</RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>vulkan-32bit</Name>		
+		<BuildType>_emul32</BuildType>
+		<PartOf>emul32</PartOf>
+		<BuildDependencies>
+			<Dependency>libX11-32bit</Dependency>
+			<Dependency>libXrandr-32bit</Dependency>
+			<Dependency>wayland-32bit</Dependency>
+		</BuildDependencies>
+		<RuntimeDependencies>
+			<Dependency>libX11-32bit</Dependency>
+			<Dependency>libXrandr-32bit</Dependency>
+			<Dependency>wayland-32bit</Dependency>
+		</RuntimeDependencies>
+        <Files>
+			<Path fileType="library">/usr/bin/*32</Path>
+			<Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+    
+     <Package>
+        <Name>vulkan-devel</Name>
+        <Files>
+			<Path fileType="header">/usr/include</Path>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+			<Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-11-08</Date>
+            <Version>1.1.127</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
