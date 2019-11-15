@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>crack-attack</Name>
+        <Homepage>http://www.nongnu.org/crack-attack/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <Icon>crack-attack</Icon>
+        <IsA>app:gui</IsA>
+        <Summary>3D Tetris Attack like game</Summary>
+        <Description>Crack Attack! is a fast-paced puzzle game inspired by the classic Super NES title Tetris Attack.</Description>
+        <Archive type="targz" sha1sum="8c53d847881d75460a86214ed0e9e7160d753341">http://mirror.rackdc.com/savannah/crack-attack/crack-attack-1.1.15-cvs-01.tar.gz</Archive>
+		<Archive type="binary" sha1sum="bee909fda4d9ee05fc717967ae436d59bf82c4c6" target="crack-attack-1.1.15-cvs-01">https://kojipkgs.fedoraproject.org/packages/crack-attack/1.1.14/40.fc30/x86_64/crack-attack-1.1.14-40.fc30.x86_64.rpm</Archive>
+        <BuildDependencies>
+            <Dependency>freeglut-devel</Dependency>
+            <Dependency>libsdl-devel</Dependency>
+            <Dependency>sdl-mixer-devel</Dependency>
+            <Dependency>atk-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+			<Dependency>glib2-devel</Dependency>
+			<Dependency>rpm2targz</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch>crack-attack-1.1.14-glut.patch</Patch> -->
+            <Patch>crack-attack-1.1.14-dont-segfault-i865g.patch</Patch>
+<!--             <Patch>crack-attack-1.1.14-fix-str-fmt.patch</Patch> -->
+            <Patch level="1">crack-attack-1.1.14-gcc43.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>crack-attack</Name>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+			<Dependency>glib2</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>libsdl</Dependency>
+            <Dependency>freeglut</Dependency>
+            <Dependency>sdl-mixer</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/crack-attack</Path>
+            <Path fileType="doc">/usr/share/doc/crack-attack</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/crack-attack.xpm">crack-attack.xpm</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/crack-attack.desktop">crack-attack.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/crack-attack/preview_normal.tga">preview_normal.tga</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/crack-attack/preview_reduced.tga">preview_reduced.tga</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/crack-attack/preview_extremely_reduced.tga">preview_extremely_reduced.tga</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-07-04</Date>
+            <Version>1.1.15</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
