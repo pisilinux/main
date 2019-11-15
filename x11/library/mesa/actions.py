@@ -84,6 +84,8 @@ def install():
 
     pisitools.domove("%s/libGL.so.1.2.0" % Libdir, "%s/mesa" % Libdir)
     pisitools.dosym("libGL.so.1.2.0", "%s/libGL.so.1.2" % Libdir)
+    
+    #pisitools.domove("%s/libEGL.so.1.0.0" % Libdir, "%s/mesa" % Libdir)
 
     if get.buildTYPE() == "emul32":
         #pisitools.remove("/usr/lib32/pkgconfig/wayland-egl.pc")
