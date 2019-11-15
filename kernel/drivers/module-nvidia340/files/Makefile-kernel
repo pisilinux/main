@@ -1,0 +1,207 @@
+#
+# This Makefile was automatically generated; do not edit.
+# Generated on 'swio-display-x64-rhel04-13' on Thu May 24 21:16:20 PDT 2018.
+#
+
+#
+# KBUILD Makefile for the NVIDIA Linux kernel module.
+#
+# The motivation for replacing the original Makefile is the hope that this
+# version will simplify the build and installation process. In the past,
+# many architectural and cosmetic changes to the Linux kernel have made it
+# difficult to maintain compatibility or required duplication of logic.
+#
+# Linux 2.6 introduces numerous such changes, many of which impact modules.
+# Relying on KBUILD, some aspects of the build system otherwise difficult
+# to support (for example, module versioning) are abstracted away and dealt
+# with elsewhere, making life significantly easier here.
+#
+# The new approach currently has its own share of problems, some of which
+# are architectural difficulties with KBUILD, others minor annoyances. For
+# this reason, an improved version of the NVIDIA Makefile is available to
+# those experiencing difficulties.
+#
+# kbuild Makefile originally developed by:
+#
+# Alistair J Strachan (alistair@devzero.co.uk) (first pass, enhancements)
+# Christian Zander (zander@mail.minion.de) (enhancements)
+#
+
+#
+# The NVIDIA kernel module base name.
+#
+
+MODULE_BASENAME := nvidia
+
+# 
+# This suffix is used to construct the name of the NVIDIA kernel module
+# in case of multiple kernel module builds. This suffix can either take the 
+# numeric value 0-7 or the string "frontend". For normal NVIDIA kernel module 
+# builds, this variable is empty and hence the module name is identical to 
+# the base names.
+#
+
+NV_MODULE_SUFFIX ?=
+
+#
+# The NVIDIA kernel module name and static file names. In case of multiple 
+# NVIDIA kernel module builds, $(NV_MODULE_SUFFIX) is appended to the 
+# module basename to construct the module name of the concerned module. 
+# KBUILD will go ahead and append ".o" or ".ko" to form the module file name. 
+#
+
+ifeq ($(NV_MODULE_SUFFIX),frontend)
+ MODULE_NAME := $(MODULE_BASENAME)-$(NV_MODULE_SUFFIX)
+else
+ MODULE_NAME := $(MODULE_BASENAME)$(NV_MODULE_SUFFIX)
+endif
+VERSION_HEADER := nv_compiler.h
+
+#
+# List of object files to link into NVIDIA kernel module; this list
+# is assigned depending on the value of $(NV_MODULE_SUFFIX) being passed.
+# Make sure KBUILD understands that we want a module.
+#
+
+CORE_OBJS := nv-kernel.o
+
+ifdef NV_BUILD_MODULE_INSTANCES
+ ifeq ($(NV_MODULE_SUFFIX),frontend)
+ MODULE_GLUE_OBJS := $(patsubst %.c,%.o,nv-frontend.c)
+ $(MODULE_NAME)-objs := $(MODULE_GLUE_OBJS)
+ else
+ MODULE_GLUE_OBJS := $(patsubst %.c,%.o, nv.c nv-acpi.c nv-chrdev.c nv-cray.c nv-dma.c nv-drm.c nv-gvi.c nv-i2c.c nv-mempool.c nv-mmap.c nv-p2p.c nv-pat.c nv-procfs.c nv-usermap.c nv-vm.c nv-vtophys.c os-interface.c os-mlock.c os-pci.c os-registry.c os-smp.c os-usermap.c nv_uvm_interface.c)
+ $(MODULE_NAME)-objs := $(CORE_OBJS) $(MODULE_GLUE_OBJS)
+ endif
+else
+ MODULE_GLUE_OBJS := $(patsubst %.c,%.o, nv.c nv-acpi.c nv-chrdev.c nv-cray.c nv-dma.c nv-drm.c nv-gvi.c nv-i2c.c nv-mempool.c nv-mmap.c nv-p2p.c nv-pat.c nv-procfs.c nv-usermap.c nv-vm.c nv-vtophys.c os-interface.c os-mlock.c os-pci.c os-registry.c os-smp.c os-usermap.c nv_uvm_interface.c) $(patsubst %.c,%.o,nv-frontend.c)
+ $(MODULE_NAME)-objs := $(CORE_OBJS) $(MODULE_GLUE_OBJS)
+endif
+
+#
+# List of targets to build in case of multiple NVIDIA kernel module builds. 
+# The actual target is constructed by prefixing nvidia/nvidia- to every
+# item in the list $(BUILD_MODULES_LIST)/$(BUILD_MODULE_FRONTEND).
+#
+
+ifdef NV_BUILD_MODULE_INSTANCES
+ BUILD_MODULES_LIST := $(shell seq 0 `expr $(NV_BUILD_MODULE_INSTANCES) - 1`)
+ BUILD_MODULE_FRONTEND := frontend
+endif
+
+COMPILE_TESTS = \
+	remap_pfn_range \
+	vmap \
+	set_pages_uc \
+	set_memory_uc \
+	set_memory_array_uc \
+	change_page_attr \
+	i2c_adapter \
+	pci_get_class \
+	pm_message_t \
+	irq_handler_t \
+	pci_choose_state \
+	vm_insert_page \
+	acpi_device_ops \
+	acpi_op_remove \
+	acpi_device_id \
+	acquire_console_sem \
+	console_lock \
+	kmem_cache_create \
+	outer_flush_all \
+	on_each_cpu \
+	smp_call_function \
+	nvmap_support \
+	acpi_evaluate_integer \
+	ioremap_cache \
+	ioremap_wc \
+	proc_dir_entry \
+	INIT_WORK \
+	acpi_walk_namespace \
+	scatterlist \
+	pci_domain_nr \
+	pci_dma_mapping_error \
+	file_operations \
+	sg_alloc_table \
+	sg_init_table \
+	pci_get_domain_bus_and_slot \
+	get_num_physpages \
+	efi_enabled \
+	dom0_kernel_present \
+	drm_available \
+	proc_create_data \
+	pde_data \
+	proc_remove \
+	sg_table \
+	pm_vt_switch_required \
+	pci_save_state \
+	file_inode \
+	drm_pci_set_busid \
+	write_cr4 \
+	for_each_online_node \
+	node_end_pfn \
+	get_user_pages \
+	get_user_pages_remote \
+	register_cpu_notifier \
+	cpuhp_setup_state \
+	vm_fault_present \
+	vm_fault_has_address \
+	drm_driver_unload_has_int_return_type \
+        drm_gem_object_get \
+        do_gettimeofday \
+	drm_legacy_pci_init \
+	timer_setup
+#
+# CFLAGS dependent on the type of builds (e.g. single/muliple module, debug)
+#
+
+ifdef NV_BUILD_MODULE_INSTANCES
+ EXTRA_CFLAGS += -DNV_BUILD_MODULE_INSTANCES=1
+ ifneq ($(NV_MODULE_SUFFIX),frontend)
+ EXTRA_CFLAGS += -DNV_MODULE_INSTANCE=$(NV_MODULE_SUFFIX)
+ endif
+else
+ EXTRA_CFLAGS += -DNV_MODULE_INSTANCE=0
+ EXTRA_CFLAGS += -DNV_BUILD_MODULE_INSTANCES=0
+endif
+
+EXTRA_CFLAGS += -UDEBUG -U_DEBUG -DNDEBUG
+
+#
+# Include common definitions; we rely on the definition of the source path to
+# find the file; set to a reasonable default if unset (e.g. for top-level
+# passes). The source path is also used in the common file.
+#
+
+src ?= .
+include $(src)/nvidia-modules-common.mk
+
+#
+# Generate multiple targets at runtime depending on the items present in
+# the lists $(BUILD_MODULES_LIST) and $(BUILD_MODULE_FRONTEND) for multiple
+# NVIDIA kernel module builds.
+#
+# For normal builds, generate the target $(MODULE_BASENAME).ko.
+#
+# Multiple-RM builds require GNU Make v3.81 or later, due to a bug in earlier
+# versions of GNU Make that prevents the use of $(eval) within a $(foreach):
+#
+# http://savannah.gnu.org/bugs/?func=detailitem&item_id=1517
+#
+
+$(foreach obj_file, $(BUILD_MODULES_LIST), $(eval $(call BUILD_MODULE_RULE,$(MODULE_BASENAME)$(obj_file).ko,$(obj_file),$(MODULE_BASENAME)-$(BUILD_MODULE_FRONTEND).ko)))
+$(eval $(call BUILD_MODULE_RULE,$(MODULE_BASENAME)-$(BUILD_MODULE_FRONTEND).ko,$(BUILD_MODULE_FRONTEND),))
+$(eval $(call BUILD_MODULE_RULE,$(MODULE_BASENAME).ko,,))
+
+#
+# Add dependencies for the generated targets, depending on whether we are
+# building multiple RM instances or a single RM.
+#
+
+ifdef NV_BUILD_MODULE_INSTANCES
+ NV_MODULE_TARGET_DEPS := $(addsuffix .ko,$(addprefix $(MODULE_BASENAME),$(BUILD_MODULES_LIST) -$(BUILD_MODULE_FRONTEND)))
+else
+ NV_MODULE_TARGET_DEPS := $(MODULE_OBJECT)
+endif
+
+module: $(NV_MODULE_TARGET_DEPS)

@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>module-nvidia430</Name>
+        <Homepage>http://www.nvidia.com</Homepage>
+        <Packager>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Packager>
+        <License>NVIDIA</License>
+        <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
+        <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
+        <Archive sha1sum="3ff62a457f2570eb67c3ce7fb3800ddcbe54164e" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/430.64/NVIDIA-Linux-x86_64-430.64.run</Archive>
+        <BuildDependencies>
+            <Dependency version="4.19.56">kernel-module-headers</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+        </BuildDependencies>
+		<AdditionalFiles>
+<!--             <AdditionalFile owner="root" permission="0644" target="header-fix.patch">header-fix.patch</AdditionalFile> -->
+        </AdditionalFiles>
+    </Source>
+
+    <Package>
+        <Name>module-nvidia430</Name>
+        <IsA>driver</IsA>
+        <Summary>Kernel module for current NVIDIA graphics driver releases</Summary>
+        <RuntimeDependencies>
+            <Dependency version="4.19.56">kernel</Dependency>
+<!--             <Dependency release="current">module-nvidia430-userspace</Dependency> -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library" permanent="true">/lib/modules</Path>
+            <Path fileType="data">/etc/modprobe.d</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/blacklist-nouveau.conf">modprobe.conf</AdditionalFile>
+        </AdditionalFiles>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <!--<Package>
+        <Name>module-nvidia430-userspace</Name>
+        <IsA>data</IsA>
+        <Summary>Modprobe rules for nvidia430 kernel driver</Summary>
+        <Files>
+            <Path fileType="data">/etc/modprobe.d</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/blacklist-nouveau.conf">modprobe.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>-->
+
+<!--    <Package>
+        <Name>nvidia-settings</Name>
+        <IsA>app:gui</IsA>
+        <PartOf>hardware.graphics</PartOf>
+        <Summary>Settings for nvidia430 kernel driver</Summary>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency version="current">module-nvidia430</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/nvidia-settings</Path>
+            <Path fileType="man">/usr/share/man/man1/nvidia-settings.1</Path>
+            <Path fileType="library">/usr/lib/libnvidia-gtk*</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+            <Path fileType="data">/usr/share/nvidia</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/nvidia-settings.desktop">nvidia-settings.desktop</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>nvidia-xconfig</Name>
+        <IsA>app:console</IsA>
+        <PartOf>hardware.graphics</PartOf>
+        <Summary>Xconfig file for nvidia430 kernel driver</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">module-nvidia430</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/nvidia-xconfig</Path>
+            <Path fileType="man">/usr/share/man/man1/nvidia-xconfig.1</Path>
+        </Files>
+    </Package>-->
+
+    <Package>
+        <Name>xorg-video-nvidia430</Name>
+        <IsA>driver</IsA>
+        <PartOf>x11.driver</PartOf>
+        <RuntimeDependencies>
+            <Dependency>libXext</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>xorg-server</Dependency>
+			<Dependency>opencl-icd</Dependency>
+			<Dependency>vulkan</Dependency>			
+            <Dependency version="current">module-nvidia430</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/etc/OpenCL</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/X11</Path>
+            <Path fileType="data">/usr/share/nvidia430</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia430-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for xorg-video-nvidia430</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libvdpau-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+			<Dependency>opencl-icd-32bit</Dependency>
+			<Dependency>vulkan-32bit</Dependency>
+            <Dependency release="current">xorg-video-nvidia430</Dependency>
+            <Dependency>atk</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/share/nvidia430/32bit-ld.so.conf</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package-emul32.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <History>
+		<Update release="1">
+            <Date>2019-11-03</Date>
+            <Version>430.64</Version>
+            <Comment>First release</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
