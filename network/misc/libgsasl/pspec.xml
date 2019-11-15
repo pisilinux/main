@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libgsasl</Name>
+        <Homepage>ftp://alpha.gnu.org/gnu/gsasl/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Implementation of the SASL framework and a few common SASL mechanisms</Summary>
+        <Description>GNU SASL is an implementation of the Simple Authentication and Security Layer framework and a few common SASL mechanisms. SASL is used by network servers (e.g., IMAP, SMTP) to request authentication from clients, and in clients to authenticate against servers.</Description>
+        <Archive sha1sum="343fd97ae924dc406986c02fb9b889f4114239ae" type="targz">https://ftp.gnu.org/gnu/gsasl/gsasl-1.8.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libgcrypt-devel</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>libgpg-error-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libgsasl</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcrypt</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>libgpg-error</Dependency>
+        </RuntimeDependencies>
+        <Files>
+			<Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libgsasl.so*</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+			<Path fileType="ldata">/usr/share/info</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+			<Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgsasl-devel</Name>
+        <Summary>Development files for libgsasl</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libgsasl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/libgsasl.pc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-07-27</Date>
+            <Version>1.8.0</Version>
+            <Comment>First release</Comment>
+            <Name>Osman Erkan</Name>
+            <Email>osman.erkan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
