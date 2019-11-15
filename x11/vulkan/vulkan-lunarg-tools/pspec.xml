@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>vulkan-lunarg-tools</Name>
+        <Homepage>http://lunarg.com/</Homepage>
+        <Packager>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Packager>
+        <License>Custom</License>
+        <IsA>app:console</IsA>
+        <Summary>Extra Vulkan tools from LunarG</Summary>
+        <Description>This project provides vktrace capture/replay tool, the Layer Factory, and other layer tools and driver tests.</Description>
+		<Archive sha1sum="d50144f13d74930988c7adc80b364113290e9cd0" type="tarxz">https://sourceforge.net/projects/pisilinux/files/source/VulkanTools-1.1.126.tar.xz</Archive>
+		<BuildDependencies>
+			<Dependency>libX11-devel</Dependency>
+			<Dependency>libxcb-devel</Dependency>
+			<Dependency>libXrandr-devel</Dependency>
+			<Dependency>wayland-devel</Dependency>
+			<Dependency>vulkan-headers</Dependency>
+			<Dependency>vulkan-devel</Dependency>
+			<Dependency>qt5-svg-devel</Dependency>
+			<Dependency>qt5-webengine-devel</Dependency>
+			<Dependency>git</Dependency>
+		</BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>vulkan-trace</Name>
+		<RuntimeDependencies>
+			<Dependency>libX11</Dependency>
+			<Dependency>libxcb</Dependency>
+			<Dependency>libXrandr</Dependency>
+			<Dependency>wayland</Dependency>
+			<Dependency>vulkan</Dependency>
+			<Dependency>qt5-base</Dependency>
+			<Dependency>qt5-svg</Dependency>
+			<Dependency>qt5-webengine</Dependency>
+			<Dependency>xcb-util-wm</Dependency>
+			<Dependency>wayland-client</Dependency>
+			<Dependency>xcb-util-keysyms</Dependency>
+		</RuntimeDependencies>
+        <Files>
+			<Path fileType="config">/etc/vulkan/explicit_layer.d/VkLayer_vktrace_layer.json</Path>
+            <Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib/libVkLayer_vktrace_layer.so</Path>
+			<Path fileType="library">/usr/lib/libvkdisplay_*.so</Path>
+			<Path fileType="doc">/usr/share/doc/vulkan-trace</Path>
+        </Files>
+    </Package>
+	
+	<Package>
+        <Name>vulkan-extra-layers</Name>
+		<RuntimeDependencies>
+			<Dependency>vulkan</Dependency>
+		</RuntimeDependencies>
+        <Files>
+			<Path fileType="config">/etc/vulkan/explicit_layer.d</Path>
+			<Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+			<Path fileType="doc">/usr/share/doc/vulkan-extra-layers</Path>
+        </Files>
+    </Package>
+	
+	<History>
+        <Update release="1">
+            <Date>2019-11-15</Date>
+            <Version>1.1.126</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
