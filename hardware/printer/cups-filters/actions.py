@@ -20,7 +20,7 @@ def setup():
                          --enable-auto-setup-driverless \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
-                         --docdir=/usr/share/doc/cups-filters-1.25.2 \
+                         --docdir=/usr/share/doc/cups-filters-1.25.12 \
                          --with-browseremoteprotocols=DNSSD,CUPS ")
                          #--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf")
 
