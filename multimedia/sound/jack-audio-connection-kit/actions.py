@@ -16,7 +16,8 @@ def setup():
                         --prefix=/usr \
                         --libdir=/usr/lib \
                         --firewire \
-                        --alsa ")
+                        --classic \
+                        --dbus")
 
 def build():
     shelltools.system("./waf build -v")
@@ -29,4 +30,4 @@ def install():
 
     shelltools.chmod("%s/usr/lib/jack/*.so*" % get.installDIR(), 0755)
 
-    pisitools.dodoc("ChangeLog", "README*", "TODO")
+    pisitools.dodoc("AUTHORS.rst", "ChangeLog.rst", "README*")
