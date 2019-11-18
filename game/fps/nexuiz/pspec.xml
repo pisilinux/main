@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>nexuiz</Name>
+        <Homepage>http://www.nexuiz.com/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <Icon>nexuiz</Icon>
+        <IsA>app:gui</IsA>
+        <Summary>Deathmatch FPS</Summary>
+        <Description>Nexuiz is a deathmatch first person shooter game based on Darkplaces, and advanced Quake1 engine.</Description>
+        <Archive sha1sum="f4f7f779d820ebd3368439a678aad649a26610e5" type="zip">https://sourceforge.net/projects/pisilinux/files/source/nexuiz-2.5.2.zip</Archive>
+        <Archive sha1sum="887dba855d2082206abfb31285722bd7bb45c661" type="zip" target="darkplaces">https://sourceforge.net/projects/nexuiz/files/NexuizRelease/Nexuiz%202.5.2/nexuiz-252.zip</Archive>
+		<Archive sha1sum="9d6780822bd682346e74b83e72fafbad45b1ad38" type="zip" target="darkplaces/Nexuiz">mirrors://sourceforge/nexuiz/nexmappack_r2.zip</Archive>
+        <BuildDependencies>
+            <Dependency>libsdl-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>libogg-devel</Dependency>
+            <Dependency>libvorbis-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
+            <Dependency>libXxf86dga-devel</Dependency>
+            <Dependency>libXxf86vm-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+			<Patch level="2">flags.patch</Patch>
+			<Patch level="2">datadir.patch</Patch>
+            <Patch level="2">nexuiz-2.5.2-watercrash.patch</Patch>
+            <Patch level="1">libjpeg.patch</Patch>
+            <Patch level="1">nexuiz-use-system-libjpeg.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>nexuiz</Name>
+        <RuntimeDependencies>
+            <Dependency>libsdl</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>libXpm</Dependency>
+            <Dependency>libXxf86dga</Dependency>
+            <Dependency>libXxf86vm</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+			<Path fileType="data">/usr/share/quake1</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/nexuiz-sdl.desktop">nexuiz-sdl.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/nexuiz-gl.desktop">nexuiz-glx.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/nexuiz.png">nexuiz.png</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+         <Update release="1">
+            <Date>2019-11-17</Date>
+            <Version>2.5.2</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
