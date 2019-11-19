@@ -7,6 +7,7 @@
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
     shelltools.makedirs("build")
@@ -36,3 +37,6 @@ def install():
     pisitools.insinto("/usr/share/sddm/themes/pisi-linux-gray", "../pisi-linux-gray-0.1/*")
 
     pisitools.dodoc("../LICENSE")
+    
+    ## If you don't like to see any character at all not even while being entered set this to true.
+    pisitools.dosed("%s/usr/share/sddm/themes/pisi-linux-gray/theme.conf" % get.installDIR(), 'ForceHideCompletePassword="false"', 'ForceHideCompletePassword="true"')
