@@ -32,4 +32,4 @@ def install():
                                                                      "V": get.curPYTHON()})
 
     pisitools.insinto("/usr/share/doc/geos", "doc/doxygen_docs/html")
-    pisitools.dodoc("README", "AUTHORS", "NEWS", "COPYING")
+    pisitools.dodoc("README*", "AUTHORS", "NEWS", "COPYING")
