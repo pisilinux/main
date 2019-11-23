@@ -1,0 +1,62 @@
+diff -Nru a/source/source/CMakeLists.txt b/source/source/CMakeLists.txt
+--- a/source/source/CMakeLists.txt	2016-03-26 20:22:10.000000000 +0100
++++ b/source/source/CMakeLists.txt	2016-11-20 10:04:45.978561513 +0100
+@@ -240,29 +240,32 @@
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux") # Do not add 'OR MINGW' here - we need to use suffix-prefix settings from Windows
+-    set(CURL_LIBRARY "")
+-    add_definitions(-DLIBCURL_RUNTIME)
++    set(CURL_LIBRARY "curl")
++    # add_definitions(-DLIBCURL_RUNTIME)
+ 
+-    set(JPEG_LIBRARIES "")
+-    add_definitions(-DLIBJPEG_RUNTIME)
++    set(JPEG_LIBRARIES "jpeg")
++    # add_definitions(-DLIBJPEG_RUNTIME)
+ 
+-    set(PNG_LIBRARIES "")
+-    add_definitions(-DLIBPNG_RUNTIME)
++    set(PNG_LIBRARIES "png")
++    # add_definitions(-DLIBPNG_RUNTIME)
+ 
+-    set(OGG_LIBRARY "")
+-    add_definitions(-DOGGLIB_RUNTIME)
++    set(OGG_LIBRARY "ogg")
++    # add_definitions(-DOGGLIB_RUNTIME)
+ 
+-    set(VORBIS_LIBRARIES "")
+-    add_definitions(-DVORBISLIB_RUNTIME)
++    set(VORBIS_LIBRARIES "vorbis" "vorbisfile")
++    # add_definitions(-DVORBISLIB_RUNTIME)
+ 
+-    set(THEORA_LIBRARIES "")
+-    add_definitions(-DTHEORALIB_RUNTIME)
++    set(THEORA_LIBRARIES "theoradec")
++    # add_definitions(-DTHEORALIB_RUNTIME)
+ 
+-    set(FREETYPE_LIBRARIES "")
+-    add_definitions(-DFREETYPELIB_RUNTIME)
++    set(FREETYPE_LIBRARIES "freetype")
++    # add_definitions(-DFREETYPELIB_RUNTIME)
+ 
+-    set(ZLIB_LIBRARY "")
+-    add_definitions(-DZLIB_RUNTIME)
++    set(ZLIB_LIBRARY "z")
++    # add_definitions(-DZLIB_RUNTIME)
++
++    set(OPENAL_LIBRARY "openal")
++    # add_definitions(-DOPENAL_RUNTIME)
+ 
+     set(CMAKE_EXECUTABLE_SUFFIX ".${CMAKE_SYSTEM_PROCESSOR}${CMAKE_EXECUTABLE_SUFFIX}")
+     set(CMAKE_SHARED_LIBRARY_SUFFIX "_${CMAKE_SYSTEM_PROCESSOR}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+diff -Nru a/source/source/snd_openal/CMakeLists.txt b/source/source/snd_openal/CMakeLists.txt
+--- a/source/source/snd_openal/CMakeLists.txt	2016-03-26 20:22:10.000000000 +0100
++++ b/source/source/snd_openal/CMakeLists.txt	2016-11-20 10:03:52.479385589 +0100
+@@ -25,5 +25,5 @@
+ endif()
+ 
+ add_library(snd_openal SHARED ${SND_OPENAL_HEADERS} ${SND_OPENAL_SOURCES})
+-target_link_libraries(snd_openal PRIVATE ${OGG_LIBRARY} ${VORBIS_LIBRARIES} ${SND_OPENAL_PLATFORM_LIBRARIES})
++target_link_libraries(snd_openal PRIVATE ${OGG_LIBRARY} ${OPENAL_LIBRARY} ${VORBIS_LIBRARIES} ${SND_OPENAL_PLATFORM_LIBRARIES})
+ qf_set_output_dir(snd_openal libs)

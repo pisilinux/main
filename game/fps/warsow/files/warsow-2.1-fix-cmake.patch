@@ -1,0 +1,18 @@
+diff -Nur warsow_21_sdk/source/source/ref_gl/CMakeLists.txt new/source/source/ref_gl/CMakeLists.txt
+--- warsow_21_sdk/source/source/ref_gl/CMakeLists.txt	2016-03-26 20:22:10.000000000 +0100
++++ new/source/source/ref_gl/CMakeLists.txt	2016-08-16 18:15:59.189284644 +0200
+@@ -55,6 +55,12 @@
+     endif()
+ endif()
+ 
++if(UNIX)
++    set(MATH_LIBRARY m)
++else()
++    set(MATH_LIBRARY)
++endif()
++
+ add_library(ref_gl SHARED ${REF_GL_HEADERS} ${REF_GL_COMMON_SOURCES} ${REF_GL_PLATFORM_SOURCES})
+-target_link_libraries(ref_gl PRIVATE ${JPEG_LIBRARIES} ${PNG_LIBRARIES} ${REF_GL_PLATFORM_LIBRARIES})
++target_link_libraries(ref_gl PRIVATE ${JPEG_LIBRARIES} ${PNG_LIBRARIES} ${REF_GL_PLATFORM_LIBRARIES} ${MATH_LIBRARY})
+ qf_set_output_dir(ref_gl libs)
+
