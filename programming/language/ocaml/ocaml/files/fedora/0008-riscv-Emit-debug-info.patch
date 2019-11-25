@@ -1,14 +1,14 @@
-From af276d83f41cb9eb9f1e50a75a9be205c9b2fee6 Mon Sep 17 00:00:00 2001
+From 2f23a53b4aa1b672b3919cc021b83548f713b90a Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 5 Jun 2018 19:48:08 +0000
-Subject: [PATCH 8/8] riscv: Emit debug info.
+Subject: [PATCH 5/5] riscv: Emit debug info.
 
 ---
  asmcomp/riscv/emit.mlp | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/asmcomp/riscv/emit.mlp b/asmcomp/riscv/emit.mlp
-index 718dca080..e42ee9770 100644
+index 88ea9f884..cc05aefe4 100644
 --- a/asmcomp/riscv/emit.mlp
 +++ b/asmcomp/riscv/emit.mlp
 @@ -261,6 +261,7 @@ let tailrec_entry_point = ref 0
@@ -18,16 +18,16 @@ index 718dca080..e42ee9770 100644
 +  emit_debug_info i.dbg;
    match i.desc with
      Lend -> ()
-   | Lop(Imove | Ispill | Ireload) ->
-@@ -560,6 +561,7 @@ let fundecl fundecl =
-   emit_stack_adjustment (-n);
-   if !contains_calls then store_ra n;
-   `{emit_label !tailrec_entry_point}:\n`;
+   | Lprologue ->
+@@ -556,6 +557,7 @@ let fundecl fundecl =
+   `	{emit_string code_space}\n`;
+   `	.align	2\n`;
+   `{emit_symbol fundecl.fun_name}:\n`;
 +  emit_debug_info fundecl.fun_dbg;
    emit_all fundecl.fun_body;
    List.iter emit_call_gc !call_gc_sites;
    List.iter emit_call_bound_error !bound_error_sites;
-@@ -619,6 +621,7 @@ let data l =
+@@ -615,6 +617,7 @@ let data l =
  
  let begin_assembly() =
    `	.file \"\"\n`; (* PR#7073 *)
@@ -36,5 +36,5 @@ index 718dca080..e42ee9770 100644
    let lbl_begin = Compilenv.make_symbol (Some "data_begin") in
    `	{emit_string data_space}\n`;
 -- 
-2.17.1
+2.22.0.rc3
 

@@ -1,27 +1,27 @@
-From 8ddd2fb4909bf6ed1a3506723126432da8fcf0c4 Mon Sep 17 00:00:00 2001
+From 8cc56a1515816c9cef84694e63eaed63a0474090 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 29 May 2012 20:44:18 +0100
-Subject: [PATCH 3/8] configure: Allow user defined C compiler flags.
+Subject: [PATCH 2/5] configure: Allow user defined C compiler flags.
 
 ---
- configure | 4 ++++
+ configure.ac | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/configure b/configure
-index 1316b3c1e..53f45f85b 100755
---- a/configure
-+++ b/configure
-@@ -2050,6 +2050,10 @@ if $flat_float_array; then
-   echo "#define FLAT_FLOAT_ARRAY" >> m.h
- fi
+diff --git a/configure.ac b/configure.ac
+index f5d8a2687..ad5b701bd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -553,6 +553,10 @@ AS_CASE([$host],
+       internal_cflags="$gcc_warnings"],
+     [common_cflags="-O"])])
  
-+# Allow user defined C Compiler flags
-+bytecccompopts="$bytecccompopts $CFLAGS"
-+nativecccompopts="$nativecccompopts $CFLAGS"
++# Allow CFLAGS and LDFLAGS to be added.
++common_cflags="$common_cflags $CFLAGS"
++oc_ldflags="$oc_ldflags $LDFLAGS"
 +
- # Finish generated files
+ internal_cppflags="-DCAML_NAME_SPACE $internal_cppflags"
  
- cclibs="$cclibs $mathlib"
+ # Enable SSE2 on x86 mingw to avoid using 80-bit registers.
 -- 
-2.17.1
+2.22.0.rc3
 

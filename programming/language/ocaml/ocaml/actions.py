@@ -15,7 +15,6 @@ def setup():
 
     autotools.rawConfigure("-prefix /usr \
                             -bindir /usr/bin \
-                            -x11include /usr/include \
                             -libdir /usr/lib/ocaml \
                             -mandir /usr/share/man \
                             --with-pthread")
@@ -24,13 +23,14 @@ def build():
     autotools.make("-j1 world")
     autotools.make("-j1 opt")
     autotools.make("-j1 opt.opt")
-    autotools.make("-C emacs ocamltags")
+    #autotools.make("-C emacs ocamltags")
 
 def install():
-    autotools.rawInstall("BINDIR=%(install)s/usr/bin \
-                          LIBDIR=%(install)s/usr/lib/ocaml \
-                          MANDIR=%(install)s/usr/share/man" \
-                          % { "install": get.installDIR()})
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #autotools.rawInstall("BINDIR=%(install)s/usr/bin \
+                          #LIBDIR=%(install)s/usr/lib/ocaml \
+                          #MANDIR=%(install)s/usr/share/man" \
+                          #% { "install": get.installDIR()})
 
     pisitools.dodoc("Changes", "LICENSE", "README*")
 

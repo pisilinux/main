@@ -1,27 +1,27 @@
-From 8ddacdf1283fe3d7054f51a4b764bc6b44d7a342 Mon Sep 17 00:00:00 2001
+From d3bc916ff1bc467c503e21015db9c1e2a47a64f2 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 24 Jun 2014 10:00:15 +0100
-Subject: [PATCH 1/8] Don't add rpaths to libraries.
+Subject: [PATCH 1/5] Don't add rpaths to libraries.
 
 ---
  tools/Makefile | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/Makefile b/tools/Makefile
-index 78d2a1068..fbec019ed 100644
+index ee0e0be4c..7c96b6405 100644
 --- a/tools/Makefile
 +++ b/tools/Makefile
-@@ -157,8 +157,8 @@ $(call byte_and_opt,ocamlmklib,ocamlmklibconfig.cmo config.cmo misc.cmo \
- ocamlmklibconfig.ml: ../config/Makefile Makefile
+@@ -153,8 +153,8 @@ $(call byte_and_opt,ocamlmklib,ocamlmklibconfig.cmo config.cmo \
+ ocamlmklibconfig.ml: $(ROOTDIR)/Makefile.config Makefile
  	(echo 'let bindir = "$(BINDIR)"'; \
           echo 'let supports_shared_libraries = $(SUPPORTS_SHARED_LIBRARIES)';\
 -         echo 'let default_rpath = "$(RPATH)"'; \
 -         echo 'let mksharedlibrpath = "$(MKSHAREDLIBRPATH)"'; \
 +         echo 'let default_rpath = ""'; \
 +         echo 'let mksharedlibrpath = ""'; \
-          echo 'let toolpref = "$(TOOLPREF)"'; \
-          sed -n -e 's/^#ml //p' ../config/Makefile) \
+          echo 'let toolpref = "$(TOOLPREF)"';) \
          > ocamlmklibconfig.ml
+ 
 -- 
-2.17.1
+2.22.0.rc3
 
