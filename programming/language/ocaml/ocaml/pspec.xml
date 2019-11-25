@@ -18,7 +18,7 @@
         Error: Files /usr/lib/ocaml/facile/facile.cmxa and /usr/lib/ocaml/stdlib.cmxa
                make inconsistent assumptions over implementation Printf
         -->
-        <Archive sha1sum="9dd56728f2ceea4784e6d574612fbcee2aa4c611" type="tarxz">http://caml.inria.fr/pub/distrib/ocaml-4.07/ocaml-4.07.0.tar.xz</Archive>
+        <Archive sha1sum="acac364d135b8f50247f0da6ee742752c08081ae" type="tarxz">http://caml.inria.fr/pub/distrib/ocaml-4.08/ocaml-4.08.1.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>zlib-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
@@ -27,12 +27,13 @@
         </BuildDependencies>
         <Patches>
             <Patch level="1">fedora/0001-Don-t-add-rpaths-to-libraries.patch</Patch>
-            <Patch level="1">fedora/0002-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch</Patch>
+<!--             <Patch level="1">fedora/0002-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch</Patch> -->
             <Patch level="1">fedora/0003-configure-Allow-user-defined-C-compiler-flags.patch</Patch>
+            <Patch level="1">fedora/0003-configure-Remove-incorrect-assumption-about-cross-co.patch</Patch>
             <Patch level="1">fedora/0004-Add-RISC-V-backend.patch</Patch>
-            <Patch level="1">fedora/0005-Copyright-untabify.patch</Patch>
-            <Patch level="1">fedora/0006-fix-caml_c_call-reload-caml_young_limit.patch</Patch>
-            <Patch level="1">fedora/0007-Adapt-to-4.07.patch</Patch>
+<!--             <Patch level="1">fedora/0005-Copyright-untabify.patch</Patch> -->
+<!--             <Patch level="1">fedora/0006-fix-caml_c_call-reload-caml_young_limit.patch</Patch> -->
+<!--             <Patch level="1">fedora/0007-Adapt-to-4.07.patch</Patch> -->
             <Patch level="1">fedora/0008-riscv-Emit-debug-info.patch</Patch>
         </Patches>
     </Source>
@@ -51,8 +52,34 @@
             <Path fileType="man">/usr/share/man/</Path>
         </Files>
     </Package>
+    
+    <Package>
+        <Name>ocaml-compiler-libs</Name>
+        <RuntimeDependencies>
+            <Dependency>ocaml</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.mli</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmi</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmo</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cma</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.a</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmxa</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmx</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.o</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmt</Path>
+            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmti</Path>
+        </Files>
+    </Package>
 
     <History>
+        <Update release="5">
+            <Date>2019-11-25</Date>
+            <Version>4.08.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2018-07-29</Date>
             <Version>4.07.0</Version>
