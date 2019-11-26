@@ -25,6 +25,7 @@ def setup():
                         --charset=UTF-8 \
                         --enable-xvmc \
                         --enable-smb \
+                        --language=en \
                         --enable-radio \
                         --enable-radio-capture \
                         --enable-gui')
