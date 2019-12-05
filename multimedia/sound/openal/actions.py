@@ -16,13 +16,14 @@ def setup():
                -DPULSEAUDIO=1 \
                -DOSS=1 \
                -DCMAKE_INSTALL_PREFIX=/usr \
-               -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+               -DCMAKE_INSTALL_LIBDIR=lib \
                -DEXAMPLES=OFF"
 
     if get.buildTYPE() == "emul32":
-        options += " -DCMAKE_INSTALL_PREFIX=/emul32 \
-                     -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
+        options += " -DCMAKE_INSTALL_BINDIR=/emul32/bin \
+                     -DCMAKE_INSTALL_LIBDIR=lib32 \
                      -DALSOFT_NO_QT5=TRUE \
+                     -DALSOFT_EXAMPLES=OFF \
                      -DLIB_SUFFIX=32"
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
 
