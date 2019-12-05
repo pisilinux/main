@@ -3,7 +3,7 @@
 <PISI>
     <Source>
         <Name>openal</Name>
-        <Homepage>http://kcat.strangesoft.net/openal.html</Homepage>
+        <Homepage>https://kcat.strangesoft.net/openal.html</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -12,16 +12,20 @@
         <IsA>library</IsA>
         <Summary>Open Audio Library is a vendor-neutral API for interactive spatialized audio</Summary>
         <Description>OpenAL is a cross-platform 3D audio API appropriate for use with gaming applications and many other types of audio applications. The basic OpenAL objects are a Listener, a Source, and a Buffer.</Description>
-        <Archive sha1sum="84d4dd33db40ce8a7347234e632965bceb984950" type="tarbz2">http://kcat.strangesoft.net/openal-releases/openal-soft-1.18.2.tar.bz2</Archive>
+        <Archive sha1sum="7fade24f33d8dc7cdb1ea436aaf1f8d70afe1f9b" type="tarbz2">https://kcat.strangesoft.net/openal-releases/openal-soft-1.20.0.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>ffmpeg-devel</Dependency>
+            <Dependency>libsdl2-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
             <Dependency>qt5-base-devel</Dependency>
+            <Dependency>jack-audio-connection-kit-devel</Dependency>
         </BuildDependencies>
         <Patches>
 <!--             <Patch level="1">pthread.patch</Patch> -->
-            <Patch level="0">no-fpuextended.patch</Patch>
+<!--             <Patch level="0">no-fpuextended.patch</Patch> -->
 <!--        <Patch level="1">openal-soft-1.14-x86.patch</Patch> -->
 <!--        <Patch level="0">libsndio-dlopen-change.patch</Patch> -->
         </Patches>
@@ -30,6 +34,8 @@
     <Package>
         <Name>openal</Name>
         <RuntimeDependencies>
+            <Dependency>ffmpeg</Dependency>
+            <Dependency>libsdl2</Dependency>
             <Dependency>alsa-lib</Dependency>
             <Dependency>qt5-base</Dependency>
         </RuntimeDependencies>
@@ -60,8 +66,18 @@
         <PartOf>emul32</PartOf>
         <Summary>32-bit shared libraries for openal</Summary>
         <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>libsdl2-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>pulseaudio-libs-32bit</Dependency>
+        </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">openal</Dependency>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>libsdl2-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>pulseaudio-libs-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
@@ -69,6 +85,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2019-12-04</Date>
+            <Version>1.20.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="6">
             <Date>2019-01-23</Date>
             <Version>1.18.2</Version>
