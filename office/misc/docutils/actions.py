@@ -35,11 +35,20 @@ def build():
 def install():
     pythonmodules.install()
     
-    shelltools.cd("../build_python/%s" % WorkDir)
+    shelltools.cd("../build_python3/%s" % WorkDir)
+    pythonmodules.install(pyVer="3")
+    
+    #Remove .py extensions from scripts in /usr/bin
+    for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        pisitools.domove("/usr/bin/%s" % f, "/usr/bin", f.replace(".py", ""))
+        
+    for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        pisitools.rename("/usr/bin/%s" % bin, "%s_3" % bin)
+    
+    shelltools.cd("../../build_python/%s" % WorkDir)
     pythonmodules.install()
     
-    shelltools.cd("../../build_python3/%s" % WorkDir)
-    pythonmodules.install(pyVer="3")
+    
 
     #Remove .py extensions from scripts in /usr/bin
     for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
