@@ -11,10 +11,12 @@ from pisi.actionsapi import get
     
 def setup():
   
-    pisitools.dosed("CMakeLists.txt", "\"share\/doc\/\$\{MAIN_DIR_NAME\}.*", "\"share/doc/${MAIN_DIR_NAME}/\")")
+    #pisitools.dosed("CMakeLists.txt", "\"share\/doc\/\$\{MAIN_DIR_NAME\}.*", "\"share/doc/${MAIN_DIR_NAME}/\")")
     
-    cmaketools.configure("-DWANT_DISTROBUILD=YES \
-                          -DWANT_QT5SUPPORT=ON")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DWANT_DISTROBUILD=YES \
+                          -DWANT_QT5SUPPORT=ON \
+                          -DCMAKE_CXX_FLAGS=\"-Wno-deprecated-declarations -Wno-sign-compare -Wno-reorder -Wno-unused-result -Wno-unused-variable -Wno-unused-but-set-variable -Wno-deprecated\"")
 
 def build():
     
