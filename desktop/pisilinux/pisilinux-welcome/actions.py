@@ -11,4 +11,4 @@ import glob
 def install():
     pythonmodules.install(pyVer = "3")
     
-    pisitools.insinto("/usr/share/welcome/data/media-content", "data/media-content/logo.png")
+    #pisitools.insinto("/usr/share/welcome/data/media-content", "data/media-content/logo.png")
