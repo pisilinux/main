@@ -44,7 +44,7 @@ def install():
     
     pisitools.domove("/temp/lib/python3.8/tkinter", "/usr/lib/python3.8")
     pisitools.domove("/temp/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.so", "/usr/lib/python3.8/lib-dynload")
-    pisitools.domove("/temp/lib/python3.8/turtledemo", "/usr/lib/python3.8/turtledemo")
+    pisitools.domove("/temp/lib/python3.8/turtledemo", "/usr/lib/python3.8")
     pisitools.domove("/temp/bin/idle3*", "/usr/bin/")
     pisitools.domove("/temp/lib/python3.8/idlelib", "/usr/lib/python3.8")
     
