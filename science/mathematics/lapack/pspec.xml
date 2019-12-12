@@ -12,12 +12,13 @@
         <IsA>library</IsA>
         <Summary>Linear Algebra PACKage</Summary>
         <Description>LAPACK is a standard library for numerical linear algebra.  LAPACK provides routines for solving systems of simultaneous linear equations, least-squares solutions of linear systems of equations, eigenvalue problems, and singular value problems.</Description>
-        <Archive sha1sum="55ac9d6be510883c5442c8aca967722cdf58fb29" type="targz">http://www.netlib.org/lapack/lapack-3.8.0.tar.gz</Archive>
+        <Archive sha1sum="0451d180eed2b12b94aaae77e772d7573e87bec4" type="targz">https://github.com/Reference-LAPACK/lapack/archive/v3.9.0.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>libgfortran</Dependency>
             <Dependency>cmake</Dependency>
         </BuildDependencies>
         <Patches>
+            <Patch level="1">lapack-3.9.0-lapacke-shared.patch</Patch>
             <!--Patch level="1">lapack-sharedlib.patch</Patch-->
             <!--Patch level="1">lapack-parallel-make.patch</Patch-->
             <!--Patch level="1">lapack-3.3.1-cmake-sover.patch</Patch-->
@@ -46,6 +47,33 @@
         <Files>
             <Path fileType="library">/usr/lib/libblas.a</Path>
             <Path fileType="library">/usr/lib/pkgconfig/blas.pc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>cblas</Name>
+        <Summary>C interface to BLAS</Summary>
+        <Description>Blas is a standard library which provides a number of basic algorithms for numerical algebra.</Description>
+        <RuntimeDependencies>
+            <Dependency>blas</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libcblas.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>cblas-devel</Name>
+        <Summary>C interface to BLAS</Summary>
+        <Description>cblas-devel provides development files for cblas</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">blas-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libcblas.a</Path>
+            <Path fileType="header">/usr/include/cblas*</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/cblas.pc</Path>
+            <Path fileType="library">/usr/lib/cmake/cblas-3.9.0/cblas*</Path>
         </Files>
     </Package>
 
@@ -78,6 +106,13 @@
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2019-12-12</Date>
+            <Version>3.9.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Blue DeviL</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="5">
             <Date>2018-08-14</Date>
             <Version>3.8.0</Version>
