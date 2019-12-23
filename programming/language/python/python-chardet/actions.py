@@ -14,4 +14,3 @@ def install():
     pythonmodules.install()
     
     pisitools.rename("/usr/bin/chardetect", "chardetect-py2")
-    #pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")
