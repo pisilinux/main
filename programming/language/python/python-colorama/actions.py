@@ -12,5 +12,5 @@ def build():
 
 def install():
     pythonmodules.install()
-
-    pisitools.dodoc("CHANGELOG*", "LICENSE*", "MANIFEST*", "PKG-INFO", "README*")
+    
+    pisitools.dodoc("LICENSE*")
