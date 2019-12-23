@@ -5,11 +5,12 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pythonmodules
-from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
+def build():
+    pythonmodules.compile()
+    
 def install():
     pythonmodules.install()
-
