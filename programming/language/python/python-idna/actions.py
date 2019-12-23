@@ -12,5 +12,3 @@ def build():
 
 def install():
     pythonmodules.install()
-
-    #pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")
