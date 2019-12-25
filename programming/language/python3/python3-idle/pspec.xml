@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>python3-idle</Name>
+        <Homepage>http://www.python.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>custom</License>
+        <PartOf>programming.language</PartOf>
+        <Summary>An Integrated Development Environment for Python</Summary>
+        <Description>An Integrated Development Environment for Python</Description>
+        <Archive sha1sum="7720e0384558c598107cf046c48165fd7e1f5b2c" type="tarxz">https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz</Archive>
+        <BuildDependencies>
+<!--             <Dependency>valgrind</Dependency> -->
+            <Dependency>bzip2</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>tcl-devel</Dependency>
+            <Dependency>gdbm-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>tcltk-devel</Dependency>
+            <Dependency>expat-devel</Dependency>
+            <Dependency>libffi-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>mpdecimal-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1">dont-make-libpython-readonly.patch</Patch> -->
+			<Patch level="1">0001-compileall-Fix-ddir-when-recursing.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>python3-tk</Name>
+        <IsA>library</IsA>
+        <PartOf>programming.language.python</PartOf>
+        <Summary>Python modules for Tk</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">python3</Dependency>
+            <Dependency>tcl</Dependency>
+            <Dependency>tcltk</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/python3*/tkinter</Path>
+            <Path fileType="library">/usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.so</Path>
+            <Path fileType="library" permanent="0">/usr/lib/python3.8/turtledemo</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>idle3</Name>
+        <Icon>idle</Icon>
+        <IsA>app:gui</IsA>
+        <PartOf>programming.environment</PartOf>
+        <Summary>An Integrated Development Environment for Python</Summary>
+        <RuntimeDependencies>
+            <Dependency>python3-tk</Dependency>
+            <Dependency>python3</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/idle3*</Path>
+            <Path fileType="library">/usr/lib/python*/idlelib</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile permission="0644" target="/usr/share/pixmaps/idle3.png">python-logo.png</AdditionalFile>
+            <AdditionalFile permission="0644" target="/usr/share/applications/idle3.desktop">idle.desktop</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+		<Update release="7">
+            <Date>2019-12-10</Date>
+            <Version>3.8.0</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
