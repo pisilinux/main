@@ -1,0 +1,29 @@
+Author: Andreas Beckmann <anbe@debian.org>
+Description: use kmem_cache_create_usercopy on 4.16+
+ fixes "Bad or missing usercopy whitelist? Kernel memory exposure attempt
+ detected from SLUB object 'nvidia_stack_cache'" on linux-image-4.16.0-2-*
+ or newer that have disabled CONFIG_HARDENED_USERCOPY_FALLBACK
+Bug-Debian: #901919, #899998
+Bug: https://devtalk.nvidia.com/default/topic/1031067
+
+--- a/kernel/nv-linux.h
++++ b/kernel/nv-linux.h
+@@ -757,11 +757,18 @@ extern nv_spinlock_t km_lock;
+                         0, 0, NULL, NULL);                      \
+     }
+ #elif (NV_KMEM_CACHE_CREATE_ARGUMENT_COUNT == 5)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 16, 0)
++#define NV_KMEM_CACHE_CREATE(kmem_cache, name, type)            \
++    {                                                           \
++        kmem_cache = kmem_cache_create_usercopy(name, sizeof(type), 0, 0, 0, sizeof(type), NULL); \
++    }
++#else
+ #define NV_KMEM_CACHE_CREATE(kmem_cache, name, type)            \
+     {                                                           \
+         kmem_cache = kmem_cache_create(name, sizeof(type),      \
+                         0, 0, NULL);                            \
+     }
++#endif
+ #else
+ #error "NV_KMEM_CACHE_CREATE_ARGUMENT_COUNT value unrecognized!"
+ #endif

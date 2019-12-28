@@ -14,7 +14,7 @@ KDIR = kerneltools.getKernelVersion()
 NoStrip = ["/lib/modules"]
 
 version = get.srcVERSION()
-driver_dir_name = "nvidia-current"
+driver_dir_name = "nvidia430"
 datadir = "/usr/share/%s" % driver_dir_name
 libdir = "/usr/lib32" if get.buildTYPE() == 'emul32' else "/usr/lib"
 arch = "x86"  if get.buildTYPE() == 'emul32' else get.ARCH().replace("i6", "x")
@@ -71,8 +71,8 @@ def install():
         pisitools.dobin("nvidia-smi")
         pisitools.doman("nvidia-smi.1.gz")
         pisitools.dobin("nvidia-debugdump")
-        pisitools.dobin("nvidia-xconfig")
-        pisitools.doman("nvidia-xconfig.1.gz")
+        #pisitools.dobin("nvidia-xconfig")
+        #pisitools.doman("nvidia-xconfig.1.gz")
         pisitools.dobin("nvidia-bug-report.sh")
         pisitools.dobin("nvidia-cuda-mps-server")
         pisitools.dobin("nvidia-cuda-mps-control")
@@ -81,37 +81,33 @@ def install():
         pisitools.doman("nvidia-modprobe.1.gz")
         pisitools.dobin("nvidia-persistenced")
         pisitools.doman("nvidia-persistenced.1.gz")
-        pisitools.dobin("nvidia-settings")
-        pisitools.doman("nvidia-settings.1.gz")
+        #pisitools.dobin("nvidia-settings")
+        #pisitools.doman("nvidia-settings.1.gz")
 
 
     ###  Libraries
     
     # 32-bit libraries
     if get.buildTYPE() == 'emul32':
-		pisitools.dolib("32/libGL.so.1.7.0", nvlibdir)
-		pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so.1.2.0" % nvlibdir)
-		pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so.1" % nvlibdir)
-		pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so" % nvlibdir)
+		pisitools.dolib("32/libGL.so.%s" % version, nvlibdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so" % nvlibdir)
 	
 		pisitools.dolib("32/libEGL.so.1.1.0", nvlibdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so.1.1.0" % libdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so.1.0.0" % nvlibdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so.1" % nvlibdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so" % nvlibdir)
-		
+		pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so.1" % nvlibdir)
+		pisitools.dosym("32/libEGL.so.1.1.0", "%s/libEGL.so" % nvlibdir)
 		pisitools.dolib("32/libEGL_nvidia.so.%s" % version, libdir)
-		pisitools.dosym("libEGL_nvidia.so.%s" % version, "%s/libEGL_nvidia.so.1" %libdir)
-		pisitools.dosym("libEGL_nvidia.so.%s" % version, "%s/libEGL_nvidia.so" %libdir)
-		
 		pisitools.dolib("32/libGLESv1_CM_nvidia.so.%s" % version, libdir)
 		pisitools.dolib("32/libGLESv2_nvidia.so.%s" % version, libdir)
          
+		pisitools.insinto("/etc/OpenCL/vendors", "nvidia.icd")
 		pisitools.dolib("32/libnvidia-compiler.so.%s" % version, libdir)
 		pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
 		pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
 		
 		#pisitools.dolib("32/libOpenCL.so.1.0.0", libdir)
+		#pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
 		#pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
 		#pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so" % libdir)
          
@@ -131,7 +127,7 @@ def install():
 		pisitools.dosym("libnvidia-ml.so.%s" % version, "%s/libnvidia-ml.so.1" % libdir)
         
 		for lib in ("eglcore", "encode", "fatbinaryloader", "fbc", "glcore",  "glsi", \
-		            "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "tls", "allocator" ):
+		            "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "tls" ):
 			pisitools.dolib("32/libnvidia-%s.so.%s" % (lib, version), libdir)
 			pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
 			pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so" %(libdir, lib))
@@ -143,44 +139,23 @@ def install():
 		pisitools.dolib("32/libGLX_nvidia.so.%s" % version, libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so.0" % libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so" % libdir)
-		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_nvidia.so.0" % libdir)
-		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_nvidia.so" % libdir)
-		
-		pisitools.dolib("32/libGLdispatch.so.0", libdir)
-		pisitools.dosym("libGLdispatch.so.0", "%s/ibGLdispatch.so" % libdir)
-		
-		pisitools.dolib("32/libGLX.so.0", libdir)
-		pisitools.dosym("libGLX.so.0", "%s/libGLX.so" % libdir)
-		
-		pisitools.dolib("32/libOpenGL.so.0", libdir)
-		pisitools.dosym("libOpenGL.so.0", "%s/libOpenGL.so" % libdir)
 	
     else:
 		# OpenGl library
-		pisitools.dolib("libGL.so.1.7.0", nvlibdir)
-		pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so.1.2.0" % nvlibdir)
-		pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so.1" % nvlibdir)
-		pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so" % nvlibdir)
+		pisitools.dolib("libGL.so.%s" % version, nvlibdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
+		pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so" % nvlibdir)
 		
 		pisitools.dolib("libEGL.so.1.1.0", nvlibdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so.1.1.0" % libdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so.1.0.0" % nvlibdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so.1" % nvlibdir)
-		#pisitools.dosym("%s/libEGL.so.1.1.0" % nvlibdir, "%s/libEGL.so" % nvlibdir)
+		pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so.1" % nvlibdir)
+		pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so" % nvlibdir)
 		pisitools.dolib("libEGL_nvidia.so.%s" % version, libdir)
-		pisitools.dolib("libEGL.so.%s" % version, libdir)
-		
 		pisitools.dolib("libGLESv1_CM_nvidia.so.%s" % version, libdir)
 		pisitools.dolib("libGLESv2_nvidia.so.%s" % version, libdir)
 		
 		pisitools.dolib("libGLdispatch.so.0", libdir)
 		pisitools.dosym("libGLdispatch.so.0", "%s/libGLdispatch.so" % libdir)
-		
-		pisitools.dolib("libGLX.so.0", libdir)
-		pisitools.dosym("libGLX.so.0", "%s/libGLX.so" % libdir)
-		
-		pisitools.dolib("libOpenGL.so.0", libdir)
-		pisitools.dosym("libOpenGL.so.0", "%s/libOpenGL.so" % libdir)
 		
 		# OpenCL
 		pisitools.insinto("/etc/OpenCL/vendors", "nvidia.icd")
@@ -219,13 +194,13 @@ def install():
 		pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
 		pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so" % libdir)
     
-		pisitools.dolib("libnvidia-egl-wayland.so.1.1.4", libdir)
-		pisitools.dosym("libnvidia-egl-wayland.so.1.1.4", "%s/libnvidia-egl-wayland.so.1" % libdir)
-		pisitools.dosym("libnvidia-egl-wayland.so.1.1.4", "%s/libnvidia-egl-wayland.so" % libdir)
+		pisitools.dolib("libnvidia-egl-wayland.so.1.1.2", libdir)
+		pisitools.dosym("libnvidia-egl-wayland.so.1.1.2", "%s/libnvidia-egl-wayland.so.1" % libdir)
+		pisitools.dosym("libnvidia-egl-wayland.so.1.1.2", "%s/libnvidia-egl-wayland.so" % libdir)
 		
 		# OpenGL core library and others
-		for lib in ("allocator", "cbl", "eglcore", "encode", "fatbinaryloader", "fbc", "glcore", "glsi", \
-		            "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
+		for lib in ("cbl", "eglcore", "encode", "fatbinaryloader", "fbc", "glcore",  "glsi", \
+		         "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
 			pisitools.dolib("libnvidia-%s.so.%s" % (lib, version), libdir)
 			pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
 			pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so" %(libdir, lib))
@@ -236,30 +211,22 @@ def install():
 
 		# X modules
 		pisitools.dolib("nvidia_drv.so", "%s/modules/drivers" % xorglibdir)
-		pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions" % nvlibdir)
-		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions/libglx.so.1" % nvlibdir)
-		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions/libglx.so" % nvlibdir)
+		pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s" % nvlibdir)
+		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/libglx.so.1" % nvlibdir)
+		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/libglx.so" % nvlibdir)
 		pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s/modules/extensions" % xorglibdir)
 		pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/modules/extensions/libglx.so.1" % xorglibdir)
-		
-		# Vulkan driver
 		pisitools.dolib("libGLX_nvidia.so.%s" % version, libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so.0" % libdir)
 		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_indirect.so" % libdir)
-		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_nvidia.so.0" % libdir)
-		pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_nvidia.so" % libdir)
-		pisitools.insinto("/etc/vulkan/icd.d", "nvidia_icd.json")
-		pisitools.insinto("/etc/vulkan/icd.d", "nvidia_layers.json")
 		
-		pisitools.insinto("/usr/share/glvnd/egl_vendor.d", "10_nvidia.json")
-		
-		#pisitools.insinto("/usr/share/X11/xorg.conf.d", "nvidia-drm-outputclass.conf")
+		pisitools.insinto("/usr/share/X11/xorg.conf.d", "nvidia-drm-outputclass.conf")
 	#  pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-367.27-rc")
    # pisitools.insinto("/usr/share/nvidia", "nvidia-application-profiles-367.27-key-documentation")
-		pisitools.insinto("/usr/share/pixmaps", "nvidia-settings.png")
+		#pisitools.insinto("/usr/share/pixmaps", "nvidia-settings.png")
 		
-		pisitools.dolib("libnvidia-gtk2.so.%s" % version, libdir)
-		pisitools.dolib("libnvidia-gtk3.so.%s" % version, libdir)
+		#pisitools.dolib("libnvidia-gtk2.so.%s" % version, libdir)
+		#pisitools.dolib("libnvidia-gtk3.so.%s" % version, libdir)
 
     
     
