@@ -11,15 +11,18 @@ from pisi.actionsapi import get
 shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
-    shelltools.system("python waf configure --prefix=/usr --libdir=/usr/lib/")
+    # we are going to compile LV2 with python3 from now on
+    # python2 has been deprecated. so fix python interpreter:
+    pisitools.dosed("lv2specgen/lv2specgen.py", "python", "python3")
+    shelltools.export("CFLAGS", "-Wno-deprecated-declarations")
+    shelltools.system("python3 waf configure --prefix=/usr --libdir=/usr/lib/")
+    # fix unused dependecy analysis:
+    pisitools.dosed("build/c4che/_cache.py", "LINK_CC = \['x86_64-pc-linux-gnu-gcc'\]", "LINK_CC = ['x86_64-pc-linux-gnu-gcc', '-Wl,-O1,--as-needed']")
 
 def build():
-    shelltools.system("python waf build -v")
+    shelltools.system("python3 waf build -v")
 
 def install():
-    shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
+    shelltools.system("DESTDIR=%s python3 waf install" % get.installDIR())
 
-    pisitools.dodoc("NEWS", "COPYING", "README.md")
-    pisitools.remove("/usr/bin/lv2specgen.py")
-    pisitools.removeDir("/usr/bin/")
-    pisitools.removeDir("/usr/share/lv2specgen/")
+    pisitools.dodoc("COPYING", "README.md")
