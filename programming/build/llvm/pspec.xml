@@ -11,12 +11,13 @@
         <License>NCSA</License>
         <Summary>The Low Level Virtual Machine</Summary>
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
-        <Archive sha1sum="f7fcf3bd92d130784513c06efe6910f135372ce3" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/llvm-9.0.1.src.tar.xz</Archive>
-        <Archive sha1sum="3afa0d2573ba55c46360419ed944a729ae08c8f7" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lldb-9.0.1.src.tar.xz</Archive>
-        <Archive sha1sum="ef5f529adfb9b57b33c394641d7d5e2d1f1b5ff6" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lld-9.0.1.src.tar.xz</Archive>
-        <Archive sha1sum="0d72ce018c85c54fc709c7da71d3dd1463af0bfc" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/clang-9.0.1.src.tar.xz</Archive>
-        <Archive sha1sum="f0571ec2135cb735f22baa149ac84e7334d0ac70" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/clang-tools-extra-9.0.1.src.tar.xz</Archive>
-        <Archive sha1sum="b35bc6ed7ce40f18ac45c81f4cf02ffd1f14de82" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/compiler-rt-9.0.1.src.tar.xz</Archive>
+       <Archive sha1sum="f7fcf3bd92d130784513c06efe6910f135372ce3" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/llvm-9.0.1.src.tar.xz</Archive>
+       <Archive sha1sum="0d72ce018c85c54fc709c7da71d3dd1463af0bfc" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/clang-9.0.1.src.tar.xz</Archive>
+       <Archive sha1sum="f0571ec2135cb735f22baa149ac84e7334d0ac70" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/clang-tools-extra-9.0.1.src.tar.xz</Archive>
+       <Archive sha1sum="3afa0d2573ba55c46360419ed944a729ae08c8f7" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lldb-9.0.1.src.tar.xz</Archive>
+	   <Archive sha1sum="ef5f529adfb9b57b33c394641d7d5e2d1f1b5ff6" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/lld-9.0.1.src.tar.xz</Archive>
+	   <Archive sha1sum="e7ce627133584db555c5bd980418f96a9684a58f" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/polly-9.0.1.src.tar.xz</Archive>
+       <Archive sha1sum="b35bc6ed7ce40f18ac45c81f4cf02ffd1f14de82" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/compiler-rt-9.0.1.src.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>zlib-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
@@ -30,6 +31,7 @@
             <Dependency>cmake</Dependency>
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
             <Dependency>binutils</Dependency>
+			<Dependency>llvm-clang</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -49,6 +51,7 @@
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/bin/llvm-config</Path>
             <Path fileType="header">/usr/include/llvm*</Path>
+			<Path fileType="header">/usr/include/polly*</Path>
             <Path fileType="library">/usr/lib/llvm</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="conf">/etc/ld.so.conf.d</Path>
@@ -78,6 +81,7 @@
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
             <Path fileType="library">/usr/lib/LLVMgold.*</Path>
             <Path fileType="library">/usr/lib/libLTO.*</Path>
+			<Path fileType="library">/usr/lib/libPolly*.so</Path>
             <Path fileType="library">/usr/lib/bfd-plugins/LLVMgold.so</Path>
             <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
         </Files>
@@ -109,7 +113,8 @@
             <Path fileType="library">/usr/lib/liblldbPluginObjCLanguage.a</Path>
         </Files>
     </Package>
-    
+	
+   
     <Package>
         <Name>lldb-devel</Name>
         <Summary>Development headers lldb</Summary>
@@ -120,8 +125,53 @@
             <Path fileType="header">/usr/include/lldb/*</Path>
         </Files>
     </Package>
+	
+	<Package>
+        <Name>lld</Name>
+        <Summary> Linker from the LLVM project</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">llvm-libs</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>libffi</Dependency>
+            <Dependency>libedit</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>python</Dependency>
+            <Dependency>libxml2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/ld.lld</Path>
+			<Path fileType="executable">/usr/bin/ld64.lld</Path>
+			<Path fileType="executable">/usr/bin/lld</Path>
+			<Path fileType="executable">/usr/bin/lld-link</Path>
+			<Path fileType="executable">/usr/bin/wasm-ld</Path>		
+            <Path fileType="library">/usr/lib/liblldCOFF.*</Path>
+			<Path fileType="library">/usr/lib/liblldCommon.*</Path>
+			<Path fileType="library">/usr/lib/liblldCore.*</Path>
+			<Path fileType="library">/usr/lib/liblldDriver.*</Path>
+			<Path fileType="library">/usr/lib/liblldELF.*</Path>
+			<Path fileType="library">/usr/lib/liblldMachO.*</Path>
+			<Path fileType="library">/usr/lib/liblldMinGW.*</Path>
+			<Path fileType="library">/usr/lib/liblldReaderWriter.*</Path>
+			<Path fileType="library">/usr/lib/liblldWasm.*</Path>
+			<Path fileType="library">/usr/lib/liblldYAML.*</Path>
+			<Path fileType="doc">/usr/share/doc/lld</Path>
+        </Files>
+    </Package>
+	
+	<Package>
+        <Name>lld-devel</Name>
+        <Summary>Development headers lld</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">lld</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/lld/*</Path>
+        </Files>
+    </Package>
     
 
+	
     <Package>
         <Name>llvm-clang-analyzer</Name>
         <IsA>app:console</IsA>
@@ -156,6 +206,8 @@
             <Path fileType="executable">/usr/bin/tblgen</Path>
             <Path fileType="library">/usr/lib/clang</Path>
             <Path fileType="library">/usr/lib/libclang*</Path>
+<!--             <Path fileType="library">/usr/lib/liblldbPluginExpressionParserClang.a</Path> -->
+<!--             <Path fileType="library">/usr/lib/liblldbPluginObjCLanguage.a</Path> -->
             <Path fileType="man">/usr/share/man/man1/clang.1</Path>
             <Path fileType="data">/usr/lib/cmake/clang/Clang*</Path>
             <Path fileType="data">/usr/share/clang</Path>
@@ -211,12 +263,12 @@
     </Package>
 
     <History>
-        <Update release="11">
-            <Date>2020-01-03</Date>
+		<Update release="11">
+            <Date>2020-01-04</Date>
             <Version>9.0.1</Version>
             <Comment>Version bump.</Comment>
-            <Name>Marcin Bojara</Name>
-            <Email>marcin.bojara@gmail.com</Email>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
         </Update>
         <Update release="10">
             <Date>2019-05-23</Date>
