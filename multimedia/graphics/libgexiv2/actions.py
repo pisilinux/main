@@ -5,16 +5,17 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("meson build --prefix=/usr -Dgtk_doc=true")
+    mesontools.configure()
 
 def build():
-    shelltools.system("ninja -C build")
+    mesontools.build()
 
 def install():
-    shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
