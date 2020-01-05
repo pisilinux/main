@@ -1,23 +1,27 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static \
-                         --disable-dependency-tracking \
-                         --enable-video \
-                         --disable-rpath")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DEXIV2_ENABLE_VIDEO=yes \
+                          -DEXIV2_ENABLE_WEBREADY=yes \
+                          -DEXIV2_ENABLE_CURL=yes \
+                          -DEXIV2_ENABLE_NLS=ON \
+                          -DEXIV2_BUILD_SAMPLES=no")
 
 def build():
-    autotools.make()
+    cmaketools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("COPYING", "README", "doc/ChangeLog")
+    pisitools.dodoc("COPYING*", "README*", "doc/ChangeLog")
