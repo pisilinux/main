@@ -36,13 +36,13 @@ def setup():
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
                 shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")     
         
-                shelltools.export("CC", "clang")
-                shelltools.export("CXX", "clang++")
+                #shelltools.export("CC", "clang")
+                #shelltools.export("CXX", "clang++")
                 
     
     if get.buildTYPE() == "emul32":
-        shelltools.export("CC", "clang -m32")
-        shelltools.export("CXX", "clang++ -m32")
+        #shelltools.export("CC", "clang -m32")
+        #shelltools.export("CXX", "clang++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
     
     shelltools.makedirs("build")
