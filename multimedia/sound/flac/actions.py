@@ -17,9 +17,10 @@ def setup():
                 --disable-dependency-tracking \
                 --disable-xmms-plugin \
                 --disable-static"
-
+    pisitools.cflags.add("-Wno-stringop-overflow -Wno-stringop-truncation")
     autotools.autoconf()
     autotools.configure(options)
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
@@ -30,6 +31,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.removeDir("/usr/share/doc/")
-
-    pisitools.dohtml("doc/html/*")
+    pisitools.dodoc("COPYING*", "README*")
