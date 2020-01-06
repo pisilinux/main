@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>alsa-lib</Name>
@@ -13,21 +13,19 @@
         <IsA>app:console</IsA>
         <Summary>The Advanced Linux Sound Architecture (ALSA) library</Summary>
         <Description>alsa-lib provides ALSA runtime libraries to simplify application programming and provide higher level functionality as well as support for the older OSS API, providing binary compatibility for most OSS programs.</Description>
-        <Archive sha1sum="636ac0b2b759108ca9b0f4efa1c3e8650cf9c9f6" type="tarbz2">ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.5.tar.bz2</Archive>
+        <Archive sha1sum="b58599c1237b2525962ed190ef501d3b9aa6edf5" type="tarbz2">ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.2.1.2.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>python-devel</Dependency>
+            <!--dependency for documentation-->
+            <Dependency>doxygen</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>alsa-lib</Name>
-         <RuntimeDependencies>
-            <Dependency>python</Dependency>
-        </RuntimeDependencies>
+         <Summary>The Advanced Linux Sound Architecture (ALSA) library</Summary>
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/alsa</Path>
         </Files>
     </Package>
@@ -39,12 +37,23 @@
             <Dependency release="current">alsa-lib</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="header">/usr/include/</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
             <Path fileType="data">/usr/lib32/pkgconfig</Path>
             <Path fileType="header">/usr/include/sys</Path>
             <Path fileType="header">/usr/include/alsa</Path>
             <Path fileType="data">/usr/share/aclocal</Path>
-            <Path fileType="man">/usr/share/man/man3</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>alsa-lib-docs</Name>
+        <Summary>Documentation files for alsa-lib</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">alsa-lib</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
 
@@ -65,6 +74,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2020-01-06</Date>
+            <Version>1.2.1.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Blue DeviL</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="6">
             <Date>2018-09-16</Date>
             <Version>1.1.5</Version>
