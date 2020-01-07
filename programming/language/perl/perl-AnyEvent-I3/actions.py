@@ -5,10 +5,8 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import perlmodules
-from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
-
-WorkDir="AnyEvent-I3-%s" % get.srcVERSION()
+from pisi.actionsapi import get
 
 def setup():
     perlmodules.configure()
@@ -16,12 +14,10 @@ def setup():
 def build():
     perlmodules.make()
 
-#def check():
-#    perlmodules.make("test")
+def check():
+    perlmodules.make("test")
 
 def install():
     perlmodules.install()
 
-    #pisitools.insinto("%s/%s" % (get.docDIR(), get.srcNAME()), "examples")
     pisitools.dodoc("Changes", "README")
-
