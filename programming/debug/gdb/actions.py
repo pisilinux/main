@@ -38,7 +38,7 @@ def install():
         
     pisitools.remove("/usr/share/info/bfd.info")
   
-    for hea in ["ansidecl","symcat","dis-asm", "bfd", "bfdlink", "plugin-api"]:
+    for hea in ["ansidecl","symcat","dis-asm", "bfd_stdint", "diagnostics", "bfd", "bfdlink", "plugin-api"]:
         pisitools.remove("/usr/include/%s.h" % hea)
     
     pisitools.dodoc("README*", "MAINTAINERS", "COPYING*", "ChangeLog*")
