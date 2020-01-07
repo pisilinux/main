@@ -11,11 +11,7 @@
         <License>NVIDIA</License>
         <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
         <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
-        <Archive sha1sum="fb412c254b9a9f42b7837691368aa883df7c23f1" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/440.36/NVIDIA-Linux-x86_64-440.44.run</Archive>
-      <!--  <AdditionalFiles>
-            <AdditionalFile target="NVIDIA-Linux-x86_64-390.87-kernel-4.20.patch">NVIDIA-Linux-x86_64-390.87-kernel-4.20.patch</AdditionalFile>
-            <AdditionalFile target="NVIDIA-Linux-x86_64-390.87-kernel-4.19.patch">NVIDIA-Linux-x86_64-390.87-kernel-4.19.patch</AdditionalFile>
-        </AdditionalFiles>-->
+        <Archive sha1sum="fb412c254b9a9f42b7837691368aa883df7c23f1" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/440.44/NVIDIA-Linux-x86_64-440.44.run</Archive>
         <BuildDependencies>
             <Dependency version="5.4.6">kernel-module-headers</Dependency>
             <Dependency>libX11-devel</Dependency>
@@ -30,7 +26,6 @@
         <Summary>Kernel module for current NVIDIA graphics driver releases</Summary>
         <RuntimeDependencies>
             <Dependency version="5.4.6">kernel</Dependency>
-<!--             <Dependency release="current">module-nvidia-current-userspace</Dependency> -->
         </RuntimeDependencies>
         <Files>
             <Path fileType="library" permanent="true">/lib/modules</Path>
@@ -42,19 +37,10 @@
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
+        <Conflicts>
+            <Package>nvidia-current-dkms</Package>
+        </Conflicts>
     </Package>
-
-    <!--<Package>
-        <Name>module-nvidia-current-userspace</Name>
-        <IsA>data</IsA>
-        <Summary>Modprobe rules for nvidia-current kernel driver</Summary>
-        <Files>
-            <Path fileType="data">/etc/modprobe.d</Path>
-        </Files>
-        <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/blacklist-nouveau.conf">modprobe.conf</AdditionalFile>
-        </AdditionalFiles>
-    </Package>-->
 
     <Package>
         <Name>nvidia-settings</Name>
@@ -71,8 +57,11 @@
             <Dependency>libX11</Dependency>
             <Dependency>libXext</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
-            <Dependency version="current">module-nvidia-current</Dependency>
         </RuntimeDependencies>
+        <AnyDependency>
+            <Dependency version="current">module-nvidia-current</Dependency>
+            <Dependency>nvidia-current-dkms</Dependency>
+        </AnyDependency>
         <Files>
             <Path fileType="executable">/usr/bin/nvidia-settings</Path>
             <Path fileType="man">/usr/share/man/man1/nvidia-settings.1</Path>
@@ -91,9 +80,10 @@
         <IsA>app:console</IsA>
         <PartOf>hardware.graphics</PartOf>
         <Summary>Xconfig file for nvidia-current kernel driver</Summary>
-        <RuntimeDependencies>
+        <AnyDependency>
             <Dependency version="current">module-nvidia-current</Dependency>
-        </RuntimeDependencies>
+            <Dependency>nvidia-current-dkms</Dependency>
+        </AnyDependency>
         <Files>
             <Path fileType="executable">/usr/bin/nvidia-xconfig</Path>
             <Path fileType="man">/usr/share/man/man1/nvidia-xconfig.1</Path>
@@ -109,8 +99,11 @@
             <Dependency>libX11</Dependency>
             <Dependency>mesa</Dependency>
             <Dependency>xorg-server</Dependency>
-            <Dependency version="current">module-nvidia-current</Dependency>
         </RuntimeDependencies>
+        <AnyDependency>
+            <Dependency version="current">module-nvidia-current</Dependency>
+            <Dependency>nvidia-current-dkms</Dependency>
+        </AnyDependency>
         <Files>
             <Path fileType="data">/etc/OpenCL</Path>
             <Path fileType="executable">/usr/bin</Path>
@@ -119,51 +112,78 @@
             <Path fileType="data">/usr/share/nvidia-current</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/glvnd/egl_vendor.d/10_nvidia.json</Path>
+            <Path fileType="config">/etc/vulkan/icd.d</Path>
         </Files>
-        <Provides>
-            <COMAR script="package.py">System.Package</COMAR>
-        </Provides>
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
     </Package>
 
+    <!--Package>
+    <Name>xorg-video-nvidia-current-32bit</Name>
+    <PartOf>emul32</PartOf>
+    <Summary>32-bit shared libraries for xorg-video-nvidia-current</Summary>
+    <BuildType>emul32</BuildType>
+    <BuildDependencies>
+        <Dependency>libvdpau-32bit</Dependency>
+    </BuildDependencies>
+    <RuntimeDependencies>
+        <Dependency>zlib-32bit</Dependency>
+        <Dependency>mesa-32bit</Dependency>
+        <Dependency>libX11-32bit</Dependency>
+        <Dependency>libXext-32bit</Dependency>
+        <Dependency release="current">xorg-video-nvidia-current</Dependency>
+        <Dependency>atk</Dependency>
+        <Dependency>gtk2</Dependency>
+        <Dependency>gtk3</Dependency>
+        <Dependency>cairo</Dependency>
+        <Dependency>glib2</Dependency>
+        <Dependency>pango</Dependency>
+        <Dependency>gdk-pixbuf</Dependency>
+    </RuntimeDependencies>
+    <Files>
+        <Path fileType="library">/usr/lib32</Path>
+        <Path fileType="library">/usr/share/nvidia-current/32bit-ld.so.conf</Path>
+    </Files>
+    <BuildFlags>
+        <Flag>noDelta</Flag>
+    </BuildFlags>
+    </Package-->
+
     <Package>
-        <Name>xorg-video-nvidia-current-32bit</Name>
-        <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for xorg-video-nvidia-current</Summary>
-        <BuildType>emul32</BuildType>
-        <BuildDependencies>
-            <Dependency>libvdpau-32bit</Dependency>
-        </BuildDependencies>
+        <Name>nvidia-current-dkms</Name>
+        <IsA>driver</IsA>
+        <Summary>NVIDIA driver sources for linux</Summary>
         <RuntimeDependencies>
-            <Dependency>zlib-32bit</Dependency>
-            <Dependency>mesa-32bit</Dependency>
-            <Dependency>libX11-32bit</Dependency>
-            <Dependency>libXext-32bit</Dependency>
-            <Dependency release="current">xorg-video-nvidia-current</Dependency>
-            <Dependency>atk</Dependency>
-            <Dependency>gtk2</Dependency>
-            <Dependency>gtk3</Dependency>
-            <Dependency>cairo</Dependency>
-            <Dependency>glib2</Dependency>
-            <Dependency>pango</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
+             <Dependency>dkms</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib32</Path>
-            <Path fileType="library">/usr/share/nvidia-current/32bit-ld.so.conf</Path>
+            <Path fileType="config">/etc/modprobe.d/nvidia-current-dkms.conf</Path>
+            <Path fileType="data">/usr/src/nvidia-440.44</Path>
         </Files>
-        <Provides>
-            <COMAR script="package-emul32.py">System.Package</COMAR>
-        </Provides>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/nvidia-current-dkms.conf">modprobe.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/src/nvidia-440.44/dkms.conf">dkms.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf">xorg.conf</AdditionalFile>
+        </AdditionalFiles>
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
+        <Conflicts>
+            <Package>module-nvidia-current</Package>
+        </Conflicts>
     </Package>
 
     <History>
-		<Update release="27">
+        <Update release="28">
+            <Date>2020-01-07</Date>
+            <Version>440.44</Version>
+            <Comment>Add dkms.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Update>
+        <Update release="27">
             <Date>2019-12-28</Date>
             <Version>440.44</Version>
             <Comment>Version bump</Comment>
@@ -177,7 +197,7 @@
             <Name>İdris Kalp</Name>
             <Email>idriskalp@gmail.com</Email>
         </Update>
-		<Update release="25">
+        <Update release="25">
             <Date>2019-06-09</Date>
             <Version>390.116</Version>
             <Comment>Rebuild</Comment>
