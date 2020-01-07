@@ -1,0 +1,141 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>module-nvidia390t</Name>
+        <Homepage>http://www.nvidia.com</Homepage>
+        <Packager>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin@pisilinux.org</Email>
+        </Packager>
+        <License>NVIDIA</License>
+        <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
+        <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
+        <Archive sha1sum="1966a1d54c3ab415a7b252f4a0d38fa77a7e4c30" type="binary">http://us.download.nvidia.com/XFree86/Linux-x86/390.132/NVIDIA-Linux-x86-390.132.run</Archive>
+        <Archive sha1sum="63d49c0fac620b21a23b361a9f02487534ac9c5c" type="binary">http://us.download.nvidia.com/XFree86/Linux-x86_64/390.132/NVIDIA-Linux-x86_64-390.132.run</Archive>
+        <BuildDependencies>
+            <Dependency version="5.4.2">kernel-module-headers</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>module-nvidia390</Name>
+        <IsA>driver</IsA>
+        <Summary>Kernel module for current NVIDIA graphics driver releases</Summary>
+        <RuntimeDependencies>
+            <Dependency version="5.4.2">kernel</Dependency>
+<!--             <Dependency release="current">module-nvidia-current-userspace</Dependency> -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library" permanent="true">/lib/modules</Path>
+            <Path fileType="data">/etc/modprobe.d</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/blacklist-nouveau.conf">modprobe.conf</AdditionalFile>
+        </AdditionalFiles>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+
+
+    <Package>
+        <Name>nvidia-xconfig390</Name>
+        <IsA>app:console</IsA>
+        <PartOf>hardware.graphics</PartOf>
+        <Summary>Xconfig file for nvidia390 kernel driver</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">module-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/nvidia-xconfig</Path>
+            <Path fileType="man">/usr/share/man/man1/nvidia-xconfig.1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia390</Name>
+        <IsA>driver</IsA>
+        <PartOf>x11.driver</PartOf>
+        <RuntimeDependencies>
+            <Dependency>libXext</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>xorg-server</Dependency>
+            <Dependency version="current">module-nvidia390</Dependency>
+        </RuntimeDependencies>
+		<Conflicts>
+            <Package>xorg-video-nvidia-current</Package>
+            <Package>xorg-video-nvidia304</Package>
+			<Package>xorg-video-nvidia340</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="data">/etc/OpenCL</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/X11</Path>
+            <Path fileType="data">/usr/share/nvidia-current</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <Package>
+        <Name>xorg-video-nvidia390-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for xorg-video-nvidia390</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libvdpau-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>mesa-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency release="current">xorg-video-nvidia390</Dependency>
+            <Dependency>atk</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+        </RuntimeDependencies>
+		<Conflicts>
+            <Package>xorg-video-nvidia-current-32bit</Package>
+            <Package>xorg-video-nvidia304-32bit</Package>
+			<Package>xorg-video-nvidia340-32bit</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/share/nvidia-current/32bit-ld.so.conf</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package-emul32.py">System.Package</COMAR>
+        </Provides>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+    </Package>
+
+    <History>
+		<Update release="4">
+            <Date>2019-12-12</Date>
+            <Version>390.132</Version>
+            <Comment>First release</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>       
+    </History>
+</PISI>

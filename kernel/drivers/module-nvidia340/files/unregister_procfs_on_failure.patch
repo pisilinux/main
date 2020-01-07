@@ -1,0 +1,28 @@
+Author: Andreas Beckmann <anbe@debian.org>
+Description: unregister procfs upon module load failure
+ the nvidia module may leave stale proc entries if it refuses to be
+ loaded becase nouveau is already loaded and has claimed the device
+ .
+ the error unwinding in nvidia_init_module() is insane
+ (375.26 looks much better)
+ .
+ this patch is probably not correct in all cases, but the unwinding is
+ not reverse linear in creation and the gotos are all across everything
+ .
+ leaving stale proc entries prevents the nvidia module from loading again
+ .
+ accessing the stale proc entries results in
+   BUG: unable to handle kernel paging request at ...
+Bug-Debian: #764639
+
+--- a/kernel/nv.c
++++ b/kernel/nv.c
+@@ -1038,6 +1038,8 @@ failed3:
+ 
+     pci_unregister_driver(&nv_pci_driver);
+ 
++    nv_unregister_procfs();
++
+ failed5:
+     rm_shutdown_rm(sp);
+ 

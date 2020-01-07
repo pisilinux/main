@@ -13,30 +13,36 @@ libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 
 
-def setup():        
+def setup():
+	
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
-                shelltools.system("tar xf ../cfe-%s.src.tar.xz -C tools" % get.srcVERSION())
-                shelltools.move("tools/cfe-%s.src" % get.srcVERSION(), "tools/clang")
+                shelltools.system("tar xf ../clang-%s.src.tar.xz -C tools" % get.srcVERSION())
+                shelltools.move("tools/clang-%s.src" % get.srcVERSION(), "tools/clang")
 
                 shelltools.system("tar xf ../clang-tools-extra-%s.src.tar.xz -C tools" % get.srcVERSION())
                 shelltools.move("tools/clang-tools-extra-*", "tools/clang/extra")
                 
                 shelltools.system("tar xf ../lldb-%s.src.tar.xz -C tools" % get.srcVERSION())
                 shelltools.move("tools/lldb-*", "tools/lldb")
+                
+                shelltools.system("tar xf ../lld-%s.src.tar.xz -C tools" % get.srcVERSION())
+                shelltools.move("tools/lld-*", "tools/lld")
+                
+                shelltools.system("tar xf ../polly-%s.src.tar.xz -C tools" % get.srcVERSION())
+                shelltools.move("tools/polly-*", "tools/polly")
 
             if not shelltools.can_access_directory("projects/compiler-rt"):
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
-                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")    
+                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")     
         
-        
-                shelltools.export("CC", "gcc")
-                shelltools.export("CXX", "g++")
+                #shelltools.export("CC", "clang")
+                #shelltools.export("CXX", "clang++")
                 
     
     if get.buildTYPE() == "emul32":
-        shelltools.export("CC", "gcc -m32")
-        shelltools.export("CXX", "g++ -m32")
+        #shelltools.export("CC", "clang -m32")
+        #shelltools.export("CXX", "clang++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
     
     shelltools.makedirs("build")
@@ -64,9 +70,9 @@ def setup():
                                         %s \
                                         -DLLVM_ENABLE_FFI=ON \
                                         -DLLVM_BUILD_DOCS=OFF \
-                                        -DLLVM_BUILD_LLVM_DYLIB=ON \
-                                        -DLLVM_LINK_LLVM_DYLIB=ON \
+                                        -DBUILD_SHARED_LIBS=ON \
                                         -DLLVM_ENABLE_RTTI=ON \
+                                        -DLLVM_ENABLE_EH=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \

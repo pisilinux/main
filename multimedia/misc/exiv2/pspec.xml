@@ -13,13 +13,15 @@
         <IsA>app:console</IsA>
         <Summary>Another library for parsing, editing, and saving EXIF data</Summary>
         <Description>exiv2 is a C++ library and a command line utility to access image metadata. Exiv2 is available as free software and with a commercial license, and is used in a growing number of projects.</Description>
-        <Archive sha1sum="e68404958ebfbee39354f5aaaa895ac6abf127a2" type="targz">http://www.exiv2.org/builds/exiv2-0.26-trunk.tar.gz</Archive>
+        <Archive sha1sum="1a72065c95e721b1c21df4f2ee64d8338c6acf94" type="targz">http://www.exiv2.org/builds/exiv2-0.27.2-Source.tar.gz</Archive>
         <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>curl-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>expat-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">exiv2-0.18-deps.patch</Patch>
+            <Patch level="1">CVE-2019-17402.patch</Patch>
         </Patches>
     </Source>
 
@@ -41,6 +43,7 @@
         <Name>exiv2-libs</Name>
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
+            <Dependency>curl</Dependency>
             <Dependency>expat</Dependency>
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
@@ -57,11 +60,19 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2020-01-05</Date>
+            <Version>0.27.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="5">
             <Date>2018-08-07</Date>
             <Version>0.26</Version>

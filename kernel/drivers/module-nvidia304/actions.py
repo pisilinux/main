@@ -33,7 +33,7 @@ def setup():
 
     shelltools.system("patch -p1 < kernel-4.14.patch")
     shelltools.system("patch -p1 < nvidia-304.137-bionic-18.04.patch")
-    #shelltools.system("patch -p0 < nv-drm.patch")
+    shelltools.system("patch -p0 < linux-5.3.patch")
 
     # Our libc is TLS enabled so use TLS library
     shelltools.unlink("*-tls.so*")
@@ -73,9 +73,9 @@ def install():
     pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
 
     # OpenCL
-    pisitools.dolib("libOpenCL.so.1.0.0", libdir)
-    pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
-    pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
+    #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
+    #pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
+    #pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
 
     # CUDA
     pisitools.dolib("libcuda.so.%s" % version, libdir)

@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libglvnd</Name>
+        <Homepage>https://github.com/NVIDIA/libglvnd</Homepage>
+        <Packager>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Packager>
+        <License>custom:BSD-like</License>
+        <IsA>library</IsA>
+        <Summary>The GL Vendor-Neutral Dispatch library</Summary>
+        <Description>libglvnd is a vendor-neutral dispatch layer for arbitrating OpenGL API calls between multiple vendors. It allows multiple drivers from different vendors to coexist on the same filesystem, and determines which vendor to dispatch each API call to at runtime.</Description>
+        <Archive sha1sum="539b601169d9ead9bee978d3dedf698dd50f1eb7" type="targz">https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v1.3.0/libglvnd-v1.3.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>xorg-proto</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libdrm-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>libXdamage-devel</Dependency>
+            <Dependency>libXxf86vm-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libglvnd</Name>
+        <RuntimeDependencies>
+            <Dependency>libX11</Dependency>
+        </RuntimeDependencies>
+        <Conflicts>
+            <Package releaseTo="17">mesa</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libglvnd-devel</Name>
+        <Summary>Development files for libglvnd</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libglvnd</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libdrm-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>libXdamage-devel</Dependency>
+            <Dependency>libXxf86vm-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libglvnd-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libglvnd</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>libX11-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-01-03</Date>
+            <Version>1.3.0</Version>
+            <Comment>First release</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
