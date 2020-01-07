@@ -22,18 +22,14 @@ def setup():
                --disable-gcc-werror \
                --disable-dependency-tracking"
 
-    pisitools.dosed("examples/Makefile.am", "noinst_PROGRAMS", "check_PROGRAMS")
-    pisitools.dosed("tests/Makefile.am", "noinst_PROGRAMS", "check_PROGRAMS")
-
     shelltools.unlink("M4/libtool.m4")
 
     for i in shelltools.ls("M4/lt*.m4"):
         shelltools.unlink(i)
 
+    pisitools.cflags.add("-Wno-expansion-to-defined -Wno-format-truncation -Wno-implicit-fallthrough")
     autotools.autoreconf("-fi -I M4")
     autotools.configure(options)
-
-    pisitools.dosed("doc/Makefile", "^htmldocdir.*", "htmldocdir = /usr/share/doc/%s/html" % get.srcNAME())
 
 def build():
     autotools.make()
@@ -41,4 +37,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README")
+    pisitools.dodoc("COPYING", "README")
