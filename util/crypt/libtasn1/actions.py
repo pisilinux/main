@@ -29,4 +29,4 @@ def install():
 
     if get.buildTYPE() == "emul32": return
 
-    pisitools.dodoc("ChangeLog", "README", "NEWS", "AUTHORS", "COPYING")
+    pisitools.dodoc("ChangeLog", "README.md", "NEWS", "AUTHORS", "LICENSE")
