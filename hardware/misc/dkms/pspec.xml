@@ -3,34 +3,45 @@
         <Name>dkms</Name>
         <Homepage>http://linux.dell.com/dkms</Homepage>
         <Packager>
-            <Name>Ertan Güven</Name>
-            <Email>ertan@pisilinux.org</Email>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
         </Packager>
         <License>GPLv2</License>
         <PartOf>hardware.misc</PartOf>
         <IsA>kernel</IsA>
         <Summary>Dynamic Kernel Module Support</Summary>
         <Description>DKMS is a dynamic kernel module support framework.</Description>
-        <BuildDependencies>
-            <Dependency>kernel-headers</Dependency>
-        </BuildDependencies>
-        <Archive sha1sum="9cdfecc29116d578e693cf3273ea9695d9471cf2" type="targz">https://github.com/dell/dkms/archive/v2.6.1.tar.gz</Archive>
+        <Archive sha1sum="d4c4e2d160d6119f8757d6a4a4c364f0f770cc43" type="targz">https://github.com/dell/dkms/archive/v2.8.1.tar.gz</Archive>
     </Source>
     <Package>
         <Name>dkms</Name>
         <RuntimeDependencies>
-            <Dependency>kernel-headers</Dependency>
+            <Dependency>gcc</Dependency>
+            <Dependency>bash</Dependency>
+            <Dependency>kmod</Dependency>
+            <Dependency>make</Dependency>
+            <Dependency>coreutils</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
-            <Path fileType="library">/usr/lib</Path>
             <Path fileType="executable">/usr/sbin</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="data">/var/lib</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
         </Files>
+        <Provides>
+            <COMAR script="pakhandler.py">System.PackageHandler</COMAR>
+        </Provides>
     </Package>
     <History>
+        <Update release="6">
+            <Date>2020-01-06</Date>
+            <Version>2.8.1</Version>
+            <Comment>Version bump. Add pakhandler.py</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Update>
         <Update release="5">
             <Date>2018-09-01</Date>
             <Version>2.6.1</Version>
