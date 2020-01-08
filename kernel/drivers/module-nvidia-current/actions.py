@@ -31,7 +31,9 @@ def setup():
     
     shelltools.copytree("kernel", "kernel-dkms")
     shelltools.unlink("kernel-dkms/dkms.conf")
+    shelltools.move("dkms.conf", "kernel-dkms/")
     pisitools.dosed("kernel-dkms/Makefile", "CC \?= cc", "CC = /usr/bin/cc")
+    pisitools.dosed("kernel-dkms/dkms.conf", "%VERSION%", version)
 
 def build():
     # We don't need kernel module for emul32 build
