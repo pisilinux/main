@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def setup():
     autotools.autoreconf("-fiv")
     autotools.configure("--enable-vala \
-                         --disable-static")
+                         --disable-static \
+                         --disable-gtk-doc")
     
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
