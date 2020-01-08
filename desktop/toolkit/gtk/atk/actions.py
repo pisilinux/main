@@ -8,33 +8,19 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 
 def setup():
-    #pisitools.dosed(".", "^(SUBDIRS =.*)tests(.*)$", "\\1\\2", filePattern="^Makefile.(am|in)", level=0)
-    #autotools.autoreconf("-fiv")
-    shelltools.makedirs("build")
-    shelltools.cd("build")
     
-    options = "meson --prefix=/usr --libdir=lib \
-                         -Denable-introspection=true \
-              "
-              
-    if get.buildTYPE() == "emul32":
-        options += "--libdir=lib32 .."
-    
-    shelltools.system(options)
+    options = "-Denable-introspection=true"
+    mesontools.configure(options)
 
 def build():
-    shelltools.cd("build")
-    shelltools.system
+	
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    if get.buildTYPE() == "emul32":
-        #pisitools.removeDir("/usr/share/gtk-doc")
-        return
-    
-        shelltools.cd("build")
-        pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
+	
+	mesontools.install()
+	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
