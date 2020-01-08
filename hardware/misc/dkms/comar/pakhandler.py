@@ -13,11 +13,13 @@ def get_kver():
     with open("/etc/kernel/kernel") as f:
         return f.readline().strip()
 
-def run_dkms(name, version, kver, arch):
-    os.system("dkms build -m %s -v %s -k %s -a %s" % (name, version, kver, arch))
-    os.system("dkms install -m %s -v %s -k %s -a %s" % (name, version, kver, arch))
+def run_dkms(action, name, version, kver, arch):
+    actions = {"build": ["build", "install"],
+               "remove": ["uninstall", "remove"]}
+    for action in actions[action]:
+        os.system("dkms %s -m %s -v %s -k %s -a %s" % (action, name, version, kver, arch))
 
-def buildModules(metapath, filepath):
+def check_dkms(metapath, filepath, action):
     if piksemel.parse(metapath).getTag("Package").getTagData("Name") == "kernel-module-headers":
         kver = get_kver()
         arch = piksemel.parse(metapath).getTag("Package").getTagData("Architecture").replace("_", "-")
@@ -25,7 +27,7 @@ def buildModules(metapath, filepath):
         for d in os.walk("/usr/src").next()[1]:
             if os.path.isfile("/usr/src/%s/dkms.conf" % d):
                 name, version = d.split("-")
-                run_dkms(name, version, kver, arch)
+                run_dkms(action, name, version, kver, arch)
         generate_initrd(kver)
         return
 
@@ -38,15 +40,15 @@ def buildModules(metapath, filepath):
             version = path.split("/")[-2].split("-")[1]
             kver = get_kver()
             arch = piksemel.parse(metapath).getTag("Package").getTagData("Architecture").replace("_", "-")
-            run_dkms(name, version, kver, arch)
+            run_dkms(action, name, version, kver, arch)
             generate_initrd(kver)
             return
 
 def setupPackage(metapath, filepath):
-    buildModules(metapath, filepath)
+    check_dkms(metapath, filepath, action="build")
 
 def cleanupPackage(metapath, filepath):
-    pass
+    check_dkms(metapath, filepath, action="remove")
 
 def postCleanupPackage(metapath, filepath):
     pass
