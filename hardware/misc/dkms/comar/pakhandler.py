@@ -37,7 +37,7 @@ def check_dkms(metapath, filepath, action):
         # build if package has /usr/src/*/dkms.conf 
         if path.endswith("/dkms.conf") and path.startswith("usr/src/"):
             name = path.split("/")[-2].split("-")[0]
-            version = path.split("/")[-2].split("-")[1]
+            version = path.split("/")[-2].split("-")[-1]
             kver = get_kver()
             arch = piksemel.parse(metapath).getTag("Package").getTagData("Architecture").replace("_", "-")
             run_dkms(action, name, version, kver, arch)
