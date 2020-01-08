@@ -26,7 +26,8 @@ def check_dkms(metapath, filepath, action):
         # rebuild if /usr/src/*/dkms.conf exists
         for d in os.walk("/usr/src").next()[1]:
             if os.path.isfile("/usr/src/%s/dkms.conf" % d):
-                name, version = d.split("-")
+                name = d.split("-")[0]
+                version = d.split("-")[-1]
                 run_dkms(action, name, version, kver, arch)
         generate_initrd(kver)
         return
