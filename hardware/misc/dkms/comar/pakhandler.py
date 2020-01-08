@@ -17,7 +17,7 @@ def run_dkms(action, name, version, kver, arch):
     actions = {"build": ["build", "install"],
                "remove": ["uninstall", "remove"]}
     for action in actions[action]:
-        os.system("dkms %s -m %s -v %s -k %s -a %s" % (action, name, version, kver, arch))
+        os.system("PATH='/usr/sbin:/usr/bin:/sbin:/bin' dkms %s -m %s -v %s -k %s -a %s" % (action, name, version, kver, arch))
 
 def check_dkms(metapath, filepath, action):
     if piksemel.parse(metapath).getTag("Package").getTagData("Name") == "kernel-module-headers":
