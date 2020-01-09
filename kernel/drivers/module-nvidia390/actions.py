@@ -28,7 +28,7 @@ def setup():
     
     
     #if get.buildTYPE() != 'emul32':
-		#shelltools.system("patch -p1 < linux-5.1.patch")
+        #shelltools.system("patch -p1 < linux-5.1.patch")
     
     
     # Our libc is TLS enabled so use TLS library
