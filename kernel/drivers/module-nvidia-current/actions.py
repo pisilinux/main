@@ -28,7 +28,8 @@ def setup():
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
-    
+
+    # dkms    
     shelltools.copytree("kernel", "kernel-dkms")
     shelltools.unlink("kernel-dkms/dkms.conf")
     shelltools.move("dkms.conf", "kernel-dkms/")
