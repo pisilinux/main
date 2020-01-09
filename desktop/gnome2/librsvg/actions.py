@@ -6,10 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 
 def setup():
+    #shelltools.system("sed -i '/tree_index/d' doc/rsvg-docs.xml")
     autotools.autoreconf("-fiv")
     autotools.configure("--enable-vala \
                          --disable-static \
@@ -24,4 +26,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING.LIB", "NEWS", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING.LIB", "NEWS", "README.md")
