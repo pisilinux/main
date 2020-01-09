@@ -36,6 +36,24 @@ def build():
     shelltools.system("source %s/env.sh && kmk" % get.curDIR())
 
 def install():
+    # dkms packages
+    with open("env.sh") as f:
+        for l in f.readlines():
+            if l.startswith("BUILD_PLATFORM_ARCH"):
+                a = l.split("=")[1].strip()[1:-1]
+                break
+
+    pisitools.dosed("dkms.conf", "@VERSION@", get.srcVERSION())
+    pisitools.dosed("dkms-guest.conf", "@VERSION@", get.srcVERSION())
+
+    pisitools.insinto("/usr/src/%s-%s" % (get.srcNAME(), get.srcVERSION()), "out/linux.%s/release/bin/src/*" % a)
+    pisitools.insinto("/usr/src/%s-%s" % (get.srcNAME(), get.srcVERSION()), "include")
+    pisitools.insinto("/usr/src/%s-%s" % (get.srcNAME(), get.srcVERSION()), "dkms.conf")
+
+    pisitools.insinto("/usr/src/%s-guest-%s" % (get.srcNAME(), get.srcVERSION()), "out/linux.%s/release/bin/additions/src/*" % a)
+    pisitools.insinto("/usr/src/%s-guest-%s" % (get.srcNAME(), get.srcVERSION()), "dkms-guest.conf", "dkms.conf")
+
+
     shelltools.system("awk '$1 ~ /Version:/ { print gensub(/([0-9]+)\.([0-9]+).*/, \"\\\\1\\\\2\", \"g\", $2) }' /usr/lib/pkgconfig/xorg-server.pc > XorgVersion")
     with open("XorgVersion", "r") as f:
         XorgVersion = f.readline().strip()
