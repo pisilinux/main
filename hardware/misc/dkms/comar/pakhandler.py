@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import piksemel
 import subprocess
 
@@ -32,9 +33,8 @@ def check_dkms(metapath, filepath, action):
         # rebuild if /usr/src/*/dkms.conf exists
         for d in os.walk("/usr/src").next()[1]:
             if os.path.isfile("/usr/src/%s/dkms.conf" % d):
-                name = d.split("-")[0]
-                version = d.split("-")[-1]
-                run_dkms(action, name, version, kver, arch)
+                m = re.match(r".*\/(?P<name>[^\/]+)-(?P<version>[^-]+)\/[^\/]+", path).groupdict()
+                run_dkms(action, m["name"], m["version"], kver, arch)
         generate_initrd(kver)
         return
 
@@ -43,11 +43,10 @@ def check_dkms(metapath, filepath, action):
         path = fp.getTagData("Path")
         # build if package has /usr/src/*/dkms.conf 
         if path.endswith("/dkms.conf") and path.startswith("usr/src/"):
-            name = path.split("/")[-2].split("-")[0]
-            version = path.split("/")[-2].split("-")[-1]
+            m = re.match(r".*\/(?P<name>[^\/]+)-(?P<version>[^-]+)\/[^\/]+", path).groupdict()
             kver = get_kver()
             arch = piksemel.parse(metapath).getTag("Package").getTagData("Architecture").replace("_", "-")
-            run_dkms(action, name, version, kver, arch)
+            run_dkms(action, m["name"], m["version"], kver, arch)
             generate_initrd(kver)
             return
 
