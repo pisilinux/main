@@ -10,14 +10,12 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--disable-static")
+    pisitools.dosed("doc/Makefile", "-\$\(VERSION\)", "")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.removeDir("/usr/share/doc")
-
-    pisitools.dodoc("AUTHORS", "CHANGES", "COPYING", "doc/*.txt")
-    pisitools.dohtml("doc/*")
+    pisitools.dodoc("COPYING")
