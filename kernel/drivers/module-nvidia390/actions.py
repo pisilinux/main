@@ -14,7 +14,7 @@ KDIR = kerneltools.getKernelVersion()
 NoStrip = ["/lib/modules"]
 
 version = get.srcVERSION()
-driver_dir_name = "nvidia-current"
+driver_dir_name = "nvidia390"
 datadir = "/usr/share/%s" % driver_dir_name
 libdir = "/usr/lib32" if get.buildTYPE() == 'emul32' else "/usr/lib"
 arch = "x86"  if get.buildTYPE() == 'emul32' else get.ARCH().replace("i6", "x")
@@ -40,6 +40,13 @@ def setup():
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
+
+    # dkms
+    shelltools.copytree("kernel", "kernel-dkms")
+    shelltools.unlink("kernel-dkms/dkms.conf")
+    shelltools.move("dkms.conf", "kernel-dkms/")
+    pisitools.dosed("kernel-dkms/Makefile", "CC \?= cc", "CC = /usr/bin/cc")
+    pisitools.dosed("kernel-dkms/dkms.conf", "%VERSION%", version)
 
 def build():
     # We don't need kernel module for emul32 build
@@ -82,10 +89,13 @@ def install():
         pisitools.dobin("nvidia-persistenced")
         pisitools.doman("nvidia-persistenced.1.gz")
 
+        # dkms
+        pisitools.insinto("/usr/src/nvidia-%s" % version, "kernel-dkms/*")
+
     ###  Libraries
     # OpenGl library
     pisitools.dolib("libGL.so.%s" % version, nvlibdir)
-    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
+#    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
     pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
     pisitools.dolib("libGL.so.%s" % version, libdir)
     
