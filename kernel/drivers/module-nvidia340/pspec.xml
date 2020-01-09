@@ -11,18 +11,11 @@
         <License>NVIDIA</License>
         <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
         <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
-        <Archive sha1sum="e3897bc262e7ab58cda31c1139c3dc62af528113" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86/340.107/NVIDIA-Linux-x86-340.107.run</Archive>
-        <Archive sha1sum="de4d309e52ab489e412fe6de000bb92ca27b6f31" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/340.107/NVIDIA-Linux-x86_64-340.107.run</Archive>
+        <Archive sha1sum="53faf727383b3a698ac382bf9bb981d4a881cb0d" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86/340.108/NVIDIA-Linux-x86-340.108.run</Archive>
+        <Archive sha1sum="124c8462319fca6c59b10d4bdcd85e3b1c104995" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/340.108/NVIDIA-Linux-x86_64-340.108.run</Archive>
         <AdditionalFiles>
-            <AdditionalFile target="kernel-4.11.patch">kernel-4.11.patch</AdditionalFile>
-			<AdditionalFile target="kernel-5.3.patch">kernel-5.3.patch</AdditionalFile>
-			<AdditionalFile target="kernel-5.1.patch">kernel-5.1.patch</AdditionalFile>
-			<AdditionalFile target="kernel-5.4.patch">kernel-5.4.patch</AdditionalFile>
-			<AdditionalFile target="kmem_cache_create_usercopy.patch">kmem_cache_create_usercopy.patch</AdditionalFile>
-			<AdditionalFile target="unregister_procfs_on_failure.patch">unregister_procfs_on_failure.patch</AdditionalFile>
-			<AdditionalFile target="nv_patch_340.107_linux_kernel_5.0">nv_patch_340.107_linux_kernel_5.0</AdditionalFile>
-			<AdditionalFile target="Makefile-kernel">Makefile-kernel</AdditionalFile>
-			<AdditionalFile target="Makefile-uvm">Makefile-uvm</AdditionalFile>
+            <AdditionalFile target="unfuck-340.108-build-fix.patch">unfuck-340.108-build-fix.patch</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="dkms.conf">dkms.conf</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
             <Dependency version="5.4.6">kernel-module-headers</Dependency>
@@ -42,6 +35,9 @@
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
+        <Conflicts>
+            <Package>nvidia340-dkms</Package>
+        </Conflicts>
     </Package>
 
     <Package>
@@ -51,8 +47,11 @@
         <RuntimeDependencies>
             <Dependency>libXext</Dependency>
             <Dependency>xorg-server</Dependency>
-            <Dependency version="current">module-nvidia340</Dependency>
             <Dependency>libX11</Dependency>
+            <AnyDependency>
+                <Dependency version="current">module-nvidia340</Dependency>
+                <Dependency>nvidia340-dkms</Dependency>
+            </AnyDependency>
         </RuntimeDependencies>
         <Conflicts>
             <Package>xorg-video-nvidia-current</Package>
@@ -66,9 +65,6 @@
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
         </Files>
-        <Provides>
-            <COMAR script="package.py">System.Package</COMAR>
-        </Provides>
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
@@ -96,16 +92,46 @@
             <Path fileType="library">/usr/lib32</Path>
             <Path fileType="library">/usr/share/nvidia-current/32bit-ld.so.conf</Path>
         </Files>
-        <Provides>
-            <COMAR script="package-emul32.py">System.Package</COMAR>
-        </Provides>
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
     </Package>
 
+    <Package>
+        <Name>nvidia340-dkms</Name>
+        <IsA>driver</IsA>
+        <Summary>NVIDIA driver sources for linux</Summary>
+        <RuntimeDependencies>
+            <Dependency>dkms</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/modprobe.d/nvidia340-dkms.conf</Path>
+            <Path fileType="data">/usr/src/nvidia*</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/nvidia340-dkms.conf">modprobe.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/X11/xorg.conf.d/10-nvidia-glx.conf">xorg.conf</AdditionalFile>
+        </AdditionalFiles>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+        <Conflicts>
+            <Package>module-nvidia340</Package>
+            <Package>nvidia-current-dkms</Package>
+            <Package>nvidia430-dkms</Package>
+            <Package>nvidia390-dkms</Package>
+        </Conflicts>
+    </Package>
+
     <History>
-		 <Update release="28">
+        <Update release="29">
+            <Date>2020-01-09</Date>
+            <Version>340.108</Version>
+            <Comment>Add dkms support. Version bump</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Update>
+        <Update release="28">
             <Date>2019-12-28</Date>
             <Version>340.107</Version>
             <Comment>Rebuild for new kernel.</Comment>
@@ -119,7 +145,7 @@
             <Name>Idris Kalp</Name>
             <Email>idriskalp@gmail.com</Email>
         </Update>
-		<Update release="26">
+        <Update release="26">
             <Date>2019-06-09</Date>
             <Version>340.107</Version>
             <Comment>Rebuild for new kernel.</Comment>

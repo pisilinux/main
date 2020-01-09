@@ -38,7 +38,15 @@ def setup():
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
-    shelltools.system("patch -p0 < kernel-4.11.patch")
+    shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
+
+    # dkms
+    shelltools.copytree("kernel", "kernel-dkms")
+    shelltools.unlink("kernel-dkms/dkms.conf")
+    shelltools.move("dkms.conf", "kernel-dkms/")
+    pisitools.dosed("kernel-dkms/dkms.conf", "%VERSION%", version)
+    pisitools.dosed("kernel-dkms/Makefile", "(src\s\?=\s)\.", r"\1/usr/src/nvidia-%s" % version)
+    pisitools.dosed("kernel-dkms/uvm/Makefile", "(src\s\?=\s)\.", r"\1/usr/src/nvidia-%s/uvm" % version)
 
 def build():
     # We don't need kernel module for emul32 build
@@ -71,11 +79,13 @@ def install():
 
         pisitools.dobin("nvidia-persistenced")
 
+        # dkms
+        pisitools.insinto("/usr/src/nvidia-%s" % version, "kernel-dkms/*")
 
     ###  Libraries
     # OpenGl library
     pisitools.dolib("libGL.so.%s" % version, nvlibdir)
-    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
+#    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
 
     # OpenCL
     pisitools.dolib("libOpenCL.so.1.0.0", libdir)
