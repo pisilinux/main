@@ -16,12 +16,9 @@ def setup():
 def build():
     perlmodules.make()
 
-# FIXME: test fails
 def check():
     perlmodules.make("test")
 
 def install():
     perlmodules.install()
-    
-    #perl-docs Conflicted
-    pisitools.remove("/usr/share/man/man3/Digest::MD5.3pm")
+    pisitools.dodoc("Changes", "README")
