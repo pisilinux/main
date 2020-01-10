@@ -12,4 +12,4 @@ def build():
 def install():
     pythonmodules.install(pyVer="3")
 
-    pisitools.dodoc("CHANGELOG*", "LICENSE*", "MANIFEST*", "PKG-INFO", "README*")
+    pisitools.dodoc("LICENSE*")

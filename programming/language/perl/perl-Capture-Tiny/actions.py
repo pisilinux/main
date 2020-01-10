@@ -19,4 +19,4 @@ def check():
 def install():
     perlmodules.install()
 
-    pisitools.dodoc("README", "Changes", "LICENSE")
+    pisitools.dodoc("README", "LICENSE")
