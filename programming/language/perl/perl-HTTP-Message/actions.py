@@ -14,12 +14,14 @@ def setup():
 def build():
     perlmodules.make()
 
-#def check():
-#    perlmodules.make("test")
+def check():
+    perlmodules.make("test")
 
 def install():
     perlmodules.install()
+    pisitools.removeDir("/usr/share/man/man3")
 
+'''
     pisitools.remove("/usr/share/man/man3/HTTP::Request::Common.3pm")
     pisitools.remove("/usr/share/man/man3/HTTP::Request.3pm")
     pisitools.remove("/usr/share/man/man3/HTTP::Status.3pm")
@@ -28,3 +30,4 @@ def install():
     pisitools.remove("/usr/share/man/man3/HTTP::Response.3pm")
     pisitools.remove("/usr/share/man/man3/HTTP::Headers.3pm")
     pisitools.remove("/usr/share/man/man3/HTTP::Message.3pm")
+'''
