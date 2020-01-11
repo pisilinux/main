@@ -6,7 +6,6 @@
 
 from pisi.actionsapi import perlmodules
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
 
 def setup():
     perlmodules.configure()
@@ -20,4 +19,4 @@ def check():
 def install():
     perlmodules.install()
 
-    pisitools.dodoc("Changes", "MANIFEST", "README")
+    pisitools.dodoc("Changes", "MANIFEST", "LICENSE")
