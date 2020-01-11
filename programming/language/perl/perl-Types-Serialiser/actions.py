@@ -22,3 +22,4 @@ def check():
 def install():
     perlmodules.install()
 
+    pisitools.dodoc("Changes", "README")
