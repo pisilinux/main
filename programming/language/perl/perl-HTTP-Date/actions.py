@@ -22,4 +22,4 @@ def check():
 def install():
     perlmodules.install()
 
-    pisitools.remove("/usr/share/man/man3/HTTP::Date.3pm")
+    pisitools.dodoc("LICENSE", "README*")
