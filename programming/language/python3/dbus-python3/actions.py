@@ -18,7 +18,8 @@ def setup():
                        --localstatedir=/var \
                        --disable-api-docs \
                        --disable-html-docs \
-                       --disable-static")
+                       --disable-static \
+                       PYTHON_VERSION=3")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -38,4 +39,4 @@ def install():
     # remove dbus-python-common files in py3 package
     pisitools.removeDir("/usr/include/")
     pisitools.removeDir("/usr/lib/pkgconfig")
-    pisitools.removeDir("/usr/share/")
+    #pisitools.removeDir("/usr/share/")

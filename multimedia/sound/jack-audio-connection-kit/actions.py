@@ -15,8 +15,9 @@ def setup():
     shelltools.system("./waf configure \
                         --prefix=/usr \
                         --libdir=/usr/lib \
-                        --firewire \
-                        --alsa ")
+                        --alsa \
+                        --firewire=no \
+                        ")
 
 def build():
     shelltools.system("./waf build -v")
@@ -29,4 +30,4 @@ def install():
 
     shelltools.chmod("%s/usr/lib/jack/*.so*" % get.installDIR(), 0755)
 
-    pisitools.dodoc("ChangeLog", "README*", "TODO")
+    pisitools.dodoc("ChangeLog.rst", "README*")

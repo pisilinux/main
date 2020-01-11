@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
-WorkDir="gsm-1.0-pl13"
+WorkDir="gsm-1.0-pl18"
 
 def setup():
     multilib = " -m32" if get.buildTYPE() == "emul32" else ""
@@ -20,12 +20,23 @@ def build():
     autotools.make()
 
 def install():
+    #if get.buildTYPE() == "emul32":
+        #autotools.rawInstall("DESTDIR=%s bindir=/emul32 libdir=/usr/lib32" % get.installDIR())
+        #pisitools.remove("/usr/lib32/libgsm.a")
+        #return
+    #else:
+        #autotools.rawInstall("DESTDIR=%s bindir=/usr/bin" % get.installDIR())
+        
     if get.buildTYPE() == "emul32":
-        autotools.rawInstall("DESTDIR=%s bindir=/emul32 libdir=/usr/lib32" % get.installDIR())
-        pisitools.remove("/usr/lib32/libgsm.a")
+        pisitools.insinto("/usr/lib32", "lib/*")
+        #pisitools.remove("/usr/lib32/libgsm.a")
         return
     else:
-        autotools.rawInstall("DESTDIR=%s bindir=/usr/bin" % get.installDIR())
+        pisitools.insinto("/usr/bin", "bin/*")
+        pisitools.insinto("/usr/lib", "lib/*")
+        pisitools.insinto("/usr/include/gsm", "inc/*")
+        pisitools.insinto("/usr/share/man/man3", "man/*")
+        pisitools.domove("/usr/share/man/man3/toast.1", "/usr/share/man/man1")
 
     for bin in ["tcat","untoast"]:
         pisitools.remove("/usr/bin/%s" % bin)
@@ -36,6 +47,6 @@ def install():
     # pisitools.removeDir("/usr/include/gsm")
 
     # No static libs
-    pisitools.remove("/usr/lib/libgsm.a")
+    #pisitools.remove("/usr/lib/libgsm.a")
 
     pisitools.dodoc("ChangeLog", "COPYRIGHT", "MACHINES", "MANIFEST", "README")

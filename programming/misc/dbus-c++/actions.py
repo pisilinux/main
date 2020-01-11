@@ -12,10 +12,14 @@ from pisi.actionsapi import get
 def setup():
     pisitools.dosed("configure.ac", "-O3", "")
     shelltools.export("CPPFLAGS", get.CXXFLAGS())
+    
+    shelltools.export("LDFLAGS", "%s -lpthread" % get.LDFLAGS())
 
-    shelltools.system("./autogen.sh")
+    #shelltools.system("./autogen.sh")
     autotools.configure("--disable-static \
-                         --enable-glib")
+                         --enable-glib \
+                         --disable-ecore \
+                         --disable-examples")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")    
 
