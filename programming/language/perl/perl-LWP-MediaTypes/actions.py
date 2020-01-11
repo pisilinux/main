@@ -19,5 +19,5 @@ def check():
 
 def install():
     perlmodules.install()
-
+    pisitools.removeDir("/usr/share/man/")
     pisitools.dodoc("LICENSE", "MANIFEST", "README")
