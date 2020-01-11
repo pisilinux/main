@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 WorkDir = "yaml-%s" % get.srcVERSION()
 
 def setup():
+    pisitools.cflags.add("-Wno-unused-value -Wno-enum-compare")
     autotools.autoreconf("-fvi")
     autotools.configure("--disable-static")
 
@@ -22,4 +23,3 @@ def install():
 
     pisitools.dohtml("doc/html/*")
     pisitools.dodoc("LICENSE", "README")
-
