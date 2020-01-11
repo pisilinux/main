@@ -19,5 +19,5 @@ def check():
 
 def install():
     perlmodules.install()
-
+    pisitools.dodoc("README")
     pisitools.remove("/usr/share/man/man3/File::Listing.3pm")
