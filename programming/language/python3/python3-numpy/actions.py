@@ -4,27 +4,23 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 WorkDir = "numpy-%s" % get.srcVERSION()
 
-NUMPY_FCONFIG = "config_fc --fcompiler=gnu95"
-f2py_docs = "%s/%s/f2py_docs" % (get.docDIR(), get.srcNAME())
-
-shelltools.export("LDFLAGS", "%s -shared" % get.LDFLAGS())
 shelltools.export("ATLAS", "None")
 shelltools.export("PTATLAS", "None")
+shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
 
 def build():
-    pythonmodules.compile(NUMPY_FCONFIG, pyVer="3")
+    pythonmodules.compile(pyVer="3")
 
 def install():
-    pythonmodules.install(NUMPY_FCONFIG, pyVer="3")
-
-    #pisitools.doman("doc/f2py/f2py.1")
-
-    #pisitools.insinto(f2py_docs, "doc/f2py/*.txt")
-    pisitools.dodoc("LICENSE.txt", "THANKS.txt")
+    pythonmodules.install(pyVer="3")
+    pisitools.dodoc("LICENSE*")
+    
+    for dirs in ["doc"]:
+        pisitools.insinto("%s/%s" % (get.docDIR(), get.srcNAME()), dirs)

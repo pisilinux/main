@@ -5,6 +5,7 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import perlmodules
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
@@ -12,6 +13,7 @@ WorkDir = "%s-%s" % (get.srcNAME()[5:], get.srcVERSION())
 
 def setup():
     perlmodules.configure()
+    pisitools.dosed("Makefile", "CCFLAGS =", "CCFLAGS = -Wno-unused-result")
 
 def build():
     perlmodules.make()
@@ -22,3 +24,4 @@ def check():
 def install():
     perlmodules.install()
 
+    pisitools.dodoc("Changes", "README")
