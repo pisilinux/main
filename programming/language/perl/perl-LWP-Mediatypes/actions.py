@@ -19,6 +19,5 @@ def check():
 
 def install():
     perlmodules.install()
-    pisitools.remove("/usr/share/man/man3/LWP::MediaTypes.3pm")
 
-    pisitools.dodoc("Changes", "MANIFEST", "README")
+    pisitools.dodoc("LICENSE", "MANIFEST", "README")
