@@ -52,7 +52,7 @@ def setup():
                           -DWITHOUT_FEDERATED_STORAGE_ENGINE=1 \
                           -DWITHOUT_PBXT_STORAGE_ENGINE=1 \
                           -DCMAKE_C_FLAGS='-fPIC %s -fno-strict-aliasing -DBIG_JOINS=1 -fomit-frame-pointer -fno-delete-null-pointer-checks' \
-                          -DCMAKE_CXX_FLAGS='-fPIC %s -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti -fno-delete-null-pointer-checks' \
+                          -DCMAKE_CXX_FLAGS='-fPIC %s -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-delete-null-pointer-checks' \
                           -DWITH_MYSQLD_LDFLAGS='-pie %s,-z,now'" % (get.CFLAGS(), get.CXXFLAGS(), get.LDFLAGS()))
 #-DCMAKE_EXE_LINKER_FLAGS='-ljemalloc' \
 def build():
@@ -62,21 +62,21 @@ def install():
     cmaketools.install("DESTDIR=%s benchdir_root=\"/usr/share/mysql\"" % get.installDIR())
 
     # Config
-    pisitools.insinto("/etc/mysql", "%s/usr/share/mysql/my-medium.cnf" % get.installDIR(), "my.cnf")
-    pisitools.insinto("/etc/mysql", "%s/%s/scripts/mysqlaccess.conf" % (get.workDIR(), get.srcDIR()))
+    #pisitools.insinto("/etc/mysql", "%s/usr/share/mysql/my-medium.cnf" % get.installDIR(), "my.cnf")
+    #pisitools.insinto("/etc/mysql", "%s/%s/scripts/mysqlaccess.conf" % (get.workDIR(), get.srcDIR()))
     pisitools.insinto("/usr/bin", "%s/%s/scripts/mysql_config" % (get.workDIR(), get.srcDIR()))
     # Data dir
     pisitools.dodir("/var/lib/mysql")
 
     # Documents
-    pisitools.dodoc("%s/%s/support-files/my-*.cnf" % (get.workDIR(), get.srcDIR()))
+    #pisitools.dodoc("%s/%s/support-files/my-*.cnf" % (get.workDIR(), get.srcDIR()))
     pisitools.dodoc("COPYING", "INSTALL-SOURCE", "README*", "VERSION")
 
     # Remove not needed files
     pisitools.removeDir("/usr/data")
     pisitools.removeDir("/usr/mysql-test")
     pisitools.removeDir("/usr/sql-bench")
-    pisitools.remove("/usr/share/man/man1/mysql-test-run.pl.1")
+    #pisitools.remove("/usr/share/man/man1/mysql-test-run.pl.1")
 
     # Remove -lprobes_mysql
     #pisitools.dosed("%s/usr/bin/mysql_config" % get.installDIR(), "-lprobes_mysql")

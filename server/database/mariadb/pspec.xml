@@ -12,7 +12,7 @@
         <IsA>app:console</IsA>
         <Summary>MariaDB is a drop-in replacement for MySQL</Summary>
         <Description>MariaDB strives to be the logical choice for database professionals looking for a robust, scalable, and reliable SQL server.</Description>
-        <Archive sha1sum="5602cf11707b0db93cd034f633d0c89145ba12df" type="targz">https://downloads.mariadb.org/interstitial/mariadb-10.2.13/source/mariadb-10.2.13.tar.gz</Archive>
+        <Archive sha1sum="e633ea0bff6dcd22722bda4cdc66fdfdd1afc4a5" type="targz">https://downloads.mariadb.org/f/mariadb-10.4.11/source/mariadb-10.4.11.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>ncurses-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
@@ -23,6 +23,12 @@
             <Dependency>libpcre-devel</Dependency>
             <Dependency>libaio-devel</Dependency>
             <Dependency>unixODBC-devel</Dependency>
+            <Dependency>pam-devel</Dependency>
+            <Dependency>snappy-devel</Dependency>
+            <Dependency>cracklib-devel</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>lzo-devel</Dependency>
             <Dependency>cmake</Dependency>
         </BuildDependencies>
         <Patches>
@@ -42,7 +48,9 @@
             <Dependency>libxml2</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>libaio</Dependency>
-            <Dependency>unixODBC</Dependency>
+            <Dependency>unixODBC</Dependency>			
+            <Dependency>xz</Dependency>
+            <Dependency>lzo</Dependency>
         </RuntimeDependencies>
         <Replaces>
             <Package>mysql-lib</Package>
@@ -53,6 +61,7 @@
             <Path fileType="header">/usr/include</Path>
             <Path fileType="library">/usr/lib/libmariadb.so.3</Path>
             <Path fileType="library">/usr/lib/libmariadbclient.a</Path>
+			<Path fileType="library">/usr/lib/libmariadbd*</Path>
             <Path fileType="library">/usr/lib/libmariadb.so</Path>
             <Path fileType="library">/usr/lib/libmysqlclient.so</Path>
             <Path fileType="library">/usr/lib/libmysqlclient.so.19</Path>
@@ -66,7 +75,8 @@
             <Path fileType="library">/usr/lib/libmysqld.so</Path>
             <Path fileType="library">/usr/lib/libmysqld.so.19</Path>
             <Path fileType="library">/usr/lib/libmysqlservices.a</Path>
-            <Path fileType="library">/usr/bin/mysqld_safe_helper</Path>
+            <Path fileType="executable">/usr/bin/mysqld_safe_helper</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/libmariadb.pc</Path>
         </Files>
     </Package>
 
@@ -108,7 +118,11 @@
             <Dependency>libgcc</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>libxml2</Dependency>
-            <Dependency>unixODBC</Dependency>
+            <Dependency>unixODBC</Dependency>			
+            <Dependency>pam</Dependency>
+            <Dependency>snappy</Dependency>
+            <Dependency>cracklib</Dependency>
+            <Dependency>mit-kerberos</Dependency>
         </RuntimeDependencies>
         <Replaces>
             <Package>mysql-server</Package>
@@ -197,6 +211,13 @@
     </Package>
 
     <History>
+         <Update release="4">
+            <Date>2020-01-12</Date>
+            <Version>10.4.11</Version>
+            <Comment>Version Bump.</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2018-08-03</Date>
             <Version>10.2.13</Version>
