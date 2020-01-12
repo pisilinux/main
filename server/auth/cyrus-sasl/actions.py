@@ -16,11 +16,17 @@ def setup():
             shelltools.unlink("config/%s" % p)
 
     cleanup()
-    autotools.autoreconf("-vfi --no-recursive -I config -I cmulocal")
-    shelltools.cd("saslauthd")
-    cleanup()
-    autotools.autoreconf("-vi --no-recursive -I config -I ../cmulocal -I ../config")
-    shelltools.cd("..")
+    #autotools.autoreconf("-vfi --no-recursive -I config -I cmulocal")
+    #shelltools.cd("saslauthd")
+    #cleanup()
+    #autotools.autoreconf("-vi --no-recursive -I config -I ../cmulocal -I ../config")
+    #shelltools.cd("..")
+    
+    shelltools.system("libtoolize -c")
+    shelltools.system("aclocal -I config")
+    shelltools.system("automake -a -c")
+    shelltools.system("autoheader")
+    autotools.autoconf()
 
     pisitools.cflags.add("-fPIC")
 
@@ -72,8 +78,8 @@ def install():
     pisitools.dodir("/etc/sasl2")
     pisitools.dodir("/run/saslauthd")
 
-    for doc in ["AUTHORS", "COPYING", "ChangeLog", "LDAP_SASLAUTHD", "NEWS", "README"]:
-        pisitools.newdoc("saslauthd/%s" % doc, "saslauthd/%s" % doc)
+    #for doc in ["AUTHORS", "COPYING", "ChangeLog", "LDAP_SASLAUTHD", "NEWS", "README"]:
+        #pisitools.newdoc("saslauthd/%s" % doc, "saslauthd/%s" % doc)
 
-    pisitools.dohtml("doc/*.html")
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README", "doc/TODO", "doc/*.txt")
+    pisitools.dohtml("doc/html/*.html")
+    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "README")
