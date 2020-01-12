@@ -52,7 +52,7 @@ def setup():
                           -DWITHOUT_FEDERATED_STORAGE_ENGINE=1 \
                           -DWITHOUT_PBXT_STORAGE_ENGINE=1 \
                           -DCMAKE_C_FLAGS='-fPIC %s -fno-strict-aliasing -DBIG_JOINS=1 -fomit-frame-pointer -fno-delete-null-pointer-checks' \
-                          -DCMAKE_CXX_FLAGS='-fPIC %s -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti -fno-delete-null-pointer-checks' \
+                          -DCMAKE_CXX_FLAGS='-fPIC %s -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-delete-null-pointer-checks' \
                           -DWITH_MYSQLD_LDFLAGS='-pie %s,-z,now'" % (get.CFLAGS(), get.CXXFLAGS(), get.LDFLAGS()))
 #-DCMAKE_EXE_LINKER_FLAGS='-ljemalloc' \
 def build():
