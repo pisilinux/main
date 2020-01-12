@@ -41,7 +41,7 @@ def install():
         pisitools.removeDir("/_emul32")
         for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
             pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), "_emul32", "usr") 
-            pisitools.dosed("%s/usr/lib32/icu/64.2/Makefile.inc" % get.installDIR(), "_emul32", "usr")
+            pisitools.dosed("%s/usr/lib32/icu/%s/Makefile.inc" % ( get.installDIR(), get.srcVERSION()), "_emul32", "usr")
             pisitools.dosed("%s/usr/bin/icu-config-32" % get.installDIR(), "_emul32", "usr")
         return
 
