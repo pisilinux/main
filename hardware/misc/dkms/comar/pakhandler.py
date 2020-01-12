@@ -33,7 +33,7 @@ def check_dkms(metapath, filepath, action):
         # rebuild if /usr/src/*/dkms.conf exists
         for d in os.walk("/usr/src").next()[1]:
             if os.path.isfile("/usr/src/%s/dkms.conf" % d):
-                m = re.match(r".*\/(?P<name>[^\/]+)-(?P<version>[^-]+)\/[^\/]+", path).groupdict()
+                m = re.match(r"(?P<name>[^\/]+)-(?P<version>[^-]+)", d).groupdict()
                 run_dkms(action, m["name"], m["version"], kver, arch)
         generate_initrd(kver)
         return
