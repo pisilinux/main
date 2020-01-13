@@ -4,7 +4,7 @@
 import os
 
 # FIXME: Bump this version when needed
-perlVersion = "5.12.2"
+perlVersion = "5.30.1"
 vendor_lib_path = "/usr/lib/perl5/vendor_perl/%s" % perlVersion
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
