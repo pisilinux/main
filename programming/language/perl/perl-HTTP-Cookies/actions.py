@@ -22,3 +22,4 @@ def install():
     pisitools.remove("/usr/share/man/man3/HTTP::Cookies.3pm")
     pisitools.remove("/usr/share/man/man3/HTTP::Cookies::Netscape.3pm")
     pisitools.remove("/usr/share/man/man3/HTTP::Cookies::Microsoft.3pm")
+    pisitools.dodoc("LICENSE", "README*")
