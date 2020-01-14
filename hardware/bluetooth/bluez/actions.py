@@ -40,7 +40,7 @@ def build():
     autotools.make()
     
 def install():
-    autotools.rawInstall("DESTDIR=%s install-libexecPROGRAMS install-dbussessionbusDATA install-dbussystembusDATA install-dbusDATA install-man8" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s install-pkglibexecPROGRAMS install-dbussessionbusDATA install-dbussystembusDATA install-dbusDATA install-man8" % get.installDIR())
  
     
     # Install conf files
