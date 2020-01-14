@@ -6,8 +6,10 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("NOCONFIGURE=1 ./bootstrap.sh")
     autotools.configure("--enable-static=no \
                          --disable-lynx \
                          --disable-static")
