@@ -15,7 +15,8 @@ def setup():
                          --with-cd-paranoia-name=libcdio-paranoia \
                          --disable-vcd-info \
                          --enable-cpp-progs \
-                         --disable-rpath")
+                         --disable-rpath \
+                         --enable-cddb")
 
 def build():
     autotools.make()
