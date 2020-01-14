@@ -5,12 +5,15 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import perlmodules
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import pisitools
 
 def setup():
     perlmodules.configure()
+    # suppress warning messages
+    pisitools.dosed("Makefile", "CCFLAGS = ", "CCFLAGS = -Wno-discarded-qualifiers ")
+    # fix runpath analysis
+    pisitools.dosed("Makefile", "LD_RUN_PATH=\"\$\(LD_RUN_PATH\)\"", "")
 
 def build():
     perlmodules.make()
@@ -22,4 +25,4 @@ def check():
 def install():
     perlmodules.install()
 
-    pisitools.dodoc("Changes", "README")
+    pisitools.dodoc("ARTISTIC", "LGPL", "README")
