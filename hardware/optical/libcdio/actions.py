@@ -27,4 +27,4 @@ def install():
     #pisitools.dosed("%s/usr/include/cdio/version.h" % get.installDIR(), '%s[^"]+' % get.srcVERSION(), get.srcVERSION())
     pisitools.dosed("%s/usr/include/cdio/cdio_config.h" % get.installDIR(), "/define CDIO_LIBCDIO_SOURCE_PATH/s|.*|/* #undef CDIO_LIBCDIO_SOURCE_PATH */|")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "THANKS")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS.md", "README")
