@@ -25,7 +25,6 @@ def setup():
                             --enable-multithread \
                             --enable-postproc \
                             --enable-experimental \
-                            --enable-spatial-svc \
                             --disable-debug \
                             --disable-debug-libs \
                             --disable-install-docs \
