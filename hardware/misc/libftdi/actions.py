@@ -18,7 +18,8 @@ def setup():
                           -DPYTHON_LIBRARY=/usr/lib/python2.7 \
                           -DCMAKE_SKIP_BUILD_RPATH=ON \
                           -DCMAKE_BUILD_TYPE=Release \
-                          -DEXAMPLES=OFF -DFTDI_EEPROM=ON")
+                          -DEXAMPLES=OFF -DFTDI_EEPROM=ON \
+                          -DDOCUMENTATION=OFF")
 
 
 def build():
