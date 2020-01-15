@@ -10,6 +10,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+	
+    shelltools.makedirs("test/TokenizerTest/objects")
+	
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DFREETYPE_INCLUDE_DIR=/usr/include/freetype2 \
