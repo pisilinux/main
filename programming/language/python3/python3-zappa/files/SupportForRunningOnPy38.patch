@@ -1,0 +1,123 @@
+From 261d0a4c9a6201d61cc05222c2f1456112f3566e Mon Sep 17 00:00:00 2001
+From: Amit Shah <amit@amwam.me>
+Date: Thu, 12 Dec 2019 11:24:53 +0000
+Subject: [PATCH] Support for running on python 3.8
+
+---
+ .travis.yml        |  1 +
+ setup.py           |  1 +
+ tests/test_app.py  | 10 +++++++++-
+ tests/tests.py     | 13 +++++++++++++
+ zappa/__init__.py  |  2 +-
+ zappa/core.py      |  2 +-
+ zappa/utilities.py |  4 +++-
+ 7 files changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/.travis.yml b/.travis.yml
+index cd59b5b4..9a7e9488 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -3,6 +3,7 @@ python:
+   - "2.7"
+   - "3.6"
+   - "3.7"
++  - "3.8"
+ dist: xenial
+ # command to install dependencies
+ cache:
+diff --git a/setup.py b/setup.py
+index afe4d72f..2cc18602 100755
+--- a/setup.py
++++ b/setup.py
+@@ -52,6 +52,7 @@
+         'Programming Language :: Python :: 2.7',
+         'Programming Language :: Python :: 3.6',
+         'Programming Language :: Python :: 3.7',
++        'Programming Language :: Python :: 3.8',
+         'Framework :: Django',
+         'Framework :: Django :: 1.11',
+         'Framework :: Django :: 2.0',
+diff --git a/tests/test_app.py b/tests/test_app.py
+index 021dc971..5a1ea08d 100644
+--- a/tests/test_app.py
++++ b/tests/test_app.py
+@@ -1,5 +1,13 @@
+-from cgi import parse_qs, escape
+ from zappa.asynchronous import task
++try:
++    from urllib.parse import parse_qs
++except ImportError:
++    from cgi import parse_qs
++
++try:
++    from html import escape
++except ImportError:
++    from cgi import escape
+ 
+ 
+ def hello_world(environ, start_response):
+diff --git a/tests/tests.py b/tests/tests.py
+index 76b241f9..3520719f 100644
+--- a/tests/tests.py
++++ b/tests/tests.py
+@@ -174,6 +174,19 @@ def test_get_manylinux_python37(self):
+             self.assertTrue(os.path.isfile(path))
+             os.remove(path)
+ 
++    def test_get_manylinux_python38(self):
++        z = Zappa(runtime='python3.8')
++        self.assertIsNotNone(z.get_cached_manylinux_wheel('psycopg2', '2.7.6'))
++        self.assertIsNone(z.get_cached_manylinux_wheel('derp_no_such_thing', '0.0'))
++
++        # mock with a known manylinux wheel package so that code for downloading them gets invoked
++        mock_installed_packages = {'psycopg2': '2.7.6'}
++        with mock.patch('zappa.core.Zappa.get_installed_packages', return_value=mock_installed_packages):
++            z = Zappa(runtime='python3.8')
++            path = z.create_lambda_zip(handler_file=os.path.realpath(__file__))
++            self.assertTrue(os.path.isfile(path))
++            os.remove(path)
++
+     def test_should_use_lambda_packages(self):
+         z = Zappa(runtime='python2.7')
+ 
+diff --git a/zappa/__init__.py b/zappa/__init__.py
+index 08be42cb..629ef075 100644
+--- a/zappa/__init__.py
++++ b/zappa/__init__.py
+@@ -1,6 +1,6 @@
+ import sys
+ 
+-SUPPORTED_VERSIONS = [(2, 7), (3, 6), (3, 7)]
++SUPPORTED_VERSIONS = [(2, 7), (3, 6), (3, 7), (3, 8)]
+ 
+ python_major_version = sys.version_info[0]
+ python_minor_version = sys.version_info[1]
+diff --git a/zappa/core.py b/zappa/core.py
+index 09af9132..d4725dc0 100644
+--- a/zappa/core.py
++++ b/zappa/core.py
+@@ -665,7 +665,7 @@ def splitpath(path):
+                 # This is a special case!
+                 # SQLite3 is part of the _system_ Python, not a package. Still, it lives in `lambda-packages`.
+                 # Everybody on Python3 gets it!
+-                if self.runtime in ("python3.6", "python3.7"):
++                if self.runtime in ("python3.6", "python3.7", "python3.8"):
+                     print(" - sqlite==python3: Using precompiled lambda package")
+                     self.extract_lambda_package('sqlite3', temp_project_path)
+ 
+diff --git a/zappa/utilities.py b/zappa/utilities.py
+index 6e8b83d7..5facc968 100644
+--- a/zappa/utilities.py
++++ b/zappa/utilities.py
+@@ -181,8 +181,10 @@ def get_runtime_from_python_version():
+     else:
+         if sys.version_info[1] <= 6:
+             return 'python3.6'
+-        else:
++        elif sys.version_info[1] <= 7:
+             return 'python3.7'
++        else:
++            return 'python3.8'
+ 
+ ##
+ # Async Tasks

@@ -10,11 +10,15 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+	
+    shelltools.system(""" sed -i "s|link_whole: libdconf_common,|link_with: libdconf_common,|g" common/meson.build """)
+	
     shelltools.makedirs("build")
     shelltools.cd("build")
     shelltools.system("meson .. --prefix=/usr --sysconfdir=/etc -Dwith-dbus-service-dir=/usr/share/dbus-1/services \
         -Dwith-dbus-system-service-dir=/usr/share/dbus-1/system-services -Dwith-gio-modules-dir=/usr/lib/gio/modules \
         -Denable-gtk-doc=false -Denable-man=true")
+    
     
 def build():
     shelltools.cd("build")

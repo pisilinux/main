@@ -24,4 +24,4 @@ def install():
     for method in ["GET", "POST", "HEAD"]:
         pisitools.dosym("/usr/bin/lwp-request", "/usr/bin/%s" % method)
 
-    pisitools.dodoc("Changes","README")
+    pisitools.dodoc("LICENSE","README*")

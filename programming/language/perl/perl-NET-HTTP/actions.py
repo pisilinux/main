@@ -22,4 +22,4 @@ def install():
     pisitools.remove("/usr/share/man/man3/Net::HTTP::NB.3pm")
     pisitools.remove("/usr/share/man/man3/Net::HTTP.3pm")
 
-    pisitools.dodoc("Changes", "MANIFEST", "README")
+    pisitools.dodoc("LICENSE", "MANIFEST", "README*")
