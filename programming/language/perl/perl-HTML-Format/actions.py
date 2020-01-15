@@ -22,5 +22,4 @@ def build():
 def install():
     perlmodules.install()
 
-    pisitools.dodoc("Changes", "README")
-
+    pisitools.dodoc("LICENSE", "README")

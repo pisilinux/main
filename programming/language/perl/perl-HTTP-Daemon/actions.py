@@ -21,4 +21,4 @@ def install():
     perlmodules.install()
     pisitools.remove("/usr/share/man/man3/HTTP::Daemon.3pm")
 
-    pisitools.dodoc("Changes", "MANIFEST", "README")
+    pisitools.dodoc("LICENCE", "README")
