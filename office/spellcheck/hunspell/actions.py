@@ -27,4 +27,4 @@ def install():
     for f in ("affixcompress", "makealias", "wordforms"):
         pisitools.dobin("src/tools/%s" % f)
 
-    pisitools.dodoc("ABOUT-NLS", "AUTHORS*", "BUGS", "COPYING*", "NEWS", "README*", "THANKS", "TODO")
+    pisitools.dodoc("ABOUT-NLS", "AUTHORS*", "COPYING*", "NEWS", "README*", "THANKS")
