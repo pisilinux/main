@@ -43,7 +43,8 @@ def setup():
                          --includedir=/usr/include/bind9 \
                          --enable-ipv6 \
                          --enable-largefile \
-                         --disable-static")
+                         --disable-static \
+                         PYTHON=/usr/bin/python3")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
