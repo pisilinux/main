@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.unlinkDir("%s/tcl8.6.8/pkgs/sqlite3.21.0" % get.workDIR())
+    shelltools.unlinkDir("%s/tcl8.6.10/pkgs/sqlite3.30.1.2" % get.workDIR())
     shelltools.cd("unix")
 
     autotools.autoreconf("-fi")
@@ -58,4 +58,4 @@ def install():
 
     pisitools.dosym("/usr/bin/tclsh8.6","/usr/bin/tclsh")
 
-    pisitools.dodoc("ChangeLog","changes","license.terms","README")
+    pisitools.dodoc("ChangeLog*","changes","license.terms","README.md")
