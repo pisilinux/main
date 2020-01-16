@@ -20,6 +20,9 @@ def setup():
     pisitools.dosed("src/msgs/history2.sql", 'isql\s', 'fbsql ')
     pisitools.dosed("src/msgs/messages2.sql", 'isql\s', 'fbsql ')
     pisitools.dosed("src/msgs/messages2.sql", 'ISQL\s', 'FBSQL ')
+    
+    #pisitools.dosed("src/jrd/perf.h", '#include <libio.h>', '')
+    
     shelltools.system("find ./ -name \*.sh -print0 | xargs -0 chmod +x")
     for d in ("btyacc", "editline", "icu"):
         shelltools.unlinkDir("extern/%s" % d)
