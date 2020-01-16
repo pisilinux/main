@@ -10,22 +10,20 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir="Firebird-%s-0" % get.srcVERSION()
+#WorkDir="Firebird-%s-0" % get.srcVERSION()
 
 def setup():
     shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
     #shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
-    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse" % get.CXXFLAGS())
+    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse -Wno-error=narrowing" % get.CXXFLAGS())
     pisitools.dosed("src/isql/isql.epp", '"isql\s', '"fbsql ')
     pisitools.dosed("src/msgs/history2.sql", 'isql\s', 'fbsql ')
     pisitools.dosed("src/msgs/messages2.sql", 'isql\s', 'fbsql ')
     pisitools.dosed("src/msgs/messages2.sql", 'ISQL\s', 'FBSQL ')
-    
-    #pisitools.dosed("src/jrd/perf.h", '#include <libio.h>', '')
-    
     shelltools.system("find ./ -name \*.sh -print0 | xargs -0 chmod +x")
-    for d in ("btyacc", "editline", "icu"):
-        shelltools.unlinkDir("extern/%s" % d)
+    #for d in ("btyacc", "editline", "icu"):
+        #shelltools.unlinkDir("extern/%s" % d)
+    shelltools.system("sh autogen.sh")
     autotools.autoreconf("-fi")
     autotools.configure("--prefix=/opt/firebird \
                          --disable-static \
@@ -39,7 +37,7 @@ def setup():
 def build():
     #Parallel build is broken
     #shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
-    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse" % get.CXXFLAGS())
+    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse -Wno-error=narrowing" % get.CXXFLAGS())
     autotools.make("-j1")
     shelltools.cd("gen")
     pisitools.dosed("install/makeInstallImage.sh", "exit 1", "# exit 1")
