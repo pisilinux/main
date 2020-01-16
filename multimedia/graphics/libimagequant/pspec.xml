@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libimagequant</Name>
+        <Homepage>https://pngquant.org/lib/</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>Palette quantization library that powers pngquant and other PNG optimizers</Summary>
+        <Description>Small, portable C library for high-quality conversion of RGBA images to 8-bit indexed-color (palette) images.</Description>
+        <Archive sha1sum="950dd2cc5b7f611f365caa072601da1f0379d6c6" type="targz">https://github.com/ImageOptim/libimagequant/archive/2.12.6.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libgcc</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">libimagequant_solibperm.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libimagequant</Name>
+        <RuntimeDependencies>
+            <Dependency>libgomp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libimagequant-devel</Name>
+        <Summary>Development files for libimagequant</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libimagequant</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-01-15</Date>
+            <Version>2.12.6</Version>
+            <Comment>First Pisi Release</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
