@@ -4,21 +4,25 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 #WorkDir="Imaging-%s" % get.srcVERSION()
 
+def build():
+    # suppress warnings
+    pisitools.cflags.add("-Wno-sign-compare")
+    # fix unused direct dependency analysis
+    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
+    pythonmodules.compile(pyVer="3")
+
 def install():
-    #pisitools.dosed("_imagingft.c", "<freetype/freetype.h>", "<freetype2/freetype.h>")
-    #pisitools.dosed("_imagingft.c", "<freetype/fterrors.h>", "<freetype2/fterrors.h>")
-    
     pythonmodules.install(pyVer="3")
-
-    for header in ["Imaging.h","ImPlatform.h"]:
-        pisitools.insinto("/usr/include/%s" % get.curPYTHON(), "src/libImaging/%s" % header)
-
-    pisitools.dodoc("README.rst")
-
+    # install header files
+    pisitools.insinto("/usr/include/python3.8/Imaging/", "src/libImaging/*.h")
+    
+    # 2020-01-15 ToDo
+    # * Add documentation
+    # * After Qt5 version bump, extract qt5 bindings(python3-pillow-qt5)
