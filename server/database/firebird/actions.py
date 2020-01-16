@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir="Firebird-%s-0" % get.srcVERSION()
+#WorkDir="Firebird-%s-0" % get.srcVERSION()
 
 def setup():
     shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
