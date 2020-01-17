@@ -1,0 +1,67 @@
+From 09861f0081e6729383808ac4803c7fd1f0ba6dd1 Mon Sep 17 00:00:00 2001
+From: Johan Klokkhammer Helsing <johan.helsing@qt.io>
+Date: Fri, 15 Nov 2019 11:52:46 +0100
+Subject: Fix detection of linux-dmabuf
+
+On some systems drm_fourcc.h is not in /usr/include, but in
+/usr/include/libdrm, and that path can be found through pkg-config. This is
+already done with the drm lib in qtbase/src/configure.json so this just tells
+the test (and the plugins) to use the include paths for the existing "drm" lib.
+
+Fixes: QTBUG-80075
+Change-Id: I84c8c1008724b49b6bedb4fc3ef398e292f1c6c7
+Reviewed-by: Andreas Cord-Landwehr <cordlandwehr@kde.org>
+Reviewed-by: Paul Olav Tvete <paul.tvete@qt.io>
+---
+ src/compositor/configure.json                                         | 4 ++--
+ src/hardwareintegration/compositor/dmabuf-server/dmabuf-server.pri    | 2 +-
+ .../compositor/linux-dmabuf-unstable-v1/linux-dmabuf-unstable-v1.pri  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/compositor/configure.json b/src/compositor/configure.json
+index 46caceff..0dbb3364 100644
+--- a/src/compositor/configure.json
++++ b/src/compositor/configure.json
+@@ -80,13 +80,13 @@
+             "label": "Linux dma-buf Buffer Sharing",
+             "type": "compile",
+             "test": "dmabuf_server_buffer",
+-            "use": "egl"
++            "use": "egl drm"
+         },
+         "dmabuf-client-buffer": {
+             "label": "Linux Client dma-buf Buffer Sharing",
+             "type": "compile",
+             "test": "dmabuf_client_buffer",
+-            "use": "egl"
++            "use": "egl drm"
+         },
+         "vulkan-server-buffer": {
+             "label": "Vulkan Buffer Sharing",
+diff --git a/src/hardwareintegration/compositor/dmabuf-server/dmabuf-server.pri b/src/hardwareintegration/compositor/dmabuf-server/dmabuf-server.pri
+index 2df10109..41f483c4 100644
+--- a/src/hardwareintegration/compositor/dmabuf-server/dmabuf-server.pri
++++ b/src/hardwareintegration/compositor/dmabuf-server/dmabuf-server.pri
+@@ -1,6 +1,6 @@
+ INCLUDEPATH += $$PWD
+ 
+-QMAKE_USE_PRIVATE += egl wayland-server
++QMAKE_USE_PRIVATE += egl drm wayland-server
+ 
+ SOURCES += \
+     $$PWD/dmabufserverbufferintegration.cpp
+diff --git a/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linux-dmabuf-unstable-v1.pri b/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linux-dmabuf-unstable-v1.pri
+index a7630040..4dbbae19 100644
+--- a/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linux-dmabuf-unstable-v1.pri
++++ b/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linux-dmabuf-unstable-v1.pri
+@@ -1,6 +1,6 @@
+ INCLUDEPATH += $$PWD
+ 
+-QMAKE_USE_PRIVATE += egl wayland-server
++QMAKE_USE_PRIVATE += egl drm wayland-server
+ 
+ CONFIG += wayland-scanner
+ WAYLANDSERVERSOURCES += $$PWD/../../../3rdparty/protocol/linux-dmabuf-unstable-v1.xml
+-- 
+cgit v1.2.1
+
