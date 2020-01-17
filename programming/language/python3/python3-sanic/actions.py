@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -7,16 +6,11 @@
 
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
-
-
-shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
 def build():
+    # fix AttributeError
+    pisitools.dosed("sanic/testing.py", "httpx.dispatch.ASGIDispatch", "httpx.ASGIDispatch")
     pythonmodules.compile(pyVer="3")
 
 def install():
     pythonmodules.install(pyVer="3")
-
-    pisitools.dodoc("README*","PKG-INFO","MANIFEST*")
