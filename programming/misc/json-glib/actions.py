@@ -8,6 +8,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 
 def setup():
@@ -20,7 +21,6 @@ def setup():
                      --bindir=/usr/lib32/bin \
                      --sbindir=/usr/lib32/sbin \
                      --datadir=/usr/lib32/share \
-                     --datarootdir=/usr/lib32/share \
                      --libexecdir=/usr/lib32/libexec \
                      --localedir=/usr/lib32/share/locale \
                    "
@@ -28,13 +28,13 @@ def setup():
         shelltools.export("CXX", "%s -m32" % get.CXX())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
 
-    autotools.configure(options)
+    mesontools.configure(options)
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
     
     
     
