@@ -4,24 +4,22 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-
 def setup():
-    #autotools.autoreconf("-vif")
-    
-    #autotools.configure("--disable-static")
-    
+    # suppress c compiler warnings
+    pisitools.cflags.add("-Wno-deprecated-declarations")
     mesontools.configure()
 
 def build():
     mesontools.build()
+    
+def check():
+    mesontools.build("test")
 
 def install():
     mesontools.install()
-
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "COPYING")
+    pisitools.dodoc("SPECIFICATION", "README", "COPYING")

@@ -12,10 +12,11 @@ from pisi.actionsapi import get
 def setup():
     # Remove .c file to be regenerated from .defs file
     shelltools.unlink("src/pynotify.c")
-
+    # suppress c compiler warnings
+    pisitools.cflags.add("-Wno-deprecated-declarations -Wno-implicit-function-declaration")
     autotools.autoreconf("-fi")
     autotools.configure()
-    
+    # fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
