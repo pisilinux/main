@@ -18,7 +18,7 @@ def setup():
 
 def build():
     qt5.make()
-    qt5.make("docs")
+    #qt5.make("docs")
 
 def install():
     #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQml")
@@ -26,10 +26,10 @@ def install():
     #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick")
     #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtQuick.2")
     #pisitools.insinto("/usr/lib/qt5/qml", "qml/QtTest")        
-    qt5.install("INSTALL_ROOT=%s install_docs" % get.installDIR())
+    qt5.install("INSTALL_ROOT=%s" % get.installDIR())
 
     #I hope qtchooser will manage this issue
     #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
         #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
-    pisitools.insinto("/usr/share/licenses/qt5-declarative/", "LICENSE*")
+    #pisitools.insinto("/usr/share/licenses/qt5-declarative/", "LICENSE*")
