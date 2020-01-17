@@ -16,7 +16,7 @@ def setup():
                          --disable-gconf \
                          --disable-unicode-dict \
                          --disable-emoji-dict \
-                         --enable-dconf \
+                         --disable-dconf \
                          --enable-wayland \
                          --enable-vala \
                          --enable-ui \
