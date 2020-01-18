@@ -6,16 +6,19 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
-    autotools.configure("--enable-static=no")
+    #autotools.autoreconf("-fi")
+    #autotools.configure("--enable-static=no")
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    
+    cmaketools.configure()
 
 def build():
-    autotools.make()
+    cmaketools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
