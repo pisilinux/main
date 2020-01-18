@@ -4,7 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-NoStrip = "/"
+#NoStrip = "/"
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
@@ -13,6 +13,9 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i 's/python /python3 /' qtdeclarative.pro \
+                                                    src/3rdparty/masm/masm.pri")
+    #shelltools.system("sed -i 's/python /python3 /' qtdeclarative/src/3rdparty/masm/masm.pri")
     shelltools.export("CFLAGS", "CXXFLAGS")
     qt5.configure()
 
@@ -32,4 +35,4 @@ def install():
     #for bin in shelltools.ls("%s/usr/lib/qt5/bin" % get.installDIR()):
         #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
-    #pisitools.insinto("/usr/share/licenses/qt5-declarative/", "LICENSE*")
+    pisitools.insinto("/usr/share/licenses/qt5-declarative/", "LICENSE*")
