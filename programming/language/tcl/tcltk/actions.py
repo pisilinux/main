@@ -44,4 +44,4 @@ def install():
 
     pisitools.dosym("/usr/bin/wish8.6", "/usr/bin/wish")
 
-    pisitools.dodoc("ChangeLog", "changes", "license.terms", "README")
+    pisitools.dodoc("ChangeLog", "changes", "license.terms", "README*")

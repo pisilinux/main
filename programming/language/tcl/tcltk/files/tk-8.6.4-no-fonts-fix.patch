@@ -1,0 +1,12 @@
+diff -pruN tk8.6.4.orig/unix/tkUnixRFont.c tk8.6.4/unix/tkUnixRFont.c
+--- tk8.6.4.orig/unix/tkUnixRFont.c	2015-02-27 02:13:18.000000000 +0900
++++ tk8.6.4/unix/tkUnixRFont.c	2015-06-10 14:35:20.639365954 +0900
+@@ -259,7 +259,7 @@ InitFont(
+      */
+ 
+     set = FcFontSort(0, pattern, FcTrue, NULL, &result);
+-    if (!set) {
++    if (!set || set->nfont == 0) {
+ 	ckfree(fontPtr);
+ 	return NULL;
+     }
