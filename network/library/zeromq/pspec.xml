@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>zeromq</Name>
+        <Homepage>https://github.com/zeromq/libzmq/</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <License>LGPL</License>
+        <PartOf>network.library</PartOf>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>ZeroMQ core engine in C++, implements ZMTP/3.1</Summary>
+        <Description>The ZeroMQ lightweight messaging kernel is a library which extends the standard socket interfaces with features traditionally provided by specialised messaging middleware products. ZeroMQ sockets provide an abstraction of asynchronous message queues, multiple messaging patterns, message filtering (subscriptions), seamless access to multiple transport protocols and more.</Description>
+        <Archive sha1sum="c76f42e5ecbd3db3a40519c55d985ef2968aabce" type="targz">https://github.com/zeromq/libzmq/archive/v4.3.2.tar.gz</Archive>
+        <Archive sha1sum="a100316bc2c74c8375a2a4b36bb839a84c950f83" type="targz" target="libzmq-4.3.2">https://github.com/zeromq/cppzmq/archive/v4.5.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libsodium-devel</Dependency>
+            <Dependency>openpgm-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+    
+    <Package>
+        <Name>zeromq</Name>
+        <Summary>ZeroMQ core engine in C++, implements ZMTP/3.1</Summary>
+        <RuntimeDependencies>
+            <Dependency>libsodium</Dependency>
+            <Dependency>openpgm</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/curve_keygen</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc/zeromq</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>zeromq-devel</Name>
+        <Summary>Development files for zeromq</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">zeromq</Dependency>
+            <Dependency>libsodium-devel</Dependency>
+            <Dependency>openpgm-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="header">/usr/include/zeromq</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2019-12-30</Date>
+            <Version>4.3.2</Version>
+            <Comment>First pisi release</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>

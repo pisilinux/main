@@ -1,0 +1,59 @@
+diff --git a/openpgm/pgm/version_generator.py b/openpgm/pgm/version_generator.py
+index e489aef..581eabe 100755
+--- a/openpgm/pgm/version_generator.py
++++ b/openpgm/pgm/version_generator.py
+@@ -1,19 +1,25 @@
+-#!/usr/bin/python
++#!/usr/bin/python3
+ 
+ import os
+ import platform
+ import time
+ 
+-build_date = time.strftime ("%Y-%m-%d")
+-build_time = time.strftime ("%H:%M:%S")
+-build_rev = filter (str.isdigit, "$Revision$")
++timestamp = time.gmtime(int(os.environ.get('SOURCE_DATE_EPOCH', time.time())))
++build_date = time.strftime ("%Y-%m-%d", timestamp)
++build_time = time.strftime ("%H:%M:%S", timestamp)
++build_rev = ''.join (list (filter (str.isdigit, "$Revision$")))
++build_system = platform.system()
++build_machine = platform.machine()
++if 'SOURCE_DATE_EPOCH' in os.environ:
++        build_system = 'BuildSystem'
++        build_machine = 'BuildMachine'
+ 
+-print """
++print ("""
+ /* vim:ts=8:sts=8:sw=4:noai:noexpandtab
+  * 
+  * OpenPGM version.
+  *
+- * Copyright (c) 2006-2011 Miru Limited.
++ * Copyright (c) 2006-2014 Miru Limited.
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+@@ -41,15 +47,16 @@
+ 
+ const unsigned pgm_major_version = 5;
+ const unsigned pgm_minor_version = 2;
+ const unsigned pgm_micro_version = 122;
+-const char* pgm_build_date = "%s";
+-const char* pgm_build_time = "%s";
+-const char* pgm_build_system = "%s";
+-const char* pgm_build_machine = "%s";
+-const char* pgm_build_revision = "%s";
++const char* pgm_build_date = "{0}";
++const char* pgm_build_time = "{1}";
++const char* pgm_build_system = "{2}";
++const char* pgm_build_machine = "{3}";
++const char* pgm_build_revision = "{4}";
+ 
+ 
+ /* eof */
+-"""%(build_date, build_time, platform.system(), platform.machine(), build_rev)
++""".format (build_date, build_time, build_system, build_machine, build_rev))
+ 
+ # end of file
++
