@@ -1,37 +1,49 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>python-enchant</Name>
-        <Homepage>http://www.rfk.id.au/software/pyenchant</Homepage>
+        <Homepage>https://github.com/pyenchant/pyenchant</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
+		<PartOf>programming.language.python</PartOf>
         <License>LGPLv3</License>
         <IsA>library</IsA>
-        <Summary>Spellchecking library for Python</Summary>
+        <Summary>Python bindings for the Enchant spellchecking system</Summary>
         <Description>python-enchant is an efficient Python module for Enchant spellchecker.</Description>
         <Archive sha1sum="92ca797bbef9660271c3a9269ff7eb841272044d" type="targz">https://pypi.python.org/packages/9e/54/04d88a59efa33fefb88133ceb638cdf754319030c28aadc5a379d82140ed/pyenchant-2.0.0.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>enchant-devel</Dependency>
             <Dependency>python-setuptools</Dependency>
+            <Dependency>enchant2-devel</Dependency>
+			<Dependency>python-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch level="1">enchant-2.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
         <Name>python-enchant</Name>
+		<Summary>Python bindings for the Enchant spellchecking system</Summary>
         <RuntimeDependencies>
-            <Dependency>enchant</Dependency>
-            <Dependency>python</Dependency>
+            <Dependency>enchant2</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="library">/usr/lib/python2*</Path>
+            <Path fileType="doc">/usr/share/doc/python-enchant</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2020-01-18</Date>
+            <Version>2.0.0</Version>
+            <Comment>Rebuild for new toolchain</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="4">
             <Date>2018-08-29</Date>
             <Version>2.0.0</Version>
