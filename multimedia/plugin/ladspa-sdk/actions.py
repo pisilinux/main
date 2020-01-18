@@ -10,10 +10,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir = "ladspa_sdk/src"
+WorkDir = "ladspa_sdk_%s/src" % get.srcVERSION()
 
 def setup():
-    pisitools.dosed("makefile", "-Werror", get.CFLAGS())
+    pisitools.dosed("Makefile", "-Werror", get.CFLAGS())
 
 def build():
     autotools.make('CC="%s" \
