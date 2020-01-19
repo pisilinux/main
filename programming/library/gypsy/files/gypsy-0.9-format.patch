@@ -1,0 +1,87 @@
+diff -up gypsy-0.9/src/gypsy-client.c.format gypsy-0.9/src/gypsy-client.c
+--- gypsy-0.9/src/gypsy-client.c.format	2011-12-06 13:59:36.000000000 +0100
++++ gypsy-0.9/src/gypsy-client.c	2017-10-02 23:54:53.450486922 +0200
+@@ -401,7 +401,7 @@ garmin_init (GIOChannel *channel)
+ 
+ 	if (status != G_IO_STATUS_NORMAL) {
+ 		GYPSY_NOTE (CLIENT, "GARMIN: Error writing \"Private Set Mode\" packet:\n%s", g_strerror (errno));
+-		g_set_error (&error, GYPSY_ERROR, errno, g_strerror (errno));
++		g_set_error (&error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 		return FALSE;
+ 	}
+ 
+@@ -428,7 +428,7 @@ garmin_init (GIOChannel *channel)
+ 
+ 	if (status != G_IO_STATUS_NORMAL) {
+ 		GYPSY_NOTE (CLIENT, "GARMIN: Error writing \"Start PVT Transfer\" packet:\n%s", g_strerror (errno));
+-		g_set_error (&error, GYPSY_ERROR, errno, g_strerror (errno));
++		g_set_error (&error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 		return FALSE;
+ 	}
+ 
+@@ -593,7 +593,7 @@ gypsy_client_start (GypsyClient *client,
+ 
+ 		if (priv->fd == -1) {
+ 			g_warning ("Error opening device %s: %s", priv->device_path, g_strerror (errno));
+-			g_set_error (error, GYPSY_ERROR, errno, g_strerror (errno));
++			g_set_error (error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 			return FALSE;
+ 		}
+ 
+@@ -602,7 +602,7 @@ gypsy_client_start (GypsyClient *client,
+ 
+ 			if (tcgetattr (priv->fd, &term) < 0) {
+ 				g_warning ("Error getting term: %s", g_strerror (errno));
+-				g_set_error (error, GYPSY_ERROR, errno, g_strerror (errno));
++				g_set_error (error, GYPSY_ERROR, "%s", errno, g_strerror (errno));
+ 				return FALSE;
+ 			}
+ 
+@@ -612,7 +612,7 @@ gypsy_client_start (GypsyClient *client,
+ 
+ 			if (tcsetattr (priv->fd, TCSAFLUSH, &term) < 0) {
+ 				g_warning ("Error setting term: %s", g_strerror (errno));
+-				g_set_error (error, GYPSY_ERROR, errno, g_strerror (errno));
++				g_set_error (error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 				return FALSE;
+ 			}
+ 		}
+@@ -653,7 +653,7 @@ gypsy_client_start (GypsyClient *client,
+ 
+ 	if (status != G_IO_STATUS_NORMAL) {
+ 		g_warning ("Error setting flags: %s", g_strerror (errno));
+-		g_set_error (error, GYPSY_ERROR, errno, g_strerror (errno));
++		g_set_error (error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 		return FALSE;
+ 	}
+ 
+@@ -662,7 +662,7 @@ gypsy_client_start (GypsyClient *client,
+ 
+ 	if (status != G_IO_STATUS_NORMAL) {
+ 		g_warning ("Error setting encoding: %s", g_strerror (errno));
+-		g_set_error (error, GYPSY_ERROR, errno, g_strerror (errno));
++		g_set_error (error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 		return FALSE;
+ 	}
+ 
+@@ -692,7 +692,7 @@ gypsy_client_start (GypsyClient *client,
+ 			}
+ 
+ 			g_warning ("Error connecting: %s", g_strerror (errno));
+-			g_set_error (error, GYPSY_ERROR, errno, g_strerror (errno));
++			g_set_error (error, GYPSY_ERROR, errno, "%s", g_strerror (errno));
+ 
+ 			g_source_remove (priv->error_id);
+ 			priv->error_id = 0;
+diff -up gypsy-0.9/src/main.c.format gypsy-0.9/src/main.c
+--- gypsy-0.9/src/main.c.format	2017-10-02 23:50:18.273403357 +0200
++++ gypsy-0.9/src/main.c	2017-10-02 23:55:37.686178566 +0200
+@@ -156,7 +156,7 @@ main (int    argc,
+ #if GLIB_CHECK_VERSION(2, 14, 0)
+ 		char *help;
+ 		help = g_option_context_get_help (context, TRUE, NULL);
+-		g_print (help);
++		g_print ("%s", help);
+ 		g_free (help);
+ #else
+ 		g_printerr ("Cannot parse arguments: %s\n", error->message);
