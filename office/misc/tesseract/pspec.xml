@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>tesseract</Name>
+        <Homepage>https://github.com/tesseract-ocr/tesseract</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>office.misc</PartOf>
+        <License>APACHE</License>
+        <IsA>app:console</IsA>
+        <Summary>Tesseract OCR Engine</Summary>
+        <Description>This package contains an OCR engine - libtesseract and a command line program - tesseract. Tesseract 4 adds a new neural net (LSTM) based OCR engine which is focused on line recognition, but also still supports the legacy Tesseract OCR engine of Tess</Description>
+        <Archive sha1sum="25318bb3f57ef72d5736730739451673f4a66f51" type="targz">https://github.com/tesseract-ocr/tesseract/archive/4.1.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>leptonica-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>libgomp</Dependency>
+            <!-- dependecies for documentation -->
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>asciidoc</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>tesseract</Name>
+        <Summary>Tesseract OCR Engine</Summary>
+        <RuntimeDependencies>
+            <Dependency>leptonica</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>tiff</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libtesseract.so.4.0.1</Path>
+            <Path fileType="library">/usr/lib/libtesseract.so.4</Path>
+            <Path fileType="library">/usr/lib/libtesseract.so</Path>
+            <Path fileType="executable">/usr/bin/tesseract</Path>
+            <Path fileType="data">/usr/share/tessdata</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>tesseract-devel</Name>
+        <Summary>Development files for tesseract</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">tesseract</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/pkgconfig/tesseract.pc</Path>
+            <Path fileType="header">/usr/include/tesseract</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>tesseract-tools</Name>
+        <Summary>Tools for tesseract</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">tesseract</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>leptonica</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>icu4c</Dependency>
+            <Dependency>pango</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/set_unicharset_properties</Path>
+            <Path fileType="executable">/usr/bin/language-specific.sh</Path>
+            <Path fileType="executable">/usr/bin/unicharset_extractor</Path>
+            <Path fileType="executable">/usr/bin/tesstrain_utils.sh</Path>
+            <Path fileType="executable">/usr/bin/combine_lang_model</Path>
+            <Path fileType="executable">/usr/bin/classifier_tester</Path>
+            <Path fileType="executable">/usr/bin/merge_unicharsets</Path>
+            <Path fileType="executable">/usr/bin/combine_tessdata</Path>
+            <Path fileType="executable">/usr/bin/shapeclustering</Path>
+            <Path fileType="executable">/usr/bin/ambiguous_words</Path>
+            <Path fileType="executable">/usr/bin/dawg2wordlist</Path>
+            <Path fileType="executable">/usr/bin/wordlist2dawg</Path>
+            <Path fileType="executable">/usr/bin/tesstrain.sh</Path>
+            <Path fileType="executable">/usr/bin/lstmtraining</Path>
+            <Path fileType="executable">/usr/bin/cntraining</Path>
+            <Path fileType="executable">/usr/bin/mftraining</Path>
+            <Path fileType="executable">/usr/bin/text2image</Path>
+            <Path fileType="executable">/usr/bin/lstmeval</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="2">
+            <Date>2020-01-19</Date>
+            <Version>4.1.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+        <Update release="1">
+            <Date>2019-01-25</Date>
+            <Version>4.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

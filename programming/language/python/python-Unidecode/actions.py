@@ -5,13 +5,11 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pythonmodules
-from pisi.actionsapi import get
-
-WorkDir = "Unidecode-%s" % get.srcVERSION()
+from pisi.actionsapi import pisitools
 
 def build():
     pythonmodules.compile()
 
 def install():
     pythonmodules.install()
-
+    pisitools.rename("/usr/bin/unidecode","unidecode-py2")
