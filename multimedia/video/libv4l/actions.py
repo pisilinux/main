@@ -25,12 +25,21 @@ def setup():
 
 
 def build():
-    autotools.make()
+	if get.buildTYPE() == "emul32":
+		autotools.make("-C lib")
+	else:
+		autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    if get.buildTYPE() == "emul32": return
+	if get.buildTYPE() == "emul32":
+		autotools.make("MAKEFLAGS='-j1' -C lib DESTDIR=%s install" % get.installDIR())
+		pisitools.removeDir("/emul32")
+	else:
+		autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+	
+    
+    #if get.buildTYPE() == "emul32": return
 
-    pisitools.dodoc("ChangeLog", "COPYING*", "README*", "TODO")
-    pisitools.insinto("/%s/%s/" % (get.docDIR(), get.srcNAME()), "contrib")
+	pisitools.dodoc("ChangeLog", "COPYING*", "README*", "TODO")
+	pisitools.insinto("/%s/%s/" % (get.docDIR(), get.srcNAME()), "contrib")
 
