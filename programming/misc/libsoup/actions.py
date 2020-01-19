@@ -8,37 +8,38 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 def setup():
-    options = "\
-                --disable-static \
-                --without-apache-httpd \
-                --without-apache-module-dir \
-                --disable-tls-check \
-              "
-
-    if get.buildTYPE() == "_emul32":
-        options += " --libdir=/usr/lib32 \
-                     --without-krb5-config \
-                     --bindir=/_emul32/bin \
-                     --sbindir=/_emul32/sbin"
-
-
-        shelltools.export("CC", "%s -m32" % get.CC())
-        shelltools.export("CXX", "%s -m32" % get.CXX())
-        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-
-    autotools.configure(options)
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
-def build():
-    autotools.make()
-
-def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
+    options = " -Dbrotli=disabled \
+                -Dintrospection=enabled"
 
     #if get.buildTYPE() == "_emul32":
-        #pisitools.removeDir("/_emul32")
+        #options += " --libdir=/usr/lib32 \
+                     #--bindir=/usr/bin32 \
+                     #--sbindir=/usr/sbin32 \
+                     #-Dintrospection=disabled \
+                     #-Dtls_check=false"
+
+
+        #shelltools.export("CC", "%s -m32" % get.CC())
+        #shelltools.export("CXX", "%s -m32" % get.CXX())
+        #shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+
+    mesontools.configure(options)
+    
+    
+
+    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+
+def build():
+    mesontools.build
+
+def install():
+    mesontools.install()
+
+
+    if get.buildTYPE() == "_emul32":
+        pisitools.removeDir("/usr/bin32")
+        pisitools.removeDir("/usr/sbin32")
     pisitools.dodoc("README", "NEWS", "AUTHORS")
