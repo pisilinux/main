@@ -11,14 +11,14 @@ from pisi.actionsapi import get
 
 #WorkDir = "flite-%s-current" % get.srcVERSION()
 
-NoStrip = ["/usr/lib"]
    
 def setup():
 	#shelltools.system("sed '/^#VOXES.*$/d; s/+//g; s/cmu_indic_lex/&\nVOXES = cmu_us_kal16 cmu_us_slt/' config/android.lv >config/pisilinux.lv")
 	#shelltools.system("sed -i '/$(INSTALL) -m 755 $(BINDIR)\/flite_time $(DESTDIR)$(INSTALLBINDIR)/d' main/Makefile")
 	shelltools.export("LDFLAGS", "-lasound -lm")
 	autotools.configure("--prefix=/usr \
-						 --with-audio=alsa \
+		                 --enable-shared \
+                         --with-audio=alsa \
 	                     --with-vox=cmu_us_kal16")
 
 def build():
@@ -26,5 +26,7 @@ def build():
 
 def install():
     autotools.install()
+    
+    pisitools.remove("/usr/lib/*.a")
 
     pisitools.dodoc("COPYING", "README*")

@@ -10,12 +10,23 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 
 def setup():
-    autotools.configure("--prefix=/usr \
-                        --enable-introspection \
-                        --enable-gtk-doc \
-                        --disable-umockdev")
+
+   options = "--disable-umockdev  \
+             "
+
+   if get.buildTYPE() == "emul32":
+      options += "--disable-introspection \
+                  --disable-gtk-doc \
+                 "
+   else:
+      options += "--enable-introspection \
+                  --enable-gtk-doc \
+                 "
+   
+
+   autotools.configure(options)
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+   pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     
 def build():
     autotools.make()

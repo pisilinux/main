@@ -9,7 +9,8 @@ from pisi.actionsapi import pisitools
 
 def setup():
     autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-good package' \
-                         --with-package-origin='http://www.pisilinux.org'")
+                         --with-package-origin='http://www.pisilinux.org' \
+                         --disable-qt")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 

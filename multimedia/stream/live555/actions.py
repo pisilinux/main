@@ -16,7 +16,7 @@ def setup():
 
 def build():
     # http://bugs.gentoo.org/show_bug.cgi?id=247844
-    autotools.make('-j1 LINK_OPTS="-L. %s"' % get.LDFLAGS().replace("-Wl,--as-needed",""))
+    autotools.make('-j1 LINK_OPTS="-L. %s -lssl -lcrypto"' % get.LDFLAGS().replace("-Wl,--as-needed",""))
 
 def install():
     for directory in ["BasicUsageEnvironment", "groupsock", "liveMedia", "UsageEnvironment"]:

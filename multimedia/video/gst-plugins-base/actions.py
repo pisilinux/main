@@ -17,6 +17,7 @@ def setup():
     autotools.configure("--enable-introspection=%(introspection)s \
                          --with-package-name='PisiLinux gstreamer-plugins-base package' \
                          --with-package-origin='http://www.pisilinux.org' \
+                         --disable-examples \
                         " % opts)
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")

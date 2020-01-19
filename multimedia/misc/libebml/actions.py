@@ -7,20 +7,24 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
 def setup():
     shelltools.export("CFLAGS", "%s -fPIC" % get.CFLAGS())
     shelltools.export("CXXFLAGS", "%s -fPIC" % get.CXXFLAGS())
-    autotools.configure()
+    #autotools.autoreconf("-vfi")
+    #autotools.configure()
+    
+    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib")
 
 def build():
-    autotools.make("PREFIX=/usr")
+    cmaketools.make()
 
 def install():
-    autotools.install("libdir=%s/usr/lib" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     # No static libs
-    pisitools.remove("/usr/lib/*.a")
+    #pisitools.remove("/usr/lib/*.a")
 
     pisitools.dodoc("LICENSE.*")

@@ -7,23 +7,26 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
 def setup():
     #pisitools.dosed("make/linux/Makefile", "CXXFLAGS=", "CXXFLAGS+=")
-    autotools.configure()
+    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib")
 
 def build():
     #shelltools.cd("make/linux")
-    autotools.make("PREFIX=/usr \
-                   LIBEBML_INCLUDE_DIR=/usr/include/ebml \
-                   LIBEBML_LIB_DIR=/usr/lib")
+    #autotools.make("PREFIX=/usr \
+                   #LIBEBML_INCLUDE_DIR=/usr/include/ebml \
+                   #LIBEBML_LIB_DIR=/usr/lib")
+                   
+    cmaketools.make()
 
 def install():
     #shelltools.cd("make/linux")
-    autotools.install("libdir=%s/usr/lib" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     # No static libs
-    pisitools.remove("/usr/lib/*.a")
+    #pisitools.remove("/usr/lib/*.a")
 
     pisitools.dodoc("ChangeLog")
