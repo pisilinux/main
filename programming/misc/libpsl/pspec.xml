@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libpsl</Name>
+        <Homepage>https://github.com/rockdaboot/libpsl</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>Public Suffix List library</Summary>
+        <Description>C library to handle the Public Suffix List. A Public Suffix List is a collection of Top Level Domains (TLDs) suffixes. TLDs include Global Top Level Domains (gTLDs) like .com and .net; Country Top Level Domains (ccTLDs) like .de and .cn; and Brand Top Level Domains like .apple and .google</Description>
+        <Archive sha1sum="142a4abbf7ebab9651942b6e7a1b334742307f06" type="targz">https://github.com/rockdaboot/libpsl/releases/download/libpsl-0.21.0/libpsl-0.21.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>gtk-doc</Dependency>
+         </BuildDependencies>
+         <Patches>
+             <Patch level="1">libpsl-0.21.0-build-fix.patch</Patch>
+             <Patch level="1">libpsl-gtk-doc-1.30-fix.patch</Patch>
+        </Patches>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="effective_tld_names.dat">public_suffix_list.dat</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="test_psl.txt">test_psl.txt</AdditionalFile>
+        </AdditionalFiles>
+    </Source>
+
+    <Package>
+        <Name>libpsl</Name>
+        <RuntimeDependencies>
+             <Dependency>icu4c</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+			<Path fileType="doc">/usr/share/gtk-doc</Path>
+            <Path fileType="data">/usr/share/libpsl</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+        </Files>
+    </Package>
+	
+   <Package>
+        <Name>libpsl-32bit</Name>
+        <BuildType>emul32</BuildType>
+        <PartOf>emul32</PartOf>
+        <BuildDependencies>
+            <Dependency>icu4c-32bit</Dependency>
+         </BuildDependencies>
+        <RuntimeDependencies>
+             <Dependency>icu4c-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libpsl-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">libpsl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+			<Path fileType="library">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-01-19</Date>
+            <Version>0.21.0</Version>
+            <Comment>First release</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.coö</Email>
+        </Update>
+    </History>
+</PISI>
