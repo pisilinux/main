@@ -24,7 +24,6 @@ def setup():
                           -D CMAKE_SKIP_RPATH=ON \
                            DESTDIR=%s  \
                           -DBUILD_EXAMPLES=1 \
-                          -DBUILD_SWIG_PYTHON_SUPPORT=1 \
                           -DINSTALL_C_EXAMPLES=1 \
                           -DINSTALL_PYTHON_EXAMPLES=1 \
                           -DINSTALL_OCTAVE_EXAMPLES=1 \
@@ -48,7 +47,23 @@ def setup():
                           -DWITH_TIFF=1 \
                           -DWITH_V4L=1 \
                           -DWITH_XINE=1 \
-                          -DCMAKE_SKIP_RPATH=1", sourceDir="..")
+                          -DWITH_VTK=OFF \
+                          -DWITH_QT=OFF \
+                          -DWITH_OPENGL=ON \
+                          -DWITH_OPENCL=ON \
+                          -DWITH_VULKAN=ON \
+                          -DCMAKE_SKIP_RPATH=1 \
+                          -DBUILD_opencv_python3=ON \
+                          -DBUILD_opencv_python2=ON \
+                          -DBUILD_IPP_IW=OFF \
+                          -DBUILD_ITT=OFF \
+                          -DBUILD_JAVA=OFF \
+                          -DBUILD_PROTOBUF=OFF \
+                          -DBUILD_opencv_java_bindings_generator=OFF \
+                          -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
+                          -DOPENCV_GENERATE_PKGCONFIG=ON \
+                          -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-%s/modules \
+                          " % (get.installDIR(), get.srcVERSION()), sourceDir="..")
                           #  -DUSE_O3=OFF
                           #  -DUSE_OMIT_FRAME_POINTER=OFF
 
