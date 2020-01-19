@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir = "soundtouch"
+#WorkDir = "soundtouch"
 
 def setup():
     pisitools.dosed("source/SoundStretch/Makefile.*", "-O3", "")
