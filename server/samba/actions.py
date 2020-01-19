@@ -33,7 +33,6 @@ def setup():
                          --disable-rpath \
                          --disable-rpath-install \
                          --enable-fhs \
-                         --enable-gnutls \
                          --nopyc \
                          --nopyo \
                          --with-acl-support \
@@ -48,6 +47,7 @@ def setup():
                          --with-syslog \
                          --with-utmp \
                          --with-winbind \
+                         --without-systemd \
                          --bundled-libraries=!tdb,!talloc,!pytalloc-util,!tevent,!popt \
                         " % MODULES)
     # !ldb,!pyldb-util
