@@ -10,49 +10,93 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("./configure --prefix=/usr \
+	shelltools.system("./configure --prefix=/usr \
                             --mandir=/usr/share/man \
                             --disable-debug \
                             --disable-static \
                             --disable-stripping \
+                            --enable-version3 \
+                            --enable-nonfree \
                             --enable-avfilter \
                             --enable-avresample \
-                            --enable-fontconfig \
-                            --enable-gnutls \
+                            --enable-frei0r \
                             --enable-gpl \
+                            --enable-ladspa \
+                            --enable-libaom \
+                            --enable-libaribb24 \
                             --enable-libass \
                             --enable-libbluray \
+                            --enable-libbs2b \
+                            --enable-libcelt \
+                            --enable-libcdio \
+                            --enable-libcodec2 \
+                            --enable-libdav1d \
+                            --enable-libdavs2 \
+                            --enable-libdc1394 \
+                            --enable-libfdk-aac \
+                            --enable-libflite \
+                            --enable-libfontconfig \
                             --enable-libfreetype \
+                            --enable-libfribidi \
+                            --enable-libgme \
                             --enable-libgsm \
+                            --enable-libiec61883 \
+                            --enable-libilbc \
+                            --enable-libjack \
+                            --enable-libkvazaar \
+                            --enable-liblensfun \
                             --enable-libmodplug \
                             --enable-libmp3lame \
                             --enable-libopencore_amrnb \
                             --enable-libopencore_amrwb \
                             --enable-libopenjpeg \
+                            --enable-libopenmpt \
                             --enable-libopus \
                             --enable-libpulse \
+                            --enable-librsvg \
+                            --enable-librubberband \
                             --enable-librtmp \
+                            --enable-libshine \
+                            --enable-libsnappy \
+                            --enable-libsoxr \
                             --enable-libspeex \
                             --enable-libtheora \
+                            --enable-libtwolame \
+                            --enable-libvidstab \
                             --enable-libv4l2 \
+                            --enable-libvo-amrwbenc \
                             --enable-libvorbis \
                             --enable-libvpx \
+                            --enable-libwavpack \
+                            --enable-libwebp \
                             --enable-libx264 \
                             --enable-libx265 \
+                            --enable-libxavs \
+                            --enable-libxavs2 \
+                            --enable-libxcb \
                             --enable-libxvid \
+                            --enable-libxml2 \
+                            --enable-libzmq \
+                            --enable-libzimg \
                             --enable-pic \
                             --enable-postproc \
                             --enable-runtime-cpudetect \
                             --enable-shared \
                             --enable-swresample \
                             --enable-vdpau \
-                            --enable-version3 \
-                            --enable-libdc1394 \
-                            --enable-libcelt \
-                            --enable-frei0r \
-                            --enable-libcdio \
-                            --enable-libvo-amrwbenc \
-                            --enable-nonfree")
+                            --enable-openal \
+                            --enable-opencl \
+                            --enable-openssl \
+                            --enable-libdrm \
+                            --enable-libmfx \
+                            --enable-nvdec \
+                            --enable-nvenc \
+                            --enable-vaapi \
+                            --enable-vdpau \
+                            --enable-omx \
+                            --extra-ldflags='-lasound -lm' \
+                            --cc='clang -fuse-ld=lld -rtlib=compiler-rt' \
+                            --cxx='clang++ -fuse-ld=lld -rtlib=compiler-rt'")
 
 def build():
     autotools.make()
