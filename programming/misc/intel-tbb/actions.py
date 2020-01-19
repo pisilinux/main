@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 
 #WorkDir="tbb%soss" % (get.srcVERSION().replace(".", ""))
-WorkDir="tbb-2018_U5"
+WorkDir="tbb-%s" % get.srcVERSION()
 
 
 def build():
