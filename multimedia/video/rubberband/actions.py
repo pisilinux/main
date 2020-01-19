@@ -6,13 +6,18 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
+	shelltools.export("JAVA_HOME", "/usr/lib/jvm/java-7-openjdk")
+	
+	autotools.autoreconf("-vfi")
+	autotools.configure()
 
 def build():
     autotools.make()
+    autotools.make("jni")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
