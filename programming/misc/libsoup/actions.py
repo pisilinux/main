@@ -19,6 +19,7 @@ def setup():
 
     if get.buildTYPE() == "_emul32":
         options += " --libdir=/usr/lib32 \
+                     --without-krb5-config \
                      --bindir=/_emul32/bin \
                      --sbindir=/_emul32/sbin"
 
