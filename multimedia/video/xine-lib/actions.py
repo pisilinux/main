@@ -39,11 +39,15 @@ def setup():
                       --enable-mmap \
                       --enable-modplug \
                       --enable-opengl \
+                      --disable-vaapi \
+                      --disable-vdpau \
                       --disable-samba \
                       --enable-xinerama \
                       --with-external-a52dec \
                       --with-external-ffmpeg \
                       --with-external-libmad \
+                      --with-libaom \
+                      --with-dav1d \
                       --with-vorbis \
                       --with-x \
                       --with-xcb \
