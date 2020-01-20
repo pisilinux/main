@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>git</Name>
@@ -8,24 +8,25 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
+        <PartOf>programming.scm</PartOf>
         <License>GPLv2</License>
         <Summary>Fast Version Control System</Summary>
         <Description>Git is a fast, scalable, distributed revision control system with an unusually rich command set that provides both high-level operations and full access to internals.</Description>
-        <Archive sha1sum="1930a8df36a193a7b5792b47ef3a904217b55bd9" type="tarxz">https://www.kernel.org/pub/software/scm/git/git-2.23.1.tar.xz</Archive>
+        <Archive sha1sum="6ea4b553fbdd9112777902f2f6754439bdc20167" type="tarxz">https://www.kernel.org/pub/software/scm/git/git-2.25.0.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>tcltk-devel</Dependency>
+            <Dependency>libpcre2-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>libpcre-devel</Dependency>
-            <Dependency>libpcre2-devel</Dependency>
-            <Dependency>curl-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
             <Dependency>expat-devel</Dependency>
-            <Dependency>xmlto</Dependency>
-            <Dependency>asciidoc</Dependency>
+            <Dependency>tcltk-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
             <Dependency>perl-Error</Dependency>
-            <Dependency>perl</Dependency>
-            <Dependency>libxslt</Dependency>
             <Dependency>util-linux</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>asciidoc</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>xmlto</Dependency>
+            <Dependency>perl</Dependency>
             <!--Needed for emacs-Git package
             <Dependency>emacs</Dependency>-->
         </BuildDependencies>
@@ -40,15 +41,16 @@
 
     <Package>
         <Name>git</Name>
+        <Summary>Fast Version Control System</Summary>
         <IsA>app:console</IsA>
         <RuntimeDependencies>
+            <Dependency version="current">perl-Git</Dependency>
             <Dependency>perl-String-ShellQuote</Dependency>
             <Dependency>perl-Net-SMTP-SSL</Dependency>
             <Dependency>perl-Authen-SASL</Dependency>
             <Dependency>perl-libwww</Dependency>
             <Dependency>libpcre</Dependency>
             <Dependency>libpcre2</Dependency>
-            <Dependency version="current">perl-Git</Dependency>
             <Dependency>openssh</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>rsync</Dependency>
@@ -62,7 +64,39 @@
             <Path fileType="data">/etc/bash_completion.d</Path>
             <Path fileType="data">/usr/share/git-core</Path>
             <Path fileType="locale">/usr/share/locale</Path>
-            <Path fileType="man">/usr/share/man</Path>
+            <!-- to fix "belongs in multiple packages" warning -->
+            <Path fileType="man">/usr/share/man/man1/git.1*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-a*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-b*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-ca*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-ch*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-cl*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-co*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-credential-c*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-credential-s*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-credential.*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-cv*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-di*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-de*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-f*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-gc*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-ge*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-gr*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-h*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-i*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-l*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-m*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-n*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-p*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-q*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-r*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-s*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-t*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-u*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-v*</Path>
+            <Path fileType="man">/usr/share/man/man1/git-w*</Path>
+            <Path fileType="man">/usr/share/man/man5/</Path>
+            <Path fileType="man">/usr/share/man/man7/</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
@@ -106,52 +140,6 @@
         </Files>
     </Package>
 
-    <!--    <Package>
-        <Name>emacs-Git</Name>
-        <IsA>data</IsA>
-        <PartOf>editor.emacs</PartOf>
-        <Summary>Git support for emacs</Summary>
-        <RuntimeDependencies>
-            <Dependency>emacs</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="data">/usr/share/emacs/site-lisp/git*</Path>
-            <Path fileType="doc">/usr/share/doc/emacs-git</Path>
-        </Files>
-    </Package> -->
-
-    <!--Package>
-        <Name>git-svn</Name>
-        <IsA>app:console</IsA>
-        <Summary>Git tools for importing Subversion repositories</Summary>
-        <RuntimeDependencies>
-            <Dependency version="current">git</Dependency>
-            <Dependency>subversion</Dependency>
-            <Dependency>perl-Term-ReadKey</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="executable">/usr/libexec/git-core/*svn*</Path>
-            <Path fileType="man">/usr/share/man/man1/*svn*.1*</Path>
-        </Files>
-    </Package-->
-
-    <!--Package>
-        <Name>git-cvs</Name>
-        <IsA>app:console</IsA>
-        <Summary>Git tools for importing CVS repositories</Summary>
-        <RuntimeDependencies>
-            <Dependency version="current">git</Dependency>
-            <Dependency>cvs</Dependency>
-            <Dependency>cvsps</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="executable">/usr/libexec/git-core/*cvs*</Path>
-            <Path fileType="executable">/usr/bin/git-cvsserver</Path>
-            <Path fileType="man">/usr/share/man/man1/*cvs*.1*</Path>
-            <Path fileType="man">/usr/share/man/man7/*cvs*.7*</Path>
-        </Files>
-    </Package-->
-
     <Package>
         <Name>gitk</Name>
         <IsA>app:gui</IsA>
@@ -182,7 +170,11 @@
             <Path fileType="data">/usr/share/git-gui</Path>
             <Path fileType="man">/usr/share/man/man1/git-gui.1*</Path>
             <Path fileType="man">/usr/share/man/man1/git-citool.1*</Path>
+            <Path fileType="data">/usr/share/applications/git-gui.desktop</Path>
         </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/git-gui.desktop">git-gui.desktop</AdditionalFile>
+        </AdditionalFiles>
     </Package>
 
     <Package>
@@ -197,6 +189,7 @@
             <Path fileType="data">/var/www/localhost</Path>
             <Path fileType="config">/etc/conf.d/gitweb</Path>
             <Path fileType="config">/etc/apache2/conf.d</Path>
+            <Path fileType="man">/usr/share/man/man1/gitweb.1*</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/gitweb">gitweb.confd</AdditionalFile>
@@ -204,7 +197,64 @@
         </AdditionalFiles>
     </Package>
 
+    <!--
+    <Package>
+        <Name>emacs-Git</Name>
+        <IsA>data</IsA>
+        <PartOf>editor.emacs</PartOf>
+        <Summary>Git support for emacs</Summary>
+        <RuntimeDependencies>
+            <Dependency>emacs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/emacs/site-lisp/git*</Path>
+            <Path fileType="doc">/usr/share/doc/emacs-git</Path>
+        </Files>
+    </Package>
+    -->
+
+    <!--Package>
+        <Name>git-svn</Name>
+        <IsA>app:console</IsA>
+        <Summary>Git tools for importing Subversion repositories</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">git</Dependency>
+            <Dependency>subversion</Dependency>
+            <Dependency>perl-Term-ReadKey</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/libexec/git-core/*svn*</Path>
+            <Path fileType="man">/usr/share/man/man1/*svn*.1*</Path>
+        </Files>
+    </Package-->
+
+    <!--
+    <Package>
+        <Name>git-cvs</Name>
+        <IsA>app:console</IsA>
+        <Summary>Git tools for importing CVS repositories</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">git</Dependency>
+            <Dependency>cvs</Dependency>
+            <Dependency>cvsps</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/libexec/git-core/*cvs*</Path>
+            <Path fileType="executable">/usr/bin/git-cvsserver</Path>
+            <Path fileType="man">/usr/share/man/man1/*cvs*.1*</Path>
+            <Path fileType="man">/usr/share/man/man7/*cvs*.7*</Path>
+        </Files>
+    </Package>
+    -->
+
     <History>
+        <Update release="7">
+            <Date>2020-01-20</Date>
+            <Version>2.25.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="6">
             <Date>2020-01-18</Date>
             <Version>2.23.1</Version>

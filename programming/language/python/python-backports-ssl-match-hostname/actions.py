@@ -11,5 +11,4 @@ def build():
 
 def install():
     pythonmodules.install()
-
-    pisitools.dodoc("PKG-INFO")
+    pisitools.dodoc("LICENSE*")
