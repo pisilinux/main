@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>python-pillow</Name>
@@ -8,57 +8,85 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
+        <PartOf>programming.language.python</PartOf>
         <License>as-is</License>
         <IsA>library</IsA>
-        <Summary>PIL is the Python Imaging Library.</Summary>
-        <Description>The Python Imaging Library (PIL) adds image processing capabilities to your Python interpreter. This library supports many file formats, and provides powerful image processing and graphics capabilities.</Description>
-        <Archive sha1sum="31cc46de95b21fd2c6634c0eb574f5278f120991" type="targz">https://github.com/python-pillow/Pillow/archive/5.2.0.tar.gz</Archive>
+        <Summary>The friendly PIL fork (Python Imaging Library) </Summary>
+        <Description>Pillow is the friendly PIL fork by Alex Clark and Contributors. PIL is the Python Imaging Library by Fredrik Lundh and Contributors. As of 2019, Pillow development is supported by Tidelift.</Description>
+        <Archive sha1sum="f155a3296a73c1cfc9b38bcebe03a626ad931b82" type="targz">https://github.com/python-pillow/Pillow/archive/6.2.2.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>python3-tk</Dependency>
-            <Dependency>python-devel</Dependency>
-            <Dependency>lcms-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>libimagequant-devel</Dependency>
             <Dependency>python-setuptools</Dependency>
-            <Dependency>python3-setuptools</Dependency>
-            <Dependency>python3-qt5-devel</Dependency>
-            <Dependency>python-qt5-devel</Dependency>
+            <Dependency>openjpeg2-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>python-devel</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
             <Dependency>webp-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <!--
+            <Dependency>lcms-devel</Dependency>
             <Dependency>tcltk-devel</Dependency>
             <Dependency>tcl-devel</Dependency>
-            <Dependency>tiff-devel</Dependency>
-            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>python3-tk</Dependency>
+            <Dependency>python3-qt5-devel</Dependency>
+            <Dependency>python-qt5-devel</Dependency>
             <Dependency>sane-backends-devel</Dependency>
-            <Dependency>libjpeg-turbo-devel</Dependency>
+            -->
         </BuildDependencies>        
     </Source>
 
     <Package>
         <Name>python-pillow</Name>
+        <Summary>The friendly PIL fork (Python Imaging Library) </Summary>
         <RuntimeDependencies>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>libimagequant</Dependency>
+            <Dependency>openjpeg2</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>lcms2</Dependency>
             <Dependency>tiff</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>python3-tk</Dependency>
-            <Dependency>python</Dependency>
-            <Dependency>lcms</Dependency>
-            <Dependency>python-setuptools</Dependency>
-            <Dependency>python3-setuptools</Dependency>
-            <Dependency>python3-qt5</Dependency>
-            <Dependency>python-qt5</Dependency>
             <Dependency>webp</Dependency>
+            <Dependency>zlib</Dependency>
+            <!--
             <Dependency>tcltk</Dependency>
             <Dependency>tcl</Dependency>
             <Dependency>sane-backends</Dependency>
-            <Dependency>libjpeg-turbo</Dependency>
             <Dependency>xdg-utils</Dependency>
+            <Dependency>python3-qt5</Dependency>
+            <Dependency>python-qt5</Dependency>
+            -->
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="header">/usr/include</Path>
             <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="library">/usr/lib</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>python-pillow-devel</Name>
+        <Summary>Development files for python-pillow</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">python-pillow</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>python-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2020-01-20</Date>
+            <Version>6.2.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="4">
             <Date>2018-08-30</Date>
             <Version>5.2.0</Version>
