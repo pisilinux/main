@@ -4,37 +4,24 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-import os
-
-#WorkDir = "pygame-%srelease" % get.srcVERSION()
 docdir = "%s/%s" % (get.docDIR(), get.srcNAME())
-pyversion = get.curPYTHON().replace("python", "")
-arch = get.ARCH().replace("-", "_")
-
-def fixperms(d):
-    for root, dirs, files in os.walk(d):
-        for name in dirs:
-            shelltools.chmod(os.path.join(root, name), 0755)
-        for name in files:
-            shelltools.chmod(os.path.join(root, name), 0644)
-
-def setup():
-    for d in ["src", "lib", "docs", "examples"]:
-        fixperms(d)
-
-    pythonmodules.run("config.py -auto")
 
 def build():
+    # suppress compiler warnings:
+    pisitools.cflags.add("-Wno-format -Wno-comment -Wno-unused -Wno-incompatible-pointer-types \
+                         -Wno-logical-not-parentheses -Wno-bool-compare -Wno-maybe-uninitialized \
+                         -Wno-discarded-qualifiers -Wno-pointer-sign -Wno-pointer-to-int-cast \
+                         -Wno-unknown-pragmas")
+    # fix unused dependency analysis:
+    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
     pythonmodules.compile()
-    shelltools.copy("lib/pygame_icon.bmp", "build/lib.linux-%s-%s/pygame/" % (arch, pyversion))
 
 def install():
     pythonmodules.install()
 
-    pisitools.insinto(docdir, "docs", "html")
-    pisitools.insinto(docdir, "examples")
+    pisitools.insinto(docdir, "docs", "examples")
