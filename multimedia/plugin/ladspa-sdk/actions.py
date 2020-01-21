@@ -22,9 +22,12 @@ def build():
                     targets' % (get.CC(), get.CXX(), get.LD()))
 
 def install():
-    autotools.install('INSTALL_PLUGINS_DIR="/usr/lib/ladspa" \
+    autotools.install('INSTALL_PLUGINS_DIR="%s/usr/lib/ladspa" \
+					   INSTALL_INCLUDE_DIR="%s/usr/include" \
+					   INSTALL_BINARY_DIR="%s/usr/bin" \
                        MKDIR_P="mkdir -p" \
-                       DESTDIR="%s"' % get.installDIR())
+                       DESTDIR="%s" \
+                       ' % (get.installDIR(), get.installDIR(), get.installDIR(), get.installDIR()))
 
     shelltools.cd("..")
     pisitools.dohtml("doc/*.html")
