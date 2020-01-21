@@ -14,6 +14,7 @@ JAVA_HOME = "/usr/lib/jvm/java-7-openjdk"
 def setup():
 	shelltools.export("JAVA_HOME", "%s" %JAVA_HOME)
 	shelltools.export("CFLAGS", "%s -I%s/include" %(get.CFLAGS(), JAVA_HOME))
+	shelltools.export("CXXFLAGS", "%s -I%s/include" %(get.CXXFLAGS(), JAVA_HOME))
 	
 	autotools.autoreconf("-vfi")
 	autotools.configure()
