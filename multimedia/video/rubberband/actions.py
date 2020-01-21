@@ -10,14 +10,11 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 JAVA_HOME = "/usr/lib/jvm/java-7-openjdk"
+shelltools.export("JAVA_HOME", JAVA_HOME)
 
 def setup():
-	shelltools.export("JAVA_HOME", "%s" %JAVA_HOME)
-	shelltools.export("CFLAGS", "%s -I%s/include -I%s/include/linux" %(get.CFLAGS(), JAVA_HOME, JAVA_HOME))
-	shelltools.export("CXXFLAGS", "%s -I%s/include -I%s/include/linux" %(get.CXXFLAGS(), JAVA_HOME, JAVA_HOME))
-	
-	autotools.autoreconf("-vfi")
-	autotools.configure()
+    autotools.autoreconf("-vfi")
+    autotools.configure()
 
 def build():
     autotools.make()
