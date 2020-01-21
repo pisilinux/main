@@ -50,7 +50,6 @@ def setup():
                             --enable-libopencore_amrnb \
                             --enable-libopencore_amrwb \
                             --enable-libopenjpeg \
-                            --enable-libopenmpt \
                             --enable-libopus \
                             --enable-libpulse \
                             --enable-librsvg \
