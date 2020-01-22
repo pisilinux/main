@@ -96,7 +96,9 @@ def setup():
                             --enable-omx \
                             --extra-ldflags='-lasound -lm' \
                             --cc='clang -fuse-ld=lld -rtlib=compiler-rt' \
-                            --cxx='clang++ -fuse-ld=lld -rtlib=compiler-rt'")
+                            --cxx='clang++ -fuse-ld=lld -rtlib=compiler-rt' \
+                            --ar=llvm-ar \
+                            --ranlib=llvm-ranlib")
 
 def build():
     autotools.make()
