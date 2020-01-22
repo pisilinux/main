@@ -10,6 +10,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+NoStrip = ["/usr/lib"]
+
 def setup():
 	autotools.autoreconf("-vfi")
 	autotools.configure("--disable-static \
