@@ -14,11 +14,20 @@ def setup():
             "introspection": "no" if get.buildTYPE() == "emul32" else "yes",
            }
     
-    autotools.configure("--enable-introspection=%(introspection)s \
-                         --with-package-name='PisiLinux gstreamer-plugins-base package' \
-                         --with-package-origin='http://www.pisilinux.org' \
-                         --disable-examples \
-                        " % opts)
+    options = "--with-package-name='PisiLinux gstreamer-plugins-base package' \
+               --with-package-origin='http://www.pisilinux.org' \
+               --disable-examples \
+              "
+    if get.buildTYPE() == "emul32":
+       options += "--enable-introspection=no \
+                   --disable-wayland \
+                   --disable-gbm \
+                   "
+    else:
+       options += "--enable-introspection=yes \
+                  "
+    
+    autotools.configure(options)
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
