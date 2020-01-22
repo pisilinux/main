@@ -14,7 +14,8 @@ shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 def build():
     scons.make('PREFIX=/usr \
                 COMPILE_FLAGS="%s %s -lpthread" \
-                BUILD_TESTS=0' % (get.CXXFLAGS(), get.LDFLAGS()))
+                BUILD_TESTS=0 \
+                PYTHON_INTERPRETER="/usr/bin/python3" ' % (get.CXXFLAGS(), get.LDFLAGS()))
 
 def install():
     scons.install("install WILL_DEAL_WITH_XDG_MYSELF=1 DESTDIR=%s" % get.installDIR())
