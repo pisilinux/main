@@ -11,6 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pythonmodules
 
 shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
+shelltools.export("LDFLAGS", "%s -Wl,--as-needed" % get.LDFLAGS())
 
 def setup():
     shelltools.system("./bootstrap.py")
