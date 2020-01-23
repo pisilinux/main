@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     shelltools.system("mkdir -p cldr")
-    shelltools.system("cp core.zip cldr/cldr-core-35.1.zip")
+    shelltools.system("cp core.zip cldr/cldr-core-36.zip")
 
 def build():
     pythonmodules.run("setup.py import_cldr", pyVer="3")
