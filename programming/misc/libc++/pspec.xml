@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libc++</Name>
+        <Homepage>http://www.kde.org</Homepage>
+        <Packager>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>LLVM C++ standard library.</Summary>
+        <Description>libc++ provides standard c++ library by LLVM</Description>
+        <Archive sha1sum="d6da82e9445fe824f021baf35f81a7efb6096ae3" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/libcxx-9.0.1.src.tar.xz</Archive>
+		<Archive sha1sum="457cec7f1dff38648518416a292853c8d643fe4e" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/libcxxabi-9.0.1.src.tar.xz</Archive>
+        <BuildDependencies>
+	        <Dependency>llvm</Dependency>
+            <Dependency>llvm-libs</Dependency>
+			<Dependency>llvm-clang</Dependency>
+			<Dependency>lld</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libc++</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+        <Files>
+	        <Path fileType="library">/usr/lib</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>libc++-32bit</Name>
+	    <Summary>libc++ 32bit shared libraries.</Summary>
+	    <PartOf>emul32</PartOf>
+        <Files>
+	       <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>libc++-devel</Name>
+	   <Summary>Development files for libc++</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libc++</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>    
+        <Update release="1">
+            <Date>20120-01-23</Date>
+            <Version>9.0.1</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>        
+    </History>
+</PISI>
