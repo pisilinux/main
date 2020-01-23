@@ -24,13 +24,13 @@ def build():
     
     for arch in ["x86_64", "i686"]:
 		if arch == "x86_64":
-			shelltools.export("CC", "clang -m64 -target %s-pc-linux-gnu  -rtlib=compiler-rt" %arch)
-			shelltools.export("CXX", "clang++ -m64 -target %s-pc-linux-gnu  -rtlib=compiler-rt" %arch)
+			shelltools.export("CC", "clang -m64 -fuse-ld=lld -rtlib=compiler-rt")
+			shelltools.export("CXX", "clang++ -m64 -fuse-ld=lld -rtlib=compiler-rt")
 			shelltools.export("LDFLAGS", " -fuse-ld=lld -rtlib=compiler-rt -L/usr/lib -ldl -lpthread")
 			libsuffix = " "
 		if arch == "i686":
-			shelltools.export("CC", "clang -m32 -target %s-pc-linux-gnu  -rtlib=compiler-rt" %arch)
-			shelltools.export("CXX", "clang++ -m32 -target %s-pc-linux-gnu  -rtlib=compiler-rt" %arch)
+			shelltools.export("CC", "clang -m32 -fuse-ld=lld -rtlib=compiler-rt")
+			shelltools.export("CXX", "clang++ -m32 -fuse-ld=lld -rtlib=compiler-rt")
 			shelltools.export("LDFLAGS", "-fuse-ld=lld -L/usr/lib32 -ldl -lpthread")
 			libsuffix = "32"
 			
