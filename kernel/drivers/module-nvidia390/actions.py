@@ -97,7 +97,7 @@ def install():
     pisitools.dolib("libGL.so.%s" % version, nvlibdir)
 #    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
     pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
-    pisitools.dolib("libGL.so.%s" % version, libdir)
+    #pisitools.dolib("libGL.so.%s" % version, libdir)
     
     pisitools.dolib("libEGL.so.1.1.0", nvlibdir)
     pisitools.dosym("libEGL.so.1.1.0", "%s/libEGL.so.1" % nvlibdir)
@@ -110,9 +110,9 @@ def install():
     pisitools.dolib("libnvidia-compiler.so.%s" % version, libdir)
     pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
     
-    pisitools.dolib("libOpenCL.so.1.0.0", libdir)
-    pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
-    pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
+    #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
+    #pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
+    #pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
     
     pisitools.dolib("libnvidia-opencl.so.%s" % version, libdir)
     pisitools.dosym("libnvidia-opencl.so.%s" % version, "%s/libnvidia-opencl.so.1" % libdir)
