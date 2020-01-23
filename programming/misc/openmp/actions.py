@@ -13,21 +13,21 @@ from pisi.actionsapi import pisitools
 
 def setup():
     
-    shelltools.export("CC", "clang -fuse-ld=lld -rtlib=compiler-rt")
-    shelltools.export("CXX", "clang++ -fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
-    
     options = "-DCMAKE_BUILD_TYPE=Release \
                -DLIBOMP_ENABLE_ASSERTIONS=ON \
                -DLIBOMP_ENABLE_SHARED=ON \
                -DLIBOMP_USE_HIER_SCHED=ON \
               "
                
-    if get.buildTYPE() == "emul32":        
-                     
+    if get.buildTYPE() == "emul32":
+         shelltools.export("CC", "clang -fuse-ld=lld -rtlib=compiler-rt -m32")
+         shelltools.export("CXX", "clang++ -fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++ -m32")                     
          options = " -DOPENMP_LIBDIR_SUFFIX=32 \
                    "
     else:
-           options = "-DOPENMP_LIBDIR_SUFFIX= \
+         shelltools.export("CC", "clang -fuse-ld=lld -rtlib=compiler-rt")
+         shelltools.export("CXX", "clang++ -fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
+         options = "-DOPENMP_LIBDIR_SUFFIX= \
                      "
 
     cmaketools.configure(options)
