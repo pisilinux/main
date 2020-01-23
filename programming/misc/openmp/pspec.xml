@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>openmp</Name>
+        <Homepage>https://openmp.llvm.org/</Homepage>
+        <Packager>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>LLVM OpenMP runtime library</Summary>
+        <Description>openmp provides runtime for OpenMP by LLVM</Description>
+        <Archive sha1sum="b23687827cb69da01fb3ea1234b708ab604def22" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/openmp-9.0.1.src.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>llvm</Dependency>
+            <Dependency>llvm-libs</Dependency>
+            <Dependency>llvm-clang</Dependency>
+            <Dependency>lld</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>libc++-devel</Dependency>
+            <Dependency>libffi-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>openmp</Name>
+        <RuntimeDependencies>
+            <Dependency>llvm-libs</Dependency>
+            <Dependency>libc++</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>openmp-32bit</Name>
+        <Summary>openmp 32-bit libraries</Summary>
+        <PartOf>emul32</PartOf>
+        <BuildType>emul32</BuildType>
+        <RuntimeDependencies>
+            <Dependency release="current">openmp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+       <Package>
+        <Name>openmp-devel</Name>
+        <Summary>Development files for openmp</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">openmp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig/poppler.pc</Path>
+        </Files>
+    </Package>
+
+   
+    <History>
+        <Update release="1">
+            <Date>2020-01-23</Date>
+            <Version>9.0.1</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
