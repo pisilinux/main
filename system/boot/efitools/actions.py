@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def build():
+    shelltools.system('sed -i "s/-O2/${CFLAGS} -Wno-pointer-sign/" Make.rules')
     shelltools.export("ARCH","x86_64")
     
     autotools.make()
