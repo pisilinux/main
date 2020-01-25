@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 
 def setup():
+    pisitools.dosed("bin/help2txt", "openSUSE", "PisiLinux")
     pisitools.dosed("Makefile", "^CC.*", "CC = %s" % get.CC())
     #pisitools.dosed("doc/Makefile", "xmlto", "xmlto --skip-validation")
     pisitools.dosed("gfxboot-font.c", "#include <freetype/ftsynth.h>", "#include <freetype2/ftsynth.h>")
