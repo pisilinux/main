@@ -14,7 +14,6 @@ def setup():
                          --enable-unix-transport \
                          --enable-tcp-transport \
                          --enable-local-transport \
-                         --enable-secure-rpc \
                          --enable-xpm-logos \
                          --enable-xdm-auth \
                          --with-pam \
@@ -25,6 +24,7 @@ def setup():
                          --with-xft \
                          --with-pixmapdir=/usr/share/X11/xdm/pixmaps \
                         ")
+                         #--enable-secure-rpc \
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
