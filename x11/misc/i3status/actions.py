@@ -10,10 +10,21 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+
+def setup():
+    autotools.autoreconf("-fi")
+    shelltools.system("mkdir build")
+    shelltools.cd("build")
+    shelltools.system("../configure --disable-sanitizers \
+                                    --prefix=/usr \
+                                    --sysconfdir=/etc")
+
 def build():
+    shelltools.cd("build")
     autotools.make()
 
 def install():
+    shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
