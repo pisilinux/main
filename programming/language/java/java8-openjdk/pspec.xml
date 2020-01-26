@@ -12,16 +12,16 @@
         <IsA>app:gui</IsA>
         <Summary>Open Java Development Kit</Summary>
         <Description>OpenJDK (Open Java Development Kit) is a free and open source implementation of the Java Platform, Standard Edition (Java SE).</Description>
-        <Archive sha1sum="540a1210b6ebf8f45c9c71cdeea557e666587ec3" type="tarxz">http://icedtea.wildebeest.org/download/source/icedtea-3.13.0.tar.xz</Archive>
+        <Archive sha1sum="bd7c81a64a5d05c6cb6d43fd71a7d1e7ef7623b6" type="tarxz">http://icedtea.wildebeest.org/download/source/icedtea-3.15.0.tar.xz</Archive>
         
-        <Archive sha1sum="25016fd36b2363511acb12047050de6fc9ca919e" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/corba.tar.xz</Archive>
-        <Archive sha1sum="012db36c882feba8d84ce75a2750abdb65a3032e" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/jaxp.tar.xz</Archive>
-        <Archive sha1sum="2e4eb694aaf3c39b00c95ec2d0c85561cf8b7123" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/jaxws.tar.xz</Archive>
-        <Archive sha1sum="b00c34e60c294f19b06a4ad02c5bca9e28165551" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/jdk.tar.xz</Archive>
-        <Archive sha1sum="bfd8a1b0f0b58fbeb97f359ca564b5b38947a3a4" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/langtools.tar.xz</Archive>
-        <Archive sha1sum="122af61a9f655502923dc05e85838e21739e7495" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/openjdk.tar.xz</Archive>
-        <Archive sha1sum="0ed87240abd374d6a83e251d34a8bb2f244d0ee3" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/nashorn.tar.xz</Archive>
-        <Archive sha1sum="de56097770d99f5936e2cf6543d110b7aeb83dff" type="binary" target="icedtea-3.13.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.14.0/hotspot.tar.xz</Archive>
+        <Archive sha1sum="dad8b3d69a3044782daeeb61da46a7a2743d53b0" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/corba.tar.xz</Archive>
+        <Archive sha1sum="f2f6b7f95e6e7b9cc21797f6c557dc61cf515457" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/jaxp.tar.xz</Archive>
+        <Archive sha1sum="44b51d6acf9fd4bdac84fc69b5a30653e61ba912" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/jaxws.tar.xz</Archive>
+        <Archive sha1sum="bb0ff9840eb656216d3dab97802a364e06385c1d" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/jdk.tar.xz</Archive>
+        <Archive sha1sum="6985c75f2fd23d4459f8b5aeedf620aaf7ca82e1" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/langtools.tar.xz</Archive>
+        <Archive sha1sum="91e7869c854f0e64861733000e05d370bed58f3b" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/openjdk.tar.xz</Archive>
+        <Archive sha1sum="33a71ee5ac23ff9a5385f425134b775bb1890ee1" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/nashorn.tar.xz</Archive>
+        <Archive sha1sum="259d958ed1456ec79b313f1ccd84a972257782ca" type="binary" target="icedtea-3.15.0/">http://icedtea.wildebeest.org/download/drops/icedtea8/3.15.0/hotspot.tar.xz</Archive>
         <BuildDependencies>
 <!--             <Dependency>ant</Dependency> -->
             <Dependency>wget</Dependency>
@@ -52,6 +52,10 @@
             <Dependency>chrpath</Dependency>
             <Dependency>jre8-openjdk-headless</Dependency>
             <!--<Dependency>pulseaudio-libs-devel</Dependency>--><!-- for bootstrap -->
+            <Dependency>zip</Dependency>
+            <Dependency>cpio</Dependency>
+            <Dependency>unzip</Dependency>
+            <Dependency>libXp-devel</Dependency>
         </BuildDependencies>
         <AdditionalFiles>
 <!--             <AdditionalFile target="patches/giflib_5.1.diff">giflib_5.1.diff</AdditionalFile> -->
@@ -92,8 +96,8 @@
             <Path fileType="executable">/usr/bin/java_8</Path>
             <Path fileType="executable">/usr/bin/jjs_8</Path>
             <Path fileType="executable">/usr/bin/jdeps_8</Path>
-            <Path fileType="data">/etc/env.d/20java8_jre.csh</Path>
-            <Path fileType="data">/etc/env.d/20java8_jre</Path>
+            <Path fileType="data">/etc/env.d/25java_jre.csh</Path>
+            <Path fileType="data">/etc/env.d/25java_jre</Path>
             <Path fileType="config">/etc/java-8-openjdk/</Path>
             <Path fileType="executable">/usr/bin/pack200_8</Path>
             <Path fileType="executable">/usr/bin/keytool_8</Path>
@@ -152,8 +156,8 @@
             <Path fileType="library">/usr/lib/jvm/java-8-openjdk/jre/lib/amd64/headless/libmawt.so</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/20java8_jre">20java_jre</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/20java8_jre.csh">20java_jre.csh</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/25java_jre">25java_jre</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/25java_jre.csh">25java_jre.csh</AdditionalFile>
         </AdditionalFiles>
     </Package>
 
@@ -202,8 +206,8 @@
             <Dependency>jre8-openjdk-headless</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/etc/env.d/21java8_jdk.csh</Path>
-            <Path fileType="data">/etc/env.d/21java8_jdk</Path>
+            <Path fileType="data">/etc/env.d/25java_jdk.csh</Path>
+            <Path fileType="data">/etc/env.d/25java_jdk</Path>
             <Path fileType="man">/usr/share/man/man1/</Path>
             <Path fileType="man">/usr/share/man/ja/man1/</Path>
             <Path fileType="executable">/usr/bin/jar_8</Path>
@@ -287,8 +291,8 @@
             <Path fileType="library">/usr/lib/jvm/java-8-openjdk/lib/jconsole.jar</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/21java8_jdk.csh">21java_jdk.csh</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/21java8_jdk">21java_jdk</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/25java_jdk.csh">25java_jdk.csh</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/env.d/25java_jdk">25java_jdk</AdditionalFile>
         </AdditionalFiles>
         <Replaces>
             <Package>sun-jdk</Package>
@@ -321,6 +325,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2020-01-26</Date>
+            <Version>8u_242.3.15.0</Version>
+            <Comment>Version Bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2019-09-20</Date>
             <Version>8u_222.3.13.0</Version>
