@@ -27,7 +27,6 @@ def setup():
                             --disable-Werror \
                             --with-parallel-jobs=%s \
                             --enable-nss \
-                            --with-rhino \
                             --disable-system-kerberos \
                             --disable-system-pcsc \
                             --disable-system-sctp \
