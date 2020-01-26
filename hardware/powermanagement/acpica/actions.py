@@ -10,7 +10,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
+    shelltools.system("sed -i -e 's/_CYGWIN/_LINUX/g' -e 's/-Werror//g' generate/unix/Makefile.*")
     shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
+    pisitools.dosed("generate/unix/iasl/Makefile", "-Werror", "")
     if get.ARCH() == "x86_64":
         autotools.make("BITS=64")
     else:
