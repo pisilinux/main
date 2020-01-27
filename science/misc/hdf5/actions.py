@@ -34,7 +34,6 @@ def setup():
                          --disable-sharedlib-rpath \
                          --disable-dependency-tracking \
                          --docdir=/usr/share/doc/hdf5/ \
-                         --with-pthread=/usr/lib/ \
                          --with-pic")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")    
