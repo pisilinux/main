@@ -12,17 +12,18 @@ from pisi.actionsapi import get
 WorkDir = "indi-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.cd("libindi")
+    #shelltools.cd("libindi")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DINDI_BUILD_QT5_CLIENT=ON \
                           -DBUILD_ROOT=%s" % get.installDIR())
 
 def build():
-    shelltools.cd("libindi")
+    #shelltools.cd("libindi")
     cmaketools.make()
 
 def install():
-    shelltools.cd("libindi")
+    #shelltools.cd("libindi")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README*")
