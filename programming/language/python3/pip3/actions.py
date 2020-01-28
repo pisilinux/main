@@ -6,8 +6,8 @@
 
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 WorkDir="pip-%s" % get.srcVERSION()
 
@@ -20,4 +20,3 @@ def install():
     
     shelltools.system("sed -i 's|#!/usr/bin/env python$|#!/usr/bin/env python3|' %s/usr/lib/python3.*/site-packages/pip/__init__.py" % get.installDIR())
     shelltools.system("python3 -m compileall %s/usr/lib/python3.*/site-packages/pip/__init__.py" % get.installDIR())
-    
