@@ -49,6 +49,7 @@ def install():
         pisitools.dosed("%s/usr/lib32/openjpeg-2.3/OpenJPEGTargets-relwithdebinfo.cmake" % get.installDIR(), "emul32", "bin")
         pisitools.removeDir("/usr/emul32")
         
+        pisitools.dosym("openjpeg-2.3/openjpeg.h", "/usr/include/openjpeg.h")
         
         pisitools.dodoc("AUTHORS*", "CHANGELOG*", "NEWS*", "README*")
         
