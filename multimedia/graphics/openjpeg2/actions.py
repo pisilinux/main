@@ -15,7 +15,7 @@ def setup():
     #shelltools.cd("build")
 
     options = "-DCMAKE_BUILD_TYPE=Release \
-               -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+               -DOPENJPEG_INSTALL_LIB_DIR=lib \
                -DCMAKE_INSTALL_PREFIX=/usr \
                -DBUILD_SHARED_LIBS=ON \
                -DBUILD_STATIC_LIBS=OFF \
@@ -27,7 +27,6 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
         options = "-DOPENJPEG_INSTALL_LIB_DIR=lib32 \
-                   -DCMAKE_INSTALL_PREFIX=/usr \
                    -DOPENJPEG_INSTALL_BIN_DIR=emul32 \
                    -DBUILD_DOC=OFF"
     
