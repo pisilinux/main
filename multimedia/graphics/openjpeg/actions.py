@@ -35,6 +35,6 @@ def install():
 
     #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dosym("openjpeg-1.5/openjpeg.h", "/usr/include/openjpeg.h")
+    #pisitools.dosym("openjpeg-1.5/openjpeg.h", "/usr/include/openjpeg.h")
 
     pisitools.dodoc("README*")
