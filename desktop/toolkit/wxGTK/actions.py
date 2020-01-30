@@ -9,6 +9,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.copytree("../wxWidgets-%s" % (get.srcVERSION().replace("_", "~")), "../wxWidgets-%s-gtk3" % get.srcVERSION())
+    
     pisitools.flags.add("-fno-strict-aliasing")
 
     autotools.configure("--enable-gtk2 \
@@ -43,13 +45,61 @@ def setup():
                          --with-regex=builtin \
                          --with-zlib=sys \
                          --with-expat=sys")
+    
+    #shelltools.cd("%s" % get.workDIR())
+    shelltools.cd("../wxWidgets-%s-gtk3" % get.srcVERSION())
+    
+    pisitools.flags.add("-fno-strict-aliasing")
+    autotools.configure("--enable-gtk3 \
+                         --enable-shared \
+                         --disable-optimise \
+                         --disable-debug \
+                         --enable-no_deps \
+                         --disable-rpath \
+                         --enable-intl \
+                         --enable-geometry \
+                         --enable-timer \
+                         --enable-unicode \
+                         --enable-sound \
+                         --enable-mediactrl \
+                         --enable-xrc \
+                         --enable-graphics_ctx \
+                         --enable-display \
+                         --enable-joystick \
+                         --disable-gtktest \
+                         --disable-sdltest \
+                         --disable-precomp-headers \
+                         --with-gtk=3 \
+                         --with-libpng=sys \
+                         --with-libjpeg=sys \
+                         --with-libtiff=sys \
+                         --with-libxpm=sys \
+                         --with-sdl \
+                         --without-gnomeprint \
+                         --without-gnomevfs \
+                         --without-odbc \
+                         --with-opengl \
+                         --with-regex=builtin \
+                         --with-zlib=sys \
+                         --with-expat=sys")
+    
 
 def build():
     autotools.make()
     autotools.make("-C locale allmo")
+    
+    shelltools.cd("../wxWidgets-%s-gtk3" % get.srcVERSION())
+    autotools.make()
 
 def install():
+    shelltools.cd("../wxWidgets-%s-gtk3" % get.srcVERSION())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.rename("/usr/bin/wx-config","wx-config-gtk3")
+    
+    shelltools.cd("../wxWidgets-%s" % get.srcVERSION())
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     #autotools.install()
 
     pisitools.dodoc("docs/*.txt", "docs/*.htm")
+    
+    
