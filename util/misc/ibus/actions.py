@@ -13,10 +13,9 @@ def setup():
     autotools.configure("--prefix=/usr \
                          --sysconfdir=/etc \
                          --libexecdir=/usr/lib/ibus \
-                         --disable-gconf \
                          --disable-unicode-dict \
                          --disable-emoji-dict \
-                         --disable-dconf \
+                         --enable-dconf \
                          --enable-wayland \
                          --enable-vala \
                          --enable-ui \
