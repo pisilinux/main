@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import get
 
-options="WXPORT=gtk2 UNICODE=1 WX_CONFIG=/usr/bin/wx-config-2.8"
+options="WXPORT=gtk3 UNICODE=1 WX_CONFIG=/usr/bin/wx-config-gtk3"
 
 def build():
     shelltools.cd("wxPython")
