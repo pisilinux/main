@@ -10,10 +10,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -i '115d; 121,137d; 139,140d'  configure.ac")
-    shelltools.system("sed -i '/valadoc/d' Makefile.am")
+    #shelltools.system("sed -i '115d; 121,137d; 139,140d'  configure.ac")
+    #shelltools.system("sed -i '/valadoc/d' Makefile.am")
     autotools.autoreconf("-vfi")
-    autotools.configure("--enable-vapigen \
+    autotools.configure("--disable-valadoc \
                          --with-pic")
 
 def build():
