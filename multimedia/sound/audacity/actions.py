@@ -12,8 +12,8 @@ from pisi.actionsapi import get
 #WorkDir = "audacity-minsrc-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.cd("lib-src/portmixer")
     autotools.autoreconf("-vfi")
+    shelltools.cd("lib-src/portmixer")
     shelltools.cd("../..")
 
     autotools.aclocal("-I m4")
@@ -21,7 +21,7 @@ def setup():
     shelltools.export("LIBS", "-lavcodec")
     #shelltools.export("WX_CONFIG=wx-config-gtk3 ./configure", "/usr/bin/wxconfig")
     autotools.configure("--enable-unicode \
-                         WX_CONFIG=wx-config-gtk3 \
+                         WX_CONFIG=/usr/bin/wx-config-gtk3 \
                          --enable-nyquist \
                          --enable-ladspa \
                          --with-lib-preference='system local' \
