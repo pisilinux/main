@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -i '/exit 5/s/^/echo uncompress failed -- skipping #/' test/test")
+    #shelltools.system("sed -i '/exit 5/s/^/echo uncompress failed -- skipping #/' test/test")
     autotools.configure()
         
 def build():
