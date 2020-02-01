@@ -6,10 +6,13 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i '/parse_time.h/i #define _GNU_SOURCE' lib/parse_time.c")
     pisitools.flags.add("-std=gnu89")
+    autotools.autoreconf("-fiv")
     autotools.configure("--prefix=/usr --sbindir=/sbin")
 
 def build():
