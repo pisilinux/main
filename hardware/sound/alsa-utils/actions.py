@@ -21,4 +21,4 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     
-    pisitools.dodoc("ChangeLog", "README", "TODO", "seq/aconnect/README.aconnect", "seq/aseqnet/README.aseqnet")
+    pisitools.dodoc("ChangeLog", "README*", "TODO", "seq/aconnect/README.aconnect", "seq/aseqnet/README.aseqnet")
