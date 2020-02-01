@@ -13,10 +13,12 @@ def setup():
     options = "--disable-aload"
 
     if get.buildTYPE() == "emul32":
-        options += " --disable-python"
+        options += " --disable-python \
+                     --libdir=/usr/lib32"
+                     
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
 
-    autotools.autoreconf("-fi")
+    autotools.autoreconf("-fiv")
 
     autotools.configure(options)
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
