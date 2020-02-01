@@ -13,7 +13,6 @@ def setup():
     autotools.configure("--with-libcap-ng=yes \
                          --enable-gssapi-krb5=no \
                          --enable-systemd=no \
-                         --with-python=yes \
                          --disable-static")
 
 def build():
