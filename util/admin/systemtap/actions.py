@@ -10,6 +10,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.unlink('pwd.lock')
+
     pisitools.dosed("configure.ac", "-Werror")
     pisitools.dosed("Makefile.am", "-Werror")
     autotools.autoreconf("-vfi")
@@ -17,6 +19,7 @@ def setup():
     autotools.configure("--enable-sqlite \
                          --enable-pie \
                          --disable-docs \
+                         --disable-static \
                          --disable-publican \
                          --disable-crash \
                          --disable-silent-rules \
@@ -36,9 +39,8 @@ def install():
     pisitools.dodir("/etc/stap-server/conf.d")
     pisitools.dodir("/etc/systemtap/conf.d")
     pisitools.dodir("/etc/systemtap/script.d")
-
-    pisitools.dobin("stap-prep")
     
+    pisitools.dobin("stap-prep")
     pisitools.domove("/var/run/stap-server", "/run/")
     pisitools.removeDir("var/run")
 
