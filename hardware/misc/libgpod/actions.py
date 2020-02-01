@@ -14,6 +14,7 @@ def setup():
                          --with-html-dir=/usr/share/doc/%s/html \
                          --with-temp-mount-dir=/run/libgpod \
                          --without-hal \
+                         --with-python \
                          --without-mono \
                          --disable-gtk-doc \
                          --disable-static \
