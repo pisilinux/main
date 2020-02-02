@@ -12,13 +12,13 @@ from pisi.actionsapi import get
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 def setup():
-    mesontools.configure()
+    mesontools.configure("--prefix=/usr -Dstemming=false -Dqt=true -Dvapi=true")
 
 def build():
     mesontools.build()
     
-def check():
-    mesontools.build("test")
+##def check():
+   # mesontools.build("test")
 
 def install():
     mesontools.install()
