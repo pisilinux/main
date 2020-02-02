@@ -14,7 +14,7 @@ def setup():
                           -DCMAKE_SKIP_RPATH=ON \
                           -DPERL_VENDORINSTALL=yes \
                           -DCMAKE_BUILD_TYPE=Release \
-                          -DWITH_WEBKIT=ON \
+                          -DWITH_WEBKIT3=ON \
                           -DWITH_VALA=yes \
                           -DWITH_MOZJS=ON")
 
