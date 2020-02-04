@@ -4,22 +4,18 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-
 def setup():
-    shelltools.system("./autogen.sh")
-    autotools.configure("--prefix=/usr \
-                         --disable-static \
-                         --disable-gtk-doc")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING")
+    mesontools.install()
+
+    pisitools.dodoc("README*", "NEWS", "COPYING")
