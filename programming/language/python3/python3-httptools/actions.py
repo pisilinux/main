@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 
 def build():
-	# suppress warnings
+    # suppress compiler warnings
     pisitools.cflags.add("-Wno-deprecated-declarations")
     # fix unused direct dependency analysis
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
