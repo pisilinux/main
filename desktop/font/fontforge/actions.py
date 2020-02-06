@@ -16,6 +16,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("PYTHON", "/usr/bin/python3")
     #pisitools.dosed("configure.ac", "fontforge_package_name", "fontforge")
+    shelltools.system("""sed -e 's|python-"${PYTHON_VERSION}"|python-"${PYTHON_VERSION}"-embed|g' -i m4/fontforge_arg_enable.m4""")
     shelltools.system("./bootstrap --force")
 
     autotools.configure("--without-libuninameslist \
