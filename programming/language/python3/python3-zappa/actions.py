@@ -8,8 +8,6 @@
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
 
-
-
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
 def build():
