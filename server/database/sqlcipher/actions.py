@@ -16,6 +16,7 @@ def setup():
                          --enable-tempstore=yes \
                          --enable-readline \
                          --enable-threadsafe \
+                         --disable-editline \
                          --enable-cross-thread-connections \
                          --enable-releasemode \
                          --disable-static \
