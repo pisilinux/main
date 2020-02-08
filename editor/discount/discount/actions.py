@@ -19,7 +19,7 @@ def setup():
     
 
 def build():
-    autotools.make()
+    autotools.make("-j1")
 
 
 def install():
