@@ -13,6 +13,7 @@ from pisi.actionsapi import autotools
 def setup():
     shelltools.system("./configure.sh --prefix=/usr \
                                       --libdir=/usr/lib \
+                                      --mandir=/usr/share/man \
                                       --enable-all-features \
                                       --with-fenced-code \
                                       --shared")
