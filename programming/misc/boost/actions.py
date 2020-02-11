@@ -3,10 +3,10 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import autotools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 #WorkDir = "boost-%s" % get.srcVERSION()
 
@@ -39,7 +39,8 @@ def build():
                        link=shared,static \
                        toolset=gcc \
                        python=2.7 \
-                       cflags=-fno-strict-aliasing \
+                       cflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
+                       cxxflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
                        --layout=system")
     
     shelltools.cd("../boost-%s-38" % get.srcVERSION())
@@ -51,9 +52,9 @@ def build():
                        link=shared,static \
                        toolset=gcc \
                        python=3.8 \
-                       cflags=-fno-strict-aliasing \
+                       cflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
+                       cxxflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
                        --layout=system")
-    
     shelltools.cd("..")
     
 def install():
@@ -69,3 +70,5 @@ def install():
     shelltools.copytree("tools/boostbook/xsl", "%s/usr/share/boostbook/xsl" % get.installDIR())
     shelltools.copytree("tools/boostbook/dtd", "%s/usr/share/boostbook" % get.installDIR())
     shelltools.system("./b2 install threading=multi link=shared")
+    # some packages need this library as : libboost_python3.so
+    pisitools.dosym("/usr/lib/libboost_python38.so.1.72.0", "/usr/lib/libboost_python3.so")
