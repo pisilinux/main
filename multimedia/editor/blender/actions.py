@@ -16,7 +16,7 @@ def setup():
     shelltools.cd("..")
     shelltools.makedirs("cmake-make")
     shelltools.cd("cmake-make") 
-    shelltools.system("cmake ../blender-2.79b \
+    shelltools.system("cmake ../blender-2.81a \
                       -DCMAKE_INSTALL_PREFIX=/usr \
                       -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
                       -DCMAKE_BUILD_TYPE=Release \
@@ -33,10 +33,11 @@ def setup():
                       -DWITH_GAMEENGINE=ON \
                       -DWITH_PYTHON_INSTALL=OFF \
                       -DWITH_MOD_OCEANSIM=ON \
-                      -DPYTHON_VERSION=3.6 \
+                      -DPYTHON_VERSION=3.8 \
                       -DPYTHON_LIBPATH=/usr/lib \
-                      -DPYTHON_LIBRARY=python3.6m \
-                      -DPYTHON_INCLUDE_DIRS=/usr/include/python3.6m \
+                      -DPYTHON_LIBRARY=python3.8 \
+                      -DPYTHON_INCLUDE_DIRS=/usr/include/python3.8 \
+                      -DPYTHON_NUMPY_INCLUDE_DIRS=/usr/lib/python2.8/site-packages/numpy/core/include \
                       -DWITH_CODEC_SNDFILE=ON ")
 
 def build():
