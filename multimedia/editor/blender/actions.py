@@ -37,7 +37,7 @@ def setup():
                       -DPYTHON_LIBPATH=/usr/lib \
                       -DPYTHON_LIBRARY=python3.8 \
                       -DPYTHON_INCLUDE_DIRS=/usr/include/python3.8 \
-                      -DPYTHON_NUMPY_INCLUDE_DIRS=/usr/lib/python2.8/site-packages/numpy/core/include \
+                      -DPYTHON_NUMPY_INCLUDE_DIRS=/usr/lib/python3.8/site-packages/numpy/core/include \
                       -DWITH_CODEC_SNDFILE=ON ")
 
 def build():
