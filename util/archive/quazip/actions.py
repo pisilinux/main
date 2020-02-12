@@ -18,4 +18,4 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("COPYING", "README.txt", "NEWS.txt")
+    pisitools.dodoc("COPYING", "README.md", "NEWS.txt")
