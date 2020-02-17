@@ -9,11 +9,13 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "lxml-%s" % get.srcVERSION()
+#WorkDir = "lxml-%s" % get.srcVERSION()
+
+def setup():
+    # Setting LC_CTYPE to workaround encoding issue
+    shelltools.export("LC_CTYPE", "en_US.UTF-8")
 
 def build():
-    # remove the C extension so that it will be rebuild using the latest Cython
-    shelltools.unlink("src/lxml/*.c")
     # fix unused dependency analysis
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
     pythonmodules.compile()
@@ -23,4 +25,4 @@ def install():
 
     pisitools.insinto("%s/%s" % (get.docDIR(), get.srcNAME()),"doc/*")
 
-    pisitools.dodoc("CHANGES.txt", "LICENSES.txt")
+    pisitools.dodoc("CHANGE*", "LICENSE*")
