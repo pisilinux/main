@@ -19,7 +19,8 @@ def check():
 
 def install():
     autotools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
-    pisitools.dobin("zstdmt")
-    pisitools.dobin("contrib/pzstd/pzstd")
+    autotools.rawInstall("-C contrib/pzstd PREFIX=/usr DESTDIR=%s" % get.installDIR())
+    #pisitools.dobin("zstdmt")
+    #pisitools.dobin("contrib/pzstd/pzstd")
 
     pisitools.dodoc("CONTRIBUTING*", "CHANGELOG*", "COPYING", "LICENSE", "README*")
