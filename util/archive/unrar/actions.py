@@ -6,13 +6,17 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 WorkDir = "%s" % get.srcNAME()
 
 def build():
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.copytree("unrar", "libunrar")
 #changed for version 4.2.4
-    autotools.make()
+    autotools.make("-C libunrar lib")
+    autotools.make("-C unrar -j1")
 #autotools.make for older version
 #    autotools.make('-f makefile.unix \
 #                    CXXFLAGS="%s" \
@@ -21,5 +25,10 @@ def build():
 
 def install():
     pisitools.dobin("unrar")
-
+    
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.cd("libunrar")
+    pisitools.doexe("libunrar.so", "/usr/lib")
+    pisitools.insinto("/usr/include/unrar", "dll.hpp")
+    
     pisitools.dodoc("readme.txt","license.txt")
