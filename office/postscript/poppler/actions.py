@@ -20,13 +20,17 @@ def setup():
                -DCMAKE_INSTALL_LIBDIR=lib \
                -DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
                -DENABLE_XPDF_HEADERS=ON \
+               -DWITH_NSS3=OFF \
               "
 
     if get.buildTYPE() == "emul32":
         options = " -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
                     -DCMAKE_INSTALL_PREFIX=/emul32 \
                     -DENABLE_QT5=OFF \
-                    -DENABLE_LIBCURL=OFF"
+                    -DENABLE_LIBCURL=OFF \
+                    -DWITH_NSS3=OFF \
+                    -DWITH_GTK=OFF \
+                    -DWITH_GObjectIntrospection=OFF"
 
     cmaketools.configure(options, sourceDir="..")
 
