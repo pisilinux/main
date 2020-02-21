@@ -20,5 +20,5 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("readme.md", "copying.txt", "doc/glm.pdf")
+    pisitools.dodoc("readme.md", "copying.txt", "doc/manual.pdf")
     pisitools.dohtml("doc/*")
