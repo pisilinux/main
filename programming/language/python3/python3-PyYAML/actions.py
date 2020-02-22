@@ -9,10 +9,12 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "PyYAML-%s" % get.srcVERSION()
+#WorkDir = "PyYAML-%s" % get.srcVERSION()
 
 def build():
+    # suppress compiler warnings
     pisitools.cflags.add("-Wno-pointer-sign -Wno-incompatible-pointer-types -Wno-sign-compare -Wno-discarded-qualifiers")
+    # fix unused direct dependency analysis
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread -Wl,-O1 -Wl,-z,relro -Wl,--hash-style=gnu -Wl,--as-needed -Wl,--sort-common")
     pythonmodules.compile(pyVer="3")
     
