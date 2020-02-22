@@ -14,7 +14,8 @@ def setup():
     autotools.configure("--prefix=/usr \
                          --disable-werror \
                          --without-docs \
-                         --enable-static=no ")
+                         --enable-static=no \
+                         --with-mdds=1.5")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
