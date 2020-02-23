@@ -15,7 +15,7 @@ def setup():
     shelltools.export("SANEI_JPEG", "sanei_jpeg.o")
     shelltools.export("SANEI_JPEG_LO", "sanei_jpeg.lo")
 
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
 
     autotools.configure("--enable-ipv6 \
                          --enable-avahi \
