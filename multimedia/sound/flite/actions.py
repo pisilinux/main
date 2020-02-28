@@ -23,7 +23,7 @@ def setup():
 	shelltools.export("RANLIB", "llvm-ranlib")
 	shelltools.export("LDFLAGS", "-lasound -lm")
 	autotools.configure("--prefix=/usr \
-                         --disable-shared \
+                         --enable-shared \
                          --with-pic \
                          --with-audio=alsa \
 	                     --with-vox=cmu_us_kal16")
