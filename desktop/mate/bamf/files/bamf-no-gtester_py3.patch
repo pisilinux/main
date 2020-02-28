@@ -1,0 +1,63 @@
+diff --git a/configure b/configure
+index af65be1..d915eea 100755
+--- a/configure
++++ b/configure
+@@ -14653,10 +14653,10 @@ fi
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gtester2xunit dependencies" >&5
+ $as_echo_n "checking for gtester2xunit dependencies... " >&6; }
+-if !($PYTHON -c "import libxslt, libxml2" 2> /dev/null); then
++if !($PYTHON -c "import lxml" 2> /dev/null); then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+-  as_fn_error $? "You need to install python-libxslt1 and python-libxml2" "$LINENO" 5;
++  as_fn_error $? "You need to install python-lxml" "$LINENO" 5;
+ fi
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+diff --git a/configure.ac b/configure.ac
+index 41cb7db..e62c807 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -115,9 +115,9 @@ GTK_DOC_CHECK(1.0)
+ 
+ AC_PATH_PROG([PYTHON],[python])
+ AC_MSG_CHECKING(for gtester2xunit dependencies)
+-if !($PYTHON -c "import libxslt, libxml2" 2> /dev/null); then
++if !($PYTHON -c "import lxml" 2> /dev/null); then
+   AC_MSG_RESULT([no])
+-  AC_MSG_ERROR([You need to install python-libxslt1 and python-libxml2]);
++  AC_MSG_ERROR([You need to install python-lxml]);
+ fi
+ AC_MSG_RESULT([yes])
+ 
+diff --git a/tests/gtester2xunit.py b/tests/gtester2xunit.py
+index fbe3c66..861d541 100755
+--- a/tests/gtester2xunit.py
++++ b/tests/gtester2xunit.py
+@@ -1,18 +1,17 @@
+ #! /usr/bin/python
+ from argparse import ArgumentParser
+-import libxslt
+-import libxml2
+ import sys
+ import os
++from lxml import etree
+ 
+ XSL_TRANSFORM='/usr/share/gtester2xunit/gtester.xsl'
+ 
+ def transform_file(input_filename, output_filename, xsl_file):
+-    gtester = libxml2.parseFile(xsl_file)
+-    style = libxslt.parseStylesheetDoc(gtester)
+-    doc = libxml2.parseFile(input_filename)
+-    result = style.applyStylesheet(doc, None)
+-    result.saveFormatFile(filename=output_filename, format=True)
++    gtester = etree.parse(xsl_file)
++    style = etree.XSLT(gtester)
++    doc = etree.parse(input_filename)
++    result = style(doc)
++    result.write(filename=output_filename, format=True)
+ 
+ 
+ def get_output_filename(input_filename):
+

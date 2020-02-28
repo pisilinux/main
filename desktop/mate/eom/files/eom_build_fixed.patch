@@ -1,0 +1,52 @@
+diff -Nuar a/configure.ac b/configure.ac
+--- a/configure.ac	2019-09-18 16:05:00.000000000 +0300
++++ b/configure.ac	2020-02-19 10:35:23.874694686 +0300
+@@ -1,6 +1,7 @@
+ AC_PREREQ(2.59)
+ AC_CONFIG_MACRO_DIR([m4])
+ 
++m4_define(gdk-pixbuf_minver, 2.36.5)
+ m4_define(eom_major_version, 1)
+ m4_define(eom_minor_version, 22)
+ m4_define(eom_micro_version, 2)
+@@ -26,6 +27,7 @@
+ 
+ AM_MAINTAINER_MODE
+ 
++AC_SUBST(GDKPIXBUF_REQUIRED, [gdk-pixbuf_minver])
+ MATE_COMMON_INIT
+ MATE_MAINTAINER_MODE_DEFINES
+ MATE_COMPILE_WARNINGS
+@@ -96,6 +98,7 @@
+ 
+ PKG_CHECK_MODULES(GMODULE, gmodule-2.0, [GMODULE_ADD="gmodule-2.0"],[GMODULE_ADD=""])
+ EOM_MODULES="gtk+-3.0 >= $GTK_REQUIRED \
++             gdk-pixbuf-2.0 >= gdk-pixbuf_minver
+              glib-2.0 >= $GLIB_REQUIRED \
+              $GMODULE_ADD \
+              gio-2.0 >= $GLIB_REQUIRED \
+diff -Nuar a/src/eom-thumbnail.c b/src/eom-thumbnail.c
+--- a/src/eom-thumbnail.c	2019-09-18 16:05:00.000000000 +0300
++++ b/src/eom-thumbnail.c	2020-02-19 10:42:44.560728013 +0300
+@@ -123,9 +123,10 @@
+ 
+ 	perc = CLAMP (128.0/(MAX (width, height)), 0, 1);
+ 
+-	thumb = mate_desktop_thumbnail_scale_down_pixbuf (pixbuf,
++	thumb = gdk_pixbuf_scale_simple (pixbuf,
+ 							   width*perc,
+-							   height*perc);
++							   height*perc,
++							   GDK_INTERP_HYPER);
+ 
+ 	return thumb;
+ }
+@@ -444,7 +445,7 @@
+ 		width  = MAX (width  * factor, 1);
+ 		height = MAX (height * factor, 1);
+ 
+-		result_pixbuf = mate_desktop_thumbnail_scale_down_pixbuf (thumbnail, width, height);
++		result_pixbuf = gdk_pixbuf_scale_simple (thumbnail, width, height, GDK_INTERP_HYPER);
+ 
+ 		return result_pixbuf;
+ 	}
