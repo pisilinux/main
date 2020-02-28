@@ -1,0 +1,60 @@
+diff -Nuar a/configure.ac b/configure.ac
+--- a/configure.ac	2019-12-23 20:17:34.000000000 +0300
++++ b/configure.ac	2020-02-13 14:46:07.401950610 +0300
+@@ -2,6 +2,7 @@
+ 
+ dnl ===========================================================================
+ 
++m4_define(gdk-pixbuf_minver,           2.36.5)
+ m4_define(glib_minver,                 2.50.0)
+ m4_define(gio_minver,                  2.50.0)
+ m4_define(mate_desktop_minver,         1.17.3)
+@@ -33,6 +34,7 @@
+ AM_MAINTAINER_MODE
+ AC_SUBST([ACLOCAL_AMFLAGS], ["\${ACLOCAL_FLAGS}"])
+ 
++AC_SUBST(GDKPIXBUF_REQUIRED, [gdk-pixbuf_minver])
+ AC_SUBST(GLIB_REQUIRED, [glib_minver])
+ AC_SUBST(GIO_REQUIRED, [gio_minver])
+ AC_SUBST(MATE_DESKTOP_REQUIRED, [mate_desktop_minver])
+@@ -63,6 +65,7 @@
+ AC_CHECK_LIB(m, floor)
+ 
+ PKG_CHECK_MODULES(ALL, [
++    gdk-pixbuf-2.0 >= gdk-pixbuf_minver
+     glib-2.0 >= glib_minver
+     mate-desktop-2.0 >= mate_desktop_minver
+     gthread-2.0
+diff -Nuar a/src/file-manager/fm-properties-window.c b/src/file-manager/fm-properties-window.c
+--- a/src/file-manager/fm-properties-window.c	2019-12-23 20:17:34.000000000 +0300
++++ b/src/file-manager/fm-properties-window.c	2020-02-13 15:11:38.836946406 +0300
+@@ -26,7 +26,6 @@
+ #include "fm-properties-window.h"
+ #include "fm-ditem-page.h"
+ 
+-#define MATE_DESKTOP_USE_UNSTABLE_API
+ 
+ #include "fm-error-reporting.h"
+ #include "libcaja-private/caja-mime-application-chooser.h"
+@@ -42,7 +41,6 @@
+ #include <gtk/gtk.h>
+ #include <gdk/gdkkeysyms.h>
+ #include <glib/gi18n.h>
+-#include <libmate-desktop/mate-desktop-thumbnail.h>
+ #include <libcaja-extension/caja-property-page-provider.h>
+ #include <libcaja-private/caja-entry.h>
+ #include <libcaja-private/caja-extensions.h>
+@@ -5622,10 +5620,11 @@
+ 			scale = (double)gdk_pixbuf_get_height (pixbuf) /
+ 				gdk_pixbuf_get_width (pixbuf);
+ 
+-			scaled_pixbuf = mate_desktop_thumbnail_scale_down_pixbuf
++			scaled_pixbuf = gdk_pixbuf_scale_simple
+ 				(pixbuf,
+ 				 PREVIEW_IMAGE_WIDTH,
+-				 scale * PREVIEW_IMAGE_WIDTH);
++				 scale * PREVIEW_IMAGE_WIDTH,
++				 GDK_INTERP_HYPER);
+ 			g_object_unref (pixbuf);
+ 			pixbuf = scaled_pixbuf;
+ 		}

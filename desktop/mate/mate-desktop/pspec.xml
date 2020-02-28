@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>mate-desktop</Name>
+        <Homepage>http://www.mate-desktop.org</Homepage>
+        <Packager>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>Ayhan Yalçınsoy</Email>
+        </Packager>
+        <License>MIT</License>
+        <License>GPLv2+</License>
+        <License>LGPLv2+</License>
+        <Icon>desktop</Icon>
+        <IsA>app:gui</IsA>
+        <Summary>Basic Mate libraries and dialogs</Summary>
+        <Description>mate-desktop contains basic Mate libraries and information applications.</Description>
+        <Archive sha1sum="54e7feadc273fdd5ab524b5db6e65bf666340faf" type="tarxz">http://pub.mate-desktop.org/releases/1.22/mate-desktop-1.22.2.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>dconf-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>iso-codes</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>python-six</Dependency>
+            <Dependency>mate-common</Dependency>
+            <Dependency>librsvg-devel</Dependency>
+            <Dependency>startup-notification-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>mate-desktop</Name>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>dconf</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>startup-notification</Dependency>
+            <Dependency>network-manager-applet</Dependency> <!--no remove-->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/help</Path>
+            <Path fileType="data">/usr/share/glib-2.0</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="data">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/mate-about</Path>
+            <Path fileType="data">/usr/share/backgrounds</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share/libmate-desktop</Path>
+        </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>mate-desktop-devel</Name>
+        <summary>mate-desktop için geliştirme dosyaları</summary>
+        <RuntimeDependencies>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>dconf-devel</Dependency>
+            <Dependency>startup-notification-devel</Dependency>
+            <Dependency release="current">mate-desktop</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>mate-desktop-doc</Name>
+        <Summary>mate-desktop için döküman belgeleri.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">mate-desktop</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/gtk-doc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-02-13</Date>
+            <Version>1.22.2</Version>
+            <Comment>First release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
