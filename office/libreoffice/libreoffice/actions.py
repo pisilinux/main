@@ -24,7 +24,7 @@ lang="tr"
 def setup():
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
     shelltools.export("LO_PREFIX", "/usr")    
-    shelltools.export("PYTHON", "python3.6")
+    shelltools.export("PYTHON", "python3.8")
     
     # http://site.icu-project.org/download/61#TOC-Migration-Issues
     shelltools.export("CPPFLAGS", "-DU_USING_ICU_NAMESPACE=1")
@@ -40,17 +40,17 @@ def setup():
                         --sysconfdir=/etc                 \
                         --with-vendor="Pisi Linux"        \
                         --with-lang="%s"                  \
-                        --disable-gtk                     \
-                        --disable-postgresql-sdbc         \
-                        --disable-firebird-sdbc           \
                         --disable-coinmp                  \
                         --disable-odk                     \
+                        --enable-qt5                      \
                         --enable-gtk3                     \
+                        --enable-kf5                      \
                         --enable-release-build=yes        \
                         --enable-python=system            \
                         --enable-scripting-beanshell      \
                         --enable-scripting-javascript     \
                         --enable-ext-wiki-publisher       \
+                        --enable-ext-numbertext           \
                         --enable-ext-nlpsolver            \
                         --with-help                       \
                         --with-myspell-dicts              \
@@ -67,7 +67,7 @@ def setup():
                         --with-system-hunspell            \
                         --with-system-icu                 \
                         --with-system-jpeg                \
-                        --with-jdk-home=/usr/lib/jvm/java \
+                        --with-system-boost               \
                         --with-system-lcms2               \
                         --with-system-libcdr              \
                         --with-system-libetonyek          \
@@ -100,7 +100,8 @@ def setup():
                         --without-system-libstaroffice    \
                         --without-system-libzmf           \
                         --without-system-ucpp             \
-                        --without-system-boost            \
+                        --without-system-coinmp           \
+                        --without-system-firebird         \
                         --without-system-libcmis          \
                         --without-system-orcus            \
                         --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
@@ -116,7 +117,10 @@ def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
     
     # cleanup gid_Module
-    pisitools.remove("gid_Module*")
+    pisitools.remove("gid_Module*")    
+    
+    pisitools.remove("/usr/lib/libreoffice/share/extensions/numbertext/pythonpath/Makefile")
+    pisitools.removeDir("/usr/lib/libreoffice/share/extensions/numbertext/idl/")
     
     # add application descriptions    
     pisitools.insinto("/usr/share/appdata/", "sysui/desktop/appstream-appdata/libreoffice-*.xml")
@@ -127,8 +131,8 @@ def install():
     pisitools.dosym("/usr/lib/libreoffice/share/psprint/psprint.conf", "/etc/libreoffice/psprint.conf")
     
     # make pyuno find its modules
-    pisitools.dosym("/usr/lib/libreoffice/program/uno.py", "/usr/lib/python3.6/site-packages/uno.py")
-    pisitools.dosym("/usr/lib/libreoffice/program/unohelper.py", "/usr/lib/python3.6/site-packages/unohelper.py")
+    pisitools.dosym("/usr/lib/libreoffice/program/uno.py", "/usr/lib/python3.8/site-packages/uno.py")
+    pisitools.dosym("/usr/lib/libreoffice/program/unohelper.py", "/usr/lib/python3.8/site-packages/unohelper.py")
     
     for pix in ["libreoffice-base.png", "libreoffice-calc.png", "libreoffice-draw.png", "libreoffice-impress.png", "libreoffice-main.png", "libreoffice-math.png", "libreoffice-startcenter.png", "libreoffice-writer.png"]:
         pisitools.dosym("/usr/share/icons/hicolor/32x32/apps/%s" % pix, "/usr/share/pixmaps/%s" %pix)
