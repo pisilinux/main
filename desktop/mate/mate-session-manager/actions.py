@@ -13,7 +13,6 @@ def setup():
     autotools.configure("--disable-static \
                          --enable-ipv6 \
                          --libexecdir=/usr/lib/mate-session-manager \
-                         --with-elogind \
                          --disable-docbook-docs \
                          --with-default-wm=marco")
 
