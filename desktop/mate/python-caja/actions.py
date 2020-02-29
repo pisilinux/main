@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("PYTHON","python3.6")
+    shelltools.export("PYTHON","python3.8")
     autotools.configure("--prefix=/usr \
                         --disable-scrollkeeper \
                         --disable-schemas-install")
