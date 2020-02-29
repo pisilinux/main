@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--disable-static          \
-                         --with-gtk=3.0            \
+                         --with-gtk=3            \
                          --disable-schemas-compile \
                          --with-x")
 
