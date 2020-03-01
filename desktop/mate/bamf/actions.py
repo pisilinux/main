@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("PYTHON", "python3")
+    pisitools.dosed("configure", "-Werror", "")
     autotools.configure("--disable-static \
                          --libexecdir=/usr/lib \
                          --sysconfdir=/etc \
