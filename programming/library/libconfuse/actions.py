@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("./autogen.sh")
+    #shelltools.system("./autogen.sh")
     
     autotools.configure("--enable-static=no \
                          --enable-shared=yes \
@@ -22,4 +22,4 @@ def build():
 def install():
     autotools.install()
 
-    pisitools.dodoc("AUTHORS", "README*")
+    pisitools.dodoc("AUTHORS", "README.md", "LICENSE")
