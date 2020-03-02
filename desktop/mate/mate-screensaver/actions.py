@@ -16,6 +16,7 @@ def setup():
                           --with-systemd=no \
                           --prefix=/usr \
                           --sysconfdir=/etc \
+                          --with-elogind \
                           --with-xscreensaverdir=/usr/share/xscreensaver/config \
                           --with-xscreensaverhackdir=/usr/lib/misc/xscreensaver")
 
