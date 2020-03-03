@@ -13,6 +13,7 @@ from pisi.actionsapi import get
 def setup():
     pisitools.dosed("data/org.mate.peripherals-touchpad.gschema.xml.in", "<default>false</default>", "<default>true</default>")
     autotools.configure("--enable-pulse  \
+                         --libexecdir=/usr/lib/mate-settings-daemon \
                          --disable-static \
                          --disable-schemas-compile \
                          --enable-polkit  \

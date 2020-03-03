@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("LDFLAGS", "%s -ldl"  % get.LDFLAGS())
     autotools.configure("--prefix=/usr \
-                         --libexecdir=/usr/lib \
+                         --libexecdir=/usr/lib/mate-sensors-applet \
                          --disable-static \
                          --disable-schemas-compile \
                          --enable-libnotify \
@@ -25,8 +25,6 @@ def build():
     autotools.make()
 
 def install():
-    pisitools.dodir("/usr/lib/mate-sensors-applet/plugins")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #autotools.install()
 
     pisitools.dodoc("README", "NEWS", "ChangeLog", "AUTHORS", "COPYING")
