@@ -8,13 +8,11 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-
 def setup():
     #pisitools.dosed("libfaad/Makefile.am", "iquote ", "I")
     autotools.autoreconf("-vfi")
 
     autotools.configure("--without-xmms \
-                         --without-drm \
                          --disable-static")
 
 def build():
