@@ -14,7 +14,6 @@ def setup():
                          --enable-ipv6 \
                          --libexecdir=/usr/lib/mate-session-manager \
                          --disable-docbook-docs \
-                         --with-elogind \
                          --with-default-wm=marco")
 
 def build():
