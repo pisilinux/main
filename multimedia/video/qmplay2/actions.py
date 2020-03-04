@@ -30,4 +30,4 @@ def install():
     
     shelltools.cd("..")
 
-    pisitools.dodoc("README*", "LICENSE", "TODO*")
+    pisitools.dodoc("README*", "LICENSE")
