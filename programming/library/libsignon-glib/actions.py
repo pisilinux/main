@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 
 def setup():
+    pisitools.cflags.add("-Wno-error")
     shelltools.system("./autogen.sh \
                        --prefix=/usr \
                        --localstatedir=/var \
@@ -23,5 +24,4 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
     pisitools.dodoc("README*", "AUTHORS", "COPYING", "NEWS")
