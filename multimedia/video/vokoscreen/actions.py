@@ -8,6 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import qt5
 
 def setup():
+    pisitools.dosed("vokoscreen.pro", "lrelease-qt5", "lrelease")
     qt5.configure()
 
 def build():
