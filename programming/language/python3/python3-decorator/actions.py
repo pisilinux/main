@@ -6,11 +6,9 @@
 
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import pisitools
 
 def check():
     shelltools.system("nosetests3 --with-doctest -e documentation")
 
 def install():
     pythonmodules.install(pyVer="3")
-
