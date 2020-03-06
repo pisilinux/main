@@ -1,4 +1,3 @@
- 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -12,18 +11,18 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.insinto("/usr/include/CL", "OpenCL-Headers-2.1/CL/*")
-	shelltools.export("CFLAGS", "-I%s/usr/include -O2")
-	shelltools.export("CXXFLAGS", "-I%s/usr/include -O2")
-	
-	autotools.autoreconf("-vfi")
-    
-	autotools.configure()    
+    pisitools.insinto("/usr/include/CL", "OpenCL-Headers-2.1/CL/*")
+    shelltools.export("CFLAGS", "-I%s/usr/include -O2")
+    shelltools.export("CXXFLAGS", "-I%s/usr/include -O2")
+
+    autotools.autoreconf("-vfi")
+
+    autotools.configure()
 
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    
+
     pisitools.dodoc("COPYING","NEWS", "README")
