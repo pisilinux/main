@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 
 def setup():
     #pisitools.dosed("make/linux/Makefile", "CXXFLAGS=", "CXXFLAGS+=")
-    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib")
+    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
+                          -DBUILD_SHARED_LIBS=ON")
 
 def build():
     #shelltools.cd("make/linux")
