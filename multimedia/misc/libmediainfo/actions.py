@@ -14,10 +14,11 @@ WorkDir = "."
 
 def setup():
     shelltools.cd("MediaInfoLib/Project/GNU/Library")
-    libtools.libtoolize("--automake")
-    autotools.aclocal()
-    autotools.automake("-afc")
-    autotools.autoconf()
+    #libtools.libtoolize("--automake")
+    #autotools.aclocal()
+    #autotools.automake("-afc")
+    #autotools.autoconf()
+    shelltools.system("sh ./autogen.sh")
     autotools.configure("--enable-shared \
                          --disable-static \
                          --with-libcurl \
@@ -29,16 +30,17 @@ def build():
 
 def install():
     shelltools.cd("MediaInfoLib/Project/GNU/Library")
-    autotools.install()
-    pisitools.dosed("libmediainfo.pc", "^(Version:)\s+$", r"\1 %s\n" % get.srcVERSION())
-    pisitools.dosed("libmediainfo.pc", "^Libs_Static.*$", "")
-    pisitools.dodir("/usr/lib/pkgconfig")
-    pisitools.insinto("/usr/lib/pkgconfig", "libmediainfo.pc")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #autotools.install()
+    #pisitools.dosed("libmediainfo.pc", "^(Version:)\s+$", r"\1 %s\n" % get.srcVERSION())
+    #pisitools.dosed("libmediainfo.pc", "^Libs_Static.*$", "")
+    #pisitools.dodir("/usr/lib/pkgconfig")
+    #pisitools.insinto("/usr/lib/pkgconfig", "libmediainfo.pc")
     shelltools.cd("../../../")
     pisitools.dodoc("*.txt")
-    pisitools.dohtml("*.html")
-    for it in ["MediaInfo", "MediaInfoDLL"]:
-        pisitools.dodir("/usr/include/%s" % it)
-        pisitools.insinto("/usr/include/%s" % it, "Source/%s/*.h" % it)
+    #pisitools.dohtml("*.html")
+    #for it in ["MediaInfo", "MediaInfoDLL"]:
+        #pisitools.dodir("/usr/include/%s" % it)
+        #pisitools.insinto("/usr/include/%s" % it, "Source/%s/*.h" % it)
 
 
