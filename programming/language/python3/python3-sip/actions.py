@@ -17,7 +17,7 @@ def setup():
     shelltools.cd("sip-%s" % get.srcVERSION())
     shelltools.copytree("../sip-%s" % (get.srcVERSION().replace("_", "~")), "../sip-%s-pyqt5" % get.srcVERSION())
     
-    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.8\/Python.h/g' {} \;")
+    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.6m\/Python.h/g' {} \;")
     
     pythonmodules.run('configure.py CFLAGS="%s" CXXFLAGS="%s"' % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
     
