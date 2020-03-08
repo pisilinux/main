@@ -11,8 +11,8 @@ from pisi.actionsapi import get
 def setup():
     pisitools.dosed("src/plugins/Input/cdaudio/decoder_cdaudio.cpp", "cdio\/cdda\.h", r"cdio/paranoia/cdda.h")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-          -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-          -DUSE_HAL:BOOL=FALSE")
+                          -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DUSE_HAL:BOOL=FALSE")
 
 def build():
     cmaketools.make()
