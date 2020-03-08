@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
+                          -DMYGPO_BUILD_TESTS=OFF \
                           -DBUILD_WITH_QT4=OFF")
 
 def build():
