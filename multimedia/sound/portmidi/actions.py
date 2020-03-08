@@ -10,8 +10,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-shelltools.export("JAVAC","/usr/lib/jvm/java-7-openjdk/bin/javac")
-shelltools.export("JAVA_HOME","/usr/lib/jvm/java-7-openjdk")
+shelltools.export("JAVAC","/usr/lib/jvm/java-8-openjdk/bin/javac")
+shelltools.export("JAVA_HOME","/usr/lib/jvm/java-8-openjdk")
 
 def setup():
     cmaketools.configure("-DCMAKE_SKIP_BUILD_RPATH=1 \
