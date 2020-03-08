@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def build():
+    pisitools.dosed("avidemux_plugins/ADM_videoFilters6/ass/CMakeLists.txt", "0.19", "1.0")
     shelltools.system("bash ./bootStrap.bash")
 
 def install():
