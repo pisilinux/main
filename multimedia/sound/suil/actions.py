@@ -19,4 +19,4 @@ def build():
 def install():
     shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "NEWS", "COPYING", "README")
+    pisitools.dodoc("AUTHORS", "NEWS", "COPYING", "README*")
