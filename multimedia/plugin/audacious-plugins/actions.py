@@ -10,8 +10,7 @@ from pisi.actionsapi import get
 # WorkDir="__package_name__-"+ get.srcVERSION() +"/sub_project_dir/"
 
 def setup():
-    autotools.rawConfigure("--prefix=/usr \
-                            --disable-bs2b")
+    autotools.rawConfigure("--prefix=/usr")
 
 def build():
     autotools.make()
