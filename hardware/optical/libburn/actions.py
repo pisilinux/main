@@ -11,8 +11,7 @@ def setup():
     #autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
                          --disable-ldconfig-at-install \
-                         --with-gnu-ld \
-                         --disable-test")
+                         --with-gnu-ld")
 
 def build():
     autotools.make()
