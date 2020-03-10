@@ -25,4 +25,4 @@ def install():
     
     pisitools.insinto("/etc/", "src/Info.plist", "libccid_Info.plist")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*")
