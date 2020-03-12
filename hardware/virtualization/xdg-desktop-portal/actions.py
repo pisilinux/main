@@ -11,10 +11,11 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    
+    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    autotools.autoreconf("-fi")
     autotools.configure("--with-systemduserunitdir=none \
                          --disable-geoclue \
+                         --disable-docbook-docs \
                          --disable-libportal \
                          --disable-pipewire")
 
