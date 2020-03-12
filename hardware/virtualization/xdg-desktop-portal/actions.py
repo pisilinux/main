@@ -15,6 +15,7 @@ def setup():
     
     autotools.configure("--with-systemduserunitdir=none \
                          --disable-geoclue \
+                         --disable-libportal \
                          --disable-pipewire")
 
 def build():
