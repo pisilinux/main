@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>gnome-desktop</Name>
+        <Homepage>https://gitlab.gnome.org/GNOME/gnome-desktop</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPL</License>
+        <IsA>library</IsA>
+        <Summary>Library with common API for various GNOME modules</Summary>
+        <Description>Library with common API for various GNOME modules</Description>
+        <Archive sha1sum="9592c81d16370d398182e05345e6709a1a488e13" type="tarxz">http://ftp.gnome.org/pub/gnome/sources/gnome-desktop/3.34/gnome-desktop-3.34.4.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>itstool</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>docbook-xsl</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>bubblewrap</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>iso-codes-devel</Dependency>
+            <Dependency>libxkbfile-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>xkeyboard-config</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>libseccomp-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>gsettings-desktop-schemas-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>gnome-desktop.patch</Patch>
+            <Patch level="1">gnome-desktop.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>gnome-desktop</Name>
+        <RuntimeDependencies>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>libseccomp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <!--
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/gnome-desktop.desktop">gnome-desktop.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/gnome-desktop.png">gnome-desktop.png</AdditionalFile>
+        </AdditionalFiles>
+        -->
+        <!--
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+        -->
+    </Package>
+    <Package>
+        <Name>gnome-desktop-devel</Name>
+        <Summary>Development files for gnome-desktop</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gnome-desktop</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>gnome-desktop-docs</Name>
+        <Summary>Development files for gnome-desktop</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gnome-desktop</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/gtk-doc</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2020-03-12</Date>
+            <Version>3.34.4</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
