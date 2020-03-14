@@ -29,7 +29,7 @@ builddirkvmtest = "kvm/test"
 targetListKvm = "x86_64-softmmu"
 targetList = "i386-softmmu x86_64-softmmu arm-softmmu cris-softmmu m68k-softmmu \
               mips-softmmu mipsel-softmmu mips64-softmmu mips64el-softmmu ppc-softmmu \
-              ppcemb-softmmu ppc64-softmmu sh4-softmmu sh4eb-softmmu sparc-softmmu \
+              ppc64-softmmu sh4-softmmu sh4eb-softmmu sparc-softmmu \
               i386-linux-user x86_64-linux-user alpha-linux-user arm-linux-user \
               armeb-linux-user cris-linux-user m68k-linux-user mips-linux-user \
               mipsel-linux-user ppc-linux-user ppc64-linux-user ppc64abi32-linux-user \
@@ -58,7 +58,7 @@ def printfancy(msg):
     print
 
 def setup():
-    shelltools.system("sed -i 's/ memfd_create/ qemu_memfd_create/' util/memfd.c")
+    #shelltools.system("sed -i 's/ memfd_create/ qemu_memfd_create/' util/memfd.c")
     
     # disable fdt until dtc is in repo
     # pisitools.dosed("configure", 'fdt="yes"', 'fdt="no"')
@@ -119,6 +119,6 @@ def install():
     shelltools.system("chmod u+s %s/usr/lib/qemu/qemu-bridge-helper" % get.installDIR())
     pisitools.insinto("/etc/sasl2/", "qemu.sasl", "qemu.conf")
 
-    for i in ["pc-bios/README", "LICENSE", "README", "COPYING*"]:
+    for i in ["pc-bios/README", "LICENSE", "README*", "COPYING*"]:
         pisitools.dodoc(i)
 
