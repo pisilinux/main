@@ -9,7 +9,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static")
+    autotools.configure("--disable-static \
+                         --enable-jpeg    \
+                         --enable-jasper  \
+                         --enable-lcms")
 
 def build():
     autotools.make()
