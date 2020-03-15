@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("PYTHON", "python3")
+    shelltools.export("PYTHON", "/usr/bin/python3")
     autotools.configure("--prefix=/usr \
                          --libexecdir=/usr/lib/pluma \
                          --disable-schemas-compile \
