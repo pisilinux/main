@@ -1,0 +1,34 @@
+diff -Nuar a/extension/caja-admin.py.in b/extension/caja-admin.py.in
+--- a/extension/caja-admin.py.in	2017-08-16 18:55:41.000000000 +0300
++++ b/extension/caja-admin.py.in	2020-03-18 23:41:45.604050174 +0300
+@@ -15,7 +15,7 @@
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+-import os, subprocess, urlparse, traceback
++import os, subprocess, traceback
+ from gi.repository import Caja, GObject, Gtk, GLib
+ from gettext import gettext, locale, bindtextdomain, textdomain
+ 
+@@ -154,9 +154,7 @@
+ 	def _is_executable(self, file):
+ 		"""Returns whether the current user can execute the given file."""
+ 		try:
+-			uri = file.get_uri()
+-			p = urlparse.urlparse(uri)
+-			path = os.path.abspath(os.path.join(p.netloc, p.path))
++			path = file.get_location().get_path()
+ 			return os.access(path,os.X_OK)
+ 		except:
+ 			return False
+@@ -165,9 +163,7 @@
+ 		"""'Run as Administrator' menu item callback."""
+ 		if self._show_warning_dialog():
+ 			try:
+-				uri = file.get_uri()
+-				p = urlparse.urlparse(uri)
+-				path = os.path.abspath(os.path.join(p.netloc, p.path))
++				path = file.get_location().get_path()
+ 				#is_app = not os.path.splitext(path)[-1]
+ 				cmd = [PKEXEC_PATH]
+ 				#cmd +=['env','DISPLAY='+os.environ['DISPLAY'],'XAUTHORITY='+os.environ['XAUTHORITY']]
