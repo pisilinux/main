@@ -14,7 +14,7 @@ def setup():
     #shelltools.export("PYTHON", "/usr/bin/python3")
     pisitools.dosed("configure", "-Werror", "")
     autotools.configure("--disable-static \
-						 pythondir=/usr/bin/python3 \
+                         pythondir=/usr/bin/python3 \
                          --libexecdir=/usr/lib \
                          --sysconfdir=/etc \
                          --enable-gtk-doc-html=no \
