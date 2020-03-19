@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     #Change default xcursor
-    pisitools.dosed("schemas/org.mate.peripherals-mouse.gschema.xml.in", "<default>''</default>", "<default>'mate'</default>")
+    #pisitools.dosed("schemas/org.mate.peripherals-mouse.gschema.xml.in", "<default>''</default>", "<default>'mate'</default>")
     pisitools.dosed("schemas/org.mate.background.gschema.xml.in", "backgrounds/mate/desktop/Stripes.png", "backgrounds/mate/nature/5.jpg")
     autotools.configure("--prefix=/usr \
                          --with-x \
