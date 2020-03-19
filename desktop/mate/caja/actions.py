@@ -11,6 +11,8 @@ from pisi.actionsapi import get
 
 def setup():
     #pisitools.dosed("data/caja.desktop.in*", "Exec=caja", "Exec=caja -n --sync")
+    autotools.autoreconf("-fiv")
+    
     autotools.configure("--disable-static \
                          --libexecdir=/usr/lib/caja \
                          --enable-introspection \
