@@ -11,8 +11,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("PYTHON", "/usr/bin/python3")
+    #shelltools.export("PYTHON", "python3")
     autotools.configure("--prefix=/usr \
+						 pythondir=/usr/bin/python3 \
                          --libexecdir=/usr/lib/pluma \
                          --disable-schemas-compile \
                          --enable-gtk-doc=no \
