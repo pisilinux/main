@@ -8,10 +8,15 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-NoStrip = "/"
+#NoStrip = "/"
 
 def setup():
-    autotools.configure()
+    autotools.autoreconf("-vif")
+    # suppress compiler warnings
+    pisitools.cxxflags.add("-Wno-format-truncation")
+    autotools.configure("--disable-static")
+    # fix unused direct dependency analysis
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
@@ -19,4 +24,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "COPYING")
+    pisitools.dodoc("README", "README.md", "COPYING")
