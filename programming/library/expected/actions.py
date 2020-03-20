@@ -27,4 +27,3 @@ def install():
     cmaketools.install()
 
     pisitools.dodoc('../COPYING')
-    pisitools.insinto('/usr/bin', 'sl')
