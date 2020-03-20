@@ -12,7 +12,7 @@ def install():
     #pisitools.dosed("data/*.desktop", "Icon=application-x-pisi", "Icon=/usr/share/icons/breeze/apps/128/package-manager.png")
     pythonmodules.install()
 
-    # Copy Notification Rc file for Kde 4
+    # Copy Notification Rc file for Kde
     pisitools.insinto("%s/package-manager/" % kde5.appsdir, "src/package-manager.notifyrc")
 
     for lang in ('de','en','es','fr','nl','sv','tr'):
