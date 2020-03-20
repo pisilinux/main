@@ -11,18 +11,14 @@ from pisi.actionsapi import cmaketools
 #shelltools.export("HOME", get.workDIR())
 
 def setup():
-    kde5.configure("-DFORCED_UNBUNDLE=ON \
-                    -DWITH_LQR=ON \
-                    -DWITH_LENSFUN=ON \
-                    -DWITH_MarbleWidget=ON \
-                    -DENABLE_LCMS2=ON \
-                    -DDIGIKAMSC_COMPILE_KIPIPLUGINS=ON \
-                    -DDIGIKAMSC_USE_PRIVATE_SHAREDLIBS=ON \
-                    -DDIGIKAMSC_COMPILE_LIBKGEOMAP=ON \
-                    -DDIGIKAMSC_COMPILE_LIBKVKONTAKTE=ON \
-                    -DDIGIKAMSC_COMPILE_LIBMEDIAWIKI=ON \
-                    -DDIGIKAMSC_COMPILE_LIBKFACE=ON \
-                    -DDIGIKAMSC_COMPILE_LIBKIPI=ON ")
+    kde5.configure("-DBUILD_TESTING=OFF \
+                    -DENABLE_KFILEMETADATASUPPORT=ON \
+                    -DENABLE_MEDIAPLAYER=ON \
+                    -DENABLE_AKONADICONTACTSUPPORT=ON \
+                    -DENABLE_MYSQLSUPPORT=ON \
+                    -DENABLE_APPSTYLES=ON \
+                    -DENABLE_QWEBENGINE=ON \
+                    -DOpenGL_GL_PREFERENCE=GLVND")
 
 def build():
     kde5.make()

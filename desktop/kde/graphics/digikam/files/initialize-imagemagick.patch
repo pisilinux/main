@@ -1,0 +1,60 @@
+From 76ff65aec63be4036955e89bf7136a5e9411e6b1 Mon Sep 17 00:00:00 2001
+From: Antonio Rojas <arojas@archlinux.org>
+Date: Thu, 7 Nov 2019 09:25:02 +0100
+Subject: Properly initialize ExceptionInfo in libMagick
+
+Otherwise it will crash if some plugins can't be loaded.
+
+Differential Revision: https://phabricator.kde.org/D25181
+---
+ core/dplugins/dimg/imagemagick/dimgimagemagickplugin.cpp | 6 +++---
+ core/tests/dimg/magickloader.cpp                         | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/core/dplugins/dimg/imagemagick/dimgimagemagickplugin.cpp b/core/dplugins/dimg/imagemagick/dimgimagemagickplugin.cpp
+index 1858b4d..20ef01b 100644
+--- a/core/dplugins/dimg/imagemagick/dimgimagemagickplugin.cpp
++++ b/core/dplugins/dimg/imagemagick/dimgimagemagickplugin.cpp
+@@ -125,7 +125,7 @@ QMap<QString, QString> DImgImageMagickPlugin::extraAboutData() const
+     QString mimes = typeMimes();
+ 
+     QMap<QString, QString> map;
+-    ExceptionInfo ex;
++    ExceptionInfo ex = *AcquireExceptionInfo();
+     size_t n                  = 0;
+     const MagickInfo** inflst = GetMagickInfoList("*", &n, &ex);
+ 
+@@ -219,7 +219,7 @@ int DImgImageMagickPlugin::canRead(const QFileInfo& fileInfo, bool magic) const
+ int DImgImageMagickPlugin::canWrite(const QString& format) const
+ {
+     QStringList formats;
+-    ExceptionInfo ex;
++    ExceptionInfo ex = *AcquireExceptionInfo();
+     size_t n                  = 0;
+     const MagickInfo** inflst = GetMagickInfoList("*", &n, &ex);
+ 
+@@ -266,7 +266,7 @@ DImgLoader* DImgImageMagickPlugin::loader(DImg* const image, const DRawDecoding&
+ QStringList DImgImageMagickPlugin::decoderFormats() const
+ {
+     QStringList formats;
+-    ExceptionInfo ex;
++    ExceptionInfo ex = *AcquireExceptionInfo();
+     size_t n                  = 0;
+     const MagickInfo** inflst = GetMagickInfoList("*", &n, &ex);
+ 
+diff --git a/core/tests/dimg/magickloader.cpp b/core/tests/dimg/magickloader.cpp
+index 2526779..73f2abe 100644
+--- a/core/tests/dimg/magickloader.cpp
++++ b/core/tests/dimg/magickloader.cpp
+@@ -127,7 +127,7 @@ int main(int argc, char** argv)
+ {
+     MagickCoreGenesis((char*)NULL, MagickFalse);
+ 
+-    ExceptionInfo ex;
++    ExceptionInfo ex = *AcquireExceptionInfo();
+     size_t n                  = 0;
+     const MagickInfo** inflst = GetMagickInfoList("*", &n, &ex);
+ 
+-- 
+cgit v1.1
+
