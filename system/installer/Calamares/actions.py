@@ -20,16 +20,18 @@ def setup():
                           sourceDir=".." )
     
 def build():
-    shelltools.makedirs("build")
+    #shelltools.makedirs("build")
     shelltools.cd("build")
     
     cmaketools.make()
 
 def install():
-    shelltools.makedirs("build")
+    #shelltools.makedirs("build")
     shelltools.cd("build")
-    
     cmaketools.install()
+    
+    pisitools.insinto("/usr/share/calamares", "../settings.conf")
+    pisitools.insinto("/usr/share/calamares/modules", "src/modules/machineid/machineid.conf")
     
     #dbus configuration for pisi
     pisitools.dosed("%s/usr/share/calamares/modules/machineid.conf" % get.installDIR(), "systemd: true", "systemd: false")
