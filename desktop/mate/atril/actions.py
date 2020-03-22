@@ -28,7 +28,6 @@ def setup():
                          --enable-pixbuf \
                          --enable-impress \
                          --enable-introspection \
-                         --enable-t1lib=no \
                          --disable-schemas-compile")
 
     # for fix unused dependency
