@@ -23,12 +23,10 @@ def setup():
                          --enable-djvu \
                          --enable-dvi \
                          --enable-xps \
-                         --enable-since=no \
-                         --disable-t1lib \
+                         --enable-t1lib \
                          --enable-comics \
                          --enable-pixbuf \
                          --enable-impress \
-                         --disable-since \
                          --enable-introspection \
                          --disable-schemas-compile")
 
