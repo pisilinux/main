@@ -14,7 +14,7 @@ from pisi.actionsapi import texlivemodules
 import os
 
 WorkDir = "."
-buildDir = 'source/build'
+buildDir = 'texlive-20190410-source/build'
 
 def setup():
     shelltools.makedirs(buildDir)
@@ -30,8 +30,10 @@ def setup():
                          --with-banner-add=/PisiLinux \
                          --disable-psutils \
                          --disable-t1utils \
-                         --enable-multiplatform \
+                         --disable-multiplatform \
                          --disable-static \
+                         --disable-dvisvgm \
+                         --enable-shared \
                          --enable-ipc \
                          --with-x \
                          --disable-xindy \
@@ -43,6 +45,7 @@ def setup():
                          --without-system-xpdf \
                          --with-system-graphite2 \
                          --with-system-freetype2 \
+                         --with-system-harfbuzz \
                          --disable-luatex")
 
 def build():
