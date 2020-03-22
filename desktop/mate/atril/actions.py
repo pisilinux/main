@@ -23,12 +23,13 @@ def setup():
                          --enable-djvu \
                          --enable-dvi \
                          --enable-xps \
-                         --enable-t1lib \
+                         --enable-since=no \
+                         --disable-t1lib \
                          --enable-comics \
                          --enable-pixbuf \
                          --enable-impress \
+                         --disable-since \
                          --enable-introspection \
-                         --enable-t1lib=no \
                          --disable-schemas-compile")
 
     # for fix unused dependency
