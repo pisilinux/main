@@ -4,13 +4,23 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import kde5
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
+
 
 def setup():
-    kde5.configure()
+    shelltools.makedirs("build")
+    shelltools.cd("build") 
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr   \
+                          -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DBUILD_TESTING=OFF", sourceDir="..")
 
 def build():
-    kde5.make()
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
-    kde5.install()
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
