@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure(" --enable-locking \
+                          --libexecdir=/usr/lib/mate-screensaver \
                           --with-xf86gamma-ext \
                           --with-kbd-layout-indicator \
                           --with-systemd=no \
