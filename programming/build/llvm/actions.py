@@ -13,9 +13,12 @@ libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else ""
 
+NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
+
 def setup():
 	
     #pisitools.ldflags.add("-fuse-ld=lld")
+    pisitools.ldflags.add(" --rtlib=libgcc --unwindlib=libgcc")
 	
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
@@ -83,7 +86,6 @@ def setup():
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
                                         -DCOMPILER_RT_USE_LIBCXX=OFF \
                                         -DLIBOMP_USE_HIER_SCHED=ON \
-                                        -DCLANG_DEFAULT_UNWINDLIB=libunwind \
                                         -DENABLE_SHARED=ON" % (options), sourceDir=".." ) 
 
 def build():
