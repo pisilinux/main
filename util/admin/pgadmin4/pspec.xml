@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pgadmin4</Name>
+        <Homepage>https://www.pgadmin.org/</Homepage>
+        <Packager>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Packager>
+        <License>custom</License>
+        <IsA>app:gui</IsA>
+        <Summary>Comprehensive design and management interface for PostgreSQL</Summary>
+        <Description>pgAdmin is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world.</Description>
+        <Archive sha1sum="53e44e5707ab04fd8b499d840a71ad8637cde3c0" type="targz">https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v4.19/source/pgadmin4-4.19.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>imagemagick-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
+            <Dependency>python3-sphinx</Dependency>
+            <Dependency>python3-extras</Dependency>
+            <Dependency>python3-fixtures</Dependency>
+            <Dependency>python3-html5lib</Dependency>
+            <Dependency>python3-pbr</Dependency>
+            <Dependency>python3-mimeparse</Dependency>
+            <Dependency>python3-pyrsistent</Dependency>
+            <Dependency>python3-blinker</Dependency>
+            <Dependency>python3-flask</Dependency>
+            <Dependency>python3-flask-login</Dependency>
+            <Dependency>python3-flask-migrate</Dependency>
+            <Dependency>python3-flask-sqlalchemy</Dependency>
+            <Dependency>python3-flask-wtf</Dependency>
+            <Dependency>python3-passlib</Dependency>
+            <Dependency>python3-pytz</Dependency>
+            <Dependency>python3-simplejson</Dependency>
+            <Dependency>python3-six</Dependency>
+            <Dependency>python3-speaklater</Dependency>
+            <Dependency>python3-sqlparse</Dependency>
+            <Dependency>python3-wtforms</Dependency>
+            <Dependency>python3-psutil</Dependency>
+            <Dependency>python3-Jinja2</Dependency>
+            <Dependency>python3-paramiko</Dependency>
+            <Dependency>python3-psycopg2</Dependency>
+            <Dependency>python3-cryptography</Dependency>
+            <Dependency>python3-sqlalchemy</Dependency>
+            <Dependency>python3-testtools</Dependency>
+            <Dependency>python3-webencodings</Dependency>
+            <Dependency>python3-werkzeug</Dependency>
+            <Dependency>python3-dateutil</Dependency>
+            <Dependency>python3-flask-gravatar</Dependency>
+            <Dependency>python3-flask-mail</Dependency>
+            <Dependency>python3-flask-principal</Dependency>
+            <Dependency>python3-flask-paranoid</Dependency>
+            <Dependency>python3-sshtunnel</Dependency>
+            <Dependency>python3-flask-security</Dependency>
+            <Dependency>python3-flask-compress</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">pgadmin4-python-de-vendor-venv-paths.patch</Patch>
+            <Patch level="1">python-3.8.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>pgadmin4</Name>
+        <Summary>Comprehensive design and management interface for PostgreSQL</Summary>
+        <RuntimeDependencies>
+            <Dependency>python3</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>imagemagick</Dependency>
+            <Dependency>python3-blinker</Dependency>
+            <Dependency>python3-flask</Dependency>
+            <Dependency>python3-flask-login</Dependency>
+            <Dependency>python3-flask-migrate</Dependency>
+            <Dependency>python3-flask-sqlalchemy</Dependency>
+            <Dependency>python3-flask-wtf</Dependency>
+            <Dependency>python3-passlib</Dependency>
+            <Dependency>python3-pytz</Dependency>
+            <Dependency>python3-simplejson</Dependency>
+            <Dependency>python3-six</Dependency>
+            <Dependency>python3-speaklater</Dependency>
+            <Dependency>python3-sqlparse</Dependency>
+            <Dependency>python3-wtforms</Dependency>
+            <Dependency>python3-psutil</Dependency>
+            <Dependency>python3-Jinja2</Dependency>
+            <Dependency>python3-paramiko</Dependency>
+            <Dependency>python3-psycopg2</Dependency>
+            <Dependency>python3-cryptography</Dependency>
+            <Dependency>python3-sqlalchemy</Dependency>
+            <Dependency>python3-testtools</Dependency>
+            <Dependency>python3-webencodings</Dependency>
+            <Dependency>python3-werkzeug</Dependency>
+            <Dependency>python3-dateutil</Dependency>
+            <Dependency>python3-flask-gravatar</Dependency>
+            <Dependency>python3-flask-mail</Dependency>
+            <Dependency>python3-flask-principal</Dependency>
+            <Dependency>python3-flask-paranoid</Dependency>
+            <Dependency>python3-sshtunnel</Dependency>
+            <Dependency>python3-flask-security</Dependency>
+            <Dependency>python3-flask-compress</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+        </Files>
+       <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0755" target="/usr/bin/pgadmin4">pgadmin4</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/bin/pgadmin4-server">pgadmin4-server</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/share/applications/pgAdmin4.desktop">pgAdmin4.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pgadmin4/web/config_distro.py">config_distro.py</AdditionalFile>
+       </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>pgadmin4-docs</Name>
+        <Summary>Documentation files for pgadmin4</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">pgadmin4</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/pgadmin4</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2020-03-24</Date>
+            <Version>4.19</Version>
+            <Comment>First release</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
