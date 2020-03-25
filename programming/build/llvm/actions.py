@@ -11,9 +11,11 @@ from pisi.actionsapi import cmaketools
 
 libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
-
+libsuffix = "32" if get.buildTYPE() == "emul32" else ""
 
 def setup():
+	
+    #pisitools.ldflags.add("-fuse-ld=lld")
 	
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
@@ -34,7 +36,7 @@ def setup():
 
             if not shelltools.can_access_directory("projects/compiler-rt"):
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
-                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")     
+                shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
         
                 shelltools.export("CC", "clang")
                 shelltools.export("CXX", "clang++")
@@ -79,7 +81,10 @@ def setup():
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
-                                        -DENABLE_SHARED=ON" % options, sourceDir=".." ) 
+                                        -DCOMPILER_RT_USE_LIBCXX=OFF \
+                                        -DLIBOMP_USE_HIER_SCHED=ON \
+                                        -DCLANG_DEFAULT_UNWINDLIB=libunwind \
+                                        -DENABLE_SHARED=ON" % (options), sourceDir=".." ) 
 
 def build():
     shelltools.makedirs("build")
