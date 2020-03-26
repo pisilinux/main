@@ -21,6 +21,7 @@ def setup():
                          --with-espeak \
                          --with-libao \
                          --with-pulse \
+                         --with-ibmtts=no \
                          --with-baratinoo=no \
                          --with-kali=no \
                          --with-default-audio-method=alsa")
