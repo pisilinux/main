@@ -41,15 +41,16 @@ def setup():
                -Dbuild-tests=false \
                -Dosmesa=gallium \
                -Dswr-arches=avx,avx2 \
+               -Dgallium-opencl=icd \
               " % ((libdir, ) * 2)
 
     if get.buildTYPE() == "emul32":
-        options += " -Dlmsensors=false"
+        options += " -Dlmsensors=false --native-file crossfile.ini -Dllvm_libdir=/usr/lib32"
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32") 
-    else: options += " -Dgallium-opencl=icd -Dgallium-omx=bellagio -Dlmsensors=true"
+    else: options += " -Dgallium-omx=bellagio -Dlmsensors=true"
 
     mesontools.configure(options)
 
