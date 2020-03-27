@@ -24,5 +24,3 @@ def install():
     perlmodules.install()
 
     pisitools.dodoc("README", "LICENCE")
-    shelltools.chmod("examples/*", 0644)
-    pisitools.insinto(examples, "examples/*")
