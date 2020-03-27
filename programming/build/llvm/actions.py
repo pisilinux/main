@@ -16,7 +16,7 @@ libsuffix = "32" if get.buildTYPE() == "emul32" else ""
 NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 
 def setup():
-    #pisitools.ldflags.add("-fuse-ld=lld")
+    pisitools.ldflags.add("-fuse-ld=lld")
 
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
@@ -39,19 +39,19 @@ def setup():
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
                 shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
         
-                #shelltools.export("CC", "clang")
-                #shelltools.export("CXX", "clang++")
-                shelltools.export("CC", "gcc")
-                shelltools.export("CXX", "g++")
+                shelltools.export("CC", "clang")
+                shelltools.export("CXX", "clang++")
+                #shelltools.export("CC", "gcc")
+                #shelltools.export("CXX", "g++")
     else:
         shelltools.system("tar xf ../clang-%s.src.tar.xz -C tools" % get.srcVERSION())
         shelltools.move("tools/clang-%s.src" % get.srcVERSION(), "tools/clang")
     
     if get.buildTYPE() == "emul32":
-        #shelltools.export("CC", "clang -m32")
-        #shelltools.export("CXX", "clang++ -m32")
-        shelltools.export("CC", "gcc -m32")
-        shelltools.export("CXX", "g++ -m32")
+        shelltools.export("CC", "clang -m32")
+        shelltools.export("CXX", "clang++ -m32")
+        #shelltools.export("CC", "gcc -m32")
+        #shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
     
     shelltools.makedirs("build")
@@ -63,6 +63,7 @@ def setup():
                               -DCMAKE_INSTALL_PREFIX=/usr \
                             -DCMAKE_CXX_FLAGS:STRING=-m64 \
                             -DLLVM_TARGET_ARCH:STRING=x86_64 \
+                            -DLLDB_ENABLE_LUA=OFF \
                             -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
                           
     
