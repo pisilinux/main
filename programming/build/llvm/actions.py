@@ -16,9 +16,8 @@ libsuffix = "32" if get.buildTYPE() == "emul32" else ""
 NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 
 def setup():
-	
-    pisitools.ldflags.add("-fuse-ld=lld")
-	
+    #pisitools.ldflags.add("-fuse-ld=lld")
+
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
                 shelltools.system("tar xf ../clang-%s.src.tar.xz -C tools" % get.srcVERSION())
@@ -87,8 +86,7 @@ def setup():
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
                                         -DCOMPILER_RT_USE_LIBCXX=OFF \
-                                        -DLIBOMP_USE_HIER_SCHED=ON \
-                                        -DENABLE_SHARED=ON" % (options), sourceDir=".." ) 
+                                        -DLIBOMP_USE_HIER_SCHED=ON" % (options), sourceDir=".." ) 
 
 def build():
     shelltools.makedirs("build")
