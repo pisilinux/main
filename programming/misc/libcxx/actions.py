@@ -18,19 +18,21 @@ def setup():
     shelltools.move("libcxx-%s.src" %get.srcVERSION(), "libcxx")
     shelltools.move("libcxxabi-%s.src" %get.srcVERSION(), "libcxxabi")
 
-def build():
-    
-    
+def build():   
+    shelltools.export("CC", "clang")
+    shelltools.export("CXX", "clang++")
     
     for arch in ["x86_64", "i686"]:
+		
 		if arch == "x86_64":
-			shelltools.export("CC", "clang -m64 -fuse-ld=lld -rtlib=compiler-rt")
-			shelltools.export("CXX", "clang++ -m64 -fuse-ld=lld -rtlib=compiler-rt")
+			pisitools.cflags.add("-m64")
+			pisitools.cxxflags.add("-m64")
 			shelltools.export("LDFLAGS", " -fuse-ld=lld -rtlib=compiler-rt -L/usr/lib -ldl -lpthread")
 			libsuffix = " "
+		
 		if arch == "i686":
-			shelltools.export("CC", "clang -m32 -fuse-ld=lld -rtlib=compiler-rt")
-			shelltools.export("CXX", "clang++ -m32 -fuse-ld=lld -rtlib=compiler-rt")
+			pisitools.cflags.add("-m32")
+			pisitools.cxxflags.add("-m32")
 			shelltools.export("LDFLAGS", "-fuse-ld=lld -L/usr/lib32 -ldl -lpthread")
 			libsuffix = "32"
 			
@@ -79,6 +81,7 @@ def build():
                          -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=ON \
                          -DLIBCXX_ENABLE_FILESYSTEM=ON \
                          -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=TRUE \
+                         -DLIBCXX_USE_COMPILER_RT=ON \
                          -DLIBCXX_CXX_ABI=libcxxabi \
                          -DLIBCXX_CXX_ABI_INCLUDE_PATHS=../../libcxxabi/include \
                          -DLIBCXX_CXX_ABI_LIBRARY_PATH=../../libcxxabi/build-%s/lib \
@@ -86,9 +89,7 @@ def build():
                          -DLIBCXX_LIBDIR_SUFFIX=%s \
                          " % (arch, libsuffix) )
 		
-		autotools.make()
-		
-                         
+		autotools.make()                         
 	    
 
 def install():
@@ -96,24 +97,5 @@ def install():
 	for arch in ["x86_64", "i686"]:
 		shelltools.cd("%s/libcxx/build-%s" % (get.workDIR(), arch) )
 		autotools.rawInstall("DESTDIR=%s" %get.installDIR())
-		if arch == "x86_64":
-			libsuffix = ""
-		if arch == "i686":
-			libsuffix = "32"
-		pisitools.remove("/usr/lib%s/libc++.so" %libsuffix)
-		pisitools.remove("/usr/lib%s/libc++.so.1" %libsuffix)
-		pisitools.remove("/usr/lib%s/libc++.so.1.0" %libsuffix)
-		shelltools.copy("%s/libcxx/build-%s/lib%s/libc++.so" % (get.workDIR(), arch, libsuffix), "%s/usr/lib%s" %(get.installDIR(), libsuffix))
-		shelltools.copy("%s/libcxx/build-%s/lib%s/libc++.so.1" % (get.workDIR(), arch, libsuffix), "%s/usr/lib%s" %(get.installDIR(), libsuffix))
-		shelltools.copy("%s/libcxx/build-%s/lib%s/libc++.so.1.0" % (get.workDIR(), arch, libsuffix), "%s/usr/lib%s" %(get.installDIR(), libsuffix))
-		shelltools.copy("%s/libcxx/build-%s/lib%s/libc++experimental.a" % (get.workDIR(), arch, libsuffix), "%s/usr/lib%s" %(get.installDIR(), libsuffix))
-		
-		
-	
-    
-	#shelltools.system("cd %s/libcxx" % get.workDIR())
-	#shelltools.system("mkdir -p %s/usr/share/doc/libc++" %get.installDIR())
-	#shelltools.copy("%s/libcxx/CREDITS.TXT" %get.workDIR(), "%s/usr/share/doc/libc++" %get.installDIR())
-	#shelltools.copy("%s/libcxx/LICENCE.TXT" %get.workDIR(), "%s/usr/share/doc/libc++" %get.installDIR())
-	#shelltools.copy("%s/libcxx/NOTES.TXT" %get.workDIR(), "%s/usr/share/doc/libc++" %get.installDIR())
-	#shelltools.copy("%s/libcxx/TODO.TXT" %get.workDIR(), "%s/usr/share/doc/libc++" %get.installDIR())
+   
+	pisitools.dodoc("%s/libcxx/CREDITS.TXT" % get.workDIR(), "%s/libcxx/LICENSE.TXT" % get.workDIR(), "%s/libcxx/NOTES.TXT" % get.workDIR(), "%s/libcxx/TODO.TXT" % get.workDIR())
