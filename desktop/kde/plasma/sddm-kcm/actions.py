@@ -18,4 +18,4 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("CONTRIBUTORS", "COPYING", "README")
+    pisitools.dodoc("CONTRIBUTORS", "COPYING", "README*")
