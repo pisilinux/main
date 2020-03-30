@@ -17,7 +17,7 @@ def setup():
                          --disable-geoclue \
                          --disable-docbook-docs \
                          --disable-libportal \
-                         --disable-pipewire")
+                         --enable-pipewire")
 
 def build():
     autotools.make()
