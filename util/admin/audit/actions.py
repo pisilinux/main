@@ -6,6 +6,7 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
@@ -35,5 +36,8 @@ def install():
     # Disable zos-remote plugin to get rid of deps. like cyrus-sasl
     pisitools.remove("/usr/share/man/man8/audispd-zos-remote.8")
     pisitools.remove("/usr/share/man/man5/zos-remote.conf.5")
+    
+    for sbin in shelltools.ls("%s/usr/sbin" % get.installDIR()):
+        pisitools.dosym("/usr/sbin/%s" % sbin, "/sbin/%s" % sbin)
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "THANKS", "README", "COPYING")
