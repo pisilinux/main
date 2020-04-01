@@ -4,21 +4,20 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--with-package-name='PisiLinux gstreamer-plugins-bad package' \
-                         --with-package-origin='http://www.pisilinux.org'")
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ") 
+    mesontools.configure("-Dpackage-name='PisiLinux gstreamer-plugins-bad package' \
+                          -Dpackage-origin='http://www.pisilinux.org' \
+						  -D msdk=disabled")
 
 def build():
-    autotools.make()
-
+    mesontools.build()
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("ABOUT-NLS", "AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README", "RELEASE", "REQUIREMENTS")
