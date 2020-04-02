@@ -27,6 +27,6 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.removeDir("/usr/share/selinux")
+    #pisitools.removeDir("/usr/share/selinux")
 
-    #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
+    pisitools.dodoc("COPYING", "README*", "NEWS")
