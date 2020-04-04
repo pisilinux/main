@@ -26,6 +26,9 @@ def setup():
                       % (arch, get.srcVERSION()))
     shelltools.move("tmp/*", ".")
     
+    #5.5 patch icin
+    shelltools.move("tmp/.manifest", ".")
+    shelltools.system("patch -p1 < kernel-5.5.patch")
     
     #if get.buildTYPE() != 'emul32':
         #shelltools.system("patch -p1 < linux-5.1.patch")
@@ -52,7 +55,7 @@ def build():
     # We don't need kernel module for emul32 build
     if get.buildTYPE() == 'emul32':
         return
-
+    
     shelltools.export("SYSSRC", "/lib/modules/%s/build" % KDIR)
     shelltools.cd("kernel")
 
