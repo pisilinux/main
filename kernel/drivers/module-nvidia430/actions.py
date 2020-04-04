@@ -26,10 +26,12 @@ def setup():
                       % get.srcVERSION())
     shelltools.move("tmp/*", ".")
     
-    #shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.19.patch")
-    #shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-390.87-kernel-4.20.patch")
+    #5.5 patch icin
+    shelltools.move("tmp/.manifest", ".")
     
-    #shelltools.system("patch -p1 < header-fix.patch")
+    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-work-around-mga-bug-25890.patch")
+    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-kernel-5.5.patch")
+    
     
     # Our libc is TLS enabled so use TLS library
     #shelltools.unlink("*-tls.so*")

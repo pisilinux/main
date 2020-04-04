@@ -1,0 +1,45 @@
+
+In this bug:
+https://bugs.mageia.org/show_bug.cgi?id=25890
+
+The nvidia-current conftest.sh falsely detects support for
+set_memory_array_uc/wb() in 5.4 series kernels
+
+Fix it by adding linux kernel version checks to exclude the unsuppoorted code
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nv-vm.c NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nv-vm.c
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nv-vm.c	2019-10-27 13:48:11.000000000 +0200
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nv-vm.c	2019-12-29 23:54:36.176732208 +0200
+@@ -42,12 +42,14 @@ static inline int nv_set_memory_array_ty
+ {
+     switch (type)
+     {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 4, 0)
+ #if defined(NV_SET_MEMORY_ARRAY_UC_PRESENT)
+         case NV_MEMORY_UNCACHED:
+             return 1;
+         case NV_MEMORY_WRITEBACK:
+             return 1;
+ #endif
++#endif
+         default:
+             return 0;
+     }
+@@ -61,6 +63,7 @@ static inline void nv_set_memory_array_t
+ {
+     switch (type)
+     {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 4, 0)
+ #if defined(NV_SET_MEMORY_ARRAY_UC_PRESENT)
+         case NV_MEMORY_UNCACHED:
+             set_memory_array_uc(pages, num_pages);
+@@ -69,6 +72,7 @@ static inline void nv_set_memory_array_t
+             set_memory_array_wb(pages, num_pages);
+             break;
+ #endif
++#endif
+         default:
+             nv_printf(NV_DBG_ERRORS,
+                 "NVRM: %s(): type %d unimplemented\n",
