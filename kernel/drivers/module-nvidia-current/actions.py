@@ -25,6 +25,14 @@ def setup():
     shelltools.system("sh NVIDIA-Linux-x86_64-%s.run -x --target tmp"
                       % get.srcVERSION())
     shelltools.move("tmp/*", ".")
+    
+    #5.5 patch icin
+    shelltools.move("tmp/.manifest", ".")
+    
+    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-work-around-mga-bug-25890.patch")
+    shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-kernel-5.5.patch")
+    
+    
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
