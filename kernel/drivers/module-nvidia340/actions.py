@@ -26,7 +26,11 @@ def setup():
                       % (arch, get.srcVERSION()))
 
     shelltools.move("tmp/*", ".")
-
+    
+    #5.5 patch icin
+    shelltools.move("tmp/.manifest", ".")
+    shelltools.system("patch -p1 < kernel-5.5.patch")
+    
 
     # Our libc is TLS enabled so use TLS library
     shelltools.unlink("*-tls.so*")
