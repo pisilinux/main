@@ -9,11 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def build():
-    pisitools.dosed("data/service-manager.desktop", "NotShowIn=KDE;", "")
     shelltools.system("python setup.py build")
 
 def install():
     pythonmodules.install()
-    
-    pisitools.insinto("/usr/share/pixmaps", "data/flag-yellow.png")
-
