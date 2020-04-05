@@ -21,7 +21,7 @@ def install():
     pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog")
     
 
-    shelltools.export("LD_PRELOAD","%s/liblouis/.libs/liblouis.so.12" % get.curDIR())
+    shelltools.export("LD_PRELOAD","%s/liblouis/.libs/liblouis.so.20" % get.curDIR())
     shelltools.cd("python")
 
     pythonmodules.install("--prefix=/usr --optimize=1")
