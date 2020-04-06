@@ -16,22 +16,22 @@ def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Debug \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DWITH_PYTHONQT=OFF \
+                          -DINSTALL_CONFIG=ON \
                           -DWITH_CRASHREPORTER=ON", \
                           sourceDir=".." )
     
 def build():
-    #shelltools.makedirs("build")
     shelltools.cd("build")
     
     cmaketools.make()
 
 def install():
-    #shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.install()
     
-    pisitools.insinto("/usr/share/calamares", "../settings.conf")
-    pisitools.insinto("/usr/share/calamares/modules", "src/modules/machineid/machineid.conf")
+    #pisitools.insinto("/usr/share/calamares", "../settings.conf")
+    #pisitools.insinto("/usr/share/calamares/modules", "src/modules/machineid/machineid.conf")
     
     #dbus configuration for pisi
     pisitools.dosed("%s/usr/share/calamares/modules/machineid.conf" % get.installDIR(), "systemd: true", "systemd: false")
