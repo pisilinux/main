@@ -19,13 +19,21 @@ def setup():
     
     shelltools.copytree("../boost-%s" % (get.srcVERSION().replace("_", "~")), "../boost-%s-38" % get.srcVERSION())
     
-    shelltools.system("./bootstrap.sh --with-toolset=gcc --with-icu --with-python=/usr/bin/python2.7 --prefix=%s/usr" % get.installDIR())
     
-    shelltools.copytree("../boost-%s" % (get.srcVERSION().replace("_", "~")), "../boost-%s-38" % get.srcVERSION())
+    
+    shelltools.system("./bootstrap.sh --with-toolset=gcc \
+                                      --with-icu \
+                                      --with-python=/usr/bin/python2.7 \
+                                      --prefix=%s/usr" % get.installDIR())
+    
+    
+    
     shelltools.cd("../boost-%s-38" % get.srcVERSION())
-    shelltools.system("sed -e '/using python/ s@;@: /usr/include/python${PYTHON_VERSION/3*/${PYTHON_VERSION}} ;@' \
-    -i bootstrap.sh")
-    shelltools.system("./bootstrap.sh --with-toolset=gcc --with-icu --with-python=/usr/bin/python3.8 --prefix=%s/usr" % get.installDIR())
+    shelltools.system("./bootstrap.sh --with-toolset=gcc \
+                                      --with-icu \
+                                      --with-python=/usr/bin/python3 \
+                                      --with-libraries=python \
+                                      --prefix=%s/usr" % get.installDIR())
     
     shelltools.cd("..")
     
