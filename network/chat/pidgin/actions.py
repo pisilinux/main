@@ -14,7 +14,7 @@ def setup():
     #shelltools.export("CFLAGS","%s -fstack-protector-all" % get.CFLAGS())
     #shelltools.export("CXXFLAGS", "%s -fstack-protector-all" % get.CXXFLAGS())
     #shelltools.export("LDFLAGS", "%s -pie" % get.LDFLAGS())
-    #autotools.autoreconf("-fi")
+    autotools.autoreconf("-fiv")
     autotools.configure("--prefix=/usr \
                          --enable-dbus \
                          --enable-cyrus-sasl \
