@@ -1,15 +1,108 @@
+diff -Nuar a/Cargo.lock b/Cargo.lock
+--- a/Cargo.lock	2020-04-05 00:32:40.000000000 +0300
++++ b/Cargo.lock	2020-04-01 12:45:53.000000000 +0300
+@@ -32,7 +32,7 @@
+ 
+ [[package]]
+ name = "cbindgen"
+-version = "0.14.0"
++version = "0.13.2"
+ dependencies = [
+  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
+  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
+diff -Nuar a/Cargo.toml b/Cargo.toml
+--- a/Cargo.toml	2020-04-05 00:32:40.000000000 +0300
++++ b/Cargo.toml	2020-04-01 12:45:53.000000000 +0300
+@@ -1,6 +1,6 @@
+ [package]
+ name = "cbindgen"
+-version = "0.14.0"
++version = "0.13.2"
+ authors = ["Jeff Muizelaar <jmuizelaar@mozilla.com>",
+            "Kartikaya Gupta <kats@mozilla.com>",
+            "Ryan Hunt <rhunt@eqrion.net>"]
+diff -Nuar a/CHANGES b/CHANGES
+--- a/CHANGES	2020-04-05 00:32:40.000000000 +0300
++++ b/CHANGES	2020-04-01 12:45:53.000000000 +0300
+@@ -1,10 +1,3 @@
+-## 0.14.0
+-
+-     * Minor tweak at how [export.exclude] is handled to allow excluding
+-       generic instantiations in C mode. (#501)
+-     * Documented cpp_compat option. (#496)
+-     * Fixed a panic when parsing associated constants for a built-in type. (#494)
+-
+ ## 0.13.2
+ 
+      * Constants now have suitable documentation. (#471)
 diff -Nuar a/tests/tests.rs b/tests/tests.rs
 --- a/tests/tests.rs	2020-04-05 00:32:40.000000000 +0300
-+++ b/tests/tests.rs	2020-04-07 09:43:23.472782274 +0300
-@@ -74,7 +74,10 @@
++++ b/tests/tests.rs	2020-04-01 12:45:53.000000000 +0300
+@@ -62,19 +62,13 @@
+     );
+ }
+ 
+-fn compile(
+-    cbindgen_output: &Path,
+-    tests_path: &Path,
+-    tmp_dir: &Path,
+-    language: Language,
+-    style: Option<Style>,
+-) {
++fn compile(cbindgen_output: &Path, tests_path: &Path, language: Language, style: Option<Style>) {
+     let cc = match language {
+         Language::Cxx => env::var("CXX").unwrap_or_else(|_| "g++".to_owned()),
          Language::C => env::var("CC").unwrap_or_else(|_| "gcc".to_owned()),
      };
  
 -    let mut object = tmp_dir.join(cbindgen_output);
-+    let file_name = cbindgen_output
-+        .file_name()
-+        .expect("cbindgen output should be a file");
-+    let mut object = tmp_dir.join(file_name);
++    let mut object = cbindgen_output.to_path_buf();
      object.set_extension("o");
  
-     let mut command = Command::new(cc); 
+     let mut command = Command::new(cc);
+@@ -120,7 +114,6 @@
+     cbindgen_path: &'static str,
+     name: &'static str,
+     path: &Path,
+-    tmp_dir: &Path,
+     language: Language,
+     cpp_compat: bool,
+     style: Option<Style>,
+@@ -154,27 +147,21 @@
+     output.push(format!("{}.{}", name, ext));
+ 
+     run_cbindgen(cbindgen_path, path, &output, language, cpp_compat, style);
+-    compile(&output, &tests_path, tmp_dir, language, style);
++    compile(&output, &tests_path, language, style);
+ 
+     if language == Language::C && cpp_compat {
+-        compile(&output, &tests_path, tmp_dir, Language::Cxx, style)
++        compile(&output, &tests_path, Language::Cxx, style)
+     }
+ }
+ 
+ fn test_file(cbindgen_path: &'static str, name: &'static str, filename: &'static str) {
+     let test = Path::new(filename);
+-    let tmp_dir = tempfile::Builder::new()
+-        .prefix("cbindgen-test-output")
+-        .tempdir()
+-        .expect("Creating tmp dir failed");
+-    let tmp_dir = tmp_dir.path();
+     for style in &[Style::Type, Style::Tag, Style::Both] {
+         for cpp_compat in &[true, false] {
+             run_compile_test(
+                 cbindgen_path,
+                 name,
+                 &test,
+-                tmp_dir,
+                 Language::C,
+                 *cpp_compat,
+                 Some(*style),
+@@ -185,7 +172,6 @@
+         cbindgen_path,
+         name,
+         &test,
+-        tmp_dir,
+         Language::Cxx,
+         /* cpp_compat = */ false,
+         None,
