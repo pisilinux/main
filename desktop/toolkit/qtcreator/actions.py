@@ -8,9 +8,15 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir="qt-creator-opensource-src-%s" % get.srcVERSION()
+#WorkDir="qt-creator-opensource-src-%s" % get.srcVERSION()
 def setup():
-    shelltools.system("qmake qtcreator.pro CONFIG+=release QTC_PREFIX=/usr")
+    pisitools.dosed("qtcreator.pri", "libexec/qtcreator", "lib/qtcreator")
+    pisitools.dosed("src/tools/tools.pro", "libexec", "lib")
+
+    shelltools.system("qmake LLVM_INSTALL_DIR=/usr QBS_INSTALL_DIR=/usr \
+                             CONFIG+=release QMAKE_CFLAGS_ISYSTEM=-I \
+                             DEFINES+=QBS_ENABLE_PROJECT_FILE_UPDATES \
+                             QTC_PREFIX=/usr qtcreator.pro")
 
 
 def build():
