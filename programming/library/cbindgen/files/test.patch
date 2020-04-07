@@ -1,0 +1,15 @@
+diff -Nuar a/tests/tests.rs b/tests/tests.rs
+--- a/tests/tests.rs	2020-04-05 00:32:40.000000000 +0300
++++ b/tests/tests.rs	2020-04-07 09:43:23.472782274 +0300
+@@ -74,7 +74,10 @@
+         Language::C => env::var("CC").unwrap_or_else(|_| "gcc".to_owned()),
+     };
+ 
+-    let mut object = tmp_dir.join(cbindgen_output);
++    let file_name = cbindgen_output
++        .file_name()
++        .expect("cbindgen output should be a file");
++    let mut object = tmp_dir.join(file_name);
+     object.set_extension("o");
+ 
+     let mut command = Command::new(cc); 
