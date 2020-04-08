@@ -1,0 +1,72 @@
+From 69e17dec5add40655cd9334ec7ad4eef13fed8a4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonah=20Br=C3=BCchert?= <jbb.prv@gmx.de>
+Date: Wed, 5 Jun 2019 13:28:44 +0200
+Subject: [PATCH] Fix compilation with Qt 5.13
+
+---
+ src/account-service-model.cpp | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/src/account-service-model.cpp b/src/account-service-model.cpp
+index 45795c5..deb157e 100644
+--- a/src/account-service-model.cpp
++++ b/src/account-service-model.cpp
+@@ -183,7 +183,7 @@ AccountServiceModelPrivate::addServicesFromAccount(Accounts::Account *account)
+             newModelItems.append(accountService);
+     }
+ 
+-    qSort(newModelItems.begin(), newModelItems.end(), sortFunction);
++    std::sort(newModelItems.begin(), newModelItems.end(), sortFunction);
+     addItems(newModelItems);
+ }
+ 
+@@ -211,7 +211,7 @@ void AccountServiceModelPrivate::addItems(const AccountServices &added)
+     foreach (Accounts::AccountService *accountService, added) {
+         // Find where the item should be inserted
+         AccountServices::iterator i =
+-            qLowerBound(modelItems.begin(), modelItems.end(),
++            std::lower_bound(modelItems.begin(), modelItems.end(),
+                         accountService, sortFunction);
+         int index = i - modelItems.begin();
+         addedIndexes[index]++;
+@@ -253,7 +253,7 @@ AccountServiceModelPrivate::removeItems(const AccountServices &removed)
+         removedIndexes.append(index);
+     }
+     // sort the indexes from highest to lower, and start updating the list
+-    qSort(removedIndexes.begin(), removedIndexes.end(), qGreater<int>());
++    std::sort(removedIndexes.begin(), removedIndexes.end(), std::greater<int>());
+     int first = -1;
+     int last = -1;
+     foreach (int index, removedIndexes) {
+@@ -281,7 +281,7 @@ AccountServiceModelPrivate::removeItems(const AccountServices &removed)
+ 
+ void AccountServiceModelPrivate::sortItems()
+ {
+-    qSort(modelItems.begin(), modelItems.end(), sortFunction);
++    std::sort(modelItems.begin(), modelItems.end(), sortFunction);
+ }
+ 
+ void AccountServiceModelPrivate::update()
+@@ -809,7 +809,8 @@ QVariant AccountServiceModel::data(const QModelIndex &index, int role) const
+         ret = accountService->enabled();
+         break;
+     case AccountServiceRole:
+-        qWarning("accountService role is deprecated, use accountServiceHandle");
++        qWarning() << "accountService role is deprecated, use accountServiceHandle";
++	/* FALLTHRU */
+     case AccountServiceHandleRole:
+         object = accountService;
+         break;
+@@ -817,7 +818,8 @@ QVariant AccountServiceModel::data(const QModelIndex &index, int role) const
+         ret = accountService->account()->id();
+         break;
+     case AccountRole:
+-        qWarning("account role is deprecated, use accountHandle");
++        qWarning() << "account role is deprecated, use accountHandle";
++	/* FALLTHRU */
+     case AccountHandleRole:
+         object = accountService->account();
+         break;
+-- 
+2.22.2
+

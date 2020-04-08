@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>accounts-qml-module</Name>
+        <Homepage>https://launchpad.net/ubuntu/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv3</License>
+        <IsA>library</IsA>
+        <Summary>Expose the Online Accounts API to QML applications</Summary>
+        <Description>Expose the Online Accounts API to QML applications</Description>
+        <Archive sha1sum="bb99ab9922ccf849fc7009ebef9f47559f443576" type="targz">https://gitlab.com/accounts-sso/accounts-qml-module/-/archive/VERSION_0.7/accounts-qml-module-VERSION_0.7.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>signon-devel</Dependency>
+            <Dependency>libaccounts-qt5-devel</Dependency>
+            <Dependency versionFrom="5.14.2">qt5-base-devel</Dependency>
+            <Dependency versionFrom="5.14.2">qt5-assistant-devel</Dependency>
+            <Dependency versionFrom="5.14.2">qt5-declarative-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>Build-add-qmltypes-file-to-repository.patch</Patch>
+            <Patch level="1">Fix-compilation-with-Qt-5.13.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>accounts-qml-module</Name>
+        <RuntimeDependencies>
+            <Dependency>signon</Dependency>
+            <Dependency>libaccounts-qt5</Dependency>
+            <Dependency versionFrom="5.14.2">qt5-base</Dependency>
+            <Dependency versionFrom="5.14.2">qt5-declarative</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2020-04-08</Date>
+            <Version>0.6</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
