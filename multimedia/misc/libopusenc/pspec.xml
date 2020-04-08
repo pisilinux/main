@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libopusenc</Name>
+        <Homepage>http://www.opus-codec.org/</Homepage>
+        <Packager>
+            <Name>fury</Name>
+            <Email>wascheme@tuta.io</Email>
+        </Packager>
+        <PartOf>multimedia.misc</PartOf>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>Library for encoding .opus audio files and live streams.</Summary>
+        <Description>The libopusenc libraries provide a high-level API for encoding .opus files. libopusenc depends only on libopus.</Description>
+        <Archive sha1sum="0f107876925141fe1a8840f4d602d5b0771be105" type="targz">https://archive.mozilla.org/pub/opus/libopusenc-0.2.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>libopus-devel</Dependency>
+            <Dependency>libopus-32bit</Dependency>
+            <Dependency>doxygen</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libopusenc</Name>
+        <Summary>Library for encoding .opus audio files and live streams.</Summary>
+        <RuntimeDependencies>
+            <Dependency>libopus</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libopusenc-devel</Name>
+        <Summary>Development files for libopusenc</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libopusenc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/pkgconfig</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libopusenc-docs</Name>
+        <Summary>document files for libopusenc</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libopusenc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libopusenc-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libopusenc</Summary>
+        <BuildType>emul32</BuildType>
+        <RuntimeDependencies>
+            <Dependency release="current">libopusenc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2019-06-24</Date>
+            <Version>0.2.1</Version>
+            <Comment>First build.</Comment>
+            <Email>wascheme@tuta.io</Email>
+            <Name>fury</Name>
+        </Update>
+    </History>
+</PISI>
