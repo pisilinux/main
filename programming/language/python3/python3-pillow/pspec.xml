@@ -8,12 +8,12 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>BSD</License>
         <PartOf>programming.language.python3</PartOf>
+        <License>BSD</License>
         <IsA>library</IsA>
         <Summary>PIL is the fork of Python Imaging Library.</Summary>
         <Description>Pillow is the friendly PIL fork by Alex Clark and Contributors. PIL is the Python Imaging Library by Fredrik Lundh and Contributors. As of 2019, Pillow development is supported by Tidelift.</Description>
-        <Archive sha1sum="0c9a2065f549d99ed9cf159d95ebea0678ff41d3" type="targz">https://github.com/python-pillow/Pillow/archive/7.0.0.tar.gz</Archive>
+        <Archive sha1sum="934e707b4d887152897847f3719d32f9c4c0954a" type="targz">https://github.com/python-pillow/Pillow/archive/7.1.1.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>libimagequant-devel</Dependency>
@@ -21,10 +21,18 @@
             <Dependency>openjpeg2-devel</Dependency>
             <Dependency>freetype-devel</Dependency>
             <Dependency>python3-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
             <Dependency>lcms2-devel</Dependency>
             <Dependency>tiff-devel</Dependency>
             <Dependency>webp-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
+            <!-- documentation dependencies -->
+            <Dependency>python3-sphinx_rtd_theme</Dependency>
+            <Dependency>python3-pycparser</Dependency>
+            <Dependency>python3-olefile</Dependency>
+            <Dependency>python3-sphinx</Dependency>
+            <Dependency>python3-cffi</Dependency>
+            <Dependency>python3-tk</Dependency>
             <!--
             <Dependency>lcms-devel</Dependency>
             <Dependency>tcltk-devel</Dependency>
@@ -34,7 +42,10 @@
             <Dependency>python-qt5-devel</Dependency>
             <Dependency>sane-backends-devel</Dependency>
             -->
-        </BuildDependencies>        
+        </BuildDependencies>
+        <Patches>
+            <Patch>docfix.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
@@ -46,6 +57,7 @@
             <Dependency>openjpeg2</Dependency>
             <Dependency>freetype</Dependency>
             <Dependency>python3</Dependency>
+            <Dependency>libxcb</Dependency>
             <Dependency>lcms2</Dependency>
             <Dependency>tiff</Dependency>
             <Dependency>webp</Dependency>
@@ -60,8 +72,8 @@
             -->
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="library">/usr/lib</Path>
         </Files>
     </Package>
 
@@ -79,7 +91,25 @@
         </Files>
     </Package>
 
+    <Package>
+        <Name>python3-pillow-docs</Name>
+        <Summary>Documentation files for python3-pillow</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">python3-pillow</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/python3-pillow/html</Path>
+        </Files>
+    </Package>
+
     <History>
+        <Update release="6">
+            <Date>2020-04-07</Date>
+            <Version>7.1.1</Version>
+            <Comment>Minor version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="5">
             <Date>2020-01-15</Date>
             <Version>7.0.0</Version>
