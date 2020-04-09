@@ -19,5 +19,7 @@ def check():
 
 def install():
     perlmodules.install()
+    # Remove autotools installed man pages
+    pisitools.removeDir("/usr/share/man")
 
     pisitools.dodoc("MANIFEST", "README", "Changes")
