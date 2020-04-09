@@ -37,7 +37,8 @@ def install():
                        MANDIR=%(D)s/usr/share/man" % {"D": get.installDIR()})
 
     # set the default skin for gui
-    shelltools.copytree("mplayer-1.2_pre37124/Blue-multilingual", "%s/usr/share/mplayer/skins/default" % get.installDIR())
+    #shelltools.copytree("mplayer-1.2_pre37124/Blue-multilingual", "%s/usr/share/mplayer/skins/default" % get.installDIR())
+    shelltools.copytree("../Clearlooks-multilingual", "%s/usr/share/mplayer/skins/default" % get.installDIR())
     
     # codecs conf, not something user will interact with
     pisitools.insinto("/etc/mplayer", "etc/*.conf")
