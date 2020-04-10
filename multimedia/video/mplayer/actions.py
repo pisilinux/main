@@ -19,6 +19,7 @@ def setup():
                         --prefix=/usr \
                         --confdir=/usr/share/mplayer   \
                         --enable-dynamic-plugins \
+                        --disable-ossaudio \
                         --enable-menu   \
                         --datadir=/usr/share/mplayer \
                         --charset=UTF-8 \
