@@ -33,6 +33,7 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += " --libdir=/usr/lib32 \
+                     --disable-ibus \
                      --bindir=/emul32/bin \
                      --mandir=/emul32/man \
                      "
