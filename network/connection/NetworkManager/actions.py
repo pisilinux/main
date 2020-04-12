@@ -25,6 +25,7 @@ def setup():
                          --disable-config-plugin-ibft \
                          --disable-ifnet \
                          --disable-more-warnings \
+                         --enable-wifi \
                          --enable-modify-system \
                          --enable-ppp=yes \
                          --enable-bluez5-dun \
