@@ -1,0 +1,51 @@
+From 22a4af265c78c2d0000c7f234d15b8bf5ff8b2c4 Mon Sep 17 00:00:00 2001
+From: fuscated <fuscated@2a5c6006-c6dd-42ca-98ab-0921f2732cef>
+Date: Wed, 12 Jun 2019 19:11:23 +0000
+Subject: [PATCH] * UI: Fix crash if the list in Settings->Scripting is empty
+ (ticket 842)
+
+git-svn-id: https://svn.code.sf.net/p/codeblocks/code/trunk@11739 2a5c6006-c6dd-42ca-98ab-0921f2732cef
+---
+ src/src/scriptingsettingsdlg.cpp | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/src/src/scriptingsettingsdlg.cpp b/src/src/scriptingsettingsdlg.cpp
+index 5cb23aaf4..a7f58f0cb 100644
+--- a/src/src/scriptingsettingsdlg.cpp
++++ b/src/src/scriptingsettingsdlg.cpp
+@@ -101,16 +101,23 @@ void ScriptingSettingsDlg::UpdateState()
+     wxListCtrl* list = XRCCTRL(*this, "chkStartupScripts", wxListCtrl);
+     long sel = list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+ 
+-    bool en = sel != -1;
+-
+-    const ScriptEntry& se = m_ScriptsVector[sel];
++    bool hasSelection = false;
++    bool enabled = false;
++    bool registered = false;
++    if (sel >= 0 && sel < long(m_ScriptsVector.size()))
++    {
++        const ScriptEntry& se = m_ScriptsVector[sel];
++        enabled = se.enabled;
++        registered = se.registered;
++        hasSelection = true;
++    }
+ 
+-    XRCCTRL(*this, "btnDelete", wxButton)->Enable(en);
+-    XRCCTRL(*this, "chkEnableScript", wxCheckBox)->Enable(en);
+-    XRCCTRL(*this, "txtScript", wxTextCtrl)->Enable(en && se.enabled);
+-    XRCCTRL(*this, "btnBrowseScript", wxButton)->Enable(en && se.enabled);
+-    XRCCTRL(*this, "chkRegisterScript", wxCheckBox)->Enable(en && se.enabled);
+-    XRCCTRL(*this, "txtScriptMenu", wxTextCtrl)->Enable(en && se.enabled && se.registered);
++    XRCCTRL(*this, "btnDelete", wxButton)->Enable(hasSelection);
++    XRCCTRL(*this, "chkEnableScript", wxCheckBox)->Enable(hasSelection);
++    XRCCTRL(*this, "txtScript", wxTextCtrl)->Enable(hasSelection && enabled);
++    XRCCTRL(*this, "btnBrowseScript", wxButton)->Enable(hasSelection && enabled);
++    XRCCTRL(*this, "chkRegisterScript", wxCheckBox)->Enable(hasSelection && enabled);
++    XRCCTRL(*this, "txtScriptMenu", wxTextCtrl)->Enable(hasSelection && enabled && registered);
+ }
+ 
+ void ScriptingSettingsDlg::FillTrusts()
+-- 
+2.21.0
+
