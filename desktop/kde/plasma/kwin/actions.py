@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     #shelltools.system("rm -rf po/id")
-    kde5.configure("-DCMAKE_INSTALL_LIBEXECDIR=lib")
+    kde5.configure()
 
 def build():
     kde5.make()
