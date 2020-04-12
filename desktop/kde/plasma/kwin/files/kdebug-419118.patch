@@ -1,0 +1,66 @@
+From bee3afdd5194e0cf1fb72619b3d130514102e3cf Mon Sep 17 00:00:00 2001
+From: David Edmundson <kde@davidedmundson.co.uk>
+Date: Mon, 30 Mar 2020 17:27:11 +0100
+Subject: [kcmkwin] Make dialog non blocking
+
+Summary:
+It's invoked from QML.
+
+Nested event loops invoked directly from QML is asking for crashes.
+
+BUG: 419118
+
+Test Plan:
+Opened KCM
+Opened dialog for some settings
+Window was still modal as before
+Settings were saved
+(though they didn't seem to be applied..maybe another bug?)
+
+Reviewers: #kwin, apol
+
+Reviewed By: apol
+
+Subscribers: zzag, kwin
+
+Tags: #kwin
+
+Differential Revision: https://phabricator.kde.org/D28293
+---
+ kcmkwin/common/effectsmodel.cpp | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/kcmkwin/common/effectsmodel.cpp b/kcmkwin/common/effectsmodel.cpp
+index 47c264f..4927567 100644
+--- a/kcmkwin/common/effectsmodel.cpp
++++ b/kcmkwin/common/effectsmodel.cpp
+@@ -636,7 +636,7 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
+         return;
+     }
+ 
+-    QPointer<QDialog> dialog = new QDialog();
++    auto dialog = new QDialog();
+ 
+     KCModule *module = index.data(ScriptedRole).toBool()
+         ? findScriptedConfig(index.data(ServiceNameRole).toString(), dialog)
+@@ -668,11 +668,13 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
+     layout->addWidget(module);
+     layout->addWidget(buttons);
+ 
+-    if (dialog->exec() == QDialog::Accepted) {
++    connect(dialog, &QDialog::accepted, module, [module]() {
+         module->save();
+-    }
++    });
+ 
+-    delete dialog;
++    dialog->setModal(true);
++    dialog->setAttribute(Qt::WA_DeleteOnClose);
++    dialog->show();
+ }
+ 
+ bool EffectsModel::shouldStore(const EffectData &data) const
+-- 
+cgit v1.1
+
+ 
