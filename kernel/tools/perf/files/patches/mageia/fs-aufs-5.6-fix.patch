@@ -1,0 +1,39 @@
+diff -Nurp linux-5.6.3-aufs/fs/aufs/procfs.c linux-5.6.3-aufs-fix/fs/aufs/procfs.c
+--- linux-5.6.3-aufs/fs/aufs/procfs.c	2020-04-10 12:40:52.192049502 +0300
++++ linux-5.6.3-aufs-fix/fs/aufs/procfs.c	2020-04-10 17:46:50.019444421 +0300
+@@ -116,10 +116,9 @@ out:
+ 	return err;
+ }
+ 
+-static const struct file_operations au_procfs_plm_fop = {
+-	.write		= au_procfs_plm_write,
+-	.release	= au_procfs_plm_release,
+-	.owner		= THIS_MODULE
++static const struct proc_ops au_procfs_plm_op = {
++	.proc_write	= au_procfs_plm_write,
++	.proc_release	= au_procfs_plm_release
+ };
+ 
+ /* ---------------------------------------------------------------------- */
+@@ -143,7 +142,7 @@ int __init au_procfs_init(void)
+ 		goto out;
+ 
+ 	entry = proc_create(AUFS_PLINK_MAINT_NAME, S_IFREG | 0200,
+-			    au_procfs_dir, &au_procfs_plm_fop);
++			    au_procfs_dir, &au_procfs_plm_op);
+ 	if (unlikely(!entry))
+ 		goto out_dir;
+ 
+diff -Nurp linux-5.6.3-aufs/fs/aufs/xino.c linux-5.6.3-aufs-fix/fs/aufs/xino.c
+--- linux-5.6.3-aufs/fs/aufs/xino.c	2020-04-10 12:40:52.193049549 +0300
++++ linux-5.6.3-aufs-fix/fs/aufs/xino.c	2020-04-10 17:46:25.165284147 +0300
+@@ -1344,7 +1344,8 @@ static void au_xino_release(struct kref
+ 		hlist_bl_lock(hbl);
+ 		hlist_bl_for_each_entry_safe(p, pos, n, hbl, node) {
+ 			hlist_bl_del(&p->node);
+-			au_kfree_rcu(p);
++			/* kmemleak reported au_kfree_rcu() doesn't free it */
++			kfree(p);
+ 		}
+ 		hlist_bl_unlock(hbl);
+ 	}
