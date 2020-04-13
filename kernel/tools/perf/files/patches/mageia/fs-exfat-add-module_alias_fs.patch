@@ -1,0 +1,30 @@
+From c37f83b424911f9bb6c9f17a4543c9c77cd73282 Mon Sep 17 00:00:00 2001
+From: Thomas Backlund <tmb@mageia.org>
+Date: Sat, 4 Apr 2020 23:00:31 +0300
+Subject: [PATCH v2] exfat: add missing MODULE_ALIAS_FS()
+
+This adds the necessary MODULE_ALIAS_FS() to exfat so the module gets
+automatically loaded when an exfat filesystem is mounted.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Sungjong Seo <sj1557.seo@samsung.com>
+---
+ fs/exfat/super.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index 16ed202ef527..b4a4063a0272 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -717,6 +717,7 @@ static void __exit exit_exfat_fs(void)
+ module_init(init_exfat_fs);
+ module_exit(exit_exfat_fs);
+ 
++MODULE_ALIAS_FS("exfat");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("exFAT filesystem support");
+ MODULE_AUTHOR("Samsung Electronics Co., Ltd.");
+-- 
+2.26.0
+
