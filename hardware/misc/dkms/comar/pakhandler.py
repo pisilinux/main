@@ -6,6 +6,8 @@ import re
 import piksemel
 import subprocess
 
+raise_install = []
+
 class BuildModuleError(Exception):
     pass
 
@@ -24,7 +26,7 @@ def run_dkms(action, name, version, kver, arch):
         os.system("PATH='/usr/sbin:/usr/bin:/sbin:/bin' dkms %s -m %s -v %s -k %s -a %s" % (action, name, version, kver, arch))
 
     if action == "install" and os.path.exists("/var/lib/dkms/%s/%s/build/make.log" % (name, version)):
-        raise BuildModuleError("check /var/lib/dkms/%s/%s/build/make.log" % (name, version))
+        raise_install.append("check /var/lib/dkms/%s/%s/build/make.log" % (name, version))
 
 def check_dkms(metapath, filepath, action):
     if piksemel.parse(metapath).getTag("Package").getTagData("Name") == "kernel-module-headers":
@@ -36,6 +38,8 @@ def check_dkms(metapath, filepath, action):
                 m = re.match(r"(?P<name>[^\/]+)-(?P<version>[^-]+)", d).groupdict()
                 run_dkms(action, m["name"], m["version"], kver, arch)
         generate_initrd(kver)
+        if raise_install:
+            raise BuildModuleError("\n\t".join(raise_install))
         return
 
     parse = piksemel.parse(filepath)
@@ -47,6 +51,8 @@ def check_dkms(metapath, filepath, action):
             kver = get_kver()
             arch = piksemel.parse(metapath).getTag("Package").getTagData("Architecture").replace("_", "-")
             run_dkms(action, m["name"], m["version"], kver, arch)
+            if raise_install:
+                raise BuildModuleError(raise_install.pop())
             generate_initrd(kver)
             return
 
