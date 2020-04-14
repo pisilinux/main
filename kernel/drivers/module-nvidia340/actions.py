@@ -31,6 +31,7 @@ def setup():
     shelltools.move("tmp/.manifest", ".")
     shelltools.system("patch -p1 < kernel-5.5.patch")
     shelltools.system("patch -p1 < kernel-5.6.patch")
+    shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
     
 
     # Our libc is TLS enabled so use TLS library
@@ -93,9 +94,9 @@ def install():
 #    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
 
     # OpenCL
-    pisitools.dolib("libOpenCL.so.1.0.0", libdir)
-    pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
-    pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
+    #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
+    #pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
+    #pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
 
     pisitools.dolib("libnvidia-opencl.so.%s" % version, libdir)
     pisitools.dosym("libnvidia-opencl.so.%s" % version, "%s/libnvidia-opencl.so.1" % libdir)
