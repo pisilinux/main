@@ -31,7 +31,7 @@ def setup():
     shelltools.move("tmp/.manifest", ".")
     shelltools.system("patch -p1 < kernel-5.5.patch")
     shelltools.system("patch -p1 < kernel-5.6.patch")
-    shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
+    #shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
     
 
     # Our libc is TLS enabled so use TLS library
@@ -44,7 +44,6 @@ def setup():
 
     shelltools.echo("ld.so.conf", nvlibdir)
     shelltools.echo("XvMCConfig", "%s/libXvMCNVIDIA.so" % nvlibdir)
-    shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
 
     # dkms
     shelltools.copytree("kernel", "kernel-dkms")
