@@ -57,9 +57,15 @@ def build():
     if get.buildTYPE() == 'emul32':
         return
     
+        
+    #kernel 5.6.4 32 bit patch hatası
+    elif get.ARCH() == "x86_64":
+        shelltools.system("patch -p1 < kernel-5.6-uvm.patch")
+        
     shelltools.export("SYSSRC", "/lib/modules/%s/build" % KDIR)
     shelltools.cd("kernel")
 
+    
     autotools.make("module")
     
     #shelltools.cd("uvm")

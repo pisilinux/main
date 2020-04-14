@@ -30,6 +30,7 @@ def setup():
     #5.5 patch icin
     shelltools.move("tmp/.manifest", ".")
     shelltools.system("patch -p1 < kernel-5.5.patch")
+    shelltools.system("patch -p1 < kernel-5.6.patch")
     
 
     # Our libc is TLS enabled so use TLS library
