@@ -1,0 +1,508 @@
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/common/inc/nv-linux.h NVIDIA-Linux-x86_64-430.64/kernel/common/inc/nv-linux.h
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/common/inc/nv-linux.h	2019-10-27 13:48:11.000000000 +0200
++++ NVIDIA-Linux-x86_64-430.64/kernel/common/inc/nv-linux.h	2020-04-11 01:30:24.576641371 +0300
+@@ -534,7 +534,11 @@ static inline void *nv_ioremap(NvU64 phy
+ 
+ static inline void *nv_ioremap_nocache(NvU64 phys, NvU64 size)
+ {
++#if defined(NV_IOREMAP_NOCACHE_PRESENT)
+     void *ptr = ioremap_nocache(phys, size);
++#else
++    void *ptr = ioremap(phys, size);
++#endif
+     if (ptr)
+         NV_MEMDBG_ADD(ptr, size);
+     return ptr;
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/common/inc/nv-procfs.h NVIDIA-Linux-x86_64-430.64/kernel/common/inc/nv-procfs.h
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/common/inc/nv-procfs.h	2020-04-11 01:29:29.475036592 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/common/inc/nv-procfs.h	2020-04-11 01:28:48.300091052 +0300
+@@ -28,6 +28,18 @@
+ 
+ #define IS_EXERCISE_ERROR_FORWARDING_ENABLED() (EXERCISE_ERROR_FORWARDING)
+ 
++#if defined(NV_HAVE_PROC_OPS)
++#define NV_CREATE_PROC_FILE(filename,parent,__name,__data)               \
++   ({                                                                    \
++        struct proc_dir_entry *__entry;                                  \
++        int mode = (S_IFREG | S_IRUGO);                                  \
++        const struct proc_ops *fops = &nv_procfs_##__name##_fops;        \
++        if (fops->proc_write != 0)                                       \
++            mode |= S_IWUSR;                                             \
++        __entry = proc_create_data(filename, mode, parent, fops, __data);\
++        __entry;                                                         \
++    })
++#else
+ #define NV_CREATE_PROC_FILE(filename,parent,__name,__data)               \
+    ({                                                                    \
+         struct proc_dir_entry *__entry;                                  \
+@@ -38,6 +50,7 @@
+         __entry = proc_create_data(filename, mode, parent, fops, __data);\
+         __entry;                                                         \
+     })
++#endif
+ 
+ /*
+  * proc_mkdir_mode exists in Linux 2.6.9, but isn't exported until Linux 3.0.
+@@ -77,6 +90,44 @@
+     remove_proc_entry(entry->name, entry->parent);
+ #endif
+ 
++#if defined(NV_HAVE_PROC_OPS)
++#define NV_DEFINE_SINGLE_PROCFS_FILE(name, open_callback, close_callback)     \
++    static int nv_procfs_open_##name(                                         \
++        struct inode *inode,                                                  \
++        struct file *filep                                                    \
++    )                                                                         \
++    {                                                                         \
++        int ret;                                                              \
++        ret = single_open(filep, nv_procfs_read_##name,                       \
++                          NV_PDE_DATA(inode));                                \
++        if (ret < 0)                                                          \
++        {                                                                     \
++            return ret;                                                       \
++        }                                                                     \
++        ret = open_callback();                                                \
++        if (ret < 0)                                                          \
++        {                                                                     \
++            single_release(inode, filep);                                     \
++        }                                                                     \
++        return ret;                                                           \
++    }                                                                         \
++                                                                              \
++    static int nv_procfs_release_##name(                                      \
++        struct inode *inode,                                                  \
++        struct file *filep                                                    \
++    )                                                                         \
++    {                                                                         \
++        close_callback();                                                     \
++        return single_release(inode, filep);                                  \
++    }                                                                         \
++                                                                              \
++    static const struct proc_ops nv_procfs_##name##_fops = {                  \
++        .proc_open       = nv_procfs_open_##name,                             \
++        .proc_read       = seq_read,                                          \
++        .proc_lseek      = seq_lseek,                                         \
++        .proc_release    = nv_procfs_release_##name,                          \
++    };
++#else
+ #define NV_DEFINE_SINGLE_PROCFS_FILE(name, open_callback, close_callback)     \
+     static int nv_procfs_open_##name(                                         \
+         struct inode *inode,                                                  \
+@@ -114,6 +165,7 @@
+         .llseek     = seq_lseek,                                              \
+         .release    = nv_procfs_release_##name,                               \
+     };
++#endif
+ 
+ #endif  /* CONFIG_PROC_FS */
+ 
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/common/inc/nv-time.h NVIDIA-Linux-x86_64-430.64/kernel/common/inc/nv-time.h
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/common/inc/nv-time.h	2020-04-11 01:29:29.475036592 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/common/inc/nv-time.h	2020-04-11 01:28:48.300091052 +0300
+@@ -27,7 +27,12 @@
+ 
+ #include <linux/ktime.h>
+ 
+-static inline void nv_gettimeofday(struct timeval *tv)
++struct nv_timeval {
++    __kernel_long_t      tv_sec;
++    __kernel_suseconds_t tv_usec;
++};
++
++static inline void nv_gettimeofday(struct nv_timeval *tv)
+ {
+ #ifdef NV_DO_GETTIMEOFDAY_PRESENT
+     do_gettimeofday(tv);
+@@ -36,7 +41,7 @@ static inline void nv_gettimeofday(struc
+ 
+     ktime_get_real_ts64(&now);
+ 
+-    *tv = (struct timeval) {
++    *tv = (struct nv_timeval) {
+         .tv_sec = now.tv_sec,
+         .tv_usec = now.tv_nsec/1000,
+     };
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/conftest.sh NVIDIA-Linux-x86_64-430.64/kernel/conftest.sh
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/conftest.sh	2020-04-11 01:29:29.476036639 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/conftest.sh	2020-04-11 01:28:48.300091052 +0300
+@@ -777,6 +777,46 @@ compile_test() {
+             compile_check_conftest "$CODE" "NV_FILE_OPERATIONS_HAS_IOCTL" "" "types"
+         ;;
+ 
++        proc_ops)
++            CODE="
++            #include <linux/proc_fs.h>
++            int conftest_proc_ops(void) {
++                return offsetof(struct proc_ops, proc_open);
++            }"
++
++            compile_check_conftest "$CODE" "NV_HAVE_PROC_OPS" "" "types"
++        ;;
++
++        ktime_get_raw_ts64)
++            #
++            # Determine if the ktime_get_raw_ts64() function is present.
++            #
++            CODE="
++            #include <linux/ktime.h>
++            int conftest_ktime_get_raw_ts64(void) {
++                struct timespec64 ts = {0};
++
++                ktime_get_raw_ts64(&ts64);
++            }"
++
++            compile_check_conftest "$CODE" "NV_KTIME_GET_RAW_TS64_PRESENT" "" "functions"
++        ;;
++
++        ktime_get_real_ts64)
++            #
++            # Determine if the ktime_get_real_ts64() function is present.
++            #
++            CODE="
++            #include <linux/ktime.h>
++            int conftest_ktime_get_raw_ts64(void) {
++                struct timespec64 ts = {0};
++
++                ktime_get_real_ts64(&ts64);
++            }"
++
++            compile_check_conftest "$CODE" "NV_KTIME_GET_REAL_TS64_PRESENT" "" "functions"
++        ;;
++
+         sg_alloc_table)
+             #
+             # sg_alloc_table_from_pages added by commit efc42bc98058
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/linux_nvswitch.c NVIDIA-Linux-x86_64-430.64/kernel/nvidia/linux_nvswitch.c
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/linux_nvswitch.c	2020-04-11 01:29:29.476036639 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia/linux_nvswitch.c	2020-04-11 01:28:48.301091099 +0300
+@@ -1581,10 +1581,17 @@ nvswitch_os_get_platform_time
+     void
+ )
+ {
++#if defined(NV_KTIME_GET_REAL_TS64_PRESENT)
++    struct timespec64 ts64;
++
++    ktime_get_real_ts64(&ts64);
++    return ((NvU64)(ts64.tv_sec * NSEC_PER_SEC) + ts64.tv_nsec);
++#else
+     struct timespec ts;
+ 
+     getnstimeofday(&ts);
+     return ((NvU64) timespec_to_ns(&ts));
++#endif
+ }
+ 
+ void
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nvidia.Kbuild NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nvidia.Kbuild
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nvidia.Kbuild	2020-04-11 01:29:29.476036639 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nvidia.Kbuild	2020-04-11 01:28:48.301091099 +0300
+@@ -149,6 +149,9 @@ NV_CONFTEST_TYPE_COMPILE_TESTS += acpi_o
+ NV_CONFTEST_TYPE_COMPILE_TESTS += outer_flush_all
+ NV_CONFTEST_TYPE_COMPILE_TESTS += scatterlist
+ NV_CONFTEST_TYPE_COMPILE_TESTS += file_operations
++NV_CONFTEST_TYPE_COMPILE_TESTS += proc_ops
++NV_CONFTEST_TYPE_COMPILE_TESTS += ktime_get_raw_ts64
++NV_CONFTEST_TYPE_COMPILE_TESTS += ktime_get_real_ts64
+ NV_CONFTEST_TYPE_COMPILE_TESTS += vm_operations_struct
+ NV_CONFTEST_TYPE_COMPILE_TESTS += atomic_long_type
+ NV_CONFTEST_TYPE_COMPILE_TESTS += file_inode
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nvlink_linux.c NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nvlink_linux.c
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nvlink_linux.c	2020-04-11 01:29:29.476036639 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nvlink_linux.c	2020-04-11 01:28:48.301091099 +0300
+@@ -510,8 +510,8 @@ void * NVLINK_API_CALL nvlink_memcpy(voi
+ 
+ static NvBool nv_timer_less_than
+ (
+-    const struct timeval *a,
+-    const struct timeval *b
++    const struct nv_timeval *a,
++    const struct nv_timeval *b
+ )
+ {
+     return (a->tv_sec == b->tv_sec) ? (a->tv_usec < b->tv_usec) 
+@@ -520,9 +520,9 @@ static NvBool nv_timer_less_than
+ 
+ static void nv_timeradd
+ (
+-    const struct timeval    *a,
+-    const struct timeval    *b,
+-    struct timeval          *result
++    const struct nv_timeval    *a,
++    const struct nv_timeval    *b,
++    struct nv_timeval          *result
+ )
+ {
+     result->tv_sec = a->tv_sec + b->tv_sec;
+@@ -536,9 +536,9 @@ static void nv_timeradd
+ 
+ static void nv_timersub
+ (
+-    const struct timeval    *a,
+-    const struct timeval    *b,
+-    struct timeval          *result
++    const struct nv_timeval    *a,
++    const struct nv_timeval    *b,
++    struct nv_timeval          *result
+ )
+ {
+     result->tv_sec = a->tv_sec - b->tv_sec;
+@@ -558,7 +558,7 @@ void NVLINK_API_CALL nvlink_sleep(unsign
+     unsigned long us;
+     unsigned long jiffies;
+     unsigned long mdelay_safe_msec;
+-    struct timeval tm_end, tm_aux;
++    struct nv_timeval tm_end, tm_aux;
+ 
+     nv_gettimeofday(&tm_aux);
+ 
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nv-procfs.c NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nv-procfs.c
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/nv-procfs.c	2020-04-11 01:29:29.476036639 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia/nv-procfs.c	2020-04-11 01:28:48.301091099 +0300
+@@ -482,6 +482,15 @@ done:
+     return ((status < 0) ? status : (int)count);
+ }
+ 
++#if defined(NV_HAVE_PROC_OPS)
++static struct proc_ops nv_procfs_registry_fops = {
++    .proc_open    = nv_procfs_open_registry,
++    .proc_read    = seq_read,
++    .proc_write   = nv_procfs_write_file,
++    .proc_lseek   = seq_lseek,
++    .proc_release = nv_procfs_close_registry,
++};
++#else
+ static struct file_operations nv_procfs_registry_fops = {
+     .owner   = THIS_MODULE,
+     .open    = nv_procfs_open_registry,
+@@ -490,6 +499,7 @@ static struct file_operations nv_procfs_
+     .llseek  = seq_lseek,
+     .release = nv_procfs_close_registry,
+ };
++#endif
+ 
+ #if defined(CONFIG_PM)
+ static int
+@@ -561,6 +571,15 @@ nv_procfs_open_suspend_depth(
+     return single_open(file, nv_procfs_show_suspend_depth, NULL);
+ }
+ 
++#if defined(NV_HAVE_PROC_OPS)
++static struct proc_ops nv_procfs_suspend_depth_fops = {
++    .proc_open    = nv_procfs_open_suspend_depth,
++    .proc_read    = seq_read,
++    .proc_write   = nv_procfs_write_suspend_depth,
++    .proc_lseek   = seq_lseek,
++    .proc_release = single_release
++};
++#else
+ static struct file_operations nv_procfs_suspend_depth_fops = {
+     .owner   = THIS_MODULE,
+     .open    = nv_procfs_open_suspend_depth,
+@@ -569,6 +588,7 @@ static struct file_operations nv_procfs_
+     .llseek  = seq_lseek,
+     .release = single_release
+ };
++#endif
+ 
+ static int
+ nv_procfs_show_suspend(
+@@ -643,6 +663,15 @@ nv_procfs_open_suspend(
+     return single_open(file, nv_procfs_show_suspend, NULL);
+ }
+ 
++#if defined(NV_HAVE_PROC_OPS)
++static struct proc_ops nv_procfs_suspend_fops = {
++    .proc_open    = nv_procfs_open_suspend,
++    .proc_read    = seq_read,
++    .proc_write   = nv_procfs_write_suspend,
++    .proc_lseek   = seq_lseek,
++    .proc_release = single_release
++};
++#else
+ static struct file_operations nv_procfs_suspend_fops = {
+     .owner   = THIS_MODULE,
+     .open    = nv_procfs_open_suspend,
+@@ -652,6 +681,7 @@ static struct file_operations nv_procfs_
+     .release = single_release
+ };
+ #endif
++#endif
+ 
+ /*
+  * Forwards error to nv_log_error which exposes data to vendor callback
+@@ -754,12 +784,20 @@ done:
+     return status;
+ }
+ 
++#if defined(NV_HAVE_PROC_OPS)
++static struct proc_ops nv_procfs_exercise_error_forwarding_fops = {
++    .proc_open    = nv_procfs_open_exercise_error_forwarding,
++    .proc_write   = nv_procfs_write_file,
++    .proc_release = nv_procfs_close_exercise_error_forwarding,
++};
++#else
+ static struct file_operations nv_procfs_exercise_error_forwarding_fops = {
+     .owner   = THIS_MODULE,
+     .open    = nv_procfs_open_exercise_error_forwarding,
+     .write   = nv_procfs_write_file,
+     .release = nv_procfs_close_exercise_error_forwarding,
+ };
++#endif
+ 
+ static int
+ nv_procfs_read_unbind_lock(
+@@ -881,6 +919,15 @@ done:
+     return rc;
+ }
+ 
++#if defined(NV_HAVE_PROC_OPS)
++static struct proc_ops nv_procfs_unbind_lock_fops = {
++    .proc_open    = nv_procfs_open_unbind_lock,
++    .proc_read    = seq_read,
++    .proc_write   = nv_procfs_write_file,
++    .proc_lseek   = seq_lseek,
++    .proc_release = nv_procfs_close_unbind_lock,
++};
++#else
+ static struct file_operations nv_procfs_unbind_lock_fops = {
+     .owner   = THIS_MODULE,
+     .open    = nv_procfs_open_unbind_lock,
+@@ -889,6 +936,7 @@ static struct file_operations nv_procfs_
+     .llseek  = seq_lseek,
+     .release = nv_procfs_close_unbind_lock,
+ };
++#endif
+ 
+ static const char*
+ numa_status_describe(nv_numa_status_t state)
+@@ -1217,6 +1265,22 @@ done:
+     return retval;
+ }
+ 
++#if defined(NV_HAVE_PROC_OPS)
++static const struct proc_ops nv_procfs_numa_status_fops = {
++    .proc_open    = nv_procfs_open_numa_status,
++    .proc_read    = seq_read,
++    .proc_write   = nv_procfs_write_file,
++    .proc_lseek   = seq_lseek,
++    .proc_release = nv_procfs_close_numa_status,
++};
++
++static const struct proc_ops nv_procfs_offline_pages_fops = {
++    .proc_open    = nv_procfs_open_offline_pages,
++    .proc_read    = seq_read,
++    .proc_lseek   = seq_lseek,
++    .proc_release = nv_procfs_close_offline_pages,
++};
++#else
+ static const struct file_operations nv_procfs_numa_status_fops = {
+     .owner   = THIS_MODULE,
+     .open    = nv_procfs_open_numa_status,
+@@ -1233,6 +1297,7 @@ static const struct file_operations nv_p
+     .llseek  = seq_lseek,
+     .release = nv_procfs_close_offline_pages,
+ };
++#endif
+ 
+ static int
+ nv_procfs_read_text_file(
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/os-interface.c NVIDIA-Linux-x86_64-430.64/kernel/nvidia/os-interface.c
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia/os-interface.c	2020-04-11 01:29:29.476036639 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia/os-interface.c	2020-04-11 01:28:48.301091099 +0300
+@@ -452,7 +452,7 @@ NV_STATUS NV_API_CALL os_get_current_tim
+     NvU32 *useconds
+ )
+ {
+-    struct timeval tm;
++    struct nv_timeval tm;
+ 
+     nv_gettimeofday(&tm);
+ 
+@@ -466,9 +466,15 @@ NV_STATUS NV_API_CALL os_get_current_tim
+ 
+ void NV_API_CALL os_get_current_tick(NvU64 *nseconds)
+ {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
++    struct timespec64 ts;
++
++    jiffies_to_timespec64(jiffies, &ts);
++#else
+     struct timespec ts;
+ 
+     jiffies_to_timespec(jiffies, &ts);
++#endif
+ 
+     *nseconds = ((NvU64)ts.tv_sec * NSEC_PER_SEC + (NvU64)ts.tv_nsec);
+ }
+@@ -538,7 +544,7 @@ NV_STATUS NV_API_CALL os_delay_us(NvU32
+     unsigned long usec;
+ 
+ #ifdef NV_CHECK_DELAY_ACCURACY
+-    struct timeval tm1, tm2;
++    struct nv_timeval tm1, tm2;
+ 
+     nv_gettimeofday(&tm1);
+ #endif
+@@ -578,9 +584,9 @@ NV_STATUS NV_API_CALL os_delay(NvU32 Mil
+     unsigned long MicroSeconds;
+     unsigned long jiffies;
+     unsigned long mdelay_safe_msec;
+-    struct timeval tm_end, tm_aux;
++    struct nv_timeval tm_end, tm_aux;
+ #ifdef NV_CHECK_DELAY_ACCURACY
+-    struct timeval tm_start;
++    struct nv_timeval tm_start;
+ #endif
+ 
+     nv_gettimeofday(&tm_aux);
+@@ -1925,7 +1931,7 @@ static NV_STATUS NV_API_CALL _os_ipmi_re
+ {
+     struct ipmi_recv_msg    *rx_msg;
+     int                     err_no;
+-    struct timeval          tv;
++    struct nv_timeval          tv;
+     NvU64                   start_time;
+ 
+     nv_gettimeofday(&tv);
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia-modeset/nvidia-modeset-linux.c NVIDIA-Linux-x86_64-430.64/kernel/nvidia-modeset/nvidia-modeset-linux.c
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia-modeset/nvidia-modeset-linux.c	2020-04-11 01:29:29.477036687 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia-modeset/nvidia-modeset-linux.c	2020-04-11 01:28:48.302091146 +0300
+@@ -279,7 +279,7 @@ void NVKMS_API_CALL nvkms_usleep(NvU64 u
+ 
+ NvU64 NVKMS_API_CALL nvkms_get_usec(void)
+ {
+-    struct timeval tv;
++    struct nv_timeval tv;
+ 
+     nv_gettimeofday(&tv);
+ 
+diff -Nurp NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia-uvm/uvm_linux.h NVIDIA-Linux-x86_64-430.64/kernel/nvidia-uvm/uvm_linux.h
+--- NVIDIA-Linux-x86_64-430.64.orig/kernel/nvidia-uvm/uvm_linux.h	2020-04-11 01:29:29.477036687 +0300
++++ NVIDIA-Linux-x86_64-430.64/kernel/nvidia-uvm/uvm_linux.h	2020-04-11 01:28:48.302091146 +0300
+@@ -298,7 +298,16 @@ static inline uint64_t NV_DIV64(uint64_t
+ }
+ #endif
+ 
+-#if defined(CLOCK_MONOTONIC_RAW)
++#if defined(NV_KTIME_GET_RAW_TS64_PRESENT)
++static inline NvU64 NV_GETTIME(void)
++{
++    struct timespec64 ts;
++
++    ktime_get_raw_ts64(&ts);
++
++    return (ts.tv_sec * 1000000000ULL + ts.tv_nsec);
++}
++#elif defined(CLOCK_MONOTONIC_RAW)
+ /* Return a nanosecond-precise value */
+ static inline NvU64 NV_GETTIME(void)
+ {
+@@ -314,7 +323,7 @@ static inline NvU64 NV_GETTIME(void)
+  * available non-GPL symbols. */
+ static inline NvU64 NV_GETTIME(void)
+ {
+-    struct timeval tv = {0};
++    struct nv_timeval tv = {0};
+ 
+     nv_gettimeofday(&tv);
+ 
