@@ -30,8 +30,7 @@ def setup():
     shelltools.move("tmp/.manifest", ".")
     
     shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-work-around-mga-bug-25890.patch")
-    #shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-kernel-5.5.patch")
-    
+    #shelltools.system("patch -p1 < NVIDIA-Linux-x86_64-430.64-kernel-5.5.patch")    
     
 
     shelltools.echo("ld.so.conf", nvlibdir)
