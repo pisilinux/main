@@ -93,11 +93,7 @@ def setup():
                             --enable-vaapi \
                             --enable-vdpau \
                             --enable-omx \
-                            --extra-ldflags='-lasound -lm' \
-                            --cc='clang -fuse-ld=lld -rtlib=compiler-rt' \
-                            --cxx='clang++ -fuse-ld=lld -rtlib=compiler-rt' \
-                            --ar=llvm-ar \
-                            --ranlib=llvm-ranlib")
+                            --extra-ldflags='-lasound -lm'")
 
 def build():
     autotools.make()
