@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>fluxbox</Name>
+        <Homepage>http://www.fluxbox.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>app:gui</IsA>
+        <Summary>An X11 window manager featuring tabs and an iconbar</Summary>
+        <Description>Fluxbox is a windowmanager for X that was based on the Blackbox 0.61.1 code. It is very light on resources and easy to handle but yet full of features to make an easy, and extremely fast, desktop experience.</Description>
+        <Archive sha1sum="47919f0345832de41ca7192ff168abd145af819f" type="targz">mirrors://sourceforge/fluxbox/fluxbox-1.3.7.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>imlib2-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>libICE-devel</Dependency>
+            <Dependency>libSM-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXft-devel</Dependency>
+            <Dependency>libXinerama-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>libXrender-devel</Dependency>            
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>fribidi-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>fluxbox-startfluxbox-pulseaudio.patch</Patch>
+            <Patch level="1">autostart.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>fluxbox</Name>
+        <RuntimeDependencies>
+            <Dependency>imlib2</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libXft</Dependency>
+            <Dependency>libXinerama</Dependency>
+            <Dependency>libXpm</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>libXrender</Dependency>
+            <Dependency>fribidi</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libX11</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/fluxbox</Path>
+            <Path fileType="data">/usr/share/xsessions</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/xsessions/fluxbox.desktop">fluxbox.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/bin/fbmenugen">fbmenugen</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/fluxbox/backgrounds/pisi-reflect.jpg">pisi-reflect.jpg</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-04-16</Date>
+            <Version>1.3.7</Version>
+            <Comment>First release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
