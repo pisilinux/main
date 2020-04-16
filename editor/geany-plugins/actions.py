@@ -10,28 +10,10 @@ from pisi.actionsapi import get
 
 def setup():
 	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure("\
-	\
-	--enable-geanypg \
-	--enable-markdown \
-	--enable-debugger \
-	--enable-geanylua \
-	--enable-utilslib \
-	--enable-spellcheck \
-	--enable-geanygendoc \
-	--enable-gitchangebar \
-	--enable-gtkspell=yes \
-	\
-	--disable-geanypy \
-	--disable-devhelp \
-	--disable-webhelper \
-	--disable-multiterm")
+	autotools.configure("--prefix=/usr --libexecdir=/usr/lib -enable-all")
 
 def build():
 	autotools.make()
-
-def check():
-	autotools.make("check")
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
