@@ -1,0 +1,48 @@
+diff --git a/build/compat.m4 b/build/compat.m4
+index e69de29b..3dda7497 100644
+--- /dev/null
++++ b/build/compat.m4
+@@ -0,0 +1,18 @@
++dnl taken from Autoconf's m4sh.m4, GPLv3+
++m4_ifndef([AS_VAR_COPY], [
++m4_define([AS_VAR_COPY],
++[AS_LITERAL_WORD_IF([$1[]$2], [$1=$$2], [eval $1=\$$2])])
++])
++
++dnl taken from pkg-config's pkg.m4, GPLv2+
++m4_ifndef([PKG_CHECK_VAR], [
++AC_DEFUN([PKG_CHECK_VAR],
++[AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
++AC_ARG_VAR([$1], [value of $3 for $2, overriding pkg-config])dnl
++
++_PKG_CONFIG([$1], [variable="][$3]["], [$2])
++AS_VAR_COPY([$1], [pkg_cv_][$1])
++
++AS_VAR_IF([$1], [""], [$5], [$4])dnl
++])dnl PKG_CHECK_VAR
++])
+diff --git a/build/cppcheck.m4 b/build/cppcheck.m4
+index 33a0364f..c63dd2a0 100644
+--- a/build/cppcheck.m4
++++ b/build/cppcheck.m4
+@@ -21,4 +21,8 @@ AC_DEFUN([GP_CHECK_CPPCHECK],
+     AM_CONDITIONAL([HAVE_CPPCHECK], [test "x$gp_have_cppcheck" = xyes])
+     GP_STATUS_BUILD_FEATURE_ADD([Static code checking],
+                                 [$gp_have_cppcheck])
++
++    GP_GEANY_PKG_CONFIG_PATH_PUSH
++    PKG_CHECK_VAR([GEANY_INCLUDEDIR], [geany], [includedir], [], [])
++    GP_GEANY_PKG_CONFIG_PATH_POP
+ ])
+diff --git a/build/cppcheck.mk b/build/cppcheck.mk
+index 0f9a27b9..f902e357 100644
+--- a/build/cppcheck.mk
++++ b/build/cppcheck.mk
+@@ -4,6 +4,7 @@ if HAVE_CPPCHECK
+ check-cppcheck: $(srcdir)
+ 	$(CPPCHECK) \
+ 		-q --template gcc --error-exitcode=2 \
++		-I$(GEANY_INCLUDEDIR)/geany \
+ 		$(AM_CPPCHECKFLAGS) $(CPPCHECKFLAGS) \
+ 		$(srcdir)
+ 
