@@ -12,6 +12,8 @@ from pisi.actionsapi import pisitools
 def build():
     # suppress compiler warnings
     pisitools.cflags.add("-Wno-stringop-truncation -Wno-deprecated-declarations -Wno-incompatible-pointer-types -Wno-discarded-qualifiers -Wno-sign-conversion -Wno-sign-compare")
+    # fix unused direct dependency analysis
+    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread -Wl,-O1 -Wl,-z,relro -Wl,--hash-style=gnu -Wl,--as-needed -Wl,--sort-common")
     pythonmodules.compile(pyVer="3")
     # build documentation
     shelltools.cd("docs")
