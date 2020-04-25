@@ -71,7 +71,7 @@ def setup():
     
     shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
     shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")
-    shelltools.system("tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
+    shelltools.system("/usr/bin/python3 tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
 
 
