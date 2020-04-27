@@ -37,6 +37,8 @@ def install():
     pisitools.remove("/usr/share/man/man8/audispd-zos-remote.8")
     pisitools.remove("/usr/share/man/man5/zos-remote.conf.5")
     
+    pisitools.insinto("/etc/audit/rules.d", "rules/10-no-audit.rules", "audit.rules")
+    
     for sbin in shelltools.ls("%s/usr/sbin" % get.installDIR()):
         pisitools.dosym("/usr/sbin/%s" % sbin, "/sbin/%s" % sbin)
 
