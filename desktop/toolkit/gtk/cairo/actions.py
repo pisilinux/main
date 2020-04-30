@@ -36,5 +36,5 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.removeDir("/usr/share/gtk-doc")
+    #pisitools.removeDir("/usr/share/gtk-doc")
     pisitools.dodoc("AUTHORS", "README", "ChangeLog", "NEWS", "COPYING", "COPYING-LGPL-2.1", "COPYING-MPL-1.1")
