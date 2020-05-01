@@ -16,6 +16,7 @@ def setup():
                --sysconfdir=/etc       \
                -Dcolord=no \
                -Dgtk_doc=true \
+               -Dwayland_backend=false \
                -Dbroadway_backend=true \
               "
 
