@@ -7,17 +7,15 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import mesontools
 from pisi.actionsapi import shelltools
 
 
 def setup():
-    options = "--prefix=/usr           \
-               --sysconfdir=/etc       \
-               -Dcolord=no \
-               -Dgtk_doc=true \
-               -Dwayland_backend=false \
-               -Dbroadway_backend=true \
+    options = "--prefix=/usr             \
+               --sysconfdir=/etc         \
+               --enable-x11-backend \
+               --enable-broadway-backend \
+               --disable-wayland-backend \
               "
 
     shelltools.export("CFLAGS", get.CFLAGS().replace("-fomit-frame-pointer",""))
@@ -26,9 +24,7 @@ def setup():
         options += " --libdir=/usr/lib32 \
                      --bindir=/usr/bin32 \
                      --sbindir=/usr/sbin32 \
-                     -Dman=false \
-                     -Dgtk_doc=false \
-                     -Dcolord=no \
+                     --enable-colord=no \
                    "
 
         shelltools.export("CC", "%s -m32" % get.CC())
@@ -40,21 +36,19 @@ def setup():
 
         pisitools.dosed("configure.ac", "cups-config", "cups-config-32bit")
 
-    #autotools.autoreconf("-fiv")
-    mesontools.configure(options)
+    autotools.autoreconf("-fiv")
+    autotools.configure(options)
 
-    #pisitools.dosed("libtool", "( -shared )", r" -Wl,-O1,--as-needed\1")
+    pisitools.dosed("libtool", "( -shared )", r" -Wl,-O1,--as-needed\1")
 
 def build():
-    mesontools.build()
-    #autotools.make()
+    autotools.make()
 
 def install():
-    mesontools.install()
-    #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     # remove empty dir
-    #pisitools.removeDir("/usr/share/man")
+    pisitools.removeDir("/usr/share/man")
     pisitools.dodoc("AUTHORS", "README*", "HACKING", "ChangeLog*", "NEWS*")
 
     if get.buildTYPE() == "emul32":
