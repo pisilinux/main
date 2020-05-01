@@ -37,6 +37,7 @@ def setup():
 	
 	if get.buildTYPE()=="emul32" :
 		options += "-Dintrospection=false \
+                    -Dinstalled_tests=false \
 		            --bindir=/usr/bin32"
 	else:
 		options += "-Dintrospection=true"
