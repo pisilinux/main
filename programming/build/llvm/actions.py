@@ -16,7 +16,7 @@ libsuffix = "32" if get.buildTYPE() == "emul32" else ""
 NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 
 def setup():
-    pisitools.ldflags.add("-fuse-ld=lld")
+    #pisitools.ldflags.add("-fuse-ld=lld")
 
     if get.buildTYPE() != "emul32":
             if not shelltools.can_access_directory("tools/clang"):
@@ -38,21 +38,31 @@ def setup():
             if not shelltools.can_access_directory("projects/compiler-rt"):
                 shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
                 shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
+                
+                #clang patch
+                shelltools.cd("tools")
+                shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
+                shelltools.cd("..")
         
-                shelltools.export("CC", "clang")
-                shelltools.export("CXX", "clang++")
-                #shelltools.export("CC", "gcc")
-                #shelltools.export("CXX", "g++")
+                #shelltools.export("CC", "clang")
+                #shelltools.export("CXX", "clang++")
+                shelltools.export("CC", "gcc")
+                shelltools.export("CXX", "g++")
     else:
         shelltools.system("tar xf ../clang-%s.src.tar.xz -C tools" % get.srcVERSION())
         shelltools.move("tools/clang-%s.src" % get.srcVERSION(), "tools/clang")
     
     if get.buildTYPE() == "emul32":
-        shelltools.export("CC", "clang -m32")
-        shelltools.export("CXX", "clang++ -m32")
-        #shelltools.export("CC", "gcc -m32")
-        #shelltools.export("CXX", "g++ -m32")
+        #shelltools.export("CC", "clang -m32")
+        #shelltools.export("CXX", "clang++ -m32")
+        shelltools.export("CC", "gcc -m32")
+        shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
+        
+        #clang patch
+        shelltools.cd("tools")
+        shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
+        shelltools.cd("..")
     
     shelltools.makedirs("build")
     
@@ -80,9 +90,10 @@ def setup():
                                         %s \
                                         -DLLVM_ENABLE_FFI=ON \
                                         -DLLVM_BUILD_DOCS=OFF \
-                                        -DBUILD_SHARED_LIBS=ON \
                                         -DLLVM_ENABLE_RTTI=ON \
                                         -DLLVM_ENABLE_EH=ON \
+                                        -DLLVM_BUILD_LLVM_DYLIB=ON \
+                                        -DLLVM_LINK_LLVM_DYLIB=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
