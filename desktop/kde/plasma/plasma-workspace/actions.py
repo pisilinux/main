@@ -18,5 +18,7 @@ def build():
 def install():
     kde5.install()
     #pisitools.dosym("/usr/lib/drkonqi", "/usr/lib/libexec/drkonqi")
+    
+    pisitools.dosym("/usr/bin/startplasma-x11", "usr/bin/startkde")
 
     pisitools.dodoc("COPYING", "HACKING")
