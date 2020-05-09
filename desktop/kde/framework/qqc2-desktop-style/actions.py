@@ -16,4 +16,4 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("LICENSE*", "README*")
+    pisitools.dodoc("LICENSE.GPL-2", "README*")
