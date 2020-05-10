@@ -24,7 +24,7 @@ def setup():
                 shelltools.move("tools/clang-%s.src" % get.srcVERSION(), "tools/clang")
 
                 shelltools.system("tar xf ../clang-tools-extra-%s.src.tar.xz -C tools" % get.srcVERSION())
-                shelltools.move("tools/clang-tools-extra-*", "tools/clang/extra")
+                shelltools.move("tools/clang-tools-extra-*", "tools/clang/tools/extra")
                 
                 shelltools.system("tar xf ../lldb-%s.src.tar.xz -C tools" % get.srcVERSION())
                 shelltools.move("tools/lldb-*", "tools/lldb")
@@ -92,8 +92,7 @@ def setup():
                                         -DLLVM_BUILD_DOCS=OFF \
                                         -DLLVM_ENABLE_RTTI=ON \
                                         -DLLVM_ENABLE_EH=ON \
-                                        -DLLVM_BUILD_LLVM_DYLIB=ON \
-                                        -DLLVM_LINK_LLVM_DYLIB=ON \
+                                        -DBUILD_SHARED_LIBS=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
