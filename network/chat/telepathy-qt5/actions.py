@@ -13,7 +13,8 @@ WorkDir = "telepathy-qt-%s" % get.srcVERSION()
 
 def setup():
     cmaketools.configure("-DDESIRED_QT_VERSION=5 \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python2.7 \
+                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+                          -DCMAKE_INSTALL_LIBDIR=lib \
                           -DENABLE_EXAMPLES=OFF \
                           -DENABLE_TESTS=OFF")
 
