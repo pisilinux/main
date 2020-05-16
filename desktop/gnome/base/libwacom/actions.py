@@ -11,7 +11,8 @@ from pisi.actionsapi import get
 
 
 def setup():
-    autotools.configure("--disable-static ")
+    autotools.configure("--disable-static \
+                         --with-udev-dir=/lib/udev")
 
 def build():
     autotools.make()
