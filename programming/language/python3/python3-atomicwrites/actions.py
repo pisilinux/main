@@ -12,7 +12,7 @@ def build():
     pythonmodules.compile(pyVer="3")
     
 def check():
-    shelltools.system("PYTHONPATH=build:%s/python-atomicwrites-1.3.0/build/lib py.test" % get.workDIR())
+    shelltools.system("PYTHONPATH=build:%s/python-atomicwrites-1.4.0/build/lib py.test" % get.workDIR())
 
 def install():
     pythonmodules.install(pyVer="3")
