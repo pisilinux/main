@@ -31,6 +31,8 @@ def setup():
                          --enable-monitor \
                          --enable-udev \
                          --enable-test \
+                         --enable-testing \
+                         --enable-mesh \
                          --disable-systemd")
                          
     
