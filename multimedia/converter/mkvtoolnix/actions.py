@@ -21,11 +21,13 @@ pisitools.flags.add("-DBOOST_FILESYSTEM_VERSION=3")
 def setup():
    # pisitools.dosed("configure.in", "curl", deleteLine=True)
 
+    shelltools.system("./autogen.sh")
     autotools.autoreconf("-fiv")
     autotools.configure("--enable-gui \
-                                       --without-curl \
-                                       --with-flac \
-                                    --with-boost-libdir=/usr/lib ")
+                         --without-curl \
+                         --with-flac \
+                         --disable-update-check \
+                         --with-boost-libdir=/usr/lib ")
 
 def build():
     shelltools.system("rake")
@@ -33,4 +35,4 @@ def build():
 def install():
     shelltools.system('rake install DESTDIR="%s"' % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "NEWS*", "README*")
+    pisitools.dodoc("COPYING*", "README*")
