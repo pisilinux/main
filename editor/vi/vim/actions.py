@@ -4,19 +4,18 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
-
 
 #WorkDir = "vim74"
 
 def setup():
     # TODO: do we need that ?
-    shelltools.export("CXXFLAGS", get.CXXFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
-    shelltools.export("CFLAGS", get.CFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
-    pisitools.dosed("runtime/tools/mve.awk", "#!/usr/bin/nawk -f", "#!/usr/bin/awk -f")
+    #shelltools.export("CXXFLAGS", get.CXXFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
+    #shelltools.export("CFLAGS", get.CFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
+    #pisitools.dosed("runtime/tools/mve.awk", "#!/usr/bin/nawk -f", "#!/usr/bin/awk -f")
 
     # define the place for the global (g)vimrc file (set to /etc/vim/vimrc)
     shelltools.echo("src/feature.h", "#define SYS_VIMRC_FILE \"/etc/vim/vimrc\"")
@@ -26,10 +25,10 @@ def setup():
     pisitools.dosed("runtime/doc/tagsrch.txt", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
     pisitools.dosed("runtime/doc/usr_29.txt", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
     pisitools.dosed("runtime/menu.vim", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
-#    pisitools.dosed("src/configure.in", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
+    #pisitools.dosed("src/configure.in", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
 
     # TODO: do we need that ?
-#    pisitools.dosed("src/configure.in", r"libc\.h", "")
+    #pisitools.dosed("src/configure.in", r"libc\.h", "")
 
     # TODO: we could need that
     #autotools.make("-C src autoconf")
@@ -77,4 +76,3 @@ def install():
     # Vi != Vim, it's hard to break habbits
     pisitools.dosym("vim", "/usr/bin/vi")
     pisitools.dosym("/usr/bin/vim", "/bin/ex")
-
