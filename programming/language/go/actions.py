@@ -4,10 +4,10 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import autotools
 from pisi.actionsapi import get
+from pisi.actionsapi import autotools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 NoStrip = ["/"]
 
@@ -15,12 +15,13 @@ def build():
     shelltools.export("go_platform","linux-amd64")
     shelltools.export("go_linker","/lib/ld-linux-x86-64.so.2")
 
-    shelltools.export("GOROOT", "%s/go-go1.14.1" % get.workDIR()) #0
+    shelltools.export("GOROOT", "%s/go-go1.14.3" % get.workDIR()) #0
 
     shelltools.export("GOBIN", "$GOROOT/bin") #1
     shelltools.export("GOPATH", "%s" % get.workDIR())
     shelltools.export("GOROOT_FINAL", "/usr/lib/go")
-    shelltools.export("GOROOT_BOOTSTRAP", "%s/go-go1.14.1/go-linux-amd64-bootstrap" % get.workDIR())  #2
+    shelltools.export("GOROOT_BOOTSTRAP", "%s/go-go1.14.3/go" % get.workDIR())  #2
+    #shelltools.export("GOROOT_BOOTSTRAP", "/usr/lib/go")
 
     shelltools.export("GOOS","linux")
     shelltools.export("GOARCH","amd64")
@@ -31,7 +32,7 @@ def build():
 
 def install():
     shelltools.export("GOROOT_FINAL", "/usr/lib/go")
-    shelltools.cd("%s/go-go1.14.1" % get.workDIR())
+    shelltools.cd("%s/go-go1.14.3" % get.workDIR())
 
     pisitools.dodir("/usr/lib/go")
     shelltools.system("cp -r api bin doc lib pkg src  %s/usr/lib/go" % get.installDIR())
