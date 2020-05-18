@@ -1,0 +1,1863 @@
+From 5e1bdcfd6e5bd8353993433bd0efb4a3cb3ca639 Mon Sep 17 00:00:00 2001
+From: Alexandre Lissy <lissyx@lissyx.dyndns.org>
+Date: Thu, 25 Apr 2019 12:29:19 +0200
+Subject: [PATCH] Upgrade SWIG to support NodeJS v12, v13 / V8 v7.6, v7.8
+ runtime
+
+---
+ .travis.yml                                   | 35 ++++++++
+ Examples/test-suite/javascript/Makefile.in    | 15 +++-
+ .../javascript/abstract_access_runme.js       |  4 +-
+ .../javascript/abstract_inherit_runme.js      |  4 +-
+ .../javascript/abstract_typedef2_runme.js     |  4 +-
+ .../javascript/abstract_typedef_runme.js      |  4 +-
+ .../javascript/abstract_virtual_runme.js      |  4 +-
+ .../javascript/array_member_runme.js          |  4 +-
+ .../javascript/arrays_global_runme.js         |  4 +-
+ .../test-suite/javascript/callback_runme.js   |  4 +-
+ .../javascript/char_binary_runme.js           |  4 +-
+ .../javascript/char_strings_runme.js          |  4 +-
+ .../javascript/class_ignore_runme.js          |  4 +-
+ .../javascript/class_scope_weird_runme.js     |  4 +-
+ .../javascript/complextest_runme.js           |  4 +-
+ .../test-suite/javascript/constover_runme.js  |  4 +-
+ .../javascript/constructor_copy_runme.js      |  4 +-
+ ...cpp11_strongly_typed_enumerations_runme.js |  4 +-
+ .../test-suite/javascript/cpp_enum_runme.js   |  4 +-
+ .../javascript/cpp_namespace_runme.js         |  4 +-
+ .../test-suite/javascript/cpp_static_runme.js |  4 +-
+ .../javascript/director_alternating_runme.js  |  4 +-
+ .../test-suite/javascript/disown_runme.js     |  4 +-
+ .../javascript/dynamic_cast_runme.js          |  4 +-
+ .../test-suite/javascript/empty_c_runme.js    |  4 +-
+ Examples/test-suite/javascript/empty_runme.js |  3 +-
+ .../javascript/enum_template_runme.js         |  4 +-
+ .../test-suite/javascript/infinity_runme.js   |  4 +-
+ .../namespace_virtual_method_runme.js         |  4 +-
+ .../javascript/native_directive_runme.js      |  4 +-
+ .../javascript/nspace_extend_runme.js         |  4 +-
+ .../test-suite/javascript/nspace_runme.js     |  4 +-
+ .../javascript/null_pointer_runme.js          |  4 +-
+ .../javascript/overload_copy_runme.js         |  4 +-
+ .../javascript/overload_null_runme.js         |  4 +-
+ .../javascript/preproc_include_runme.js       |  4 +-
+ .../test-suite/javascript/preproc_runme.js    |  4 +-
+ .../test-suite/javascript/rename1_runme.js    |  4 +-
+ .../test-suite/javascript/rename2_runme.js    |  4 +-
+ .../test-suite/javascript/rename3_runme.js    |  4 +-
+ .../test-suite/javascript/rename4_runme.js    |  4 +-
+ .../javascript/rename_scope_runme.js          |  4 +-
+ .../javascript/rename_simple_runme.js         |  4 +-
+ .../javascript/ret_by_value_runme.js          |  4 +-
+ .../javascript/string_simple_runme.js         |  4 +-
+ .../javascript/struct_value_runme.js          |  4 +-
+ .../javascript/swig_exception_runme.js        |  4 +-
+ .../javascript/template_static_runme.js       |  4 +-
+ .../javascript/typedef_class_runme.js         |  4 +-
+ .../javascript/typedef_inherit_runme.js       |  4 +-
+ .../javascript/typedef_scope_runme.js         |  4 +-
+ .../javascript/typemap_arrays_runme.js        |  4 +-
+ .../javascript/typemap_delete_runme.js        |  4 +-
+ .../javascript/typemap_namespace_runme.js     |  4 +-
+ .../javascript/typemap_ns_using_runme.js      |  4 +-
+ .../test-suite/javascript/using1_runme.js     |  4 +-
+ .../test-suite/javascript/using2_runme.js     |  4 +-
+ .../test-suite/javascript/varargs_runme.js    |  4 +-
+ Lib/javascript/v8/javascriptcode.swg          | 30 ++++---
+ Lib/javascript/v8/javascriptcomplex.swg       | 10 +--
+ Lib/javascript/v8/javascripthelpers.swg       | 26 +++---
+ Lib/javascript/v8/javascriptinit.swg          |  4 +-
+ Lib/javascript/v8/javascriptprimtypes.swg     | 28 +++----
+ Lib/javascript/v8/javascriptrun.swg           | 80 +++++++++++++------
+ Lib/javascript/v8/javascriptruntime.swg       |  5 ++
+ Lib/javascript/v8/javascriptstrings.swg       | 10 +--
+ Lib/javascript/v8/javascripttypemaps.swg      |  2 +-
+ Source/Modules/javascript.cxx                 |  4 +-
+ Tools/javascript/v8_shell.cxx                 | 18 ++---
+ Tools/testflags.py                            |  5 +-
+ Tools/travis-linux-install.sh                 |  7 +-
+ 71 files changed, 358 insertions(+), 144 deletions(-)
+
+diff --git a/.travis.yml b/.travis.yml
+index 32c6656dd2..a53da19f68 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -112,6 +112,41 @@ matrix:
+       env: SWIGLANG=javascript ENGINE=node VER=10 CPP11=1
+       sudo: required
+       dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=node VER=12.8.1 CPP11=1
++      sudo: required
++      dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=node VER=12.10.0 CPP11=1
++      sudo: required
++      dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=node VER=12.14.1 CPP11=1
++      sudo: required
++      dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=node VER=13.1.0 CPP11=1
++      sudo: required
++      dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=node VER=13.6.0 CPP11=1
++      sudo: required
++      dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=electron VER=12.14.1 ELECTRON_VER=7.0.1 CPP11=1
++      sudo: required
++      dist: xenial
++    - compiler: gcc
++      os: linux
++      env: SWIGLANG=javascript ENGINE=electron VER=12.14.1 ELECTRON_VER=7.1.8 CPP11=1
++      sudo: required
++      dist: xenial
+     - compiler: gcc
+       os: linux
+       env: SWIGLANG=javascript ENGINE=jsc
+diff --git a/Examples/test-suite/javascript/Makefile.in b/Examples/test-suite/javascript/Makefile.in
+index 8127415f12..b780a9e9cf 100644
+--- a/Examples/test-suite/javascript/Makefile.in
++++ b/Examples/test-suite/javascript/Makefile.in
+@@ -16,6 +16,17 @@ top_builddir = @top_builddir@
+ SWIGEXE   = $(top_builddir)/swig
+ SWIG_LIB_DIR = $(top_srcdir)/Lib
+ 
++ifeq (electron, $(ENGINE))
++NODE_DISTURL    = --disturl=https://electronjs.org/headers
++NODE_RUNTIME    = --runtime=electron
++NODE_ABI_TARGET = --target=${ELECTRON_VER}
++ENGINE          =
++NODEJS          = electron
++else
++NODE_DISTURL =
++NODE_RUNTIME =
++endif
++
+ ifneq (, $(ENGINE))
+ 	JSENGINE=$(ENGINE)
+ else
+@@ -66,14 +77,14 @@ ifeq (node,$(JSENGINE))
+ 		$(MAKE) -f $(top_builddir)/$(EXAMPLES)/Makefile SRCDIR='$(SRCDIR)' \
+ 		SWIG_LIB_DIR='$(SWIG_LIB_DIR)' SWIGEXE='$(SWIGEXE)' \
+ 		SWIGOPT='-javascript $(SWIGOPT) -o $*_wrap.cxx $(srcdir)/../$*.i' swiginvoke && \
+-		MAKEFLAGS= $(COMPILETOOL) $(NODEGYP) --loglevel=silent --directory $* configure build 1>>/dev/null
++		MAKEFLAGS= $(COMPILETOOL) $(NODEGYP) $(NODE_ABI_TARGET) $(NODE_DISTURL) $(NODE_RUNTIME) --loglevel=silent --directory $* configure build 1>>/dev/null
+ 
+ 	swig_and_compile_cpp = \
+ 		$(setup_node) && \
+ 		$(MAKE) -f $(top_builddir)/$(EXAMPLES)/Makefile SRCDIR='$(SRCDIR)' \
+ 		SWIG_LIB_DIR='$(SWIG_LIB_DIR)' SWIGEXE='$(SWIGEXE)' \
+ 		SWIGOPT='-c++ -javascript $(SWIGOPT) $(srcdir)/../$*.i' swiginvoke && \
+-		MAKEFLAGS= $(COMPILETOOL) $(NODEGYP) --loglevel=silent --directory $* configure build 1>>/dev/null
++		MAKEFLAGS= $(COMPILETOOL) $(NODEGYP) $(NODE_ABI_TARGET) $(NODE_DISTURL) $(NODE_RUNTIME) --loglevel=silent --directory $* configure build 1>>/dev/null
+ 
+ 	run_testcase = \
+ 		if [ -f $(srcdir)/$*$(SCRIPTSUFFIX) ]; then \
+diff --git a/Examples/test-suite/javascript/abstract_access_runme.js b/Examples/test-suite/javascript/abstract_access_runme.js
+index f61bb4358b..b2b5e95fb4 100644
+--- a/Examples/test-suite/javascript/abstract_access_runme.js
++++ b/Examples/test-suite/javascript/abstract_access_runme.js
+@@ -1,6 +1,8 @@
+-var abstract_access = require("abstract_access");
++var abstract_access = require("./abstract_access");
+ 
+ var d = new abstract_access.D()
+ if (d.do_x() != 1) {
+    throw "Error";
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/abstract_inherit_runme.js b/Examples/test-suite/javascript/abstract_inherit_runme.js
+index f732e87673..6f58400373 100644
+--- a/Examples/test-suite/javascript/abstract_inherit_runme.js
++++ b/Examples/test-suite/javascript/abstract_inherit_runme.js
+@@ -1,4 +1,4 @@
+-var abstract_inherit = require("abstract_inherit");
++var abstract_inherit = require("./abstract_inherit");
+ 
+ // Shouldn't be able to instantiate any of these classes
+ // since none of them implements the pure virtual function
+@@ -38,3 +38,5 @@ try {
+ if (!caughtException) {
+   throw new Error("Spam should be instantiated as it is abstract");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/abstract_typedef2_runme.js b/Examples/test-suite/javascript/abstract_typedef2_runme.js
+index d8a533ab1d..f1c293818d 100644
+--- a/Examples/test-suite/javascript/abstract_typedef2_runme.js
++++ b/Examples/test-suite/javascript/abstract_typedef2_runme.js
+@@ -1,6 +1,8 @@
+-var abstract_typedef2 = require("abstract_typedef2");
++var abstract_typedef2 = require("./abstract_typedef2");
+ 
+ var a = new abstract_typedef2.A_UF();
+ 
+ if (a == undefined)
+   throw "Error";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/abstract_typedef_runme.js b/Examples/test-suite/javascript/abstract_typedef_runme.js
+index 286328fa8c..09b271218c 100644
+--- a/Examples/test-suite/javascript/abstract_typedef_runme.js
++++ b/Examples/test-suite/javascript/abstract_typedef_runme.js
+@@ -1,4 +1,4 @@
+-var abstract_typedef = require("abstract_typedef");
++var abstract_typedef = require("./abstract_typedef");
+ 
+ var e = new abstract_typedef.Engine();
+ var a = new abstract_typedef.A()
+@@ -6,3 +6,5 @@ var a = new abstract_typedef.A()
+ if (a.write(e) != 1) {
+   throw "Error";
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/abstract_virtual_runme.js b/Examples/test-suite/javascript/abstract_virtual_runme.js
+index 9a9ce99885..f0d505d922 100644
+--- a/Examples/test-suite/javascript/abstract_virtual_runme.js
++++ b/Examples/test-suite/javascript/abstract_virtual_runme.js
+@@ -1,4 +1,4 @@
+-var abstract_virtual = require("abstract_virtual");
++var abstract_virtual = require("./abstract_virtual");
+ 
+ d = new abstract_virtual.D()
+ 
+@@ -9,3 +9,5 @@ e = new abstract_virtual.E()
+ 
+ if (e == undefined)
+   throw "Error";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/array_member_runme.js b/Examples/test-suite/javascript/array_member_runme.js
+index 3d9bb0e5b3..64d158df59 100644
+--- a/Examples/test-suite/javascript/array_member_runme.js
++++ b/Examples/test-suite/javascript/array_member_runme.js
+@@ -1,4 +1,4 @@
+-var array_member = require("array_member");
++var array_member = require("./array_member");
+ 
+ var f = new array_member.Foo();
+ f.data = array_member.global_data;
+@@ -20,3 +20,5 @@ for (var i=0; i<8; i++){
+     throw "Bad array assignment (2)";
+   }
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/arrays_global_runme.js b/Examples/test-suite/javascript/arrays_global_runme.js
+index 0cbb28efba..db4ac20526 100644
+--- a/Examples/test-suite/javascript/arrays_global_runme.js
++++ b/Examples/test-suite/javascript/arrays_global_runme.js
+@@ -1,4 +1,4 @@
+-var arrays_global = require("arrays_global");
++var arrays_global = require("./arrays_global");
+ 
+ arrays_global.array_i = arrays_global.array_const_i;
+ 
+@@ -16,3 +16,5 @@ arrays_global.BeginString_FIX44f;
+ arrays_global.test_a("hello","hi","chello","chi");
+ 
+ arrays_global.test_b("1234567","hi");
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/callback_runme.js b/Examples/test-suite/javascript/callback_runme.js
+index 0218886419..aa22cd21fd 100644
+--- a/Examples/test-suite/javascript/callback_runme.js
++++ b/Examples/test-suite/javascript/callback_runme.js
+@@ -1,4 +1,4 @@
+-var callback = require("callback");
++var callback = require("./callback");
+ 
+ if (callback.foo(2) !== 2) {
+   throw new Error("Failed.");
+@@ -28,3 +28,5 @@ var a = new callback.A();
+ if (callback.foobarm(3, a, callback.A.foom_cb_ptr) != a.foom(3)) {
+   throw new Error("Failed.");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/char_binary_runme.js b/Examples/test-suite/javascript/char_binary_runme.js
+index 01b72ebe14..8b7e400349 100644
+--- a/Examples/test-suite/javascript/char_binary_runme.js
++++ b/Examples/test-suite/javascript/char_binary_runme.js
+@@ -1,4 +1,4 @@
+-var char_binary = require("char_binary");
++var char_binary = require("./char_binary");
+ 
+ var t = new char_binary.Test();
+ if (t.strlen('hile') != 4) {
+@@ -46,3 +46,5 @@ if (char_binary.var_namet != "hola") {
+   throw("bad pointer case (2)");
+ }
+ char_binary.delete_pchar(pc);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/char_strings_runme.js b/Examples/test-suite/javascript/char_strings_runme.js
+index fe17cb9827..0cbe81e542 100644
+--- a/Examples/test-suite/javascript/char_strings_runme.js
++++ b/Examples/test-suite/javascript/char_strings_runme.js
+@@ -1,4 +1,4 @@
+-var char_strings = require("char_strings");
++var char_strings = require("./char_strings");
+ 
+ var assertIsEqual = function(expected, actual) {
+   if (expected !== actual) {
+@@ -9,3 +9,5 @@ var assertIsEqual = function(expected, actual) {
+ assertIsEqual("hi there", char_strings.CharPingPong("hi there"));
+ assertIsEqual("hi there", char_strings.CharArrayPingPong("hi there"));
+ assertIsEqual("hi there", char_strings.CharArrayDimsPingPong("hi there"));
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/class_ignore_runme.js b/Examples/test-suite/javascript/class_ignore_runme.js
+index ffbe021c71..938a19fc8d 100644
+--- a/Examples/test-suite/javascript/class_ignore_runme.js
++++ b/Examples/test-suite/javascript/class_ignore_runme.js
+@@ -1,6 +1,8 @@
+-var class_ignore = require("class_ignore");
++var class_ignore = require("./class_ignore");
+ 
+ a = new class_ignore.Bar();
+ 
+ if (class_ignore.do_blah(a) != "Bar::blah")
+     throw "Error";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/class_scope_weird_runme.js b/Examples/test-suite/javascript/class_scope_weird_runme.js
+index 73c118d617..325fefbac5 100644
+--- a/Examples/test-suite/javascript/class_scope_weird_runme.js
++++ b/Examples/test-suite/javascript/class_scope_weird_runme.js
+@@ -1,6 +1,8 @@
+-var class_scope_weird = require("class_scope_weird");
++var class_scope_weird = require("./class_scope_weird");
+ 
+ f = new class_scope_weird.Foo();
+ g = new class_scope_weird.Foo(3);
+ if (f.bar(3) != 3)
+     throw RuntimeError;
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/complextest_runme.js b/Examples/test-suite/javascript/complextest_runme.js
+index 1d9825f3b2..7e3e3e984b 100644
+--- a/Examples/test-suite/javascript/complextest_runme.js
++++ b/Examples/test-suite/javascript/complextest_runme.js
+@@ -1,4 +1,4 @@
+-var complextest = require("complextest");
++var complextest = require("./complextest");
+ 
+ a = [-1,2];
+ 
+@@ -29,3 +29,5 @@ v.add(1);
+ // TODO: how to check validity?
+ complextest.CopyHalf(v);
+ complextest.CopyHalfRef(v);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/constover_runme.js b/Examples/test-suite/javascript/constover_runme.js
+index 9b192b5ff7..bae3344072 100644
+--- a/Examples/test-suite/javascript/constover_runme.js
++++ b/Examples/test-suite/javascript/constover_runme.js
+@@ -1,4 +1,4 @@
+-var constover = require("constover");
++var constover = require("./constover");
+ 
+ p = constover.test("test");
+ if (p != "test") {
+@@ -31,3 +31,5 @@ p = f.test_pconstm("test");
+ if (p != "test_pconstmethod") {
+     throw "member-test_pconstm failed!";
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/constructor_copy_runme.js b/Examples/test-suite/javascript/constructor_copy_runme.js
+index 179b9fb406..0d811470f1 100644
+--- a/Examples/test-suite/javascript/constructor_copy_runme.js
++++ b/Examples/test-suite/javascript/constructor_copy_runme.js
+@@ -1,4 +1,4 @@
+-var constructor_copy = require("constructor_copy");
++var constructor_copy = require("./constructor_copy");
+ 
+ f1 = new constructor_copy.Foo1(3);
+ f11 = new constructor_copy.Foo1(f1);
+@@ -40,3 +40,5 @@ try {
+ if (good == 0) {
+   throw "Error: should not allow calling copy ctor for Bard";
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/cpp11_strongly_typed_enumerations_runme.js b/Examples/test-suite/javascript/cpp11_strongly_typed_enumerations_runme.js
+index ad9d4e8833..241e38b768 100644
+--- a/Examples/test-suite/javascript/cpp11_strongly_typed_enumerations_runme.js
++++ b/Examples/test-suite/javascript/cpp11_strongly_typed_enumerations_runme.js
+@@ -1,4 +1,4 @@
+-var cpp11_strongly_typed_enumerations = require("cpp11_strongly_typed_enumerations");
++var cpp11_strongly_typed_enumerations = require("./cpp11_strongly_typed_enumerations");
+ 
+ function enumCheck(actual, expected) {
+   if (actual != expected) {
+@@ -163,3 +163,5 @@ enumCheck(class1.class1Test2(cpp11_strongly_typed_enumerations.Class1.Enum12_Val
+ enumCheck(cpp11_strongly_typed_enumerations.globalTest1(cpp11_strongly_typed_enumerations.Enum1_Val5a), 13);
+ enumCheck(cpp11_strongly_typed_enumerations.globalTest2(cpp11_strongly_typed_enumerations.Class1.Enum12_Val5c), 1121);
+ //enumCheck(globalTest3(cpp11_strongly_typed_enumerations.Class1.Struct1_Enum12_Val5f), 3121);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/cpp_enum_runme.js b/Examples/test-suite/javascript/cpp_enum_runme.js
+index 8a248c372a..990f703c39 100644
+--- a/Examples/test-suite/javascript/cpp_enum_runme.js
++++ b/Examples/test-suite/javascript/cpp_enum_runme.js
+@@ -1,4 +1,4 @@
+-var cpp_enum = require("cpp_enum");
++var cpp_enum = require("./cpp_enum");
+ 
+ var f = new cpp_enum.Foo()
+ 
+@@ -26,3 +26,5 @@ if(cpp_enum.Foo.hi != cpp_enum.Hello){
+   throw "Error";
+ }
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/cpp_namespace_runme.js b/Examples/test-suite/javascript/cpp_namespace_runme.js
+index a6ab799646..69e74ae4ed 100644
+--- a/Examples/test-suite/javascript/cpp_namespace_runme.js
++++ b/Examples/test-suite/javascript/cpp_namespace_runme.js
+@@ -1,4 +1,4 @@
+-var cpp_namespace = require("cpp_namespace");
++var cpp_namespace = require("./cpp_namespace");
+ 
+ var n = cpp_namespace.fact(4);
+ if (n != 24){
+@@ -45,3 +45,5 @@ if (cpp_namespace.do_method3(t4,40) != "Test4::method"){
+ if (cpp_namespace.do_method3(t5,40) != "Test5::method"){
+     throw ("Bad return value error!");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/cpp_static_runme.js b/Examples/test-suite/javascript/cpp_static_runme.js
+index c7917e12ea..e78b7016bd 100644
+--- a/Examples/test-suite/javascript/cpp_static_runme.js
++++ b/Examples/test-suite/javascript/cpp_static_runme.js
+@@ -1,4 +1,4 @@
+-var cpp_static = require("cpp_static");
++var cpp_static = require("./cpp_static");
+ 
+ cpp_static.StaticFunctionTest.static_func();
+ cpp_static.StaticFunctionTest.static_func_2(1);
+@@ -7,3 +7,5 @@ cpp_static.StaticMemberTest.static_int = 10;
+ if (cpp_static.StaticMemberTest.static_int != 10)
+ throw "error";
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/director_alternating_runme.js b/Examples/test-suite/javascript/director_alternating_runme.js
+index cff288d35c..40da25af0c 100644
+--- a/Examples/test-suite/javascript/director_alternating_runme.js
++++ b/Examples/test-suite/javascript/director_alternating_runme.js
+@@ -1,5 +1,7 @@
+-var director_alternating = require("director_alternating");
++var director_alternating = require("./director_alternating");
+ 
+ id = director_alternating.getBar().id();
+ if (id != director_alternating.idFromGetBar())
+   throw ("Error, Got wrong id: " + str(id));
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/disown_runme.js b/Examples/test-suite/javascript/disown_runme.js
+index ea742b51e5..1950a2fb6c 100644
+--- a/Examples/test-suite/javascript/disown_runme.js
++++ b/Examples/test-suite/javascript/disown_runme.js
+@@ -1,4 +1,4 @@
+-var disown = require("disown");
++var disown = require("./disown");
+ 
+ var a = new disown.A();
+ var tmp = a.thisown;
+@@ -20,3 +20,5 @@ b.acquire(a);
+ if (a.thisown) {
+   throw new Error("Failed.");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/dynamic_cast_runme.js b/Examples/test-suite/javascript/dynamic_cast_runme.js
+index 32eabcf8b0..b807a93ca2 100644
+--- a/Examples/test-suite/javascript/dynamic_cast_runme.js
++++ b/Examples/test-suite/javascript/dynamic_cast_runme.js
+@@ -1,4 +1,4 @@
+-var dynamic_cast = require("dynamic_cast");
++var dynamic_cast = require("./dynamic_cast");
+ 
+ var f = new dynamic_cast.Foo();
+ var b = new dynamic_cast.Bar();
+@@ -10,3 +10,5 @@ var a = dynamic_cast.do_test(y);
+ if (a != "Bar::test") {
+   throw new Error("Failed.");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/empty_c_runme.js b/Examples/test-suite/javascript/empty_c_runme.js
+index 1cc22e4ce7..61d57853bf 100644
+--- a/Examples/test-suite/javascript/empty_c_runme.js
++++ b/Examples/test-suite/javascript/empty_c_runme.js
+@@ -1 +1,3 @@
+-var empty_c = require("empty_c");
++var empty_c = require("./empty_c");
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/empty_runme.js b/Examples/test-suite/javascript/empty_runme.js
+index 7894379bee..a16eed15a1 100644
+--- a/Examples/test-suite/javascript/empty_runme.js
++++ b/Examples/test-suite/javascript/empty_runme.js
+@@ -1 +1,2 @@
+-var empty = require("empty");
+\ No newline at end of file
++var empty = require("./empty");
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/enum_template_runme.js b/Examples/test-suite/javascript/enum_template_runme.js
+index 1e71e5f640..c44b813644 100644
+--- a/Examples/test-suite/javascript/enum_template_runme.js
++++ b/Examples/test-suite/javascript/enum_template_runme.js
+@@ -1,4 +1,4 @@
+-var enum_template = require("enum_template");
++var enum_template = require("./enum_template");
+ 
+ if (enum_template.MakeETest() != 1)
+   throw "RuntimeError";
+@@ -6,3 +6,5 @@ if (enum_template.MakeETest() != 1)
+ if (enum_template.TakeETest(0) != null)
+   throw "RuntimeError";
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/infinity_runme.js b/Examples/test-suite/javascript/infinity_runme.js
+index 8ebe496a6b..4bef97a1c1 100644
+--- a/Examples/test-suite/javascript/infinity_runme.js
++++ b/Examples/test-suite/javascript/infinity_runme.js
+@@ -1,5 +1,7 @@
+-var infinity = require("infinity");
++var infinity = require("./infinity");
+ 
+ infinity.initialise_MYINFINITY();
+ var my_infinity = infinity.INFINITY;
+ var ret_val = infinity.use_infinity(my_infinity);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/namespace_virtual_method_runme.js b/Examples/test-suite/javascript/namespace_virtual_method_runme.js
+index 4f1e05c848..9dfe33a3ea 100644
+--- a/Examples/test-suite/javascript/namespace_virtual_method_runme.js
++++ b/Examples/test-suite/javascript/namespace_virtual_method_runme.js
+@@ -1,3 +1,5 @@
+-var namespace_virtual_method = require("namespace_virtual_method");
++var namespace_virtual_method = require("./namespace_virtual_method");
+ 
+ x = new namespace_virtual_method.Spam();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/native_directive_runme.js b/Examples/test-suite/javascript/native_directive_runme.js
+index 5c1d69cf17..c7573cf7d8 100644
+--- a/Examples/test-suite/javascript/native_directive_runme.js
++++ b/Examples/test-suite/javascript/native_directive_runme.js
+@@ -1,4 +1,4 @@
+-var native_directive = require("native_directive");
++var native_directive = require("./native_directive");
+ 
+ (function main() {
+   var s = "abc.DEF-123";
+@@ -7,3 +7,5 @@ var native_directive = require("native_directive");
+   if (native_directive.CountAlphaCharacters(s) !== 6)
+     throw "CountAlphaCharacters failed";
+ })();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/nspace_extend_runme.js b/Examples/test-suite/javascript/nspace_extend_runme.js
+index 8cabfe9457..b7daf883a9 100644
+--- a/Examples/test-suite/javascript/nspace_extend_runme.js
++++ b/Examples/test-suite/javascript/nspace_extend_runme.js
+@@ -1,4 +1,4 @@
+-var nspace_extend = require("nspace_extend");
++var nspace_extend = require("./nspace_extend");
+ 
+ // constructors and destructors
+ var color1 = new nspace_extend.Outer.Inner1.Color();
+@@ -25,3 +25,5 @@ created = nspace_extend.Outer.Inner2.Color.create();
+ var col1 = new nspace_extend.Outer.Inner1.Color();
+ var col2 = nspace_extend.Outer.Inner2.Color.create();
+ col2.colors(col1, col1, col2, col2, col2);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/nspace_runme.js b/Examples/test-suite/javascript/nspace_runme.js
+index 993610dd62..5402b13af9 100644
+--- a/Examples/test-suite/javascript/nspace_runme.js
++++ b/Examples/test-suite/javascript/nspace_runme.js
+@@ -1,4 +1,4 @@
+-var nspace = require("nspace");
++var nspace = require("./nspace");
+ 
+ var color1 = new nspace.Outer.Inner1.Color();
+ var color = new nspace.Outer.Inner1.Color(color1);
+@@ -74,3 +74,5 @@ var blue3 = new nspace.Outer.Inner3.Blue();
+ blue3.blueInstanceMethod();
+ var blue4 = new nspace.Outer.Inner4.Blue();
+ blue4.blueInstanceMethod();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/null_pointer_runme.js b/Examples/test-suite/javascript/null_pointer_runme.js
+index 8a9b611867..25d1e535f4 100644
+--- a/Examples/test-suite/javascript/null_pointer_runme.js
++++ b/Examples/test-suite/javascript/null_pointer_runme.js
+@@ -1,4 +1,4 @@
+-var null_pointer = require("null_pointer");
++var null_pointer = require("./null_pointer");
+ 
+ if (!null_pointer.funk(null)) {
+   throw new Error("Javascript 'null' should be converted into NULL.");
+@@ -7,3 +7,5 @@ if (!null_pointer.funk(null)) {
+ if (null_pointer.getnull() != null) {
+   throw new Error("NULL should be converted into Javascript 'null'.");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/overload_copy_runme.js b/Examples/test-suite/javascript/overload_copy_runme.js
+index e2f6107884..a1e1459317 100644
+--- a/Examples/test-suite/javascript/overload_copy_runme.js
++++ b/Examples/test-suite/javascript/overload_copy_runme.js
+@@ -1,4 +1,6 @@
+-var overload_copy = require("overload_copy");
++var overload_copy = require("./overload_copy");
+ 
+ f = new overload_copy.Foo();
+ g = new overload_copy.Foo(f);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/overload_null_runme.js b/Examples/test-suite/javascript/overload_null_runme.js
+index f1e35cac76..74d855248e 100644
+--- a/Examples/test-suite/javascript/overload_null_runme.js
++++ b/Examples/test-suite/javascript/overload_null_runme.js
+@@ -1,6 +1,6 @@
+ // There are no typecheck typemaps in Javascript yet, so most of this test
+ // does not actually worked - the check functions have thus been commented out.
+-var overload_null = require("overload_null");
++var overload_null = require("./overload_null");
+ 
+ var check = function(expected, actual) {
+   if (expected !== actual) {
+@@ -47,3 +47,5 @@ check(20, o.byval2forwardptr(x));
+ check(21, o.byval1forwardref(x));
+ 
+ check(22, o.byval2forwardref(x));
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/preproc_include_runme.js b/Examples/test-suite/javascript/preproc_include_runme.js
+index 5ec72b842d..8d4e8601f6 100644
+--- a/Examples/test-suite/javascript/preproc_include_runme.js
++++ b/Examples/test-suite/javascript/preproc_include_runme.js
+@@ -1,4 +1,4 @@
+-var preproc_include = require("preproc_include");
++var preproc_include = require("./preproc_include");
+ 
+ if (preproc_include.multiply10(10) != 100)
+   throw "RuntimeError";
+@@ -21,3 +21,5 @@ if (preproc_include.multiply60(10) != 600)
+ if (preproc_include.multiply70(10) != 700)
+   throw "RuntimeError";
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/preproc_runme.js b/Examples/test-suite/javascript/preproc_runme.js
+index 167ca5ac1c..15e026d8a6 100644
+--- a/Examples/test-suite/javascript/preproc_runme.js
++++ b/Examples/test-suite/javascript/preproc_runme.js
+@@ -1,4 +1,4 @@
+-var preproc = require("preproc");
++var preproc = require("./preproc");
+ 
+ if (preproc.endif != 1)
+   throw "RuntimeError";
+@@ -12,3 +12,5 @@ if (preproc.defined != 1)
+ if (2*preproc.one != preproc.two)
+   throw "RuntimeError";
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/rename1_runme.js b/Examples/test-suite/javascript/rename1_runme.js
+index 7b2ac37b6d..4741673c90 100644
+--- a/Examples/test-suite/javascript/rename1_runme.js
++++ b/Examples/test-suite/javascript/rename1_runme.js
+@@ -1,4 +1,4 @@
+-var rename = require("rename1");
++var rename = require("./rename1");
+ 
+ function part1() {
+   var xyz = new rename.XYZInt();
+@@ -62,3 +62,5 @@ part2();
+ part3();
+ part4();
+ part5();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/rename2_runme.js b/Examples/test-suite/javascript/rename2_runme.js
+index 040c798bb5..6f6a7d3814 100644
+--- a/Examples/test-suite/javascript/rename2_runme.js
++++ b/Examples/test-suite/javascript/rename2_runme.js
+@@ -1,4 +1,4 @@
+-var rename = require("rename2");
++var rename = require("./rename2");
+ 
+ function part1() {
+   var xyz = new rename.XYZInt();
+@@ -62,3 +62,5 @@ part2();
+ part3();
+ part4();
+ part5();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/rename3_runme.js b/Examples/test-suite/javascript/rename3_runme.js
+index fb9393b037..fcac4dfe02 100644
+--- a/Examples/test-suite/javascript/rename3_runme.js
++++ b/Examples/test-suite/javascript/rename3_runme.js
+@@ -1,4 +1,4 @@
+-var rename = require("rename3");
++var rename = require("./rename3");
+ 
+ function part1() {
+   var xyz = new rename.XYZInt();
+@@ -62,3 +62,5 @@ part2();
+ part3();
+ part4();
+ part5();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/rename4_runme.js b/Examples/test-suite/javascript/rename4_runme.js
+index 1c3d8e77f5..9bf1c45a24 100644
+--- a/Examples/test-suite/javascript/rename4_runme.js
++++ b/Examples/test-suite/javascript/rename4_runme.js
+@@ -1,4 +1,4 @@
+-var rename = require("rename4");
++var rename = require("./rename4");
+ 
+ function part1() {
+   var xyz = new rename.XYZInt();
+@@ -62,3 +62,5 @@ part2();
+ part3();
+ part4();
+ part5();
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/rename_scope_runme.js b/Examples/test-suite/javascript/rename_scope_runme.js
+index fea4d2ca99..dffbcded7d 100644
+--- a/Examples/test-suite/javascript/rename_scope_runme.js
++++ b/Examples/test-suite/javascript/rename_scope_runme.js
+@@ -1,4 +1,4 @@
+-var rename_scope = require("rename_scope");
++var rename_scope = require("./rename_scope");
+ 
+ var a = new rename_scope.Natural_UP();
+ var b = new rename_scope.Natural_BP();
+@@ -15,3 +15,5 @@ var f = rename_scope.equals;
+ if (f === undefined) {
+   throw new Error("Equality operator has not been renamed.");
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/rename_simple_runme.js b/Examples/test-suite/javascript/rename_simple_runme.js
+index 21350cd3ee..9d39f1a62e 100644
+--- a/Examples/test-suite/javascript/rename_simple_runme.js
++++ b/Examples/test-suite/javascript/rename_simple_runme.js
+@@ -1,4 +1,4 @@
+-var rename_simple = require("rename_simple");
++var rename_simple = require("./rename_simple");
+ var NewStruct = rename_simple.NewStruct;
+ 
+ var s = new NewStruct();
+@@ -48,3 +48,5 @@ rename_simple.NewGlobalVariable = 6666;
+ if (rename_simple.NewGlobalVariable !== 6666) {
+   throw new Error("rename_simple.NewGlobalVariable: Expected 6666, was " + rename_simple.NewGlobalVariable);
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/ret_by_value_runme.js b/Examples/test-suite/javascript/ret_by_value_runme.js
+index 9d0840602a..e0eec07cf7 100644
+--- a/Examples/test-suite/javascript/ret_by_value_runme.js
++++ b/Examples/test-suite/javascript/ret_by_value_runme.js
+@@ -1,4 +1,4 @@
+-var ret_by_value = require("ret_by_value");
++var ret_by_value = require("./ret_by_value");
+ 
+ a = ret_by_value.get_test();
+ if (a.myInt != 100)
+@@ -6,3 +6,5 @@ if (a.myInt != 100)
+ 
+ if (a.myShort != 200)
+     throw "RuntimeError";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/string_simple_runme.js b/Examples/test-suite/javascript/string_simple_runme.js
+index 71fbb7bd07..21668fc05f 100644
+--- a/Examples/test-suite/javascript/string_simple_runme.js
++++ b/Examples/test-suite/javascript/string_simple_runme.js
+@@ -1,4 +1,4 @@
+-var string_simple = require("string_simple");
++var string_simple = require("./string_simple");
+ 
+ // Test unicode string
+ var str = "olé";
+@@ -8,3 +8,5 @@ var copy = string_simple.copy_str(str);
+ if (str !== copy) {
+   throw "Error: copy is not equal: original="+str+", copy="+copy;
+ }
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/struct_value_runme.js b/Examples/test-suite/javascript/struct_value_runme.js
+index 5b171b8fed..d277481ed0 100644
+--- a/Examples/test-suite/javascript/struct_value_runme.js
++++ b/Examples/test-suite/javascript/struct_value_runme.js
+@@ -1,4 +1,4 @@
+-var struct_value = require("struct_value");
++var struct_value = require("./struct_value");
+ 
+ b = new struct_value.Bar();
+ 
+@@ -9,3 +9,5 @@ throw "RuntimeError";
+ b.b.x = 3;
+ if (b.b.x != 3)
+ throw "RuntimeError"
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/swig_exception_runme.js b/Examples/test-suite/javascript/swig_exception_runme.js
+index 55435e9477..257dedc8fc 100644
+--- a/Examples/test-suite/javascript/swig_exception_runme.js
++++ b/Examples/test-suite/javascript/swig_exception_runme.js
+@@ -1,4 +1,4 @@
+-var swig_exception = require("swig_exception");
++var swig_exception = require("./swig_exception");
+ 
+ var c = new swig_exception.Circle(10);
+ var s = new swig_exception.Square(10);
+@@ -28,3 +28,5 @@ if (swig_exception.Shape.nshapes != 0) {
+     throw "Shape.nshapes should be 0, actually " + swig_exception.Shape.nshapes;
+ }
+ */
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/template_static_runme.js b/Examples/test-suite/javascript/template_static_runme.js
+index d6106138ae..aa3e548b8d 100644
+--- a/Examples/test-suite/javascript/template_static_runme.js
++++ b/Examples/test-suite/javascript/template_static_runme.js
+@@ -1,3 +1,5 @@
+-var template_static = require("template_static");
++var template_static = require("./template_static");
+ 
+ template_static.Foo.bar_double(1);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typedef_class_runme.js b/Examples/test-suite/javascript/typedef_class_runme.js
+index 64e0051c37..5d6df5b6b7 100644
+--- a/Examples/test-suite/javascript/typedef_class_runme.js
++++ b/Examples/test-suite/javascript/typedef_class_runme.js
+@@ -1,7 +1,9 @@
+-var typedef_class = require("typedef_class");
++var typedef_class = require("./typedef_class");
+ 
+ a = new typedef_class.RealA();
+ a.a = 3;
+ 
+ b = new typedef_class.B();
+ b.testA(a);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typedef_inherit_runme.js b/Examples/test-suite/javascript/typedef_inherit_runme.js
+index 7590e1e6ec..b13c59a030 100644
+--- a/Examples/test-suite/javascript/typedef_inherit_runme.js
++++ b/Examples/test-suite/javascript/typedef_inherit_runme.js
+@@ -1,4 +1,4 @@
+-var typedef_inherit = require("typedef_inherit");
++var typedef_inherit = require("./typedef_inherit");
+ 
+ a = new typedef_inherit.Foo();
+ b = new typedef_inherit.Bar();
+@@ -21,3 +21,5 @@ if (x != "Spam::blah")
+ x = typedef_inherit.do_blah2(d);
+ if (x != "Grok::blah")
+     print ("Whoa! Bad return" + x);
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typedef_scope_runme.js b/Examples/test-suite/javascript/typedef_scope_runme.js
+index 5c1368ab78..e8b2a8255c 100644
+--- a/Examples/test-suite/javascript/typedef_scope_runme.js
++++ b/Examples/test-suite/javascript/typedef_scope_runme.js
+@@ -1,4 +1,4 @@
+-var typedef_scope = require("typedef_scope");
++var typedef_scope = require("./typedef_scope");
+ 
+ b = new typedef_scope.Bar();
+ x = b.test1(42,"hello");
+@@ -10,3 +10,5 @@ if (x != "hello")
+     print("Failed!!");
+ 
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typemap_arrays_runme.js b/Examples/test-suite/javascript/typemap_arrays_runme.js
+index 610ecdd9c7..c333f43930 100644
+--- a/Examples/test-suite/javascript/typemap_arrays_runme.js
++++ b/Examples/test-suite/javascript/typemap_arrays_runme.js
+@@ -1,5 +1,7 @@
+-var typemap_arrays = require("typemap_arrays");
++var typemap_arrays = require("./typemap_arrays");
+ 
+ if (typemap_arrays.sumA(null) != 60)
+     throw "RuntimeError, Sum is wrong";
+ 
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typemap_delete_runme.js b/Examples/test-suite/javascript/typemap_delete_runme.js
+index 1d42ce4daf..72252fe013 100644
+--- a/Examples/test-suite/javascript/typemap_delete_runme.js
++++ b/Examples/test-suite/javascript/typemap_delete_runme.js
+@@ -1,5 +1,7 @@
+-var typemap_delete = require("typemap_delete");
++var typemap_delete = require("./typemap_delete");
+ 
+ r = new typemap_delete.Rect(123);
+ if (r.val != 123)
+     throw "RuntimeError";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typemap_namespace_runme.js b/Examples/test-suite/javascript/typemap_namespace_runme.js
+index 2aa3580249..962e54afa4 100644
+--- a/Examples/test-suite/javascript/typemap_namespace_runme.js
++++ b/Examples/test-suite/javascript/typemap_namespace_runme.js
+@@ -1,7 +1,9 @@
+-var typemap_namespace = require("typemap_namespace");
++var typemap_namespace = require("./typemap_namespace");
+ 
+ if (typemap_namespace.test1("hello") != "hello")
+     throw "RuntimeError";
+ 
+ if (typemap_namespace.test2("hello") != "hello")
+     throw "RuntimeError";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/typemap_ns_using_runme.js b/Examples/test-suite/javascript/typemap_ns_using_runme.js
+index 7e4019ab24..e97ea473c6 100644
+--- a/Examples/test-suite/javascript/typemap_ns_using_runme.js
++++ b/Examples/test-suite/javascript/typemap_ns_using_runme.js
+@@ -1,4 +1,6 @@
+-var typemap_ns_using = require("typemap_ns_using");
++var typemap_ns_using = require("./typemap_ns_using");
+ 
+ if (typemap_ns_using.spam(37) != 37)
+     throw "RuntimeError";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/using1_runme.js b/Examples/test-suite/javascript/using1_runme.js
+index 2415156f08..68917b0156 100644
+--- a/Examples/test-suite/javascript/using1_runme.js
++++ b/Examples/test-suite/javascript/using1_runme.js
+@@ -1,4 +1,6 @@
+-var using1 = require("using1");
++var using1 = require("./using1");
+ 
+ if (using1.spam(37) != 37)
+     throw "RuntimeError";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/using2_runme.js b/Examples/test-suite/javascript/using2_runme.js
+index 2ef08faca1..001f551403 100644
+--- a/Examples/test-suite/javascript/using2_runme.js
++++ b/Examples/test-suite/javascript/using2_runme.js
+@@ -1,4 +1,6 @@
+-var using2 = require("using2");
++var using2 = require("./using2");
+ 
+ if (using2.spam(37) != 37)
+     throw "RuntimeError";
++
++process.exit(0);
+diff --git a/Examples/test-suite/javascript/varargs_runme.js b/Examples/test-suite/javascript/varargs_runme.js
+index fc6d945c1a..66348f2983 100644
+--- a/Examples/test-suite/javascript/varargs_runme.js
++++ b/Examples/test-suite/javascript/varargs_runme.js
+@@ -1,4 +1,4 @@
+-var varargs = require("varargs");
++var varargs = require("./varargs");
+ 
+ if (varargs.test("Hello") != "Hello") {
+   throw new Error("Failed");
+@@ -42,3 +42,5 @@ try {
+ if (!thrown) {
+   throw new Error("Failed");
+ }
++
++process.exit(0);
+diff --git a/Lib/javascript/v8/javascriptcode.swg b/Lib/javascript/v8/javascriptcode.swg
+index c4aaf3db0c..c2aacc61a5 100644
+--- a/Lib/javascript/v8/javascriptcode.swg
++++ b/Lib/javascript/v8/javascriptcode.swg
+@@ -11,7 +11,7 @@
+ static SwigV8ReturnValue $jswrapper(const SwigV8Arguments &args) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Object> self = args.Holder();
++  v8::Local<v8::Object> self = args.Holder();
+   $jslocals
+   if(args.Length() != $jsargcount) SWIG_exception_fail(SWIG_ERROR, "Illegal number of arguments for $jswrapper.");
+   $jscode
+@@ -53,7 +53,7 @@ static SwigV8ReturnValue $jswrapper(const SwigV8Arguments &args) {
+   SWIGV8_HANDLESCOPE();
+   
+   OverloadErrorHandler errorHandler;
+-  v8::Handle<v8::Value> self;
++  v8::Local<v8::Value> self;
+ 
+   // switch all cases by means of series of if-returns.
+   $jsdispatchcases
+@@ -78,7 +78,7 @@ fail:
+ static SwigV8ReturnValue $jswrapper(const SwigV8Arguments &args, V8ErrorHandler &SWIGV8_ErrorHandler) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Object> self = args.Holder();
++  v8::Local<v8::Object> self = args.Holder();
+   $jslocals
+   if(args.Length() != $jsargcount) SWIG_exception_fail(SWIG_ERROR, "Illegal number of arguments for $jswrapper.");
+   $jscode
+@@ -226,7 +226,7 @@ static SwigV8ReturnValue $jswrapper(v8::Local<v8::Name> property, const SwigV8Pr
+ #endif
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Value> jsresult;
++  v8::Local<v8::Value> jsresult;
+   $jslocals
+   $jscode
+   SWIGV8_RETURN_INFO(jsresult, info);
+@@ -271,7 +271,7 @@ fail:
+ static SwigV8ReturnValue $jswrapper(const SwigV8Arguments &args) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Value> jsresult;
++  v8::Local<v8::Value> jsresult;
+   $jslocals
+   if(args.Length() != $jsargcount) SWIG_exception_fail(SWIG_ERROR, "Illegal number of arguments for $jswrapper.");
+ 
+@@ -296,7 +296,7 @@ fail:
+ static SwigV8ReturnValue $jswrapper(const SwigV8Arguments &args) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Value> jsresult;
++  v8::Local<v8::Value> jsresult;
+   OverloadErrorHandler errorHandler;
+   $jscode
+ 
+@@ -320,7 +320,7 @@ static SwigV8ReturnValue $jswrapper(const SwigV8Arguments &args, V8ErrorHandler
+ {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Value> jsresult;
++  v8::Local<v8::Value> jsresult;
+   $jslocals
+   $jscode
+   SWIGV8_RETURN(jsresult);
+@@ -374,7 +374,7 @@ fail:
+ %fragment("jsv8_define_class_template", "templates")
+ %{
+   /* Name: $jsmangledname, Type: $jsmangledtype, Dtor: $jsdtor */
+-  v8::Handle<v8::FunctionTemplate> $jsmangledname_class = SWIGV8_CreateClassTemplate("$jsmangledname");
++  v8::Local<v8::FunctionTemplate> $jsmangledname_class = SWIGV8_CreateClassTemplate("$jsmangledname");
+   SWIGV8_SET_CLASS_TEMPL($jsmangledname_clientData.class_templ, $jsmangledname_class);
+   $jsmangledname_clientData.dtor = $jsdtor;
+   if (SWIGTYPE_$jsmangledtype->clientdata == 0) {
+@@ -420,11 +420,15 @@ fail:
+ %fragment("jsv8_create_class_instance", "templates")
+ %{
+   /* Class: $jsname ($jsmangledname) */
+-  v8::Handle<v8::FunctionTemplate> $jsmangledname_class_0 = SWIGV8_CreateClassTemplate("$jsname");
++  v8::Local<v8::FunctionTemplate> $jsmangledname_class_0 = SWIGV8_CreateClassTemplate("$jsname");
+   $jsmangledname_class_0->SetCallHandler($jsctor);
+   $jsmangledname_class_0->Inherit($jsmangledname_class);
++#if (SWIG_V8_VERSION < 0x0705)
+   $jsmangledname_class_0->SetHiddenPrototype(true);
+-  v8::Handle<v8::Object> $jsmangledname_obj = $jsmangledname_class_0->GetFunction();
++  v8::Local<v8::Object> $jsmangledname_obj = $jsmangledname_class_0->GetFunction();
++#else
++  v8::Local<v8::Object> $jsmangledname_obj = $jsmangledname_class_0->GetFunction(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked();
++#endif
+ %}
+ 
+ /* -----------------------------------------------------------------------------
+@@ -435,7 +439,11 @@ fail:
+  * ----------------------------------------------------------------------------- */
+ %fragment("jsv8_register_class", "templates")
+ %{
++#if (SWIG_V8_VERSION < 0x0706)
+   $jsparent_obj->Set(SWIGV8_SYMBOL_NEW("$jsname"), $jsmangledname_obj);
++#else
++  $jsparent_obj->Set(SWIGV8_CURRENT_CONTEXT(), SWIGV8_SYMBOL_NEW("$jsname"), $jsmangledname_obj);
++#endif
+ %}
+ 
+ /* -----------------------------------------------------------------------------
+@@ -444,7 +452,7 @@ fail:
+  * ----------------------------------------------------------------------------- */
+ %fragment("jsv8_create_namespace", "templates")
+ %{
+-  v8::Handle<v8::Object> $jsmangledname_obj = SWIGV8_OBJECT_NEW();
++  v8::Local<v8::Object> $jsmangledname_obj = SWIGV8_OBJECT_NEW();
+ %}
+ 
+ /* -----------------------------------------------------------------------------
+diff --git a/Lib/javascript/v8/javascriptcomplex.swg b/Lib/javascript/v8/javascriptcomplex.swg
+index d3b4aaffa6..533e548131 100644
+--- a/Lib/javascript/v8/javascriptcomplex.swg
++++ b/Lib/javascript/v8/javascriptcomplex.swg
+@@ -12,7 +12,7 @@
+ %fragment(SWIG_From_frag(Type),"header",
+           fragment=SWIG_From_frag(double))
+ {
+-SWIGINTERNINLINE v8::Handle<v8::Value>
++SWIGINTERNINLINE v8::Local<v8::Value>
+ SWIG_From_dec(Type)(%ifcplusplus(const Type&, Type) c)
+ {
+   SWIGV8_HANDLESCOPE_ESC();
+@@ -32,12 +32,12 @@ SWIG_From_dec(Type)(%ifcplusplus(const Type&, Type) c)
+ 	  fragment=SWIG_AsVal_frag(double))
+ {
+ SWIGINTERN int
+-SWIG_AsVal_dec(Type) (v8::Handle<v8::Value> o, Type* val)
++SWIG_AsVal_dec(Type) (v8::Local<v8::Value> o, Type* val)
+ {
+   SWIGV8_HANDLESCOPE();
+   
+   if (o->IsArray()) {
+-    v8::Handle<v8::Array> array = v8::Handle<v8::Array>::Cast(o);
++    v8::Local<v8::Array> array = v8::Local<v8::Array>::Cast(o);
+     
+     if(array->Length() != 2) SWIG_Error(SWIG_TypeError, "Illegal argument for complex: must be array[2].");
+     double re, im;
+@@ -74,12 +74,12 @@ SWIG_AsVal_dec(Type) (v8::Handle<v8::Value> o, Type* val)
+ %fragment(SWIG_AsVal_frag(Type),"header",
+           fragment=SWIG_AsVal_frag(float)) {
+ SWIGINTERN int
+-SWIG_AsVal_dec(Type) (v8::Handle<v8::Value> o, Type* val)
++SWIG_AsVal_dec(Type) (v8::Local<v8::Value> o, Type* val)
+ {
+   SWIGV8_HANDLESCOPE();
+ 
+   if (o->IsArray()) {
+-    v8::Handle<v8::Array> array = v8::Handle<v8::Array>::Cast(o);
++    v8::Local<v8::Array> array = v8::Local<v8::Array>::Cast(o);
+     
+     if(array->Length() != 2) SWIG_Error(SWIG_TypeError, "Illegal argument for complex: must be array[2].");
+     double re, im;
+diff --git a/Lib/javascript/v8/javascripthelpers.swg b/Lib/javascript/v8/javascripthelpers.swg
+index 80fbd7aa1a..0cd24a1942 100644
+--- a/Lib/javascript/v8/javascripthelpers.swg
++++ b/Lib/javascript/v8/javascripthelpers.swg
+@@ -21,19 +21,19 @@ typedef v8::PropertyCallbackInfo<void>  SwigV8PropertyCallbackInfoVoid;
+ /**
+  * Creates a class template for a class with specified initialization function.
+  */
+-SWIGRUNTIME v8::Handle<v8::FunctionTemplate> SWIGV8_CreateClassTemplate(const char* symbol) {
++SWIGRUNTIME v8::Local<v8::FunctionTemplate> SWIGV8_CreateClassTemplate(const char* symbol) {
+     SWIGV8_HANDLESCOPE_ESC();
+     
+     v8::Local<v8::FunctionTemplate> class_templ = SWIGV8_FUNCTEMPLATE_NEW_VOID();
+     class_templ->SetClassName(SWIGV8_SYMBOL_NEW(symbol));
+ 
+-    v8::Handle<v8::ObjectTemplate> inst_templ = class_templ->InstanceTemplate();
++    v8::Local<v8::ObjectTemplate> inst_templ = class_templ->InstanceTemplate();
+     inst_templ->SetInternalFieldCount(1);
+ 
+-    v8::Handle<v8::ObjectTemplate> equals_templ = class_templ->PrototypeTemplate();
++    v8::Local<v8::ObjectTemplate> equals_templ = class_templ->PrototypeTemplate();
+     equals_templ->Set(SWIGV8_SYMBOL_NEW("equals"), SWIGV8_FUNCTEMPLATE_NEW(_SWIGV8_wrap_equals));
+ 
+-    v8::Handle<v8::ObjectTemplate> cptr_templ = class_templ->PrototypeTemplate();
++    v8::Local<v8::ObjectTemplate> cptr_templ = class_templ->PrototypeTemplate();
+     cptr_templ->Set(SWIGV8_SYMBOL_NEW("getCPtr"), SWIGV8_FUNCTEMPLATE_NEW(_wrap_getCPtr));
+ 
+     SWIGV8_ESCAPE(class_templ);
+@@ -42,33 +42,39 @@ SWIGRUNTIME v8::Handle<v8::FunctionTemplate> SWIGV8_CreateClassTemplate(const ch
+ /**
+  * Registers a class method with given name for a given class template.
+  */
+-SWIGRUNTIME void SWIGV8_AddMemberFunction(v8::Handle<v8::FunctionTemplate> class_templ, const char* symbol,
++SWIGRUNTIME void SWIGV8_AddMemberFunction(v8::Local<v8::FunctionTemplate> class_templ, const char* symbol,
+   SwigV8FunctionCallback _func) {
+-    v8::Handle<v8::ObjectTemplate> proto_templ = class_templ->PrototypeTemplate();
++    v8::Local<v8::ObjectTemplate> proto_templ = class_templ->PrototypeTemplate();
+     proto_templ->Set(SWIGV8_SYMBOL_NEW(symbol), SWIGV8_FUNCTEMPLATE_NEW(_func));
+ }
+ 
+ /**
+  * Registers a class property with given name for a given class template.
+  */
+-SWIGRUNTIME void SWIGV8_AddMemberVariable(v8::Handle<v8::FunctionTemplate> class_templ, const char* symbol,
++SWIGRUNTIME void SWIGV8_AddMemberVariable(v8::Local<v8::FunctionTemplate> class_templ, const char* symbol,
+   SwigV8AccessorGetterCallback getter, SwigV8AccessorSetterCallback setter) {
+-  v8::Handle<v8::ObjectTemplate> proto_templ = class_templ->InstanceTemplate();
++  v8::Local<v8::ObjectTemplate> proto_templ = class_templ->InstanceTemplate();
+   proto_templ->SetAccessor(SWIGV8_SYMBOL_NEW(symbol), getter, setter);
+ }
+ 
+ /**
+  * Registers a class method with given name for a given object.
+  */
+-SWIGRUNTIME void SWIGV8_AddStaticFunction(v8::Handle<v8::Object> obj, const char* symbol,
++SWIGRUNTIME void SWIGV8_AddStaticFunction(v8::Local<v8::Object> obj, const char* symbol,
+   const SwigV8FunctionCallback& _func) {
++#if (SWIG_V8_VERSION < 0x0705)
+   obj->Set(SWIGV8_SYMBOL_NEW(symbol), SWIGV8_FUNCTEMPLATE_NEW(_func)->GetFunction());
++#elif (SWIG_V8_VERSION < 0x0706)
++  obj->Set(SWIGV8_SYMBOL_NEW(symbol), SWIGV8_FUNCTEMPLATE_NEW(_func)->GetFunction(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked());
++#else
++  obj->Set(SWIGV8_CURRENT_CONTEXT(), SWIGV8_SYMBOL_NEW(symbol), SWIGV8_FUNCTEMPLATE_NEW(_func)->GetFunction(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked());
++#endif
+ }
+ 
+ /**
+  * Registers a class method with given name for a given object.
+  */
+-SWIGRUNTIME void SWIGV8_AddStaticVariable(v8::Handle<v8::Object> obj, const char* symbol,
++SWIGRUNTIME void SWIGV8_AddStaticVariable(v8::Local<v8::Object> obj, const char* symbol,
+   SwigV8AccessorGetterCallback getter, SwigV8AccessorSetterCallback setter) {
+ #if (V8_MAJOR_VERSION-0) < 5
+   obj->SetAccessor(SWIGV8_SYMBOL_NEW(symbol), getter, setter);
+diff --git a/Lib/javascript/v8/javascriptinit.swg b/Lib/javascript/v8/javascriptinit.swg
+index 8faf2dd8e1..450aa9c6d9 100644
+--- a/Lib/javascript/v8/javascriptinit.swg
++++ b/Lib/javascript/v8/javascriptinit.swg
+@@ -70,14 +70,14 @@ extern "C"
+ #if (NODE_MODULE_VERSION < 0x000C)
+ void SWIGV8_INIT (v8::Handle<v8::Object> exports)
+ #else
+-void SWIGV8_INIT (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> /*module*/)
++void SWIGV8_INIT (v8::Local<v8::Object> exports, v8::Local<v8::Object> /*module*/)
+ #endif
+ {
+   SWIG_InitializeModule(static_cast<void *>(&exports));
+ 
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Object> exports_obj = exports;
++  v8::Local<v8::Object> exports_obj = exports;
+ %}
+ 
+ 
+diff --git a/Lib/javascript/v8/javascriptprimtypes.swg b/Lib/javascript/v8/javascriptprimtypes.swg
+index f76be983b1..24f5daf7c5 100644
+--- a/Lib/javascript/v8/javascriptprimtypes.swg
++++ b/Lib/javascript/v8/javascriptprimtypes.swg
+@@ -6,7 +6,7 @@
+ 
+ %fragment(SWIG_From_frag(bool),"header") {
+ SWIGINTERNINLINE
+-v8::Handle<v8::Value>
++v8::Local<v8::Value>
+ SWIG_From_dec(bool)(bool value)
+ {
+   return SWIGV8_BOOLEAN_NEW(value);
+@@ -16,7 +16,7 @@ SWIG_From_dec(bool)(bool value)
+ %fragment(SWIG_AsVal_frag(bool),"header",
+           fragment=SWIG_AsVal_frag(long)) {
+ SWIGINTERN
+-int SWIG_AsVal_dec(bool)(v8::Handle<v8::Value> obj, bool *val)
++int SWIG_AsVal_dec(bool)(v8::Local<v8::Value> obj, bool *val)
+ {
+   if(!obj->IsBoolean()) {
+     return SWIG_ERROR;
+@@ -31,7 +31,7 @@ int SWIG_AsVal_dec(bool)(v8::Handle<v8::Value> obj, bool *val)
+ 
+ %fragment(SWIG_From_frag(int),"header") {
+ SWIGINTERNINLINE
+-v8::Handle<v8::Value> SWIG_From_dec(int)(int value)
++v8::Local<v8::Value> SWIG_From_dec(int)(int value)
+ {
+   return SWIGV8_INT32_NEW(value);
+ }
+@@ -39,7 +39,7 @@ v8::Handle<v8::Value> SWIG_From_dec(int)(int value)
+ 
+ %fragment(SWIG_AsVal_frag(int),"header") {
+ SWIGINTERN
+-int SWIG_AsVal_dec(int)(v8::Handle<v8::Value> valRef, int* val)
++int SWIG_AsVal_dec(int)(v8::Local<v8::Value> valRef, int* val)
+ {
+   if (!valRef->IsNumber()) {
+     return SWIG_TypeError;
+@@ -54,7 +54,7 @@ int SWIG_AsVal_dec(int)(v8::Handle<v8::Value> valRef, int* val)
+ 
+ %fragment(SWIG_From_frag(long),"header") {
+ SWIGINTERNINLINE
+-v8::Handle<v8::Value> SWIG_From_dec(long)(long value)
++v8::Local<v8::Value> SWIG_From_dec(long)(long value)
+ {
+   return SWIGV8_NUMBER_NEW(value);
+ }
+@@ -63,7 +63,7 @@ v8::Handle<v8::Value> SWIG_From_dec(long)(long value)
+ %fragment(SWIG_AsVal_frag(long),"header",
+           fragment="SWIG_CanCastAsInteger") {
+ SWIGINTERN
+-int SWIG_AsVal_dec(long)(v8::Handle<v8::Value> obj, long* val)
++int SWIG_AsVal_dec(long)(v8::Local<v8::Value> obj, long* val)
+ {
+   if (!obj->IsNumber()) {
+     return SWIG_TypeError;
+@@ -79,7 +79,7 @@ int SWIG_AsVal_dec(long)(v8::Handle<v8::Value> obj, long* val)
+ %fragment(SWIG_From_frag(unsigned long),"header",
+           fragment=SWIG_From_frag(long)) {
+ SWIGINTERNINLINE
+-v8::Handle<v8::Value> SWIG_From_dec(unsigned long)(unsigned long value)
++v8::Local<v8::Value> SWIG_From_dec(unsigned long)(unsigned long value)
+ {
+   return (value > LONG_MAX) ?
+     SWIGV8_INTEGER_NEW_UNS(value) : SWIGV8_INTEGER_NEW(%numeric_cast(value,long));
+@@ -89,7 +89,7 @@ v8::Handle<v8::Value> SWIG_From_dec(unsigned long)(unsigned long value)
+ %fragment(SWIG_AsVal_frag(unsigned long),"header",
+           fragment="SWIG_CanCastAsInteger") {
+ SWIGINTERN
+-int SWIG_AsVal_dec(unsigned long)(v8::Handle<v8::Value> obj, unsigned long *val)
++int SWIG_AsVal_dec(unsigned long)(v8::Local<v8::Value> obj, unsigned long *val)
+ {
+   if(!obj->IsNumber()) {
+     return SWIG_TypeError;
+@@ -115,7 +115,7 @@ int SWIG_AsVal_dec(unsigned long)(v8::Handle<v8::Value> obj, unsigned long *val)
+     fragment="SWIG_LongLongAvailable") {
+ %#ifdef SWIG_LONG_LONG_AVAILABLE
+ SWIGINTERNINLINE
+-v8::Handle<v8::Value> SWIG_From_dec(long long)(long long value)
++v8::Local<v8::Value> SWIG_From_dec(long long)(long long value)
+ {
+   return SWIGV8_NUMBER_NEW(value);
+ }
+@@ -128,7 +128,7 @@ v8::Handle<v8::Value> SWIG_From_dec(long long)(long long value)
+     fragment="SWIG_LongLongAvailable") {
+ %#ifdef SWIG_LONG_LONG_AVAILABLE
+ SWIGINTERN
+-int SWIG_AsVal_dec(long long)(v8::Handle<v8::Value> obj, long long* val)
++int SWIG_AsVal_dec(long long)(v8::Local<v8::Value> obj, long long* val)
+ {
+   if (!obj->IsNumber()) {
+     return SWIG_TypeError;
+@@ -148,7 +148,7 @@ int SWIG_AsVal_dec(long long)(v8::Handle<v8::Value> obj, long long* val)
+     fragment="SWIG_LongLongAvailable") {
+ %#ifdef SWIG_LONG_LONG_AVAILABLE
+ SWIGINTERNINLINE
+-v8::Handle<v8::Value> SWIG_From_dec(unsigned long long)(unsigned long long value)
++v8::Local<v8::Value> SWIG_From_dec(unsigned long long)(unsigned long long value)
+ {
+   return (value > LONG_MAX) ?
+     SWIGV8_INTEGER_NEW_UNS(value) : SWIGV8_INTEGER_NEW(%numeric_cast(value,long));
+@@ -162,7 +162,7 @@ v8::Handle<v8::Value> SWIG_From_dec(unsigned long long)(unsigned long long value
+     fragment="SWIG_LongLongAvailable") {
+ %#ifdef SWIG_LONG_LONG_AVAILABLE
+ SWIGINTERN
+-int SWIG_AsVal_dec(unsigned long long)(v8::Handle<v8::Value> obj, unsigned long long *val)
++int SWIG_AsVal_dec(unsigned long long)(v8::Local<v8::Value> obj, unsigned long long *val)
+ {
+   if(!obj->IsNumber()) {
+     return SWIG_TypeError;
+@@ -185,7 +185,7 @@ int SWIG_AsVal_dec(unsigned long long)(v8::Handle<v8::Value> obj, unsigned long
+ 
+ %fragment(SWIG_From_frag(double),"header") {
+ SWIGINTERN
+-v8::Handle<v8::Value> SWIG_From_dec(double) (double val)
++v8::Local<v8::Value> SWIG_From_dec(double) (double val)
+ {
+   return SWIGV8_NUMBER_NEW(val);
+ }
+@@ -193,7 +193,7 @@ v8::Handle<v8::Value> SWIG_From_dec(double) (double val)
+ 
+ %fragment(SWIG_AsVal_frag(double),"header") {
+ SWIGINTERN
+-int SWIG_AsVal_dec(double)(v8::Handle<v8::Value> obj, double *val)
++int SWIG_AsVal_dec(double)(v8::Local<v8::Value> obj, double *val)
+ {
+   if(!obj->IsNumber()) {
+     return SWIG_TypeError;
+diff --git a/Lib/javascript/v8/javascriptrun.swg b/Lib/javascript/v8/javascriptrun.swg
+index 2452f4040d..db6299a84e 100644
+--- a/Lib/javascript/v8/javascriptrun.swg
++++ b/Lib/javascript/v8/javascriptrun.swg
+@@ -10,7 +10,11 @@
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x031803)
+ #define SWIGV8_STRING_NEW2(cstr, len) v8::String::New(cstr, len)
+ #else
++#if (SWIG_V8_VERSION < 0x0706)
+ #define SWIGV8_STRING_NEW2(cstr, len) v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), cstr, v8::String::kNormalString, len)
++#else
++#define SWIGV8_STRING_NEW2(cstr, len) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), cstr, v8::NewStringType::kNormal, len)).ToLocalChecked()
++#endif
+ #endif
+ 
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x031903)
+@@ -47,12 +51,18 @@ typedef v8::PropertyCallbackInfo<v8::Value> SwigV8PropertyCallbackInfo;
+ #define SWIGV8_THROW_EXCEPTION(err) v8::ThrowException(err)
+ #define SWIGV8_STRING_NEW(str) v8::String::New(str)
+ #define SWIGV8_SYMBOL_NEW(sym) v8::String::NewSymbol(sym)
++#elif (SWIG_V8_VERSION < 0x0706)
++#define SWIGV8_ADJUST_MEMORY(size) v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(size)
++#define SWIGV8_CURRENT_CONTEXT() v8::Isolate::GetCurrent()->GetCurrentContext()
++#define SWIGV8_THROW_EXCEPTION(err) v8::Isolate::GetCurrent()->ThrowException(err)
++#define SWIGV8_STRING_NEW(str) v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), str, v8::String::kNormalString)
++#define SWIGV8_SYMBOL_NEW(sym) v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), sym, v8::String::kNormalString)
+ #else
+ #define SWIGV8_ADJUST_MEMORY(size) v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(size)
+ #define SWIGV8_CURRENT_CONTEXT() v8::Isolate::GetCurrent()->GetCurrentContext()
+ #define SWIGV8_THROW_EXCEPTION(err) v8::Isolate::GetCurrent()->ThrowException(err)
+-#define SWIGV8_STRING_NEW(str) v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), str)
+-#define SWIGV8_SYMBOL_NEW(sym) v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), sym)
++#define SWIGV8_STRING_NEW(str) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), str, v8::NewStringType::kNormal)).ToLocalChecked()
++#define SWIGV8_SYMBOL_NEW(sym) (v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), sym, v8::NewStringType::kNormal)).ToLocalChecked()
+ #endif
+ 
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x032318)
+@@ -107,7 +117,7 @@ typedef v8::PropertyCallbackInfo<v8::Value> SwigV8PropertyCallbackInfo;
+ #define SWIGV8_BOOLEAN_VALUE(handle) (handle)->BooleanValue()
+ #define SWIGV8_WRITE_UTF8(handle, buffer, len) (handle)->WriteUtf8(buffer, len)
+ #define SWIGV8_UTF8_LENGTH(handle) (handle)->Utf8Length()
+-#else
++#elif (SWIG_V8_VERSION < 0x0706)
+ #define SWIGV8_TO_OBJECT(handle) (handle)->ToObject(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked()
+ #define SWIGV8_TO_STRING(handle) (handle)->ToString(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked()
+ #define SWIGV8_NUMBER_VALUE(handle) (handle)->NumberValue(SWIGV8_CURRENT_CONTEXT()).ToChecked()
+@@ -115,6 +125,14 @@ typedef v8::PropertyCallbackInfo<v8::Value> SwigV8PropertyCallbackInfo;
+ #define SWIGV8_BOOLEAN_VALUE(handle) (handle)->BooleanValue(SWIGV8_CURRENT_CONTEXT()).ToChecked()
+ #define SWIGV8_WRITE_UTF8(handle, buffer, len) (handle)->WriteUtf8(v8::Isolate::GetCurrent(), buffer, len)
+ #define SWIGV8_UTF8_LENGTH(handle) (handle)->Utf8Length(v8::Isolate::GetCurrent())
++#else
++#define SWIGV8_TO_OBJECT(handle) (handle)->ToObject(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked()
++#define SWIGV8_TO_STRING(handle) (handle)->ToString(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked()
++#define SWIGV8_NUMBER_VALUE(handle) (handle)->NumberValue(SWIGV8_CURRENT_CONTEXT()).ToChecked()
++#define SWIGV8_INTEGER_VALUE(handle) (handle)->IntegerValue(SWIGV8_CURRENT_CONTEXT()).ToChecked()
++#define SWIGV8_BOOLEAN_VALUE(handle) (handle)->BooleanValue(v8::Isolate::GetCurrent())
++#define SWIGV8_WRITE_UTF8(handle, buffer, len) (handle)->WriteUtf8(v8::Isolate::GetCurrent(), buffer, len)
++#define SWIGV8_UTF8_LENGTH(handle) (handle)->Utf8Length(v8::Isolate::GetCurrent())
+ #endif
+ 
+ /* ---------------------------------------------------------------------------
+@@ -163,7 +181,7 @@ public:
+         SWIGV8_THROW_EXCEPTION(err);
+     }
+   }
+-  v8::Handle<v8::Value> err;
++  v8::Local<v8::Value> err;
+ };
+ 
+ /* ---------------------------------------------------------------------------
+@@ -228,13 +246,13 @@ public:
+ 
+ SWIGRUNTIME v8::Persistent<v8::FunctionTemplate> SWIGV8_SWIGTYPE_Proxy_class_templ;
+ 
+-SWIGRUNTIME int SWIG_V8_ConvertInstancePtr(v8::Handle<v8::Object> objRef, void **ptr, swig_type_info *info, int flags) {
++SWIGRUNTIME int SWIG_V8_ConvertInstancePtr(v8::Local<v8::Object> objRef, void **ptr, swig_type_info *info, int flags) {
+   SWIGV8_HANDLESCOPE();
+ 
+   if(objRef->InternalFieldCount() < 1) return SWIG_ERROR;
+ 
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x031511)
+-  v8::Handle<v8::Value> cdataRef = objRef->GetInternalField(0);
++  v8::Local<v8::Value> cdataRef = objRef->GetInternalField(0);
+   SWIGV8_Proxy *cdata = static_cast<SWIGV8_Proxy *>(v8::External::Unwrap(cdataRef));
+ #else
+   SWIGV8_Proxy *cdata = static_cast<SWIGV8_Proxy *>(objRef->GetAlignedPointerFromInternalField(0));
+@@ -280,11 +298,11 @@ SWIGRUNTIME void SWIGV8_Proxy_DefaultDtor(const v8::WeakCallbackInfo<SWIGV8_Prox
+   delete proxy;
+ }
+ 
+-SWIGRUNTIME int SWIG_V8_GetInstancePtr(v8::Handle<v8::Value> valRef, void **ptr) {
++SWIGRUNTIME int SWIG_V8_GetInstancePtr(v8::Local<v8::Value> valRef, void **ptr) {
+   if(!valRef->IsObject()) {
+     return SWIG_TypeError;
+   }
+-  v8::Handle<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
++  v8::Local<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
+ 
+   if(objRef->InternalFieldCount() < 1) return SWIG_ERROR;
+ 
+@@ -304,7 +322,7 @@ SWIGRUNTIME int SWIG_V8_GetInstancePtr(v8::Handle<v8::Value> valRef, void **ptr)
+   return SWIG_OK;
+ }
+ 
+-SWIGRUNTIME void SWIGV8_SetPrivateData(v8::Handle<v8::Object> obj, void *ptr, swig_type_info *info, int flags) {
++SWIGRUNTIME void SWIGV8_SetPrivateData(v8::Local<v8::Object> obj, void *ptr, swig_type_info *info, int flags) {
+   SWIGV8_Proxy *cdata = new SWIGV8_Proxy();
+   cdata->swigCObject = ptr;
+   cdata->swigCMemOwn = (flags & SWIG_POINTER_OWN) ? 1 : 0;
+@@ -361,13 +379,15 @@ SWIGRUNTIME void SWIGV8_SetPrivateData(v8::Handle<v8::Object> obj, void *ptr, sw
+   cdata->handle.MarkIndependent();
+ #elif (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x032100)
+   cdata->handle.MarkIndependent(v8::Isolate::GetCurrent());
+-#else
++#elif (SWIG_V8_VERSION < 0x0706)
+   cdata->handle.MarkIndependent();
++// Looks like future versions do not require that anymore:
++// https://monorail-prod.appspot.com/p/chromium/issues/detail?id=923361#c11
+ #endif
+ 
+ }
+ 
+-SWIGRUNTIME int SWIG_V8_ConvertPtr(v8::Handle<v8::Value> valRef, void **ptr, swig_type_info *info, int flags) {
++SWIGRUNTIME int SWIG_V8_ConvertPtr(v8::Local<v8::Value> valRef, void **ptr, swig_type_info *info, int flags) {
+   SWIGV8_HANDLESCOPE();
+   
+   /* special case: JavaScript null => C NULL pointer */
+@@ -378,14 +398,14 @@ SWIGRUNTIME int SWIG_V8_ConvertPtr(v8::Handle<v8::Value> valRef, void **ptr, swi
+   if(!valRef->IsObject()) {
+     return SWIG_TypeError;
+   }
+-  v8::Handle<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
++  v8::Local<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
+   return SWIG_V8_ConvertInstancePtr(objRef, ptr, info, flags);
+ }
+ 
+-SWIGRUNTIME v8::Handle<v8::Value> SWIG_V8_NewPointerObj(void *ptr, swig_type_info *info, int flags) {
++SWIGRUNTIME v8::Local<v8::Value> SWIG_V8_NewPointerObj(void *ptr, swig_type_info *info, int flags) {
+   SWIGV8_HANDLESCOPE_ESC();
+   
+-  v8::Handle<v8::FunctionTemplate> class_templ;
++  v8::Local<v8::FunctionTemplate> class_templ;
+ 
+   if (ptr == NULL) {
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x031903)
+@@ -412,8 +432,11 @@ SWIGRUNTIME v8::Handle<v8::Value> SWIG_V8_NewPointerObj(void *ptr, swig_type_inf
+   }
+ #endif
+ 
+-//  v8::Handle<v8::Object> result = class_templ->InstanceTemplate()->NewInstance();
++#if (SWIG_V8_VERSION < 0x0705)
+   v8::Local<v8::Object> result = class_templ->InstanceTemplate()->NewInstance();
++#else
++  v8::Local<v8::Object> result = class_templ->InstanceTemplate()->NewInstance(SWIGV8_CURRENT_CONTEXT()).ToLocalChecked();
++#endif
+   SWIGV8_SetPrivateData(result, ptr, info, flags);
+ 
+   SWIGV8_ESCAPE(result);
+@@ -433,7 +456,7 @@ SWIGRUNTIME v8::Handle<v8::Value> SWIG_V8_NewPointerObj(void *ptr, swig_type_inf
+ SWIGRUNTIME SwigV8ReturnValue _SWIGV8_wrap_equals(const SwigV8Arguments &args) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Value> jsresult;
++  v8::Local<v8::Value> jsresult;
+   void *arg1 = (void *) 0 ;
+   void *arg2 = (void *) 0 ;
+   bool result;
+@@ -463,7 +486,7 @@ fail:
+ SWIGRUNTIME SwigV8ReturnValue _wrap_getCPtr(const SwigV8Arguments &args) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Value> jsresult;
++  v8::Local<v8::Value> jsresult;
+   void *arg1 = (void *) 0 ;
+   long result;
+   int res1;
+@@ -502,10 +525,10 @@ public:
+ };
+ 
+ SWIGRUNTIMEINLINE
+-int SwigV8Packed_Check(v8::Handle<v8::Value> valRef) {
++int SwigV8Packed_Check(v8::Local<v8::Value> valRef) {
+   SWIGV8_HANDLESCOPE();
+   
+-  v8::Handle<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
++  v8::Local<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
+   if(objRef->InternalFieldCount() < 1) return false;
+ #if (V8_MAJOR_VERSION-0) < 5
+   v8::Handle<v8::Value> flag = objRef->GetHiddenValue(SWIGV8_STRING_NEW("__swig__packed_data__"));
+@@ -519,13 +542,13 @@ int SwigV8Packed_Check(v8::Handle<v8::Value> valRef) {
+ }
+ 
+ SWIGRUNTIME
+-swig_type_info *SwigV8Packed_UnpackData(v8::Handle<v8::Value> valRef, void *ptr, size_t size) {
++swig_type_info *SwigV8Packed_UnpackData(v8::Local<v8::Value> valRef, void *ptr, size_t size) {
+   if (SwigV8Packed_Check(valRef)) {
+     SWIGV8_HANDLESCOPE();
+     
+     SwigV8PackedData *sobj;
+ 
+-    v8::Handle<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
++    v8::Local<v8::Object> objRef = SWIGV8_TO_OBJECT(valRef);
+ 
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x031511)
+     v8::Handle<v8::Value> cdataRef = objRef->GetInternalField(0);
+@@ -542,7 +565,7 @@ swig_type_info *SwigV8Packed_UnpackData(v8::Handle<v8::Value> valRef, void *ptr,
+ }
+ 
+ SWIGRUNTIME
+-int SWIGV8_ConvertPacked(v8::Handle<v8::Value> valRef, void *ptr, size_t sz, swig_type_info *ty) {
++int SWIGV8_ConvertPacked(v8::Local<v8::Value> valRef, void *ptr, size_t sz, swig_type_info *ty) {
+   swig_type_info *to = SwigV8Packed_UnpackData(valRef, ptr, sz);
+   if (!to) return SWIG_ERROR;
+   if (ty) {
+@@ -590,7 +613,7 @@ SWIGRUNTIME void _wrap_SwigV8PackedData_delete(const v8::WeakCallbackInfo<SwigV8
+ }
+ 
+ SWIGRUNTIME
+-v8::Handle<v8::Value> SWIGV8_NewPackedObj(void *data, size_t size, swig_type_info *type) {
++v8::Local<v8::Value> SWIGV8_NewPackedObj(void *data, size_t size, swig_type_info *type) {
+   SWIGV8_HANDLESCOPE_ESC();
+ 
+   SwigV8PackedData *cdata = new SwigV8PackedData(data, size, type);
+@@ -636,8 +659,10 @@ v8::Handle<v8::Value> SWIGV8_NewPackedObj(void *data, size_t size, swig_type_inf
+   cdata->handle.MarkIndependent();
+ #elif (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x032100)
+   cdata->handle.MarkIndependent(v8::Isolate::GetCurrent());
+-#else
++#elif (SWIG_V8_VERSION < 0x0706)
+   cdata->handle.MarkIndependent();
++// Looks like future versions do not require that anymore:
++// https://monorail-prod.appspot.com/p/chromium/issues/detail?id=923361#c11
+ #endif
+ 
+   SWIGV8_ESCAPE(obj);
+@@ -657,7 +682,7 @@ SWIGRUNTIME
+ #if (V8_MAJOR_VERSION-0) < 4 && (SWIG_V8_VERSION < 0x031903)
+ v8::Handle<v8::Value> SWIGV8_AppendOutput(v8::Handle<v8::Value> result, v8::Handle<v8::Value> obj) {
+ #else
+-v8::Handle<v8::Value> SWIGV8_AppendOutput(v8::Local<v8::Value> result, v8::Handle<v8::Value> obj) {
++v8::Local<v8::Value> SWIGV8_AppendOutput(v8::Local<v8::Value> result, v8::Local<v8::Value> obj) {
+ #endif
+   SWIGV8_HANDLESCOPE_ESC();
+   
+@@ -669,7 +694,12 @@ v8::Handle<v8::Value> SWIGV8_AppendOutput(v8::Local<v8::Value> result, v8::Handl
+ #else  
+   v8::Local<v8::Array> arr = v8::Local<v8::Array>::Cast(result);
+ #endif
++
++#if (SWIG_V8_VERSION < 0x0706)
+   arr->Set(arr->Length(), obj);
++#else
++  arr->Set(SWIGV8_CURRENT_CONTEXT(), arr->Length(), obj);
++#endif
+ 
+   SWIGV8_ESCAPE(arr);
+ }
+diff --git a/Lib/javascript/v8/javascriptruntime.swg b/Lib/javascript/v8/javascriptruntime.swg
+index c78e04efbb..773014f2a5 100644
+--- a/Lib/javascript/v8/javascriptruntime.swg
++++ b/Lib/javascript/v8/javascriptruntime.swg
+@@ -56,6 +56,11 @@
+ %insert(runtime) %{
+ #include <v8.h>
+ 
++#if defined(V8_MAJOR_VERSION) && defined(V8_MINOR_VERSION)
++#undef SWIG_V8_VERSION
++#define SWIG_V8_VERSION (V8_MAJOR_VERSION * 256 + V8_MINOR_VERSION)
++#endif
++
+ #include <errno.h>
+ #include <limits.h>
+ #include <stdlib.h>
+diff --git a/Lib/javascript/v8/javascriptstrings.swg b/Lib/javascript/v8/javascriptstrings.swg
+index e767a6d662..61a937fa52 100644
+--- a/Lib/javascript/v8/javascriptstrings.swg
++++ b/Lib/javascript/v8/javascriptstrings.swg
+@@ -4,10 +4,10 @@
+  * ------------------------------------------------------------ */
+ %fragment("SWIG_AsCharPtrAndSize", "header", fragment="SWIG_pchar_descriptor") {
+ SWIGINTERN int
+-SWIG_AsCharPtrAndSize(v8::Handle<v8::Value> valRef, char** cptr, size_t* psize, int *alloc)
++SWIG_AsCharPtrAndSize(v8::Local<v8::Value> valRef, char** cptr, size_t* psize, int *alloc)
+ {
+   if(valRef->IsString()) {
+-    v8::Handle<v8::String> js_str = SWIGV8_TO_STRING(valRef);
++    v8::Local<v8::String> js_str = SWIGV8_TO_STRING(valRef);
+ 
+     size_t len = SWIGV8_UTF8_LENGTH(js_str) + 1;
+     char* cstr = new char[len];
+@@ -20,7 +20,7 @@ SWIG_AsCharPtrAndSize(v8::Handle<v8::Value> valRef, char** cptr, size_t* psize,
+     return SWIG_OK;
+   } else {
+     if(valRef->IsObject()) {
+-      v8::Handle<v8::Object> obj = SWIGV8_TO_OBJECT(valRef);
++      v8::Local<v8::Object> obj = SWIGV8_TO_OBJECT(valRef);
+       // try if the object is a wrapped char[]
+       swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+       if (pchar_descriptor) {
+@@ -41,7 +41,7 @@ SWIG_AsCharPtrAndSize(v8::Handle<v8::Value> valRef, char** cptr, size_t* psize,
+ }
+ 
+ %fragment("SWIG_FromCharPtrAndSize","header",fragment="SWIG_pchar_descriptor") {
+-SWIGINTERNINLINE v8::Handle<v8::Value>
++SWIGINTERNINLINE v8::Local<v8::Value>
+ SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+ {
+   if (carray) {
+@@ -49,7 +49,7 @@ SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+       // TODO: handle extra long strings
+       return SWIGV8_UNDEFINED();
+     } else {
+-      v8::Handle<v8::String> js_str = SWIGV8_STRING_NEW2(carray, size);
++      v8::Local<v8::String> js_str = SWIGV8_STRING_NEW2(carray, size);
+       return js_str;
+     }
+   } else {
+diff --git a/Lib/javascript/v8/javascripttypemaps.swg b/Lib/javascript/v8/javascripttypemaps.swg
+index 4601698e03..fbe7849cd2 100644
+--- a/Lib/javascript/v8/javascripttypemaps.swg
++++ b/Lib/javascript/v8/javascripttypemaps.swg
+@@ -25,7 +25,7 @@
+ 
+ /* Javascript types */
+ 
+-#define SWIG_Object                     v8::Handle<v8::Value>
++#define SWIG_Object                     v8::Local<v8::Value>
+ #define VOID_Object                     SWIGV8_UNDEFINED()
+ 
+ /* Overload of the output/constant/exception/dirout handling */
+diff --git a/Source/Modules/javascript.cxx b/Source/Modules/javascript.cxx
+index d2b33b1b42..450ebbd497 100644
+--- a/Source/Modules/javascript.cxx
++++ b/Source/Modules/javascript.cxx
+@@ -548,7 +548,7 @@ void JAVASCRIPT::main(int argc, char *argv[]) {
+       	}
+ 	Swig_mark_arg(i);
+ 	engine = JSEmitter::JavascriptCore;
+-      } else if (strcmp(argv[i], "-node") == 0) {
++      } else if ((strcmp(argv[i], "-node") == 0) || (strcmp(argv[i], "-electron") == 0)) {
+       	if (engine != -1) {
+ 	  Printf(stderr, ERR_MSG_ONLY_ONE_ENGINE_PLEASE);
+ 	  SWIG_exit(-1);
+@@ -594,7 +594,7 @@ void JAVASCRIPT::main(int argc, char *argv[]) {
+     }
+   default:
+     {
+-      Printf(stderr, "SWIG Javascript: Unknown engine. Please specify one of '-jsc', '-v8' or '-node'.\n");
++      Printf(stderr, "SWIG Javascript: Unknown engine. Please specify one of '-jsc', '-v8' or '-node/-electron'.\n");
+       SWIG_exit(-1);
+       break;
+     }
+diff --git a/Tools/javascript/v8_shell.cxx b/Tools/javascript/v8_shell.cxx
+index 5001bc25a6..8067247a41 100644
+--- a/Tools/javascript/v8_shell.cxx
++++ b/Tools/javascript/v8_shell.cxx
+@@ -9,7 +9,7 @@
+ 
+ #include "js_shell.h"
+ 
+-typedef int (*V8ExtensionInitializer) (v8::Handle<v8::Object> module);
++typedef int (*V8ExtensionInitializer) (v8::Local<v8::Object> module);
+ 
+ // Note: these typedefs and defines are used to deal with  v8 API changes since version 3.19.00
+ 
+@@ -87,7 +87,7 @@ class V8Shell: public JSShell {
+ 
+ private:
+ 
+-  v8::Handle<v8::Value> Import(const std::string &moduleName);
++  v8::Local<v8::Value> Import(const std::string &moduleName);
+ 
+   SwigV8Context CreateShellContext();
+ 
+@@ -135,7 +135,7 @@ bool V8Shell::RunScript(const std::string &scriptPath) {
+ 
+   // Store a pointer to this shell for later use
+ 
+-  v8::Handle<v8::Object> global = context->Global();
++  v8::Local<v8::Object> global = context->Global();
+   v8::Local<v8::External> __shell__ = SWIGV8_EXTERNAL_NEW((void*) (long) this);
+ 
+   global->SetHiddenValue(SWIGV8_STRING_NEW("__shell__"), __shell__);
+@@ -215,7 +215,7 @@ bool V8Shell::ExecuteScript(const std::string &source, const std::string &name)
+   SWIGV8_HANDLESCOPE();
+ 
+   v8::TryCatch try_catch;
+-  v8::Handle<v8::Script> script = v8::Script::Compile(SWIGV8_STRING_NEW(source.c_str()), SWIGV8_STRING_NEW(name.c_str()));
++  v8::Local<v8::Script> script = v8::Script::Compile(SWIGV8_STRING_NEW(source.c_str()), SWIGV8_STRING_NEW(name.c_str()));
+ 
+   // Stop if script is empty
+   if (script.IsEmpty()) {
+@@ -224,7 +224,7 @@ bool V8Shell::ExecuteScript(const std::string &source, const std::string &name)
+     return false;
+   }
+ 
+-  v8::Handle<v8::Value> result = script->Run();
++  v8::Local<v8::Value> result = script->Run();
+ 
+   // Print errors that happened during execution.
+   if (try_catch.HasCaught()) {
+@@ -241,7 +241,7 @@ bool V8Shell::DisposeEngine() {
+ 
+ SwigV8Context V8Shell::CreateShellContext() {
+   // Create a template for the global object.
+-  v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
++  v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
+ 
+   // Bind global functions
+   global->Set(SWIGV8_STRING_NEW("print"), SWIGV8_FUNCTEMPLATE_NEW(V8Shell::Print));
+@@ -258,7 +258,7 @@ SwigV8Context V8Shell::CreateShellContext() {
+ #endif
+ }
+ 
+-v8::Handle<v8::Value> V8Shell::Import(const std::string &module_path)
++v8::Local<v8::Value> V8Shell::Import(const std::string &module_path)
+ {
+   SWIGV8_HANDLESCOPE_ESC();
+ 
+@@ -319,7 +319,7 @@ SwigV8ReturnValue V8Shell::Require(const SwigV8Arguments &args) {
+   v8::Local<v8::External> __shell__ = v8::Local<v8::External>::Cast(hidden);
+   V8Shell *_this = (V8Shell *) (long) __shell__->Value();
+ 
+-  v8::Handle<v8::Value> module = _this->Import(moduleName);
++  v8::Local<v8::Value> module = _this->Import(moduleName);
+ 
+   SWIGV8_RETURN(module);
+ }
+@@ -345,7 +345,7 @@ void V8Shell::ReportException(v8::TryCatch *try_catch) {
+ 
+   v8::String::Utf8Value exception(try_catch->Exception());
+   const char *exception_string = V8Shell::ToCString(exception);
+-  v8::Handle<v8::Message> message = try_catch->Message();
++  v8::Local<v8::Message> message = try_catch->Message();
+   if (message.IsEmpty()) {
+     // V8 didn't provide any extra information about this error; just
+     // print the exception.
+diff --git a/Tools/testflags.py b/Tools/testflags.py
+index f3d216b59a..64528d6925 100755
+--- a/Tools/testflags.py
++++ b/Tools/testflags.py
+@@ -41,7 +41,10 @@ def get_cxxflags(language, std, compiler):
+             "go":"-Werror " + cxx_common,
+          "guile":"-Werror " + cxx_common,
+           "java":"-Werror " + cxx_common,
+-    "javascript":"-Werror " + cxx_common + " -Wno-error=unused-function", # Until overload_rename is fixed for node
++    "javascript":"-Werror " + cxx_common +
++                 " -Wno-error=unused-function" + # Until overload_rename is fixed for node
++                 " -Wno-error=unused-result -Wno-unused-result", # Until proper update of latest NodeJS / V8
++                 # " -Wno-error=cast-function-type" + Only in GCC 8.x+
+            "lua":"-Werror " + cxx_common,
+       "mzscheme":"-Werror " + cxx_common,
+          "ocaml":"-Werror " + cxx_common,
+diff --git a/Tools/travis-linux-install.sh b/Tools/travis-linux-install.sh
+index c8347d27a4..04683572af 100755
+--- a/Tools/travis-linux-install.sh
++++ b/Tools/travis-linux-install.sh
+@@ -33,7 +33,7 @@ case "$SWIGLANG" in
+ 		;;
+ 	"javascript")
+ 		case "$ENGINE" in
+-			"node")
++			"node"|"electron")
+ 				travis_retry wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.10/install.sh | bash
+ 				export NVM_DIR="$HOME/.nvm"
+ 				[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+@@ -45,6 +45,11 @@ case "$SWIGLANG" in
+ 				else
+ 					travis_retry npm install -g node-gyp
+ 				fi
++
++				if [ ! -z "$ELECTRON_VER" ] ; then
++					travis_retry npm install -g electron@$ELECTRON_VER
++				fi
++
+ 				;;
+ 			"jsc")
+ 				travis_retry sudo apt-get install -qq libwebkitgtk-dev
+

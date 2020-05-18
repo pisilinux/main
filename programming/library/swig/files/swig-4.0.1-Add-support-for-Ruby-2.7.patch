@@ -1,0 +1,453 @@
+From 00e291b319bd6b58bf061feee3721a58c9c6be32 Mon Sep 17 00:00:00 2001
+From: Thomas Reitmayr <treitmayr@devbase.at>
+Date: Mon, 30 Dec 2019 20:11:03 +0100
+Subject: [PATCH 1/3] Add support for Ruby 2.7
+
+This commit fixes the signatures of various callback methods
+and cleans up the macro definitions used for casting callbacks.
+
+Note that the transparent version of the macro RUBY_METHOD_FUNC
+is currently masked behind RUBY_DEVEL, see commit
+https://github.com/ruby/ruby/commit/1d91feaf13e0ffe04b2dabc6e77e4101b6d0bb07
+In order to still support strict signature checking and prevent
+nasty deprecation warnings, the use of RUBY_METHOD_FUNC had to
+be replaced with VALUEFUNC.
+---
+ Lib/ruby/rubyclasses.swg   | 14 +++++++-------
+ Lib/ruby/rubyhead.swg      | 26 +++++++++-----------------
+ Lib/ruby/rubyprimtypes.swg | 15 ++++++++-------
+ Lib/ruby/rubytracking.swg  | 10 +++++-----
+ Source/Modules/ruby.cxx    | 22 +++++++++-------------
+ 5 files changed, 38 insertions(+), 49 deletions(-)
+
+diff --git a/Lib/ruby/rubyclasses.swg b/Lib/ruby/rubyclasses.swg
+index f7b51bdcc5..b345fcebeb 100644
+--- a/Lib/ruby/rubyclasses.swg
++++ b/Lib/ruby/rubyclasses.swg
+@@ -174,7 +174,7 @@ namespace swig {
+       return rb_inspect(_obj);
+     }
+ 
+-    static VALUE swig_rescue_swallow(VALUE)
++    static VALUE swig_rescue_swallow(VALUE, VALUE)
+     {
+       /*
+       VALUE errstr = rb_obj_as_string(rb_errinfo());
+@@ -203,8 +203,8 @@ namespace swig {
+         args.id     = op_id;
+         args.nargs  = 1;
+         args.target = VALUE(other);
+-        ret = rb_rescue(RUBY_METHOD_FUNC(swig_rescue_funcall), VALUE(&args),
+-                       (RUBY_METHOD_FUNC(swig_rescue_swallow)), Qnil);
++        ret = rb_rescue(VALUEFUNC(swig_rescue_funcall), VALUE(&args),
++                       (VALUEFUNC(swig_rescue_swallow)), Qnil);
+       }
+       if (ret == Qnil) {
+         VALUE a = rb_funcall(         _obj, hash_id, 0 );
+@@ -243,8 +243,8 @@ namespace swig {
+       args.id     = op_id;
+       args.nargs  = 0;
+       args.target = Qnil;
+-      ret = rb_rescue(RUBY_METHOD_FUNC(swig_rescue_funcall), VALUE(&args),
+-                     (RUBY_METHOD_FUNC(swig_rescue_swallow)), Qnil);
++      ret = rb_rescue(VALUEFUNC(swig_rescue_funcall), VALUE(&args),
++                     (VALUEFUNC(swig_rescue_swallow)), Qnil);
+       SWIG_RUBY_THREAD_END_BLOCK;
+       return ret;
+     }
+@@ -262,8 +262,8 @@ namespace swig {
+       args.id     = op_id;
+       args.nargs  = 1;
+       args.target = VALUE(other);
+-      ret = rb_rescue(RUBY_METHOD_FUNC(swig_rescue_funcall), VALUE(&args),
+-                     (RUBY_METHOD_FUNC(swig_rescue_swallow)), Qnil);
++      ret = rb_rescue(VALUEFUNC(swig_rescue_funcall), VALUE(&args),
++                     (VALUEFUNC(swig_rescue_swallow)), Qnil);
+       SWIG_RUBY_THREAD_END_BLOCK;
+       return GC_VALUE(ret);
+     }
+diff --git a/Lib/ruby/rubyhead.swg b/Lib/ruby/rubyhead.swg
+index 90f07cf683..9a0400eea9 100644
+--- a/Lib/ruby/rubyhead.swg
++++ b/Lib/ruby/rubyhead.swg
+@@ -110,26 +110,18 @@
+  * can be passed as an argument to API functions like Data_Wrap_Struct()
+  * and Data_Make_Struct().
+  */
+- 
+-#ifdef __cplusplus
+-#  ifndef RUBY_METHOD_FUNC /* These definitions should work for Ruby 1.4.6 */
+-#    define PROTECTFUNC(f) ((VALUE (*)()) f)
+-#    define VALUEFUNC(f) ((VALUE (*)()) f)
+-#    define VOIDFUNC(f)  ((void (*)()) f)
+-#  else
+-#    ifndef ANYARGS /* These definitions should work for Ruby 1.6 */
+-#      define PROTECTFUNC(f) ((VALUE (*)()) f)
+-#      define VALUEFUNC(f) ((VALUE (*)()) f)
+-#      define VOIDFUNC(f)  ((RUBY_DATA_FUNC) f)
+-#    else /* These definitions should work for Ruby 1.7+ */
+-#      define PROTECTFUNC(f) ((VALUE (*)(VALUE)) f)
+-#      define VALUEFUNC(f) ((VALUE (*)(ANYARGS)) f)
+-#      define VOIDFUNC(f)  ((RUBY_DATA_FUNC) f)
+-#    endif
+-#  endif
++#if defined(__cplusplus) && !defined(RB_METHOD_DEFINITION_DECL)
++#  define PROTECTFUNC(f) ((VALUE (*)(VALUE)) f)
++#  define VALUEFUNC(f) ((VALUE (*)(ANYARGS)) f)
++#  define VOIDFUNC(f) ((RUBY_DATA_FUNC) f)
++#  define VOID_ANYARGS_FUNC(f) ((void (*)(ANYARGS))(f))
++#  define INT_ANYARGS_FUNC(f) ((int (*)(ANYARGS))(f))
+ #else
++#  define PROTECTFUNC(f) (f)
+ #  define VALUEFUNC(f) (f)
+ #  define VOIDFUNC(f) (f)
++#  define VOID_ANYARGS_FUNC(f) (f)
++#  define INT_ANYARGS_FUNC(f) (f)
+ #endif
+ 
+ /* Don't use for expressions have side effect */
+diff --git a/Lib/ruby/rubyprimtypes.swg b/Lib/ruby/rubyprimtypes.swg
+index 3a848191cd..4b078deea0 100644
+--- a/Lib/ruby/rubyprimtypes.swg
++++ b/Lib/ruby/rubyprimtypes.swg
+@@ -10,15 +10,16 @@
+ %fragment("SWIG_ruby_failed","header")
+ {
+ SWIGINTERN VALUE
+-SWIG_ruby_failed(void)
++SWIG_ruby_failed(VALUE SWIGUNUSEDPARM(arg1), VALUE SWIGUNUSEDPARM(arg2))
+ {
+   return Qnil;
+ } 
+ }
+ 
+ %define %ruby_aux_method(Type, Method, Action)
+-SWIGINTERN VALUE SWIG_AUX_##Method##(VALUE *args)
++SWIGINTERN VALUE SWIG_AUX_##Method##(VALUE arg)
+ {
++  VALUE *args = (VALUE *)arg;
+   VALUE obj = args[0];
+   VALUE type = TYPE(obj);
+   Type *res = (Type *)(args[1]);
+@@ -79,7 +80,7 @@ SWIG_AsVal_dec(long)(VALUE obj, long* val)
+     VALUE a[2];
+     a[0] = obj;
+     a[1] = (VALUE)(&v);
+-    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2LONG), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
++    if (rb_rescue(VALUEFUNC(SWIG_AUX_NUM2LONG), (VALUE)a, VALUEFUNC(SWIG_ruby_failed), 0) != Qnil) {
+       if (val) *val = v;
+       return SWIG_OK;
+     }
+@@ -111,7 +112,7 @@ SWIG_AsVal_dec(unsigned long)(VALUE obj, unsigned long *val)
+     VALUE a[2];
+     a[0] = obj;
+     a[1] = (VALUE)(&v);
+-    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2ULONG), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
++    if (rb_rescue(VALUEFUNC(SWIG_AUX_NUM2ULONG), (VALUE)a, VALUEFUNC(SWIG_ruby_failed), 0) != Qnil) {
+       if (val) *val = v;
+       return SWIG_OK;
+     }
+@@ -149,7 +150,7 @@ SWIG_AsVal_dec(long long)(VALUE obj, long long *val)
+     VALUE a[2];
+     a[0] = obj;
+     a[1] = (VALUE)(&v);
+-    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2LL), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
++    if (rb_rescue(VALUEFUNC(SWIG_AUX_NUM2LL), (VALUE)a, VALUEFUNC(SWIG_ruby_failed), 0) != Qnil) {
+       if (val) *val = v;
+       return SWIG_OK;
+     }
+@@ -187,7 +188,7 @@ SWIG_AsVal_dec(unsigned long long)(VALUE obj, unsigned long long *val)
+     VALUE a[2];
+     a[0] = obj;
+     a[1] = (VALUE)(&v);
+-    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2ULL), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
++    if (rb_rescue(VALUEFUNC(SWIG_AUX_NUM2ULL), (VALUE)a, VALUEFUNC(SWIG_ruby_failed), 0) != Qnil) {
+       if (val) *val = v;
+       return SWIG_OK;
+     }
+@@ -215,7 +216,7 @@ SWIG_AsVal_dec(double)(VALUE obj, double *val)
+     VALUE a[2];
+     a[0] = obj;
+     a[1] = (VALUE)(&v);
+-    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2DBL), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
++    if (rb_rescue(VALUEFUNC(SWIG_AUX_NUM2DBL), (VALUE)a, VALUEFUNC(SWIG_ruby_failed), 0) != Qnil) {
+       if (val) *val = v;
+       return SWIG_OK;
+     }
+diff --git a/Lib/ruby/rubytracking.swg b/Lib/ruby/rubytracking.swg
+index b9fb249d80..221a681939 100644
+--- a/Lib/ruby/rubytracking.swg
++++ b/Lib/ruby/rubytracking.swg
+@@ -32,7 +32,7 @@ extern "C" {
+ */
+ static st_table* swig_ruby_trackings = NULL;
+ 
+-static VALUE swig_ruby_trackings_count(ANYARGS) {
++static VALUE swig_ruby_trackings_count(ID id, VALUE *var) {
+   return SWIG2NUM(swig_ruby_trackings->num_entries);
+ }
+ 
+@@ -69,7 +69,7 @@ SWIGRUNTIME void SWIG_RubyInitializeTrackings(void) {
+     swig_ruby_trackings = (st_table*)NUM2SWIG(trackings_value);
+   }
+ 
+-  rb_define_virtual_variable("SWIG_TRACKINGS_COUNT", swig_ruby_trackings_count, NULL);
++  rb_define_virtual_variable("SWIG_TRACKINGS_COUNT", VALUEFUNC(swig_ruby_trackings_count), VOID_ANYARGS_FUNC((rb_gvar_setter_t*)NULL));
+ }
+ 
+ /* Add a Tracking from a C/C++ struct to a Ruby object */
+@@ -118,13 +118,13 @@ SWIGRUNTIME void SWIG_RubyUnlinkObjects(void* ptr) {
+    to the passed callback function. */
+ 
+ /* Proxy method to abstract the internal trackings datatype */
+-static int swig_ruby_internal_iterate_callback(void* ptr, VALUE obj, void(*meth)(void* ptr, VALUE obj)) {
+-  (*meth)(ptr, obj);
++static int swig_ruby_internal_iterate_callback(st_data_t ptr, st_data_t obj, st_data_t meth) {
++  ((void (*) (void *, VALUE))meth)((void *)ptr, (VALUE)obj);
+   return ST_CONTINUE;
+ }
+ 
+ SWIGRUNTIME void SWIG_RubyIterateTrackings( void(*meth)(void* ptr, VALUE obj) ) {
+-  st_foreach(swig_ruby_trackings, (int (*)(ANYARGS))&swig_ruby_internal_iterate_callback, (st_data_t)meth);
++  st_foreach(swig_ruby_trackings, INT_ANYARGS_FUNC(swig_ruby_internal_iterate_callback), (st_data_t)meth);
+ }
+ 
+ #ifdef __cplusplus
+diff --git a/Source/Modules/ruby.cxx b/Source/Modules/ruby.cxx
+index c8f582679b..01b75befa5 100644
+--- a/Source/Modules/ruby.cxx
++++ b/Source/Modules/ruby.cxx
+@@ -2191,6 +2191,7 @@ class RUBY:public Language {
+     String *tm;
+     String *getfname, *setfname;
+     Wrapper *getf, *setf;
++    const int assignable = is_assignable(n);
+ 
+     // Determine whether virtual global variables shall be used
+     // which have different getter and setter signatures,
+@@ -2206,7 +2207,7 @@ class RUBY:public Language {
+     getfname = Swig_name_wrapper(getname);
+     Setattr(n, "wrap:name", getfname);
+     Printv(getf->def, "SWIGINTERN VALUE\n", getfname, "(", NIL);
+-    Printf(getf->def, (use_virtual_var) ? "ID id" : "VALUE self");
++    Printf(getf->def, (use_virtual_var) ? "ID id, VALUE *data" : "VALUE self");
+     Printf(getf->def, ") {");
+     Wrapper_add_local(getf, "_val", "VALUE _val");
+ 
+@@ -2229,8 +2230,8 @@ class RUBY:public Language {
+ 
+     Wrapper_print(getf, f_wrappers);
+ 
+-    if (!is_assignable(n)) {
+-      setfname = NewString("NULL");
++    if (!assignable) {
++      setfname = NewString("(rb_gvar_setter_t *)NULL");
+     } else {
+       /* create setter */
+       String* docs = docstring(n, AUTODOC_SETTER);
+@@ -2242,7 +2243,7 @@ class RUBY:public Language {
+       Setattr(n, "wrap:name", setfname);
+       Printf(setf->def, "SWIGINTERN ");
+       if (use_virtual_var) {
+-        Printv(setf->def, "void\n", setfname, "(VALUE _val, ID id) {", NIL);
++        Printv(setf->def, "void\n", setfname, "(VALUE _val, ID id, VALUE *data) {", NIL);
+       } else {
+         Printv(setf->def, "VALUE\n", setfname, "(VALUE self, VALUE _val) {", NIL);
+       }
+@@ -2273,7 +2274,7 @@ class RUBY:public Language {
+     if (CPlusPlus) {
+       Insert(getfname, 0, "VALUEFUNC(");
+       Append(getfname, ")");
+-      Insert(setfname, 0, (use_virtual_var) ? "(void (*)(ANYARGS))(" : "VALUEFUNC(");
++      Insert(setfname, 0, (use_virtual_var) ? "VOID_ANYARGS_FUNC(" : "VALUEFUNC(");
+       Append(setfname, ")");
+     }
+ 
+@@ -2282,7 +2283,7 @@ class RUBY:public Language {
+     case STATIC_VAR:
+       /* C++ class variable */
+       Printv(s, tab4, "rb_define_singleton_method(", klass->vname, ", \"", klass->strip(iname), "\", ", getfname, ", 0);\n", NIL);
+-      if (!GetFlag(n, "feature:immutable")) {
++      if (assignable) {
+ 	Printv(s, tab4, "rb_define_singleton_method(", klass->vname, ", \"", klass->strip(iname), "=\", ", setfname, ", 1);\n", NIL);
+       }
+       Printv(klass->init, s, NIL);
+@@ -2293,16 +2294,11 @@ class RUBY:public Language {
+       assert(current == NO_CPP);
+       if (!useGlobalModule) {
+ 	Printv(s, tab4, "rb_define_singleton_method(", modvar, ", \"", iname, "\", ", getfname, ", 0);\n", NIL);
+-	if (!GetFlag(n, "feature:immutable")) {
++	if (assignable) {
+ 	  Printv(s, tab4, "rb_define_singleton_method(", modvar, ", \"", iname, "=\", ", setfname, ", 1);\n", NIL);
+ 	}
+       } else {
+-	Printv(s, tab4, "rb_define_virtual_variable(\"$", iname, "\", ", getfname, ", ", NIL);
+-	if (GetFlag(n, "feature:immutable")) {
+-	  Printv(s, tab4, "0);\n", NIL);
+-	} else {
+-	  Printv(s, tab4, setfname, ");\n", NIL);
+-	}
++	Printv(s, tab4, "rb_define_virtual_variable(\"$", iname, "\", ", getfname, ", ", setfname, ");\n", NIL);
+       }
+       Printv(f_init, s, NIL);
+       Delete(s);
+
+From 5542cc228ad10bdc5c91107afb77c808c43bf2a4 Mon Sep 17 00:00:00 2001
+From: Thomas Reitmayr <treitmayr@devbase.at>
+Date: Fri, 3 Jan 2020 21:45:53 +0100
+Subject: [PATCH 2/3] Move new macros for Ruby to their dedicated namespace
+
+---
+ Lib/ruby/rubyhead.swg     | 8 ++++----
+ Lib/ruby/rubytracking.swg | 8 ++++++--
+ Source/Modules/ruby.cxx   | 2 +-
+ 3 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/Lib/ruby/rubyhead.swg b/Lib/ruby/rubyhead.swg
+index 9a0400eea9..89d6f14662 100644
+--- a/Lib/ruby/rubyhead.swg
++++ b/Lib/ruby/rubyhead.swg
+@@ -114,14 +114,14 @@
+ #  define PROTECTFUNC(f) ((VALUE (*)(VALUE)) f)
+ #  define VALUEFUNC(f) ((VALUE (*)(ANYARGS)) f)
+ #  define VOIDFUNC(f) ((RUBY_DATA_FUNC) f)
+-#  define VOID_ANYARGS_FUNC(f) ((void (*)(ANYARGS))(f))
+-#  define INT_ANYARGS_FUNC(f) ((int (*)(ANYARGS))(f))
++#  define SWIG_RUBY_VOID_ANYARGS_FUNC(f) ((void (*)(ANYARGS))(f))
++#  define SWIG_RUBY_INT_ANYARGS_FUNC(f) ((int (*)(ANYARGS))(f))
+ #else
+ #  define PROTECTFUNC(f) (f)
+ #  define VALUEFUNC(f) (f)
+ #  define VOIDFUNC(f) (f)
+-#  define VOID_ANYARGS_FUNC(f) (f)
+-#  define INT_ANYARGS_FUNC(f) (f)
++#  define SWIG_RUBY_VOID_ANYARGS_FUNC(f) (f)
++#  define SWIG_RUBY_INT_ANYARGS_FUNC(f) (f)
+ #endif
+ 
+ /* Don't use for expressions have side effect */
+diff --git a/Lib/ruby/rubytracking.swg b/Lib/ruby/rubytracking.swg
+index 221a681939..1edcc56819 100644
+--- a/Lib/ruby/rubytracking.swg
++++ b/Lib/ruby/rubytracking.swg
+@@ -69,7 +69,9 @@ SWIGRUNTIME void SWIG_RubyInitializeTrackings(void) {
+     swig_ruby_trackings = (st_table*)NUM2SWIG(trackings_value);
+   }
+ 
+-  rb_define_virtual_variable("SWIG_TRACKINGS_COUNT", VALUEFUNC(swig_ruby_trackings_count), VOID_ANYARGS_FUNC((rb_gvar_setter_t*)NULL));
++  rb_define_virtual_variable("SWIG_TRACKINGS_COUNT",
++                             VALUEFUNC(swig_ruby_trackings_count),
++                             SWIG_RUBY_VOID_ANYARGS_FUNC((rb_gvar_setter_t*)NULL));
+ }
+ 
+ /* Add a Tracking from a C/C++ struct to a Ruby object */
+@@ -124,7 +126,9 @@ static int swig_ruby_internal_iterate_callback(st_data_t ptr, st_data_t obj, st_
+ }
+ 
+ SWIGRUNTIME void SWIG_RubyIterateTrackings( void(*meth)(void* ptr, VALUE obj) ) {
+-  st_foreach(swig_ruby_trackings, INT_ANYARGS_FUNC(swig_ruby_internal_iterate_callback), (st_data_t)meth);
++  st_foreach(swig_ruby_trackings,
++             SWIG_RUBY_INT_ANYARGS_FUNC(swig_ruby_internal_iterate_callback),
++             (st_data_t)meth);
+ }
+ 
+ #ifdef __cplusplus
+diff --git a/Source/Modules/ruby.cxx b/Source/Modules/ruby.cxx
+index 01b75befa5..fcbcb7a5c1 100644
+--- a/Source/Modules/ruby.cxx
++++ b/Source/Modules/ruby.cxx
+@@ -2274,7 +2274,7 @@ class RUBY:public Language {
+     if (CPlusPlus) {
+       Insert(getfname, 0, "VALUEFUNC(");
+       Append(getfname, ")");
+-      Insert(setfname, 0, (use_virtual_var) ? "VOID_ANYARGS_FUNC(" : "VALUEFUNC(");
++      Insert(setfname, 0, (use_virtual_var) ? "SWIG_RUBY_VOID_ANYARGS_FUNC(" : "VALUEFUNC(");
+       Append(setfname, ")");
+     }
+ 
+
+From f5908eca7638b786acda58306ba96ff70094e98b Mon Sep 17 00:00:00 2001
+From: Thomas Reitmayr <treitmayr@devbase.at>
+Date: Sat, 4 Jan 2020 18:21:10 +0100
+Subject: [PATCH 3/3] Improve description of cast macros for Ruby
+
+The macros for casting function pointers are now fully described and also
+clarify why the macros act transparently for C even before Ruby 2.7.
+
+In addition, an "if (CPlusPlus)" was removed in the code generator for
+global variables in order to keep the distinction between C and C++ in
+one place, which is at the definition of said macros.
+---
+ Lib/ruby/rubyhead.swg   | 32 ++++++++++++++++++++++++--------
+ Source/Modules/ruby.cxx | 12 +++++-------
+ 2 files changed, 29 insertions(+), 15 deletions(-)
+
+diff --git a/Lib/ruby/rubyhead.swg b/Lib/ruby/rubyhead.swg
+index 89d6f14662..bf4e36248e 100644
+--- a/Lib/ruby/rubyhead.swg
++++ b/Lib/ruby/rubyhead.swg
+@@ -98,17 +98,33 @@
+ 
+ 
+ /*
+- * Need to be very careful about how these macros are defined, especially
+- * when compiling C++ code or C code with an ANSI C compiler.
++ * The following macros are used for providing the correct type of a
++ * function pointer to the Ruby C API.
++ * Starting with Ruby 2.7 (corresponding to RB_METHOD_DEFINITION_DECL being
++ * defined) these macros act transparently due to Ruby's moving away from
++ * ANYARGS and instead employing strict function signatures.
+  *
+- * VALUEFUNC(f) is a macro used to typecast a C function that implements
+- * a Ruby method so that it can be passed as an argument to API functions
+- * like rb_define_method() and rb_define_singleton_method().
++ * Note: In case of C (not C++) the macros are transparent even before
++ * Ruby 2.7 due to the fact that the Ruby C API used function declarators
++ * with empty parentheses, which allows for an unspecified number of
++ * arguments.
+  *
+- * VOIDFUNC(f) is a macro used to typecast a C function that implements
+- * either the "mark" or "free" stuff for a Ruby Data object, so that it
+- * can be passed as an argument to API functions like Data_Wrap_Struct()
++ * PROTECTFUNC(f) is used for the function pointer argument of the Ruby
++ * C API function rb_protect().
++ *
++ * VALUEFUNC(f) is used for the function pointer argument(s) of Ruby C API
++ * functions like rb_define_method() and rb_define_singleton_method().
++ *
++ * VOIDFUNC(f) is used to typecast a C function that implements either
++ * the "mark" or "free" stuff for a Ruby Data object, so that it can be
++ * passed as an argument to Ruby C API functions like Data_Wrap_Struct()
+  * and Data_Make_Struct().
++ *
++ * SWIG_RUBY_VOID_ANYARGS_FUNC(f) is used for the function pointer
++ * argument(s) of Ruby C API functions like rb_define_virtual_variable().
++ *
++ * SWIG_RUBY_INT_ANYARGS_FUNC(f) is used for the function pointer
++ * argument(s) of Ruby C API functions like st_foreach().
+  */
+ #if defined(__cplusplus) && !defined(RB_METHOD_DEFINITION_DECL)
+ #  define PROTECTFUNC(f) ((VALUE (*)(VALUE)) f)
+diff --git a/Source/Modules/ruby.cxx b/Source/Modules/ruby.cxx
+index fcbcb7a5c1..48b0efab36 100644
+--- a/Source/Modules/ruby.cxx
++++ b/Source/Modules/ruby.cxx
+@@ -2270,13 +2270,11 @@ class RUBY:public Language {
+       Delete(setname);
+     }
+ 
+-    /* define accessor method */
+-    if (CPlusPlus) {
+-      Insert(getfname, 0, "VALUEFUNC(");
+-      Append(getfname, ")");
+-      Insert(setfname, 0, (use_virtual_var) ? "SWIG_RUBY_VOID_ANYARGS_FUNC(" : "VALUEFUNC(");
+-      Append(setfname, ")");
+-    }
++    /* define accessor methods */
++    Insert(getfname, 0, "VALUEFUNC(");
++    Append(getfname, ")");
++    Insert(setfname, 0, (use_virtual_var) ? "SWIG_RUBY_VOID_ANYARGS_FUNC(" : "VALUEFUNC(");
++    Append(setfname, ")");
+ 
+     String *s = NewString("");
+     switch (current) {
