@@ -1,0 +1,32 @@
+From 6532dbecf36d1f24dab1f2143afd171e0b7699eb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADt=20Ondruch?= <vondruch@redhat.com>
+Date: Wed, 4 Sep 2019 15:07:07 +0200
+Subject: [PATCH] Remove RubyGems dependency.
+
+Since `Process::RLIMIT_NOFILE` is platform specific, better to use Ruby
+introspection than detecting platform.
+---
+ .../vendor/net-http-persistent/lib/net/http/persistent.rb   | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/bundler/vendor/net-http-persistent/lib/net/http/persistent.rb b/lib/bundler/vendor/net-http-persistent/lib/net/http/persistent.rb
+index a54be2a..06739f1 100644
+--- a/lib/bundler/vendor/net-http-persistent/lib/net/http/persistent.rb
++++ b/lib/bundler/vendor/net-http-persistent/lib/net/http/persistent.rb
+@@ -202,10 +202,10 @@ class Bundler::Persistent::Net::HTTP::Persistent
+   ##
+   # The default connection pool size is 1/4 the allowed open files.
+ 
+-  if Gem.win_platform? then
+-    DEFAULT_POOL_SIZE = 256
+-  else
++  if Process.const_defined? :RLIMIT_NOFILE
+     DEFAULT_POOL_SIZE = Process.getrlimit(Process::RLIMIT_NOFILE).first / 4
++  else
++    DEFAULT_POOL_SIZE = 256
+   end
+ 
+   ##
+-- 
+2.23.0
+
