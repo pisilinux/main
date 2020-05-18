@@ -6,11 +6,10 @@
 
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
 def build():
     # fıx unused direct dependency analysis
-    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread -Wl,-O1 -Wl,-z,relro -Wl,--hash-style=gnu -Wl,--as-needed -Wl,--sort-common")
+    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
     pythonmodules.compile(pyVer="3")
     
 #def check():
