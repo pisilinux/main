@@ -4,19 +4,22 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import perlmodules
-from pisi.actionsapi import get
 
 
 def setup():
     shelltools.export("AUTOPOINT", "/bin/true")
-#    autotools.autoreconf("-vfi")
+    #autotools.autoreconf("-vfi")
+    # suppress compiler warnings
+    pisitools.cflags.add("-Wno-missing-prototypes -Wno-format-truncation -Wno-implicit-fallthrough -Wno-cast-function-type -Wstringop-truncation")
+    # fix unused direct dependency analysis
+    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
     autotools.configure("--disable-silent-rules \
                          --disable-static \
-                         --disable-rpath \
                          --enable-perl \
                          --enable-ruby \
                          --enable-lua \
@@ -32,6 +35,9 @@ def setup():
     pisitools.dosed("bindings/Makefile", "^RRDDOCDIR.*$", "RRDDOCDIR=${datadir}/doc/${PACKAGE}")
     pisitools.dosed("examples/Makefile", "examplesdir = .*$", "examplesdir = $(datadir)/doc/${PACKAGE}/examples")
     
+    # TODO: fix rpath and unused direct dependency analysis
+    
+    # fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
