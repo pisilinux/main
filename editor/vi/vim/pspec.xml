@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>vim</Name>
@@ -8,60 +8,62 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>GPLv2</License>
+        <PartOf>editor.vi</PartOf>
+        <License>custom</License>
         <Summary>Vi IMproved, an advanced text editor</Summary>
         <Description>Vim, which stands for Vi IMproved, is an open-source, multiplatform text editor extended from vi. It was first released by Bram Moolenaar in 1991. Since then, numerous features have been added to Vim, many of which are helpful in editing program source code.</Description>
-        <Archive sha1sum="67d7cada9dec7e83a6755e6700ab9966917f84d3" type="targz">https://github.com/vim/vim/archive/v8.2.0236.tar.gz</Archive>
+        <Archive sha1sum="2c47fc99281a97ea74c23da996cb993aad1845d2" type="targz">https://github.com/vim/vim/archive/v8.2.0788.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>gpm</Dependency>
             <Dependency>ctags</Dependency>
-            <Dependency>python-devel</Dependency>
             <Dependency>acl-devel</Dependency>
+            <Dependency>ruby-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
             <Dependency>libXt-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>libICE-devel</Dependency>
-            <Dependency>ruby-devel</Dependency>
+            <Dependency>python-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
         </BuildDependencies>
         <Patches>
+            <Patch level="1">pisilinux/grub_conf.patch</Patch>
+            <Patch level="1">pisilinux/xorg_conf.patch</Patch>
+            <Patch level="1">vim-7.3-interix-link.patch</Patch>
             <!-- Official VIM patches: ftp://ftp.vim.org/pub/vim/patches -->
            <!--<Patch compressionType="xz">official/7.4-461-tar.xz</Patch>-->
 
             <!-- Fix xml autocomplete crash (Fixes #8383) -->
-<!--             <Patch>vim-fix-xml-crash.patch</Patch> -->
+            <!--<Patch>vim-fix-xml-crash.patch</Patch> -->
 
             <!-- syntax higlighting fixes -->
             <!--<Patch level="1">pisilinux/bash_completion.patch</Patch>-->
-            <Patch level="1">pisilinux/grub_conf.patch</Patch>
-            <Patch level="1">pisilinux/xorg_conf.patch</Patch>
-<!--             <Patch level="1">vim-7.0-warning.patch</Patch> -->
-            <Patch level="1">vim-7.3-interix-link.patch</Patch>
+            <!--<Patch level="1">vim-7.0-warning.patch</Patch> -->
         </Patches>
     </Source>
 
     <Package>
         <Name>vim</Name>
+        <Summary>Vi IMproved, an advanced text editor</Summary>
         <IsA>app:console</IsA>
         <RuntimeDependencies>
             <Dependency>gpm</Dependency>
-            <Dependency>ctags</Dependency>
-            <Dependency>perl</Dependency>
             <Dependency>acl</Dependency>
+            <Dependency>perl</Dependency>
             <Dependency>ruby</Dependency>
+            <Dependency>ctags</Dependency>
             <Dependency>ncurses</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/vi*</Path>
-            <Path fileType="executable">/usr/bin/rvi*</Path>
+            <Path fileType="config">/etc/vim</Path>
+            <Path fileType="executable">/bin</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/vim</Path>
             <Path fileType="executable">/usr/bin/ex</Path>
             <Path fileType="executable">/usr/bin/xxd</Path>
-            <Path fileType="executable">/bin</Path>
-            <Path fileType="data">/usr/share/vim</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="config">/etc/vim</Path>
+            <Path fileType="executable">/usr/bin/vi*</Path>
+            <Path fileType="executable">/usr/bin/rvi*</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/etc/vim/vimrc">vimrc</AdditionalFile>
@@ -77,34 +79,35 @@
 
     <Package>
         <Name>gvim</Name>
+        <Summary>Graphical User Interface for Vi IMproved, an advanced text editor</Summary>
         <Icon>gvim</Icon>
         <IsA>app:gui</IsA>
         <BuildType>gui</BuildType>
         <RuntimeDependencies>
             <Dependency>acl</Dependency>
+            <Dependency>gpm</Dependency>
+            <Dependency>vim</Dependency>
             <Dependency>perl</Dependency>
+            <Dependency>gtk2</Dependency>
             <Dependency>ruby</Dependency>
             <Dependency>glib2</Dependency>
-            <Dependency>libX11</Dependency>
-            <Dependency>ncurses</Dependency>
-            <Dependency>gtk2</Dependency>
-            <Dependency>gpm</Dependency>
             <Dependency>libSM</Dependency>
             <Dependency>libXt</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>libICE</Dependency>
-            <Dependency>vim</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>ncurses</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/ggvi*</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
             <Path fileType="executable">/usr/bin/gvi*</Path>
             <Path fileType="executable">/usr/bin/egvi*</Path>
-            <Path fileType="executable">/usr/bin/rggvi*</Path>
             <Path fileType="executable">/usr/bin/rgvi*</Path>
+            <Path fileType="executable">/usr/bin/ggvi*</Path>
+            <Path fileType="executable">/usr/bin/rggvi*</Path>
             <Path fileType="executable">/usr/bin/gvimtutor</Path>
-            <Path fileType="data">/usr/share/pixmaps</Path>
-            <Path fileType="data">/usr/share/icons</Path>
             <Path fileType="data">/usr/share/applications</Path>
         </Files>
         <AdditionalFiles>
@@ -115,6 +118,13 @@
     </Package>
 
     <History>
+        <Update release="10">
+            <Date>2020-05-18</Date>
+            <Version>8.2.0788</Version>
+            <Comment>Patch version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
         <Update release="9">
             <Date>2020-02-09</Date>
             <Version>8.2.0236</Version>
