@@ -7,10 +7,10 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import pythonmodules
 
-def setup():
+def build():
     pythonmodules.compile(pyVer="3")
 
 def install():
     pythonmodules.install(pyVer="3")
 
-    pisitools.dodoc("LICENSE.txt", "README.txt")
+    pisitools.dodoc("LICENSE*", "README*")
