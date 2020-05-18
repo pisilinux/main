@@ -30,6 +30,7 @@ def setup():
                          --without-selinux \
                          --without-rpath")
     
+    # fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
