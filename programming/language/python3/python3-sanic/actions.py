@@ -5,11 +5,8 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pythonmodules
-from pisi.actionsapi import pisitools
 
 def build():
-    # fix AttributeError
-    pisitools.dosed("sanic/testing.py", "httpx.dispatch.ASGIDispatch", "httpx.ASGIDispatch")
     pythonmodules.compile(pyVer="3")
 
 def install():
