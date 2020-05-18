@@ -1,0 +1,88 @@
+From e14532ce52a654768cc4010e9e18e1a0a4d965db Mon Sep 17 00:00:00 2001
+From: Vadim Zeitlin <vz-swig@zeitlins.org>
+Date: Sat, 25 Jan 2020 17:06:20 +0100
+Subject: [PATCH] Fix crash in Python backend when using empty docstrings
+
+Due to confusion in build_combined_docstring(), we could call
+DohDelete() on the "feature:docstring" string, which resulted in a crash
+when trying to use it later.
+
+Fix this and simplify the code at the same time by ensuring that we
+always use a copy of "feature:docstring" if it's not empty or don't use
+it at all if it's empty -- like this we don't have to check for its
+length each time before using it.
+
+Closes #1648.
+---
+ Examples/test-suite/autodoc.i               |  9 +++++++++
+ Examples/test-suite/python/autodoc_runme.py |  2 ++
+ Source/Modules/python.cxx                   | 15 +++++++++++----
+ 3 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/Examples/test-suite/autodoc.i b/Examples/test-suite/autodoc.i
+index 9f4365ee1c..efc7201553 100644
+--- a/Examples/test-suite/autodoc.i
++++ b/Examples/test-suite/autodoc.i
+@@ -183,3 +183,12 @@ const int PROCESS_DEFAULT_VALUE = 17;
+ typedef long int some_type;
+ int process_complex_defval(int val = PROCESS_DEFAULT_VALUE, int factor = some_type(-1)) { return val*factor; }
+ %}
++
++// Test for empty docstring, which should be ignored.
++%feature("docstring") ""
++
++%inline %{
++struct a_structure{
++  char my_array[1];
++};
++%}
+diff --git a/Examples/test-suite/python/autodoc_runme.py b/Examples/test-suite/python/autodoc_runme.py
+index 6002d49fec..7bc918644d 100644
+--- a/Examples/test-suite/python/autodoc_runme.py
++++ b/Examples/test-suite/python/autodoc_runme.py
+@@ -279,3 +279,5 @@ def check(got, expected, expected_builtin=None, skip=False):
+ check(inspect.getdoc(process4), "process4(int _from=0, int _in=1, int var=2) -> int")
+ 
+ check(inspect.getdoc(process_complex_defval), "process_complex_defval(val=PROCESS_DEFAULT_VALUE, factor=some_type(-1)) -> int")
++
++check(inspect.getdoc(a_structure.__init__), "__init__(a_structure self) -> a_structure", None, skip)
+diff --git a/Source/Modules/python.cxx b/Source/Modules/python.cxx
+index 1dbedad26a..f6b47be244 100644
+--- a/Source/Modules/python.cxx
++++ b/Source/Modules/python.cxx
+@@ -1484,8 +1484,15 @@ class PYTHON:public Language {
+ 
+   String *build_combined_docstring(Node *n, autodoc_t ad_type, const String *indent = "", bool low_level = false) {
+     String *docstr = Getattr(n, "feature:docstring");
+-    if (docstr && Len(docstr)) {
+-      docstr = Copy(docstr);
++    if (docstr) {
++      // Simplify the code below by just ignoring empty docstrings.
++      if (!Len(docstr))
++	docstr = NULL;
++      else
++	docstr = Copy(docstr);
++    }
++
++    if (docstr) {
+       char *t = Char(docstr);
+       if (*t == '{') {
+ 	Delitem(docstr, 0);
+@@ -1496,7 +1503,7 @@ class PYTHON:public Language {
+     if (Getattr(n, "feature:autodoc") && !GetFlag(n, "feature:noautodoc")) {
+       String *autodoc = make_autodoc(n, ad_type, low_level);
+       if (autodoc && Len(autodoc) > 0) {
+-	if (docstr && Len(docstr)) {
++	if (docstr) {
+ 	  Append(autodoc, "\n");
+ 	  Append(autodoc, docstr);
+ 	}
+@@ -1509,7 +1516,7 @@ class PYTHON:public Language {
+       Delete(autodoc);
+     }
+ 
+-    if (!docstr || !Len(docstr)) {
++    if (!docstr) {
+       if (doxygen) {
+ 	docstr = Getattr(n, "python:docstring");
+ 	if (!docstr && doxygenTranslator->hasDocumentation(n)) {
