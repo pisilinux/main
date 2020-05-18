@@ -9,7 +9,6 @@ from pisi.actionsapi import get
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
-
 def setup():
     mesontools.configure("-Ddocs=false \
                           -Dexiv2=enabled \
@@ -22,4 +21,3 @@ def install():
     mesontools.install()
     
     pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LESSER")
-
