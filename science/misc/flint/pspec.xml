@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>flint</Name>
+        <Homepage>http://www.flintlib.org/</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>science.misc</PartOf>
+        <License>LGPLv2+</License>
+        <IsA>library</IsA>
+        <Summary>Fast Library for Number Theory.</Summary>
+        <Description>FLINT is a C library for doing number theory. FLINT supports arithmetic with numbers, polynomials, power series and matrices over many base rings.</Description>
+        <Archive sha1sum="67c747ec92dda0dbc57ab88e2c501b11537299a5" type="targz">http://www.flintlib.org/flint-2.5.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gmp-devel</Dependency>
+            <Dependency>ntl-devel</Dependency>
+            <Dependency>mpfr-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>flint-pie-hardening-conflict.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>flint</Name>
+        <Summary>Fast Library for Number Theory.</Summary>
+        <RuntimeDependencies>
+            <Dependency>gmp</Dependency>
+            <Dependency>ntl</Dependency>
+            <Dependency>mpfr</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc/flint</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>flint-devel</Name>
+        <Summary>Development files for flint</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">flint</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-20</Date>
+            <Version>2.5.2</Version>
+            <Comment>First pisi release.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
