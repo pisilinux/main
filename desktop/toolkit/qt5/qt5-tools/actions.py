@@ -11,8 +11,8 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("CC", "clang -fuse-ld=lld")
-    shelltools.export("CXX", "clang++ -fuse-ld=lld")
+    #shelltools.export("CC", "clang -fuse-ld=lld")
+    #shelltools.export("CXX", "clang++ -fuse-ld=lld")
     qt5.configure()
 
 def build():
