@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>arpack</Name>
+        <Homepage>https://github.com/opencollab/arpack-ng</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>science.misc</PartOf>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>Collection of Fortran77 subroutines designed to solve large scale eigenvalue problems.</Summary>
+        <Description>ARPACK-NG is a collection of Fortran77 subroutines designed to solve large scale eigenvalue problems.</Description>
+        <Archive sha1sum="cb5a6e1f3c5ab231440bbe30f4a0808d76215e93" type="targz">https://github.com/opencollab/arpack-ng/archive/3.7.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>blas-devel</Dependency>
+            <Dependency>libquadmath</Dependency>
+            <Dependency>libgfortran</Dependency>
+            <Dependency>lapack-devel</Dependency>
+            <Dependency>openmpi-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>arpack</Name>
+        <Summary>Collection of Fortran77 subroutines designed to solve large scale eigenvalue problems.</Summary>
+        <RuntimeDependencies>
+            <Dependency>blas</Dependency>
+            <Dependency>lapack</Dependency>
+            <Dependency>openmpi</Dependency>
+            <Dependency>libgfortran</Dependency>
+            <Dependency>libquadmath</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc/arpack</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>arpack-devel</Name>
+        <Summary>Development files for arpack</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">arpack</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-24</Date>
+            <Version>3.7.0</Version>
+            <Comment>First pisi release.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
