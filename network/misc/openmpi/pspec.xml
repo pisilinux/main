@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>openmpi</Name>
+        <Homepage>https://www.open-mpi.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>network.misc</PartOf>
+        <License>custom:OpenMPI</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>High performance message passing library (MPI)</Summary>
+        <Description>The Open MPI Project is an open source Message Passing Interface implementation that is developed and maintained by a consortium of academic, research, and industry partners. Open MPI is therefore able to combine the expertise, technologies, and resources from all across the High Performance Computing community in order to build the best MPI library available. Open MPI offers advantages for system and software vendors, application developers and computer science researchers.</Description>
+        <Archive sha1sum="d958454e32da2c86dd32b7d557cf9a401f0a08d3" type="tarbz2">https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.3.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>valgrind</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>hwloc-devel</Dependency>
+            <Dependency>libnl-devel</Dependency>
+            <!--
+            <Dependency>numactl</Dependency>
+            <Dependency>libpciaccess-devel</Dependency>
+            -->
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>openmpi</Name>
+        <Summary>High performance message passing library (MPI)</Summary>
+        <RuntimeDependencies>
+            <Dependency>hwloc</Dependency>
+            <Dependency>libnl</Dependency>
+            <!--
+            <Dependency>numactl</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>libgfortran</Dependency>
+            <Dependency>libpciaccess</Dependency>
+            -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/pmix</Path>
+            <Path fileType="data">/usr/share/openmpi</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>openmpi-devel</Name>
+        <Summary>Development files for openmpi</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">openmpi</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-22</Date>
+            <Version>4.0.3</Version>
+            <Comment>First Pisi Release</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
