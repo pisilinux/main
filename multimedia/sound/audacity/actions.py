@@ -20,6 +20,8 @@ def setup():
     autotools.autoconf()
     shelltools.export("LIBS", "-lavcodec")
     #shelltools.export("WX_CONFIG=wx-config-gtk3 ./configure", "/usr/bin/wxconfig")
+    # suppress compiler warnings
+    pisitools.cxxflags.add("-Wno-unused-result -Wno-implicit-int -Wno-format-overflow -Wno-return-type -Wno-format-truncation -Wno-deprecated-declarations -Wno-unknown-pragmas -Wno-maybe-uninitialized -Wno-strict-prototypes -Wno-comment -Wno-implicit-function-declaration -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -Wno-enum-compare -Wno-aligned-new -Wno-class-memaccess -Wno-unused-but-set-variable -Wno-misleading-indentation -Wno-unused-variable -Wno-reorder -Wno-unused-function -Wno-sign-compare -Wno-unused-value -Wno-pessimizing-move -Wno-reorder -Wno-switch")
     autotools.configure("--enable-unicode \
                          --with-midi \
                          --with-sbsms \
