@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>shiboken2</Name>
+        <Homepage>https://www.pyside.org</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>programming.language.python3</PartOf>
+        <License>LGPLv2</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>Shiboken the Binding Generator</Summary>
+        <Description>Shiboken is the CPython-based binding code generator for C or C++ libraries. It uses an ApiExtractor library to parse the C or C++ headers and get the type information, using Clang.</Description>
+        <Archive sha1sum="d457ef87ce427afd35a20347068cdf6a4150271a" type="tarxz">https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.14.2-src/pyside-setup-opensource-src-5.14.2.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>llvm</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>llvm-clang-devel</Dependency>
+            <Dependency>qt5-xmlpatterns-devel</Dependency>
+            <!--<Dependency>python3-setuptools</Dependency>
+            <Dependency>qt5-multimedia-devel</Dependency>
+            <Dependency>qt5-sql-postgresql</Dependency>
+            <Dependency>qt5-sql-sqlite</Dependency>
+            <Dependency>qt5-sql-mysql</Dependency>
+            <Dependency>qt5-sql-odbc</Dependency>-->
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>shiboken2</Name>
+        <Summary>Shiboken2 is the binding generator used to create the PySide2 bindings.</Summary>
+        <RuntimeDependencies>
+            <Dependency>libxslt</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>llvm-clang</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="executable">/usr/bin/shiboken2</Path>
+			<Path fileType="library">/usr/lib/libshiboken2*</Path>
+            <Path fileType="man">/usr/share/man/man1/shiboken2.1</Path>
+            <Path fileType="executable">/usr/bin/shiboken_tool.py</Path>
+            <!--<Path fileType="man">/usr/share/man/shiboken2.1.gz</Path>-->
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>python3-shiboken2</Name>
+        <Summary>Python3 shared library files used by shiboken2.</Summary>
+        <RuntimeDependencies>
+            <Dependency>python3</Dependency>
+            <Dependency release="current">shiboken2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/python3*/site-packages/shiboken2*</Path>
+            <Path fileType="library">/usr/lib/libshiboken2.cpython-36m-x86_64-linux-gnu.so*</Path>
+            <!--<Path fileType="data">/usr/lib/python3*/site-packages/shiboken2-5.13.2-py3.6.egg-info/</Path>-->
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>python3-shiboken2-devel</Name>
+        <Summary>Development headers for the shiboken2 library.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">python3-shiboken2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/cmake/</Path>
+            <Path fileType="header">/usr/include/shiboken2/</Path>			
+            <Path fileType="library">/usr/lib/pkgconfig/shiboken2.pc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-25</Date>
+            <Version>5.14.2</Version>
+            <Comment>Patch version bump.</Comment>
+            <Name>Blue DeviL</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
