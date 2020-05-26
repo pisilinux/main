@@ -25,6 +25,7 @@ def setup():
                --disable-dependency-tracking \
                --disable-static \
                --disable-bluez4 \
+               --enable-bluez5 \
                --disable-rpath \
                --with-systemduserunitdir=no \
                --disable-oss-output \
