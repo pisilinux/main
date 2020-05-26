@@ -23,16 +23,16 @@ lang="tr"
 
 def setup():
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
-    shelltools.export("LO_PREFIX", "/usr")    
+    shelltools.export("LO_PREFIX", "/usr")
     shelltools.export("PYTHON", "python3.8")
-    
+
     # http://site.icu-project.org/download/61#TOC-Migration-Issues
     shelltools.export("CPPFLAGS", "-DU_USING_ICU_NAMESPACE=1")
-    shelltools.cd(OurWorkDir)   
-  
+    shelltools.cd(OurWorkDir)
+
     #set toolbars default icon theme as colibre
     pisitools.dosed("officecfg/registry/schema/org/openoffice/Office/Common.xcs", "<value>auto</value>", "<value>colibre</value>")
-    
+
     shelltools.touch("autogen.lastrun")
     shelltools.system('sed -e "/distro-install-file-lists/d" -i Makefile.in')
     shelltools.system('./autogen.sh                       \
@@ -115,24 +115,24 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
-    
+
     # cleanup gid_Module
-    pisitools.remove("gid_Module*")    
-    
+    pisitools.remove("gid_Module*")
+
     pisitools.remove("/usr/lib/libreoffice/share/extensions/numbertext/pythonpath/Makefile")
     pisitools.removeDir("/usr/lib/libreoffice/share/extensions/numbertext/idl/")
-    
-    # add application descriptions    
+
+    # add application descriptions
     pisitools.insinto("/usr/share/appdata/", "sysui/desktop/appstream-appdata/libreoffice-*.xml")
-    
+
     # put configuration files into place
     pisitools.dosym("/usr/lib/libreoffice/program/bootstraprc", "/etc/libreoffice/bootstraprc")
     pisitools.dosym("/usr/lib/libreoffice/program/sofficerc", "/etc/libreoffice/sofficerc")
     pisitools.dosym("/usr/lib/libreoffice/share/psprint/psprint.conf", "/etc/libreoffice/psprint.conf")
-    
+
     # make pyuno find its modules
     pisitools.dosym("/usr/lib/libreoffice/program/uno.py", "/usr/lib/python3.8/site-packages/uno.py")
     pisitools.dosym("/usr/lib/libreoffice/program/unohelper.py", "/usr/lib/python3.8/site-packages/unohelper.py")
-    
+
     for pix in ["libreoffice-base.png", "libreoffice-calc.png", "libreoffice-draw.png", "libreoffice-impress.png", "libreoffice-main.png", "libreoffice-math.png", "libreoffice-startcenter.png", "libreoffice-writer.png"]:
         pisitools.dosym("/usr/share/icons/hicolor/32x32/apps/%s" % pix, "/usr/share/pixmaps/%s" %pix)
