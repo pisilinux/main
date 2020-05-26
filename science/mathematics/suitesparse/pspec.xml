@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>suitesparse</Name>
+        <Homepage>http://faculty.cse.tamu.edu/davis/suitesparse.html</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>science.mathematics</PartOf>
+        <License>GPL</License>
+        <IsA>library</IsA>
+        <Summary>SuiteSparse, a suite of Sparse matrix software</Summary>
+        <Description>SuiteSparse is a single archive that contains sparse matrix libraries.</Description>
+        <Archive sha1sum="ccc50177425d0d9bfe878786b8f2729c247efa90" type="targz">https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/v5.7.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>blas-devel</Dependency>
+            <Dependency>metis-devel</Dependency>
+            <Dependency>libquadmath</Dependency>
+            <Dependency>lapack-devel</Dependency>
+            <Dependency>intel-tbb-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>suitesparse-no-demo.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>suitesparse</Name>
+        <Summary>SuiteSparse, a suite of Sparse matrix software</Summary>
+        <RuntimeDependencies>
+            <Dependency>blas</Dependency>
+            <Dependency>metis</Dependency>
+            <Dependency>lapack</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>intel-tbb</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>suitesparse-devel</Name>
+        <Summary>Development files for SuiteSparse</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">suitesparse</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-24</Date>
+            <Version>5.7.2</Version>
+            <Comment>First Pisi Release</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
