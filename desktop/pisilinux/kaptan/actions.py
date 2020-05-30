@@ -8,6 +8,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 import glob
 
+def build():
+    pythonmodules.compile(pyVer="3")
+
 def install():
-    pythonmodules.install(pyVer = "3")
+    pythonmodules.install(pyVer="3")
 
