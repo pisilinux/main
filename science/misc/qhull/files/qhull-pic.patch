@@ -1,0 +1,25 @@
+From a5d0e644ee886251cec5d05948502517e154a9e1 Mon Sep 17 00:00:00 2001
+From: "Joshua A. Anderson" <joaander@umich.edu>
+Date: Fri, 20 Sep 2019 09:36:51 -0400
+Subject: [PATCH] Build libqhullcpp with position independent code
+
+This allows libqhullcpp.a to be linked into shared libraries (i.e.
+python modules).
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9d44056..f4b6b37 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -466,7 +466,8 @@ endif(UNIX)
+ 
+ add_library(${qhull_CPP} STATIC ${libqhullcpp_SOURCES})
+ set_target_properties(${qhull_CPP} PROPERTIES
+-    VERSION ${qhull_VERSION})
++    VERSION ${qhull_VERSION}
++    POSITION_INDEPENDENT_CODE "TRUE")
+ 
+ # ---------------------------------------
+ # Define qhull executables linked to qhullstatic library
