@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>qhull</Name>
+        <Homepage>http://www.qhull.org/</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>science.misc</PartOf>
+        <License>custom</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>A general dimension code for computing convex hulls and related structures.</Summary>
+        <Description>Qhull computes the convex hull, Delaunay triangulation, Voronoi diagram, halfspace intersection about a point, furthest-site Delaunay triangulation, and furthest-site Voronoi diagram.</Description>
+        <Archive sha1sum="f707f42d931eedfaf3e045602d4b15e50eb3b41f" type="targz">https://github.com/qhull/qhull/archive/2019.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- Build libqhullcpp with PIC -->
+            <Patch>qhull-pic.patch</Patch>
+            <!--  Disable static libraries -->
+            <Patch>qhull-no-static.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>qhull</Name>
+        <Summary>A general dimension code for computing convex hulls and related structures.</Summary>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="doc">/usr/share/doc/qhull</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>qhull-devel</Name>
+        <Summary>Development files for qhull</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">qhull</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-27</Date>
+            <Version>2019.1</Version>
+            <Comment>First pisi release.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
