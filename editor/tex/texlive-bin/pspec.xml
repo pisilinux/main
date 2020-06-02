@@ -1,0 +1,129 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>texlive-bin</Name>
+        <Homepage>http://www.tug.org/texlive</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>editor.tex</PartOf>
+        <License>GPLv2</License>
+        <IsA>data:doc</IsA>
+        <IsA>app:console</IsA>
+        <Summary>Tex Live binaries</Summary>
+        <Description>Texlive binaries that are an essential part of TeXLive component.</Description>
+        <!--<Archive sha1sum="7fdc8972d22347880d1117bec8c3b75f82c4fbd5" type="tarxz">http://mirrors.kernel.org/archlinux/other/texlive/texlive-bin-texmf-20120623.tar.xz</Archive>-->
+        <!--<Archive sha1sum="2d176c127470638ee9818592464500252fe5569b" type="tarxz">http://mirrors.edge.kernel.org/archlinux/other/texlive/texlive-bin-source-2018.47465.tar.xz</Archive> -->
+        <Archive sha1sum="94b77331474d678ce75d9d6c673965fd7f93295b" type="tarxz">ftp://tug.org/texlive/historic/2020/texlive-20200406-source.tar.xz</Archive>
+        <Archive sha1sum="8d60837532d1b6a3dbaf4822174144bd9c1a20bb" type="targz">https://github.com/plk/biber/archive/v2.14.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gd-devel</Dependency>
+            <Dependency>clisp-devel</Dependency>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>t1lib-devel</Dependency>
+            <Dependency>libXi-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
+            <Dependency>ffcall-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>libXaw-devel</Dependency>
+            <Dependency>libXmu-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
+            <Dependency>poppler-devel</Dependency>
+            <Dependency>libpaper-devel</Dependency>
+            <Dependency>harfbuzz-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>graphite2-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>libsigsegv-devel</Dependency>
+            <Dependency>ghostscript-devel</Dependency>
+            <!--
+            <Dependency>zziplib-devel</Dependency>
+            <Dependency>potrace</Dependency>
+            -->
+        </BuildDependencies>
+        <Patches>
+            <!--
+            <Patch level="1">arch/texlive-20190410-source-upstream_fixes-1.patch</Patch>
+            -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>texlive-bin</Name>
+        <Summary>Tex Live binaries</Summary>
+        <RuntimeDependencies>
+            <Dependency>gd</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>icu4c</Dependency>
+            <Dependency>libXt</Dependency>
+            <Dependency>libXi</Dependency>
+            <Dependency>t1lib</Dependency>
+            <Dependency>ffcall</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libXaw</Dependency>
+            <Dependency>libXmu</Dependency>
+            <Dependency>libXpm</Dependency>
+            <Dependency>harfbuzz</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>graphite2</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>libsigsegv</Dependency>
+            <Dependency>ghostscript</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <!--Change this after next upgrade to config-->
+            <Path fileType="sysconfdir">/etc</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/info</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/tlpkg</Path>
+            <Path fileType="data">/usr/share/texmf-dist</Path>
+        </Files>
+        <AdditionalFiles>
+            <!--<AdditionalFile permission="0755" target="/usr/bin/biber">biber</AdditionalFile>-->
+            <!--<AdditionalFile permission="0644" target="09-texlive-fonts.conf">09-texlive-fonts.conf</AdditionalFile> -->
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>texlive-bin-devel</Name>
+        <Summary>Development files for texlive-bin</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">texlive-bin</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="3">
+            <Date>2020-06-01</Date>
+            <Version>20200406</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+        <Update release="2">
+            <Date>2020-03-21</Date>
+            <Version>20190410</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@pisilinux.org</Email>
+        </Update>
+        <Update release="1">
+            <Date>2020-03-21</Date>
+            <Version>2018.47465</Version>
+            <Comment>First release</Comment>
+            <Name>Osman Erkan</Name>
+            <Email>osman.erkan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
