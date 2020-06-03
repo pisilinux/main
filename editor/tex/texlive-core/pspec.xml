@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>texlive-core</Name>
+        <Homepage>http://www.tug.org/texlive</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>editor.tex</PartOf>
+        <License>GPLv2</License>
+        <IsA>data:doc</IsA>
+        <IsA>app:console</IsA>
+        <Summary>TeX Live core distribution</Summary>
+        <Description>texlive-core is the essential part of TeXLive. It corresponds to the "medium" scheme of TexLive</Description>
+        <Archive sha1sum="454c5a8a032f451432a6d3c56a80a86495667536" type="zip">http://mirrors.kernel.org/archlinux/other/texlive/texlive-core-2020.54593-src.zip </Archive>
+        <BuildDependencies>
+            <Dependency>texlive-bin</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>texlive-core</Name>
+        <Summary>TeX Live core distribution</Summary>
+        <RuntimeDependencies>
+            <Dependency>psutils</Dependency>
+            <Dependency>t1utils</Dependency>
+            <Dependency>ghostscript</Dependency>
+            <Dependency>texlive-bin</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/etc/fonts</Path>
+            <Path fileType="data">/etc/texmf</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/var/lib/texmf</Path>
+            <Path fileType="data">/usr/share/tlpkg</Path>
+            <Path fileType="data">/usr/share/libalpm</Path>
+            <Path fileType="data">/usr/share/texmf-dist</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/texmf/web2c/texmf.cnf">arch/texmf.cnf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/texmf-dist/web2c/texmfcnf.lua">arch/texmfcnf.lua</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/fonts/conf.avail/09-texlive-fonts.conf">arch/09-texlive-fonts.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/var/lib/texmf/pisilinux/installedpkgs/texlive-core.maps">arch/texlive-core.maps</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/var/lib/texmf/pisilinux/installedpkgs/texlive-core.fmts">arch/texlive-core.fmts</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-29</Date>
+            <Version>2020.54593</Version>
+            <Comment>Major version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
