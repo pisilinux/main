@@ -79,43 +79,35 @@ def install():
             pisitools.dosym(new_path, "/usr/bin/" + binary)
 
 
-    bibtexextra_scripts=["bibexport", "listbib" ,"multibibliography", "urlbst"]
+    bibtexextra_scripts=["bbl2bib", "bib2gls", "bibdoiadd", "bibexport", "bibmradd", "biburl2doi", "bibzbladd", "convertgls2bib", "listbib", "ltx2crossrefxml", "multibibliography", "urlbst"]
 
-    core_scripts=["a2ping","a5toa4", "adhocfilelist", "afm2afm", "allcm", "allec", "allneeded", "arara","arlatex"
-    ,"autoinst", "bundledoc", "checkcites", "chkweb", "context", "ctanify", "ctanupload", "ctxtools", "de-macro", "deweb"
-    ,"dosepsbin", "dtxgen", "dvi2fax", "dviasm", "dvired", "e2pall", "epstopdf", "findhyph", "fmtutil", "fmtutil-sys"
-    ,"fontinst", "fragmaster", "installfont-tl", "kpsepath", "kpsetool", "kpsewhere", "kpsexpand", "latex2man", "latexdiff"
-    ,"latexdiff-vc", "latexfileversion", "latexmk", "latexpand", "latexrevise", "listings-ext.sh", "ltxfileinfo", "lua2dox_filter"
-    ,"luaotfload-tool", "luatools", "match_parens", "mf2pt1", "mkjobtexmf", "mkluatexfontdb", "mkt1font", "mktexfmt", "mptopdf"
-    ,"mtxrun", "ot2kpx", "pdf180", "pdf270", "pdf90", "pdfatfi", "pdfbook", "pdfcrop", "pdfflip", "pdfjam", "pdfjam-pocketmod"
-    ,"pdfjam-slides3up", "pdfjam-slides6up", "pdfjoin", "pdfnup", "pdfpun", "pfarrei", "pkfix", "pkfix-helper", "ps2eps", "ps2frag"
-    ,"pslatex", "pstopdf", "purifyeps", "repstopdf", "rpdfcrop", "rungs", "simpdftex", "sty2dtx", "texconfig", "texconfig-dialog"
-    ,"texconfig-sys", "texcount", "texdef", "texdiff", "texdirflatten", "texdoc", "texdoctk", "texexec", "texindy", "texlinks"
-    ,"texliveonfly", "texloganalyser", "texmfstart", "thumbpdf", "typeoutfileinfo", "updmap", "updmap-sys", "vpl2ovp", "vpl2vpl", "xindy"]
+    core_scripts=["a2ping", "a5toa4", "adhocfilelist", "afm2afm", "allcm", "allec", "allneeded", "arara", "arlatex", "autoinst", "bundledoc", "checkcites", "checklistings", "chklref", "chkweb", "cjk-gs-integrate", "cluttex", "cllualatex", "clxelatex", "context", "contextjit", "ctanbib", "ctanify", "ctanupload", "ctan-o-mat", "de-macro", "depythontex", "deweb", "dosepsbin", "dtxgen", "dvi2fax", "dviasm", "dviinfox", "dvired", "e2pall", "epstopdf", "findhyph", "fmtutil", "fmtutil-sys", "fmtutil-user", "fontinst", "fragmaster", "ht", "htcontext", "htlatex", "htmex", "httex", "httexi", "htxelatex", "htxetex", "installfont-tl", "jfmutil", "ketcindy", "kpsepath", "kpsetool", "kpsewhere", "kpsexpand", "latex-git-log", "latex-papersize", "latex2man", "latex2nemeth", "latexdef", "latexdiff", "latexdiff-vc", "latexfileversion", "latexindent", "latexmk", "latexpand", "latexrevise", "listings-ext.sh", "ltxfileinfo", "ltximg", "luaotfload-tool", "luatools", "lwarpmk", "make4ht", "match_parens", "mf2pt1", "mk4ht", "mkjobtexmf", "mkt1font", "mktexfmt", "mktexlsr", "mktexmf", "mktexpk", "mktextfm", "mptopdf", "mtxrun", "mtxrunjit", "ot2kpx", "pamphletangler", "pdfatfi", "pdfbook2", "pdfcrop", "pdfjam", "pdflatexpicscale", "pdftex-quiet", "pdfxup", "pfarrei", "pkfix", "pkfix-helper", "ps2eps", "ps2frag", "pslatex", "purifyeps", "pythontex", "repstopdf", "rpdfcrop", "rungs", "simpdftex", "srcredact", "sty2dtx", "tex4ebook", "texconfig", "texconfig-dialog", "texconfig-sys", "texcount", "texdef", "texdiff", "texdirflatten", "texdoc", "texdoctk", "texexec", "texfot", "texhash", "texindy", "texlinks", "texliveonfly", "texloganalyser", "texmfstart", "texosquery", "texosquery-jre5", "texosquery-jre8", "texplate", "thumbpdf", "tlcockpit", "tlshell", "typeoutfileinfo", "updmap", "updmap-sys", "updmap-user", "vpl2ovp", "vpl2vpl", "xhlatex", "xindex", "xindy"]
 
-    htmlxml_scripts=["ht", "htcontext", "htlatex", "htmex", "httex", "httexi", "htxelatex", "htxetex", "mk4ht"]
+    games_scripts=["rubikrotation"]
+    
+    humanities_scripts=["diadia"]
 
     langcyrillic_scripts=["rubibtex", "rumakeindex"]
-
-    langcjk_scripts=["convbkmk", "ptex2pdf", "kanji-fontmap-creator", "kanji-config-updmap", "kanji-config-updmap-sys"]
+    langkorean_scripts=["jamo-normalize komkindex ttf2kotexfont"]
+    langcjk_scripts=["convbkmk", "ptex2pdf", "kanji-fontmap-creator", "kanji-config-updmap", "kanji-config-updmap-sys", "kanji-config-updmap-user"]
 
     langextra_scripts=["ebong"]
 
     langgreek_scripts=["mkgrkindex"]
 
-    latexextra_scripts=["authorindex", "exceltex", "makeglossaries", "pdfannotextractor", "perltex", "ps4pdf", "splitindex" ,"svn-multi", "vpe"]
+    latexextra_scripts=["authorindex", "exceltex", "l3build", "makedtx", "makeglossaries", "makeglossaries-lite", "pdfannotextractor", "perltex", "ps4pdf", "splitindex", "svn-multi", "vpe", "webquiz", "wordcount", "yplan"]
 
-    music_scripts=["m-tx", "musixtex", "musixflx", "pmx2pdf"]
+    music_scripts=["lily-glyph-commands", "lily-image-commands", "lily-rebuild-pdfs", "m-tx", "musixtex", "musixflx", "pmxchords"]
 
-    pictures_scripts=["cachepic", "epspdf", "epspdftk", "fig4latex", "mathspic"]
+    pictures_scripts=["cachepic", "epspdf", "epspdftk", "fig4latex", "getmapdl", "mathspic", "mathspic", "mkpic", "pn2pdf"]
 
     pstricks_scripts=["pedigree", "pst2pdf"]
 
-    science_scripts=["ulqda"]
+    science_scripts=["pygmentex", "ulqda"]
 
     # remove unneeded files and symlinks
     dirs = []
-    for g in [bibtexextra_scripts, core_scripts, htmlxml_scripts, \
+    for g in [bibtexextra_scripts, core_scripts, games_scripts, humanities_scripts, \
               langcjk_scripts, langcyrillic_scripts, langextra_scripts, \
               langgreek_scripts, latexextra_scripts, music_scripts, \
               pictures_scripts, pstricks_scripts, science_scripts, \
