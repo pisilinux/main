@@ -25,7 +25,7 @@ def install():
     pisitools.insinto("/usr/share/java/", "lib/optional/junit-4.12.jar", "junit.jar")
     pisitools.insinto("/usr/share/java/", "lib/optional/hamcrest-core-1.3.jar", "hamcrest.jar")
     pisitools.insinto("/usr/share/ant/lib/", "%s/lib/*" % WorkDir)
-    pisitools.insinto("/usr/share/ant/bin/", "apache-ant-1.9.14/bin/*")
+    pisitools.insinto("/usr/share/ant/bin/", "apache-ant-1.9.15/bin/*")
             
 
     for binsym in ["ant", "antRun", "antRun.pl", "complete-ant-cmd.pl", "runant.pl", "runant.py"]:
