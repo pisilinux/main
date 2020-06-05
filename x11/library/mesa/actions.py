@@ -26,6 +26,7 @@ def setup():
                -Dgallium-xa=true \
                -Dgallium-nine=true \
                -Dvulkan-drivers=amd,intel \
+               -Dvulkan-device-select-layer=true \
                -Dshared-glapi=true \
                -Dgles1=true \
                -Dgles2=true \
