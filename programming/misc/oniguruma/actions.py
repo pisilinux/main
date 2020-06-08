@@ -12,9 +12,10 @@ from pisi.actionsapi import shelltools
 WorkDir = "onig-%s" %get.srcVERSION()
 
 def setup():
-	
     autotools.autoreconf("-vfi")
-    autotools.configure()
+    autotools.configure("--enable-posix-api \
+                         --disable-silent-rules \
+                         --disable-static")
     
 
 def build():
