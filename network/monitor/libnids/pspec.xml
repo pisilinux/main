@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libnids</Name>
+        <Homepage>http://libnids.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>network.monitor</PartOf>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Network intrusion detection library</Summary>
+        <Description>Libnids is an implementation of an E-component of Network Intrusion Detection System. It emulates the IP stack of Linux 2.0.x. Libnids offers IP defragmentation, TCP stream assembly and TCP port scan detection.</Description>
+        <Archive sha1sum="9a421df05cefdc4f5f7db95efc001b3c2b5249ce" type="targz">https://sourceforge.net/projects/libnids/files/libnids/1.24/libnids-1.24.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libnet-devel</Dependency>
+            <Dependency>libpcap-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">libnids-1.24-inline.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libnids</Name>
+        <Summary>Network intrusion detection library</Summary>
+        <RuntimeDependencies>
+            <Dependency>libnet</Dependency>
+            <Dependency>libpcap</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc/libnids</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libnids-devel</Name>
+        <Summary>Development files for libnids</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libnids</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-06-08</Date>
+            <Version>1.24</Version>
+            <Comment>Moved from contrib.</Comment>
+            <Name>Blue DeviL</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
