@@ -14,6 +14,8 @@ def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DINSTALL_PLUGINSDIR=/usr/lib/qt5/plugins \
+                          -DINSTALL_QMLDIR=/usr/lib/qt5/qml \
                           -DCMAKE_LIBDIR=/usr/lib", sourceDir="..")
 def build():
     shelltools.cd("build")
