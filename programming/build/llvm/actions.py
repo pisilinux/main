@@ -40,9 +40,9 @@ def setup():
                 shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
                 
                 #clang patch
-                shelltools.cd("tools")
-                shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
-                shelltools.cd("..")
+                #shelltools.cd("tools")
+                #shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
+                #shelltools.cd("..")
         
                 #shelltools.export("CC", "clang")
                 #shelltools.export("CXX", "clang++")
@@ -60,9 +60,9 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
         #clang patch
-        shelltools.cd("tools")
-        shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
-        shelltools.cd("..")
+        #shelltools.cd("tools")
+        #shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
+        #shelltools.cd("..")
     
     shelltools.makedirs("build")
     
