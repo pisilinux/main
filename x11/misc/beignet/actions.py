@@ -12,6 +12,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+	shelltools.export("CC", "clang")
+	shelltools.export("CXX", "clang++")
     
 	cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
 						  -DOCLICD_COMPAT=1")
