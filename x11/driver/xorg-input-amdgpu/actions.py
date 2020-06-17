@@ -9,15 +9,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-	
-	pisitools.cflags.add("-fno-plt -fcommon")
-	pisitools.cxxflags.add("-fno-plt")
-	pisitools.ldflags.add(",-z,now")
-	
+    pisitools.cflags.add("-fno-plt -fcommon")
+    pisitools.cxxflags.add("-fno-plt")
+    pisitools.ldflags.add(",-z,now")
+    
     autotools.autoreconf("-fiv")
     autotools.configure("\
-                         --disable-static \
-                         --enable-glamor \
+                          --disable-static \
+                          --enable-glamor \
                         ")
 
 def build():
