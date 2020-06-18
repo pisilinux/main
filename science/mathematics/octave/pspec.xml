@@ -1,0 +1,126 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>octave</Name>
+        <Homepage>https://www.gnu.org/software/octave/</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>science.mathematics</PartOf>
+        <License>GPL</License>
+        <IsA>library</IsA>
+        <IsA>app:gui</IsA>
+        <Summary>A high-level language, primarily intended for numerical computations.</Summary>
+        <Description>GNU Octave is software featuring a high-level programming language, primarily intended for numerical computations. Octave helps in solving linear and nonlinear problems numerically, and for performing other numerical experiments using a language that is mostly compatible with MATLAB. It may also be used as a batch-oriented language. </Description>
+        <Archive sha1sum="bc9e4ceed93c7f7dcc692daeb9dccb182b2d5e9e" type="targz">https://ftp.gnu.org/gnu/octave/octave-5.2.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gperf</Dependency>
+            <Dependency>gnuplot</Dependency>
+            <Dependency>qrupdate</Dependency>
+            <Dependency>blas-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>glpk-devel</Dependency>
+            <Dependency>hdf5-devel</Dependency>
+            <Dependency>fltk-devel</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>qhull-devel</Dependency>
+            <Dependency>arpack-devel</Dependency>
+            <Dependency>lapack-devel</Dependency>
+            <Dependency>qt5-linguist</Dependency>
+            <Dependency>libpcre-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>mesa-glu-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>sundials-devel</Dependency>
+            <Dependency>portaudio-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>libsndfile-devel</Dependency>
+            <Dependency>ghostscript-devel</Dependency>
+            <Dependency>qscintilla2-devel</Dependency>
+            <Dependency>SuiteSparse-devel</Dependency>
+            <Dependency>qt5-assistant-devel</Dependency>
+            <Dependency>GraphicsMagick-devel</Dependency>
+            <!--
+            -->
+        </BuildDependencies>
+        <Patches>
+            <!-- Fix sundials support: https://savannah.gnu.org/bugs/?52475 -->
+            <Patch>octave-sundials4.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>octave</Name>
+        <Summary>A high-level language, primarily intended for numerical computations.</Summary>
+        <RuntimeDependencies>
+            <Dependency>blas</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>fltk</Dependency>
+            <Dependency>glpk</Dependency>
+            <Dependency>hdf5</Dependency>
+            <Dependency>fftw3</Dependency>
+            <Dependency>qhull</Dependency>
+            <Dependency>arpack</Dependency>
+            <Dependency>lapack</Dependency>
+            <Dependency>libXft</Dependency>
+            <Dependency>libpcre</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>libglvnd</Dependency>
+            <Dependency>mesa-glu</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>qrupdate</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>readline</Dependency>
+            <Dependency>sundials</Dependency>
+            <Dependency>libXfixes</Dependency>
+            <Dependency>portaudio</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>libsndfile</Dependency>
+            <Dependency>libXcursor</Dependency>
+            <Dependency>libXrender</Dependency>
+            <Dependency>ghostscript</Dependency>
+            <Dependency>libgfortran</Dependency>
+            <Dependency>libXinerama</Dependency>
+            <Dependency>qscintilla2</Dependency>
+            <Dependency>SuiteSparse</Dependency>
+            <Dependency>qt5-assistant</Dependency>
+            <Dependency>GraphicsMagick</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="doc">/usr/share/doc/octave</Path>
+            <Path fileType="config">/etc/ld.so.conf.d/octave.conf</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>octave-devel</Name>
+        <Summary>Development files for octave</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">octave</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-05-22</Date>
+            <Version>5.2.0</Version>
+            <Comment>First pisi release.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
