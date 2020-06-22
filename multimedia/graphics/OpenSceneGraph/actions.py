@@ -21,4 +21,4 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS.txt", "ChangeLog", "LICENSE.txt", "NEWS.txt", "README.txt")
+    pisitools.dodoc("AUTHORS.txt", "ChangeLog", "LICENSE.txt", "NEWS.txt")
