@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
+    autotools.autoreconf("-fiv")
     autotools.configure("\
                          --with-html-dir=/usr/share/doc/%s/html \
                          --with-temp-mount-dir=/run/libgpod \
