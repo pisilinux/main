@@ -31,4 +31,4 @@ def install():
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     
     shelltools.cd("..")
-    pisitools.dodoc("COPYING*", "AUTHORS", "NEWS", "README")
+    pisitools.dodoc("COPYING*", "NEWS*", "README*")

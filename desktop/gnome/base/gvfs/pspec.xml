@@ -13,12 +13,12 @@
         <IsA>library</IsA>
         <Summary>New generation gnome-virtual-file-system</Summary>
         <Description>GVFS is a userspace virtual filesystem designed to work with the I/O abstractions, especially HAL. It supports fuse for directly access for GVFS mounts. It installs several modules and backends that are automatically used by applications.</Description>
-        <Archive sha1sum="acfe3412e77c49501e3de2e9567d286a4cf58cfb" type="tarxz">http://ftp.gnome.org/mirror/gnome.org/sources/gvfs/1.36/gvfs-1.36.3.tar.xz</Archive>
+        <Archive sha1sum="a3d21bd3a0f7f8af4a1c66698fc1e92c377d6ec7" type="tarxz">http://ftp.gnome.org/mirror/gnome.org/sources/gvfs/1.45/gvfs-1.45.2.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>meson</Dependency>
             <Dependency>gtk-doc</Dependency>
             <Dependency>gtk3-devel</Dependency>
-            <Dependency>fuse-devel</Dependency>
+            <Dependency>fuse3-devel</Dependency>
             <Dependency>avahi-devel</Dependency>
             <Dependency>gconf-devel</Dependency>
             <Dependency>libmtp-devel</Dependency>
@@ -49,12 +49,13 @@
             <Dependency>libgnome-keyring</Dependency>
             <Dependency>polkit-devel</Dependency>
             <Dependency>libcap-devel</Dependency>
+            <Dependency>gsettings-desktop-schemas-devel</Dependency>
             <Dependency versionFrom="4.0.7">samba-devel</Dependency>
             <Dependency versionFrom="0.90">libcdio-devel</Dependency>
             <Dependency versionFrom="1.1.5">libimobiledevice-devel</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch level="1">gvfs-archive-integration.patch</Patch> -->
+            <Patch level="1">0001-afc-Add-support-for-libplist-2.2.patch</Patch>
         </Patches>
     </Source>
 
@@ -128,7 +129,7 @@
         <Name>gvfs-fuse</Name>
         <Summary>FUSE backend for GVFS</Summary>
         <RuntimeDependencies>
-            <Dependency>fuse</Dependency>
+            <Dependency>fuse3</Dependency>
             <Dependency release="current">gvfs</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -298,6 +299,13 @@
     </Package>
 
     <History>
+        <Update release="10">
+            <Date>2020-06-24</Date>
+            <Version>1.45.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="9">
             <Date>2020-03-11</Date>
             <Version>1.36.3</Version>
