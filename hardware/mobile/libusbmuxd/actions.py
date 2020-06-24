@@ -8,8 +8,9 @@ from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
+
 def setup():
-    
+    autotools.autoreconf("-fiv")
     autotools.configure("\
                          --disable-static \
                          --disable-silent-rules \
@@ -21,4 +22,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "README")
+    pisitools.dodoc("AUTHORS", "README*")
