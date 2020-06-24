@@ -9,6 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
+    autotools.autoreconf("-fi")
     autotools.configure("\
                          --disable-static \
                          --disable-openssl \
@@ -27,4 +28,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README*")
