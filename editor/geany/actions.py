@@ -9,7 +9,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--enable-gtk3 --enable-vte --enable-binreloc")
+	autotools.configure("--enable-gtk3 --enable-vte")
+
 	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -18,11 +19,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", \
-	"ChangeLog", \
-	"COPYING", \
-	"HACKING", \
-	"INSTALL", \
-	"NEWS", \
-	"README*", "THANKS", "TODO")
+#	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "HACKING", "NEWS", "README*", "THANKS", "TODO")
 
