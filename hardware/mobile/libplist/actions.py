@@ -26,4 +26,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LESSER", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LESSER", "README*")
