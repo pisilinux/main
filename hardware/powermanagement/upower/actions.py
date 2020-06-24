@@ -14,6 +14,7 @@ def setup():
     autotools.configure("--disable-static \
                          --disable-gtk-doc \
                          --enable-deprecated \
+                         --with-systemdsystemunitdir=no \
                          --enable-introspection")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
