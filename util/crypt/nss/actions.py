@@ -18,6 +18,9 @@ def setup():
 
     # Respect LDFLAGS
     pisitools.dosed("nss/coreconf/rules.mk", "(\$\(MKSHLIB\))\s-o", r"\1 $(LDFLAGS) -o")
+    
+    # Fix missing includes
+    shelltools.system("sed 's|-Ideprecated|-Ideprecated -I../util -I../softoken -I.|' -i nss/lib/freebl/Makefile")
 
     # Create nss.pc and nss-config dynamically
     shelltools.system("./generate-pc-config.sh")
@@ -39,8 +42,10 @@ def build():
     shelltools.export("PKG_CONFIG_ALLOW_SYSTEM_CFLAGS", "1")
 
     autotools.make("-C nss/coreconf -j1")
+    autotools.make("-C nss/lib/util -j1")
     autotools.make("-C nss/lib/dbm")
-    autotools.make("-C nss -j1")
+    autotools.make("-C  nss/lib/sysinit -j1")
+    autotools.make("-C nss all -j1")
 
 def install():
     for binary in ["*util", "shlibsign", "signtool", "signver", "ssltap"]:
