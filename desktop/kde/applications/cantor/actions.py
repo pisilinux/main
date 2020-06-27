@@ -7,12 +7,14 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde5
+from pisi.actionsapi import get
 
 NoStrip=["/usr/share/icons"]
 # TODO: KAlgebra icon not shown in GUI
 # TODO: more sub packages? *-libs etc.?
 
 def setup():
+    pisitools.cxxflags.add("-std=c++11 -pthread")
     kde5.configure()
 
 def build():
