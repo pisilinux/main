@@ -4,21 +4,32 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-t = 'FILESDIR=/usr/share/cppcheck CFGDIR=/usr/share/cppcheck/cfg'
+j = "-DHAVE_RULES=ON \
+     -DBUILD_GUI=ON \
+     -DWITH_QCHART=ON \
+     -DENABLE_CHECK_INTERNAL=ON -L \
+    "
+
+def setup():
+	shelltools.makedirs("build")
+	shelltools.cd("build")
+	cmaketools.configure("-DUSE_Z3=OFF -DBUILD_TESTS=OFF %s" % j, sourceDir = '..')
 
 def build():
-	pisitools.cxxflags.add("-DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function")
-	autotools.make("MATCHCOMPILER=yes %s HAVE_RULES=yes" % t)
+	shelltools.cd("build")
+	cmaketools.make()
 
-def check():
-	autotools.make("check %s" % t)
+#def check():
+#	cmaketools.make("test")
 
 def install():
-	autotools.rawInstall("DESTDIR=%s %s" % (get.installDIR(), t))
+	shelltools.cd("build")
+	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "readme*")
+	pisitools.dodoc("../AUTHORS", "../COPYING", "../readme*")
 
