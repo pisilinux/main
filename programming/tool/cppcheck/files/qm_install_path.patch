@@ -1,0 +1,37 @@
+--- a/gui/CMakeLists.txt	2020-05-10 12:31:19.000000000 +0300
++++ b/gui/CMakeLists.txt	2020-05-28 16:22:24.704402614 +0300
+@@ -37,7 +37,7 @@
+     endif()
+ 
+     install(TARGETS cppcheck-gui RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR} COMPONENT applications)
+-    install(FILES ${qms} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR} COMPONENT applications)
++    install(FILES ${qms} DESTINATION share/${PROJECT_NAME}/lang COMPONENT applications)
+ 
+     install(FILES cppcheck-gui.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+ 
+--- a/gui/translationhandler.cpp	2020-05-28 16:29:27.334549404 +0300
++++ b/gui/translationhandler.cpp	2020-05-28 16:27:15.183706532 +0300
+@@ -116,15 +116,16 @@
+         if (datadir.isEmpty())
+             datadir = appPath;
+ 
+-        QString translationFile;
+-        if (QFile::exists(datadir + "/lang/" + mTranslations[index].mFilename + ".qm"))
+-            translationFile = datadir + "/lang/" + mTranslations[index].mFilename + ".qm";
++//        QString translationFile;
++//        if (QFile::exists(datadir + "/lang/" + mTranslations[index].mFilename + ".qm"))
++//            translationFile = datadir + "/lang/" + mTranslations[index].mFilename + ".qm";
+ 
+-        else if (QFile::exists(datadir + "/" + mTranslations[index].mFilename + ".qm"))
+-            translationFile = datadir + "/" + mTranslations[index].mFilename + ".qm";
++//        else if (QFile::exists(datadir + "/" + mTranslations[index].mFilename + ".qm"))
++//            translationFile = datadir + "/" + mTranslations[index].mFilename + ".qm";
+ 
+-        else
+-            translationFile = appPath + "/" + mTranslations[index].mFilename + ".qm";
++//        else
++//           translationFile = appPath + "/" + mTranslations[index].mFilename + ".qm";
++          QString translationFile("/usr/share/Cppcheck/lang/" + mTranslations[index].mFilename + ".qm");
+ 
+         if (!mTranslator->load(translationFile) && !failure) {
+             //If it failed, lets check if the default file exists

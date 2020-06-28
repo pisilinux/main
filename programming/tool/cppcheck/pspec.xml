@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
 	<Source>
 		<Name>cppcheck</Name>
@@ -15,25 +15,69 @@
 		<Description>
 			 Cppcheck is a static analysis tool for C/C++ code. It provides unique code analysis to detect bugs and focuses on detecting undefined behaviour and dangerous coding constructs. The goal is to detect only real errors in the code (i.e. have very few false positives).
 		</Description>
-		<Archive sha1sum="852d69a60b6caf023a3420943ebdc29e99fd0349" type="targz">https://github.com/danmar/cppcheck/archive/1.90.tar.gz</Archive>
+		<Archive sha1sum="e59758410408fa0679df06e8c3f3dd4e8c930d00" type="targz">
+			https://github.com/danmar/cppcheck/archive/2.1.tar.gz
+		</Archive>
 		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>python3</Dependency>
+			<!-- <Dependency>z3-devel</Dependency> -->
+			<Dependency>zlib-devel</Dependency>
+			<Dependency>qt5-linguist</Dependency>
 			<Dependency>libpcre-devel</Dependency>
+			<Dependency>qt5-base-devel</Dependency>
+			<Dependency>tinyxml2-devel</Dependency>
+			<Dependency>qt5-charts-devel</Dependency>
 		</BuildDependencies>
+		<Patches>
+			<Patch level="1">qm_install_path.patch</Patch>
+		</Patches>
 	</Source>
 
 	<Package>
 		<Name>cppcheck</Name>
 		<RuntimeDependencies>
+			<!-- <Dependency>z3</Dependency> -->
 			<Dependency>libgcc</Dependency>
+			<Dependency>libpcre</Dependency>
+			<Dependency>python3</Dependency>
+			<Dependency>python3-Pygments</Dependency>
 		</RuntimeDependencies>
 		<Files>
-			<Path fileType="executable">/usr/bin</Path>
-			<Path fileType="data">/usr/share/cppcheck</Path>
+			<Path fileType="executable">/usr/bin/cppcheck</Path>
+			<Path fileType="data">/usr/share</Path>
+			<!-- <Path fileType="man">/usr/share/man</Path> -->
 			<Path fileType="doc">/usr/share/doc</Path>
 		</Files>
 	</Package>
 
+	<Package>
+		<IsA>app:gui</IsA>
+		<Name>cppcheck-gui</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">cppcheck</Dependency>
+			<!-- <Dependency>z3</Dependency> -->
+			<Dependency>libgcc</Dependency>
+			<Dependency>libpcre</Dependency>
+			<Dependency>qt5-base</Dependency>
+			<Dependency>qt5-charts</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin/cppcheck-gui</Path>
+			<Path fileType="data">/usr/share/applications</Path>
+			<Path fileType="data">/usr/share/icons</Path>
+			<Path fileType="localedata">/usr/share/Cppcheck/lang</Path>
+		</Files>
+	</Package>
+
 	<History>
+		<Update release="3">
+			<Date>2020-06-27</Date>
+			<Version>2.1</Version>
+			<Comment>Ver. bump</Comment>
+			<Name>fury</Name>
+			<Email>wascheme@tuta.io</Email>
+		</Update>
 		<Update release="2">
 			<Date>2020-04-16</Date>
 			<Version>1.90</Version>
