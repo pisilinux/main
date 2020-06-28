@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
@@ -14,8 +14,7 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-        options += " --libdir=/usr/lib32 \
-                   "
+        options += " --libdir=/usr/lib32 "
 
     autotools.configure(options)
 
@@ -26,3 +25,4 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("AUTHORS", "COPYING", "README*")
+
