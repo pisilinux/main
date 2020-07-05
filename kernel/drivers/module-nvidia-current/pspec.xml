@@ -125,6 +125,9 @@
             <Path fileType="data">/usr/share/glvnd/egl_vendor.d/10_nvidia.json</Path>
             <Path fileType="config">/etc/vulkan/icd.d</Path>
         </Files>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
@@ -182,7 +185,58 @@
         </Conflicts>
     </Package>
 
+    <Package>
+        <Name>nvidia</Name>
+        <IsA>driver</IsA>
+        <Summary>Meata package for nvidia-current drivers</Summary>
+        <RuntimeDependencies>
+            <Dependency>module-nvidia-current</Dependency>
+            <Dependency>xorg-video-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/var/tmp/nvidia</Path>
+        </Files>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+        <Conflicts>
+            <Package>nvidia-dkms</Package>
+        </Conflicts>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/var/tmp/nvidia">nvidia.tmp</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>nvidia-dkms</Name>
+        <IsA>driver</IsA>
+        <Summary>Meata package for nvidia-current dkms drivers</Summary>
+        <RuntimeDependencies>
+            <Dependency>nvidia-current-dkms</Dependency>
+            <Dependency>xorg-video-nvidia-current</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/var/tmp/nvidia-dkms</Path>
+        </Files>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+        <Conflicts>
+            <Package>nvidia</Package>
+        </Conflicts>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/var/tmp/nvidia-dkms">nvidia.tmp</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
     <History>
+        <Update release="33">
+            <Date>2020-07-05</Date>
+            <Version>440.82</Version>
+            <Comment>Add comar script and meta packages</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Update>
         <Update release="32">
             <Date>2020-06-01</Date>
             <Version>440.82</Version>
