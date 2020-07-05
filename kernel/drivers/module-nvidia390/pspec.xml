@@ -101,6 +101,9 @@
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
+        <Provides>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
     </Package>
 
     <Package>
@@ -148,6 +151,7 @@
         <Summary>NVIDIA driver sources for linux</Summary>
         <RuntimeDependencies>
             <Dependency>dkms</Dependency>
+            <Dependency>xorg-video-nvidia390</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc/modprobe.d/nvidia390-dkms.conf</Path>
@@ -165,10 +169,40 @@
             <Package>nvidia340-dkms</Package>
             <Package>nvidia430-dkms</Package>
             <Package>nvidia-current-dkms</Package>
+            <Package>nvidia390</Package>
         </Conflicts>
     </Package>
 
+    <Package>
+        <Name>nvidia390</Name>
+        <IsA>driver</IsA>
+        <Summary>Meata package for nvidia390 drivers</Summary>
+        <RuntimeDependencies>
+            <Dependency>module-nvidia390</Dependency>
+            <Dependency>xorg-video-nvidia390</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/var/tmp/nvidia</Path>
+        </Files>
+        <BuildFlags>
+            <Flag>noDelta</Flag>
+        </BuildFlags>
+        <Conflicts>
+            <Package>nvidia390-dkms</Package>
+        </Conflicts>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/var/tmp/nvidia">nvidia.tmp</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
     <History>
+        <Update release="9">
+            <Date>2020-07-05</Date>
+            <Version>390.132</Version>
+            <Comment>Add comar script and meta package</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2020-06-01</Date>
             <Version>390.132</Version>
