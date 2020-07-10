@@ -25,6 +25,7 @@ def setup():
                          --prefix=/usr \
                          --without-team \
                          --libexecdir=/usr/lib/NetworkManager \
+                         --without-appindicator \
                          --without-selinux")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
