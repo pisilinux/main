@@ -12,67 +12,84 @@
         <IsA>library</IsA>
         <Summary>Vulkan headers, loaders and validations layers</Summary>
         <Description>Vulkan headers, loaders and validations layers</Description>
-		<Archive sha1sum="402a02c04744573a70fc14d5293bf48b614d2b1d" type="targz" name="Vulkan-Loader-1.1.130.tar.gz">https://github.com/KhronosGroup/Vulkan-Loader/archive/v1.1.130.tar.gz</Archive>
-		<Archive sha1sum="dfc4c95f6d87b1b023a91e426178f80d711ee074" type="targz" name="Vulkan-ValidationLayers-1.1.130.tar.gz">https://github.com/KhronosGroup/Vulkan-ValidationLayers/archive/v1.1.130.tar.gz</Archive>
-		<BuildDependencies>
-			<Dependency>python3-lxml</Dependency>
-			<Dependency>libX11-devel</Dependency>
-			<Dependency>libXrandr-devel</Dependency>
-			<Dependency>wayland-devel</Dependency>
-			<Dependency>vulkan-headers</Dependency>
-			<Dependency>cmake</Dependency>
-			<Dependency>git</Dependency>
-		</BuildDependencies>
+        <Archive sha1sum="f63661132dad6c8b9c9fe409eb18791b0cf9e000" type="targz" name="Vulkan-Loader-1.2.146.tar.gz">https://github.com/KhronosGroup/Vulkan-Loader/archive/v1.2.146.tar.gz</Archive>
+        <Archive sha1sum="f8321042083e86eac3305a4daa000a6d0d6b4359" type="targz" name="Vulkan-ValidationLayers-1.2.146.tar.gz">https://github.com/KhronosGroup/Vulkan-ValidationLayers/archive/v1.2.146.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>python3-lxml</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
+            <Dependency>vulkan-headers</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>git</Dependency>
+            
+            <Dependency>spirv-headers</Dependency>
+            <Dependency>glslang-devel</Dependency>
+            <Dependency>wayland-server</Dependency>
+            <Dependency>wayland-client</Dependency>
+            <Dependency>wayland-cursor</Dependency>
+            <Dependency>spirv-tools-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>vulkan</Name>
-		<RuntimeDependencies>
-			<Dependency>libX11</Dependency>
-			<Dependency>libXrandr</Dependency>
-			<Dependency>wayland</Dependency>
-		</RuntimeDependencies>
+        <RuntimeDependencies>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>wayland</Dependency>
+            <Dependency>spirv-tools</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-			<Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib</Path>
             <Path fileType="data">/usr/share</Path>
-			<Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
     
     <Package>
-        <Name>vulkan-32bit</Name>		
-		<BuildType>_emul32</BuildType>
-		<PartOf>emul32</PartOf>
-		<BuildDependencies>
-			<Dependency>libX11-32bit</Dependency>
-			<Dependency>libXrandr-32bit</Dependency>
-			<Dependency>wayland-32bit</Dependency>
-		</BuildDependencies>
-		<RuntimeDependencies>
-			<Dependency>libX11-32bit</Dependency>
-			<Dependency>libXrandr-32bit</Dependency>
-			<Dependency>wayland-32bit</Dependency>
-		</RuntimeDependencies>
+        <Name>vulkan-32bit</Name>
+        <BuildType>_emul32</BuildType>
+        <PartOf>emul32</PartOf>
+        <BuildDependencies>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>spirv-tools-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>spirv-tools-32bit</Dependency>
+        </RuntimeDependencies>
         <Files>
-			<Path fileType="library">/usr/bin/*32</Path>
-			<Path fileType="library">/usr/lib32</Path>
+            <Path fileType="library">/usr/bin/*32</Path>
+            <Path fileType="library">/usr/lib32</Path>
         </Files>
     </Package>
     
      <Package>
         <Name>vulkan-devel</Name>
         <RuntimeDependencies>
-			<Dependency release="current">vulkan</Dependency>
-		</RuntimeDependencies>
+            <Dependency release="current">vulkan</Dependency>
+        </RuntimeDependencies>
         <Files>
-			<Path fileType="header">/usr/include</Path>
-			<Path fileType="data">/usr/lib/pkgconfig</Path>
-			<Path fileType="data">/usr/lib32/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2020-07-13</Date>
+            <Version>1.2.146</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="1">
             <Date>2020-01-11</Date>
             <Version>1.1.130</Version>
