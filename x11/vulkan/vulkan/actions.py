@@ -36,10 +36,8 @@ def setup():
                         -DBUILD_WSI_WAYLAND_SUPPORT=On \
                         -DBUILD_SHARED_LIBS=ON \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
-                        -DSPIRV_TOOLS_LIB=/usr \
-                        -DSPIRV_TOOLS_OPT_LIB=/usr \
                         -DSPIRV_HEADERS_INSTALL_DIR=/usr \
-                        -DGLSLANG_INSTALL_DIR=/usr \
+                        -DGLSLANG_INSTALL_DIR=glslang/build/install \
                       "
                       
     if get.buildTYPE() == "_emul32":
@@ -61,7 +59,7 @@ def setup():
         shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
-        #shelltools.system("../scripts/update_deps.py")
+        shelltools.system("../scripts/update_deps.py")
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
                             -DCMAKE_ASM_FLAGS='--32' \
                            "
@@ -81,7 +79,7 @@ def setup():
         shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
-        #shelltools.system("../scripts/update_deps.py")
+        shelltools.system("../scripts/update_deps.py")
         
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
                            "
