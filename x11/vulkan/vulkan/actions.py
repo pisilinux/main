@@ -15,8 +15,8 @@ pisitools.cxxflags.add("-std=gnu++11")
 ver = get.srcVERSION()
 
 def setup():
-	
-	loader_opts = "-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+    
+    loader_opts = "-DCMAKE_INSTALL_SYSCONFDIR=/etc \
                    -DCMAKE_INSTALL_DATADIR=/share \
                    -DCMAKE_SKIP_RPATH=True \
                    -DBUILD_TESTS=Off \
@@ -26,7 +26,7 @@ def setup():
                    -DBUILD_SHARED_LIBS=ON \
                    -DVULKAN_HEADERS_INSTALL_DIR='/usr' \
                  "
-	validation_opts = "-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+    validation_opts = " -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                         -DCMAKE_INSTALL_DATADIR=/share \
                         -DCMAKE_SKIP_RPATH=True \
                         -DCMAKE_INSTALL_INCLUDEDIR='/usr/include/vulkan/' \
@@ -35,65 +35,74 @@ def setup():
                         -DBUILD_WSI_XLIB_SUPPORT=On \
                         -DBUILD_WSI_WAYLAND_SUPPORT=On \
                         -DBUILD_SHARED_LIBS=ON \
-                        -DVULKAN_HEADERS_INSTALL_DIR='/usr/include' \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
-                        -DGLSLANG_INSTALL_DIR=glslang/build/install \
+                        -DSPIRV_HEADERS_INSTALL_DIR=/usr \
+                        -DGLSLANG_INSTALL_DIR=/usr \
                       "
-	
-	if get.buildTYPE() == "_emul32":
-		shelltools.export("ASFLAGS", "--32")
-		shelltools.export("CFLAGS", "-m32")
-		shelltools.export("CXXFLAGS", "-m32")
-		shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-		
-		shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
-		
-		loader_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
+                      
+    if get.buildTYPE() == "_emul32":
+        shelltools.export("ASFLAGS", "--32")
+        shelltools.export("CFLAGS", "-m32")
+        shelltools.export("CXXFLAGS", "-m32")
+        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        
+        shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+        shelltools.makedirs("build")
+        shelltools.cd("build")
+        
+        loader_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
                         -DCMAKE_ASM_FLAGS='--32' \
-		               "
-		
-		cmaketools.configure(loader_opts)		
-		
-		shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-		shelltools.system("scripts/update_deps.py")		
-		validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
+                       "
+                       
+        cmaketools.configure(loader_opts, sourceDir="..")
+        
+        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        shelltools.makedirs("build")
+        shelltools.cd("build")
+        #shelltools.system("../scripts/update_deps.py")
+        validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
                             -DCMAKE_ASM_FLAGS='--32' \
                            "
-		
-		cmaketools.configure(validation_opts)
-	
-	else:		
-		shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
-		
-		loader_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
-		               "
-		
-		cmaketools.configure(loader_opts)
-		
-		shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-		shelltools.system("scripts/update_deps.py")
-		
-		validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
-		                   "
-		
-		cmaketools.configure(validation_opts)
-    
-
+                           
+        cmaketools.configure(validation_opts, sourceDir="..")
+        
+    else:
+        shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+        shelltools.makedirs("build")
+        shelltools.cd("build")
+        
+        loader_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
+                       "
+                       
+        cmaketools.configure(loader_opts, sourceDir="..")
+        
+        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        shelltools.makedirs("build")
+        shelltools.cd("build")
+        #shelltools.system("../scripts/update_deps.py")
+        
+        validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
+                           "
+                           
+        cmaketools.configure(validation_opts, sourceDir="..")
+        
 def build():
-	shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
-	cmaketools.make()
-		
-	shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-	cmaketools.make()
+    shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+    shelltools.cd("build")
+    cmaketools.make()
     
-
+    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    shelltools.cd("build")
+    cmaketools.make()
+    
 def install():
     
-	shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
-	autotools.rawInstall("DESTDIR=%s" %get.installDIR())
-		
-	shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-	autotools.rawInstall("DESTDIR=%s" %get.installDIR())  
-
+    shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+    shelltools.cd("build")
+    autotools.rawInstall("DESTDIR=%s" %get.installDIR())
+    
+    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    shelltools.cd("build")
+    autotools.rawInstall("DESTDIR=%s" %get.installDIR())  
     
     #pisitools.dodoc("README.md", "COPYRIGHT.txt", "LICENSE.txt")
