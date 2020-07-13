@@ -14,7 +14,7 @@ pisitools.cxxflags.add("-std=gnu++11")
 
 def setup():
   
-	shelltools.system("mv SPIRV-Headers-1.5.1.corrected external/SPIRV-Headers")
+	shelltools.system("mv SPIRV-Headers-1.5.3 external/SPIRV-Headers")
 	
 	if get.buildTYPE() == "emul32":
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib32 \

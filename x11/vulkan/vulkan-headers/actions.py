@@ -15,7 +15,8 @@ pisitools.cxxflags.add("-std=gnu++11")
 ver = get.srcVERSION()
 
 def setup():
-	cmaketools.configure()
+	cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_BUILD_TYPE=Release")
 	
 def build():
 	cmaketools.make()
