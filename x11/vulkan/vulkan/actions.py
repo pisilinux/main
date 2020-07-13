@@ -36,6 +36,8 @@ def setup():
                         -DBUILD_WSI_WAYLAND_SUPPORT=On \
                         -DBUILD_SHARED_LIBS=ON \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
+                        -DSPIRV_TOOLS_LIB=/usr \
+                        -DSPIRV_TOOLS_OPT_LIB=/usr \
                         -DSPIRV_HEADERS_INSTALL_DIR=/usr \
                         -DGLSLANG_INSTALL_DIR=/usr \
                       "
