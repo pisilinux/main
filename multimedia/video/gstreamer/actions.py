@@ -5,39 +5,39 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
     shelltools.export("AUTOPOINT", "true")
-    autotools.autoreconf("-vfi")
-    
-    options = '--with-package-name="GStreamer for PisiLinux" \
-               --with-package-origin="http://www.pisilinux.org" \
-               --disable-gtk-doc'
-
+    options = "-Dpackage-name='GStreamer for PisiLinux' \
+               -Dpackage-origin='https://www.pisilinux.org' \
+               -Ddbghelp=disabled \
+               -Dgtk_doc=disabled \
+              "
     if get.buildTYPE() == "emul32":
+        shelltools.export("CC", "%s -m32" % get.CC())
+        shelltools.export("CXX", "%s -m32" % get.CXX())
+        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        
         options += " --bindir=/usr/bin32 \
                      --libdir=/usr/lib32 \
                      --libexecdir=/usr/libexec32 \
-                     --with-bash-completion-dir=no \
-                     --disable-introspection"
-
-        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-
-    autotools.configure(options)
+                     -Dintrospection=disabled \
+                   "
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")    
+    mesontools.configure(options)
 
 def build():
-    autotools.make()
-
+    mesontools.build()
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
     
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/usr/bin32")
         pisitools.removeDir("/usr/libexec32")
+        return
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README")
