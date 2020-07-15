@@ -4,38 +4,38 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 def setup():
-    opts = {
-            "introspection": "no" if get.buildTYPE() == "emul32" else "yes",
-           }
-    
-    options = "--with-package-name='PisiLinux gstreamer-plugins-base package' \
-               --with-package-origin='http://www.pisilinux.org' \
-               --disable-examples \
+    shelltools.export("AUTOPOINT", "true")
+    options = "-Dpackage-name='PisiLinux gstreamer-plugins-base package' \
+               -Dpackage-origin='https://www.pisilinux.org' \
+               -Dexamples=disabled \
+               -Dgtk_doc=disabled \
               "
     if get.buildTYPE() == "emul32":
-       options += "--enable-introspection=no \
-                   --disable-wayland \
-                   --disable-gbm \
+        shelltools.export("CC", "%s -m32" % get.CC())
+        shelltools.export("CXX", "%s -m32" % get.CXX())
+        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        
+        options += " --bindir=/usr/bin32 \
+                     --libdir=/usr/lib32 \
+                     -Dintrospection=disabled \
                    "
-    else:
-       options += "--enable-introspection=yes \
-                  "
     
-    autotools.configure(options)
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    mesontools.configure(options)
 
 def build():
-    autotools.make()
-
-
+    mesontools.build()
+    
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+    
+    if get.buildTYPE() == "emul32":
+        pisitools.removeDir("/usr/bin32")
+        return
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README")
