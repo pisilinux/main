@@ -14,8 +14,8 @@ def setup():
 def build():
     mesontools.build()
     
-def check():
-    mesontools.build("test")
+#def check():
+    #mesontools.build("test")
 
 def install():
     mesontools.install()

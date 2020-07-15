@@ -11,8 +11,8 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Dpackage-name='PisiLinux gstreamer-plugins-bad package' \
-                          -Dpackage-origin='http://www.pisilinux.org' \
-						  -D msdk=disabled")
+                          -Dpackage-origin='https://www.pisilinux.org' \
+                          -D msdk=disabled")
 
 def build():
     mesontools.build()
@@ -20,4 +20,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("ABOUT-NLS", "AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README", "RELEASE", "REQUIREMENTS")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README", "RELEASE", "REQUIREMENTS")
