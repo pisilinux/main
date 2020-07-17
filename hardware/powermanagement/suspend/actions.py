@@ -16,7 +16,6 @@ def setup():
     autotools.configure("--enable-threads \
                          --enable-compress \
                          --disable-encrypt \
-                         --with-initramfsdir=/usr/sbin \
                          --disable-resume-static")
                          #kernel panic
                          #--with-initramfsdir=/usr/sbin
