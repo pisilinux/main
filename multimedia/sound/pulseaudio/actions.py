@@ -24,13 +24,12 @@ def setup():
                --libexecdir=/usr/libexec \
                --disable-dependency-tracking \
                --disable-static \
-               --disable-bluez4 \
                --enable-bluez5 \
                --disable-rpath \
                --with-systemduserunitdir=no \
                --disable-oss-output \
                --enable-largefile \
-               --enable-gconf \
+               --disable-gconf \
                --with-speex \
                --with-system-user=pulse \
                --with-system-group=pulse \
