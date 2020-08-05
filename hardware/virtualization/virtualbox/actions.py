@@ -104,6 +104,8 @@ def install():
     # Guest additions
     pisitools.dobin("additions/VBoxClient")
     pisitools.dobin("additions/VBoxControl")
+    
+    pisitools.dobin("additions/VBoxDRMClient")
 
     pisitools.dosbin("additions/VBoxService")
     pisitools.dosbin("additions/mount.vboxsf", "/sbin")
