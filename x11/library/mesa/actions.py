@@ -46,7 +46,7 @@ def setup():
               " % ((libdir, ) * 2)
 
     if get.buildTYPE() == "emul32":
-        options += " -Dlmsensors=false --native-file crossfile.ini -Dllvm_libdir=/usr/lib32"
+        options += " -Dlmsensors=false --native-file crossfile.ini -Dllvm_libdir=/usr/lib32 -Dzstd=false"
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
