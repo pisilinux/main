@@ -13,10 +13,9 @@ CGPROXY_PIDFILE = "/run/cgproxy.pid"
 @synchronized
 def start():
     startService(command="/usr/bin/cgmanager",
-                args="--daemon --mount=subsystems",
+                args="--daemon",
                 donotify=True)
-    
-    
+
     startService(command="/usr/bin/cgproxy",
                 args="--daemon",
                 donotify=True)
