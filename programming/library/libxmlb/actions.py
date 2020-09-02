@@ -4,20 +4,19 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
-from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("-Dgtkdoc=true \
+                         --libexecdir=/usr/lib")
 
 def build():
     mesontools.build()
 
 def install():
     mesontools.install()
-    
-    #shelltools.cd("..")
-    pisitools.dodoc("LICENSE", "NEWS", "README*")
+    pisitools.dodoc("LICENSE", "README*")
+    # remove installed tests
+    pisitools.removeDir("/usr/lib/installed-tests/")
+    pisitools.removeDir("/usr/share/installed-tests/")
