@@ -17,10 +17,10 @@ def setup():
                          --with-rcdir=no \
                          --disable-static \
                          --enable-driverless \
-                         --enable-auto-setup-driverless \
+                         --enable-auto-setup-driverless-only \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
-                         --docdir=/usr/share/doc/cups-filters-1.25.12 \
+                         --docdir=/usr/share/doc/cups-filters-1.28.1 \
                          --with-browseremoteprotocols=DNSSD,CUPS ")
                          #--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf")
 
