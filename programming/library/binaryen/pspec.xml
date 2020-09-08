@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>binaryen</Name>
+        <Homepage>https://github.com/WebAssembly/binaryen</Homepage>
+        <Packager>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>programming.library</PartOf>
+        <License>Apache2.0</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <Summary>Compiler infrastructure and toolchain library for WebAssembly</Summary>
+        <Description>Binaryen is a compiler and toolchain infrastructure library for WebAssembly, written in C++. It aims to make compiling to WebAssembly easy, fast, and effective.</Description>
+        <Archive sha1sum="199d0e0e5205332a64e21fc6308bf8e12b6ab831" type="targz">https://github.com/WebAssembly/binaryen/archive/version_96.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>meson</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">b43807a835fc878e5eefcb8b4a18aff62d7f4540.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>binaryen</Name>
+        <Summary>Extremely fast hash algorithm</Summary>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="config">/etc/profile.d/binaryen.sh</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" target="/etc/profile.d/binaryen.sh" permission="0755">binaryen.sh</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>binaryen-devel</Name>
+        <Summary>Development files for binaryen</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">binaryen</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-09-07</Date>
+            <Version>96</Version>
+            <Comment>First pisi release.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>

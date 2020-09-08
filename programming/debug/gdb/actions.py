@@ -4,41 +4,47 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
 def setup():
-    pisitools.dosed("config/override.m4", "2.64", "2.69")
     shelltools.system('sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure')
-    autotools.autoreconf("-vfi")
-    autotools.configure("--with-system-readline \
-                         --with-separate-debug-dir=/usr/lib/debug \
-                         --with-gdb-datadir=/usr/share/gdb \
-                         --with-pythondir=/usr/lib/%s/site-packages \
-                         --disable-nls \
-                         --disable-rpath \
-                         --with-python \
-                         --with-expat" % get.curPYTHON())
+    
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("../configure \
+                       --enable-tui \
+                       --prefix=/usr \
+                       --disable-nls \
+                       --with-python \
+                       --disable-rpath \
+                       --with-guile=guile-2.0 \
+                       --with-system-readline \
+                       --enable-source-highlight \
+                       --with-python=/usr/bin/python \
+                       --with-gdb-datadir=/usr/share/gdb \
+                       --with-system-gdbinit=/etc/gdb/gdbinit \
+                       --with-separate-debug-dir=/usr/lib/debug")
 
 
 def build():
+    shelltools.cd("build")
     autotools.make()
 
 def install():
+    shelltools.cd("build")
     autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
-    
-    for libdel in ["libbfd.a","libopcodes.a"]:
+
+    # to prevent conflict with binutils delete these files:
+    for libdel in ["libbfd.a", "libopcodes.a", "libctf.a", "libctf-nobfd.a"]:
         pisitools.remove("/usr/lib/%s" % libdel)
 
-    # these are not necessary
-    #for info in ["bfd","configure","standards"]:
-        #pisitools.remove("/usr/share/info/%s.info" % info)
-        
-    pisitools.remove("/usr/share/info/bfd.info")
-  
-    for hea in ["ansidecl","symcat","dis-asm", "bfd_stdint", "diagnostics", "bfd", "bfdlink", "plugin-api"]:
+    for hea in ["ansidecl", "bfd", "bfdlink", "bfd_stdint", "diagnostics", "dis-asm", "plugin-api", "symcat", "ctf", "ctf-api"]:
         pisitools.remove("/usr/include/%s.h" % hea)
-    
-    pisitools.dodoc("README*", "MAINTAINERS", "COPYING*", "ChangeLog*")
+
+    pisitools.remove("/usr/share/info/bfd.info")
+
+    shelltools.cd("..")
+    pisitools.dodoc("README*", "COPYING*", "ChangeLog*")
