@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>source-highlight</Name>
+        <Homepage>https://www.gnu.org/software/src-highlite/</Homepage>
+        <Packager>
+            <Name>Blue DeviL</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Packager>
+        <PartOf>programming.misc</PartOf>
+        <License>GPL</License>
+        <IsA>app::console</IsA>
+        <Summary>Source code to syntax highlighted document converter.</Summary>
+        <Description>source-highlight, given a source file, produces a document with syntax highlighting. It also provides a C++ highlight library.</Description>
+        <Archive sha1sum="233e37b011ba1a5e57f674dd0077d505306bc3e4" type="targz">https://ftp.gnu.org/gnu/src-highlite/source-highlight-3.1.9.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>ctags</Dependency>
+            <Dependency>boost-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>source-highlight</Name>
+        <IsA>app::console</IsA>
+        <Summary>Source code to syntax highlighted document converter.</Summary>
+        <RuntimeDependencies>
+            <Dependency>boost</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/info</Path>
+            <Path fileType="data">/usr/share/source-highlight</Path>
+            <Path fileType="library">/usr/lib/libsource-highlight*</Path>
+            <Path fileType="data">/usr/share/bash-completion/completions/source-highlight</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>source-highlight-devel</Name>
+        <IsA>library</IsA>
+        <Summary>Development headers for source-highlight</Summary>
+        <Description>source-highlight-devel provides development headers for source-highlight.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">source-highlight</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>source-highlight-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>Documentation files for source-highlight</Summary>
+        <Description>source-highlight-docs provides documentation files for source-highlight.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">source-highlight</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/source-highlight</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-09-07</Date>
+            <Version>3.1.9</Version>
+            <Comment>First pisi release</Comment>
+            <Name>Blue DeviL</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+    </History>
+</PISI>
