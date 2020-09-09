@@ -9,7 +9,7 @@ from pisi.actionsapi import get
 
 
 def setup():
-    pisitools.dosed("src/ui/gui/gen-dot-desktop.sh", "Math;", "")
+    pisitools.dosed("src/ui/gui/org.fsf.pspp.desktop.in", "Math;", "")
     autotools.configure("--disable-rpath \
                          --disable-static")
                          #--without-libreadline-prefix")
@@ -19,6 +19,6 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR()) 
-    pisitools.dodir("/usr/share/pspp/contrib")
-    pisitools.insinto("/usr/share/pspp/contrib" , "pspp-mode.el")
+    #pisitools.dodir("/usr/share/pspp/contrib")
+    #pisitools.insinto("/usr/share/pspp/contrib" , "pspp-mode.el")
  
