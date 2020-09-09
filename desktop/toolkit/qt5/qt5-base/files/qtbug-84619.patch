@@ -1,0 +1,225 @@
+From 9d2b474b5f6aa07ee731d28f9774d10dfaa49b32 Mon Sep 17 00:00:00 2001
+From: Allan Sandfeld Jensen <allan.jensen@qt.io>
+Date: Tue, 2 Jun 2020 10:59:21 +0200
+Subject: Do not multithread if already in a global threadpool thread
+
+This can lead to a deadlock if we block all the worker threads, waiting
+for the worker threads to finish.
+
+Fixes: QTBUG-84619
+Change-Id: I92b7f96007897d86ece0c34223bab0df4ccbed9a
+Reviewed-by: Sona Kurazyan <sona.kurazyan@qt.io>
+(cherry picked from commit 87d32424de2f471a520c1f3ba0c3035fbff7ee06)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+---
+ src/corelib/thread/qthreadpool.cpp    | 24 ++++++++++++++++++++++++
+ src/corelib/thread/qthreadpool.h      |  2 ++
+ src/gui/image/qimage.cpp              |  7 ++++---
+ src/gui/image/qimage_conversions.cpp  | 15 +++++++++------
+ src/gui/painting/qimagescale.cpp      |  5 +++--
+ src/gui/painting/qimagescale_neon.cpp |  5 +++--
+ src/gui/painting/qimagescale_sse4.cpp |  5 +++--
+ 7 files changed, 48 insertions(+), 15 deletions(-)
+
+diff --git a/src/corelib/thread/qthreadpool.cpp b/src/corelib/thread/qthreadpool.cpp
+index 1f99bad247..d2dcc32280 100644
+--- a/src/corelib/thread/qthreadpool.cpp
++++ b/src/corelib/thread/qthreadpool.cpp
+@@ -52,6 +52,7 @@ Q_GLOBAL_STATIC(QThreadPool, theInstance)
+ */
+ class QThreadPoolThread : public QThread
+ {
++    Q_OBJECT
+ public:
+     QThreadPoolThread(QThreadPoolPrivate *manager);
+     void run() override;
+@@ -763,6 +764,28 @@ void QThreadPool::clear()
+     d->clear();
+ }
+ 
++#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
++/*!
++    \internal
++
++    Returns \c true if \a thread is a thread managed by this thread pool.
++*/
++#else
++/*!
++    \since 6.0
++
++    Returns \c true if \a thread is a thread managed by this thread pool.
++*/
++#endif
++bool QThreadPool::contains(const QThread *thread) const
++{
++    Q_D(const QThreadPool);
++    const QThreadPoolThread *poolThread = qobject_cast<const QThreadPoolThread *>(thread);
++    if (!poolThread)
++        return false;
++    return d->allThreads.contains(const_cast<QThreadPoolThread *>(poolThread));
++}
++
+ #if QT_DEPRECATED_SINCE(5, 9)
+ /*!
+     \since 5.5
+@@ -784,3 +807,4 @@ void QThreadPool::cancel(QRunnable *runnable)
+ QT_END_NAMESPACE
+ 
+ #include "moc_qthreadpool.cpp"
++#include "qthreadpool.moc"
+diff --git a/src/corelib/thread/qthreadpool.h b/src/corelib/thread/qthreadpool.h
+index e3691ab010..004f76a240 100644
+--- a/src/corelib/thread/qthreadpool.h
++++ b/src/corelib/thread/qthreadpool.h
+@@ -93,6 +93,8 @@ public:
+ 
+     void clear();
+ 
++    bool contains(const QThread *thread) const;
++
+ #if QT_DEPRECATED_SINCE(5, 9)
+     QT_DEPRECATED_X("use tryTake(), but note the different deletion rules")
+     void cancel(QRunnable *runnable);
+diff --git a/src/gui/image/qimage.cpp b/src/gui/image/qimage.cpp
+index 499c527cfc..c443836c0a 100644
+--- a/src/gui/image/qimage.cpp
++++ b/src/gui/image/qimage.cpp
+@@ -5042,15 +5042,16 @@ void QImage::applyColorTransform(const QColorTransform &transform)
+         };
+     }
+ 
+-#if QT_CONFIG(thread)
++#if QT_CONFIG(thread) && !defined(Q_OS_WASM)
+     int segments = sizeInBytes() / (1<<16);
+     segments = std::min(segments, height());
+-    if (segments > 1) {
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments > 1 && !threadPool->contains(QThread::currentThread())) {
+         QSemaphore semaphore;
+         int y = 0;
+         for (int i = 0; i < segments; ++i) {
+             int yn = (height() - y) / (segments - i);
+-            QThreadPool::globalInstance()->start([&, y, yn]() {
++            threadPool->start([&, y, yn]() {
+                 transformSegment(y, y + yn);
+                 semaphore.release(1);
+             });
+diff --git a/src/gui/image/qimage_conversions.cpp b/src/gui/image/qimage_conversions.cpp
+index a3868a64c7..e804b3b788 100644
+--- a/src/gui/image/qimage_conversions.cpp
++++ b/src/gui/image/qimage_conversions.cpp
+@@ -236,14 +236,15 @@ void convert_generic(QImageData *dest, const QImageData *src, Qt::ImageConversio
+     int segments = src->nbytes / (1<<16);
+     segments = std::min(segments, src->height);
+ 
+-    if (segments <= 1)
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments <= 1 || threadPool->contains(QThread::currentThread()))
+         return convertSegment(0, src->height);
+ 
+     QSemaphore semaphore;
+     int y = 0;
+     for (int i = 0; i < segments; ++i) {
+         int yn = (src->height - y) / (segments - i);
+-        QThreadPool::globalInstance()->start([&, y, yn]() {
++        threadPool->start([&, y, yn]() {
+             convertSegment(y, y + yn);
+             semaphore.release(1);
+         });
+@@ -290,14 +291,15 @@ void convert_generic_to_rgb64(QImageData *dest, const QImageData *src, Qt::Image
+     int segments = src->nbytes / (1<<16);
+     segments = std::min(segments, src->height);
+ 
+-    if (segments <= 1)
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments <= 1 || threadPool->contains(QThread::currentThread()))
+         return convertSegment(0, src->height);
+ 
+     QSemaphore semaphore;
+     int y = 0;
+     for (int i = 0; i < segments; ++i) {
+         int yn = (src->height - y) / (segments - i);
+-        QThreadPool::globalInstance()->start([&, y, yn]() {
++        threadPool->start([&, y, yn]() {
+             convertSegment(y, y + yn);
+             semaphore.release(1);
+         });
+@@ -396,12 +398,13 @@ bool convert_generic_inplace(QImageData *data, QImage::Format dst_format, Qt::Im
+ #ifdef QT_USE_THREAD_PARALLEL_IMAGE_CONVERSIONS
+     int segments = data->nbytes / (1<<16);
+     segments = std::min(segments, data->height);
+-    if (segments > 1) {
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments > 1 && !threadPool->contains(QThread::currentThread())) {
+         QSemaphore semaphore;
+         int y = 0;
+         for (int i = 0; i < segments; ++i) {
+             int yn = (data->height - y) / (segments - i);
+-            QThreadPool::globalInstance()->start([&, y, yn]() {
++            threadPool->start([&, y, yn]() {
+                 convertSegment(y, y + yn);
+                 semaphore.release(1);
+             });
+diff --git a/src/gui/painting/qimagescale.cpp b/src/gui/painting/qimagescale.cpp
+index 2395c891ce..aac1e20f7b 100644
+--- a/src/gui/painting/qimagescale.cpp
++++ b/src/gui/painting/qimagescale.cpp
+@@ -307,12 +307,13 @@ static inline void multithread_pixels_function(QImageScaleInfo *isi, int dh, con
+ #if QT_CONFIG(thread) && !defined(Q_OS_WASM)
+     int segments = (qsizetype(isi->sh) * isi->sw) / (1<<16);
+     segments = std::min(segments, dh);
+-    if (segments > 1) {
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments > 1 && !threadPool->contains(QThread::currentThread())) {
+         QSemaphore semaphore;
+         int y = 0;
+         for (int i = 0; i < segments; ++i) {
+             int yn = (dh - y) / (segments - i);
+-            QThreadPool::globalInstance()->start([&, y, yn]() {
++            threadPool->start([&, y, yn]() {
+                 scaleSection(y, y + yn);
+                 semaphore.release(1);
+             });
+diff --git a/src/gui/painting/qimagescale_neon.cpp b/src/gui/painting/qimagescale_neon.cpp
+index 65fe3fac3c..046e56b419 100644
+--- a/src/gui/painting/qimagescale_neon.cpp
++++ b/src/gui/painting/qimagescale_neon.cpp
+@@ -58,12 +58,13 @@ static inline void multithread_pixels_function(QImageScaleInfo *isi, int dh, con
+ #if QT_CONFIG(thread) && !defined(Q_OS_WASM)
+     int segments = (qsizetype(isi->sh) * isi->sw) / (1<<16);
+     segments = std::min(segments, dh);
+-    if (segments > 1) {
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments > 1 && !threadPool->contains(QThread::currentThread())) {
+         QSemaphore semaphore;
+         int y = 0;
+         for (int i = 0; i < segments; ++i) {
+             int yn = (dh - y) / (segments - i);
+-            QThreadPool::globalInstance()->start([&, y, yn]() {
++            threadPool->start([&, y, yn]() {
+                 scaleSection(y, y + yn);
+                 semaphore.release(1);
+             });
+diff --git a/src/gui/painting/qimagescale_sse4.cpp b/src/gui/painting/qimagescale_sse4.cpp
+index 1760e72f65..70cfa08d95 100644
+--- a/src/gui/painting/qimagescale_sse4.cpp
++++ b/src/gui/painting/qimagescale_sse4.cpp
+@@ -59,12 +59,13 @@ static inline void multithread_pixels_function(QImageScaleInfo *isi, int dh, con
+ #if QT_CONFIG(thread) && !defined(Q_OS_WASM)
+     int segments = (qsizetype(isi->sh) * isi->sw) / (1<<16);
+     segments = std::min(segments, dh);
+-    if (segments > 1) {
++    QThreadPool *threadPool = QThreadPool::globalInstance();
++    if (segments > 1 && !threadPool->contains(QThread::currentThread())) {
+         QSemaphore semaphore;
+         int y = 0;
+         for (int i = 0; i < segments; ++i) {
+             int yn = (dh - y) / (segments - i);
+-            QThreadPool::globalInstance()->start([&, y, yn]() {
++            threadPool->start([&, y, yn]() {
+                 scaleSection(y, y + yn);
+                 semaphore.release(1);
+             });
+-- 
+cgit v1.2.1
+

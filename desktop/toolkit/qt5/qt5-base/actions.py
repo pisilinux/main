@@ -73,6 +73,7 @@ def setup():
                             -nomake tests \
                             -nomake examples \
                             -optimized-qmake \
+                            -no-strip \
                             -reduce-relocations \
                             -dbus-linked" % (qt5.prefix, bindirQt5, qt5.headerdir, qt5.archdatadir, qt5.docdir, qt5.plugindir, qt5.importdir, qt5.qmldir, qt5.datadir, qt5.testdir, qt5.translationdir, qt5.sysconfdir, qt5.examplesdir, qt5.libdir)
     else:

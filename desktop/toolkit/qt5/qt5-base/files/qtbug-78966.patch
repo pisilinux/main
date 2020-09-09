@@ -1,0 +1,39 @@
+From 777f2a1c1e7e1cd669cc152aaa5b99d68b8a1ccd Mon Sep 17 00:00:00 2001
+From: Friedemann Kleint <Friedemann.Kleint@qt.io>
+Date: Wed, 10 Jun 2020 11:26:00 +0200
+Subject: Fix QToolButton menus showing on primary screens in multiscreen
+ setups
+
+Calculate an initial position based on the current size hint
+and pass it to QMenuPrivate::exec(), which does screen checks
+based on it.
+
+Amends a78d66743171557d79b16c08be775e3ac15bb4ef.
+
+Fixes: QTBUG-84462
+Task-number: QTBUG-78966
+Change-Id: Icae8d2bc0fb50c4c853cfebaa2b2250fc06542e3
+Reviewed-by: Volker Hilsheimer <volker.hilsheimer@qt.io>
+(cherry picked from commit ad532ce118b7052be3b69999cef2eb610e66fa88)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+---
+ src/widgets/widgets/qtoolbutton.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/widgets/widgets/qtoolbutton.cpp b/src/widgets/widgets/qtoolbutton.cpp
+index 314c6ab40c..e380cb647b 100644
+--- a/src/widgets/widgets/qtoolbutton.cpp
++++ b/src/widgets/widgets/qtoolbutton.cpp
+@@ -805,7 +805,8 @@ void QToolButtonPrivate::popupTimerDone()
+     // QTBUG-78966, Delay positioning until after aboutToShow().
+     auto positionFunction = [q, horizontal](const QSize &sizeHint) {
+         return positionMenu(q, horizontal, sizeHint); };
+-    actualMenu->d_func()->exec({}, nullptr, positionFunction);
++    const auto initialPos = positionFunction(actualMenu->sizeHint());
++    actualMenu->d_func()->exec(initialPos, nullptr, positionFunction);
+ 
+     if (!that)
+         return;
+-- 
+cgit v1.2.1
+
