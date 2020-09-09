@@ -22,6 +22,7 @@ def setup():
                    -system-ffmpeg \
                    -system-opus \
                    -system-webp \
+                   -spellchecker \
                    -webengine-icu \
                    -webengine-kerberos")
     

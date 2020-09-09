@@ -1,0 +1,51 @@
+From 4e8ca195e4a58a35b015ec55f32fb35403acb5ad Mon Sep 17 00:00:00 2001
+From: Kirill Burtsev <kirill.burtsev@qt.io>
+Date: Fri, 12 Jun 2020 16:30:23 +0200
+Subject: Fix crash on run with blink setting DarkModeImagePolicy=kFilterSmart
+
+Activating Dark Mode with with smart image filter policy
+'--blink-settings=darkModeEnabled=true,darkModeImagePolicy=2'
+lead to crash due stack-use-after-scope. Don't use use local references.
+Issue was fixed after refatoring here:
+https://chromium-review.googlesource.com/c/chromium/src/+/2169489
+Won't be needed after chromium 85.0.4166.0
+
+Change-Id: I6a36a394be41602c10b4c4bca3aa197c99d3be0c
+Reviewed-by: Florian Bruhin <qt-project.org@the-compiler.org>
+Reviewed-by: Michal Klocek <michal.klocek@qt.io>
+---
+ .../blink/renderer/platform/graphics/dark_mode_filter.cc       | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/src/3rdparty/chromium/third_party/blink/renderer/platform/graphics/dark_mode_filter.cc b/src/3rdparty/chromium/third_party/blink/renderer/platform/graphics/dark_mode_filter.cc
+index 0c2a478ca67..6f76ef45588 100644
+--- a/src/3rdparty/chromium/third_party/blink/renderer/platform/graphics/dark_mode_filter.cc
++++ b/src/3rdparty/chromium/third_party/blink/renderer/platform/graphics/dark_mode_filter.cc
+@@ -49,21 +49,17 @@ bool ShouldApplyToImage(const DarkModeSettings& settings,
+                         Image* image) {
+   switch (settings.image_policy) {
+     case DarkModeImagePolicy::kFilterSmart: {
+-      DarkModeImageClassifier* classifier;
++      DarkModeClassification result = DarkModeClassification::kNotClassified;
+       switch (settings.classifier_type) {
+         case DarkModeClassifierType::kIcon: {
+-          DarkModeIconClassifier icon_classifier;
+-          classifier = &icon_classifier;
++          result = DarkModeIconClassifier().Classify(image, src_rect, dest_rect);
+           break;
+         }
+         case DarkModeClassifierType::kGeneric: {
+-          DarkModeGenericClassifier generic_classifier;
+-          classifier = &generic_classifier;
++          result = DarkModeGenericClassifier().Classify(image, src_rect, dest_rect);
+           break;
+         }
+       }
+-      DarkModeClassification result =
+-          classifier->Classify(image, src_rect, dest_rect);
+       return result == DarkModeClassification::kApplyFilter;
+     }
+     case DarkModeImagePolicy::kFilterNone:
+-- 
+cgit v1.2.1
+
