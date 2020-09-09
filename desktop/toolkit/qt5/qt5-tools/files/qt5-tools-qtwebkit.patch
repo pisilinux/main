@@ -1,0 +1,32 @@
+From 3c30956e65a98706d283d44e07fd481a1849f74e Mon Sep 17 00:00:00 2001
+From: Alexander Volkov <avolkov@astralinux.ru>
+Date: Tue, 26 May 2020 22:20:31 +0300
+Subject: Assistant: Fix build with qtwebkit
+
+Amend b3cdd63d4bdaea09222fb93ffcd5104a2dc0bf2e.
+Don't declare HelpViewer::resizeEvent() when HelpViewer
+is inherited from QWebView to avoid linker error.
+
+Change-Id: Ib4ca6823cf17c238eb08ecc531870d66db202269
+Reviewed-by: Eirik Aavitsland <eirik.aavitsland@qt.io>
+---
+ src/assistant/assistant/helpviewer.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/assistant/assistant/helpviewer.h b/src/assistant/assistant/helpviewer.h
+index fa954cc9f..acd38c66e 100644
+--- a/src/assistant/assistant/helpviewer.h
++++ b/src/assistant/assistant/helpviewer.h
+@@ -130,7 +130,9 @@ protected:
+     void wheelEvent(QWheelEvent *event) override;
+     void mousePressEvent(QMouseEvent *event) override;
+     void mouseReleaseEvent(QMouseEvent *event) override;
++#if defined(BROWSER_QTEXTBROWSER)
+     void resizeEvent(QResizeEvent *e) override;
++#endif
+ 
+ private slots:
+     void actionChanged();
+-- 
+cgit v1.2.1
+
