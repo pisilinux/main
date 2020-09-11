@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def setup():
     shelltools.system("sed -i 's|ncursesw/curses.h|curses.h|' RichString.[ch] configure")
     autotools.configure("--enable-taskstats \
-                         --enable-unicode")
+                         --enable-unicode \
+                         --enable-cgroup")
 
 def build():
     autotools.make("-j1")
