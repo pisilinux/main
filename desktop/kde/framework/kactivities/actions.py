@@ -16,4 +16,4 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("README.md", "MAINTAINER", "TODO")
+    pisitools.dodoc("README.md")
