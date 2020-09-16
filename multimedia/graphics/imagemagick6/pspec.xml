@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>imagemagick6</Name>
+        <Homepage>https://legacy.imagemagick.org/</Homepage>
+        <Packager>
+            <Name>Pisilinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>multimedia.graphics</PartOf>
+        <License>as-is</License>
+        <IsA>app:gui</IsA>
+        <Summary>A collection of tools and libraries for many image file formats.</Summary>
+        <Description>ImageMagick is a software suite to create, edit, and compose bitmap images. It can read, convert and write images in a variety of formats (over 100) including DPX, EXR, GIF, JPEG, JPEG-2000, PDF, PhotoCD, PNG, Postscript, SVG, and TIFF. You can use ImageMagick to translate, flip, mirror, rotate, scale, shear and transform images, adjust image colors, apply various special effects, or draw text, lines, polygons, ellipses and Bézier curves.</Description>
+        <Archive sha1sum="623ca64d1681fdafc238da0ca7b10a6afa4cac39" type="tarxz">
+            https://imagemagick.org/download/releases/ImageMagick-6.9.11-29.tar.xz
+        </Archive>
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>zstd-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>webp-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>libwmf-devel</Dependency>
+            <Dependency>liblqr-devel</Dependency>
+            <Dependency>jasper-devel</Dependency>
+            <Dependency>libgxps-devel</Dependency>
+            <Dependency>librsvg-devel</Dependency>
+            <Dependency>openexr-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>ghostscript-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- <Patch level="0">perlmagick.rpath.patch</Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>imagemagick6</Name>
+        <RuntimeDependencies>
+            <Dependency>tiff</Dependency>
+            <Dependency>webp</Dependency>
+            <Dependency>fftw3</Dependency>
+            <Dependency>lcms2</Dependency>
+            <Dependency>liblqr</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libwmf</Dependency>
+            <Dependency>libgxps</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>ghostscript</Dependency>
+            <Dependency>openexr-libs</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <!-- This is just a legacy version of ImageMagick
+                 We only need libraries
+            <Path fileType="executable">/usr/bin</Path>
+            -->
+            <Path fileType="config">/etc/ImageMagick-6/</Path>
+            <Path fileType="library">/usr/lib/libMagick*</Path>
+            <Path fileType="data">/usr/share/ImageMagick-*</Path>
+            <Path fileType="library">/usr/lib/ImageMagick-6*</Path>
+            <Path fileType="doc">/usr/share/doc/imagemagick6/LICENSE</Path>
+            <Path fileType="doc">/usr/share/doc/imagemagick6/README.txt</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>imagemagick6-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>HTML documentation for imagemagick6</Summary>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/imagemagick6/html</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>imagemagick6-devel</Name>
+        <Summary>Development files for imagemagick6</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">imagemagick6</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/imagemagick6/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2020-09-14</Date>
+            <Version>6.9.11.29</Version>
+            <Comment>ver6 rebuild.</Comment>
+            <Name>fury</Name>
+            <Email>wascheme@tuta.io</Email>
+        </Update>
+    </History>
+</PISI>
