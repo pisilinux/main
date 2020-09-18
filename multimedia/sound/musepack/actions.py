@@ -8,6 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
 def setup():
+	autotools.autoreconf("-fiv")
 	autotools.configure("--enable-mpcchap --disable-static")
 
 def build():
