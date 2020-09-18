@@ -9,8 +9,10 @@ from pisi.actionsapi import pythonmodules
 
 def setup():
     repo_uri = "https://ciftlik.pisilinux.org/2.0-Beta.1/pisi-index.xml.xz" # FIXME
-    pisitools.dosed("yali/constants.py", "@REPO_URI@", repo_uri)
-    pisitools.dosed("yali/constants.py", "@REPO_NAME@", "Beta") # FIXME
+    #pisitools.dosed("yali/constants.py", "@REPO_URI@", repo_uri)
+    #pisitools.dosed("yali/constants.py", "@REPO_NAME@", "Beta") # FIXME
+    pisitools.dosed("conf/yali.conf", "@REPO_URI@", repo_uri)
+    pisitools.dosed("conf/yali.conf", "@REPO_NAME@", "Beta") # FIXME
 
     pisitools.dosed("conf/yali.conf", "@INSTALL_TYPE@", "default")
 
