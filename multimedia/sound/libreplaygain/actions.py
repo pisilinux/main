@@ -2,17 +2,21 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file https://www.gnu.org/licenses/gpl-3.0.txt
+# See the file http://www.gnu.org/copyleft/gpl.txt.
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import get
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
 
 def setup():
-	autotools.configure()
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_BUILD_TYPE=Release")
 
 def build():
-	autotools.make()
+    cmaketools.make()
+
+def check():
+    pass
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
+    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    cmaketools.install()
