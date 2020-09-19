@@ -16,7 +16,7 @@ def setup():
     shelltools.cd("..")
     shelltools.makedirs("cmake-make")
     shelltools.cd("cmake-make") 
-    shelltools.system("cmake ../blender-2.83.0 \
+    shelltools.system("cmake ../blender-2.90.0 \
                       -DCMAKE_INSTALL_PREFIX=/usr \
                       -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
                       -DCMAKE_BUILD_TYPE=Release \
@@ -38,6 +38,7 @@ def setup():
                       -DPYTHON_LIBRARY=python3.8 \
                       -DPYTHON_INCLUDE_DIRS=/usr/include/python3.8 \
                       -DPYTHON_NUMPY_INCLUDE_DIRS=/usr/lib/python3.8/site-packages/numpy/core/include \
+                      -DWITH_CYCLES_EMBREE=OFF \
                       -DWITH_CODEC_SNDFILE=ON ")
 
 def build():
