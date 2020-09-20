@@ -10,18 +10,22 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.cd("IlmBase")
     shelltools.system("./bootstrap")
     autotools.configure("--disable-static")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
+    shelltools.cd("IlmBase")
     autotools.make()
 
 def check():
+    shelltools.cd("IlmBase")
     autotools.make("check")
 
 def install():
+    shelltools.cd("IlmBase")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "LICENSE", "README")
+    pisitools.dodoc("README*")
