@@ -9,8 +9,9 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-j = "-DCMAKE_INSTALL_PREFIX=/isr \
-     -DCMAKE_BUILD_TYPE=Release \
+j = "-DCMAKE_INSTALL_PREFIX=/usr \
+     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+     -DUSE_SYSTEM_TAGLIB=ON \
      -DENABLE_VK=ON \
     "
 
