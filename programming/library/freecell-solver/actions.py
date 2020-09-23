@@ -4,16 +4,17 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import shelltools
 
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DFCS_WITH_TEST_SUITE=OFF \
+    cmaketools.configure("-DFCS_WITH_TEST_SUITE=OFF \
+                          -DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_SKIP_BUILD_RPATH=ON \
                           -DBUILD_STATIC_LIBRARY=OFF", sourceDir="..")
 
 def build():
@@ -25,5 +26,4 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     shelltools.cd("..")
-
-    pisitools.dodoc("AUTHORS.asciidoc", "COPYING.asciidoc", "NEWS.asciidoc", "README.asciidoc")
+    pisitools.dodoc("COPYING.asciidoc", "README.asciidoc")

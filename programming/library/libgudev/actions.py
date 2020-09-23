@@ -4,33 +4,32 @@
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
 
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
 
-   options = "--disable-umockdev  \
+    options = "--disable-umockdev  \
              "
 
-   if get.buildTYPE() == "emul32":
+    if get.buildTYPE() == "emul32":
       options += "--disable-introspection \
                   --disable-gtk-doc \
                  "
-   else:
+    else:
       options += "--enable-introspection \
                   --enable-gtk-doc \
                  "
-   
 
-   autotools.configure(options)
-    
-   pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    autotools.configure(options)
+    # fix unused direct dependency analysis
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #pisitools.dodoc("AUTHORS", "COPYING")
+    pisitools.dodoc("README*", "COPYING*")
