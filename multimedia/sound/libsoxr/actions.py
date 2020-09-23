@@ -8,6 +8,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
+from pisi.actionsapi import autotools
 
 def setup():
     shelltools.system("mkdir build_")
