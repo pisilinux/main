@@ -1,30 +1,40 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>proj</Name>
-        <Homepage>http://trac.osgeo.org/proj/</Homepage>
+        <Homepage>https://proj.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
+        <PartOf>science.gis</PartOf>
         <License>MIT</License>
         <IsA>library</IsA>
         <IsA>app:console</IsA>
         <Summary>Cartographic Projections library</Summary>
         <Description>Proj.4 cartographic projection software with updated NAD27 grids.</Description>
-        <Archive sha1sum="13b5fc606bc62d347908fb3f256d93516b0be2a1" type="targz">http://download.osgeo.org/proj/proj-5.1.0.tar.gz</Archive>
-        <Archive sha1sum="e054eba77dfe8260234775c6047cc147ed468261" type="zip" target="proj-5.1.0/nad">http://download.osgeo.org/proj/proj-datumgrid-1.7.zip</Archive>
+        <Archive sha1sum="3e713e3f7bbd0e0211dda500bfc5b05364c45485" type="targz">https://download.osgeo.org/proj/proj-7.1.1.tar.gz</Archive>
+        <Archive sha1sum="ede1c255adebb903f9ec33c5760ecb0df7b3b03c" type="targz" target="proj-7.1.1/nad">https://download.osgeo.org/proj/proj-datumgrid-1.8.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+        </BuildDependencies>
     </Source>
 
     <Package>
         <Name>proj</Name>
+        <Summary>Cartographic Projections library</Summary>
+        <RuntimeDependencies>
+            <Dependency>tiff</Dependency>
+        </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="data">/usr/share/proj</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/proj</Path>
         </Files>
     </Package>
 
@@ -42,6 +52,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2020-09-24</Date>
+            <Version>7.1.1</Version>
+            <Comment>Major version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
          <Update release="4">
             <Date>2018-09-07</Date>
             <Version>5.1.0</Version>
