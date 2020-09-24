@@ -92,7 +92,8 @@ def setup():
                                         -DLLVM_BUILD_DOCS=OFF \
                                         -DLLVM_ENABLE_RTTI=ON \
                                         -DLLVM_ENABLE_EH=ON \
-                                        -DBUILD_SHARED_LIBS=ON \
+                                        -DLLVM_BUILD_LLVM_DYLIB=ON \
+                                        -DLLVM_LINK_LLVM_DYLIB=ON \
                                         -DLLVM_INCLUDEDIR=/usr/include \
                                         -DLLVM_ENABLE_ASSERTIONS=OFF \
                                         -DFFI_INCLUDE_DIR=/usr/lib/libffi-3.2.1/include \
