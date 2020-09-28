@@ -17,7 +17,7 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.remove("usr/share/icons/sayonara.png")
+    #pisitools.remove("usr/share/icons/sayonara.png")
     pisitools.dodoc("CHANGES", \
     "LICENSE", \
     "MANUAL", \
