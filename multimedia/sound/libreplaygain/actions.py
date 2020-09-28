@@ -17,7 +17,7 @@ j = "-DCMAKE_INSTALL_PREFIX=/usr \
 def setup():
 #	cmaketools.configure(j)
 	autotools.autoreconf("-fiv")
-	autotools.configure("--enable-mpcchap --disable-static")
+	autotools.configure("--disable-static")
 
 def build():
 #	cmaketools.make()

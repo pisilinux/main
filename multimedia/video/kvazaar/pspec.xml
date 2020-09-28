@@ -1,22 +1,29 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>kvazaar</Name>
         <Homepage>http://ultravideo.cs.tut.fi/#encoder</Homepage>
         <Packager>
-           <Name>Mathias Freire</Name>
-           <Email>mathiasfreire45@gmail.com</Email>
+            <Name>Mathias Freire</Name>
+            <Email>mathiasfreire45@gmail.com</Email>
         </Packager>
-		<License>LGPL</License>        
-        <IsA>library</IsA>        
+        <License>LGPL</License>
+        <IsA>library</IsA>
         <Summary>An open-source HEVC encoder</Summary>
         <Description>Kvazaar is an award-winning academic open-source video encoder for the state-of-the-art High Efficiency Video Coding (HEVC/H.265) standard. Kvazaar is being developed in C and optimized in Assembly under the LGPLv2.1.</Description>
-		<Archive sha1sum="2cf672d45483a677e8d7a0a90677a8ccabced941" type="tarxz">https://github.com/ultravideo/kvazaar/releases/download/v1.3.0/kvazaar-1.3.0.tar.xz</Archive>
+        <Archive sha1sum="0af6f755640d29f805463cb7abeb7cfa064ca94e" type="tarxz">https://github.com/ultravideo/kvazaar/releases/download/v2.0.0/kvazaar-2.0.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>yasm</Dependency>
+            <Dependency>crypto++-devel</Dependency>
+        </BuildDependencies>
     </Source>
-    
+
     <Package>
         <Name>kvazaar</Name>
+        <RuntimeDependencies>
+            <Dependency>crypto++</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
@@ -24,20 +31,27 @@
             <Path fileType="man">/usr/share/man</Path>
          </Files>
     </Package>
-    
-	<Package>
+
+    <Package>
         <Name>kvazaar-devel</Name>
-		<Summary>Header files for kvazaar.</Summary>
-		<RuntimeDependencies>
-			<Dependency release="current">kvazaar</Dependency>
-		</RuntimeDependencies>
+        <Summary>Header files for kvazaar.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">kvazaar</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
-			<Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
          </Files>
     </Package>
 
-    <History>         
+    <History>
+        <Update release="2">
+            <Date>2020-09-28</Date>
+            <Version>2.0.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>wascheme@tuta.io</Email>
+        </Update>
         <Update release="1">
             <Date>2020-01-12</Date>
             <Version>1.3.0</Version>
@@ -48,5 +62,3 @@
     </History>
 </PISI>
 
-    
-    
