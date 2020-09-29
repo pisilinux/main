@@ -134,7 +134,7 @@ def install():
         pisitools.dolib("32/libnvidia-ml.so.%s" % version, libdir)
         pisitools.dosym("libnvidia-ml.so.%s" % version, "%s/libnvidia-ml.so.1" % libdir)
 
-        for lib in ("eglcore", "encode", "fatbinaryloader", "fbc", "glcore",  "glsi", \
+        for lib in ("eglcore", "encode", "fbc", "glcore",  "glsi", \
                     "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "tls", "allocator" ):
             pisitools.dolib("32/libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
@@ -213,12 +213,12 @@ def install():
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so" % libdir)
 
-        pisitools.dolib("libnvidia-egl-wayland.so.1.1.4", libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.4", "%s/libnvidia-egl-wayland.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.4", "%s/libnvidia-egl-wayland.so" % libdir)
+        pisitools.dolib("libnvidia-egl-wayland.so.1.1.5", libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.5", "%s/libnvidia-egl-wayland.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.5", "%s/libnvidia-egl-wayland.so" % libdir)
 
         # OpenGL core library and others
-        for lib in ("allocator", "cbl", "eglcore", "encode", "fatbinaryloader", "fbc", "glcore", "glsi", \
+        for lib in ("allocator", "cbl", "eglcore", "encode", "ngx", "fbc", "glcore", "glsi", \
                     "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
             pisitools.dolib("libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
