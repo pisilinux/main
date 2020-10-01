@@ -21,11 +21,11 @@ def setup():
     shelltools.system("sed -i 's| enum FAMCodes | int |' gschem/src/gschem_change_notification.c")
     #autotools.autoreconf("-vfi")
     # xorn uses python2 instead of python, shebang problems
-    shelltools.export("PYTHON_CFLAGS", "-I /usr/include/python2.7/")
-    shelltools.export("PYTHON_LIBS", "-l python2.7")
+    shelltools.export("PYTHON_CFLAGS", "-I/usr/include/python2.7/")
+    shelltools.export("PYTHON_LIBS", "-lpython2.7")
     # to fix cannot find libguile.h error
-    shelltools.export("GUILE_CFLAGS", "-I /usr/include/guile/2.2/")
-    shelltools.export("GUILE_LIBS", "-l guile-2.2")
+    shelltools.export("GUILE_CFLAGS", "-I/usr/include/guile/2.2/")
+    shelltools.export("GUILE_LIBS", "-lguile-2.2")
     
     pisitools.cflags.add("%s" % options)
     autotools.configure("--prefix=/usr \
