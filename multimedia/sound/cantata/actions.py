@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
@@ -19,6 +20,6 @@ def build():
 def install():
     cmaketools.install()
 
-    pisitools.dodoc("AUTHORS", "LICENSE", "ChangeLog", "TODO", "INSTALL", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "INSTALL", "LICENSE", "README", "TODO")
 
     pisitools.insinto("/usr/share/pixmaps/", "streams/icons/stream.png", "cantata.png")
