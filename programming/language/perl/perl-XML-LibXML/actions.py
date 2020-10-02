@@ -10,6 +10,7 @@ from pisi.actionsapi import perlmodules
 
 WorkDir = "%s-%s" % (get.srcNAME()[5:], get.srcVERSION())
 
+
 def setup():
     perlmodules.configure()
     # suppress warning messages
@@ -19,11 +20,14 @@ def setup():
     # fix runpath analysis
     pisitools.dosed("Makefile","LD_RUN_PATH=\"\$\(LD_RUN_PATH\)\"", "")
 
+
 def build():
     perlmodules.make()
 
+
 def check():
     perlmodules.make("test")
+
 
 def install():
     perlmodules.install()

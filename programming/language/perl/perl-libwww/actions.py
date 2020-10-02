@@ -10,14 +10,18 @@ from pisi.actionsapi import perlmodules
 
 WorkDir = "libwww-perl-%s" % get.srcVERSION()
 
+
 def setup():
     perlmodules.configure()
+
 
 def build():
     perlmodules.make()
 
+
 def check():
     perlmodules.make("test")
+
 
 def install():
     perlmodules.install()
