@@ -16,32 +16,39 @@
 		<Description>
 			 Cppcheck is a static analysis tool for C/C++ code. It provides unique code analysis to detect bugs and focuses on detecting undefined behaviour and dangerous coding constructs. The goal is to detect only real errors in the code (i.e. have very few false positives).
 		</Description>
-		<Archive sha1sum="e59758410408fa0679df06e8c3f3dd4e8c930d00" type="targz">
-			https://github.com/danmar/cppcheck/archive/2.1.tar.gz
+		<Archive sha1sum="936bd156097ba73381d62d171d60ab4c328322d9" type="tarbz2">
+			https://sourceforge.net/projects/cppcheck/files/cppcheck/2.2/cppcheck-2.2.tar.bz2
 		</Archive>
 		<BuildDependencies>
 			<Dependency>cmake</Dependency>
 			<Dependency>python3</Dependency>
-			<!-- <Dependency>z3-devel</Dependency> -->
+			<Dependency>z3-devel</Dependency>
 			<Dependency>zlib-devel</Dependency>
+			<Dependency>docbook-xsl</Dependency>
 			<Dependency>qt5-linguist</Dependency>
+			<Dependency>libxslt-devel</Dependency>
 			<Dependency>libpcre-devel</Dependency>
+			<Dependency>python3-devel</Dependency>
 			<Dependency>qt5-base-devel</Dependency>
 			<Dependency>tinyxml2-devel</Dependency>
 			<Dependency>qt5-charts-devel</Dependency>
+			<Dependency>python3-setuptools</Dependency>
 		</BuildDependencies>
 		<Patches>
+			<Patch level="1">htmlreport_py3.patch</Patch>
 			<Patch level="1">qm_install_path.patch</Patch>
+			<Patch level="1">use_system_tinyxml.patch</Patch>
 		</Patches>
 	</Source>
 
 	<Package>
 		<Name>cppcheck</Name>
 		<RuntimeDependencies>
-			<!-- <Dependency>z3</Dependency> -->
+			<Dependency>z3</Dependency>
 			<Dependency>libgcc</Dependency>
 			<Dependency>libpcre</Dependency>
 			<Dependency>python3</Dependency>
+			<Dependency>tinyxml2</Dependency>
 			<Dependency>qt5-base</Dependency>
 			<Dependency>qt5-charts</Dependency>
 			<Dependency>python3-Pygments</Dependency>
@@ -51,12 +58,19 @@
 			<Path fileType="data">/usr/share</Path>
 			<Path fileType="data">/usr/share/Cppcheck</Path>
 			<Path fileType="localedata">/usr/share/Cppcheck/lang</Path>
-			<!-- <Path fileType="man">/usr/share/man</Path> -->
+			<Path fileType="man">/usr/share/man</Path>
 			<Path fileType="doc">/usr/share/doc</Path>
 		</Files>
 	</Package>
 
 	<History>
+		<Update release="4">
+			<Date>2020-10-06</Date>
+			<Version>2.2</Version>
+			<Comment>Ver. bump</Comment>
+			<Name>fury</Name>
+			<Email>wascheme@tuta.io</Email>
+		</Update>
 		<Update release="3">
 			<Date>2020-06-27</Date>
 			<Version>2.1</Version>
