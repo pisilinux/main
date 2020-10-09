@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>z3</Name>
+		<Homepage>https://github.com/Z3Prover/z3</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>wascheme@tuta.io</Email>
+		</Packager>
+		<License>MIT</License>
+		<IsA>library</IsA>
+		<PartOf>programming.library</PartOf>
+		<Summary>The Z3 Theorem Prover.</Summary>
+		<Description>Z3 is a theorem prover from Microsoft Research.</Description>
+		<Archive sha1sum="6586ddd6388ddaa73a387b9d13f299169c11674e" type="targz">
+			https://github.com/Z3Prover/z3/archive/z3-4.8.9.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
+			<Dependency>python3</Dependency>
+			<Dependency>gmp-devel</Dependency>
+			<Dependency>python3-setuptools</Dependency>
+		</BuildDependencies>
+	</Source>
+
+	<Package>
+		<Name>z3</Name>
+		<RuntimeDependencies>
+			<Dependency>gmp</Dependency>
+			<Dependency>libgcc</Dependency>
+			<Dependency>python3</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>python3-z3</Name>
+		<PartOf>programming.language.python3</PartOf>
+		<RuntimeDependencies>
+			<Dependency release="current">z3</Dependency>
+			<Dependency>python3</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/python*</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>z3-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">z3</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2020-10-08</Date>
+			<Version>4.8.9</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>wascheme@tuta.io</Email>
+		</Update>
+	</History>
+</PISI>
+
