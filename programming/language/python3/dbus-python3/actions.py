@@ -14,6 +14,7 @@ def setup():
     autotools.autoreconf("-fi")
 
     shelltools.cd("build-python3")
+    shelltools.export("LDFLAGS", "-lpthread")
     shelltools.system("PYTHON=python3 ../configure --prefix=/usr \
                        --localstatedir=/var \
                        --disable-api-docs \
