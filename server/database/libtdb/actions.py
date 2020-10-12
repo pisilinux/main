@@ -12,6 +12,7 @@ from pisi.actionsapi import shelltools
 shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
+    shelltools.export("LDFLAGS", "-lpthread")
     autotools.configure("\
                          --builtin-libraries=replace \
                          --bundled-libraries=NONE \
