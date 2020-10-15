@@ -10,7 +10,7 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 
 
-WorkDir="x265_3.2.1"
+WorkDir="x265_%s" % get.srcVERSION()
 
 def setup():
 	
