@@ -21,9 +21,9 @@ def setup():
                -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swr,iris,swrast,virgl \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
-               -Dgallium-xvmc=true \
+               -Dgallium-xvmc=enabled \
                -Dgallium-va=enabled \
-               -Dgallium-xa=true \
+               -Dgallium-xa=enabled \
                -Dgallium-nine=true \
                -Dvulkan-drivers=amd,intel \
                -Dvulkan-device-select-layer=true \
@@ -46,12 +46,12 @@ def setup():
               " % ((libdir, ) * 2)
 
     if get.buildTYPE() == "emul32":
-        options += " -Dlmsensors=false --native-file crossfile.ini -Dllvm_libdir=/usr/lib32 -Dzstd=false"
+        options += " -Dlmsensors=disabled --native-file crossfile.ini -Dllvm_libdir=/usr/lib32 -Dzstd=disabled"
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32") 
-    else: options += " -Dgallium-omx=bellagio -Dlmsensors=true"
+    else: options += " -Dgallium-omx=bellagio -Dlmsensors=enabled"
 
     mesontools.configure(options)
 
