@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
 	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure("--prefix=/usr --libexecdir=/usr/lib -enable-all")
+	autotools.configure("--libexecdir=/usr/lib -enable-all-plugins")
 
 def build():
 	autotools.make()

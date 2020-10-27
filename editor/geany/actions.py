@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--enable-gtk3 --enable-vte")
+	autotools.configure("--enable-vte")
 
 	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
