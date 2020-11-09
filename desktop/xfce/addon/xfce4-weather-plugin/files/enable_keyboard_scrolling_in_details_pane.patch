@@ -1,0 +1,71 @@
+--- a/panel-plugin/weather-summary.c	2020-02-23 03:39:53.000000000 +0300
++++ b/panel-plugin/weather-summary.c	2020-10-04 17:44:45.597555175 +0300
+@@ -282,6 +282,55 @@
+ }
+ 
+ 
++static gboolean
++text_view_key_pressed_cb (GtkWidget   *widget,
++                          GdkEventKey *event,
++                          gpointer     user_data)
++{
++    GtkScrolledWindow *scrolled = GTK_SCROLLED_WINDOW (user_data);
++    GtkAdjustment *adjustment = gtk_scrolled_window_get_vadjustment (scrolled);
++    gdouble current = gtk_adjustment_get_value (adjustment);
++    gdouble min = gtk_adjustment_get_lower (adjustment);
++    gdouble max = gtk_adjustment_get_upper (adjustment);
++    gdouble step_size = 0;
++
++    switch (event->keyval) {
++        case GDK_KEY_Up:
++        case GDK_KEY_uparrow:
++            step_size = -1 * gtk_adjustment_get_step_increment (adjustment);
++            break;
++        case GDK_KEY_Down:
++        case GDK_KEY_downarrow:
++            step_size = gtk_adjustment_get_step_increment (adjustment);
++            break;
++        case GDK_KEY_Page_Up:
++            step_size = -1 * gtk_adjustment_get_page_size (adjustment);
++            break;
++        case GDK_KEY_Page_Down:
++        case GDK_KEY_space:
++            step_size = gtk_adjustment_get_page_size (adjustment);
++            break;
++        case GDK_KEY_Home:
++            step_size = -1 * current;
++            break;
++        case GDK_KEY_End:
++            step_size = max;
++            break;
++    }
++
++    if (step_size != 0) {
++        current = current + step_size;
++        if (current < min) current = min;
++        if (current > max) current = max;
++
++        gtk_adjustment_set_value (adjustment, current);
++
++        return TRUE;
++    }
++
++    return FALSE;
++}
++
+ static GtkWidget *
+ create_summary_tab(plugin_data *data)
+ {
+@@ -311,9 +360,12 @@
+     gtk_text_view_set_top_margin (GTK_TEXT_VIEW(view), 12);
+     gtk_text_view_set_right_margin (GTK_TEXT_VIEW(view), 12);
+     gtk_text_view_set_bottom_margin (GTK_TEXT_VIEW(view), 12);
++
+     frame = gtk_frame_new(NULL);
+     scrolled = gtk_scrolled_window_new(NULL, NULL);
+ 
++    g_signal_connect(GTK_WIDGET(view), "key-press-event", G_CALLBACK(text_view_key_pressed_cb), scrolled);
++
+     overlay = gtk_overlay_new ();
+     gtk_container_add (GTK_CONTAINER (overlay), view);
+ 

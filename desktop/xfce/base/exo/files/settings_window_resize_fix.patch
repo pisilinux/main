@@ -1,0 +1,23 @@
+--- a/exo/exo-icon-view.c	2020-08-01 12:59:52.213014648 +0300
++++ b/exo/exo-icon-view.c	2020-08-01 12:59:32.463747070 +0300
+@@ -1768,7 +1768,9 @@
+   GList                    *lp;
+ 
+   /* well, this is easy */
+-  *minimal_width = *natural_width = priv->width;
++  if (priv->item_width < 0)
++    *minimal_width = priv->width;
++  *natural_width = priv->width;
+ 
+   /* handle the child widgets */
+   for (lp = priv->children; lp != NULL; lp = lp->next)
+@@ -1790,7 +1792,8 @@
+   GList                    *lp;
+ 
+   /* well, this is easy */
+-  *natural_height = *minimal_height = priv->height;
++  *minimal_height = priv->height;
++  *natural_height = priv->height;
+ 
+   /* handle the child widgets */
+   for (lp = priv->children; lp != NULL; lp = lp->next)

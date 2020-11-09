@@ -1,0 +1,18 @@
+--- a/scripts/xinitrc.in.in	2019-10-16 17:00:56.364000642 +0300
++++ b/scripts/xinitrc.in.in	2019-10-16 17:03:41.612001128 +0300
+@@ -98,8 +98,13 @@
+     exit 1
+   fi
+ else
+-  # start xfce4-session normally
+-  exec xfce4-session
++  if [[ "$(pgrep -fu root 'autolaunch')" ]]; then
++    # start xfce4-session normally
++    exec xfce4-session
++  else
++    # hack for run session from sddm
++    exec dbus-launch --sh-syntax --exit-with-session xfce4-session
++  fi
+ fi
+ 
+ # if we got here, then exec failed

@@ -1,0 +1,187 @@
+From f98836ef80afd511b9debc5d24cc570cd0f6ad20 Mon Sep 17 00:00:00 2001
+From: Mikhail Efremov <sem@altlinux.org>
+Date: Fri, 22 Nov 2019 18:11:26 +0300
+Subject: Fix day/night calculation (bug #16091)
+
+Time in the astronomical date given in local time, so parse it as
+local. Otherwise the day/night calculation is broken, we can't
+compare local and UTC time properly.
+This fixes commit 701da805ecf273f376dbae5003607746fad9d316.
+
+Signed-off-by: Sean Davis <smd.seandavis@gmail.com>
+---
+ panel-plugin/weather-parsers.c |  8 ++++----
+ panel-plugin/weather-summary.c | 16 ++++++++--------
+ panel-plugin/weather.c         | 20 ++++++++++----------
+ 3 files changed, 22 insertions(+), 22 deletions(-)
+
+diff --git a/panel-plugin/weather-parsers.c b/panel-plugin/weather-parsers.c
+index 109d726..786abf7 100644
+--- a/panel-plugin/weather-parsers.c
++++ b/panel-plugin/weather-parsers.c
+@@ -445,28 +445,28 @@ parse_astro_time(xmlNode *cur_node)
+         if (child_node->type == XML_ELEMENT_NODE) {
+             if (NODE_IS_TYPE(child_node, "sunrise")) {
+                 sunrise = remove_timezone_offset(PROP(child_node, "time"));
+-                astro->sunrise = parse_timestring(sunrise, NULL, FALSE);
++                astro->sunrise = parse_timestring(sunrise, NULL, TRUE);
+                 xmlFree(sunrise);
+                 sun_rises = TRUE;
+             }
+ 
+             if (NODE_IS_TYPE(child_node, "moonset")) {
+                 moonset = remove_timezone_offset(PROP(child_node, "time"));
+-                astro->moonset = parse_timestring(moonset, NULL, FALSE);
++                astro->moonset = parse_timestring(moonset, NULL, TRUE);
+                 xmlFree(moonset);
+                 moon_sets = TRUE;
+             }
+ 
+             if (NODE_IS_TYPE(child_node, "sunset")) {
+                 sunset = remove_timezone_offset(PROP(child_node, "time"));
+-                astro->sunset = parse_timestring(sunset, NULL, FALSE);
++                astro->sunset = parse_timestring(sunset, NULL, TRUE);
+                 xmlFree(sunset);
+                 sun_sets = TRUE;
+             }
+ 
+             if (NODE_IS_TYPE(child_node, "moonrise")) {
+                 moonrise = remove_timezone_offset(PROP(child_node, "time"));
+-                astro->moonrise = parse_timestring(moonrise, NULL, FALSE);
++                astro->moonrise = parse_timestring(moonrise, NULL, TRUE);
+                 xmlFree(moonrise);
+                 moon_rises = TRUE;
+             }
+diff --git a/panel-plugin/weather-summary.c b/panel-plugin/weather-summary.c
+index dbe3014..da12a5b 100644
+--- a/panel-plugin/weather-summary.c
++++ b/panel-plugin/weather-summary.c
+@@ -417,12 +417,12 @@ create_summary_tab(plugin_data *data)
+             value = g_strdup(_("\tSunset:\t\tThe sun never sets today.\n"));
+             APPEND_TEXT_ITEM_REAL(value);
+         } else {
+-            sunrise = format_date(data->current_astro->sunrise, NULL, FALSE);
++            sunrise = format_date(data->current_astro->sunrise, NULL, TRUE);
+             value = g_strdup_printf(_("\tSunrise:\t\t%s\n"), sunrise);
+             g_free(sunrise);
+             APPEND_TEXT_ITEM_REAL(value);
+ 
+-            sunset = format_date(data->current_astro->sunset, NULL, FALSE);
++            sunset = format_date(data->current_astro->sunset, NULL, TRUE);
+             value = g_strdup_printf(_("\tSunset:\t\t%s\n\n"), sunset);
+             g_free(sunset);
+             APPEND_TEXT_ITEM_REAL(value);
+@@ -445,12 +445,12 @@ create_summary_tab(plugin_data *data)
+                 g_strdup(_("\tMoonset:\tThe moon never sets today.\n"));
+             APPEND_TEXT_ITEM_REAL(value);
+         } else {
+-            moonrise = format_date(data->current_astro->moonrise, NULL, FALSE);
++            moonrise = format_date(data->current_astro->moonrise, NULL, TRUE);
+             value = g_strdup_printf(_("\tMoonrise:\t%s\n"), moonrise);
+             g_free(moonrise);
+             APPEND_TEXT_ITEM_REAL(value);
+ 
+-            moonset = format_date(data->current_astro->moonset, NULL, FALSE);
++            moonset = format_date(data->current_astro->moonset, NULL, TRUE);
+             value = g_strdup_printf(_("\tMoonset:\t%s\n"), moonset);
+             g_free(moonset);
+             APPEND_TEXT_ITEM_REAL(value);
+@@ -699,13 +699,13 @@ forecast_day_header_tooltip_text(xml_astro *astro)
+                                     "Sunset: The sun never sets this day."
+                                     "</small></tt>\n"));
+         else {
+-            sunrise = format_date(astro->sunrise, NULL, FALSE);
++            sunrise = format_date(astro->sunrise, NULL, TRUE);
+             g_string_append_printf(text, _("<tt><small>"
+                                            "Sunrise: %s"
+                                            "</small></tt>\n"), sunrise);
+             g_free(sunrise);
+ 
+-            sunset = format_date(astro->sunset, NULL, FALSE);
++            sunset = format_date(astro->sunset, NULL, TRUE);
+             g_string_append_printf(text, _("<tt><small>"
+                                            "Sunset:  %s"
+                                            "</small></tt>\n\n"), sunset);
+@@ -732,13 +732,13 @@ forecast_day_header_tooltip_text(xml_astro *astro)
+                               "Moonset: The moon never sets this day."
+                               "</small></tt>\n"));
+         else {
+-            moonrise = format_date(astro->moonrise, NULL, FALSE);
++            moonrise = format_date(astro->moonrise, NULL, TRUE);
+             g_string_append_printf(text, _("<tt><small>"
+                                            "Moonrise: %s"
+                                            "</small></tt>\n"), moonrise);
+             g_free(moonrise);
+ 
+-            moonset = format_date(astro->moonset, NULL, FALSE);
++            moonset = format_date(astro->moonset, NULL, TRUE);
+             g_string_append_printf(text, _("<tt><small>"
+                                            "Moonset:  %s"
+                                            "</small></tt>"), moonset);
+diff --git a/panel-plugin/weather.c b/panel-plugin/weather.c
+index 7d79566..11f6f6f 100644
+--- a/panel-plugin/weather.c
++++ b/panel-plugin/weather.c
+@@ -1115,8 +1115,8 @@ write_cache_file(plugin_data *data)
+             if (G_UNLIKELY(astro == NULL))
+                 continue;
+             value = format_date(astro->day, "%Y-%m-%d", TRUE);
+-            start = format_date(astro->sunrise, date_format, FALSE);
+-            end = format_date(astro->sunset, date_format, FALSE);
++            start = format_date(astro->sunrise, date_format, TRUE);
++            end = format_date(astro->sunset, date_format, TRUE);
+             g_string_append_printf(out, "[astrodata%d]\n", i);
+             CACHE_APPEND("day=%s\n", value);
+             CACHE_APPEND("sunrise=%s\n", start);
+@@ -1129,8 +1129,8 @@ write_cache_file(plugin_data *data)
+             g_free(start);
+             g_free(end);
+ 
+-            start = format_date(astro->moonrise, date_format, FALSE);
+-            end = format_date(astro->moonset, date_format, FALSE);
++            start = format_date(astro->moonrise, date_format, TRUE);
++            end = format_date(astro->moonset, date_format, TRUE);
+             CACHE_APPEND("moonrise=%s\n", start);
+             CACHE_APPEND("moonset=%s\n", end);
+             CACHE_APPEND("moon_never_rises=%s\n",
+@@ -1303,10 +1303,10 @@ read_cache_file(plugin_data *data)
+         astro->day = parse_timestring(timestring, "%Y-%m-%d", TRUE);
+         g_free(timestring);
+         CACHE_READ_STRING(timestring, "sunrise");
+-        astro->sunrise = parse_timestring(timestring, NULL, FALSE);
++        astro->sunrise = parse_timestring(timestring, NULL, TRUE);
+         g_free(timestring);
+         CACHE_READ_STRING(timestring, "sunset");
+-        astro->sunset = parse_timestring(timestring, NULL, FALSE);
++        astro->sunset = parse_timestring(timestring, NULL, TRUE);
+         g_free(timestring);
+         astro->sun_never_rises =
+             g_key_file_get_boolean(keyfile, group, "sun_never_rises", NULL);
+@@ -1314,10 +1314,10 @@ read_cache_file(plugin_data *data)
+             g_key_file_get_boolean(keyfile, group, "sun_never_sets", NULL);
+ 
+         CACHE_READ_STRING(timestring, "moonrise");
+-        astro->moonrise = parse_timestring(timestring, NULL, FALSE);
++        astro->moonrise = parse_timestring(timestring, NULL, TRUE);
+         g_free(timestring);
+         CACHE_READ_STRING(timestring, "moonset");
+-        astro->moonset = parse_timestring(timestring, NULL, FALSE);
++        astro->moonset = parse_timestring(timestring, NULL, TRUE);
+         g_free(timestring);
+         CACHE_READ_STRING(astro->moon_phase, "moon_phase");
+         astro->moon_never_rises =
+@@ -1731,9 +1731,9 @@ weather_get_tooltip_text(const plugin_data *data)
+             sunval = g_strdup(_("The sun never sets today."));
+         } else {
+             sunrise = format_date(data->current_astro->sunrise,
+-                                  "%H:%M:%S", FALSE);
++                                  "%H:%M:%S", TRUE);
+             sunset = format_date(data->current_astro->sunset,
+-                                 "%H:%M:%S", FALSE);
++                                 "%H:%M:%S", TRUE);
+             sunval =
+                 g_strdup_printf(_("The sun rises at %s and sets at %s."),
+                                 sunrise, sunset);
+-- 
+cgit v1.2.3
+

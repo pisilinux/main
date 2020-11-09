@@ -1,0 +1,135 @@
+From 72c34872bad6ff11cc6e74245ab5db805132c4bd Mon Sep 17 00:00:00 2001
+From: Goran <tiny.lasagna@protonmail.com>
+Date: Sat, 29 Feb 2020 23:50:00 -0500
+Subject: Support solarnoon and solarmidnight (bug #15771)
+
+---
+ panel-plugin/weather-data.c    | 15 ++++++++-------
+ panel-plugin/weather-parsers.c | 10 ++++++++++
+ panel-plugin/weather-parsers.h |  2 ++
+ panel-plugin/weather.c         | 29 +++++++++++++++++++++++++----
+ 4 files changed, 45 insertions(+), 11 deletions(-)
+
+diff --git a/panel-plugin/weather-data.c b/panel-plugin/weather-data.c
+index 008a60c..fa6a4bd 100644
+--- a/panel-plugin/weather-data.c
++++ b/panel-plugin/weather-data.c
+@@ -552,13 +552,14 @@ is_night_time(const xml_astro *astro)
+     time(&now_t);
+ 
+     if (G_LIKELY(astro)) {
+-        /* Polar night */
+-        if (astro->sun_never_rises)
+-            return TRUE;
+-
+-        /* Polar day */
+-        if (astro->sun_never_sets)
+-            return FALSE;
++        if (astro->sun_never_rises || astro->sun_never_sets){
++            /* Polar night */
++            if (astro->solarnoon_elevation <= 0)
++                return TRUE;
++            /* Polar day */
++            if (astro->solarmidnight_elevation > 0)
++                return FALSE;
++        }
+ 
+         /* Sunrise and sunset are known */
+         if (difftime(astro->sunrise, now_t) > 0)
+diff --git a/panel-plugin/weather-parsers.c b/panel-plugin/weather-parsers.c
+index 786abf7..baa0250 100644
+--- a/panel-plugin/weather-parsers.c
++++ b/panel-plugin/weather-parsers.c
+@@ -478,6 +478,14 @@ parse_astro_time(xmlNode *cur_node)
+                 }
+                 astro->moon_phase = g_strdup(parse_moonposition(moonposition));
+             }
++
++            if (NODE_IS_TYPE(child_node, "solarnoon")) {
++                astro->solarnoon_elevation = extract_double(PROP(child_node, "elevation"));
++            }
++
++            if (NODE_IS_TYPE(child_node, "solarmidnight")) {
++                astro->solarmidnight_elevation = extract_double(PROP(child_node, "elevation"));
++            }
+         }
+     }
+ 
+@@ -737,6 +745,8 @@ xml_astro_copy(const xml_astro *src)
+     dst->moon_never_rises = src->moon_never_rises;
+     dst->moon_never_sets = src->moon_never_sets;
+     dst->moon_phase = g_strdup(src->moon_phase);
++    dst->solarnoon_elevation = src->solarnoon_elevation;
++    dst->solarmidnight_elevation = src->solarmidnight_elevation;
+     return dst;
+ }
+ 
+diff --git a/panel-plugin/weather-parsers.h b/panel-plugin/weather-parsers.h
+index 2b98d2f..f0697a7 100644
+--- a/panel-plugin/weather-parsers.h
++++ b/panel-plugin/weather-parsers.h
+@@ -86,6 +86,8 @@ typedef struct {
+     time_t sunset;
+     gboolean sun_never_rises;
+     gboolean sun_never_sets;
++    gdouble solarnoon_elevation;
++    gdouble solarmidnight_elevation;
+ 
+     time_t moonrise;
+     time_t moonset;
+diff --git a/panel-plugin/weather.c b/panel-plugin/weather.c
+index 11f6f6f..8780c0e 100644
+--- a/panel-plugin/weather.c
++++ b/panel-plugin/weather.c
+@@ -1125,6 +1125,8 @@ write_cache_file(plugin_data *data)
+                          astro->sun_never_rises ? "true" : "false");
+             CACHE_APPEND("sun_never_sets=%s\n",
+                          astro->sun_never_sets ? "true" : "false");
++            CACHE_APPEND("solarnoon_elevation=%e\n", astro->solarnoon_elevation);
++            CACHE_APPEND("solarmidnight_elevation=%e\n", astro->solarmidnight_elevation);
+             g_free(value);
+             g_free(start);
+             g_free(end);
+@@ -1312,6 +1314,10 @@ read_cache_file(plugin_data *data)
+             g_key_file_get_boolean(keyfile, group, "sun_never_rises", NULL);
+         astro->sun_never_sets =
+             g_key_file_get_boolean(keyfile, group, "sun_never_sets", NULL);
++        astro->solarnoon_elevation =
++            g_key_file_get_double(keyfile, group, "solarnoon_elevation", NULL);
++        astro->solarmidnight_elevation =
++            g_key_file_get_double(keyfile, group, "solarmidnight_elevation", NULL);
+ 
+         CACHE_READ_STRING(timestring, "moonrise");
+         astro->moonrise = parse_timestring(timestring, NULL, TRUE);
+@@ -1725,10 +1731,25 @@ weather_get_tooltip_text(const plugin_data *data)
+ 
+     /* use sunrise and sunset times if available */
+     if (data->current_astro)
+-        if (data->current_astro->sun_never_rises) {
+-            sunval = g_strdup(_("The sun never rises today."));
+-        } else if (data->current_astro->sun_never_sets) {
+-            sunval = g_strdup(_("The sun never sets today."));
++        if (data->current_astro->sun_never_rises && data->current_astro->sun_never_sets) {
++            if (data->current_astro->solarmidnight_elevation > 0)
++                sunval = g_strdup(_("The sun never sets today."));
++            else if (data->current_astro->solarnoon_elevation <= 0)
++                sunval = g_strdup(_("The sun never rises today."));
++        }
++        else if (data->current_astro->sun_never_rises){
++            sunset = format_date(data->current_astro->sunset,
++                                 "%H:%M:%S", FALSE);
++            sunval =
++                g_strdup_printf(_("The sun never rises and sets at %s."),
++                                 sunset);
++        }
++        else if (data->current_astro->sun_never_sets){
++            sunrise = format_date(data->current_astro->sunrise,
++                                 "%H:%M:%S", FALSE);
++            sunval =
++                g_strdup_printf(_("The sun rises at %s and never sets."),
++                                 sunset);
+         } else {
+             sunrise = format_date(data->current_astro->sunrise,
+                                   "%H:%M:%S", TRUE);
+-- 
+cgit v1.2.3
