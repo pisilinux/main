@@ -14,6 +14,6 @@ def build():
 
 
 def install():
-    autotools.install()
+    autotools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
     pisitools.remove('/usr/lib/libxxhash.a')
     pisitools.dodoc("LICENSE", "doc/*")
