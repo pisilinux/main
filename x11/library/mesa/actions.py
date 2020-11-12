@@ -51,7 +51,7 @@ def setup():
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32") 
-    else: options += " -Dgallium-omx=bellagio -Dlmsensors=enabled"
+    else: options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled"
 
     mesontools.configure(options)
 
