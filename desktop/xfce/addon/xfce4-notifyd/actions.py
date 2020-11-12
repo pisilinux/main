@@ -10,17 +10,20 @@ from pisi.actionsapi import get
 
 pisitools.cflags.add("-Wno-deprecated-declarations")
 
+j = "--enable-old-get-server-information-signature \
+     --enable-old-notification-closed-signature \
+     --enable-dbus-start-daemon \
+    "
+
 def setup():
-	autotools.configure("--enable-dbus-start-daemon \
-	--enable-old-get-server-information-signature \
-	--enable-old-notification-closed-signature")
+	# maybe some enabled options broke daemon autostart.
+	autotools.configure(j)
 
 def build():
 	autotools.make()
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
 	pisitools.removeDir("usr/lib/systemd")
 
 	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
