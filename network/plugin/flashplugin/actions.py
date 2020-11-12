@@ -7,8 +7,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
-ARCH = "i386" if get.ARCH() == "i686" else "x86_64"
-WorkDir = get.ARCH()
+#ARCH = "i386" if get.ARCH() == "i686" else "x86_64"
+WorkDir = "x86_64"
 NoStrip = "/"
 
 def install():
