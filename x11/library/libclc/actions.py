@@ -17,7 +17,7 @@ def setup():
 	
     if get.buildTYPE() == "emul32": 
        shelltools.system("chmod +x clang32")
-       options = "-DLLVM_CLANG='%s/%s-%s/clang32' \
+       options = "-DLLVM_CLANG='%s/%s-%s.src/clang32' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config-32' \
                   -DCMAKE_INSTALL_LIBDIR=lib32 \
                  " % (get.workDIR(), get.srcNAME(), get.srcVERSION())
