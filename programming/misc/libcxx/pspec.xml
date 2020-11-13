@@ -3,7 +3,7 @@
 <PISI>
     <Source>
         <Name>libcxx</Name>
-        <Homepage>http://www.kde.org</Homepage>
+        <Homepage>http://libcxx.llvm.org/</Homepage>
         <Packager>
             <Name>Idris Kalp</Name>
             <Email>idriskalp@gmail.com</Email>
@@ -12,8 +12,7 @@
         <IsA>library</IsA>
         <Summary>LLVM C++ standard library.</Summary>
         <Description>libcxx provides standard c++ library by LLVM</Description>
-        <Archive sha1sum="9fa3bcaf229a8b74bbc1c53d60f040656f89cb9f" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/libcxx-10.0.0.src.tar.xz</Archive>
-		<Archive sha1sum="474dfec6db4a6ca34902ed8446c8c3f85b210c46" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/libcxxabi-10.0.0.src.tar.xz</Archive>
+        <Archive sha1sum="3c88390b19ac6779c8d9c89256892d690903412b" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-project-11.0.0.tar.xz</Archive>
         <BuildDependencies>
 	        <Dependency>llvm</Dependency>
             <Dependency>llvm-libs</Dependency>
@@ -27,14 +26,18 @@
         <Name>libcxx</Name>
         <Files>
            <Path fileType="library">/usr/lib</Path>
-		   <Path fileType="doc">/usr/share/doc</Path>
+           <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
     
     <Package>
         <Name>libcxx-32bit</Name>
-        <Summary>libcxx 32bit shared libraries.</Summary>
         <PartOf>emul32</PartOf>
+        <BuildType>emul32</BuildType>
+        <Summary>libcxx 32bit shared libraries.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libcxx</Dependency>
+        </RuntimeDependencies>
         <Files>
            <Path fileType="library">/usr/lib32</Path>
         </Files>
@@ -51,7 +54,14 @@
         </Files>
     </Package>
 
-    <History>    
+    <History>     
+        <Update release="2">
+            <Date>2020-11-13</Date>
+            <Version>11.0.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>     
         <Update release="1">
             <Date>2020-03-26</Date>
             <Version>10.0.0</Version>
