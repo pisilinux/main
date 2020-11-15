@@ -14,7 +14,7 @@ libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else ""
 
-NoStrip = ["/usr/"]
+NoStrip = ["/usr/lib/clang/%s/lib/linux" %get.srcVERSION()]
 
 WorkDir = "llvm-project-%s/llvm" %get.srcVERSION()
 
@@ -91,7 +91,7 @@ def setup():
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -G 'Ninja' \
+                          -G 'MSYS Makefiles' \
                           %s \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_ENABLE_FFI=ON \
@@ -110,13 +110,13 @@ def build():
     shelltools.makedirs("build")
     shelltools.cd("build")
 
-    shelltools.system("ninja")
+    autotools.make()
 
 def install():
     shelltools.makedirs("build")
     shelltools.cd("build")
     
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
         
     if get.buildTYPE() == "emul32":
         
