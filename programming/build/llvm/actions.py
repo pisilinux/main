@@ -21,40 +21,6 @@ WorkDir = "llvm-project-%s/llvm" %get.srcVERSION()
 def setup():
     pisitools.ldflags.add("-fuse-ld=lld")
 
-    #if get.buildTYPE() != "emul32":
-            #if not shelltools.can_access_directory("tools/clang"):
-                #shelltools.system("tar xf ../clang-%s.src.tar.xz -C tools" % get.srcVERSION())
-                #shelltools.move("tools/clang-%s.src" % get.srcVERSION(), "tools/clang")
-
-                #shelltools.system("tar xf ../clang-tools-extra-%s.src.tar.xz -C tools" % get.srcVERSION())
-                #shelltools.move("tools/clang-tools-extra-*", "tools/clang/tools/extra")
-                
-                #shelltools.system("tar xf ../lldb-%s.src.tar.xz -C tools" % get.srcVERSION())
-                #shelltools.move("tools/lldb-*", "tools/lldb")
-                
-                #shelltools.system("tar xf ../lld-%s.src.tar.xz -C tools" % get.srcVERSION())
-                #shelltools.move("tools/lld-*", "tools/lld")
-                
-                #shelltools.system("tar xf ../polly-%s.src.tar.xz -C tools" % get.srcVERSION())
-                #shelltools.move("tools/polly-*", "tools/polly")
-
-            #if not shelltools.can_access_directory("projects/compiler-rt"):
-                #shelltools.system("tar xf ../compiler-rt-%s.src.tar.xz -C projects" % get.srcVERSION())
-                #shelltools.move("projects/compiler-rt-%s.src" % get.srcVERSION(), "projects/compiler-rt")
-                
-                ##clang patch
-                ##shelltools.cd("tools")
-                ##shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
-                ##shelltools.cd("..")
-        
-                ##shelltools.export("CC", "clang")
-                ##shelltools.export("CXX", "clang++")
-                #shelltools.export("CC", "clang")
-                #shelltools.export("CXX", "clang++")
-    #else:
-        #shelltools.system("tar xf ../clang-%s.src.tar.xz -C tools" % get.srcVERSION())
-        #shelltools.move("tools/clang-%s.src" % get.srcVERSION(), "tools/clang")
-    
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "clang -m32")
         shelltools.export("CXX", "clang++ -m32")
@@ -91,7 +57,7 @@ def setup():
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -G 'MSYS Makefiles' \
+                          -G 'Unix Makefiles' \
                           %s \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_ENABLE_FFI=ON \
