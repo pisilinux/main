@@ -39,21 +39,21 @@ def setup():
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
-        options = "-DCMAKE_C_FLAGS:STRING=-m64 \
-                   -DCMAKE_INSTALL_PREFIX=/usr \
-                   -DCMAKE_CXX_FLAGS:STRING=-m64 \
+        pisitools.cflags.add("-m64")
+        pisitools.cxxflags.add("-m64")
+        options = "-DCMAKE_CXX_FLAGS:STRING=-m64 \
                    -DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
                           
     
     if get.buildTYPE() == "emul32":
-        options = "  -DCMAKE_C_FLAGS:STRING=-m32 \
-                     -DCMAKE_INSTALL_PREFIX=/emul32 \
+        pisitools.cflags.add("-m32")
+        pisitools.cxxflags.add("-m32")
+        options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
                      -DLLVM_LIBDIR_SUFFIX=32 \
-                     -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu' \
-                     -DCMAKE_CXX_FLAGS:STRING=-m32"
+                     -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu'"
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
