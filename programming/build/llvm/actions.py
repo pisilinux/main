@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 from pisi.actionsapi import cmaketools
 
-projects = "clang;polly;compiler-rt;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
+projects = "clang;compiler-rt;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
 libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else ""
@@ -84,8 +84,7 @@ def install():
     
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
         
-    if get.buildTYPE() == "emul32":
-        
+    if get.buildTYPE() == "emul32":        
         pisitools.domove("/emul32/lib32/", "/usr/")
         pisitools.insinto("/usr/include/llvm/Config/","%s/emul32/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
