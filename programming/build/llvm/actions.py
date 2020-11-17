@@ -44,8 +44,7 @@ def setup():
     if get.buildTYPE() != "emul32":
         pisitools.cflags.add("-m64")
         pisitools.cxxflags.add("-m64")
-        options = "-DCMAKE_CXX_FLAGS:STRING=-m64 \
-                   -DLLVM_TARGET_ARCH:STRING=x86_64 \
+        options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
                           
