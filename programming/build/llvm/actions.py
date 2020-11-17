@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 from pisi.actionsapi import cmaketools
 
-projects = "clang;compiler-rt;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
+projects = "clang;polly;compiler-rt;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
 libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else ""
@@ -20,6 +20,9 @@ WorkDir = "llvm-project-%s/llvm" %get.srcVERSION()
 
 def setup():
     pisitools.ldflags.add("-fuse-ld=lld")
+    pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
+    pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
+    
 
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "clang -m32")
