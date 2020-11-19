@@ -12,8 +12,6 @@ from pisi.actionsapi import get
 from pisi.actionsapi import qt5
 
 def setup():
-    shelltools.system("qmake qterminal.pro")
-
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
