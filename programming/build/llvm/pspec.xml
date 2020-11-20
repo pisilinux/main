@@ -11,13 +11,7 @@
         <License>NCSA</License>
         <Summary>The Low Level Virtual Machine</Summary>
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
-       <Archive sha1sum="25d07260f3b7bf4f647e115c4a663fdeda130fbd" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/llvm-10.0.1.src.tar.xz</Archive>
-       <Archive sha1sum="0e61e92b22a620fe7f833fa8b2a56f2db96f7335" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang-10.0.1.src.tar.xz</Archive>
-       <Archive sha1sum="26c996da082677aca1016bcf2141dbff01dc7300" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang-tools-extra-10.0.1.src.tar.xz</Archive>
-       <Archive sha1sum="90b946ff7b850bcded598509a10d0795e7da3f63" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lldb-10.0.1.src.tar.xz</Archive>
-	   <Archive sha1sum="8581337dba00041c2633f61bfb5be778df83cff7" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/lld-10.0.1.src.tar.xz</Archive>
-	   <Archive sha1sum="fd1ece6c77d420f52d0502bc2b34075c353eed21" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/polly-10.0.1.src.tar.xz</Archive>
-       <Archive sha1sum="ee6077b4728b3c750e476938cead11cea45b49ff" type="binary">https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/compiler-rt-10.0.1.src.tar.xz</Archive>
+       <Archive sha1sum="3c88390b19ac6779c8d9c89256892d690903412b" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-project-11.0.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>zlib-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
@@ -26,14 +20,14 @@
             <Dependency>libffi-devel</Dependency>
             <Dependency>groff</Dependency>
             <Dependency>swig</Dependency>
-            <Dependency>python-devel</Dependency>
             <Dependency>libedit-devel</Dependency>
-            <Dependency>cmake</Dependency>
+            <Dependency versionFrom="3.18.3">cmake</Dependency>
+            <Dependency versionFrom="3.8.6">python3-devel</Dependency>
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
             <Dependency>binutils</Dependency>
             <Dependency>gcc</Dependency>
-<!--             <Dependency>llvm-clang</Dependency>	  -->
-<!--             <Dependency>lld</Dependency>			  -->
+            <Dependency>llvm-clang</Dependency>
+            <Dependency>lld</Dependency>
         </BuildDependencies>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="tools/enable-SSP-and-PIE-by-default.patch">enable-SSP-and-PIE-by-default.patch</AdditionalFile>
@@ -56,6 +50,7 @@
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/bin/llvm-config</Path>
             <Path fileType="header">/usr/include/llvm*</Path>
+            <Path fileType="header">/usr/include/mlir*</Path>
             <Path fileType="header">/usr/include/polly*</Path>
             <Path fileType="library">/usr/lib/llvm</Path>
             <Path fileType="library">/usr/lib</Path>
@@ -84,10 +79,12 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
-			<Path fileType="library">/usr/lib/libLLVM*.so.10</Path>
+			<Path fileType="library">/usr/lib/libLLVM*.so.11</Path>
             <Path fileType="library">/usr/lib/LLVMgold.*</Path>
             <Path fileType="library">/usr/lib/libLTO.*</Path>
 			<Path fileType="library">/usr/lib/libPolly*.so</Path>
+			<Path fileType="library">/usr/lib/libMLIR*</Path>			
+			<Path fileType="library">/usr/lib/libmlir*</Path>
             <Path fileType="library">/usr/lib/bfd-plugins/LLVMgold.so</Path>
             <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
         </Files>
@@ -104,7 +101,7 @@
             <Dependency>libedit</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
-            <Dependency>python</Dependency>
+            <Dependency>python3</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>xz</Dependency>
         </RuntimeDependencies>
@@ -143,7 +140,7 @@
             <Dependency>libedit</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
-            <Dependency>python</Dependency>
+            <Dependency>python3</Dependency>
             <Dependency>libxml2</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -194,14 +191,14 @@
             <Path fileType="executable">/usr/libexec/c++-*</Path>
         </Files>
     </Package>
-
+	
     <Package>
         <Name>compiler-rt</Name>
         <Summary>Various runtime libraries used by Clang</Summary>
         <RuntimeDependencies>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/clang/10.0.1/lib/linux/*.so</Path>
+            <Path fileType="library">/usr/lib/clang/11.0.0/lib/linux/*.so</Path>
         </Files>
     </Package>
 
@@ -239,6 +236,7 @@
         <Files>
             <Path fileType="header">/usr/include/clang</Path>
             <Path fileType="header">/usr/include/clang-c</Path>
+            <Path fileType="header">/usr/include/clang-tidy</Path>
         </Files>
     </Package>
 
@@ -279,6 +277,13 @@
     </Package>
 
     <History>
+        <Update release="14">
+            <Date>2020-11-15</Date>
+            <Version>11.0.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="13">
             <Date>2020-09-23</Date>
             <Version>10.0.1</Version>
