@@ -10,10 +10,14 @@ from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+WorkDir = "rustc-%s-src" %get.srcVERSION()
+crt_ver = "11.0.0"
 
 def build():
     shelltools.export("LC_ALL", "en_US.UTF-8")
-    shelltools.system("python ./x.py build")
+    shelltools.export("RUST_BACKTRACE", "1")
+    shelltools.export("RUST_COMPILER_RT_ROOT", "%s/%s/compiler-rt-%s.src" % (get.workDIR(), WorkDir, crt_ver))
+    shelltools.system("python ./x.py dist")
     
 
 def install():
