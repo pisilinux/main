@@ -17,7 +17,7 @@ def build():
     shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.export("RUST_BACKTRACE", "1")
     shelltools.export("RUST_COMPILER_RT_ROOT", "%s/%s/compiler-rt-%s.src" % (get.workDIR(), WorkDir, crt_ver))
-    shelltools.system("python ./x.py dist")
+    shelltools.system("python ./x.py build")
     
 
 def install():
