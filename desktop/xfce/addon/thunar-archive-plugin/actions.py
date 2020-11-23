@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--disable-static")
+	autotools.configure("--enable-gtk3 --disable-static")
 
 	pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
 
