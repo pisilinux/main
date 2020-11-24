@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-i = "--enable-vala \
+i = "--enable-vala=no \
      --enable-introspection \
      --disable-static \
      --disable-gtk-doc \

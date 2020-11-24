@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>libXpresent</Name>
+        <Homepage>https://www.x.org/</Homepage>
+		<Packager>
+			<Name>Ali Cengiz Kurt</Name>
+			<Email>admins@pisilinux.org</Email>
+		</Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>X.Org Xpm library</Summary>
+		<Description>X Present Extension library</Description>
+		<Archive sha1sum="8893cca785dc94f4a001b53f4308588ff6c3900a" type="tarbz2">https://www.x.org/archive/individual/lib/libXpresent-1.0.0.tar.bz2</Archive>
+		<BuildDependencies>
+			<Dependency>util-macros</Dependency>
+			<Dependency>xorg-proto</Dependency>
+		</BuildDependencies>
+	</Source>
+
+	<Package>
+		<Name>libXpresent</Name>
+		<RuntimeDependencies>
+			<Dependency>libXfixes</Dependency>
+			<Dependency>libXrandr</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="config">/usr/include/X11/extensions</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+			<Path fileType="man">/usr/share/man/man3</Path>
+			<Path fileType="doc">/usr/share/licenses</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libXpresent-devel</Name>
+		<IsA>library</IsA>
+		<Summary>Development files for libXpresent</Summary>
+		<RuntimeDependencies>
+			<Dependency release="current">libXpresent</Dependency>
+		</RuntimeDependencies>
+		<Files>
+            <Path fileType="header">/usr/include/X11</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libXpresent-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libXpresent</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>            
+			<Dependency>libXfixes-32bit</Dependency>
+			<Dependency>libXrandr-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>            
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">libXpresent</Dependency>
+			<Dependency>libXfixes-32bit</Dependency>
+			<Dependency>libXrandr-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>            
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+	<History>
+		<Update release="1">
+			<Date>2020-11-22</Date>
+			<Version>1.0.0</Version>
+			<Comment>First Release For Beta System</Comment>
+			<Name>Ali Cengiz Kurt</Name>
+			<Email>alicengizkurt@gmail.com</Email>
+		</Update>
+	</History>
+</PISI>

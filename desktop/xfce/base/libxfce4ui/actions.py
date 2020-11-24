@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 i = "--with-vendor-info='Pisi Linux' \
      --enable-gtk2 \
-     --enable-vala \
+     --enable-vala=no \
      --enable-introspection \
      --enable-startup-notification \
      --disable-static \
