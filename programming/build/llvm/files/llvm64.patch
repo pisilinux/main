@@ -1,0 +1,21 @@
+diff -Nuar a/lld/test/ELF/shared.s b/lld/test/ELF/shared.s
+--- a/lld/test/ELF/shared.s	2020-10-07 13:10:48.000000000 +0300
++++ b/lld/test/ELF/shared.s	2020-11-24 11:22:37.683751304 +0300
+@@ -3,7 +3,7 @@
+ // RUN: llvm-mc -filetype=obj -triple=i686-unknown-linux %p/Inputs/shared.s -o %t2.o
+ // RUN: ld.lld --hash-style=sysv -shared %t2.o -soname=t2.so -o %t2.so
+ // RUN: llvm-readobj -S %t2.so | FileCheck --check-prefix=SO %s
+-// RUN: ld.lld --hash-style=sysv -dynamic-linker /lib64/ld-linux-x86-64.so.2 -rpath foo -rpath bar --export-dynamic %t.o %t2.so -o %t
++// RUN: ld.lld --hash-style=sysv -dynamic-linker /lib/ld-linux-x86-64.so.2 -rpath foo -rpath bar --export-dynamic %t.o %t2.so -o %t
+ // RUN: llvm-readobj -S -l --dynamic-table --symbols --dyn-syms --section-data --hash-table %t | FileCheck %s
+ // RUN: ld.lld --hash-style=sysv %t.o %t2.so %t2.so -o %t2
+ // RUN: llvm-readobj --dyn-syms %t2 | FileCheck --check-prefix=DONT_EXPORT %s
+@@ -33,7 +33,7 @@
+ // CHECK-NEXT:   AddressAlignment: 1
+ // CHECK-NEXT:   EntrySize: 0
+ // CHECK-NEXT:   SectionData (
+-// CHECK-NEXT:     0000: 2F6C6962 36342F6C 642D6C69 6E75782D  |/lib64/ld-linux-|
++// CHECK-NEXT:     0000: 2F6C6962 36342F6C 642D6C69 6E75782D  |/lib/ld-linux-|
+ // CHECK-NEXT:     0010: 7838362D 36342E73 6F2E3200           |x86-64.so.2.|
+ // CHECK-NEXT:   )
+ // CHECK-NEXT: }

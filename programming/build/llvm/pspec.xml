@@ -13,6 +13,7 @@
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
        <Archive sha1sum="3c88390b19ac6779c8d9c89256892d690903412b" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-project-11.0.0.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency>ninja</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
@@ -30,8 +31,11 @@
             <Dependency>lld</Dependency>
         </BuildDependencies>
         <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="tools/enable-SSP-and-PIE-by-default.patch">enable-SSP-and-PIE-by-default.patch</AdditionalFile>
+<!--             <AdditionalFile owner="root" permission="0644" target="tools/enable-SSP-and-PIE-by-default.patch">enable-SSP-and-PIE-by-default.patch</AdditionalFile> -->
         </AdditionalFiles>
+        <Patches>
+<!--             <Patch>llvm64.patch</Patch> -->
+        </Patches>
     </Source>
 
      <Package>
@@ -40,11 +44,7 @@
         <IsA>library</IsA>
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
-            <Dependency>libxml2</Dependency>
             <Dependency>libgcc</Dependency>
-            <Dependency>ncurses</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>libffi</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -54,12 +54,16 @@
             <Path fileType="header">/usr/include/polly*</Path>
             <Path fileType="library">/usr/lib/llvm</Path>
             <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libMLIR*.a</Path>
+            <Path fileType="library">/usr/lib/libmlir_c_r*.a</Path>
             <Path fileType="conf">/etc/ld.so.conf.d</Path>
             <Path fileType="data">/etc/llvm</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/vim</Path>
             <Path fileType="data">/usr/share/llvm/cmake</Path>
             <Path fileType="man">/usr/share/man</Path>
+            
+            <Path fileType="library">/usr/lib/libPolly*.so</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/etc/ld.so.conf.d/51-llvm.conf">51-llvm.conf</AdditionalFile>
@@ -82,9 +86,14 @@
 			<Path fileType="library">/usr/lib/libLLVM*.so.11</Path>
             <Path fileType="library">/usr/lib/LLVMgold.*</Path>
             <Path fileType="library">/usr/lib/libLTO.*</Path>
-			<Path fileType="library">/usr/lib/libPolly*.so</Path>
-			<Path fileType="library">/usr/lib/libMLIR*</Path>			
-			<Path fileType="library">/usr/lib/libmlir*</Path>
+            
+            <Path fileType="library">/usr/lib/libPolly.so*</Path>
+            <Path fileType="library">/usr/lib/LLVMPolly.so*</Path>
+            <Path fileType="library">/usr/lib/libPollyISL.so*</Path>
+            <Path fileType="library">/usr/lib/libPollyPPCG.so*</Path>
+            <Path fileType="library">/usr/lib/libRemarks.so*</Path>
+            <Path fileType="library">/usr/lib/libMLIR*.so*</Path>
+            <Path fileType="library">/usr/lib/libmlir*.so*</Path>
             <Path fileType="library">/usr/lib/bfd-plugins/LLVMgold.so</Path>
             <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
         </Files>
@@ -96,14 +105,11 @@
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency release="current">llvm-clang</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>libffi</Dependency>
-            <Dependency>libedit</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>libedit</Dependency>
+            <Dependency>libxml2</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>python3</Dependency>
-            <Dependency>libxml2</Dependency>
-            <Dependency>xz</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/argdumper</Path>
@@ -112,7 +118,7 @@
             <Path fileType="library">/usr/lib/liblldb.so*</Path>
             <Path fileType="library">/usr/lib/liblldb*</Path>
             <Path fileType="library">/usr/lib/python2.7/site-packages/readline.so</Path>
-            <Path fileType="library">/usr/lib/python2.7/site-packages/lldb/*</Path>
+            <Path fileType="library">/usr/lib/python3.8/site-packages/lldb/*</Path>
             <Path fileType="library">/usr/lib/liblldbIntelFeatures.so*</Path>
             <Path fileType="library">/usr/lib/liblldbPluginExpressionParserClang.a</Path>
             <Path fileType="library">/usr/lib/liblldbPluginObjCLanguage.a</Path>
@@ -135,13 +141,6 @@
         <Summary> Linker from the LLVM project</Summary>
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>libffi</Dependency>
-            <Dependency>libedit</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>ncurses</Dependency>
-            <Dependency>python3</Dependency>
-            <Dependency>libxml2</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/ld.lld</Path>
@@ -149,6 +148,7 @@
             <Path fileType="executable">/usr/bin/lld</Path>
             <Path fileType="executable">/usr/bin/lld-link</Path>
             <Path fileType="executable">/usr/bin/wasm-ld</Path>		
+            <Path fileType="library">/usr/lib/liblldMachO2.so*</Path>
             <Path fileType="library">/usr/lib/liblldCOFF.*</Path>
             <Path fileType="library">/usr/lib/liblldCommon.*</Path>
             <Path fileType="library">/usr/lib/liblldCore.*</Path>
@@ -159,6 +159,7 @@
             <Path fileType="library">/usr/lib/liblldReaderWriter.*</Path>
             <Path fileType="library">/usr/lib/liblldWasm.*</Path>
             <Path fileType="library">/usr/lib/liblldYAML.*</Path>
+            <Path fileType="library">/usr/lib/liblldMachO2.*</Path>
             <Path fileType="doc">/usr/share/doc/lld</Path>
         </Files>
     </Package>
@@ -168,9 +169,11 @@
         <Summary>Development headers lld</Summary>
         <RuntimeDependencies>
             <Dependency release="current">lld</Dependency>
+            <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/lld/*</Path>
+            <Path fileType="library">/usr/lib/cmake/lld/*</Path>
         </Files>
     </Package>
 
@@ -189,6 +192,7 @@
             <Path fileType="library">/usr/share/opt-viewer</Path>
             <Path fileType="executable">/usr/libexec/ccc-*</Path>
             <Path fileType="executable">/usr/libexec/c++-*</Path>
+            <Path fileType="man">/usr/share/man/man1/scan-build.1</Path>
         </Files>
     </Package>
 	
@@ -196,6 +200,7 @@
         <Name>compiler-rt</Name>
         <Summary>Various runtime libraries used by Clang</Summary>
         <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/clang/11.0.0/lib/linux/*.so</Path>
@@ -209,18 +214,22 @@
         <RuntimeDependencies>
             <Dependency release="current">llvm</Dependency>
             <Dependency release="current">llvm-libs</Dependency>
+            <Dependency>libxml2</Dependency>
             <Dependency>libgcc</Dependency>
-            <Dependency>ncurses</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="executable">/usr/bin/diagtool</Path>
+            <Path fileType="executable">/usr/bin/pp-trace</Path>
+            <Path fileType="executable">/usr/bin/modularize</Path>
+            <Path fileType="executable">/usr/bin/find-all-symbols</Path>
             <Path fileType="executable">/usr/bin/git-clang*</Path>
             <Path fileType="executable">/usr/bin/clang*</Path>
             <Path fileType="executable">/usr/bin/c-index-test</Path>
             <Path fileType="executable">/usr/bin/tblgen</Path>
             <Path fileType="library">/usr/lib/libclang*</Path>
             <Path fileType="library">/usr/lib/clang/</Path>
-<!--             <Path fileType="library">/usr/lib/liblldbPluginExpressionParserClang.a</Path> -->
-<!--             <Path fileType="library">/usr/lib/liblldbPluginObjCLanguage.a</Path> -->
+            
+            <Path fileType="library">/usr/lib/libfindAllSymbols.so*</Path>
             <Path fileType="man">/usr/share/man/man1/clang.1</Path>
             <Path fileType="data">/usr/lib/cmake/clang/Clang*</Path>
             <Path fileType="data">/usr/share/clang</Path>
@@ -239,7 +248,7 @@
             <Path fileType="header">/usr/include/clang-tidy</Path>
         </Files>
     </Package>
-
+    
     <!--Package>
         <Name>llvm-docs</Name>
         <PartOf>programming.docs</PartOf>
@@ -260,11 +269,11 @@
             <Dependency>zlib-32bit</Dependency>
             <Dependency>libffi-32bit</Dependency>
             <Dependency>libxml2-32bit</Dependency>
+            <Dependency>ncurses-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">llvm</Dependency>
             <Dependency>libgcc</Dependency>
-            <Dependency>libedit</Dependency>
             <Dependency>libxml2-32bit</Dependency>
             <Dependency>ncurses-32bit</Dependency>
             <Dependency>zlib-32bit</Dependency>
