@@ -27,6 +27,7 @@ def setup():
                -Dgallium-nine=true \
                -Dvulkan-drivers=amd,intel \
                -Dvulkan-device-select-layer=true \
+               -Dvulkan-device-select-layer=true \
                -Dshared-glapi=enabled \
                -Dgles1=enabled \
                -Dgles2=enabled \
@@ -52,7 +53,8 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32") 
     else: options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled"
-
+    
+    pisitools.ldflags.add("-fuse-ld=lld")
     mesontools.configure(options)
 
 def build():
