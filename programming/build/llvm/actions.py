@@ -19,16 +19,16 @@ NoStrip = ["/usr/lib/clang/%s/lib/linux" %get.srcVERSION()]
 WorkDir = "llvm-project-%s" %get.srcVERSION()
 
 def setup():
-    pisitools.ldflags.add("-fuse-ld=lld -rtlib=libgcc")
-    pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
-    pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
+    #pisitools.ldflags.add("-fuse-ld=lld -rtlib=libgcc")
+    #pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
+    #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
     
 
     if get.buildTYPE() == "emul32":
-        #shelltools.export("CC", "gcc -m32")
-        #shelltools.export("CXX", "g++ -m32")
-        shelltools.export("CC", "clang -m32")
-        shelltools.export("CXX", "clang++ -m32")
+        shelltools.export("CC", "gcc -m32")
+        shelltools.export("CXX", "g++ -m32")
+        #shelltools.export("CC", "clang -m32")
+        #shelltools.export("CXX", "clang++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
         #clang patch
@@ -36,10 +36,10 @@ def setup():
         #shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
         #shelltools.cd("..")
     else:
-        #shelltools.export("CC", "gcc")
-        #shelltools.export("CXX", "g++")
-        shelltools.export("CC", "clang")
-        shelltools.export("CXX", "clang++")
+        shelltools.export("CC", "gcc")
+        shelltools.export("CXX", "g++")
+        #shelltools.export("CC", "clang")
+        #shelltools.export("CXX", "clang++")
     
     shelltools.makedirs("llvm/build")
     
@@ -82,12 +82,12 @@ def setup():
 def build():
     shelltools.cd("llvm/build")
     shelltools.system("ninja")
-        #cmaketools.make()
+    #cmaketools.make()
 
 def install():
     shelltools.cd("llvm/build")
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-        #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
     if get.buildTYPE() == "emul32":        
         pisitools.domove("/emul32/lib32/", "/usr/")
