@@ -12,17 +12,29 @@ from pisi.actionsapi import shelltools
 shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
-    shelltools.export("LDFLAGS", "-lpthread")
-    autotools.configure("\
-                         --builtin-libraries=replace \
-                         --bundled-libraries=NONE \
-                         --disable-rpath \
-                        ")
+    options = "--builtin-libraries=replace \
+               --bundled-libraries=NONE \
+               --disable-rpath \
+              "
+              
+    if get.buildTYPE() == "_emul32":
+        shelltools.export("CC", "%s -m32" % get.CC())
+        shelltools.export("CXX", "%s -m32" % get.CXX())
+        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        options += " --libdir=/usr/lib32 \
+                     --bindir=/usr/bin32 \
+                     --disable-python \
+                   "
+    #else: shelltools.export("LDFLAGS", "-lpthread")
+    autotools.configure(options)
 
 def build():
     shelltools.system("make")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
+    if get.buildTYPE() == "_emul32":
+        pisitools.removeDir("usr/bin32")
+        return
+    
     pisitools.dodoc("docs/README")

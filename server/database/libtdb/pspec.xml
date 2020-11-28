@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libtdb</Name>
-        <Homepage>https://tdb.samba.org/</Homepage>
+        <Homepage>https://tdb.samba.org</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -47,15 +47,39 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
             <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+    <Package>
+        <Name>libtdb-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for libtdb</Summary>
+        <BuildType>_emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libgcc</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">libtdb</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2020-11-28</Date>
+            <Version>1.4.3</Version>
+            <Comment>Rebuild 32bit.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2020-01-14</Date>
             <Version>1.4.3</Version>
-            <Comment>Version bump</Comment>
+            <Comment>Version bump.</Comment>
             <Name>İdris Kalp</Name>
             <Email>idriskalp@gmail.com</Email>
         </Update>
