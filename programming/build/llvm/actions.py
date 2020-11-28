@@ -16,7 +16,7 @@ libsuffix = "32" if get.buildTYPE() == "emul32" else " "
 
 NoStrip = ["/usr/lib/clang/%s/lib/linux" %get.srcVERSION()]
 
-WorkDir = "llvm-project-%s" %get.srcVERSION()
+WorkDir = "llvm-project-%s" % get.srcVERSION()
 
 def setup():
     #pisitools.ldflags.add("-fuse-ld=lld -rtlib=libgcc")
