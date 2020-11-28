@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
-projects = "clang;lld;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
+projects = "clang;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
 libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else " "
