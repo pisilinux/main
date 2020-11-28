@@ -14,7 +14,7 @@ libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else " "
 
-NoStrip = ["/usr/lib/clang/%s/lib/linux" %get.srcVERSION()]
+NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 
 WorkDir = "llvm-project-%s" % get.srcVERSION()
 
