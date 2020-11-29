@@ -25,7 +25,7 @@ def setup():
                      --bindir=/usr/bin32 \
                      --disable-python \
                    "
-    #else: shelltools.export("LDFLAGS", "-lpthread")
+    else: shelltools.export("LDFLAGS", "-lpthread")
     autotools.configure(options)
 
 def build():
