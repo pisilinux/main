@@ -39,7 +39,7 @@ def build():
     
     shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.export("RUST_BACKTRACE", "1")
-    shelltools.system("python ./x.py dist")
+    shelltools.system("python ./x.py build")
     
 
 def install():
