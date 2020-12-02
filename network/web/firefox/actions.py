@@ -65,4 +65,4 @@ def install():
     pisitools.insinto("/usr/share/pixmaps", "browser/branding/official/default256.png", "firefox.png")
     
     # Install docs
-    pisitools.dodoc("LEGAL", "LICENSE")
+    pisitools.dodoc("README*", "LICENSE")
