@@ -11,7 +11,12 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.cflags.add("-Wno-deprecated-declarations")
-    autotools.configure("--enable-introspection --enable-vala=no --enable-gtk-doc --disable-static")
+    autotools.configure("--enable-introspection  \
+        --enable-vala=no  \
+        --enable-gtk-doc  \
+        --enable-gio-unix  \
+        --disable-debug  \
+        --disable-static")
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
 def build():
