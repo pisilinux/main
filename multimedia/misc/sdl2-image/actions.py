@@ -14,7 +14,8 @@ def setup():
 
     #autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
-                        --prefix=/usr")
+                        --prefix=/usr  \
+                        --enable-wayland")
 
 def build():
     autotools.make()
