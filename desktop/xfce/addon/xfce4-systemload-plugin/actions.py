@@ -9,8 +9,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+	# fix build failure w/ xfce4-panel-4.15.0
+	pisitools.dosed("panel-plugin/systemload.c", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
 	autotools.configure()
-
+	
+	
 	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
