@@ -12,7 +12,7 @@ from pisi.actionsapi import shelltools
 def setup():
     #autotools.autoreconf("-fiv")
     autotools.configure("--prefix=/usr \
-                         -sbindir=/usr/bin \
+                         --sbindir=/usr/bin \
                          --enable-id-check \
                          --enable-clamdtop \
                          --disable-static \
