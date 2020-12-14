@@ -9,17 +9,16 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vif")
-    autotools.configure("--disable-static")
+	autotools.autoreconf("-vif")
+	autotools.configure("--disable-python --disable-static --disable-deprecations")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    autotools.make()
-
-def check():
-    autotools.make("-k check")
+	autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+	pisitools.dodoc("AUTHORS")
 

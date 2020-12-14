@@ -8,18 +8,21 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-def setup():
-    autotools.autoreconf("-vif")
-    autotools.configure("--disable-static")
+j = "--enable-outputs \
+     --disable-visualizer \
+     --disable-clock \
+     --disable-static \
+     --with-taglib \
+    "
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+def setup():
+	autotools.configure(j)
 
 def build():
-    autotools.make()
-
-def check():
-    autotools.make("-k check")
+	autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+	pisitools.dodoc("AUTHORS", "COPYING", "INSTALL", "NEWS")
 
