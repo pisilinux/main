@@ -19,5 +19,3 @@ def install():
     kde5.install()
     pisitools.dosym("/usr/lib/plasma-discover/libDiscoverNotifiers.so", "usr/lib/libDiscoverNotifiers.so") 
     pisitools.dosym("/usr/lib/plasma-discover/libDiscoverCommon.so", "usr/lib/libDiscoverCommon.so") 
-    
-    pisitools.dodoc("COPYING")
