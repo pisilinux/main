@@ -1,0 +1,31 @@
+# Fix bug with window size when music tags are too long.
+--- a/src/sources/ario-tree.c
++++ b/src/sources/ario-tree.c
+@@ -130,7 +130,7 @@
+ };
+ 
+ #define ARIO_TREE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_ARIO_TREE, ArioTreePrivate))
+-G_DEFINE_TYPE (ArioTree, ario_tree, GTK_TYPE_SCROLLED_WINDOW)
++G_DEFINE_TYPE_WITH_PRIVATE (ArioTree, ario_tree, GTK_TYPE_SCROLLED_WINDOW)
+ 
+ static void
+ ario_tree_class_init (ArioTreeClass *klass)
+@@ -182,9 +182,6 @@
+                               g_cclosure_marshal_VOID__VOID,
+                               G_TYPE_NONE,
+                               0);
+-
+-        /* Private attributes */
+-        g_type_class_add_private (klass, sizeof (ArioTreePrivate));
+ }
+ 
+ static void
+@@ -275,7 +272,7 @@
+                                                      construct_properties));
+ 
+         /* Scrolled window property */
+-        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
++        gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tree), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (tree), GTK_SHADOW_IN);
+ 
+         /* Get drag and drop targets */
