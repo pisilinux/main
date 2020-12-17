@@ -28,6 +28,7 @@ def setup():
                          --with-ldap \
                          --enable-shell-sets-home \
                          --without-selinux \
+                         --with-sendmail=/usr/sbin/sendmail \
                          --without-rpath")
     
     # fix unused direct dependency analysis
