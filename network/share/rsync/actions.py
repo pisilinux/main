@@ -11,7 +11,9 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.configure("--without-included-zlib \
+                         --with-included-zlib=no \
                          --with-included-popt=no \
+                         --disable-xxhash \
                          --disable-debug")
 
 def build():
@@ -23,4 +25,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("NEWS","README","TODO")
+    pisitools.dodoc("NEWS*","README*","TODO")

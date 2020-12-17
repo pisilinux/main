@@ -5,8 +5,11 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def build():
+    shelltools.system("sed -i '/^#include /s|ncursesw/||' gptcurses.cc")
     autotools.make()
 
 def install():

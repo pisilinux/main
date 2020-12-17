@@ -13,9 +13,9 @@ from pisi.actionsapi import pisitools
 
 def setup():
     
-    shelltools.export("CC", "clang")
-    shelltools.export("CXX", "clang++")
-    pisitools.ldflags.add("-fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
+    #shelltools.export("CC", "clang")
+    #shelltools.export("CXX", "clang++")
+    #pisitools.ldflags.add("-fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
     
     options = "-DCMAKE_BUILD_TYPE=Release \
                -DLIBOMP_ENABLE_ASSERTIONS=ON \
