@@ -6,8 +6,11 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sh ./autogen.sh")
     autotools.configure("--with-posix-regex \
                          --without-readlib \
                          --disable-etags \
@@ -15,6 +18,9 @@ def setup():
 
 def build():
     autotools.make()
+    
+#def check():
+    #autotools.make("check")
 
 def install():
     autotools.install()
@@ -23,5 +29,5 @@ def install():
     pisitools.rename("/usr/bin/ctags", "exuberant-ctags")
     pisitools.rename("/usr/share/man/man1/ctags.1", "exuberant-ctags.1")
 
-    pisitools.dohtml("EXTENDING.html", "ctags.html")
-    pisitools.dodoc("COPYING", "FAQ", "NEWS", "README")
+    #pisitools.dohtml("EXTENDING.html", "ctags.html")
+    pisitools.dodoc("COPYING", "README*")

@@ -16,11 +16,11 @@ def build():
     pisitools.flags.add("-DNDEBUG -fPIC")
     pisitools.dosed("cryptopp.pc", "@VERSION@", get.srcVERSION())
     
-    cmaketools.make("dynamic cryptest.exe")
+    cmaketools.make("dynamic cryptest.exe PREFIX=/usr libcryptopp.pc cryptopp.pc")
     
     
 def install():
-    cmaketools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s PREFIX=/usr" % get.installDIR())
     
     pisitools.remove("/usr/lib/libcryptopp.a")
 

@@ -6,23 +6,30 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
+    mesontools.configure("-Dbuild-documentation=true")
+    #shelltools.system("sh ./autogen.sh")
+    #autotools.autoreconf("-fiv")
     # dont waste time building examples, docs and tests
-    pisitools.dosed("Makefile.in", " tests examples docs")
+    #pisitools.dosed("Makefile.in", " tests examples docs")
     
-    autotools.configure("--disable-static")
+    #autotools.configure("--disable-static enable-shared=yes ENABLE_DOCUMENTATION=no")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    autotools.make()
+    mesontools.build()
+    #autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+    #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.removeDir("/usr/share/devhelp")
+    #pisitools.removeDir("/usr/share/devhelp")
 
     #move html docs to html doc dir
     pisitools.dodir("/usr/share/doc/%s/html" % get.srcNAME())
