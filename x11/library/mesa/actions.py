@@ -18,7 +18,7 @@ def setup():
                -Dplatforms=x11,wayland \
                -Ddri3=enabled \
                -Ddri-drivers=i915,i965,r100,r200,nouveau \
-               -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swr,iris,swrast,virgl \
+               -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swr,iris,swrast,virgl,zink \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
                -Dgallium-xvmc=enabled \
@@ -26,7 +26,6 @@ def setup():
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
                -Dvulkan-drivers=amd,intel \
-               -Dvulkan-device-select-layer=true \
                -Dvulkan-device-select-layer=true \
                -Dshared-glapi=enabled \
                -Dgles1=enabled \
