@@ -1,0 +1,166 @@
+From d851495f2fe614c4c860bda1bd3c80bfbe48360b Mon Sep 17 00:00:00 2001
+From: Jonas Paulsson <paulsson@linux.vnet.ibm.com>
+Date: Thu, 8 Oct 2020 13:18:29 +0200
+Subject: [PATCH] [SystemZ] Use LA instead of AGR in eliminateFrameIndex().
+
+Since AGR clobbers CC it should not be used here.
+
+Fixes https://bugs.llvm.org/show_bug.cgi?id=47736.
+
+Review: Ulrich Weigand
+Differential Revision: https://reviews.llvm.org/D89034
+---
+ .../Target/SystemZ/SystemZRegisterInfo.cpp    |  4 +--
+ llvm/test/CodeGen/SystemZ/frame-14.ll         | 26 +++++++++----------
+ llvm/test/CodeGen/SystemZ/frame-16.ll         |  4 +--
+ 3 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/llvm/lib/Target/SystemZ/SystemZRegisterInfo.cpp b/llvm/lib/Target/SystemZ/SystemZRegisterInfo.cpp
+index 53b06c6e7e6d..88212e52460f 100644
+--- a/llvm/lib/Target/SystemZ/SystemZRegisterInfo.cpp
++++ b/llvm/lib/Target/SystemZ/SystemZRegisterInfo.cpp
+@@ -322,8 +322,8 @@ SystemZRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator MI,
+         // Load the high offset into the scratch register and use it as
+         // an index.
+         TII->loadImmediate(MBB, MI, ScratchReg, HighOffset);
+-        BuildMI(MBB, MI, DL, TII->get(SystemZ::AGR),ScratchReg)
+-          .addReg(ScratchReg, RegState::Kill).addReg(BasePtr);
++        BuildMI(MBB, MI, DL, TII->get(SystemZ::LA), ScratchReg)
++          .addReg(BasePtr, RegState::Kill).addImm(0).addReg(ScratchReg);
+       }
+ 
+       // Use the scratch register as the base.  It then dies here.
+diff --git a/llvm/test/CodeGen/SystemZ/frame-14.ll b/llvm/test/CodeGen/SystemZ/frame-14.ll
+index e70731249b42..193ff81123c5 100644
+--- a/llvm/test/CodeGen/SystemZ/frame-14.ll
++++ b/llvm/test/CodeGen/SystemZ/frame-14.ll
+@@ -85,13 +85,13 @@ define void @f3() {
+ define void @f4() {
+ ; CHECK-NOFP-LABEL: f4:
+ ; CHECK-NOFP: llilh %r1, 8
+-; CHECK-NOFP: agr %r1, %r15
++; CHECK-NOFP: la %r1, 0(%r1,%r15)
+ ; CHECK-NOFP: mvi 0(%r1), 42
+ ; CHECK-NOFP: br %r14
+ ;
+ ; CHECK-FP-LABEL: f4:
+ ; CHECK-FP: llilh %r1, 8
+-; CHECK-FP: agr %r1, %r11
++; CHECK-FP: la %r1, 0(%r1,%r11)
+ ; CHECK-FP: mvi 0(%r1), 42
+ ; CHECK-FP: br %r14
+   %region1 = alloca [524104 x i8], align 8
+@@ -108,13 +108,13 @@ define void @f4() {
+ define void @f5() {
+ ; CHECK-NOFP-LABEL: f5:
+ ; CHECK-NOFP: llilh %r1, 8
+-; CHECK-NOFP: agr %r1, %r15
++; CHECK-NOFP: la %r1, 0(%r1,%r15)
+ ; CHECK-NOFP: mvi 4095(%r1), 42
+ ; CHECK-NOFP: br %r14
+ ;
+ ; CHECK-FP-LABEL: f5:
+ ; CHECK-FP: llilh %r1, 8
+-; CHECK-FP: agr %r1, %r11
++; CHECK-FP: la %r1, 0(%r1,%r11)
+ ; CHECK-FP: mvi 4095(%r1), 42
+ ; CHECK-FP: br %r14
+   %region1 = alloca [524104 x i8], align 8
+@@ -130,13 +130,13 @@ define void @f5() {
+ define void @f6() {
+ ; CHECK-NOFP-LABEL: f6:
+ ; CHECK-NOFP: llilh %r1, 8
+-; CHECK-NOFP: agr %r1, %r15
++; CHECK-NOFP: la %r1, 0(%r1,%r15)
+ ; CHECK-NOFP: mviy 4096(%r1), 42
+ ; CHECK-NOFP: br %r14
+ ;
+ ; CHECK-FP-LABEL: f6:
+ ; CHECK-FP: llilh %r1, 8
+-; CHECK-FP: agr %r1, %r11
++; CHECK-FP: la %r1, 0(%r1,%r11)
+ ; CHECK-FP: mviy 4096(%r1), 42
+ ; CHECK-FP: br %r14
+   %region1 = alloca [524104 x i8], align 8
+@@ -155,13 +155,13 @@ define void @f6() {
+ define void @f7() {
+ ; CHECK-NOFP-LABEL: f7:
+ ; CHECK-NOFP: llilh %r1, 23
+-; CHECK-NOFP: agr %r1, %r15
++; CHECK-NOFP: la %r1, 0(%r1,%r15)
+ ; CHECK-NOFP: mviy 65535(%r1), 42
+ ; CHECK-NOFP: br %r14
+ ;
+ ; CHECK-FP-LABEL: f7:
+ ; CHECK-FP: llilh %r1, 23
+-; CHECK-FP: agr %r1, %r11
++; CHECK-FP: la %r1, 0(%r1,%r11)
+ ; CHECK-FP: mviy 65535(%r1), 42
+ ; CHECK-FP: br %r14
+   %region1 = alloca [1048400 x i8], align 8
+@@ -178,13 +178,13 @@ define void @f7() {
+ define void @f8() {
+ ; CHECK-NOFP-LABEL: f8:
+ ; CHECK-NOFP: llilh %r1, 24
+-; CHECK-NOFP: agr %r1, %r15
++; CHECK-NOFP: la %r1, 0(%r1,%r15)
+ ; CHECK-NOFP: mvi 7(%r1), 42
+ ; CHECK-NOFP: br %r14
+ ;
+ ; CHECK-FP-LABEL: f8:
+ ; CHECK-FP: llilh %r1, 24
+-; CHECK-FP: agr %r1, %r11
++; CHECK-FP: la %r1, 0(%r1,%r11)
+ ; CHECK-FP: mvi 7(%r1), 42
+ ; CHECK-FP: br %r14
+   %region1 = alloca [1048408 x i8], align 8
+@@ -233,7 +233,7 @@ define void @f10(i32 *%vptr) {
+ ; CHECK-NOFP-LABEL: f10:
+ ; CHECK-NOFP: stg [[REGISTER:%r[1-9][0-4]?]], [[OFFSET:160|168]](%r15)
+ ; CHECK-NOFP: llilh [[REGISTER]], 8
+-; CHECK-NOFP: agr [[REGISTER]], %r15
++; CHECK-NOFP: la [[REGISTER]], 0([[REGISTER]],%r15)
+ ; CHECK-NOFP: mvi 0([[REGISTER]]), 42
+ ; CHECK-NOFP: lg [[REGISTER]], [[OFFSET]](%r15)
+ ; CHECK-NOFP: br %r14
+@@ -241,7 +241,7 @@ define void @f10(i32 *%vptr) {
+ ; CHECK-FP-LABEL: f10:
+ ; CHECK-FP: stg [[REGISTER:%r[1-9][0-4]?]], [[OFFSET:160|168]](%r11)
+ ; CHECK-FP: llilh [[REGISTER]], 8
+-; CHECK-FP: agr [[REGISTER]], %r11
++; CHECK-FP: la [[REGISTER]], 0([[REGISTER]],%r11)
+ ; CHECK-FP: mvi 0([[REGISTER]]), 42
+ ; CHECK-FP: lg [[REGISTER]], [[OFFSET]](%r11)
+ ; CHECK-FP: br %r14
+@@ -273,7 +273,7 @@ define void @f11(i32 *%vptr) {
+ ; CHECK-NOFP: stmg %r6, %r15,
+ ; CHECK-NOFP: stg [[REGISTER:%r[1-9][0-4]?]], [[OFFSET:160|168]](%r15)
+ ; CHECK-NOFP: llilh [[REGISTER]], 8
+-; CHECK-NOFP: agr [[REGISTER]], %r15
++; CHECK-NOFP: la [[REGISTER]], 0([[REGISTER]],%r15)
+ ; CHECK-NOFP: mvi 0([[REGISTER]]), 42
+ ; CHECK-NOFP: lg [[REGISTER]], [[OFFSET]](%r15)
+ ; CHECK-NOFP: lmg %r6, %r15,
+diff --git a/llvm/test/CodeGen/SystemZ/frame-16.ll b/llvm/test/CodeGen/SystemZ/frame-16.ll
+index ae8a041ae110..a95c58207afb 100644
+--- a/llvm/test/CodeGen/SystemZ/frame-16.ll
++++ b/llvm/test/CodeGen/SystemZ/frame-16.ll
+@@ -311,13 +311,13 @@ define void @f11(i32 *%vptr, i8 %byte) {
+ define void @f12(i8 %byte, i64 %index) {
+ ; CHECK-NOFP-LABEL: f12:
+ ; CHECK-NOFP: llilh %r1, 8
+-; CHECK-NOFP: agr %r1, %r15
++; CHECK-NOFP: la %r1, 0(%r1,%r15)
+ ; CHECK-NOFP: stc %r2, 0(%r3,%r1)
+ ; CHECK-NOFP: br %r14
+ ;
+ ; CHECK-FP-LABEL: f12:
+ ; CHECK-FP: llilh %r1, 8
+-; CHECK-FP: agr %r1, %r11
++; CHECK-FP: la %r1, 0(%r1,%r11)
+ ; CHECK-FP: stc %r2, 0(%r3,%r1)
+ ; CHECK-FP: br %r14
+   %region1 = alloca [524104 x i8], align 8
+-- 
+2.26.2
+

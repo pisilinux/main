@@ -16,9 +16,11 @@ libsuffix = "32" if get.buildTYPE() == "emul32" else " "
 
 NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 
-WorkDir = "llvm-project-%s" % get.srcVERSION()
+#WorkDir = "llvm-project-%s" % get.srcVERSION()
 
 def setup():
+    shelltools.move("../llvm-project-%s/mlir" % get.srcVERSION(), "%s/mlir" % get.workDIR())
+    shelltools.move("../clang-%s.src" % get.srcVERSION(), "%s/clang" % get.workDIR())
     #pisitools.ldflags.add("-fuse-ld=lld -rtlib=libgcc")
     #pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
     #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
@@ -40,10 +42,22 @@ def setup():
         shelltools.export("CXX", "g++")
         #shelltools.export("CC", "clang")
         #shelltools.export("CXX", "clang++")
+        
+        shelltools.move("../compiler-rt-%s.src" % get.srcVERSION(), "%s/compiler-rt" % get.workDIR())
+        shelltools.move("../clang-tools-extra-%s.src" % get.srcVERSION(), "%s/clang-tools-extra" % get.workDIR())
+        shelltools.move("../lldb-%s.src" % get.srcVERSION(), "%s/lldb" % get.workDIR())
+        shelltools.move("../lld-%s.src" % get.srcVERSION(), "%s/lld" % get.workDIR())
+        shelltools.move("../polly-%s.src" % get.srcVERSION(), "%s/polly" % get.workDIR())
+        
+        pisitools.dosed("../lld/test/ELF/shared.s", "lib64", "lib")
+        
+        #polly patch
+        shelltools.cd("%s" % get.workDIR())
+        shelltools.system("patch -p1 < support-linking-ScopPassManager-against-LLVM-dylib.patch")
+        shelltools.cd("llvm-%s.src" % get.srcVERSION())
     
-    shelltools.makedirs("llvm/build")
-    
-    shelltools.cd("llvm/build")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
         pisitools.cflags.add("-m64")
@@ -77,15 +91,16 @@ def setup():
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
+                          -DLLVM_BINUTILS_INCDIR=/usr/include \
                           -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
 
 def build():
-    shelltools.cd("llvm/build")
+    shelltools.cd("build")
     shelltools.system("ninja")
     #cmaketools.make()
 
 def install():
-    shelltools.cd("llvm/build")
+    shelltools.cd("build")
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
@@ -95,6 +110,7 @@ def install():
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
         pisitools.removeDir("/emul32")
         #pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
+        pisitools.dosym("/usr/lib/LLVMgold.so", "/usr/lib/bfd-plugins/LLVMgold.so")
    
     shelltools.cd ("..")
     
