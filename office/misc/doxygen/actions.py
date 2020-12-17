@@ -5,10 +5,13 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
+from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("""sed -i 's:DESTINATION man/man1:DESTINATION "${CMAKE_INSTALL_PREFIX}/share/man/man1":g' \
+    doc/CMakeLists.txt""")
     # --shared and --release are default parameters, however we just write them
     # to down to avoid confusing wheter it's a static/shared or release/debug
     # package at the first look :)
