@@ -11,7 +11,10 @@ from pisi.actionsapi import get
 
 
 def setup():
-    shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
+    shelltools.system("""find . -name ".pyc" -delete""")
+    #autotools.autoreconf("-fiv")
+    pisitools.dosed("configure", "python2-config", "python2.7-config")
+    
     autotools.configure()
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
