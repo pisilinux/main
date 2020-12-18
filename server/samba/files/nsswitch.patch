@@ -1,0 +1,106 @@
+diff -Nuar a/nsswitch/nsstest.c b/nsswitch/nsstest.c
+--- a/nsswitch/nsstest.c	2019-12-06 12:46:56.000000000 +0300
++++ b/nsswitch/nsstest.c	2020-11-03 13:50:40.318374062 +0300
+@@ -137,7 +137,7 @@
+ 	return &pwd;
+ }
+ 
+-static void nss_setpwent(void)
++static void nss_setpwent2(void)
+ {
+ 	NSS_STATUS (*_nss_setpwent)(void) =
+ 		(NSS_STATUS(*)(void))find_fn("setpwent");
+@@ -146,13 +146,13 @@
+ 	if (!_nss_setpwent)
+ 		return;
+ 
+-	status = _nss_setpwent();
++	status = _nss_setpwent2();
+ 	if (status != NSS_STATUS_SUCCESS) {
+ 		report_nss_error("setpwent", status);
+ 	}
+ }
+ 
+-static void nss_endpwent(void)
++static void nss_endpwent2(void)
+ {
+ 	NSS_STATUS (*_nss_endpwent)(void) =
+ 		(NSS_STATUS (*)(void))find_fn("endpwent");
+@@ -161,7 +161,7 @@
+ 	if (!_nss_endpwent)
+ 		return;
+ 
+-	status = _nss_endpwent();
++	status = _nss_endpwent2();
+ 	if (status != NSS_STATUS_SUCCESS) {
+ 		report_nss_error("endpwent", status);
+ 	}
+@@ -290,7 +290,7 @@
+ 	return &grp;
+ }
+ 
+-static void nss_setgrent(void)
++static void nss_setgrent2(void)
+ {
+ 	NSS_STATUS (*_nss_setgrent)(void) =
+ 		(NSS_STATUS (*)(void))find_fn("setgrent");
+@@ -299,13 +299,13 @@
+ 	if (!_nss_setgrent)
+ 		return;
+ 
+-	status = _nss_setgrent();
++	status = _nss_setgrent2();
+ 	if (status != NSS_STATUS_SUCCESS) {
+ 		report_nss_error("setgrent", status);
+ 	}
+ }
+ 
+-static void nss_endgrent(void)
++static void nss_endgrent2(void)
+ {
+ 	NSS_STATUS (*_nss_endgrent)(void) =
+ 		(NSS_STATUS (*)(void))find_fn("endgrent");
+@@ -314,7 +314,7 @@
+ 	if (!_nss_endgrent)
+ 		return;
+ 
+-	status = _nss_endgrent();
++	status = _nss_endgrent2();
+ 	if (status != NSS_STATUS_SUCCESS) {
+ 		report_nss_error("endgrent", status);
+ 	}
+@@ -402,7 +402,7 @@
+ {
+ 	struct passwd *pwd;
+ 
+-	nss_setpwent();
++	nss_setpwent2();
+ 	/* loop over all users */
+ 	while ((pwd = nss_getpwent())) {
+ 		printf("Testing user %s\n", pwd->pw_name);
+@@ -424,14 +424,14 @@
+ 		printf("initgroups: "); nss_test_initgroups(pwd->pw_name, pwd->pw_gid);
+ 		printf("\n");
+ 	}
+-	nss_endpwent();
++	nss_endpwent2();
+ }
+ 
+ static void nss_test_groups(void)
+ {
+ 	struct group *grp;
+ 
+-	nss_setgrent();
++	nss_setgrent2();
+ 	/* loop over all groups */
+ 	while ((grp = nss_getgrent())) {
+ 		printf("Testing group %s\n", grp->gr_name);
+@@ -452,7 +452,7 @@
+ 		printf("getgrgid: "); print_group(grp);
+ 		printf("\n");
+ 	}
+-	nss_endgrent();
++	nss_endgrent2();
+ }
+ 
+ static void nss_test_errors(void)
