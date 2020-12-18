@@ -11,6 +11,9 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    # Disable jumbo build https://bugreports.qt.io/browse/QTBUG-88657 gcc10
+    shelltools.system("sed -i 's|use_jumbo_build=true|use_jumbo_build=false|' -i src/buildtools/config/common.pri")
+    
     shelltools.makedirs("build")
     shelltools.cd("build")
     #shelltools.export("QT5LINK", "/usr/lib/qt5/bin")
@@ -18,6 +21,7 @@ def setup():
     #shelltools.export("CFLAGS", "%s -I/usr/lib/sqlite3.16.2" % get.CFLAGS())
     #shelltools.system("qmake WEBENGINE_CONFIG+=use_proprietary_codecs WEBENGINE_CONFIG+=use_system_icu WEBENGINE_CONFIG+=use_system_protobuf WEBENGINE_CONFIG+=use_system_ffmpeg qtwebengine.pro")
     #pisitools.ldflags.add("-Wl,--no-keep-memory ")
+    shelltools.export("NINJAJOBS", "-j 4")
     shelltools.system("qmake .. -- -proprietary-codecs \
                    -system-ffmpeg \
                    -system-opus \
