@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 j = "--enable-outputs \
-     --disable-visualizer \
+     --enable-visualizer \
      --disable-clock \
      --disable-static \
      --with-taglib \
@@ -24,5 +24,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "INSTALL", "NEWS")
+	pisitools.dodoc("AUTHORS", "CHANGELOG.md", "README.md")
 
