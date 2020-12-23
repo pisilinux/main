@@ -1,0 +1,93 @@
+diff -Nupr suspend~/s2ram-x86.h suspend/s2ram-x86.h
+--- suspend~/s2ram-x86.h	2012-09-15 22:23:44.000000000 +0200
++++ suspend/s2ram-x86.h	2020-05-14 19:04:21.979507630 +0200
+@@ -18,9 +18,9 @@
+ /* Item size */
+ #define ITEMSZ  1024
+ 
+-char bios_version[ITEMSZ], sys_vendor[ITEMSZ], sys_product[ITEMSZ], sys_version[ITEMSZ];
++extern char bios_version[ITEMSZ], sys_vendor[ITEMSZ], sys_product[ITEMSZ], sys_version[ITEMSZ];
+ 
+-int flags, force, fb_nosuspend, no_kms_flag;
++extern int flags, force, fb_nosuspend, no_kms_flag;
+ 
+ #define HACKS_LONG_OPTS \
+ 	{\
+diff -Nupr suspend~/s2ram-x86.c suspend/s2ram-x86.c
+--- suspend~/s2ram-x86.c	2012-09-15 22:23:44.000000000 +0200
++++ suspend/s2ram-x86.c	2020-05-14 19:33:34.683394349 +0200
+@@ -38,6 +38,10 @@ static int vbe_mode = -1, dmi_scanned;
+ #define S2RAM_NOFB	126
+ #define S2RAM_UNKNOWN	127
+ 
++/* extern in s2ram-{{arch}}.h */
++char bios_version[ITEMSZ], sys_vendor[ITEMSZ], sys_product[ITEMSZ], sys_version[ITEMSZ];
++int flags, force, fb_nosuspend, no_kms_flag;
++
+ void identify_machine(void)
+ {
+ 	if (!dmi_scanned) {
+diff -Nupr suspend~/load.c suspend/load.c
+--- suspend~/load.c	2020-05-14 18:54:12.683547000 +0200
++++ suspend/load.c	2020-05-14 19:15:39.056797202 +0200
+@@ -549,7 +549,7 @@ static int decrypt_key(struct image_head
+ 		memcpy(key, res, KEY_SIZE);
+ 		memcpy(ivec, res + KEY_SIZE, CIPHER_BLOCK);
+ 	} else {
+-		fprintf(stderr,"The main key has invalid length %i, need %i\n", s, KEY_SIZE + CIPHER_BLOCK);
++		fprintf(stderr,"The main key has invalid length %zu, need %i\n", s, KEY_SIZE + CIPHER_BLOCK);
+ 		ret = -ENODATA;
+ 	}
+ 	gcry_free(res);
+diff -Nupr suspend~/vbetool/vbetool.c suspend/vbetool/vbetool.c
+--- suspend~/vbetool/vbetool.c	2012-09-15 22:23:44.000000000 +0200
++++ suspend/vbetool/vbetool.c	2020-05-14 19:14:21.587468876 +0200
+@@ -320,7 +320,7 @@ char *__save_state(int *psize)
+ 
+ 	memset(&r, 0, sizeof(r));
+ 
+-	fprintf(stderr, "Allocated buffer at %p (base is 0x%x)\n", buffer,
++	fprintf(stderr, "Allocated buffer at %p (base is 0x%zx)\n", buffer,
+ 			LRMI_base_addr());
+ 
+ 	r.eax = 0x4f04;
+diff -Nupr suspend~/vbetool/vbetool.c suspend/vbetool/vbetool.c
+--- suspend~/vbetool/vbetool.c	2020-05-14 20:16:16.880562075 +0200
++++ suspend/vbetool/vbetool.c	2020-05-14 20:50:20.563096451 +0200
+@@ -243,9 +243,9 @@ void restore_state_from(char *data)
+ 	r.eax = 0x4f04;
+ 	r.ecx = 0xf;		/* all states */
+ 	r.edx = 2;		/* restore state */
+-	r.es = (unsigned int) (data - LRMI_base_addr()) >> 4;
+-	r.ebx = (unsigned int) (data - LRMI_base_addr()) & 0xf;
+-	r.ds = 0x0040;
++	r.es  = (unsigned short) (((data - (char*) LRMI_base_addr()) >> 4) & 0xffff);
++	r.ebx = (unsigned int)    ((data - (char*) LRMI_base_addr()) & 0xf);
++	r.ds  = 0x0040;
+ 
+ 	if (!LRMI_int(0x10, &r)) {
+ 		fprintf(stderr,
+@@ -327,9 +327,9 @@ char *__save_state(int *psize)
+ 	r.ecx = 0xf;		/* all states */
+ 	r.edx = 1;		/* save state */
+ 	
+-	r.es = (unsigned int) (buffer - LRMI_base_addr()) >> 4;
+-	r.ebx = (unsigned int) (buffer - LRMI_base_addr()) & 0xf;
+-	r.ds = 0x0040;
++	r.es  = (unsigned short) (((buffer - (char*) LRMI_base_addr()) >> 4) & 0xffff);
++	r.ebx = (unsigned int)    ((buffer - (char*) LRMI_base_addr()) & 0xf);
++	r.ds  = 0x0040;
+ 
+ 	fprintf(stderr, "ES: 0x%04X EBX: 0x%04X\n", r.es, r.ebx);
+ 
+@@ -525,8 +525,8 @@ int do_get_panel_id(int just_dimensions)
+     .ebx = 0x0001
+   };
+   struct panel_id *id = LRMI_alloc_real(sizeof(struct panel_id));
+-  r.es = (unsigned short)(((int)(id-LRMI_base_addr()) >> 4) & 0xffff);
+-  r.edi = (unsigned long)(id-LRMI_base_addr()) & 0xf;
++  r.es  = (unsigned short) (((id - LRMI_base_addr()) >> 4) & 0xffff);
++  r.edi = (unsigned long)   ((id - LRMI_base_addr()) & 0xf);
+ 
+   if(sizeof(struct panel_id) != 32)
+     return fprintf(stderr, "oops: panel_id, sizeof struct panel_id != 32, it's %ld...\n", sizeof(struct panel_id)), 7;
