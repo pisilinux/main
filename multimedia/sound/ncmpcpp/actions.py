@@ -9,9 +9,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 j = "--enable-outputs \
-     --enable-visualizer \
      --disable-clock \
      --disable-static \
+     --disable-visualizer \
      --with-taglib \
     "
 
