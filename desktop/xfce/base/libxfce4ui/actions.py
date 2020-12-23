@@ -9,7 +9,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 i = "--with-vendor-info='Pisi Linux' \
-     --enable-gtk2 \
      --enable-vala=no \
      --enable-introspection \
      --enable-startup-notification \
@@ -28,5 +27,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "THANKS")
+	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README.md", "THANKS")
 

@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--enable-gtk2 --enable-libxfce4ui --disable-gtk-doc --disable-static")
+	autotools.configure("--enable-libxfce4ui --disable-gtk-doc --disable-static")
 
 	#pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
 	#pisitools.dosed("libtool", "^(runpath_var=)LD_RUN_PATH", "\\1DIE_RPATH_DIE")

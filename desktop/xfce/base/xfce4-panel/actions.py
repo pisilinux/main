@@ -8,16 +8,19 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
+i = "--enable-introspection  \
+     --enable-gtk-doc  \
+     --enable-gio-unix  \
+     --disable-vala  \
+     --disable-debug  \
+     --disable-static \
+    "
 
 def setup():
-    pisitools.cflags.add("-Wno-deprecated-declarations")
-    autotools.configure("--enable-introspection  \
-        --enable-vala=no  \
-        --enable-gtk-doc  \
-        --enable-gio-unix  \
-        --disable-debug  \
-        --disable-static")
-    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+	pisitools.cflags.add("-Wno-deprecated-declarations")
+	autotools.configure(i)
+
+	pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
 def build():
 	autotools.make()

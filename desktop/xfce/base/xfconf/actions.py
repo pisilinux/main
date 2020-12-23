@@ -8,8 +8,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-i = "--enable-vala=no \
-     --enable-introspection \
+i = "--enable-introspection \
+     --disable-vala \
      --disable-static \
      --disable-gtk-doc \
      --disable-perl-bindings \
