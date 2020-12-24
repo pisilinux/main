@@ -10,21 +10,21 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.makedirs("build")
-    #shelltools.cd("build")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_INSTALL_LIBDIR=lib")
+                          -DCMAKE_INSTALL_LIBDIR=lib", sourceDir="..")
                          
 
 def build():
-    #shelltools.cd("build")
+    shelltools.cd("build")
     cmaketools.make()
 
 def install():
-    #shelltools.cd("build")
+    shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #shelltools.cd("..")
-
+    
+    shelltools.cd("..")
     pisitools.dodoc("README*", "TODO*", "NEWS*", "COPYING")
 
