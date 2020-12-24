@@ -8,25 +8,17 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-i = "--enable-introspection  \
-     --enable-gtk-doc  \
-     --enable-gio-unix  \
-     --disable-vala  \
-     --disable-debug  \
-     --disable-static \
-    "
-
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure(i)
-
-	pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+	autotools.configure("--disable-dependency-tracking --disable-static --enable-gnome")
 
 def build():
 	autotools.make()
 
+def check():
+	autotools.make("check")
+
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS*")
+	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README", "TODO")
 
