@@ -24,6 +24,7 @@ def setup():
                          --with-ibmtts=no \
                          --with-baratinoo=no \
                          --with-kali=no \
+                         --with-voxin=no \
                          --with-default-audio-method=alsa")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -44,5 +45,7 @@ def install():
     # Create log directory, it should be world unreadable
     pisitools.dodir("/var/log/speech-dispatcher")
     shelltools.chmod("%s/var/log/speech-dispatcher" % get.installDIR(), 0700)
+    
+    shelltools.system("""sed -e 's/# AudioOutputMethod "pulse"/AudioOutputMethod "pulse,alsa"/' -i %s/etc/speech-dispatcher/speechd.conf""" % get.installDIR())
 
     pisitools.dodoc("AUTHORS", "COPYING*", "README*")
