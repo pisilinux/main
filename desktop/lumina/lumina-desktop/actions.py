@@ -24,5 +24,7 @@ def build():
 
 def install():
     qt5.install()
+    #keep original lumina icon
+    pisitools.rename("/usr/share/icons/hicolor/scalable/apps/Lumina-DE.png", "lumina-desktop.png")
 
     pisitools.dodoc("LICENSE", "README*")
