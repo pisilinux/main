@@ -9,29 +9,29 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("\
-	\
-	--enable-gstreamer-thumbnailer \
-	--enable-poppler-thumbnailer \
-	--enable-desktop-thumbnailer \
-	--enable-pixbuf-thumbnailer \
-	--enable-ffmpeg-thumbnailer \
-	--enable-cover-thumbnailer \
-	--enable-font-thumbnailer \
-	--enable-jpeg-thumbnailer \
-	--enable-raw-thumbnailer \
-	--enable-odf-thumbnailer \
-	--enable-xdg-cache \
-	\
-	--disable-static")
+    autotools.configure("\
+    \
+    --enable-gstreamer-thumbnailer \
+    --enable-poppler-thumbnailer \
+    --enable-desktop-thumbnailer \
+    --enable-pixbuf-thumbnailer \
+    --enable-ffmpeg-thumbnailer \
+    --enable-cover-thumbnailer \
+    --enable-font-thumbnailer \
+    --enable-jpeg-thumbnailer \
+    --enable-raw-thumbnailer \
+    --enable-odf-thumbnailer \
+    --enable-xdg-cache \
+    \
+    --disable-static")
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("README*", "NEWS", "COPYING", "ChangeLog", "AUTHORS")
+    pisitools.dodoc("README*", "NEWS", "COPYING", "ChangeLog", "AUTHORS")
 

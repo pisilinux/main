@@ -9,14 +9,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure("--enable-gudev --enable-gstreamer --disable-static")
+    pisitools.cflags.add("-Wno-deprecated-declarations")
+    autotools.configure("--enable-gudev --enable-gstreamer --disable-static")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "TODO")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "TODO")
 

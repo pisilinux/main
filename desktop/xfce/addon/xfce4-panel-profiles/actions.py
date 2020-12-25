@@ -9,13 +9,13 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.rawConfigure("--python=python3 --prefix=/usr")
+    autotools.rawConfigure("--python=python3 --prefix=/usr")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-#	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
+#    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
 

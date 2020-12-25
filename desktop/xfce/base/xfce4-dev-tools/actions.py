@@ -8,13 +8,13 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-	autotools.configure()
+    autotools.configure()
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.install()
+    autotools.install()
 
-	pisitools.dodoc("README.md", "COPYING", "NEWS", "HACKING", "AUTHORS")
+    pisitools.dodoc("README.md", "COPYING", "NEWS", "HACKING", "AUTHORS")
 

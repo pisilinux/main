@@ -9,14 +9,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations -Wno-incompatible-pointer-types")
-	autotools.configure("--enable-gtk3 --disable-static")
+    pisitools.cflags.add("-Wno-deprecated-declarations -Wno-incompatible-pointer-types")
+    autotools.configure("--enable-gtk3 --disable-static")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README.md", "THANKS")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README.md", "THANKS")
 

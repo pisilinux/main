@@ -7,7 +7,7 @@
 from pisi.actionsapi import pisitools
 
 def install():
-	pisitools.insinto("/usr/share/Thunar/sendto/", "thunar-sendto-clamtk.desktop")
-	pisitools.dodoc("CHANGES", "DISCLAIMER", "LICENSE", "README")
-	pisitools.doman("thunar-sendto-clamtk.1.gz")
+    pisitools.insinto("/usr/share/Thunar/sendto/", "thunar-sendto-clamtk.desktop")
+    pisitools.dodoc("CHANGES", "DISCLAIMER", "LICENSE", "README")
+    pisitools.doman("thunar-sendto-clamtk.1.gz")
 

@@ -9,17 +9,17 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--enable-libxfce4ui --disable-gtk-doc --disable-static")
+    autotools.configure("--enable-libxfce4ui --disable-gtk-doc --disable-static")
 
-	#pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
-	#pisitools.dosed("libtool", "^(runpath_var=)LD_RUN_PATH", "\\1DIE_RPATH_DIE")
-	pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    #pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
+    #pisitools.dosed("libtool", "^(runpath_var=)LD_RUN_PATH", "\\1DIE_RPATH_DIE")
+    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "HACKING", "NEWS", "README*", "STATUS")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "HACKING", "NEWS", "README*", "STATUS")
 

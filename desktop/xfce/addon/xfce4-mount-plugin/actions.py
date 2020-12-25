@@ -19,10 +19,10 @@ def setup():
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README",	"TODO")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README",    "TODO")
 
