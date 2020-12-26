@@ -10,14 +10,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	shelltools.system("aclocal && autoconf && automake --add-missing --foreign")
-	autotools.configure()
+    shelltools.system("aclocal && autoconf && automake --add-missing --foreign")
+    autotools.configure()
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "INSTALL", "LICENSE", "README.md")
+    pisitools.dodoc("AUTHORS", "INSTALL", "LICENSE", "README.md")
 

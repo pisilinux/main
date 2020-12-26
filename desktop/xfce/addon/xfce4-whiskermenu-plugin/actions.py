@@ -11,13 +11,13 @@ from pisi.actionsapi import get
 j = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib"
 
 def setup():
-	cmaketools.configure(j)
+    cmaketools.configure(j)
 
 def build():
-	cmaketools.make()
+    cmaketools.make()
 
 def install():
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
 

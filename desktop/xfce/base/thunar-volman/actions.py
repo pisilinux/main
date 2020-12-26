@@ -9,13 +9,13 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--enable-notifications --disable-static")
+    autotools.configure("--enable-notifications --disable-static")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README*")
 

@@ -11,17 +11,17 @@ from pisi.actionsapi import get
 pisitools.cflags.add("-Wno-deprecated-declarations")
 
 def setup():
-	autotools.configure("--enable-dbus-start-daemon \
-	--enable-old-get-server-information-signature \
-	--enable-old-notification-closed-signature")
+    autotools.configure("--enable-dbus-start-daemon \
+    --enable-old-get-server-information-signature \
+    --enable-old-notification-closed-signature")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.removeDir("usr/lib/systemd")
+    pisitools.removeDir("usr/lib/systemd")
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
 

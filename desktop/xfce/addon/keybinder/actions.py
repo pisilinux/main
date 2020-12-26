@@ -10,18 +10,18 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-	autotools.configure("--disable-static --enable-introspection")
+    pisitools.cflags.add("-Wno-deprecated-declarations")
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    autotools.configure("--disable-static --enable-introspection")
 
-	#for fix unused dependency
-	pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+    #for fix unused dependency
+    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README.rst")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README.rst")
 

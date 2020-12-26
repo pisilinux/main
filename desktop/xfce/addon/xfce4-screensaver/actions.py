@@ -9,23 +9,23 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--enable-authentication-scheme=pam --enable-locking --enable-pam \
-	\
-	--disable-static \
-	\
-	--with-pam-auth-type=system \
-	--with-console-kit \
-	--with-mit-ext \
-	--with-shadow \
-	--with-libgl \
-	\
-	--without-systemd")
+    autotools.configure("--enable-authentication-scheme=pam --enable-locking --enable-pam \
+    \
+    --disable-static \
+    \
+    --with-pam-auth-type=system \
+    --with-console-kit \
+    --with-mit-ext \
+    --with-shadow \
+    --with-libgl \
+    \
+    --without-systemd")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("COPYING*", "INSTALL", "NEWS", "README.md")
+    pisitools.dodoc("COPYING*", "INSTALL", "NEWS", "README.md")
 

@@ -11,16 +11,16 @@ from pisi.actionsapi import get
 i = "-Wno-incompatible-pointer-types -Wno-implicit-function-declaration -Wno-deprecated-declarations"
 
 def setup():
-	pisitools.cflags.add(i)
-	autotools.configure("--disable-static")
+    pisitools.cflags.add(i)
+    autotools.configure("--disable-static")
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
 

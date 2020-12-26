@@ -9,15 +9,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure("--disable-static")
+    pisitools.cflags.add("-Wno-deprecated-declarations")
+    autotools.configure("--disable-static")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-	pisitools.removeDir("/usr/share/gnome-control-center")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.removeDir("/usr/share/gnome-control-center")
 
-	pisitools.dodoc("AUTHORS", "ChangeLog",	"COPYING", "NEWS", "README*", "THANKS")
+    pisitools.dodoc("AUTHORS", "ChangeLog",    "COPYING", "NEWS", "README*", "THANKS")
 

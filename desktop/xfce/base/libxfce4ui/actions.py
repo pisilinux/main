@@ -16,16 +16,16 @@ i = "--with-vendor-info='Pisi Linux' \
     "
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure(i)
+    pisitools.cflags.add("-Wno-deprecated-declarations")
+    autotools.configure(i)
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*", "THANKS")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*", "THANKS")
 
