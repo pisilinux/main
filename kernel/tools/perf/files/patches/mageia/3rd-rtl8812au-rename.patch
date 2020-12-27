@@ -1,0 +1,78 @@
+
+Adjust driver bits so it keeps the name of the replaced driver
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+---
+ 3rdparty/rtl8812au/Kconfig                       |    6 +++---
+ 3rdparty/rtl8812au/Makefile                      |    8 ++++----
+ 3rdparty/rtl8812au/hal/hal_com.c                 |    2 +-
+ 3rdparty/rtl8812au/os_dep/linux/ioctl_cfg80211.c |    2 +-
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+
+diff -Nurp linux-5.5/3rdparty/rtl8812au.orig/hal/hal_com.c linux-5.5/3rdparty/rtl8812au/hal/hal_com.c
+--- linux-5.5/3rdparty/rtl8812au.orig/hal/hal_com.c	2020-03-09 01:46:04.750166543 +0200
++++ linux-5.5/3rdparty/rtl8812au/hal/hal_com.c	2020-03-11 18:23:33.839805026 +0200
+@@ -12879,7 +12879,7 @@ bypass_hw_pg:
+ 	_rtw_memset(hal_data->EEPROMMACAddr, 0, ETH_ALEN);
+ 	ret = _FAIL;
+ exit:
+-	dev_info(&udev->dev, "88XXau %pM hw_info[%02x]", hw_addr, addr_offset);
++	dev_info(&udev->dev, "8812au %pM hw_info[%02x]", hw_addr, addr_offset);
+ 	return ret;
+ }
+ 
+diff -Nurp linux-5.5/3rdparty/rtl8812au.orig/Kconfig linux-5.5/3rdparty/rtl8812au/Kconfig
+--- linux-5.5/3rdparty/rtl8812au.orig/Kconfig	2020-03-09 01:46:04.682163430 +0200
++++ linux-5.5/3rdparty/rtl8812au/Kconfig	2020-03-11 18:21:33.457357175 +0200
+@@ -1,6 +1,6 @@
+-config 88XXAU
+-	tristate "Realtek 88XXau USB WiFi"
++config RTL8812AU
++	tristate "Realtek 8812au USB WiFi"
+ 	depends on USB
+ 	---help---
+-	  Help message of 88XXau
++	  Help message of 8812au
+ 
+diff -Nurp linux-5.5/3rdparty/rtl8812au.orig/Makefile linux-5.5/3rdparty/rtl8812au/Makefile
+--- linux-5.5/3rdparty/rtl8812au.orig/Makefile	2020-03-09 01:46:04.682163430 +0200
++++ linux-5.5/3rdparty/rtl8812au/Makefile	2020-03-11 18:22:16.769317077 +0200
+@@ -179,9 +179,9 @@ endif
+ 
+ ifeq ($(CONFIG_RTL8812A)_$(CONFIG_RTL8821A)_$(CONFIG_RTL8814A), y_y_y)
+ 
+-EXTRA_CFLAGS += -DDRV_NAME=\"rtl88XXau\"
++EXTRA_CFLAGS += -DDRV_NAME=\"rtl8812au\"
+ ifeq ($(CONFIG_USB_HCI), y)
+-USER_MODULE_NAME = 88XXau
++USER_MODULE_NAME = 8812au
+ endif
+ else
+ EXTRA_CFLAGS += -DDRV_NAME=\"rtl8812au\"
+@@ -2233,11 +2233,11 @@ $(MODULE_NAME)-y += $(_PLATFORM_FILES)
+ 
+ $(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o
+ 
+-obj-$(CONFIG_88XXAU) := $(MODULE_NAME).o
++obj-$(CONFIG_RTL8812AU) := $(MODULE_NAME).o
+ 
+ else
+ 
+-export CONFIG_88XXAU = m
++export CONFIG_RTL8812AU = m
+ 
+ all: modules
+ 
+diff -Nurp linux-5.5/3rdparty/rtl8812au.orig/os_dep/linux/ioctl_cfg80211.c linux-5.5/3rdparty/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+--- linux-5.5/3rdparty/rtl8812au.orig/os_dep/linux/ioctl_cfg80211.c	2020-03-09 01:46:04.798168741 +0200
++++ linux-5.5/3rdparty/rtl8812au/os_dep/linux/ioctl_cfg80211.c	2020-03-11 18:24:09.196405329 +0200
+@@ -2639,7 +2639,7 @@ void rtw_cfg80211_unlink_bss(_adapter *p
+ #endif
+ 
+ 	if (!wiphy) {
+-		pr_info("88XXAU: rtw_cfg80211_unlink_bss: wiphy is NULL\n");
++		pr_info("8812AU: rtw_cfg80211_unlink_bss: wiphy is NULL\n");
+ 		return;
+ 	}
+ 
