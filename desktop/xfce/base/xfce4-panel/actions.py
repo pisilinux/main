@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 i = "--enable-introspection  \
      --enable-gtk-doc  \
      --enable-gio-unix  \
-     --disable-vala  \
+     --enable-vala=yes \
      --disable-debug  \
      --disable-static \
     "
