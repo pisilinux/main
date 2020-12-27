@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
 def setup():
-    autotools.configure("--disable-static --enable-vala=no --disable-gtk-doc --enable-introspection")
+    autotools.configure("--disable-static --enable-vala=yes --disable-gtk-doc --enable-introspection")
 
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
