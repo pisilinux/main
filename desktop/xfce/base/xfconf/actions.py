@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 i = "--enable-introspection \
-     --disable-vala \
+     --enable-vala=yes \
      --disable-static \
      --disable-gtk-doc \
      --disable-perl-bindings \
