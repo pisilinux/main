@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 i = "--with-vendor-info='Pisi Linux' \
-     --enable-vala=no \
+     --enable-vala=yes \
      --enable-introspection \
      --enable-startup-notification \
      --disable-static \
