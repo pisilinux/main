@@ -6,9 +6,11 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("patch -Rp1 < 0001-Catch-gs_listener_dbus_init-failures.patch")
     autotools.configure("--enable-authentication-scheme=pam --enable-locking --enable-pam \
     \
     --disable-static \
