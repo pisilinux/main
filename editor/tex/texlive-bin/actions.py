@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import get
 from pisi.actionsapi import libtools
@@ -36,9 +36,10 @@ def setup():
                          --with-system-zlib \
                          --with-system-t1lib \
                          --datadir=/usr/share \
-                         --with-system-pnglib \
+                         --with-system-libpng \
                          --with-system-ncurses \
                          --without-system-xpdf \
+                         --with-system-zziplib \
                          --with-system-harfbuzz \
                          --mandir=/usr/share/man \
                          --disable-multiplatform \
@@ -57,7 +58,7 @@ def install():
     autotools.rawInstall("prefix=/usr DESTDIR=%s" % get.installDIR())
     shelltools.system("pwd")
     #install biber
-    pisitools.dobin("../../biber-2.14/bin/biber")
+    pisitools.dobin("../../biber-2.16/bin/biber")
 
     #pisitools.dodir("/usr/share/tlpkg/TeXLive")
     #shelltools.move("%s/source/utils/biber/TeXLive/*.pm" % get.workDIR(), "%s/usr/share/tlpkg/TeXLive" % get.installDIR())
