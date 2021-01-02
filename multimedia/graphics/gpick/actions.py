@@ -4,15 +4,18 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import scons
 from pisi.actionsapi import get
 
+def setup():
+	cmaketools.configure("-DUSE_GTK3=1")
+
 def build():
-	scons.make("USE_GTK3=True")
+	cmaketools.make()
 
 def install():
-	scons.install("install DESTDIR=%s/usr USE_GTK3=True" % get.installDIR())
+	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	pisitools.dodoc("LICENSE.txt", "README.md")
 
