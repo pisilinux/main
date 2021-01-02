@@ -1,0 +1,31 @@
+From ab015e4f1c31bd9769b0b7c8b447ff0c9c680e2c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Claes=20N=C3=A4st=C3=A9n?= <pekdon@gmail.com>
+Date: Mon, 31 Aug 2020 21:49:57 +0200
+Subject: [PATCH] Allow startup with missing config file
+
+Initial startup without a config file fails with a yaml-cpp exception,
+use an empty node instead of crashing.
+---
+ src/settings.cpp | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/settings.cpp b/src/settings.cpp
+index 1a8e679..a1d93d2 100644
+--- a/src/settings.cpp
++++ b/src/settings.cpp
+@@ -7,7 +7,14 @@ florb::settings::settings()
+     m_cfgfile = florb::utils::appdir() + florb::utils::pathsep() + "config";
+     florb::utils::mkdir(florb::utils::appdir());
+ 
+-    m_rootnode = YAML::LoadFile(m_cfgfile);
++    if (florb::utils::exists(m_cfgfile))
++    {
++        m_rootnode = YAML::LoadFile(m_cfgfile);
++    }
++    else
++    {
++        m_rootnode = YAML::Node();
++    }
+     defaults(m_cfgfile);
+ }
+ 
