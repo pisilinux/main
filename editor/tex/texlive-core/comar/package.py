@@ -10,7 +10,7 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
 
     updmap_file = "/etc/texmf/web2c/updmap.cfg"
     updmap_local_file = "/etc/texmf/web2c/updmap-local.cfg"
-    updmap_share_file = "/usr/share/texmf-dist/updmap-hdr.cfg"
+    updmap_share_file = "/usr/share/texmf-dist/web2c/updmap-hdr.cfg"
     temp_file = "/tmp/updmap.cfg.temp"
     texmf_file="/etc/texmf/web2c/texmf.cnf"
     texmf_symfile="/usr/share/texmf-dist/web2c/texmf.cnf"
@@ -40,7 +40,7 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
 
     # Look for custom additions, if available add them too
     if os.path.exists(updmap_local_file):
-        fin = open(updmaplocal_file, "r")
+        fin = open(updmap_local_file, "r")
         updmap_local = fin.read()
         fin.close()
 

@@ -1,7 +1,8 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
@@ -30,14 +31,21 @@ def install():
         shelltools.copytree("texmf-dist/%s/" % i, "%s/usr/share/texmf-dist/" % get.installDIR())
     shelltools.system("find texmf-dist -type f -executable -exec chmod 755 %s/usr/share/{} \;" % get.installDIR())
 
-    for i in shelltools.ls("."):
-        if shelltools.isDirectory(i) and not i.startswith("texmf"):
-            shelltools.copytree(i, "%s/usr/share/texmf-dist/" % get.installDIR())
+#    for i in shelltools.ls("."):
+#        if shelltools.isDirectory(i) and not i.startswith("texmf"):
+#            shelltools.copytree(i, "%s/usr/share/texmf-dist/" % get.installDIR())
+
+    for i in ["tlpkg"]:
+        shelltools.copytree("%s/" % i, "%s/usr/share/" % get.installDIR())
+
+    for i in ["bibtex", "dvips", "fonts", "makeindex", "metafont", "metapost", "mft", "scripts", "tex"]:
+        shelltools.system("find %s -type d -exec install -d -m755 %s/usr/share/texmf-dist/'{}' \;" % (i, get.installDIR()))
+        shelltools.system("find %s -type f -exec install -m644 '{}' %s/usr/share/texmf-dist/'{}' \;" % (i, get.installDIR()))
 
     # clean config files
     pisitools.dosed("tex/generic/config", "DO NOT EDIT", deleteLine=True, filePattern="language\.d..$")
     pisitools.dosed("texmf-dist/web2c/updmap.cfg", "^(#!\s*)?(Map|MixedMap)", deleteLine=True)
-    pisitools.dosed("%s/usr/share/texmf-dist/fmtutil.cnf" % get.installDIR(), "aleph", deleteLine=True)
+#    pisitools.dosed("%s/usr/share/texmf-dist/fmtutil.cnf" % get.installDIR(), "aleph", deleteLine=True)
 
     # install config files
     cfs = ["chktex/chktexrc",
@@ -65,7 +73,7 @@ def install():
     #shelltools.system("texmf-dist/scripts/texlive/texlinks.sh -f %s/usr/share/texmf-dist/web2c/fmtutil.cnf %s/usr/bin" % ((get.installDIR(), ) * 2))
 
     # remove upstream updmap.cfg: it contains too many maps
-    pisitools.remove("/usr/share/texmf-dist/updmap.cfg")
+#    pisitools.remove("/usr/share/texmf-dist/updmap.cfg")
 
     # remove unneeded dir
     pisitools.removeDir("/usr/share/texmf-dist/scripts/context/stubs/mswin")
