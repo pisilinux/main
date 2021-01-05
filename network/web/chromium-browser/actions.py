@@ -31,9 +31,12 @@ def setup():
                        third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
 					   third_party/libxml/chromium/libxml_utils.cc")
 
-    opt = 'use_sysroot=false \
+    opt = 'custom_toolchain="//build/toolchain/linux/unbundle:default" \
+           host_toolchain="//build/toolchain/linux/unbundle:default" \
+           use_sysroot=false \
            enable_nacl=true \
            enable_nacl_nonsfi=true \
+           rtc_use_pipewire=true \
            use_custom_libcxx=true \
            clang_use_chrome_plugins=false \
            is_official_build=true \
@@ -56,21 +59,25 @@ def setup():
            link_pulseaudio=true \
            enable_swiftshader=false \
            use_vaapi=true \
-           closure_compile=false'
+           closure_compile=false \
+           symbol_level=0'
            
         
     #clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin/" %(get.workDIR(), get.srcVERSION())
 
     shelltools.export("CC", "clang" )
     shelltools.export("CXX", "clang++" )
-    #shelltools.export("AR", "llvm-ar" )
+    shelltools.export("AR", "ar" )
+    shelltools.export("NM", "nm" )
+    shelltools.export("RANLIB", "ranlib" )
     
-    shelltools.export("CFLAGS", "-Wno-builtin-macro-redefined")
-    shelltools.export("CXXFLAGS", "-Wno-builtin-macro-redefined")
+    shelltools.export("CFLAGS", "-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
+    shelltools.export("CXXFLAGS", "-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
+    shelltools.export("LDFLAGS", " -fuse-ld=lld")
     shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
     
     shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
-    shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")
+    #shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")
     shelltools.system("/usr/bin/python3 tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
 
