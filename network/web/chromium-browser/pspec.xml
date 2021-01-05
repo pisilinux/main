@@ -13,7 +13,7 @@
         <IsA>app:gui</IsA>
         <Summary>A WebKit powered web browser</Summary>
         <Description>Chromium-browser is an open-source web browser, powered by WebKit.</Description>
-        <Archive type="tarxz" sha1sum="16d2e8d91b18ae264609d0356df47ba124e89779">http://gsdview.appspot.com/chromium-browser-official/chromium-81.0.4044.122.tar.xz</Archive>
+        <Archive type="tarxz" sha1sum="cdf291fa6a62fc93074bc77d3b17dd03a6b7acf9">http://gsdview.appspot.com/chromium-browser-official/chromium-87.0.4280.109.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>at-spi2-atk-devel</Dependency>
@@ -64,6 +64,7 @@
             <Dependency>libxcb-devel</Dependency>
             <Dependency>libxslt-devel</Dependency>
             <Dependency>llvm-clang-devel</Dependency>
+            <Dependency>lld-devel</Dependency>
             <Dependency>minizip-devel</Dependency>
             <Dependency>mit-kerberos</Dependency>
             <Dependency>ninja</Dependency>
@@ -94,12 +95,19 @@
             <Dependency>mesa-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="0">chromium-skia-harmony.patch</Patch>
-            <Patch level="1">chromium-widevine.patch</Patch>
-            <Patch level="1">rebuild-Linux-frame-button-cache-when-activation.patch</Patch>
-            <Patch level="1">rename-Relayout-in-DesktopWindowTreeHostPlatform.patch</Patch>
-            <Patch level="1">vaapi-build-fix.patch</Patch>
-            <Patch level="1">vdpau-support.patch</Patch>
+            <Patch level="1">subpixel-anti-aliasing-in-FreeType-2.8.1.patch</Patch>
+            <Patch level="1">wayland-egl.patch</Patch>
+            <!-- Chromium Patchset -->
+            <!-- Source: https://github.com/stha09/chromium-patches -->
+            <Patch level="1">patches/chromium-78-protobuf-RepeatedPtrField-export.patch</Patch>
+            <Patch level="1">patches/chromium-79-gcc-protobuf-alignas.patch</Patch>
+            <Patch level="1">patches/chromium-84-blink-disable-clang-format.patch</Patch>
+            <Patch level="1">patches/chromium-87-CursorFactory-include.patch</Patch>
+            <Patch level="1">patches/chromium-87-ServiceWorkerContainerHost-crash.patch</Patch>
+            <Patch level="1">patches/chromium-87-compiler.patch</Patch>
+            <Patch level="1">patches/chromium-87-openscreen-include.patch</Patch>
+            <Patch level="1">patches/chromium-88-vaapi-attribute.patch</Patch>
+            <Patch level="1">patches/chromium-fix-char_traits.patch</Patch>
         </Patches>
     </Source>
 
@@ -178,6 +186,13 @@
     </Package>
 
     <History>
+        <Update release="21">
+            <Date>2021-01-05</Date>
+            <Version>87.0.4280.109</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="20">
             <Date>2020-04-29</Date>
             <Version>81.0.4044.122</Version>
