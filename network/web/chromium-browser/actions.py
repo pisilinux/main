@@ -17,6 +17,7 @@ ARCH = "x64"
 
 def setup():
     shelltools.export("LC_ALL", "C")
+    shelltools.export("JAVA_CMD", "/usr/bin/java_8")
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
 
