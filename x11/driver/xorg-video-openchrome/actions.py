@@ -6,8 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
+    pisitools.cflags.add("-fcommon -fno-plt")
+    shelltools.export("CXXFLAGS", "-fno-plt")
     autotools.autoreconf("-if")
     autotools.configure("\
                          --disable-static \
