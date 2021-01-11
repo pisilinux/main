@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>xfsdump</Name>
+        <Homepage>https://git.kernel.org/pub/scm/fs/xfs/xfsdump-dev.git/</Homepage>
+        <Packager>
+            <Name>AYDIN ATMACA</Name>
+            <Email>aydinatmaca@gmail</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>app:console</IsA>
+        <PartOf>hardware.disk</PartOf>
+        <Summary>XFS dump/restore utilities.</Summary>
+        <Description>xfsdump contains XFS filesystem dump and restore utilities.</Description>
+        <Archive sha1sum="5701bc32ca23327ce69412a43966f19b1dad64f3" type="tarxz">http://ftp.ntu.edu.tw/pub/linux/utils/fs/xfs/xfsdump/xfsdump-3.1.9.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>attr-devel</Dependency>
+            <Dependency>dmapi-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>xfsprogs-devel</Dependency>
+            <Dependency>libutil-linux-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">no_symlink.patch</Patch>
+            <Patch level="1">skip_inventory_debian_subfolder.patch</Patch>
+            <Patch level="1">no_changes_compress.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>xfsdump</Name>
+        <RuntimeDependencies>
+            <Dependency>gcc</Dependency>
+            <Dependency>attr</Dependency>
+            <Dependency>gawk</Dependency>
+            <Dependency>dmapi</Dependency>
+            <Dependency>uuidd</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>libtool</Dependency>
+            <Dependency>gettext</Dependency>
+            <Dependency>xfsprogs</Dependency>
+            <Dependency>libutil-linux</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/sbin</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="3">
+            <Date>2021-01-12</Date>
+            <Version>3.1.9</Version>
+            <Comment>First Beta release.</Comment>
+            <Name>AYDIN ATMACA</Name>
+            <Email>aydinatmaca@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
