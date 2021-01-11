@@ -19,5 +19,6 @@ def install():
     kde5.install()
     
     pisitools.insinto("/usr/share/wallpapers/pisilinux-blue", "blue/*")
+    pisitools.insinto("/usr/share/wallpapers/sweet-cat", "../Sweet-cat/*")
 
     pisitools.dodoc("COPYING", "AUTHORS")
