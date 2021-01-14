@@ -9,19 +9,21 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+j = ''.join([
+    '--enable-pam',
+    '--enable-locking',
+    '--enable-authentication-scheme=pam',
+    '--disable-static',
+    '--with-libgl',
+    '--with-shadow',
+    '--with-mit-ext',
+    '--with-console-kit',
+    '--with-pam-auth-type=system',
+    '--without-systemd'])
+
 def setup():
-    shelltools.system("patch -Rp1 < 0001-Catch-gs_listener_dbus_init-failures.patch")
-    autotools.configure("--enable-authentication-scheme=pam --enable-locking --enable-pam \
-    \
-    --disable-static \
-    \
-    --with-pam-auth-type=system \
-    --with-console-kit \
-    --with-mit-ext \
-    --with-shadow \
-    --with-libgl \
-    \
-    --without-systemd")
+#    shelltools.system("patch -Rp1 < 0001-Catch-gs_listener_dbus_init-failures.patch")
+    autotools.configure(j)
 
 def build():
     autotools.make()
