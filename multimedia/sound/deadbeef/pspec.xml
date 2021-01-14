@@ -8,22 +8,22 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
+        <License>Zlib</License>
         <License>GPLv2</License>
+        <License>LGPLv2.1</License>
         <IsA>app:gui</IsA>
         <PartOf>multimedia.sound</PartOf>
         <Summary>Audio player for GNU/Linux systems with X11.</Summary>
         <Description>
             DeaDBeeF (as in 0xDEADBEEF) is a modular audio player for GNU/Linux, *BSD, OpenSolaris, macOS, and other UNIX-like systems.
         </Description>
-        <Archive sha1sum="798970ac4fe82f87f8ab1a2e135356ab0701e194" type="tarbz2">
-            https://sourceforge.net/projects/deadbeef/files/travis/linux/1.8.4/deadbeef-1.8.4.tar.bz2
+        <Archive sha1sum="2d4281a647f3b218965bd4efc6808cfb641dd079" type="tarbz2">
+            mirrors://sourceforge/project/deadbeef/travis/linux/1.8.5/deadbeef-1.8.5.tar.bz2
         </Archive>
-        <Patches>
-            <!-- <Patch level="1">plugins_vfs_zip_vfs_zip_c.patch</Patch> -->
-        </Patches>
         <BuildDependencies>
             <Dependency>intltool</Dependency>
             <Dependency>atk-devel</Dependency>
+            <Dependency>lld-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
             <Dependency>flac-devel</Dependency>
@@ -31,6 +31,7 @@
             <Dependency>yasm-devel</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
+            <Dependency>llvm-clang</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>faad2-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
@@ -50,13 +51,19 @@
             <Dependency>opusfile-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libmp4v2-devel</Dependency>
+            <Dependency>libsocket-devel</Dependency>
             <Dependency>libvorbis-devel</Dependency>
             <Dependency>libsndfile-devel</Dependency>
             <Dependency>cdparanoia-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>llvm-clang-devel</Dependency>
+            <Dependency>libdispatch-devel</Dependency>
             <Dependency>libsamplerate-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+            <!-- <Patch level="1">missing.patch</Patch> -->
+        </Patches>
     </Source>
 
     <Package>
@@ -85,12 +92,16 @@
             <Dependency>libcdio</Dependency>
             <Dependency>libcddb</Dependency>
             <Dependency>jansson</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency>opusfile</Dependency>
             <Dependency>alsa-lib</Dependency>
+            <Dependency>harfbuzz</Dependency>
             <Dependency>libvorbis</Dependency>
+            <Dependency>fontconfig</Dependency>
             <Dependency>cdparanoia</Dependency>
             <Dependency>libsndfile</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>libdispatch</Dependency>
             <Dependency>libsamplerate</Dependency>
             <Dependency>pulseaudio-libs</Dependency>
         </RuntimeDependencies>
@@ -105,6 +116,13 @@
     </Package>
 
     <History>
+        <Update release="14">
+            <Date>2021-01-10</Date>
+            <Version>1.8.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>wascheme@tuta.io</Email>
+        </Update>
         <Update release="13">
             <Date>2020-06-29</Date>
             <Version>1.8.4</Version>
