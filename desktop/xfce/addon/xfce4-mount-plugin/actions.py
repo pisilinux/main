@@ -11,10 +11,9 @@ from pisi.actionsapi import get
 def setup():
     # fix build failure w/ xfce4-panel-4.15.0
     pisitools.dosed("panel-plugin/devices.c", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
-    pisitools.dosed("panel-plugin/mount-plugin.h", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
+#    pisitools.dosed("panel-plugin/mount-plugin.h", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
     autotools.configure()
-    
-    
+
     # for fix unused dependency
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
@@ -24,5 +23,5 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README",    "TODO")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README", "TODO")
 
