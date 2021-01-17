@@ -15,20 +15,19 @@ shelltools.export("LDFLAGS", "%s -Wl,--as-needed" % get.LDFLAGS())
 
 def setup():
     shelltools.system("./bootstrap.py")
-    shelltools.system("python waf configure --prefix=/usr \
+    shelltools.system("python3 waf configure --prefix=/usr \
                                             --confdir=/etc/mpv \
                                             --enable-dvb \
                                             --enable-cdda \
                                             --enable-dvdnav \
                                             --enable-libarchive \
-                                            --enable-libmpv-shared \
-                                            --disable-libsmbclient")
+                                            --enable-libmpv-shared")
 
 def build():
-    shelltools.system("python waf build -v")
+    shelltools.system("python3 waf build -v")
 
 def install():
-    shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
+    shelltools.system("DESTDIR=%s python3 waf install" % get.installDIR())
     pisitools.insinto("/usr/share/mpv/scripts", "TOOLS/lua/*")
 
     pisitools.dodoc("Copyright", "RELEASE_NOTES", "README.md")
