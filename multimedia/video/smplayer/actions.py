@@ -17,20 +17,20 @@ def setup():
 def build():
     autotools.make("PREFIX=/usr QMAKE=/usr/bin/qmake -j1 LRELEASE=/usr/bin/lrelease")
     
-    shelltools.cd("smplayer-skins-15.2.0")
+    shelltools.cd("smplayer-skins-20.11.0")
     autotools.make("PREFIX=/usr")
     
     shelltools.cd("..")
-    shelltools.cd("smplayer-themes-18.6.0")
+    shelltools.cd("smplayer-themes-20.11.0")
     autotools.make("PREFIX=/usr")
 
 def install():
     autotools.rawInstall("PREFIX=/usr DESTDIR=%s DOC_PATH=/usr/share/doc/%s" % (get.installDIR(),get.srcNAME()))
     
-    shelltools.cd("smplayer-skins-15.2.0")
+    shelltools.cd("smplayer-skins-20.11.0")
     autotools.rawInstall("DESTDIR=%s PREFIX=/usr install" % get.installDIR())
     
     shelltools.cd("..")
-    shelltools.cd("smplayer-themes-18.6.0")
+    shelltools.cd("smplayer-themes-20.11.0")
     autotools.rawInstall("DESTDIR=%s PREFIX=/usr install" % get.installDIR())
     
