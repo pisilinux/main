@@ -9,7 +9,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 
-j = "-DBUILD_TESTING=OFF -L \
+j = "-DWITH_DBUS=ON \
+     -DBUILD_TESTING=OFF -L \
      -DBUILD_SHARED_LIBS=ON \
      -DWITH_IMAGE_MAGICK=OFF \
      -DBUILD_STATIC_LIBS=OFF \
@@ -23,6 +24,8 @@ shelltools.export("PYTHON", "/usr/bin/python3")
 def setup():
     # fix shebang
     shelltools.system("find share/extensions -iname '*.py' -exec sed -i 's|env\ python$|env python3|g' {} \;")
+    # if with imagemagick build.
+#    shelltools.export("PKG_CONFIG_PATH", "${PKG_CONFIG_PATH}:/usr/lib/imagemagick6/pkgconfig")
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure(j, sourceDir = '..')
@@ -35,5 +38,4 @@ def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    shelltools.cd("..")
-    pisitools.dodoc("COPYING", "README.md")
+    pisitools.dodoc("../COPYING", "../README.md")

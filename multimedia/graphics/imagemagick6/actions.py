@@ -13,32 +13,32 @@ from pisi.actionsapi import perlmodules
 KeepSpecial=["libtool"]
 
 j = "--with-lqr \
-    --with-wmf \
-    --with-xml \
-    --with-perl \
-    --with-rsvg \
-    --with-webp \
-    --without-gvc \
-    --prefix=/usr \
-    --enable-hdri \
-    --without-dps \
-    --without-fpx \
-    --with-modules \
-    --with-openexr \
-    --with-openjp2 \
-    --without-djvu \
-    --without-fftw \
-    --enable-opencl \
-    --without-gslib \
-    --sysconfdir=/etc \
-    --without-autotrace \
-    PSDelegate=/usr/bin/gs \
-    XPSDelegate=/usr/bin/gxps \
-    PCLDelegate=/usr/bin/gpcl6 \
-    --with-perl-options=INSTALLDIRS=vendor \
-    --with-dejavu-font-dir=/usr/share/fonts/dejavu \
-    --with-gs-font-dir=/usr/share/fonts/default/ghostscript \
-    PKG_CONFIG='/usr/bin/env PKG_CONFIG_PATH=/usr/lib/imagemagick6/pkgconfig pkg-config' \
+     --with-wmf \
+     --with-xml \
+     --with-perl \
+     --with-rsvg \
+     --with-webp \
+     --without-gvc \
+     --prefix=/usr \
+     --enable-hdri \
+     --without-dps \
+     --without-fpx \
+     --with-modules \
+     --with-openexr \
+     --with-openjp2 \
+     --without-djvu \
+     --without-fftw \
+     --enable-opencl \
+     --without-gslib \
+     --sysconfdir=/etc \
+     --without-autotrace \
+     PSDelegate=/usr/bin/gs \
+     XPSDelegate=/usr/bin/gxps \
+     PCLDelegate=/usr/bin/gpcl6 \
+     --with-perl-options=INSTALLDIRS=vendor \
+     --with-dejavu-font-dir=/usr/share/fonts/dejavu \
+     --with-gs-font-dir=/usr/share/fonts/default/ghostscript \
+     PKG_CONFIG='/usr/bin/env PKG_CONFIG_PATH=/usr/lib/imagemagick6/pkgconfig pkg-config' \
     "
 
 def setup():
