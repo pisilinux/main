@@ -28,7 +28,7 @@ if "_" in get.srcVERSION():
 def setup():
     for tool in alsa_tools:
         shelltools.cd(tool)
-        if tool in ["hdspconf", "ld10k1"]:
+        if tool in ["hdspconf", "ld10k1", "hdspmixer"]:
             autotools.autoreconf("-fi")
         autotools.configure()
         shelltools.cd("..")
