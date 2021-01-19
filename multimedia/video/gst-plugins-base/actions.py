@@ -10,9 +10,12 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    #pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
+    #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
     shelltools.export("AUTOPOINT", "true")
     options = "-Dpackage-name='PisiLinux gstreamer-plugins-base package' \
                -Dpackage-origin='https://www.pisilinux.org' \
+               -Dtremor=disabled \
                -Dexamples=disabled \
                -Dgtk_doc=disabled \
               "

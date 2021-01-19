@@ -13,6 +13,7 @@ def setup():
     shelltools.export("AUTOPOINT", "true")
     options = "-Dpackage-name='GStreamer for PisiLinux' \
                -Dpackage-origin='https://www.pisilinux.org' \
+               -Dptp-helper-permissions=capabilities \
                -Ddbghelp=disabled \
                -Dgtk_doc=disabled \
               "
