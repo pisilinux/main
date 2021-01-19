@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
@@ -62,7 +62,7 @@ def install():
     pisitools.removeDir("/usr/share/libgphoto2_port")
 
     # Remove circular symlink
-    pisitools.remove("/usr/include/gphoto2/gphoto2")
+    #pisitools.remove("/usr/include/gphoto2/gphoto2")
 
-    pisitools.dodoc("ChangeLog", "NEWS*", "README", "AUTHORS", "TESTERS", "MAINTAINERS", "HACKING")
+    pisitools.dodoc("HACKING.md", "MAINTAINERS", "TESTERS")
 
