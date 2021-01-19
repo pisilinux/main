@@ -72,9 +72,9 @@ def setup():
     shelltools.export("NM", "nm" )
     shelltools.export("RANLIB", "ranlib" )
     
-    shelltools.export("CFLAGS", "-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
-    shelltools.export("CXXFLAGS", "-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
-    shelltools.export("LDFLAGS", " -fuse-ld=lld")
+    pisitools.cflags.add("-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
+    pisitools.cxxflags.add("-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
+    pisitools.ldflags.add(" -fuse-ld=lld")
     shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
     
     shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
