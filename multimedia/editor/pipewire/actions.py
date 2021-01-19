@@ -20,5 +20,10 @@ def build():
 def install():
     mesontools.install()
     
+    # Use alsa-card-profiles built with Pulseaudio
+    pisitools.removeDir("/usr/share/alsa-card-profile")
+    
+    pisitools.dosym("/usr/share/alsa/alsa.conf.d/50-pipewire.conf", "/etc/alsa/conf.d/50-pipewire.conf")
+
     #shelltools.cd("..")
     pisitools.dodoc("LICENSE", "COPYING", "NEWS", "README*")
