@@ -35,6 +35,10 @@ def setup():
                --with-system-group=pulse \
                --with-access-group=pulse-access \
                --with-database=tdb \
+               --disable-systemd-daemon \
+               --disable-systemd-login \
+               --disable-systemd-journal \
+               --with-alsa-data-dir=/usr/share/alsa-card-profile/mixer \
                --with-module-dir=/usr/lib/pulse/modules \
                --with-udev-rules-dir=/lib/udev/rules.d"
 
@@ -82,7 +86,7 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     # Disable autospawn by default
-    shelltools.system("sed -e '/autospawn/iautospawn=yes' -i '%s/etc/pulse/client.conf'" % get.installDIR())
+    shelltools.system("sed -e '/autospawn/iautospawn= yes' -i '%s/etc/pulse/client.conf'" % get.installDIR())
     # Speed up pulseaudio shutdown
     # Lower resample quality, saves CPU
     shelltools.system("sed -e '/exit-idle-time/iexit-idle-time=0' \
