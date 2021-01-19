@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pipewire-0.2</Name>
+        <Homepage>https://pipewire.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Server and user space API to deal with multimedia pipelines, 0.2.x series</Summary>
+        <Description>Server and user space API to deal with multimedia pipelines, 0.2.x series</Description>
+        <Archive sha1sum="37f8801423a63303a76b8a416c90fba65d41e826" type="targz">https://github.com/PipeWire/pipewire/archive/0.2.7.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>valgrind</Dependency>
+            <Dependency>sbc-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>pipewire.patch</Patch>
+            <Patch level="1">pipewire.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>pipewire-0.2</Name>
+        <RuntimeDependencies>
+            <Dependency>sbc</Dependency>
+            <Dependency>dbus</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>alsa-lib</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="config">/lib/udev/rules.d/90-pipewire-alsa.rules</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>pipewire-0.2-devel</Name>
+        <Summary>Development files for pipewire-0.2</Summary>
+        <RuntimeDependencies>
+			<Dependency release="current">pipewire-0.2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2021-01-19</Date>
+            <Version>0.2.7</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
