@@ -15,7 +15,7 @@ def setup():
                --sysconfdir=/etc         \
                --enable-x11-backend \
                --enable-broadway-backend \
-               --disable-wayland-backend \
+               --enable-wayland-backend \
               "
 
     shelltools.export("CFLAGS", get.CFLAGS().replace("-fomit-frame-pointer",""))
