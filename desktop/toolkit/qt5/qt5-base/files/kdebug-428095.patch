@@ -1,0 +1,45 @@
+From c5336057301d6a62160bc672dd0ab081b3c26725 Mon Sep 17 00:00:00 2001
+From: David Redondo <qt@david-redondo.de>
+Date: Tue, 3 Nov 2020 11:04:56 +0100
+Subject: Ensure that QMenu is polished before setting the screen in popup()
+
+Some styles alter the widget that will influence the underlying platform
+window. An example is when a style would want to draw the menu with some
+transparency and sets the Qt::WA_TranslucentBackground attribute. This
+needs to happen before the platform window is created. However calling
+QWidgetPrivate::setScreen will end up creating the window and the
+surface format will be fixed at this point.
+
+Change-Id: I707cf1de5c1614382cffbea1aae8cdb01f7de44a
+Reviewed-by: Nate Graham
+Reviewed-by: Richard Moe Gustavsen <richard.gustavsen@qt.io>
+(cherry picked from commit 36b1d37cef09769eea22f78d77440ac4c5d008d8)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+---
+ src/widgets/widgets/qmenu.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/widgets/widgets/qmenu.cpp b/src/widgets/widgets/qmenu.cpp
+index ab933c987f..a23d8b790d 100644
+--- a/src/widgets/widgets/qmenu.cpp
++++ b/src/widgets/widgets/qmenu.cpp
+@@ -2368,6 +2368,8 @@ void QMenuPrivate::popup(const QPoint &p, QAction *atAction, PositionFunction po
+     doChildEffects = true;
+     updateLayoutDirection();
+ 
++    q->ensurePolished(); // Get the right font
++
+     // Ensure that we get correct sizeHints by placing this window on the correct screen.
+     // However if the QMenu was constructed with a QDesktopScreenWidget as its parent,
+     // then initialScreenIndex was set, so we should respect that for the lifetime of this menu.
+@@ -2405,7 +2407,6 @@ void QMenuPrivate::popup(const QPoint &p, QAction *atAction, PositionFunction po
+     q->setAttribute(Qt::WA_X11NetWmWindowTypeDropDownMenu, qobject_cast<QMenuBar *>(topCausedWidget()) != nullptr);
+ #endif
+ 
+-    q->ensurePolished(); // Get the right font
+     emit q->aboutToShow();
+     const bool actionListChanged = itemsDirty;
+ 
+-- 
+cgit v1.2.1
+
