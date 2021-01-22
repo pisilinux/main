@@ -11,21 +11,21 @@ from pisi.actionsapi import get
 
 shelltools.export("JOBS", get.makeJOBS().replace("-j5", "-j1"))
 
+j = ''.join([
+    '-DCMAKE_BUILD_TYPE=Release ',
+    '-DCMAKE_INSTALL_LIBDIR=lib ',
+    ])
+
 def setup():
 	shelltools.makedirs("build")
 	shelltools.cd("build")
-	cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib -L", sourceDir = '..')
+	cmaketools.configure("%s -G Ninja -L" % j, sourceDir = '..')
 
 def build():
-	shelltools.cd("build")
-	cmaketools.make()
-	cmaketools.make("docs")
+	shelltools.system("ninja -C build")
 
 def install():
-	shelltools.cd("build")
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+	shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
 
-	pisitools.dohtml("docs/*.htm*")
-	shelltools.cd("..")
 	pisitools.dodoc("ChangeLog", "COPYING.LIB", "README", "TODO", "docs/COPYING*", "docs/README.SDL")
 
