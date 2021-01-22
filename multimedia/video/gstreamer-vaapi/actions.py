@@ -11,11 +11,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     mesontools.configure("-Dpackage-name='GStreamer VAAPI Plugins (Pisi Linux)' \
-                          -Dpackage-origin='https://www.pisilinux.org' \
-                          -D doc=disabled \
-                          -D test=disabled \
-                          -Dbuild-files-updated=false \
-                          -D examples=disabled")
+                          -Dpackage-origin='https://www.pisilinux.org'")
 
 def build():
     mesontools.build()
