@@ -17,6 +17,8 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += " -D graphite=disabled \
+                     --libdir=/usr/lib32 \
+                     --bindir=/usr/bin32 \
                      -D introspection=disabled \
                    "
                     
@@ -27,7 +29,8 @@ def build():
 
 def install():
     mesontools.install()
-    if get.buildTYPE() == "_emul32":
+    if get.buildTYPE() == "emul32":
+        pisitools.removeDir("/usr/bin32")
         return
 
     pisitools.dodoc("AUTHORS", "COPYING", "README*")
