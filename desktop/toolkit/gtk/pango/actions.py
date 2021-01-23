@@ -12,7 +12,6 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-    pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
     if get.buildTYPE()=="emul32":
         pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
     
