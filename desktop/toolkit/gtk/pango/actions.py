@@ -12,8 +12,9 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-	if get.buildTYPE()=="emul32":
-		pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
+    pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
+    if get.buildTYPE()=="emul32":
+        pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
     
     # autotools.autoreconf("-fiv")
     
@@ -21,19 +22,18 @@ def setup():
                          #--sysconfdir=/etc \
                          #--disable-gtk-doc \
                          #--%sable-introspection" % ("dis" if get.buildTYPE()=="emul32" else "en"))
-	
-	options = "-Dgtk_doc=false \
-			"
-	
-	if get.buildTYPE()=="emul32" :
-		options += "-Dintrospection=false \
-		            --bindir=/usr/bin32"
-	else:
-		options += "-Dintrospection=true"
-
+    options = "--prefix=/usr -Dgtk_doc=false \
+              "
+              
+    if get.buildTYPE()=="emul32" :
+        options += "-Dintrospection=disabled \
+                    --bindir=/usr/bin32"
+    else:
+        options += "-Dintrospection=enabled"
+        
     #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     
-	mesontools.configure(options)
+    mesontools.configure(options)
 
 def build():
     mesontools.build()
