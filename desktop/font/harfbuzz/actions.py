@@ -21,6 +21,9 @@ def setup():
                      --bindir=/usr/bin32 \
                      -D introspection=disabled \
                    "
+                   
+    else:
+        options += "-Dintrospection=enabled -Ddocs=enabled"
                     
     mesontools.configure(options)
 
