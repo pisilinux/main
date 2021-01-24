@@ -9,10 +9,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    # fix build failure w/ xfce4-panel-4.15.0
-#    pisitools.dosed("panel-plugin/main.c", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
-#    pisitools.dosed("panel-plugin/config_gui.c", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
-#    pisitools.dosed("panel-plugin/config_gui.h", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
     autotools.configure()
 
     pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
