@@ -26,8 +26,12 @@ def setup():
         
         options += " --bindir=/usr/bin32 \
                      --libdir=/usr/lib32 \
+                     -Dgl-graphene=disabled \
                      -Dintrospection=disabled \
                    "
+                   
+    else:
+        options += "-Dgl-graphene=enabled"
     
     mesontools.configure(options)
 
