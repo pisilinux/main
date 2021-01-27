@@ -12,11 +12,6 @@ from pisi.actionsapi import get
 libdir = "lib"
 
 def setup():
-    shelltools.export("ARCH","x86_64")
-    shelltools.export("CFLAGS", "%s -fPIC -O2" % get.CFLAGS())
-    shelltools.export("CXXFLAGS", "%s -fPIC -O2" % get.CXXFLAGS())
-    pisitools.cflags.remove("-O3")
-    pisitools.cxxflags.remove("-O3")
     shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.export("CFLAGS", get.CFLAGS().replace("-ggdb3", ""))
     autotools.rawConfigure("--prefix=/usr \
