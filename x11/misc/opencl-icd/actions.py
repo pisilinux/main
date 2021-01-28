@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.insinto("/usr/include/CL", "OpenCL-Headers-2.1/CL/*")
+    pisitools.insinto("/usr/include/CL", "OpenCL-Headers-2020.12.18/CL/*")
     shelltools.export("CFLAGS", "-I%s/usr/include -O2")
     shelltools.export("CXXFLAGS", "-I%s/usr/include -O2")
 
