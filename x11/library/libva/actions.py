@@ -7,11 +7,15 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
+
+LIBDIR = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
+
 def setup():
     autotools.autoreconf("-vif")
     autotools.configure("--enable-glx \
+                         --libdir=%s \
                          --enable-wayland \
-                         --disable-static")
+                         --disable-static" % LIBDIR)
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
@@ -20,5 +24,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    if get.buildTYPE() == "emul32":
+        return
     
     pisitools.dodoc("COPYING")
