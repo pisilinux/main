@@ -1,0 +1,19 @@
+diff -up ./scripts/xflock4.orig ./scripts/xflock4
+--- ./scripts/xflock4.orig	2015-09-27 13:19:24.784098605 +0300
++++ ./scripts/xflock4	2015-09-27 13:21:49.630546600 +0300
+@@ -30,9 +30,11 @@ LOCK_CMD=$(xfconf-query -c xfce4-session
+ # Lock by xscreensaver or gnome-screensaver, if a respective daemon is running
+ for lock_cmd in \
+     "$LOCK_CMD" \
+-    "xfce4-screensaver-command --lock" \
+-    "xscreensaver-command -lock" \
+-    "gnome-screensaver-command --lock"
++    "xfce4-screensaver-command --lock" \
++    "light-locker-command --lock" \
++    "mate-screensaver-command --lock" \
++    "gnome-screensaver-command --lock" \
++    "xscreensaver-command -lock"
+ do
+     if [ ! -z "$lock_cmd" ]; then
+         $lock_cmd >/dev/null 2>&1 && exit
+
