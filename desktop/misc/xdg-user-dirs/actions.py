@@ -6,8 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac")
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--prefix=/usr --sysconfdir=/etc")
 
 def build():
