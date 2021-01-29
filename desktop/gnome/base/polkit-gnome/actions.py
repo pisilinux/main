@@ -10,7 +10,8 @@ from pisi.actionsapi import get
 
 def setup():
    # autotools.autoreconf("-fi")
-    autotools.configure("--disable-static")
+    autotools.configure("--disable-static \
+                         --libexecdir=/usr/lib/polkit-gnome")
 
 def build():
     autotools.make()
