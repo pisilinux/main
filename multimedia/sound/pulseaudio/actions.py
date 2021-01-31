@@ -35,9 +35,6 @@ def setup():
                --with-system-group=pulse \
                --with-access-group=pulse-access \
                --with-database=tdb \
-               --disable-systemd-daemon \
-               --disable-systemd-login \
-               --disable-systemd-journal \
                --with-alsa-data-dir=/usr/share/alsa-card-profile/mixer \
                --with-module-dir=/usr/lib/pulse/modules \
                --with-udev-rules-dir=/lib/udev/rules.d"
