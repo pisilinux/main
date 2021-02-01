@@ -13,6 +13,7 @@ def setup():
     #autotools.autoreconf("-fiv")
     autotools.configure("--prefix=/usr \
                          --sbindir=/usr/bin \
+                         --runstatedir=/run \
                          --enable-id-check \
                          --enable-clamdtop \
                          --disable-static \
