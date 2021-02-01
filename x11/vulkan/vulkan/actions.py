@@ -89,11 +89,11 @@ def setup():
 def build():
     shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
-    cmaketools.make()
+    cmaketools.make("-j1")
     
     shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
-    cmaketools.make()
+    cmaketools.make("-j1")
     
 def install():
     
