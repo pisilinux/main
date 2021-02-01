@@ -29,7 +29,7 @@ def setup():
     validation_opts = " -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                         -DCMAKE_INSTALL_DATADIR=/share \
                         -DCMAKE_SKIP_RPATH=True \
-                        -DCMAKE_INSTALL_INCLUDEDIR='/usr/include/vulkan/' \
+                        -DCMAKE_INSTALL_INCLUDEDIR='/usr/include' \
                         -DBUILD_TESTS=Off \
                         -DBUILD_WSI_XCB_SUPPORT=On \
                         -DBUILD_WSI_XLIB_SUPPORT=On \
