@@ -44,7 +44,7 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    cmaketools.make("-j1")
+    cmaketools.make("-j4")
     #mesontools.build()
 
 
