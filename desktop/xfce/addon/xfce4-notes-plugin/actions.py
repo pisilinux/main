@@ -13,14 +13,12 @@ i = "-Wno-incompatible-pointer-types -Wno-implicit-function-declaration -Wno-dep
 
 def setup():
     pisitools.cflags.add(i)
-    shelltools.system("./autogen.sh --prefix=/usr \
-                                    --sysconfdir=/etc \
-                                    --libexecdir=/usr/lib \
-                                    --localstatedir=/var \
-                                    --disable-static \
-                                    --disable-dependency-tracking \
-                                    --host=%s \
-                                    --disable-debug" % get.CHOST())
+    autotools.configure("--libexecdir=/usr/lib \
+                         --localstatedir=/var \
+                         --disable-static \
+                         --disable-dependency-tracking \
+                         --host=%s \
+                         --disable-debug" % get.CHOST())
 
     pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
 
