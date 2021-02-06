@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>sylpheed</Name>
@@ -15,26 +15,30 @@
         <Description>Sylpheed is a simple and lightweight but featureful and easy-to-use e-mail client.</Description>
         <Archive sha1sum="178424466901572b99fbf8e3bd55d6347f727f3c" type="tarbz2">http://sylpheed.sraoss.jp/sylpheed/v3.7/sylpheed-3.7.0.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>shared-mime-info</Dependency>
+            
+            <Dependency>atk-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>gpgme-devel</Dependency>
-            <Dependency>openldap-client</Dependency>
-            <Dependency>compface-devel</Dependency>
-            <Dependency>gtkspell-devel</Dependency>
-            <Dependency>enchant-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
-            <Dependency>atk-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
+            <Dependency>enchant-devel</Dependency>
+            <Dependency>compface-devel</Dependency>
+            <Dependency>gtkspell-devel</Dependency>
+            <Dependency>harfbuzz-devel</Dependency>
+            <Dependency>openldap-client</Dependency>
             <Dependency>fontconfig-devel</Dependency>
-            <Dependency>libgpg-error-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>shared-mime-info</Dependency>
+            <Dependency>libgpg-error-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <Patch level="1">sendmail_accelerator.patch</Patch>
 
             <!-- Use xdg-open for every mime type instead of parsing them and using mailcap file (pb#17534) -->
             <Patch level="1">add-xdg-support.patch</Patch>
+<!--             https://sylpheed.sraoss.jp/redmine/issues/306 -->
+            <Patch level="1">v2-0001-libsylph-ssl.c-Support-SNI-some-servers-imap.gmai.patch</Patch>
         </Patches>
     </Source>
 
@@ -46,6 +50,7 @@
             <Dependency release="current">sylpheed</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="doc">/usr/share/doc/sylpheed</Path>
             <Path fileType="doc">/usr/share/doc/sylpheed/html</Path>
         </Files>
     </Package>
@@ -53,27 +58,27 @@
     <Package>
         <Name>sylpheed</Name>
         <RuntimeDependencies>
-            <Dependency>shared-mime-info</Dependency>
+            <Dependency>atk</Dependency>
+            <Dependency>dbus</Dependency>
             <Dependency>gtk2</Dependency>
-            <Dependency>gpgme</Dependency>
-            <Dependency>openldap-client</Dependency>
-            <Dependency>compface</Dependency>
-            <Dependency>gtkspell</Dependency>
-            <Dependency>enchant</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>cairo</Dependency>
-            <Dependency>atk</Dependency>
-            <Dependency>fontconfig</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>dbus</Dependency>
             <Dependency>glib2</Dependency>
+            <Dependency>gpgme</Dependency>
+            <Dependency>enchant</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>freetype</Dependency>
+            <Dependency>compface</Dependency>
+            <Dependency>gtkspell</Dependency>
+            <Dependency>harfbuzz</Dependency>
             <Dependency>dbus-glib</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>shared-mime-info</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="doc">/usr/share/doc/sylpheed</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="data">/usr/share/pixmaps</Path>
@@ -85,6 +90,9 @@
         <Name>sylpheed-devel</Name>
         <IsA>library</IsA>
         <Summary>Development files for sylpheed</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">sylpheed</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/sylpheed</Path>
         </Files>
@@ -92,7 +100,7 @@
 
     <History>
         <Update release="6">
-            <Date>2019-04-26</Date>
+            <Date>2021-02-06</Date>
             <Version>3.7.0</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>

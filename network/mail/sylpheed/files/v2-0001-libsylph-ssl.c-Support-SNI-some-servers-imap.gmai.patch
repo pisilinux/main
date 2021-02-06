@@ -1,0 +1,31 @@
+From b554d88ca0032051a19f57dce8dcda298173e6cd Mon Sep 17 00:00:00 2001
+From: Antonio Ospite <ao2@ao2.it>
+Date: Fri, 24 Aug 2018 10:46:04 +0200
+Subject: [PATCH v2] libsylph/ssl.c: Support SNI, some servers (imap.gmail.com)
+ seem to require it
+X-Face: z*RaLf`X<@C75u6Ig9}{oW$H;1_\2t5)({*|jhM<pyWR#k60!#=#>/Vb;]yA5<GWI5`6u&+
+ ;6b'@y|8w"wB;4/e!7wYYrcqdJFY,~%Gk_4]cq$Ei/7<j&N3ah(m`ku?pX.&+~:_/wC~dwn^)MizBG
+ !pE^+iDQQ1yC6^,)YDKkxDd!T>\I~93>J<_`<4)A{':UrE
+
+---
+ libsylph/ssl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/libsylph/ssl.c b/libsylph/ssl.c
+index 61e770f8..b4f6be0c 100644
+--- a/libsylph/ssl.c
++++ b/libsylph/ssl.c
+@@ -262,6 +262,10 @@ gboolean ssl_init_socket_with_method(SockInfo *sockinfo, SSLMethod method)
+ 		return FALSE;
+ 	}
+ 
++#ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
++	SSL_set_tlsext_host_name(sockinfo->ssl, sockinfo->hostname);
++#endif
++
+ 	SSL_set_fd(sockinfo->ssl, sockinfo->sock);
+ 	while ((ret = SSL_connect(sockinfo->ssl)) != 1) {
+ 		err = SSL_get_error(sockinfo->ssl, ret);
+-- 
+2.19.0.rc2
+
