@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>pulseaudio</Name>
-        <Homepage>http://pulseaudio.org/</Homepage>
+        <Homepage>https://www.freedesktop.org/wiki/Software/PulseAudio/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -15,37 +15,40 @@
         <IsA>library</IsA>
         <Summary>A networked sound server with an advanced plugin system</Summary>
         <Description>pulseaudio is a sound server for POSIX and Win32 systems. It allows you to do advanced operations on your sound data as it passes between your application and your hardware.</Description>
-             <Archive sha1sum="5dfc46595e981f0eb6308d07666f4108a69b2106" type="tarxz">https://freedesktop.org/software/pulseaudio/releases/pulseaudio-14.2.tar.xz</Archive>
+        <Archive sha1sum="5dfc46595e981f0eb6308d07666f4108a69b2106" type="tarxz">https://freedesktop.org/software/pulseaudio/releases/pulseaudio-14.2.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>bluez</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>valgrind</Dependency>
             <Dependency>orc-devel</Dependency>
             <Dependency>sbc-devel</Dependency>
-            <Dependency>fftw3-devel</Dependency>
-            <Dependency>doxygen</Dependency>
             <Dependency>xcb-proto</Dependency>
-            <Dependency>gtk2-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
             <Dependency>lirc-devel</Dependency>
-            <Dependency>gconf-devel</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>eudev-devel</Dependency>
             <Dependency>avahi-devel</Dependency>
             <Dependency>speex-devel</Dependency>
-            <Dependency>speexdsp-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
+            <Dependency>check-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
+            <Dependency>libcap-devel</Dependency>
             <Dependency>libtdb-devel</Dependency>
             <Dependency>libICE-devel</Dependency>
+            <Dependency>libsoxr-devel</Dependency>
             <Dependency>libXtst-devel</Dependency>
             <Dependency>xcb-util-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>speexdsp-devel</Dependency>
+            <Dependency>bash-completion</Dependency>
+            <Dependency>bluez-libs-devel</Dependency>
             <Dependency>libsndfile-devel</Dependency>
             <Dependency>libasyncns-devel</Dependency>
+            <Dependency>desktop-file-utils</Dependency>
             <Dependency>libatomic_ops-devel</Dependency>
-            <Dependency>eudev-devel</Dependency>
-            <Dependency>dbus-devel</Dependency>
-            <Dependency>intltool</Dependency>
-            <Dependency>libcap-devel</Dependency>
-            <Dependency>json-c-devel</Dependency>
-            <Dependency>bluez</Dependency>
-            <Dependency>bluez-libs-devel</Dependency>
-            <Dependency>bash-completion</Dependency>
             <Dependency>jack-audio-connection-kit-devel</Dependency>
         </BuildDependencies>
     </Source>
@@ -54,32 +57,32 @@
         <Name>pulseaudio-libs</Name>
         <Summary>Libraries for PulseAudio clients</Summary>
         <RuntimeDependencies>
+            <Dependency>sbc</Dependency>
+            <Dependency>orc</Dependency>
             <Dependency>dbus</Dependency>
+            <Dependency>lirc</Dependency>
             <Dependency>glib2</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>fftw3</Dependency>
+            <Dependency>bluez</Dependency>
+            <Dependency>speex</Dependency>
+            <Dependency>libSM</Dependency>
             <Dependency>json-c</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>libtdb</Dependency>
             <Dependency>libxcb</Dependency>
-            <Dependency>eudev</Dependency>
-	    <!--<Dependency release="current">pulseaudio</Dependency>is wrong-->
-            <Dependency>libtool-ltdl</Dependency>
-            <Dependency>orc</Dependency>
-            <Dependency>sbc</Dependency>
-            <!--Dependency>lirc</Dependency-->
-            <Dependency>fftw3</Dependency>
-            <Dependency>libSM</Dependency>
-            <Dependency>speex</Dependency>
+            <!-- <Dependency release="current">pulseaudio</Dependency> is wrong -->
             <Dependency>libICE</Dependency>
+            <Dependency>openssl</Dependency>
             <Dependency>libXtst</Dependency>
+            <Dependency>libsoxr</Dependency>
             <Dependency>speexdsp</Dependency>
             <Dependency>alsa-lib</Dependency>
             <Dependency>avahi-libs</Dependency>
             <Dependency>libasyncns</Dependency>
             <Dependency>libsndfile</Dependency>
-            <Dependency>bluez</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
             <Dependency>tcp-wrappers</Dependency>
-            <Dependency>openssl</Dependency>
-            <Dependency>lirc</Dependency>
             <Dependency>jack-audio-connection-kit</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -93,8 +96,8 @@
             <Path fileType="library">/usr/lib/libpulse-mainloop-glib.so</Path>
             <Path fileType="library">/usr/lib/libpulse-mainloop-glib.so*</Path>
             <Path fileType="library">/usr/lib/pulseaudio/libpulsedsp.*</Path>
-	    <Path fileType="library">/usr/lib/pulse/modules</Path>
-	    <Path fileType="library">/usr/lib/udev/rules.d</Path>
+            <Path fileType="library">/usr/lib/pulse/modules</Path>
+            <Path fileType="library">/usr/lib/udev/rules.d</Path>
             <Path fileType="library">/usr/lib/pulseaudio/libpulsecore*.so</Path>
         </Files>
     </Package>
@@ -114,6 +117,7 @@
             <Path fileType="data">/usr/lib/cmake/PulseAudio</Path>
         </Files>
     </Package>
+
     <Package>
         <Name>pulseaudio-docs</Name>
         <Summary>doxygen generated API documentation for PulseAudio</Summary>
@@ -132,7 +136,7 @@
             <Dependency>libcap</Dependency>
             <Dependency>libtool-ltdl</Dependency>
             <!--<Dependency>orc</Dependency>-->
-           <!-- <Dependency>speex</Dependency>-->
+            <!--<Dependency>speex</Dependency>-->
             <!--<Dependency>libtdb</Dependency>-->
             <!--<Dependency>libsndfile</Dependency>-->
             <Dependency release="current">pulseaudio-libs</Dependency>
@@ -146,7 +150,6 @@
             <Path fileType="executable">/usr/lib/pm-utils/sleep.d</Path>
             <Path fileType="executable">/usr/libexec</Path>
             <Path fileType="library">/usr/lib/pulse-5.0/modules</Path>
-            <!--<Path fileType="library">/usr/lib/libpulsecore-*.so</Path>-->
             <Path fileType="config">/etc</Path>
             <Path fileType="config">/usr/lib/tmpfiles.d/pulseaudio.conf</Path>
             <Path fileType="data">/lib/udev/rules.d</Path>
@@ -158,27 +161,23 @@
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/pulseaudio.conf">pulseaudio.conf</AdditionalFile>
-            <!--
-            <AdditionalFile owner="root" permission="0755" target="/usr/lib/pm-utils/sleep.d/02PulseAudio">02PulseAudio</AdditionalFile>
-            -->
             <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/pulseaudio">pisilinux/pulseaudio.sysconfig</AdditionalFile>
-
+<!--
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/scalable/apps/pulseaudio.svg">mandriva/pulseaudio.svg</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/scalable/devices/audio-backend-pulseaudio.svg">mandriva/pulseaudio.svg</AdditionalFile>
-
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/16x16/apps/pulseaudio.png">mandriva/pulseaudio16.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/22x22/apps/pulseaudio.png">mandriva/pulseaudio22.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/32x32/apps/pulseaudio.png">mandriva/pulseaudio32.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/48x48/apps/pulseaudio.png">mandriva/pulseaudio48.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/64x64/apps/pulseaudio.png">mandriva/pulseaudio64.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/128x128/apps/pulseaudio.png">mandriva/pulseaudio128.png</AdditionalFile>
-
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/16x16/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio16.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/22x22/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio22.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/32x32/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio32.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/48x48/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio48.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/64x64/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio64.png</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/icons/hicolor/128x128/devices/audio-backend-pulseaudio.png">mandriva/pulseaudio128.png</AdditionalFile>
+-->
         </AdditionalFiles>
         <Provides>
             <!-- For ownerships and permissions of /var/{run,lib}/pulse -->
@@ -186,25 +185,21 @@
         </Provides>
     </Package>
 
-    <!--<Package>
-        <Name>pulseaudio-gconf</Name>
-        <Summary>GConf configuration backend for the PulseAudio sound server</Summary>
-        <RuntimeDependencies>
-            <Dependency release="current">pulseaudio-libs</Dependency>
-            <Dependency>gconf</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib/pulse-2.1/modules/module-gconf.so</Path>
-            <Path fileType="executable">/usr/libexec/pulse/gconf-helper</Path>
-        </Files>
-     </Package>-->
-
     <Package>
         <Name>pulseaudio-libs-32bit</Name>
         <PartOf>emul32</PartOf>
         <Summary>32-bit shared libraries for pulseaudio-libs</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
+            <Dependency>libtdb-32bit</Dependency>
+            <Dependency>xcb-util-32bit</Dependency>
+            <Dependency>libxcb-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libgudev-32bit</Dependency>
+            <Dependency>speexdsp-32bit</Dependency>
+            <Dependency>openssl-32bit</Dependency>
+            <Dependency>orc-32bit</Dependency>
+            <Dependency>eudev-32bit</Dependency>
             <Dependency>json-c-32bit</Dependency>
             <Dependency>dbus-32bit</Dependency>
             <Dependency>glib2-32bit</Dependency>
@@ -226,8 +221,15 @@
     </Package>
 
     <History>
+        <Update release="15">
+            <Date>2021-02-07</Date>
+            <Version>14.2</Version>
+            <Comment>Rebuild for meson</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="14">
-            <Date>2021-01-19</Date>
+            <Date>2021-02-04</Date>
             <Version>14.2</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
