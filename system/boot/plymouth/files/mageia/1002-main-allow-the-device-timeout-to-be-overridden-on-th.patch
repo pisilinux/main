@@ -1,0 +1,29 @@
+From 3149d7e8a76ce69e57c13de9ce261c5820d19125 Mon Sep 17 00:00:00 2001
+From: Martin Whitaker <freedesktop@martin-whitaker.me.uk>
+Date: Sun, 19 Mar 2017 19:12:53 +0000
+Subject: [PATCH 2/2] main: allow the device timeout to be overridden on the
+ kernel command line.
+
+
+diff --git a/src/main.c b/src/main.c
+index 4c4f3f8..de381e0 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -438,6 +438,14 @@ find_override_splash (state_t *state)
+                 if (delay_string != NULL)
+                         state->splash_delay = atof (delay_string);
+         }
++        if (isnan (state->device_timeout)) {
++                const char *delay_string;
++
++                delay_string = ply_kernel_command_line_get_string_after_prefix ("plymouth.device-timeout=");
++
++                if (delay_string != NULL)
++                        state->device_timeout = atof (delay_string);
++        }
+ }
+ 
+ static void
+-- 
+2.10.2
+

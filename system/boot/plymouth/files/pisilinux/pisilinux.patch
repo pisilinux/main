@@ -1,0 +1,101 @@
+diff -Nuar a/configure.ac b/configure.ac
+--- a/configure.ac	2020-07-08 22:14:38.000000000 +0300
++++ b/configure.ac	2021-01-25 16:39:40.751814651 +0300
+@@ -326,6 +326,7 @@
+            themes/glow/Makefile
+            themes/spinner/Makefile
+            themes/script/Makefile
++           themes/pisilinux/Makefile
+            themes/bgrt/Makefile
+            images/Makefile
+ 	   scripts/plymouth-generate-initrd
+diff -Nuar a/scripts/plymouth-set-default-theme.in b/scripts/plymouth-set-default-theme.in
+--- a/scripts/plymouth-set-default-theme.in	2020-06-15 17:16:47.000000000 +0300
++++ b/scripts/plymouth-set-default-theme.in	2021-01-25 16:17:31.757910545 +0300
+@@ -192,5 +192,5 @@
+ sed -i -e '/^Theme[[:blank:]]*=.*/d' ${PLYMOUTH_CONFDIR}/plymouthd.conf
+ sed -i -e "s/^\([[]Daemon[]]\)\n*/\1\nTheme=${THEME_NAME}/" ${PLYMOUTH_CONFDIR}/plymouthd.conf
+ 
+-[ $DO_INITRD_REBUILD -ne 0 ] && (${PLYMOUTH_LIBEXECDIR}/plymouth/plymouth-update-initrd)
++[ $DO_INITRD_REBUILD -ne 0 ] && /sbin/mkinitramfs
+ exit 0
+diff -Nuar a/scripts/plymouth-update-initrd b/scripts/plymouth-update-initrd
+--- a/scripts/plymouth-update-initrd	2018-09-20 20:53:38.000000000 +0300
++++ b/scripts/plymouth-update-initrd	2021-01-25 16:12:45.499931200 +0300
+@@ -1,2 +1,6 @@
+ #!/bin/bash
+ dracut -f
++mkinitrd -f /boot/initrd-$(uname -r).img $(uname -r)
++find /etc/mkinitcpio.d/ -name \*.preset -a \! -name example.preset | while read p; do
++  mkinitcpio -p $p
++done
+diff -Nuar a/src/libply/ply-logger.h b/src/libply/ply-logger.h
+--- a/src/libply/ply-logger.h	2020-06-15 17:16:47.000000000 +0300
++++ b/src/libply/ply-logger.h	2021-01-25 16:15:33.191919100 +0300
+@@ -102,8 +102,8 @@
+                                   __FILE__, __LINE__, __func__);                               \
+                         errno = _old_errno;                                                    \
+                         ply_logger_inject (logger,                                             \
+-                                           "%-75.75s: " format "\n",                           \
+-                                           buf, ## args);                                      \
++                                           "" format "\n",                      \
++                                            ## args);                                      \
+                         ply_logger_flush (logger);                                             \
+                         errno = _old_errno;                                                    \
+                 }                                                                        \
+diff -Nuar a/src/libply-splash-core/ply-boot-splash-plugin.h b/src/libply-splash-core/ply-boot-splash-plugin.h
+--- a/src/libply-splash-core/ply-boot-splash-plugin.h	2020-06-15 17:16:47.000000000 +0300
++++ b/src/libply-splash-core/ply-boot-splash-plugin.h	2021-01-25 16:41:40.361806021 +0300
+@@ -38,6 +38,8 @@
+ {
+         PLY_BOOT_SPLASH_MODE_BOOT_UP,
+         PLY_BOOT_SPLASH_MODE_SHUTDOWN,
++        PLY_BOOT_SPLASH_MODE_SUSPEND,
++        PLY_BOOT_SPLASH_MODE_RESUME,
+         PLY_BOOT_SPLASH_MODE_REBOOT,
+         PLY_BOOT_SPLASH_MODE_UPDATES,
+         PLY_BOOT_SPLASH_MODE_SYSTEM_UPGRADE,
+diff -Nuar a/src/plugins/splash/script/script-lib-plymouth.c b/src/plugins/splash/script/script-lib-plymouth.c
+--- a/src/plugins/splash/script/script-lib-plymouth.c	2020-06-15 17:16:47.000000000 +0300
++++ b/src/plugins/splash/script/script-lib-plymouth.c	2021-01-25 13:43:12.694848568 +0300
+@@ -70,6 +70,12 @@
+         case PLY_BOOT_SPLASH_MODE_SHUTDOWN:
+                 obj = script_obj_new_string ("shutdown");
+                 break;
++        case PLY_BOOT_SPLASH_MODE_SUSPEND:
++                obj = script_obj_new_string ("suspend");
++                break;
++        case PLY_BOOT_SPLASH_MODE_RESUME:
++                obj = script_obj_new_string ("resume");
++                break;
+         case PLY_BOOT_SPLASH_MODE_REBOOT:
+                 obj = script_obj_new_string ("reboot");
+                 break;
+diff -Nuar a/src/plymouthd.conf b/src/plymouthd.conf
+--- a/src/plymouthd.conf	2018-09-20 20:53:38.000000000 +0300
++++ b/src/plymouthd.conf	2021-01-25 16:38:32.074819607 +0300
+@@ -1,3 +1,4 @@
+ # Administrator customizations go in this file
+ #[Daemon]
+-#Theme=fade-in
++#Theme=pisilinux
++#ShowDelay=0
+diff -Nuar a/src/plymouthd.defaults b/src/plymouthd.defaults
+--- a/src/plymouthd.defaults	2020-06-15 17:16:47.000000000 +0300
++++ b/src/plymouthd.defaults	2021-01-25 16:40:16.492812072 +0300
+@@ -1,6 +1,6 @@
+ # Distribution defaults. Changes to this file will get overwritten during
+ # upgrades.
+ [Daemon]
+-Theme=spinner
++Theme=pisilinux
+ ShowDelay=0
+-DeviceTimeout=8
++DeviceTimeout=0
+diff -Nuar a/themes/Makefile.am b/themes/Makefile.am
+--- a/themes/Makefile.am	2020-06-15 17:16:47.000000000 +0300
++++ b/themes/Makefile.am	2021-01-25 16:37:54.949822285 +0300
+@@ -1,2 +1,2 @@
+-SUBDIRS = spinfinity fade-in text details solar glow script spinner tribar bgrt
++SUBDIRS = spinfinity fade-in text details solar glow script spinner pisilinux
+ MAINTAINERCLEANFILES = Makefile.in
