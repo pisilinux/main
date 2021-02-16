@@ -8,6 +8,7 @@
 
 # Pisi GNU/Linux
 ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------
+                                                                                           |
 Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazılım topluluğu       | ![](https://github.com/PisiLinuxNew/package-manager/blob/master/data/tray-zero.png)
 tarafından geliştirilen, bilgisayar kullanıcılarına kurulum, yapılandırma ve kullanım      |
 konusunda kolaylık sağlamaya çalışan, onların temel masaüstü gereksinimlerini karşılamayı  |
