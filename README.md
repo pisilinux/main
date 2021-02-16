@@ -2,8 +2,6 @@
 # DİKKAT: Geliştiriciler içindir, sisteminize zarar verebilir.
 *********************************************************************************
 
-Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki kitaplıklar, masaüstleri, ofis uygulamaları, vb. tüm bileşenlerini içerir.
-
 # Pisi GNU/Linux
 
 [![Telegram](https://img.shields.io/badge/Telegram-Pisi%20GNU%2FLinux-blue)](https://t.me/joinchat/DnOmFNS_KOjzEpnn)
@@ -13,6 +11,10 @@ Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki kitaplıklar, masaüs
 Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazılım topluluğu tarafından geliştirilen, bilgisayar kullanıcılarına kurulum, yapılandırma ve kullanım konusunda kolaylık sağlamaya çalışan, onların temel masaüstü gereksinimlerini karşılamayı amaçlayan, son kullanıcı odaklı bir GNU/Linux dağıtımıdır.
 
 ![](https://github.com/PisiLinuxNew/package-manager/blob/master/data/tray-zero.png)
+
+-----------------------------------------------------------------------------------
+Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki kitaplıklar, masaüstleri, ofis uygulamaları, vb. tüm bileşenlerini içermektedir.
+-----------------------------------------------------------------------------------
 
 Main Depo Paketleme Kuralları;
 
