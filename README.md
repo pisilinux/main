@@ -9,7 +9,7 @@ Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazıl
 
 ![](https://github.com/PisiLinuxNew/package-manager/blob/master/data/tray-zero.png)
 
-# main repository
+# main repository ![](https://img.shields.io/badge/%C3%96NEML%C4%B0-UYARI-red)
 
 *********************************************************************************
 Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
