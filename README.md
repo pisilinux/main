@@ -1,19 +1,18 @@
+# main repository
+
+*********************************************************************************
+Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
+*********************************************************************************
+
 # Pisi GNU/Linux
 
 [![Telegram](https://img.shields.io/badge/Telegram-Pisi%20GNU%2FLinux-blue)](https://t.me/joinchat/DnOmFNS_KOjzEpnn)
 [![Forum](https://img.shields.io/badge/Forum-Pisi%20GNU%2FLinux-orange)](https://pisilinux.org/forum)
 [![Website](https://img.shields.io/badge/Website-Pisi%20GNU%2FLinux-green)](https://pisilinux.org/)
 
-
 Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazılım topluluğu tarafından geliştirilen, bilgisayar kullanıcılarına kurulum, yapılandırma ve kullanım konusunda kolaylık sağlamaya çalışan, onların temel masaüstü gereksinimlerini karşılamayı amaçlayan, son kullanıcı odaklı bir GNU/Linux dağıtımıdır.
 
 ![](https://github.com/PisiLinuxNew/package-manager/blob/master/data/tray-zero.png)
-
-# main repository
-
-*********************************************************************************
-Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
-*********************************************************************************
 
 Paketleme Kuralları;
 
