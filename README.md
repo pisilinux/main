@@ -9,7 +9,7 @@
 
 # Pisi GNU/Linux
 Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazılım topluluğu tarafından geliştirilen, bilgisayar kullanıcılarına kurulum, yapılandırma ve kullanım konusunda kolaylık sağlamaya çalışan, onların temel masaüstü gereksinimlerini karşılamayı amaçlayan, son kullanıcı odaklı bir GNU/Linux dağıtımıdır.                                 
-**_Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içermektedir.
+**_Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içermektedir._**
 
 Paketleme Kuralları;
 
