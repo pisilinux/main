@@ -2,7 +2,7 @@
 
 Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
 *********************************************************************************
-# DİKKAT: Bu depo geliştiriciler içindir. Sisteminizin kararlılığını bozabilir.
+# DİKKAT: Geliştiriciler içindir, sisteminize zarar verebilir.
 
 # Pisi GNU/Linux
 
