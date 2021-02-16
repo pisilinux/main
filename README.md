@@ -15,8 +15,8 @@ Paketleme Kuralları;
 1. Dosya yolları yazılırken bir yol diğer yolları kapsamamalıdır.
 1. actions.py dosyalarında mümkünse *shelltools* yerine *pisitools* kullanılmalıdır.
 1. *configure* seçeneklerinde pakete yeni bağımlılık getirecek değişiklikler için mutlaka issue açılmalı, tartışılmadan pull request istenmemelidir.
-1. systemd olmadığı için paketleri yapılandırırken '''--with-systemdsystemunitdir=/lib/systemd/system''' yerine '''--with-systemdsystemunitdir=no''' kullanılmalıdır.
-1. Bir paketi yapılandırırken *"--libexecdir="* kullanılacaksa *"--libexecdir=/usr/lib"* şeklinde kullanılmalıdır.
+1. systemd olmadığı için paketleri yapılandırırken ```---with-systemdsystemunitdir=/lib/systemd/system``` yerine ```--with-systemdsystemunitdir=no``` kullanılmalıdır.
+1. Bir paketi yapılandırırken ```--libexecdir=``` kullanılacaksa ```--libexecdir=/usr/lib``` şeklinde kullanılmalıdır.
 1. Tüm paketçiler kendi forklarında çalışmalı ve *Pull Request* istemelidir.
 -----------------------------------------------------------------
 Pisi GNU/Linux projesinin geliştirilmesine yardım etmek istiyorsanız;
