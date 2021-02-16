@@ -2,8 +2,6 @@
 # DİKKAT: Geliştiriciler içindir, sisteminize zarar verebilir.
 *********************************************************************************
 
-# main repository
-
 Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
 
 # Pisi GNU/Linux
@@ -16,7 +14,7 @@ Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazıl
 
 ![](https://github.com/PisiLinuxNew/package-manager/blob/master/data/tray-zero.png)
 
-Paketleme Kuralları;
+Main Depo Paketleme Kuralları;
 
 1. pspec.xml ve actions.py dosyaları düzenlenirken *sekme* (Tab tuşu) yerine *boşluk* kullanılmalıdır
 
