@@ -1,8 +1,10 @@
+*********************************************************************************
+# DİKKAT: Geliştiriciler içindir, sisteminize zarar verebilir.
+*********************************************************************************
+
 # main repository
 
 Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
-*********************************************************************************
-# DİKKAT: Geliştiriciler içindir, sisteminize zarar verebilir.
 
 # Pisi GNU/Linux
 
