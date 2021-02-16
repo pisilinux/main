@@ -1,4 +1,4 @@
-
+                        
 [![Telegram](https://img.shields.io/badge/Telegram-Pisi%20GNU%2FLinux-blue)](https://t.me/joinchat/DnOmFNS_KOjzEpnn)
 [![Forum](https://img.shields.io/badge/Forum-Pisi%20GNU%2FLinux-orange)](https://pisilinux.org/forum)
 [![Website](https://img.shields.io/badge/Website-Pisi%20GNU%2FLinux-green)](https://pisilinux.org/)
@@ -13,10 +13,9 @@ Pisi GNU/Linux; Pisi tabanlı son Pardus sürümünü temel alan, özgür yazıl
 ![](https://github.com/PisiLinuxNew/package-manager/blob/master/data/tray-zero.png)
 
 ************************************
-Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki kitaplıklar, masaüstleri, ofis uygulamaları, vb. tüm bileşenlerini içermektedir.
+Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içermektedir.
 *************************************
-
-Main Depo Paketleme Kuralları;
+Paketleme Kuralları;
 
 1. pspec.xml ve actions.py dosyaları düzenlenirken *sekme* (Tab tuşu) yerine *boşluk* kullanılmalıdır
 
