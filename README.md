@@ -1,8 +1,8 @@
 # main repository
 
-*********************************************************************************
 Bu depo Pisi GNU/Linux projesinin *core* depo dışındaki tüm bileşenlerini içerir.
 *********************************************************************************
+# DİKKAT: BU DEPODAN DERLEYİP KURACAĞINIZ PAKETLER SİSTEMİNİZİN KARARLILIĞINI BOZABİLİR!
 
 # Pisi GNU/Linux
 
