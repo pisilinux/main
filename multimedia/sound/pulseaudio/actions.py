@@ -21,7 +21,6 @@ j = ''.join([
     '-Dsoxr=disabled ',
     '-Djack=disabled ',
     '-Dlirc=disabled ',
-    '-Dudev=disabled ',
     '-Dfftw=disabled ',
     '-Dgtk=disabled ',
     '-Dx11=disabled ',
