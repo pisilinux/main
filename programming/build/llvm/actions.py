@@ -48,16 +48,16 @@ def setup():
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
-        pisitools.cflags.add("-m64")
-        pisitools.cxxflags.add("-m64")
+        pisitools.cflags.add("-m64 -rtlib=compiler-rt")
+        pisitools.cxxflags.add("-m64 -stdlib=libc++ -rtlib=compiler-rt")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
                           
     
     if get.buildTYPE() == "emul32":
-        pisitools.cflags.add("-m32")
-        pisitools.cxxflags.add("-m32")        
+        pisitools.cflags.add("-m32 -rtlib=compiler-rt")
+        pisitools.cxxflags.add("-m32 -stdlib=libc++ -rtlib=compiler-rt")        
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
@@ -79,6 +79,7 @@ def setup():
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
                           -DLLVM_ENABLE_LIBCXX=ON \
+                          -DLLVM_VERSION_SUFFIX='libcxx' \
                           -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
 
 def build():
