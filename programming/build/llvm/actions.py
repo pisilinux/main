@@ -19,7 +19,7 @@ NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 WorkDir = "llvm-project-%s.src/llvm" % get.srcVERSION()
 
 def setup():
-    pisitools.ldflags.add("-fuse-ld=lld -rtlib=libgcc")
+    pisitools.ldflags.add("-fuse-ld=lld")
     pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
     pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
     shelltools.export("CC", "clang")
@@ -49,7 +49,7 @@ def setup():
     
     if get.buildTYPE() != "emul32":
         pisitools.cflags.add("-m64")
-        pisitools.cxxflags.add("-m64 -Wno-c++11-narrowing")
+        pisitools.cxxflags.add("-m64")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
@@ -57,7 +57,7 @@ def setup():
     
     if get.buildTYPE() == "emul32":
         pisitools.cflags.add("-m32")
-        pisitools.cxxflags.add("-m32 -Wno-c++11-narrowing")        
+        pisitools.cxxflags.add("-m32")        
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
