@@ -78,6 +78,7 @@ def setup():
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
+                          -DLLVM_ENABLE_LIBCXX=ON \
                           -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
 
 def build():
