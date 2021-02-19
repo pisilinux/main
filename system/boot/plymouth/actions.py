@@ -36,12 +36,6 @@ def setup():
                          --disable-systemd-integration  \
                          --disable-tests \
                          --disable-static \
-                         --enable-drm \
-                         --enable-tracing \
-                         --enable-pango \
-                         --enable-gtk=no \
-                         --without-rhgb-compat-link \
-                         --without-system-root-install \
                          --enable-gdm-transition \
                          --without-rhgb-compat-link" % LOGO_FILE)
 
