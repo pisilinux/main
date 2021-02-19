@@ -14,7 +14,7 @@
  #  define KM_FREE_RECORD(a,b,c)
  #endif
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 3)
 +#define NV_VMALLOC(ptr, size)                     \
 +    {                                             \
 +        (ptr) = __vmalloc(size, GFP_KERNEL);      \
@@ -36,7 +36,7 @@
          return rmStatus;
      }
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 3)
 +    down_read(&mm->mmap_lock);
 +    ret = NV_GET_USER_PAGES((unsigned long)address,
 +                            page_count, write, force, user_pages, NULL);
@@ -58,7 +58,7 @@
  #include "uvm_gpu_ops_tests.h"
  #endif
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 3)
 +#define mmap_sem mmap_lock
 +#endif
 +
