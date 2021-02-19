@@ -19,7 +19,7 @@ NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 WorkDir = "llvm-project-%s.src/llvm" % get.srcVERSION()
 
 def setup():
-    pisitools.ldflags.add("-fuse-ld=lld")
+    pisitools.ldflags.add("-fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
     pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
     pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
     shelltools.export("CC", "clang")
@@ -48,16 +48,16 @@ def setup():
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
-        pisitools.cflags.add("-m64 -rtlib=compiler-rt")
-        pisitools.cxxflags.add("-m64 -stdlib=libc++ -rtlib=compiler-rt")
+        pisitools.cflags.add("-m64 ")
+        pisitools.cxxflags.add("-m64 -stdlib=libc++")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
                           
     
     if get.buildTYPE() == "emul32":
-        pisitools.cflags.add("-m32 -rtlib=compiler-rt")
-        pisitools.cxxflags.add("-m32 -stdlib=libc++ -rtlib=compiler-rt")        
+        pisitools.cflags.add("-m32 ")
+        pisitools.cxxflags.add("-m32 -stdlib=libc++")        
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
@@ -65,7 +65,7 @@ def setup():
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -G 'Ninja' \
+                          -G 'Unix Makefiles' \
                           %s \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_LIBDIR_SUFFIX=%s \
@@ -84,13 +84,13 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    shelltools.system("ninja")
-    #cmaketools.make()
+    #shelltools.system("ninja")
+    cmaketools.make()
 
 def install():
     shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
     if get.buildTYPE() == "emul32":        
         pisitools.domove("/emul32/lib32/", "/usr/")
