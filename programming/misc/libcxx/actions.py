@@ -10,7 +10,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
-WorkDir = "llvm-project-%s" %get.srcVERSION()
+WorkDir = "llvm-project-%s.src" % get.srcVERSION()
 
 NoStrip = ["/usr"]
 
