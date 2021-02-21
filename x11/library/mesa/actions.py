@@ -47,15 +47,19 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += " -Dlmsensors=disabled --native-file crossfile.ini -Dllvm_libdir=/usr/lib32 -Dzstd=disabled"
-        #shelltools.export("CC", "clang -m32")
-        #shelltools.export("CXX", "clang++ -m32")
-        shelltools.export("CC", "gcc -m32")
-        shelltools.export("CXX", "g++ -m32")
+        shelltools.export("CC", "clang -m32")
+        shelltools.export("CXX", "clang++ -m32")
+        pisitools.cflags.add("-m32 ")
+        pisitools.cxxflags.add("-m32 -stdlib=libc++")
+        #shelltools.export("CC", "gcc -m32")
+        #shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         shelltools.export("LLVM_CONFIG","/usr/bin/llvm-config-32") 
     else:
-        #shelltools.export("CC", "clang")
-        #shelltools.export("CXX", "clang++")
+        shelltools.export("CC", "clang")
+        shelltools.export("CXX", "clang++")
+        pisitools.cflags.add("-m64 ")
+        pisitools.cxxflags.add("-m64 -stdlib=libc++")
         options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
