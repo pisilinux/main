@@ -14,25 +14,37 @@ libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 
 def setup():
     pisitools.dosed("CMakeLists.txt", "{CMAKE_INSTALL_DATADIR}", "{CMAKE_INSTALL_LIBDIR}")
-	
+    
+    shelltools.export("CC", "clang")
+    shelltools.export("CXX", "clang++")
+    
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    
     if get.buildTYPE() == "emul32": 
-       shelltools.system("chmod +x clang32")
-       options = "-DLLVM_CLANG='%s/%s-%s.src/clang32' \
+        pisitools.cflags.add("-m32 ")
+        pisitools.cxxflags.add("-m32 -stdlib=libc++")
+        shelltools.system("chmod +x clang32")
+        options = "-DLLVM_CLANG='%s/%s-%s.src/clang32' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config-32' \
                   -DCMAKE_INSTALL_LIBDIR=lib32 \
                  " % (get.workDIR(), get.srcNAME(), get.srcVERSION())
     else:
-       options = "-DLLVM_CLANG='/usr/bin/clang' \
+        pisitools.cflags.add("-m64 ")
+        pisitools.cxxflags.add("-m64 -stdlib=libc++")
+        options = "-DLLVM_CLANG='/usr/bin/clang' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config' \
                   -DCMAKE_INSTALL_LIBDIR=lib \
                  "
-	
-    cmaketools.configure(options)
+                 
+    cmaketools.configure(options, sourceDir="..")
     
 def build():
+    shelltools.cd("build")
     cmaketools.make()
 
 def install():
+    shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     #pisitools.domove("/usr/share/clc/", "%s" %libdir)
@@ -46,4 +58,5 @@ def install():
     #pisitools.removeDir("/usr/share/clc")
     #pisitools.removeDir("/usr/share/pkgconfig")
     
+    shelltools.cd("..")
     pisitools.dodoc("LICENSE*", "README*")
