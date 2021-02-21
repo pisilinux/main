@@ -97,7 +97,7 @@ def install():
         pisitools.insinto("/usr/include/llvm/Config/","%s/emul32/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
         pisitools.removeDir("/emul32")
-        #pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
+        pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
    
     shelltools.cd ("..")
     
