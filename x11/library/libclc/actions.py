@@ -18,9 +18,6 @@ def setup():
     shelltools.export("CC", "clang")
     shelltools.export("CXX", "clang++")
     
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    
     if get.buildTYPE() == "emul32": 
         pisitools.cflags.add("-m32 ")
         pisitools.cxxflags.add("-m32 -stdlib=libc++")
@@ -37,14 +34,12 @@ def setup():
                   -DCMAKE_INSTALL_LIBDIR=lib \
                  "
                  
-    cmaketools.configure(options, sourceDir="..")
+    cmaketools.configure(options)
     
 def build():
-    shelltools.cd("build")
     cmaketools.make()
 
 def install():
-    shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     #pisitools.domove("/usr/share/clc/", "%s" %libdir)
@@ -58,5 +53,4 @@ def install():
     #pisitools.removeDir("/usr/share/clc")
     #pisitools.removeDir("/usr/share/pkgconfig")
     
-    shelltools.cd("..")
     pisitools.dodoc("LICENSE*", "README*")
