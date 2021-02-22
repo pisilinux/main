@@ -84,13 +84,13 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    #shelltools.system("ninja")
-    cmaketools.make()
+    shelltools.system("ninja")
+    #cmaketools.make()
 
 def install():
     shelltools.cd("build")
-    #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
     if get.buildTYPE() == "emul32":        
         pisitools.domove("/emul32/lib32/", "/usr/")
