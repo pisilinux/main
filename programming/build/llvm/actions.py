@@ -67,7 +67,7 @@ def setup():
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -G 'Unix Makefiles' \
+                          -G 'Ninja' \
                           %s \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_LIBDIR_SUFFIX=%s \
