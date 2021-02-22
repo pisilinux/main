@@ -19,11 +19,11 @@ NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 WorkDir = "llvm-project-%s.src/llvm" % get.srcVERSION()
 
 def setup():
-    pisitools.ldflags.add("-fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
-    pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
-    pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
-    shelltools.export("CC", "clang")
-    shelltools.export("CXX", "clang++")
+    #pisitools.ldflags.add("-fuse-ld=lld -rtlib=compiler-rt -stdlib=libc++")
+    #pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
+    #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
+    #shelltools.export("CC", "clang")
+    #shelltools.export("CXX", "clang++")
     
 
     #if get.buildTYPE() == "emul32":
@@ -42,22 +42,24 @@ def setup():
         #shelltools.export("CXX", "g++")
         #shelltools.export("CC", "clang")
         #shelltools.export("CXX", "clang++")
-    
+
     shelltools.makedirs("build")
     
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
         pisitools.cflags.add("-m64 ")
-        pisitools.cxxflags.add("-m64 -stdlib=libc++")
+        pisitools.cxxflags.add("-m64")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
                           
     
     if get.buildTYPE() == "emul32":
+	shelltools.export("CC", "gcc -m32")
+        shelltools.export("CXX", "g++ -m32")
         pisitools.cflags.add("-m32 ")
-        pisitools.cxxflags.add("-m32 -stdlib=libc++")        
+        pisitools.cxxflags.add("-m32")        
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
@@ -78,8 +80,6 @@ def setup():
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
-                          -DLLVM_ENABLE_LIBCXX=ON \
-                          -DLLVM_VERSION_SUFFIX='libcxx' \
                           -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
 
 def build():
