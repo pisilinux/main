@@ -20,7 +20,7 @@ def setup():
     
     if get.buildTYPE() == "emul32": 
         pisitools.cflags.add("-m32 ")
-        pisitools.cxxflags.add("-m32 -stdlib=libc++")
+        pisitools.cxxflags.add("-m32")
         shelltools.system("chmod +x clang32")
         options = "-DLLVM_CLANG='%s/%s-%s.src/clang32' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config-32' \
@@ -28,7 +28,7 @@ def setup():
                  " % (get.workDIR(), get.srcNAME(), get.srcVERSION())
     else:
         pisitools.cflags.add("-m64 ")
-        pisitools.cxxflags.add("-m64 -stdlib=libc++")
+        pisitools.cxxflags.add("-m64")
         options = "-DLLVM_CLANG='/usr/bin/clang' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config' \
                   -DCMAKE_INSTALL_LIBDIR=lib \
