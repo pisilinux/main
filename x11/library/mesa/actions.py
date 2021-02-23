@@ -50,7 +50,7 @@ def setup():
         shelltools.export("CC", "clang -m32")
         shelltools.export("CXX", "clang++ -m32")
         pisitools.cflags.add("-m32 ")
-        pisitools.cxxflags.add("-m32 -stdlib=libc++")
+        pisitools.cxxflags.add("-m32")
         #shelltools.export("CC", "gcc -m32")
         #shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
@@ -59,7 +59,7 @@ def setup():
         shelltools.export("CC", "clang")
         shelltools.export("CXX", "clang++")
         pisitools.cflags.add("-m64 ")
-        pisitools.cxxflags.add("-m64 -stdlib=libc++")
+        pisitools.cxxflags.add("-m64")
         options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
