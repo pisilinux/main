@@ -15,8 +15,8 @@ libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 def setup():
     pisitools.dosed("CMakeLists.txt", "{CMAKE_INSTALL_DATADIR}", "{CMAKE_INSTALL_LIBDIR}")
     
-    shelltools.export("CC", "clang")
-    shelltools.export("CXX", "clang++")
+    #shelltools.export("CC", "clang")
+    #shelltools.export("CXX", "clang++")
     
     if get.buildTYPE() == "emul32": 
         pisitools.cflags.add("-m32 ")
