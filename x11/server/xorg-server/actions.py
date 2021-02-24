@@ -14,6 +14,7 @@ def setup():
 
     autotools.configure("--enable-install-libxf86config \
                          --disable-systemd-logind \
+                         --enable-ipv6 \
                          --enable-aiglx \
                          --enable-glx-tls \
                          --enable-composite \
