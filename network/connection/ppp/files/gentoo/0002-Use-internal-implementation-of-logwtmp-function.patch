@@ -1,0 +1,33 @@
+From 15eee4a0233c0c8f019a9ca4d7d7aa24e8d48daa Mon Sep 17 00:00:00 2001
+From: Sergey Popov <pinkbyte@gentoo.org>
+Date: Fri, 3 Jan 2020 12:05:29 +0100
+Subject: [PATCH 02/14] Use internal implementation of logwtmp function
+
+to prevent utilities from sys-apps/coreutils to not detect authorized users
+---
+ pppd/sys-linux.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/pppd/sys-linux.c b/pppd/sys-linux.c
+index 85033d9..85b1512 100644
+--- a/pppd/sys-linux.c
++++ b/pppd/sys-linux.c
+@@ -2472,7 +2472,6 @@ int ppp_available(void)
+     return ok;
+ }
+ 
+-#ifndef HAVE_LOGWTMP
+ /********************************************************************
+  *
+  * Update the wtmp file with the appropriate user name and tty device.
+@@ -2546,7 +2545,6 @@ void logwtmp (const char *line, const char *name, const char *host)
+     }
+ #endif
+ }
+-#endif /* HAVE_LOGWTMP */
+ 
+ /********************************************************************
+  *
+-- 
+2.30.0
+

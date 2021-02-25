@@ -1,0 +1,28 @@
+From 44693fba1884f8e5404fd259e371350ffc8d24be Mon Sep 17 00:00:00 2001
+From: "Nelo-T. Wallus" <nelo@wallus.de>
+Date: Tue, 5 Jan 2021 12:45:00 +0100
+Subject: [PATCH 14/14] Warn user of deprecated option defaultmetric
+
+---
+ pppd/options.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/pppd/options.c b/pppd/options.c
+index 022f9d9..d7da8c7 100644
+--- a/pppd/options.c
++++ b/pppd/options.c
+@@ -684,6 +684,11 @@ process_option(option_t *opt, char *cmd, char **argv)
+     current_option = opt->name;
+     if ((opt->flags & OPT_PRIVFIX) && privileged_option)
+ 	prio += OPRIO_ROOT;
++
++    if (current_option == "defaultmetric")
++	warn("Option '%s' is deprecated, switch to 'defaultroute-metric'",
++	     current_option);
++
+     while (mainopt->flags & OPT_PRIOSUB)
+ 	--mainopt;
+     if (mainopt->flags & OPT_PRIO) {
+-- 
+2.30.0
+

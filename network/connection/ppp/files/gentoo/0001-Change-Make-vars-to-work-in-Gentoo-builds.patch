@@ -1,0 +1,164 @@
+From 628de9d1198b724ec6427b9ca7de1c8e2e9ab9b3 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Tue, 5 Jan 2021 11:13:53 +0100
+Subject: [PATCH 01/14] Change Make vars to work in Gentoo builds
+
+---
+ chat/Makefile.linux                  | 2 +-
+ configure                            | 4 ++--
+ pppd/plugins/Makefile.linux          | 8 ++++++--
+ pppd/plugins/pppoatm/Makefile.linux  | 3 +--
+ pppd/plugins/pppoe/Makefile.linux    | 4 ++--
+ pppd/plugins/pppol2tp/Makefile.linux | 3 +--
+ pppd/plugins/radius/Makefile.linux   | 6 +++---
+ 7 files changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/chat/Makefile.linux b/chat/Makefile.linux
+index 407cc12..9b09ae3 100644
+--- a/chat/Makefile.linux
++++ b/chat/Makefile.linux
+@@ -19,7 +19,7 @@ INSTALL= install
+ all:	chat
+ 
+ chat:	chat.o
+-	$(CC) $(LDFLAGS) -o chat chat.o
++	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $^
+ 
+ chat.o:	chat.c
+ 	$(CC) -c $(CFLAGS) -o chat.o chat.c
+diff --git a/configure b/configure
+index f977663..bb72fba 100755
+--- a/configure
++++ b/configure
+@@ -7,7 +7,7 @@ SYSCONF=/etc
+ 
+ # Compile defaults
+ CROSS_COMPILE=
+-CC=cc
++CC ?= cc
+ CFLAGS=
+ 
+ system=`uname -s`
+@@ -20,7 +20,7 @@ case $system in
+     makext="linux";
+     ksrc="linux";
+     state="known";
+-    CFLAGS="-O2 -g -pipe";;
++    CFLAGS="$(CFLAGS)";;
+   SunOS)
+     karch=`/usr/bin/isainfo -k`
+     case $release in
+diff --git a/pppd/plugins/Makefile.linux b/pppd/plugins/Makefile.linux
+index 6403e3d..89cf5e7 100644
+--- a/pppd/plugins/Makefile.linux
++++ b/pppd/plugins/Makefile.linux
+@@ -8,7 +8,11 @@ MANDIR = $(DESTDIR)/share/man/man8
+ LIBDIR = $(DESTDIR)/lib/pppd/$(VERSION)
+ 
+ CFLAGS	= $(COPTS) -I.. -I../../include -fPIC
+-LDFLAGS_SHARED	= -shared
++LDFLAGS_PROG := $(LDFLAGS)
++export LDFLAGS LDFLAGS_PROG
++LDFLAGS += -shared
++# need the following option, otherwise linking plugins might fail with undef errors (Gentoo bug 210837)
++LDFLAGS += -Wl,--allow-shlib-undefined
+ INSTALL	= install
+ 
+ # EAP-TLS
+@@ -35,7 +39,7 @@ all:	$(PLUGINS)
+ 	for d in $(SUBDIRS); do $(MAKE) $(MFLAGS) -C $$d all || exit $$?; done
+ 
+ %.so: %.c
+-	$(CC) -o $@ $(LDFLAGS) $(LDFLAGS_SHARED) $(CFLAGS) $^
++	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $^ $(LIBS)
+ 
+ VERSION = $(shell awk -F '"' '/VERSION/ { print $$2; }' ../patchlevel.h)
+ 
+diff --git a/pppd/plugins/pppoatm/Makefile.linux b/pppd/plugins/pppoatm/Makefile.linux
+index d3a8086..ad6b074 100644
+--- a/pppd/plugins/pppoatm/Makefile.linux
++++ b/pppd/plugins/pppoatm/Makefile.linux
+@@ -9,7 +9,6 @@ LIBDIR = $(DESTDIR)/lib/pppd/$(VERSION)
+ VERSION = $(shell awk -F '"' '/VERSION/ { print $$2; }' ../../patchlevel.h)
+ 
+ CFLAGS	= $(COPTS) -I../.. -I../../../include -fPIC
+-LDFLAGS_SHARED	= -shared
+ INSTALL	= install
+ 
+ PLUGIN := pppoatm.so
+@@ -34,7 +33,7 @@ endif
+ all: $(PLUGIN)
+ 
+ $(PLUGIN): $(PLUGIN_OBJS)
+-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(LDFLAGS_SHARED) $^ $(LIBS)
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+ install: all
+ 	$(INSTALL) -d -m 755 $(LIBDIR)
+diff --git a/pppd/plugins/pppoe/Makefile.linux b/pppd/plugins/pppoe/Makefile.linux
+index c415ce3..e18c6de 100644
+--- a/pppd/plugins/pppoe/Makefile.linux
++++ b/pppd/plugins/pppoe/Makefile.linux
+@@ -29,7 +29,7 @@ CFLAGS=$(COPTS) -I../../../include
+ all: pppoe.so pppoe-discovery
+ 
+ pppoe-discovery: pppoe-discovery.o debug.o
+-	$(CC) $(LDFLAGS) -o pppoe-discovery pppoe-discovery.o debug.o
++	$(CC) $(LDFLAGS_PROG) $(CFLAGS) -o pppoe-discovery pppoe-discovery.o debug.o
+ 
+ pppoe-discovery.o: pppoe-discovery.c
+ 	$(CC) $(CFLAGS) -I../../.. -c -o pppoe-discovery.o pppoe-discovery.c
+@@ -38,7 +38,7 @@ debug.o: debug.c
+ 	$(CC) $(CFLAGS) -I../../.. -c -o debug.o debug.c
+ 
+ pppoe.so: plugin.o discovery.o if.o common.o
+-	$(CC) $(LDFLAGS) -o pppoe.so -shared plugin.o discovery.o if.o common.o
++	$(CC) $(LDFLAGS) $(CFLAGS) -o pppoe.so -shared plugin.o discovery.o if.o common.o
+ 
+ install: all
+ 	$(INSTALL) -d -m 755 $(LIBDIR)
+diff --git a/pppd/plugins/pppol2tp/Makefile.linux b/pppd/plugins/pppol2tp/Makefile.linux
+index 1aa1c0b..899bb5f 100644
+--- a/pppd/plugins/pppol2tp/Makefile.linux
++++ b/pppd/plugins/pppol2tp/Makefile.linux
+@@ -9,7 +9,6 @@ LIBDIR = $(DESTDIR)/lib/pppd/$(VERSION)
+ VERSION = $(shell awk -F '"' '/VERSION/ { print $$2; }' ../../patchlevel.h)
+ 
+ CFLAGS	= $(COPTS) -I. -I../.. -I../../../include -fPIC
+-LDFLAGS_SHARED	= -shared
+ INSTALL	= install
+ 
+ PLUGINS := pppol2tp.so openl2tp.so
+@@ -17,7 +16,7 @@ PLUGINS := pppol2tp.so openl2tp.so
+ all: $(PLUGINS)
+ 
+ %.so: %.o
+-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(LDFLAGS_SHARED) $^ $(LIBS)
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
+ 
+ install: all
+ 	$(INSTALL) -d -m 755 $(LIBDIR)
+diff --git a/pppd/plugins/radius/Makefile.linux b/pppd/plugins/radius/Makefile.linux
+index 489aef2..df90b17 100644
+--- a/pppd/plugins/radius/Makefile.linux
++++ b/pppd/plugins/radius/Makefile.linux
+@@ -47,13 +47,13 @@ install: all
+ 	$(INSTALL) -c -m 444 pppd-radattr.8 $(MANDIR)
+ 
+ radius.so: radius.o libradiusclient.a
+-	$(CC) $(LDFLAGS) -o radius.so -shared radius.o libradiusclient.a
++	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $^
+ 
+ radattr.so: radattr.o
+-	$(CC) $(LDFLAGS) -o radattr.so -shared radattr.o
++	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $^
+ 
+ radrealms.so: radrealms.o
+-	$(CC) $(LDFLAGS) -o radrealms.so -shared radrealms.o
++	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $^
+ 
+ CLIENTOBJS = avpair.o buildreq.o config.o dict.o ip_util.o \
+ 	clientid.o sendserver.o lock.o util.o md5.o
+-- 
+2.30.0
+
