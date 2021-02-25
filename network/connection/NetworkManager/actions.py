@@ -16,6 +16,9 @@ def setup():
         #pisitools.dosed(f, "\$\(?localstatedir\)?(\/run\/(\$PACKAGE|NetworkManager))", "\\1")
     #pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
     #pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
+    
+    shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
+    pisitools.cxxflags.add("-O2 -fPIC")
     autotools.autoreconf("-fiv")
     shelltools.system("intltoolize --force --copy --automake")
 
