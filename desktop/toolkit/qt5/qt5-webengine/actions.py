@@ -21,7 +21,7 @@ def setup():
     #shelltools.export("CFLAGS", "%s -I/usr/lib/sqlite3.16.2" % get.CFLAGS())
     #shelltools.system("qmake WEBENGINE_CONFIG+=use_proprietary_codecs WEBENGINE_CONFIG+=use_system_icu WEBENGINE_CONFIG+=use_system_protobuf WEBENGINE_CONFIG+=use_system_ffmpeg qtwebengine.pro")
     #pisitools.ldflags.add("-Wl,--no-keep-memory ")
-    shelltools.export("NINJAJOBS", "-j 4")
+    #shelltools.export("NINJAJOBS", "-j 4")
     shelltools.system("qmake .. -- -proprietary-codecs \
                    -system-ffmpeg \
                    -system-opus \
