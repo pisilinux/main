@@ -28,8 +28,10 @@ def setup():
                           -DENABLE_WEBGL=ON \
                           -DUSE_LIBHYPHEN=OFF \
                           -DUSE_WOFF2=OFF \
+                          -DUSE_SYSTEMD=OFF \
                           -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.3 \
                           -DSHOULD_INSTALL_JS_SHELL=ON \
+                          -DWPEBACKEND_FDO_INCLUDE_DIRS=/usr/include/wpe-1.0/wpe \
                           -DENABLE_MINIBROWSER=ON")
 
 def build():
