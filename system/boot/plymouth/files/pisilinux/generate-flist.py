@@ -7,7 +7,6 @@ import sys
 # Generate the list of files needed in initramfs for plymouth
 
 exclude_list = (
-                    "/usr/bin/plymouth-log-viewer",
                     "/usr/sbin/plymouth-set-default-theme",
                     "/usr/lib/plymouth/renderers/x11.so",
                     "/usr/lib/plymouth/label.so",

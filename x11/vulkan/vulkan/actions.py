@@ -29,7 +29,7 @@ def setup():
     validation_opts = " -DCMAKE_INSTALL_SYSCONFDIR=/etc \
                         -DCMAKE_INSTALL_DATADIR=/share \
                         -DCMAKE_SKIP_RPATH=True \
-                        -DCMAKE_INSTALL_INCLUDEDIR='/usr/include/vulkan/' \
+                        -DCMAKE_INSTALL_INCLUDEDIR='/usr/include' \
                         -DBUILD_TESTS=Off \
                         -DBUILD_WSI_XCB_SUPPORT=On \
                         -DBUILD_WSI_XLIB_SUPPORT=On \
@@ -89,11 +89,11 @@ def setup():
 def build():
     shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
-    cmaketools.make()
+    cmaketools.make("-j1")
     
     shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
-    cmaketools.make()
+    cmaketools.make("-j1")
     
 def install():
     

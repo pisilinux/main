@@ -13,6 +13,7 @@ LOGO_FILE = "/usr/share/pixmaps/plymouth-pisilinux.png"
 THEMEPATH = "/usr/share/plymouth/themes"
 
 def setup():
+    pisitools.ldflags.add(" -ludev ")
     # /var/run => /run
     pisitools.dosed("configure.ac", "^(\s+plymouthruntimedir=)\$localstatedir(\/run\/plymouth)", r"\1\2")
     pisitools.dosed("src/Makefile.am", "^(plymouthdrundir\s=\s)\$\(localstatedir\)(\/run\/plymouth)", r"\1\2")
@@ -32,8 +33,15 @@ def setup():
                          --with-shutdown-tty=/dev/tty1 \
                          --with-log-viewer \
                          --disable-libdrm_nouveau \
+                         --disable-systemd-integration  \
                          --disable-tests \
                          --disable-static \
+                         --enable-drm \
+                         --enable-tracing \
+                         --enable-pango \
+                         --enable-gtk=no \
+                         --without-rhgb-compat-link \
+                         --without-system-root-install \
                          --enable-gdm-transition \
                          --without-rhgb-compat-link" % LOGO_FILE)
 

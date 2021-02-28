@@ -17,6 +17,6 @@ def build():
 def install():
     autotools.install()
     #pisitools.dobin("fuse/mount.exfat-fuse")
-   # pisitools.doman("fuse/mount.exfat-fuse.8")
+    #pisitools.doman("fuse/mount.exfat-fuse.8")
 
     pisitools.dodoc("ChangeLog", "COPYING")

@@ -20,13 +20,11 @@ def setup():
                             --enable-vp8 \
                             --enable-vp9 \
                             --enable-vp9-highbitdepth \
+                            --enable-vp9-temporal-denoising \
                             --enable-shared \
                             --enable-runtime-cpu-detect \
-                            --enable-multithread \
                             --enable-postproc \
                             --enable-experimental \
-                            --disable-debug \
-                            --disable-debug-libs \
                             --disable-install-docs \
                             --disable-install-srcs" % libdir)
 

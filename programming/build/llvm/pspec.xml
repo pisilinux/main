@@ -11,14 +11,7 @@
         <License>NCSA</License>
         <Summary>The Low Level Virtual Machine</Summary>
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
-       <Archive sha1sum="5723ae20d1e6e9ccfda208cb9a8cf2f87c3a6107" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-11.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="02c87f5e07f2a1c1e2dbb8ce8328f0106d70b10d" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang-11.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="b77dc0494894b997c8f4012debbf0bf469462386" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/clang-tools-extra-11.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="6bdb22e6b5e4700269f23452d66b0bddee93e008" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/lldb-11.0.0.src.tar.xz</Archive>
-	   <Archive sha1sum="60672d63fa16a0c3b6e267331fa605d76b79e87b" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/lld-11.0.0.src.tar.xz</Archive>
-	   <Archive sha1sum="455be0af2ffbc1db71e61c463398549ff553c198" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/polly-11.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="be3e79fb93cd99135643a191f27c49449bf9c0ee" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/compiler-rt-11.0.0.src.tar.xz</Archive>
-       <Archive sha1sum="3c88390b19ac6779c8d9c89256892d690903412b" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/llvm-project-11.0.0.tar.xz</Archive>
+       <Archive sha1sum="713a5f9ce67713c2b955f9c016b4f96afa4162f1" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/llvm-project-11.1.0.src.tar.xz</Archive>
        <BuildDependencies>
             <Dependency>ninja</Dependency>
             <Dependency>zlib-devel</Dependency>
@@ -34,16 +27,18 @@
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
             <Dependency>binutils</Dependency>
             <Dependency>gcc</Dependency>
-<!--             <Dependency>llvm-clang</Dependency> -->
-<!--             <Dependency>lld</Dependency> -->
+            <Dependency>llvm-clang</Dependency>
+            <Dependency>lld</Dependency> 
+            <Dependency>libcxx-devel</Dependency> 
+            <Dependency>compiler-rt</Dependency> 
         </BuildDependencies>
-        <AdditionalFiles>
+        <!--<AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="../support-linking-ScopPassManager-against-LLVM-dylib.patch">support-linking-ScopPassManager-against-LLVM-dylib.patch</AdditionalFile>
-        </AdditionalFiles>
+        </AdditionalFiles>-->
         <Patches>
-            <Patch>0001-SystemZ-Use-LA-instead-of-AGR-in-eliminateFrameIndex.patch</Patch>
-            <Patch>0001-backport-D88371-guard-find_library-tensorflow_c_api.patch</Patch>
-            <Patch>stack-clash-fixes.patch</Patch>
+            <Patch level="2">0001-SystemZ-Use-LA-instead-of-AGR-in-eliminateFrameIndex.patch</Patch>
+<!--             <Patch level="2">0001-backport-D88371-guard-find_library-tensorflow_c_api.patch</Patch> -->
+<!--             <Patch>stack-clash-fixes.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -56,6 +51,7 @@
             <Dependency>zlib</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -85,6 +81,7 @@
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>libxml2</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
@@ -108,6 +105,7 @@
             <Dependency>libxml2</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>python3</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/argdumper</Path>
@@ -140,6 +138,7 @@
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/ld.lld</Path>
@@ -169,6 +168,7 @@
         <RuntimeDependencies>
             <Dependency release="current">lld</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/lld/*</Path>
@@ -202,15 +202,7 @@
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/lib/clang/11.0.0/bin</Path>
-            <Path fileType="header">/usr/lib/clang/11.0.0/include/xray</Path>
-            <Path fileType="header">/usr/lib/clang/11.0.0/include/fuzzer</Path>
-            <Path fileType="header">/usr/lib/clang/11.0.0/include/sanitizer</Path>
-            <Path fileType="data">/usr/lib/clang/11.0.0/share</Path>
-            <Path fileType="library">/usr/lib/clang/11.0.0/lib/linux/*.a</Path>
-            <Path fileType="library">/usr/lib/clang/11.0.0/lib/linux/*.a.*</Path>
-            <Path fileType="library">/usr/lib/clang/11.0.0/lib/linux/*.o</Path>
-            <Path fileType="library">/usr/lib/clang/11.0.0/lib/linux/*.so</Path>
+            <Path fileType="library">/usr/lib/clang/11.1.0/lib/linux/*.so</Path>
         </Files>
     </Package>
 
@@ -222,6 +214,7 @@
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/diagtool</Path>
@@ -262,6 +255,7 @@
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/mlir*</Path>
@@ -277,6 +271,7 @@
         <Summary>High-level loop and data-locality optimizer and optimization infrastructure for LLVM</Summary>
         <RuntimeDependencies>
             <Dependency>libgcc</Dependency>
+            <Dependency>libcxx</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/LLVMPolly.so</Path>
@@ -307,6 +302,7 @@
             <Dependency>libffi-32bit</Dependency>
             <Dependency>libxml2-32bit</Dependency>
             <Dependency>ncurses-32bit</Dependency>
+            <Dependency>libcxx-32bit</Dependency> 
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">llvm</Dependency>
@@ -315,6 +311,7 @@
             <Dependency>ncurses-32bit</Dependency>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>libffi-32bit</Dependency>
+            <Dependency>libcxx-32bit</Dependency> 
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/llvm-config-32</Path>
@@ -323,6 +320,13 @@
     </Package>
 
     <History>
+        <Update release="15">
+            <Date>2021-02-17</Date>
+            <Version>11.1.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="14">
             <Date>2020-11-12</Date>
             <Version>11.0.0</Version>

@@ -11,10 +11,10 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
 
-WorkDir = "ClamAV-GUI/"
+#WorkDir = "ClamAV-GUI/"
 
 def setup():
-    shelltools.system("qmake-qt5 -r PREFIX=/usr clamav-gui.pro")
+    shelltools.system("qmake -r PREFIX=/usr clamav-gui.pro")
     
 def build():
     autotools.make()

@@ -1,0 +1,32 @@
+From 464659dbdd982cad0d2b315b12d3bfc5c5bc1f16 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jani=20V=C3=A4limaa?= <wally@mageia.org>
+Date: Fri, 25 Dec 2020 13:16:46 +0200
+Subject: [PATCH] Export XDG_CONFIG_HOME and XDG_CACHE_HOME
+
+---
+ scripts/xinitrc.in.in | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/xinitrc.in.in b/scripts/xinitrc.in.in
+index ff044ed..9bd6fc3 100644
+--- a/scripts/xinitrc.in.in
++++ b/scripts/xinitrc.in.in
+@@ -33,6 +33,7 @@ fi
+ # or empty, a default equal to $HOME/.config should be used.
+ if test "x$XDG_CONFIG_HOME" = "x" ; then
+   XDG_CONFIG_HOME=$HOME/.config
++  export XDG_CONFIG_HOME
+ fi
+ [ -d "$XDG_CONFIG_HOME" ] || mkdir "$XDG_CONFIG_HOME"
+ 
+@@ -41,6 +42,7 @@ fi
+ # set or empty, a default equal to $HOME/.cache should be used.
+ if test "x$XDG_CACHE_HOME" = "x" ; then
+   XDG_CACHE_HOME=$HOME/.cache
++  export XDG_CACHE_HOME
+ fi
+ [ -d "$XDG_CACHE_HOME" ] || mkdir "$XDG_CACHE_HOME"
+ 
+-- 
+2.29.2
+

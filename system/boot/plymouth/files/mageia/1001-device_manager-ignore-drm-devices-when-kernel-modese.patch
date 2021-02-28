@@ -1,0 +1,76 @@
+Index: plymouth-0.9.5/src/main.c
+===================================================================
+--- plymouth-0.9.5/src/main.c
++++ plymouth-0.9.5/src/main.c	2020-10-01 21:11:15.353670757 +0200
+@@ -2263,6 +2263,11 @@
+             (getenv ("DISPLAY") != NULL))
+                 device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV;
+ 
++        if (ply_kernel_command_line_has_argument ("nokmsboot") ||
++            ply_kernel_command_line_has_argument ("nomodeset"))
++                device_manager_flags |= PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED;
++
++
+         if (!plymouth_should_show_default_splash (&state)) {
+                 /* don't bother listening for udev events or setting up a graphical renderer
+                  * if we're forcing details */
+Index: plymouth-0.9.5/src/libply-splash-core/ply-device-manager.c
+===================================================================
+--- plymouth-0.9.5/src/libply-splash-core/ply-device-manager.c
++++ plymouth-0.9.5/src/libply-splash-core/ply-device-manager.c	2020-10-01 21:09:30.090117000 +0200
+@@ -219,6 +219,9 @@
+         const char *id_path;
+         bool has_drm_device = false;
+ 
++        if (manager->flags & PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED)
++                return false;
++
+         /* We want to see if the framebuffer is associated with a DRM-capable
+          * graphics card, if it is, we'll use the DRM device */
+         card_matches = udev_enumerate_new (manager->udev_context);
+@@ -276,7 +279,11 @@
+ 
+                 if (subsystem != NULL && strcmp (subsystem, SUBSYSTEM_DRM) == 0) {
+                         ply_trace ("found DRM device %s", device_path);
+-                        renderer_type = PLY_RENDERER_TYPE_DRM;
++                        if (!(manager->flags & PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED))
++                                renderer_type = PLY_RENDERER_TYPE_DRM;
++                        else
++                                ply_trace ("ignoring, since kernel modesetting is disabled");
++
+                 } else if (strcmp (subsystem, SUBSYSTEM_FRAME_BUFFER) == 0) {
+                         ply_trace ("found frame buffer device %s", device_path);
+                         if (!fb_device_has_drm_device (manager, device))
+@@ -433,11 +440,17 @@
+                 return;
+ 
+         if (strcmp (action, "add") == 0 || strcmp (action, "change") == 0) {
++		const char *preferred_subsystem;
+                 const char *subsystem;
+ 
++                if (manager->flags & PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED)
++                        preferred_subsystem = SUBSYSTEM_FRAME_BUFFER;
++                else
++                        preferred_subsystem = SUBSYSTEM_DRM;
++
+                 subsystem = udev_device_get_subsystem (device);
+ 
+-                if (strcmp (subsystem, SUBSYSTEM_DRM) == 0) {
++                if (strcmp (subsystem, preferred_subsystem) == 0) {
+                         if (manager->local_console_managed && manager->local_console_is_text)
+                                 ply_trace ("ignoring since we're already using text splash for local console");
+                         else
+Index: plymouth-0.9.5/src/libply-splash-core/ply-device-manager.h
+===================================================================
+--- plymouth-0.9.5/src/libply-splash-core/ply-device-manager.h
++++ plymouth-0.9.5/src/libply-splash-core/ply-device-manager.h	2020-10-01 21:10:10.643535253 +0200
+@@ -32,7 +32,8 @@
+         PLY_DEVICE_MANAGER_FLAGS_NONE = 0,
+         PLY_DEVICE_MANAGER_FLAGS_IGNORE_SERIAL_CONSOLES = 1 << 0,
+         PLY_DEVICE_MANAGER_FLAGS_IGNORE_UDEV = 1 << 1,
+-        PLY_DEVICE_MANAGER_FLAGS_SKIP_RENDERERS = 1 << 2
++        PLY_DEVICE_MANAGER_FLAGS_SKIP_RENDERERS = 1 << 2,
++        PLY_DEVICE_MANAGER_FLAGS_KMS_DISABLED = 1 << 3
+ } ply_device_manager_flags_t;
+ 
+ typedef struct _ply_device_manager ply_device_manager_t;

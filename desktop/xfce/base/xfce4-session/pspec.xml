@@ -9,7 +9,6 @@
             <Email>ayhanyalcinsoy@pisilinux.org</Email>
         </Packager>
         <License>GPLv2</License>
-        <PartOf>desktop.xfce.base</PartOf>
         <IsA>library</IsA>
         <IsA>app:console</IsA>
         <Summary>Xfce session manager</Summary>
@@ -40,8 +39,9 @@
             <Dependency versionFrom="4.16.0">libxfce4util-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <!-- it must on low level, later... -->
-<!--             <Patch level="1">xinitrc.patch</Patch> -->
+            <Patch level="1">mageia/0001-Export-XDG_CONFIG_HOME-and-XDG_CACHE_HOME.patch</Patch>
+            <Patch level="1">mageia/xfce4-session-4.13.2-add-more-screen-lockers-to-xflock4.patch</Patch>
+            <Patch level="1">mageia/xfce4-session-4.13.2-xinitrc.patch</Patch>
         </Patches>
     </Source>
 
@@ -73,9 +73,21 @@
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
         </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" group="root" permission="0644" target="/etc/lightdm/lightdm.conf.d/55-xfce-lightdm.conf">mageia/xfce4-lightdm.conf</AdditionalFile>
+            <!--AdditionalFile owner="root" group="root" permission="0644" target="/etc/pam.d/xfce4">mageia/xfce4.pam</AdditionalFile-->
+            <AdditionalFile owner="root" group="root" permission="0644" target="/etc/xdg/autostart/xfce-polkit-gnome-authentication-agent-1.desktop">xfce-polkit-gnome-authentication-agent-1.desktop</AdditionalFile>
+        </AdditionalFiles>
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2021-01-29</Date>
+            <Version>4.16.0</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="2">
             <Date>2020-12-24</Date>
             <Version>4.16.0</Version>

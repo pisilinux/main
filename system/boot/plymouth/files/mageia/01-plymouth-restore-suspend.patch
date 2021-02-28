@@ -1,0 +1,28 @@
+diff -Nuar a/src/libply-splash-core/ply-boot-splash-plugin.h b/src/libply-splash-core/ply-boot-splash-plugin.h
+--- a/src/libply-splash-core/ply-boot-splash-plugin.h	2020-06-15 17:16:47.000000000 +0300
++++ b/src/libply-splash-core/ply-boot-splash-plugin.h	2021-01-25 13:40:38.576859689 +0300
+@@ -38,6 +38,8 @@
+ {
+         PLY_BOOT_SPLASH_MODE_BOOT_UP,
+         PLY_BOOT_SPLASH_MODE_SHUTDOWN,
++        PLY_BOOT_SPLASH_MODE_SUSPEND,
++        PLY_BOOT_SPLASH_MODE_RESUME,
+         PLY_BOOT_SPLASH_MODE_REBOOT,
+         PLY_BOOT_SPLASH_MODE_UPDATES,
+         PLY_BOOT_SPLASH_MODE_SYSTEM_UPGRADE,
+diff -Nuar a/src/plugins/splash/script/script-lib-plymouth.c b/src/plugins/splash/script/script-lib-plymouth.c
+--- a/src/plugins/splash/script/script-lib-plymouth.c	2020-06-15 17:16:47.000000000 +0300
++++ b/src/plugins/splash/script/script-lib-plymouth.c	2021-01-25 13:43:12.694848568 +0300
+@@ -70,6 +70,12 @@
+         case PLY_BOOT_SPLASH_MODE_SHUTDOWN:
+                 obj = script_obj_new_string ("shutdown");
+                 break;
++        case PLY_BOOT_SPLASH_MODE_SUSPEND:
++                obj = script_obj_new_string ("suspend");
++                break;
++        case PLY_BOOT_SPLASH_MODE_RESUME:
++                obj = script_obj_new_string ("resume");
++                break;
+         case PLY_BOOT_SPLASH_MODE_REBOOT:
+                 obj = script_obj_new_string ("reboot");
+                 break;

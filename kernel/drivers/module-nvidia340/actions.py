@@ -34,6 +34,8 @@ def setup():
     #shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
     shelltools.system("patch -p1 < kernel-5.7.patch")
     shelltools.system("patch -p1 < kernel-5.8.patch")
+    shelltools.system("patch -p1 < kernel-5.9.patch")
+    shelltools.system("patch -p1 < kernel-5.10.patch")
     
 
     # Our libc is TLS enabled so use TLS library

@@ -16,14 +16,7 @@ def build():
 
 def install():
     autotools.install()
-    #pisitools.dobin("mkfs/mkexfatfs")
-    #pisitools.dobin("dump/dumpexfat")
-    #pisitools.dobin("fsck/exfatfsck")
-    #pisitools.dobin("label/exfatlabel")    
-    
-    #pisitools.doman("mkfs/mkexfatfs.8")
-    #pisitools.doman("dump/dumpexfat.8")
-    #pisitools.doman("fsck/exfatfsck.8")
-    #pisitools.doman("label/exfatlabel.8")
-    
+    pisitools.remove("/usr/sbin/fsck.exfat")
+    pisitools.remove("/usr/sbin/mkfs.exfat")
+
     pisitools.dodoc("ChangeLog", "COPYING", "README")
