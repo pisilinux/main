@@ -1,0 +1,374 @@
+diff -Nuar a/cmake/VersioningUtils.cmake b/cmake/VersioningUtils.cmake
+--- a/cmake/VersioningUtils.cmake	2021-01-18 17:40:23.000000000 +0300
++++ b/cmake/VersioningUtils.cmake	2021-02-28 16:01:31.749319740 +0300
+@@ -1,3 +1,12 @@
++function(READ_VERSION_HEADER var_prefix def_regex file_path)
++    file(STRINGS "${file_path}" lines)
++    foreach (line ${lines})
++        if (line MATCHES "^#define[ \t]+(${def_regex})[ \t]+([0-9]+)$")
++            set("${var_prefix}${CMAKE_MATCH_1}" "${CMAKE_MATCH_2}" PARENT_SCOPE)
++        endif()
++    endforeach()
++endfunction()
++
+ macro(SET_PROJECT_VERSION major minor micro)
+     set(PROJECT_VERSION_MAJOR "${major}")
+     set(PROJECT_VERSION_MINOR "${minor}")
+diff -Nuar a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2021-01-18 17:40:23.000000000 +0300
++++ b/CMakeLists.txt	2021-02-28 16:01:00.215322016 +0300
+@@ -4,7 +4,8 @@
+ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+ include(VersioningUtils)
+ 
+-SET_PROJECT_VERSION(1 9 1)
++READ_VERSION_HEADER("" "WPE_[A-Z]+_VERSION" "${CMAKE_SOURCE_DIR}/include/wpe/libwpe-version.h")
++SET_PROJECT_VERSION(${WPE_MAJOR_VERSION} ${WPE_MINOR_VERSION} ${WPE_MICRO_VERSION})
+ set(WPE_API_VERSION "1.0")
+ 
+ # Before making a release, the LT_VERSION string should be modified.
+@@ -41,10 +42,6 @@
+     endif ()
+ endforeach ()
+ 
+-set(DERIVED_SOURCES_DIR "${CMAKE_BINARY_DIR}/DerivedSources/wpe")
+-configure_file(include/wpe/version.h.cmake ${DERIVED_SOURCES_DIR}/version.h @ONLY)
+-configure_file(include/wpe/version-deprecated.h.cmake ${DERIVED_SOURCES_DIR}/version-deprecated.h @ONLY)
+-
+ include(DistTargets)
+ include(GNUInstallDirs)
+ 
+@@ -52,8 +49,9 @@
+ find_package(Libxkbcommon REQUIRED)
+ 
+ set(WPE_PUBLIC_HEADERS
+-  ${DERIVED_SOURCES_DIR}/version.h
+-  ${DERIVED_SOURCES_DIR}/version-deprecated.h
++  include/wpe/libwpe-version.h
++  include/wpe/version.h
++  include/wpe/version-deprecated.h
+   include/wpe/export.h
+   include/wpe/input.h
+   include/wpe/keysyms.h
+@@ -81,7 +79,6 @@
+ target_include_directories(wpe PRIVATE
+     "include"
+     "src"
+-    ${DERIVED_SOURCES_DIR}/..
+     $<TARGET_PROPERTY:GL::egl,INTERFACE_INCLUDE_DIRECTORIES>
+ )
+ target_compile_definitions(wpe PRIVATE
+@@ -145,10 +142,8 @@
+       --sitemap=${CMAKE_SOURCE_DIR}/docs/sitemap.txt
+       --output=${CMAKE_CURRENT_BINARY_DIR}/Documentation/
+       --c-sources "${CMAKE_SOURCE_DIR}/include/wpe/*.h"
+-                  "${DERIVED_SOURCES_DIR}/version.h"
+-                  "${DERIVED_SOURCES_DIR}/version-deprecated.h"
+       --extra-c-flags=-DWPE_COMPILATION=1
+-      --c-include-directories ${CMAKE_SOURCE_DIR}/include ${DERIVED_SOURCES_DIR}
++      --c-include-directories ${CMAKE_SOURCE_DIR}/include
+       --c-smart-index
+     )
+   ELSE()
+diff -Nuar a/include/wpe/libwpe-version.h b/include/wpe/libwpe-version.h
+--- a/include/wpe/libwpe-version.h	1970-01-01 02:00:00.000000000 +0200
++++ b/include/wpe/libwpe-version.h	2021-02-28 16:01:59.205317759 +0300
+@@ -0,0 +1,15 @@
++/*
++ * libwpe-version.h
++ * Copyright (C) 2021 Adrian Perez de Castro <aperez@igalia.com>
++ *
++ * Distributed under terms of the MIT license.
++ */
++
++#ifndef LIBWPE_VERSION_H
++#define LIBWPE_VERSION_H
++
++#define WPE_MAJOR_VERSION 1
++#define WPE_MINOR_VERSION 9
++#define WPE_MICRO_VERSION 1
++
++#endif /* !LIBWPE_VERSION_H */
+diff -Nuar a/include/wpe/meson.build b/include/wpe/meson.build
+--- a/include/wpe/meson.build	2021-01-18 17:40:23.000000000 +0300
++++ b/include/wpe/meson.build	2021-02-28 16:02:31.313315442 +0300
+@@ -2,27 +2,17 @@
+ 	'export.h',
+ 	'input.h',
+ 	'keysyms.h',
++	'libwpe-version.h',
+ 	'loader.h',
+ 	'pasteboard.h',
+ 	'renderer-backend-egl.h',
+ 	'renderer-host.h',
++	'version.h',
++	'version-deprecated.h',
+ 	'view-backend.h',
+ 	'wpe-egl.h',
+ 	'wpe.h',
+-
+-	# Generated API headers.
+-	configure_file(
+-		input: 'version.h.cmake',
+-		output: 'version.h',
+-		configuration: version_info,
+-	),
+-	configure_file(
+-		input: 'version-deprecated.h.cmake',
+-		output: 'version-deprecated.h',
+-		configuration: version_info,
+-	),
+ ]
+ install_headers(api_headers,
+ 	subdir: join_paths('wpe-' + api_version, 'wpe'),
+ )
+-
+diff -Nuar a/include/wpe/version-deprecated.h b/include/wpe/version-deprecated.h
+--- a/include/wpe/version-deprecated.h	1970-01-01 02:00:00.000000000 +0200
++++ b/include/wpe/version-deprecated.h	2021-02-28 16:02:59.227313428 +0300
+@@ -0,0 +1,88 @@
++/*
++ * Copyright (C) 2018 Igalia S.L.
++ * All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
++ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#if !defined(__WPE_H_INSIDE__) && !defined(WPE_COMPILATION)
++#error "Only <wpe/wpe.h> can be included directly."
++#endif
++
++#ifndef wpe_version_deprecated_h
++#define wpe_version_deprecated_h
++
++#if defined(WPE_COMPILATION)
++#include "export.h"
++#endif
++
++#include "libwpe-version.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#define WPE_BACKEND_MAJOR_VERSION WPE_MAJOR_VERSION
++#define WPE_BACKEND_MINOR_VERSION WPE_MINOR_VERSION
++#define WPE_BACKEND_MICRO_VERSION WPE_MICRO_VERSION
++
++#define WPE_BACKEND_CHECK_VERSION(major, minor, micro) \
++    (WPE_BACKEND_MAJOR_VERSION > (major) || \
++    (WPE_BACKEND_MAJOR_VERSION == (major) && WPE_BACKEND_MINOR_VERSION > (minor)) || \
++    (WPE_BACKEND_MAJOR_VERSION == (major) && WPE_BACKEND_MINOR_VERSION == (minor) && \
++     WPE_BACKEND_MICRO_VERSION >= (micro)))
++
++/**
++ * wpe_backend_get_major_version:
++ *
++ * Returns: Major version of the `libwpe` library.
++ *
++ * Deprecated: Since `libwpe` version 1.0.0, use wpe_get_major_version()
++ *     instead.
++ */
++WPE_EXPORT unsigned wpe_backend_get_major_version(void);
++
++/**
++ * wpe_backend_get_minor_version:
++ *
++ * Returns: Minor version of the `libwpe` library.
++ *
++ * Deprecated: Since `libwpe` version 1.0.0, use wpe_get_minor_version()
++ *     instead.
++ */
++WPE_EXPORT unsigned wpe_backend_get_minor_version(void);
++
++/**
++ * wpe_backend_get_micro_version:
++ *
++ * Returns: Micro version of the `libwpe` library.
++ *
++ * Deprecated: Since `libwpe` version 1.0.0, use wpe_get_micro_version()
++ *     instead.
++ */
++WPE_EXPORT unsigned wpe_backend_get_micro_version(void);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* wpe_version_deprecated_h */
+diff -Nuar a/include/wpe/version.h b/include/wpe/version.h
+--- a/include/wpe/version.h	1970-01-01 02:00:00.000000000 +0200
++++ b/include/wpe/version.h	2021-02-28 16:03:30.351311182 +0300
+@@ -0,0 +1,85 @@
++/*
++ * Copyright (C) 2018 Igalia S.L.
++ * All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
++ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#if !defined(__WPE_H_INSIDE__) && !defined(WPE_COMPILATION)
++#error "Only <wpe/wpe.h> can be included directly."
++#endif
++
++#ifndef wpe_version_h
++#define wpe_version_h
++
++/**
++ * SECTION:version
++ * @short_description: Library Version
++ * @title: Version
++ * @symbols:
++ *   - wpe_backend_get_major_version
++ *   - wpe_backend_get_minor_version
++ *   - wpe_backend_get_micro_version
++ */
++
++#if defined(WPE_COMPILATION)
++#include "export.h"
++#endif
++
++#include "libwpe-version.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#define WPE_CHECK_VERSION(major, minor, micro) \
++    (WPE_MAJOR_VERSION > (major) || \
++    (WPE_MAJOR_VERSION == (major) && WPE_MINOR_VERSION > (minor)) || \
++    (WPE_MAJOR_VERSION == (major) && WPE_MINOR_VERSION == (minor) && \
++     WPE_MICRO_VERSION >= (micro)))
++
++/**
++ * wpe_get_major_version:
++ *
++ * Returns: Major version of the `libwpe` library.
++ */
++WPE_EXPORT unsigned wpe_get_major_version(void);
++
++/**
++ * wpe_get_minor_version:
++ *
++ * Returns: Minor version of the `libwpe` library.
++ */
++WPE_EXPORT unsigned wpe_get_minor_version(void);
++
++/**
++ * wpe_get_micro_version:
++ *
++ * Returns: Micro version of the `libwpe` library.
++ */
++WPE_EXPORT unsigned wpe_get_micro_version(void);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* wpe_version_h */
+diff -Nuar a/include/wpe/wpe.h b/include/wpe/wpe.h
+--- a/include/wpe/wpe.h	2021-01-18 17:40:23.000000000 +0300
++++ b/include/wpe/wpe.h	2021-02-28 16:04:05.245308665 +0300
+@@ -40,9 +40,10 @@
+ #include "loader.h"
+ #include "pasteboard.h"
+ #include "renderer-host.h"
++#include "view-backend.h"
++#include "libwpe-version.h"
+ #include "version.h"
+ #include "version-deprecated.h"
+-#include "view-backend.h"
+ 
+ #undef __WPE_H_INSIDE__
+ 
+diff -Nuar a/meson.build b/meson.build
+--- a/meson.build	2021-01-18 17:40:23.000000000 +0300
++++ b/meson.build	2021-02-28 16:04:55.565305034 +0300
+@@ -7,7 +7,7 @@
+ 		'cpp_std=c++11',
+ 	],
+ 	license: 'BSD-2-Clause',
+-	version: '1.9.1',
++	version: run_command(join_paths('scripts', 'version.py')).stdout().strip(),
+ )
+ 
+ # This refers to the API level provided. This is modified only with major,
+diff -Nuar a/scripts/version.py b/scripts/version.py
+--- a/scripts/version.py	1970-01-01 02:00:00.000000000 +0200
++++ b/scripts/version.py	2021-02-28 16:05:47.436301291 +0300
+@@ -0,0 +1,23 @@
++#! /usr/bin/env python3
++# -*- coding: utf-8 -*-
++# vim:fenc=utf-8
++#
++# Copyright © 2021 Igalia S.L.
++#
++# Distributed under terms of the MIT license.
++
++from os import environ, path
++import re
++
++version = {}
++version_re = re.compile(r"^#define\s+WPE_([A-Z]+)_VERSION\s+(\d+)$")
++version_file = path.join(environ["MESON_SOURCE_ROOT"],
++                         "include", "wpe", "libwpe-version.h")
++
++with open(version_file, "r") as f:
++    for line in f.readlines():
++        m = version_re.match(line)
++        if m:
++            version[m[1]] = m[2]
++
++print("{}.{}.{}".format(version["MAJOR"], version["MINOR"], version["MICRO"]))
+diff -Nuar a/src/version.c b/src/version.c
+--- a/src/version.c	2021-01-18 17:40:23.000000000 +0300
++++ b/src/version.c	2021-02-28 16:06:13.622299402 +0300
+@@ -24,8 +24,8 @@
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include "wpe/version.h"
+-#include "wpe/version-deprecated.h"
++#include "../include/wpe/version.h"
++#include "../include/wpe/version-deprecated.h"
+ 
+ unsigned
+ wpe_get_major_version(void)
