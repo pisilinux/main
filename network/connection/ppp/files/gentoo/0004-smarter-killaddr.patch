@@ -1,0 +1,143 @@
+From 83c2de652b2b53a23b9e87d6eb3cb4085fe797c2 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Fri, 3 Jan 2020 12:56:45 +0100
+Subject: [PATCH 04/14] smarter killaddr
+
+---
+ pppd/options.c   |  8 ++++++++
+ pppd/pppd.h      |  3 +++
+ pppd/sys-linux.c | 42 +++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 50 insertions(+), 3 deletions(-)
+
+diff --git a/pppd/options.c b/pppd/options.c
+index f8d6c00..12d12fd 100644
+--- a/pppd/options.c
++++ b/pppd/options.c
+@@ -102,6 +102,9 @@ int	maxconnect = 0;		/* Maximum connect time */
+ char	user[MAXNAMELEN];	/* Username for PAP */
+ char	passwd[MAXSECRETLEN];	/* Password for PAP */
+ bool	persist = 0;		/* Reopen link after it goes down */
++bool	killoldaddr = 0;	/* If our IP is reassigned on
++				   reconnect, kill active TCP
++				   connections using the old IP. */
+ char	our_name[MAXNAMELEN];	/* Our name for authentication purposes */
+ bool	demand = 0;		/* do dial-on-demand */
+ char	*ipparam = NULL;	/* Extra parameter for ip up/down scripts */
+@@ -252,6 +255,11 @@ option_t general_options[] = {
+     { "demand", o_bool, &demand,
+       "Dial on demand", OPT_INITONLY | 1, &persist },
+ 
++    { "killoldaddr", o_bool, &killoldaddr,
++      "Kill connections from an old source address", 1},
++    { "nokilloldaddr", o_bool,&killoldaddr,
++      "Don't kill connections from an old source address" },
++
+     { "--version", o_special_noarg, (void *)showversion,
+       "Show version number" },
+     { "--help", o_special_noarg, (void *)showhelp,
+diff --git a/pppd/pppd.h b/pppd/pppd.h
+index 612902f..bdb8778 100644
+--- a/pppd/pppd.h
++++ b/pppd/pppd.h
+@@ -310,6 +310,9 @@ extern char	our_name[MAXNAMELEN];/* Our name for authentication purposes */
+ extern char	remote_name[MAXNAMELEN]; /* Peer's name for authentication */
+ extern bool	explicit_remote;/* remote_name specified with remotename opt */
+ extern bool	demand;		/* Do dial-on-demand */
++extern bool	killoldaddr;	/* If our IP is reassigned on
++				   reconnect, kill active TCP
++				   connections using the old IP. */
+ extern char	*ipparam;	/* Extra parameter for ip up/down scripts */
+ extern bool	cryptpap;	/* Others' PAP passwords are encrypted */
+ extern int	idle_time_limit;/* Shut down link if idle for this long */
+diff --git a/pppd/sys-linux.c b/pppd/sys-linux.c
+index 85b1512..95f5a72 100644
+--- a/pppd/sys-linux.c
++++ b/pppd/sys-linux.c
+@@ -172,6 +172,10 @@ struct in6_ifreq {
+ static const eui64_t nulleui64;
+ #endif /* INET6 */
+ 
++#ifndef SIOCKILLADDR
++#define SIOCKILLADDR	0x8939
++#endif
++
+ /* We can get an EIO error on an ioctl if the modem has hung up */
+ #define ok_error(num) ((num)==EIO)
+ 
+@@ -220,6 +224,7 @@ static int	default_rt_repl_rest;	/* replace and restore old default rt */
+ static u_int32_t proxy_arp_addr;	/* Addr for proxy arp entry added */
+ static char proxy_arp_dev[16];		/* Device for proxy arp entry */
+ static u_int32_t our_old_addr;		/* for detecting address changes */
++static u_int32_t our_current_addr;
+ static int	dynaddr_set;		/* 1 if ip_dynaddr set */
+ static int	looped;			/* 1 if using loop */
+ static int	link_mtu;		/* mtu for the link (not bundle) */
+@@ -566,6 +571,27 @@ int generic_establish_ppp (int fd)
+     return -1;
+ }
+ 
++static void do_killaddr(u_int32_t oldaddr)
++{
++    struct ifreq	ifr;
++
++    memset(&ifr,0,sizeof ifr);
++
++    SET_SA_FAMILY (ifr.ifr_addr,    AF_INET);
++    SET_SA_FAMILY (ifr.ifr_dstaddr, AF_INET);
++    SET_SA_FAMILY (ifr.ifr_netmask, AF_INET);
++
++    SIN_ADDR(ifr.ifr_addr) = oldaddr;
++
++    strlcpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name));
++
++    if(ioctl(sock_fd,SIOCKILLADDR,&ifr) < 0) {
++      if (!ok_error (errno))
++       error("ioctl(SIOCKILLADDR): %m(%d)", errno);
++      return;
++    }
++}
++
+ /********************************************************************
+  *
+  * tty_disestablish_ppp - Restore the serial port to normal operation.
+@@ -2747,9 +2773,14 @@ int sifaddr (int unit, u_int32_t our_adr, u_int32_t his_adr,
+ 	}
+     }
+ 
+-    /* set ip_dynaddr in demand mode if address changes */
+-    if (demand && tune_kernel && !dynaddr_set
+-	&& our_old_addr && our_old_addr != our_adr) {
++    if(persist && our_old_addr && our_old_addr != our_adr) {
++
++      if(killoldaddr)
++       do_killaddr(our_old_addr);
++
++
++      /* set ip_dynaddr in demand mode if address changes */
++      if (tune_kernel && !dynaddr_set) {
+ 	/* set ip_dynaddr if possible */
+ 	char *path;
+ 	int fd;
+@@ -2761,7 +2792,10 @@ int sifaddr (int unit, u_int32_t our_adr, u_int32_t his_adr,
+ 	    close(fd);
+ 	}
+ 	dynaddr_set = 1;	/* only 1 attempt */
++      }
+     }
++
++    our_current_addr = our_adr;
+     our_old_addr = 0;
+ 
+     return 1;
+@@ -2818,6 +2852,8 @@ int cifaddr (int unit, u_int32_t our_adr, u_int32_t his_adr)
+ 
+     our_old_addr = our_adr;
+ 
++    our_current_addr = 0;
++
+     return 1;
+ }
+ 
+-- 
+2.30.0
+

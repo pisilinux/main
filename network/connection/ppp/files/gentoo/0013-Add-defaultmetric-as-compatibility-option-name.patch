@@ -1,0 +1,31 @@
+From 9a5431023f1389c6d4f3607b2e3336c56cb1ccee Mon Sep 17 00:00:00 2001
+From: Lars Wendler <polynomial-c@gentoo.org>
+Date: Tue, 5 Jan 2021 12:42:39 +0100
+Subject: [PATCH 13/14] Add "defaultmetric" as compatibility option name
+
+2.4.8 release introduced "defaultroute-metric" option but we patched
+a similar option called "defautlmetric" into previous releases.
+Simply adding the old option name and use dfl_route_metric from the new
+option.
+---
+ pppd/options.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/pppd/options.c b/pppd/options.c
+index 12d12fd..022f9d9 100644
+--- a/pppd/options.c
++++ b/pppd/options.c
+@@ -325,6 +325,10 @@ option_t general_options[] = {
+       "Metric to use for the default route (Linux only; -1 for default behavior)",
+       OPT_PRIV|OPT_LLIMIT|OPT_INITONLY, NULL, 0, -1 },
+ 
++    { "defaultmetric", o_int, &dfl_route_metric,
++      "Old (deprecated) option for default route metric (Linux only; -1 for default behavior)",
++      OPT_PRIV|OPT_LLIMIT|OPT_INITONLY, NULL, 0, -1 },
++
+     { "ip-up-script", o_string, path_ipup,
+       "Set pathname of ip-up script",
+       OPT_PRIV|OPT_STATIC, NULL, MAXPATHLEN },
+-- 
+2.30.0
+

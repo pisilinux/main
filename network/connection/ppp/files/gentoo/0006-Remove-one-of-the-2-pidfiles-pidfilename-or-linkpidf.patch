@@ -1,0 +1,115 @@
+From 8a17acdd63ae2b2726dc5a3272b23294f75a5883 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Tue, 5 Jan 2021 11:29:29 +0100
+Subject: [PATCH 06/14] Remove one of the 2 pidfiles (pidfilename or
+ linkpidfile)
+
+---
+ pppd/auth.c      |  2 +-
+ pppd/main.c      | 25 ++++++++++++++++---------
+ pppd/multilink.c |  2 +-
+ pppd/pppd.h      |  3 ++-
+ 4 files changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/pppd/auth.c b/pppd/auth.c
+index b1271c4..a1a831e 100644
+--- a/pppd/auth.c
++++ b/pppd/auth.c
+@@ -678,7 +678,7 @@ link_terminated(int unit)
+      * we delete its pid file.
+      */
+     if (!doing_multilink && !demand)
+-	remove_pidfiles();
++	remove_pidfile(pidfilename);
+ 
+     /*
+      * If we may want to bring the link up again, transfer
+diff --git a/pppd/main.c b/pppd/main.c
+index 6c0a173..08c5306 100644
+--- a/pppd/main.c
++++ b/pppd/main.c
+@@ -130,7 +130,7 @@ struct channel *the_channel;
+ 
+ char *progname;			/* Name of this program */
+ char hostname[MAXNAMELEN];	/* Our hostname */
+-static char pidfilename[MAXPATHLEN];	/* name of pid file */
++char pidfilename[MAXPATHLEN];	/* name of pid file */
+ static char linkpidfile[MAXPATHLEN];	/* name of linkname pid file */
+ char ppp_devnam[MAXPATHLEN];	/* name of PPP tty (maybe ttypx) */
+ uid_t uid;			/* Our real user-id */
+@@ -241,6 +241,7 @@ static void chld(int);
+ static void toggle_debug(int);
+ static void open_ccp(int);
+ static void bad_signal(int);
++static void remove_pidfilenames(void);
+ static void holdoff_end(void *);
+ static void forget_child(int pid, int status);
+ static int reap_kids(void);
+@@ -828,16 +829,22 @@ create_linkpidfile(int pid)
+ }
+ 
+ /*
+- * remove_pidfile - remove our pid files
++ * remove_pidfile - remove one of the 2 pidfiles (pidfilename or linkpidfile)
+  */
+-void remove_pidfiles(void)
++void remove_pidfile(char* filename)
+ {
+-    if (pidfilename[0] != 0 && unlink(pidfilename) < 0 && errno != ENOENT)
+-	warn("unable to delete pid file %s: %m", pidfilename);
+-    pidfilename[0] = 0;
+-    if (linkpidfile[0] != 0 && unlink(linkpidfile) < 0 && errno != ENOENT)
+-	warn("unable to delete pid file %s: %m", linkpidfile);
+-    linkpidfile[0] = 0;
++    if (filename[0] != 0 && unlink(filename) < 0 && errno != ENOENT)
++	warn("unable to delete pid file %s: %m", filename);
++    filename[0] = 0;
++}
++
++/*
++ * remove_pidfiles - remove our pid files
++ */
++static void remove_pidfiles()
++{
++    remove_pidfile(pidfilename);
++    remove_pidfile(linkpidfile);
+ }
+ 
+ /*
+diff --git a/pppd/multilink.c b/pppd/multilink.c
+index ddd848c..c9d93c3 100644
+--- a/pppd/multilink.c
++++ b/pppd/multilink.c
+@@ -267,7 +267,7 @@ void mp_bundle_terminated(void)
+ 	notice("Connection terminated.");
+ 	print_link_stats();
+ 	if (!demand) {
+-		remove_pidfiles();
++		remove_pidfile(pidfilename);
+ 		script_unsetenv("IFNAME");
+ 	}
+ 
+diff --git a/pppd/pppd.h b/pppd/pppd.h
+index bdb8778..88a1209 100644
+--- a/pppd/pppd.h
++++ b/pppd/pppd.h
+@@ -219,6 +219,7 @@ extern int	hungup;		/* Physical layer has disconnected */
+ extern int	ifunit;		/* Interface unit number */
+ extern char	ifname[];	/* Interface name */
+ extern char	hostname[];	/* Our hostname */
++extern char	pidfilename[];	/* name of pid file */
+ extern u_char	outpacket_buf[]; /* Buffer for outgoing packets */
+ extern int	devfd;		/* fd of underlying device */
+ extern int	fd_ppp;		/* fd for talking PPP */
+@@ -531,7 +532,7 @@ void notify(struct notifier *, int);
+ int  ppp_send_config(int, int, u_int32_t, int, int);
+ int  ppp_recv_config(int, int, u_int32_t, int, int);
+ const char *protocol_name(int);
+-void remove_pidfiles(void);
++void remove_pidfile(char *);
+ void lock_db(void);
+ void unlock_db(void);
+ 
+-- 
+2.30.0
+

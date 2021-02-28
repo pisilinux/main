@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     pisitools.cflags.add("-fPIC", "-D_GNU_SOURCE")
-    shelltools.copytree("%s/dhcp" % get.workDIR(), "pppd/plugins")
+    #shelltools.copytree("%s/dhcp" % get.workDIR(), "pppd/plugins")
     pisitools.dosed("pppd/plugins/dhcp/Makefile.linux", "^(CFLAGS=.+)\s-O2", "\\1 %s" % get.CFLAGS())
 
     # Enable atm

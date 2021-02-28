@@ -1,0 +1,34 @@
+From 9b3f313a860f301909dc17332a789ed39aa5a09b Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Fri, 3 Jan 2020 17:18:27 +0100
+Subject: [PATCH 08/14] Try to create /dev/ppp if not available
+
+---
+ pppd/sys-linux.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/pppd/sys-linux.c b/pppd/sys-linux.c
+index 95f5a72..33f83ac 100644
+--- a/pppd/sys-linux.c
++++ b/pppd/sys-linux.c
+@@ -2382,6 +2382,17 @@ int ppp_available(void)
+     kernel_version = KVERSION(osmaj, osmin, ospatch);
+ 
+     fd = open("/dev/ppp", O_RDWR);
++    if (fd < 0) {
++	/* try making it and see if that helps. */
++	if (errno == ENOENT && mknod("/dev/ppp", S_IFCHR | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
++		  makedev(108, 0)) >= 0) {
++	    fd = open("/dev/ppp", O_RDWR);
++	    if (fd >= 0)
++		info("Created /dev/ppp device node");
++	    else
++		unlink("/dev/ppp");     /* didn't work, undo the mknod */
++	}
++    }
+     if (fd >= 0) {
+ 	new_style_driver = 1;
+ 
+-- 
+2.30.0
+

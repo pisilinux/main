@@ -10,7 +10,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
-WorkDir = "llvm-project-%s" %get.srcVERSION()
+WorkDir = "llvm-project-%s.src" % get.srcVERSION()
 
 NoStrip = ["/usr"]
 
@@ -77,6 +77,8 @@ def setup():
                           -DLIBUNWIND_INSTALL_LIBRARY=OFF \
                           -DLIBUNWIND_ENABLE_SHARED=ON \
                           -DLIBUNWIND_USE_COMPILER_RT=ON \
+                          -DCMAKE_C_COMPILER=clang \
+                          -DCMAKE_CXX_COMPILER=clang++ \
                           -DLIBUNWIND_TARGET_TRIPLE=%s \
                           -DLLVM_DEFAULT_TARGET_TRIPLE=%s \
                           .. \

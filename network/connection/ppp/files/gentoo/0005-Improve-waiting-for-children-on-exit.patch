@@ -1,0 +1,92 @@
+From e16792c757200d679edc3918eea12a18ec12b5a8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Alin=20N=C4=83stac?= <mrness@gentoo.org>
+Date: Fri, 3 Jan 2020 17:16:17 +0100
+Subject: [PATCH 05/14] Improve waiting for children on exit
+
+Gentoo-bug: https://bugs.gentoo.org/122795
+---
+ pppd/main.c | 51 ++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 34 insertions(+), 17 deletions(-)
+
+diff --git a/pppd/main.c b/pppd/main.c
+index 0e8bc87..6c0a173 100644
+--- a/pppd/main.c
++++ b/pppd/main.c
+@@ -245,6 +245,7 @@ static void holdoff_end(void *);
+ static void forget_child(int pid, int status);
+ static int reap_kids(void);
+ static void childwait_end(void *);
++static void wait_children(void);
+ 
+ #ifdef USE_TDB
+ static void update_db_entry(void);
+@@ -560,26 +561,12 @@ main(int argc, char *argv[])
+ 	    if (!persist)
+ 		break;
+ 	}
+-    }
+ 
+-    /* Wait for scripts to finish */
+-    reap_kids();
+-    if (n_children > 0) {
+-	if (child_wait > 0)
+-	    TIMEOUT(childwait_end, NULL, child_wait);
+-	if (debug) {
+-	    struct subprocess *chp;
+-	    dbglog("Waiting for %d child processes...", n_children);
+-	    for (chp = children; chp != NULL; chp = chp->next)
+-		dbglog("  script %s, pid %d", chp->prog, chp->pid);
+-	}
+-	while (n_children > 0 && !childwait_done) {
+-	    handle_events();
+-	    if (kill_link && !childwait_done)
+-		childwait_end(NULL);
+-	}
++	wait_children();
+     }
+ 
++    wait_children();
++
+     die(status);
+     return 0;
+ }
+@@ -1831,6 +1818,36 @@ record_child(int pid, char *prog, void (*done)(void *), void *arg, int killable)
+     }
+ }
+ 
++/*
++ * wait_children - wait for scripts to finish.
++ * if child_wait is 0, wait indefinitely.
++ * else, kill'em all at the end of timeout
++ */
++static void
++wait_children()
++{
++    /* Wait for scripts to finish */
++    reap_kids();
++    if (n_children > 0) {
++	childwait_done = 0;
++	if (child_wait > 0)
++	    TIMEOUT(childwait_end, NULL, child_wait);
++	if (debug) {
++	    struct subprocess *chp;
++	    dbglog("Waiting for %d child processes...", n_children);
++	    for (chp = children; chp != NULL; chp = chp->next)
++		dbglog("  script %s, pid %d", chp->prog, chp->pid);
++	}
++	while (n_children > 0 && !childwait_done) {
++	    handle_events();
++	    if (asked_to_quit && !childwait_done)
++		childwait_end(NULL);
++	}
++	if (child_wait > 0)
++	    UNTIMEOUT(childwait_end, NULL);
++    }
++}
++
+ /*
+  * childwait_end - we got fed up waiting for the child processes to
+  * exit, send them all a SIGTERM.
+-- 
+2.30.0
+

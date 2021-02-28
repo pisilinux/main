@@ -28,6 +28,7 @@ def setup():
                           -DENABLE_WEBGL=ON \
                           -DUSE_LIBHYPHEN=OFF \
                           -DUSE_WOFF2=OFF \
+                          -DUSE_SYSTEMD=OFF \
                           -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.3 \
                           -DSHOULD_INSTALL_JS_SHELL=ON \
                           -DENABLE_MINIBROWSER=ON")
