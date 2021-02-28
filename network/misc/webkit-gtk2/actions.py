@@ -5,54 +5,39 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import get
-from pisi.actionsapi import autotools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-shelltools.export("XDG_DATA_HOME", get.workDIR())
-#pisitools.flags.replace("-ggdb3", "-g")
-
-cflags = get.CFLAGS().replace("-ggdb3","")
-cxxflags = get.CXXFLAGS().replace("-gddb3", "")
-
-paths = ["JavaScriptCore", "WebCore", "WebKit"]
-docs = ["AUTHORS", "ChangeLog", "COPYING.LIB", "THANKS", \
+paths = ["JavaScriptCore", "WebCore", "WebKit", "WebKit2"]
+docs = ["AUTHORS", "COPYING.LIB", "THANKS", \
         "LICENSE-LGPL-2", "LICENSE-LGPL-2.1", "LICENSE"]
 
 def setup():
-    autotools.autoreconf("-fiv")
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("CXXFLAGS", cxxflags)
-    autotools.configure("--prefix=/usr \
-                        --libexecdir=/usr/lib/WebKitGTK \
-                        --disable-static \
-                        --disable-webkit2 \
-                        --disable-gtk-doc \
-                        --disable-silent-rules \
-                        --disable-wayland-target \
-                        --enable-geolocation \
-                        --enable-glx \
-                        --enable-webgl \
-                        --with-gnu-ld \
-                        --with-gtk=2.0 \
-                        --enable-x11-target \
-                        --enable-video \
-                        --enable-web-audio \
-                        --enable-introspection")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    #shelltools.system("rm -r Source/ThirdParty/gtest/")
+    cmaketools.configure("-DPORT=GTK \
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DCMAKE_SKIP_RPATH=ON \
+                          -DCMAKE_INSTALL_PREFIX=/usr \
+                          -DLIB_INSTALL_DIR=/usr/lib \
+                          -DLIBEXEC_INSTALL_DIR=/usr/lib/webkit2gtk-4.0 \
+                          -DENABLE_CREDENTIAL_STORAGE=ON \
+                          -DENABLE_GEOLOCATION=ON \
+                          -DENABLE_VIDEO=ON \
+                          -DENABLE_WEB_AUDIO=ON \
+                          -DENABLE_WEBGL=ON \
+                          -DUSE_LIBHYPHEN=OFF \
+                          -DUSE_WOFF2=OFF \
+                          -DUSE_SYSTEMD=OFF \
+                          -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.3 \
+                          -DSHOULD_INSTALL_JS_SHELL=ON \
+                          -DENABLE_MINIBROWSER=ON")
 
 def build():
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("CXXFLAGS", cxxflags)
-    autotools.make("-j1 all stamp-po")
+    cmaketools.make()
 
 def install():
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("CXXFLAGS", cxxflags)
-    autotools.rawInstall("-j1 DESTDIR=%s" % get.installDIR())
-
-    pisitools.domove("/usr/share/gtk-doc/html", "/usr/share/doc/webkit-gtk2")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("NEWS")
     shelltools.cd("Source")
