@@ -1,0 +1,162 @@
+diff -urp linux-5.10/3rdparty/rtl8821ce.orig/core/rtw_btcoex.c linux-5.10/3rdparty/rtl8821ce/core/rtw_btcoex.c
+--- linux-5.10/3rdparty/rtl8821ce.orig/core/rtw_btcoex.c	2021-01-19 22:18:00.924067581 +0200
++++ linux-5.10/3rdparty/rtl8821ce/core/rtw_btcoex.c	2021-01-19 22:22:20.057518961 +0200
+@@ -1474,15 +1474,20 @@ u8 rtw_btcoex_sendmsgbysocket(_adapter *
+ 	udpmsg.msg_control	= NULL;
+ 	udpmsg.msg_controllen = 0;
+ 	udpmsg.msg_flags	= MSG_DONTWAIT | MSG_NOSIGNAL;
++
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 	oldfs = get_fs();
+ 	set_fs(KERNEL_DS);
++#endif
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0))
+ 	error = sock_sendmsg(pcoex_info->udpsock, &udpmsg);
+ #else
+ 	error = sock_sendmsg(pcoex_info->udpsock, &udpmsg, msg_size);
+ #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 	set_fs(oldfs);
++#endif
+ 	if (error < 0) {
+ 		RTW_INFO("Error when sendimg msg, error:%d\n", error);
+ 		return _FAIL;
+diff -urp linux-5.10/3rdparty/rtl8821ce.orig/core/rtw_wlan_util.c linux-5.10/3rdparty/rtl8821ce/core/rtw_wlan_util.c
+--- linux-5.10/3rdparty/rtl8821ce.orig/core/rtw_wlan_util.c	2021-01-19 22:18:00.937068206 +0200
++++ linux-5.10/3rdparty/rtl8821ce/core/rtw_wlan_util.c	2021-01-19 22:22:20.067519442 +0200
+@@ -4751,8 +4751,10 @@ int rtw_dev_nlo_info_set(struct pno_nlo_
+ 		return 0;
+ 	}
+ 
++#if (LINUX_VERSION_CODE <= KERNEL_VERSION(5, 10, 0))
+ 	fs = get_fs();
+ 	set_fs(KERNEL_DS);
++#endif
+ 
+ 	source = rtw_zmalloc(2048);
+ 
+@@ -4762,7 +4764,9 @@ int rtw_dev_nlo_info_set(struct pno_nlo_
+ 		rtw_mfree(source, 2048);
+ 	}
+ 
++#if (LINUX_VERSION_CODE <= KERNEL_VERSION(5, 10, 0))
+ 	set_fs(fs);
++#endif
+ 	filp_close(fp, NULL);
+ 
+ 	RTW_INFO("-%s-\n", __func__);
+diff -urp linux-5.10/3rdparty/rtl8821ce.orig/os_dep/linux/os_intfs.c linux-5.10/3rdparty/rtl8821ce/os_dep/linux/os_intfs.c
+--- linux-5.10/3rdparty/rtl8821ce.orig/os_dep/linux/os_intfs.c	2021-01-19 22:18:01.078074981 +0200
++++ linux-5.10/3rdparty/rtl8821ce/os_dep/linux/os_intfs.c	2021-01-19 22:22:20.068519490 +0200
+@@ -4008,14 +4008,18 @@ static int route_dump(u32 *gw_addr , int
+ 	msg.msg_controllen = 0;
+ 	msg.msg_flags = MSG_DONTWAIT;
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 	oldfs = get_fs();
+ 	set_fs(KERNEL_DS);
++#endif
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0))
+ 	err = sock_sendmsg(sock, &msg);
+ #else
+ 	err = sock_sendmsg(sock, &msg, sizeof(req));
+ #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 	set_fs(oldfs);
++#endif
+ 
+ 	if (err < 0)
+ 		goto out_sock;
+@@ -4040,14 +4044,18 @@ restart:
+ 		iov_iter_init(&msg.msg_iter, READ, &iov, 1, PAGE_SIZE);
+ #endif
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 		oldfs = get_fs();
+ 		set_fs(KERNEL_DS);
++#endif
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0))
+ 		err = sock_recvmsg(sock, &msg, MSG_DONTWAIT);
+ #else
+ 		err = sock_recvmsg(sock, &msg, PAGE_SIZE, MSG_DONTWAIT);
+ #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 		set_fs(oldfs);
++#endif
+ 
+ 		if (err < 0)
+ 			goto out_sock_pg;
+@@ -4118,14 +4126,18 @@ done:
+ 		msg.msg_controllen = 0;
+ 		msg.msg_flags = MSG_DONTWAIT;
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 		oldfs = get_fs();
+ 		set_fs(KERNEL_DS);
++#endif
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0))
+ 		err = sock_sendmsg(sock, &msg);
+ #else
+ 		err = sock_sendmsg(sock, &msg, sizeof(req));
+ #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 		set_fs(oldfs);
++#endif
+ 
+ 		if (err > 0)
+ 			goto restart;
+diff -urp linux-5.10/3rdparty/rtl8821ce.orig/os_dep/osdep_service.c linux-5.10/3rdparty/rtl8821ce/os_dep/osdep_service.c
+--- linux-5.10/3rdparty/rtl8821ce.orig/os_dep/osdep_service.c	2021-01-19 22:18:01.081075125 +0200
++++ linux-5.10/3rdparty/rtl8821ce/os_dep/osdep_service.c	2021-01-19 22:22:20.068519490 +0200
+@@ -2200,8 +2200,10 @@ static int isFileReadable(const char *pa
+ 	if (IS_ERR(fp))
+ 		ret = PTR_ERR(fp);
+ 	else {
++	#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 		oldfs = get_fs();
+ 		set_fs(KERNEL_DS);
++	#endif
+ 
+ 		if (1 != readFile(fp, &buf, 1))
+ 			ret = PTR_ERR(fp);
+@@ -2214,7 +2216,9 @@ static int isFileReadable(const char *pa
+ 			#endif
+ 		}
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 		set_fs(oldfs);
++#endif
+ 		filp_close(fp, NULL);
+ 	}
+ 	return ret;
+@@ -2238,10 +2242,14 @@ static int retriveFromFile(const char *p
+ 		if (0 == ret) {
+ 			RTW_INFO("%s openFile path:%s fp=%p\n", __FUNCTION__, path , fp);
+ 
++		#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 			oldfs = get_fs();
+ 			set_fs(KERNEL_DS);
++		#endif
+ 			ret = readFile(fp, buf, sz);
++		#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 			set_fs(oldfs);
++		#endif
+ 			closeFile(fp);
+ 
+ 			RTW_INFO("%s readFile, ret:%d\n", __FUNCTION__, ret);
+@@ -2273,10 +2281,14 @@ static int storeToFile(const char *path,
+ 		if (0 == ret) {
+ 			RTW_INFO("%s openFile path:%s fp=%p\n", __FUNCTION__, path , fp);
+ 
++		#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 			oldfs = get_fs();
+ 			set_fs(KERNEL_DS);
++		#endif
+ 			ret = writeFile(fp, buf, sz);
++		#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
+ 			set_fs(oldfs);
++		#endif
+ 			closeFile(fp);
+ 
+ 			RTW_INFO("%s writeFile, ret:%d\n", __FUNCTION__, ret);
