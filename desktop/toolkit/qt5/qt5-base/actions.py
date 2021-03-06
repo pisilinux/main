@@ -120,5 +120,7 @@ def install():
         #pisitools.dosym("/usr/lib/qt5/bin/%s" % bin, "/usr/bin/%s-qt5" % bin)
 
     mkspecPath = "%s/mkspecs" %  qt5.archdatadir
+    
+    pisitools.insinto("/usr/include/qt5/QtXcb", "src/plugins/platforms/xcb/*.h")
 
     pisitools.dodoc("LICENSE.*")
