@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-shelltools.export("JAVA_HOME","/usr/lib/jvm/java-7-openjdk")
+shelltools.export("JAVA_HOME","/usr/lib/jvm/java-8-openjdk")
 
 WorkDir = "apache-ant-%s" % get.srcVERSION()
 anthome = "/usr/share/ant"
@@ -22,10 +22,10 @@ def install():
     pisitools.insinto("/etc/ant/", "%s/etc/*" % WorkDir)
     pisitools.remove("/etc/ant/ant-bootstrap.jar")
     pisitools.insinto("/usr/share/java/ant/", "%s/lib/*" % WorkDir)
-    pisitools.insinto("/usr/share/java/", "lib/optional/junit-4.12.jar", "junit.jar")
+    pisitools.insinto("/usr/share/java/", "lib/optional/junit-4.13.jar", "junit.jar")
     pisitools.insinto("/usr/share/java/", "lib/optional/hamcrest-core-1.3.jar", "hamcrest.jar")
     pisitools.insinto("/usr/share/ant/lib/", "%s/lib/*" % WorkDir)
-    pisitools.insinto("/usr/share/ant/bin/", "apache-ant-1.9.15/bin/*")
+    pisitools.insinto("/usr/share/ant/bin/", "apache-ant-1.10.9/bin/*")
             
 
     for binsym in ["ant", "antRun", "antRun.pl", "complete-ant-cmd.pl", "runant.pl", "runant.py"]:
