@@ -8,7 +8,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-shelltools.export("JAVA_HOME","/usr/lib/jvm/java-7-openjdk/jre")
+shelltools.export("JAVA_HOME","/usr/lib/jvm/java-8-openjdk/jre")
 
 def build():    
     shelltools.system("ant -Dxbean.jar=xmlbeans-2.6.0/lib/xbean.jar -Djsr173.jar=xmlbeans-2.6.0/lib/jsr173_1.0_api.jar jar javadoc")
