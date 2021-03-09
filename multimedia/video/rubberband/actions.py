@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-JAVA_HOME = "/usr/lib/jvm/java-7-openjdk"
+JAVA_HOME = "/usr/lib/jvm/java-8-openjdk"
 shelltools.export("JAVA_HOME", JAVA_HOME)
 
 def setup():

@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 WorkDir = "%s/%s" % (get.ARCH(), get.srcNAME())
 BASEDIR = "/usr/share/java/zekr"
 
-shelltools.export("JAVA_HOME","/usr/lib/jvm/java-7-openjdk")
+shelltools.export("JAVA_HOME","/usr/lib/jvm/java-8-openjdk")
 #def setup():    
 
 #def build():    
