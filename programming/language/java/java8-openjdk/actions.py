@@ -4,13 +4,17 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+import subprocess
+
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-shelltools.export("ALT_PARALLEL_COMPILE_JOBS", get.makeJOBS())
-shelltools.export("HOTSPOT_BUILD_JOBS", get.makeJOBS())
+jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+
+shelltools.export("ALT_PARALLEL_COMPILE_JOBS", jobs)
+shelltools.export("HOTSPOT_BUILD_JOBS", jobs)
 shelltools.export("LC_ALL", "C")
 
 def setup():
@@ -33,8 +37,8 @@ def setup():
                             --enable-bootstrap \
                             --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
-                            --with-pkgversion='PisiLinux build 8.u275_3.17.1' \
-                           " % get.makeJOBS().replace("-j", ""))
+                            --with-pkgversion='PisiLinux build 8.u282_3.18.0' \
+                           " % jobs.replace("-j", ""))
     
 
 def build():
@@ -65,14 +69,14 @@ def install():
         if not f in ["java", "java-rmi.cgi", "keytool", "orbd",
                      "pack200", "policytool", "rmid", "rmiregistry",
                      "servertool", "tnameserv", "unpack200", "jjs", "clhsdb", "hsdb"]:
-            pisitools.dosym("/usr/lib/jvm/java-8-openjdk/bin/%s" % f, "/usr/bin/%s_8" % f)
+            pisitools.dosym("/usr/lib/jvm/java-8-openjdk/bin/%s" % f, "/usr/bin/%s" % f)
 
     #install man pages
     for man in shelltools.ls("images/j2sdk-image/man/man1"):
-        pisitools.insinto("/usr/share/man/man1", "images/j2sdk-image/man/man1/%s" % man, "%s_8" % man)
+        pisitools.insinto("/usr/share/man/man1", "images/j2sdk-image/man/man1/%s" % man, "%s" % man)
         
     for man in shelltools.ls("images/j2sdk-image/man/ja_JP.UTF-8/man1"):
-        pisitools.insinto("/usr/share/man/ja/man1", "images/j2sdk-image/man/ja_JP.UTF-8/man1/%s" % man, "%s_8" % man )
+        pisitools.insinto("/usr/share/man/ja/man1", "images/j2sdk-image/man/ja_JP.UTF-8/man1/%s" % man, "%s" % man )
     
     pisitools.insinto("/usr/share/applications", "../jconsole.desktop", "jconsole-jdk8.desktop")
     shelltools.system("chmod go+r %s%s/lib/sa-jdi.jar" %(get.installDIR(), jvmdir))
@@ -82,7 +86,7 @@ def install():
     #pisitools.insinto("%s/jre/lib/amd64" % jvmdir , "j2sdk-image/jre/lib/amd64/xawt")
     
     for binfile in shelltools.ls("images/j2sdk-image/jre/bin"):
-        pisitools.dosym("%s/jre/bin/%s" % (jvmdir, binfile), "/usr/bin/%s_8" % binfile)
+        pisitools.dosym("%s/jre/bin/%s" % (jvmdir, binfile), "/usr/bin/%s" % binfile)
 
     pisitools.insinto("/usr/share/applications", "../policytool.desktop", "policytool-jdk8.desktop")
 
