@@ -17,7 +17,7 @@ def setup():
     shelltools.export("EXTRA_LDFLAGS", get.LDFLAGS())
 
     autotools.configure("--disable-static \
-                         --with-jdk=/usr/lib/jvm/java-7-openjdk \
+                         --with-jdk=/usr/lib/jvm/java-8-openjdk \
                          --enable-javahl \
                          --with-apr=/usr \
                          --with-apr-util=/usr \

@@ -9,7 +9,7 @@ from pisi.actionsapi import get
 
 WorkDir = "."
 shelltools.export("LC_ALL", "C")
-shelltools.export("JAVA_HOME","/usr/lib/jvm/java-7-openjdk")
+shelltools.export("JAVA_HOME","/usr/lib/jvm/java-8-openjdk")
 
 def setup():
     shelltools.export("LANG", "en_US.UTF-8")
