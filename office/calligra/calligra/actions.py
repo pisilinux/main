@@ -9,10 +9,11 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import get
 
 def setup():
-    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
-                    -DCMAKE_INSTALL_PREFIX=/usr \
-                    -DKDE_INSTALL_LIBDIR=lib \
+    kde5.configure("-DPYTHON_EXECUTABLE=python3 \
                     -DBUILD_TESTING=OFF \
+                    -DCMAKE_BUILD_TYPE=debugfull \
+                    -DCMAKE_INSTALL_LIBDIR=lib \
+                    -Wno-dev  \
                     -DBUILD_UNMAINTAINED=ON")
 
 def build():
@@ -21,4 +22,4 @@ def build():
 def install():
     kde5.install("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("COPYING*", "README", "doc/status.txt")
+    pisitools.dodoc("ANNOTATIONS-ODF", "AUTHORS", "COPYING*", "OBSOLETE.TXT", "README*", "TODO-ANNOTATIONS", "doc/status.txt")
