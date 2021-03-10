@@ -10,12 +10,13 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+	pisitools.cxxflags.add("-std=gnu++11")
     shelltools.system("./autogen.sh")
     autotools.configure("--prefix=/usr \
                          --disable-werror \
                          --without-docs \
                          --enable-static=no \
-                         --with-mdds=1.5")
+                         --with-mdds=1.7")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
