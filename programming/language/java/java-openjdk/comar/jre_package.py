@@ -8,7 +8,7 @@ executables = (
     'jaotc', 'java', 'jfr', 'jjs', 'jrunscript', 'keytool', 'pack200', 'rmid', 'rmiregistry', 'unpack200'
 )
 bin_dir = '/usr/bin'
-jvm_dir = '/usr/lib/jvm/java-13-openjdk'
+jvm_dir = '/usr/lib/jvm/java-openjdk'
 
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
