@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cxxflags.add("-std=gnu++11")
+    pisitools.cxxflags.add("-std=gnu++11")
     shelltools.system("./autogen.sh")
     autotools.configure("--prefix=/usr \
                          --disable-werror \
