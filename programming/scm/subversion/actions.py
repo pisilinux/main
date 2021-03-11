@@ -11,6 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import perlmodules
 
 def setup():
+    shelltools.export("PYTHON", "/usr/bin/python3")
     # Respect the user LDFLAGS
     shelltools.system("./autogen.sh")
 
