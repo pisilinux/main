@@ -1,0 +1,123 @@
+From 937d1d5be8d0c783fb5740aa50456f9941ac638b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolanm@redhat.com>
+Date: Wed, 29 Jul 2020 21:05:27 +0100
+Subject: [PATCH] rhbz#1861794 csv fixed width import missing split handle
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+regression from...
+
+commit 1e97ca02773e2ba968606eed61d25d88f0d7e417
+Author: Caolán McNamara <caolanm@redhat.com>
+Date:   Mon Oct 14 11:05:07 2019 +0100
+
+EndMouseTracking was left uncalled
+
+Change-Id: Ia952addac585737c3d3aa4fd68d772c3acbae848
+---
+ sc/source/ui/dbgui/csvruler.cxx | 36 ++++++++++++++++-----------------
+ sc/source/ui/inc/csvruler.hxx   |  7 ++++---
+ 2 files changed, 21 insertions(+), 22 deletions(-)
+
+diff --git a/sc/source/ui/dbgui/csvruler.cxx b/sc/source/ui/dbgui/csvruler.cxx
+index 294f22526974..9fe9f6433359 100644
+--- a/sc/source/ui/dbgui/csvruler.cxx
++++ b/sc/source/ui/dbgui/csvruler.cxx
+@@ -106,7 +106,7 @@ void ScCsvRuler::SetDrawingArea(weld::DrawingArea* pDrawingArea)
+ {
+     ScCsvControl::SetDrawingArea(pDrawingArea);
+ 
+-    mnSplitSize = (GetCharWidth() * 3 / 5) | 1; // make an odd number
++    UpdateSplitSize();
+ 
+     Size aSize(1, GetTextHeight() + mnSplitSize + 2);
+     pDrawingArea->set_size_request(aSize.Width(), aSize.Height());
+@@ -162,10 +162,17 @@ void ScCsvRuler::InitColors()
+     InvalidateGfx();
+ }
+ 
++void ScCsvRuler::UpdateSplitSize()
++{
++    mnSplitSize = (GetCharWidth() * 3 / 5) | 1; // make an odd number
++}
++
+ void ScCsvRuler::InitSizeData()
+ {
+     maWinSize = GetOutputSizePixel();
+ 
++    UpdateSplitSize();
++
+     sal_Int32 nActiveWidth = std::min( GetWidth() - GetHdrWidth(), GetPosCount() * GetCharWidth() );
+     sal_Int32 nActiveHeight = GetTextHeight();
+ 
+@@ -409,7 +416,11 @@ bool ScCsvRuler::MouseButtonDown( const MouseEvent& rMEvt )
+ 
+ bool ScCsvRuler::MouseButtonUp( const MouseEvent& )
+ {
+-    mbTracking = false;
++    if (mbTracking)
++    {
++        EndMouseTracking();
++        mbTracking = false;
++    }
+     return true;
+ }
+ 
+@@ -498,24 +509,11 @@ void ScCsvRuler::MoveMouseTracking( sal_Int32 nPos )
+     }
+ }
+ 
+-void ScCsvRuler::EndMouseTracking( bool bApply )
++void ScCsvRuler::EndMouseTracking()
+ {
+-    if( bApply )    // tracking finished successfully
+-    {
+-        // remove on simple click on an existing split
+-        if( (mnPosMTCurr == mnPosMTStart) && maOldSplits.HasSplit( mnPosMTCurr ) && !mbPosMTMoved )
+-            Execute( CSVCMD_REMOVESPLIT, mnPosMTCurr );
+-    }
+-    else            // tracking cancelled
+-    {
+-        MoveCursor( mnPosMTStart );
+-        // move split to origin
+-        if( maOldSplits.HasSplit( mnPosMTStart ) )
+-            MoveMouseTracking( mnPosMTStart );
+-        // remove temporarily inserted split
+-        else if( !maOldSplits.HasSplit( mnPosMTCurr ) )
+-            Execute( CSVCMD_REMOVESPLIT, mnPosMTCurr );
+-    }
++    // remove on simple click on an existing split
++    if( (mnPosMTCurr == mnPosMTStart) && maOldSplits.HasSplit( mnPosMTCurr ) && !mbPosMTMoved )
++        Execute( CSVCMD_REMOVESPLIT, mnPosMTCurr );
+     mnPosMTStart = CSV_POS_INVALID;
+ }
+ 
+diff --git a/sc/source/ui/inc/csvruler.hxx b/sc/source/ui/inc/csvruler.hxx
+index 32d72ef93b8f..0913ac09271f 100644
+--- a/sc/source/ui/inc/csvruler.hxx
++++ b/sc/source/ui/inc/csvruler.hxx
+@@ -137,9 +137,8 @@ private:
+     void                        StartMouseTracking( sal_Int32 nPos );
+     /** Moves tracking to a new position. */
+     void                        MoveMouseTracking( sal_Int32 nPos );
+-    /** Applies tracking action for the current tracking position.
+-        @param bApply  sal_True = apply action, sal_False = cancel action. */
+-    void                        EndMouseTracking( bool bApply );
++    /** Applies tracking action for the current tracking position */
++    void                        EndMouseTracking();
+ 
+     // painting ---------------------------------------------------------------
+ protected:
+@@ -154,6 +153,8 @@ private:
+     sal_Int32            GetWidth() const { return maWinSize.Width(); }
+     /** Returns the height of the control. */
+     sal_Int32            GetHeight() const { return maWinSize.Height(); }
++    /** Update the split size depending on the last width set by CSVCMD_SETCHARWIDTH */
++    void UpdateSplitSize();
+ 
+     /** Draws the background and active area to maBackgrDev (only the given X range). */
+     void                        ImplDrawArea( sal_Int32 nPosX, sal_Int32 nWidth );
+-- 
+2.26.2
+

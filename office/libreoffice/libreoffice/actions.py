@@ -4,6 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
+import subprocess
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
@@ -14,6 +15,8 @@ shelltools.export("LC_ALL", "C")
 pixmaps = "/usr/share/pixmaps/"
 LoVersion = "%s" % get.srcVERSION()
 OurWorkDir = "%s/libreoffice-%s" % (get.workDIR(), LoVersion)
+
+jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
 
 #for support all languages.
 langall="en-US af am ar as ast be bg bn bn-IN bo br brx bs ca ca-valencia cs cy da de dgo dsb dz el en-GB en-ZA eo es et eu fa fi fr fy ga gd gl gu gug he hsb hi hr hu id is it ja ka kab kk km kmr-Latn kn ko kok ks lb lo lt lv mai mk ml mn mni mr my nb ne nl nn nr nso oc om or pa-IN pl pt pt-BR ro ru rw sa-IN sat sd sr-Latn si sid sk sl sq sr ss st sv sw-TZ ta te tg th tn tr ts tt ug uk uz ve vec vi xh zh-CN zh-TW zu"
@@ -40,7 +43,6 @@ def setup():
                         --sysconfdir=/etc                 \
                         --with-vendor="Pisi Linux"        \
                         --with-lang="%s"                  \
-                        --disable-coinmp                  \
                         --disable-odk                     \
                         --enable-qt5                      \
                         --enable-gtk3                     \
@@ -104,11 +106,11 @@ def setup():
                         --without-system-firebird         \
                         --without-system-libcmis          \
                         --without-system-orcus            \
-                        --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
+                        --with-jdk-home=/usr/lib/jvm/java-openjdk \
                         --with-external-tar=external/tarballs       \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
                         --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4            \
-                        --with-parallelism=%s' % (langall, get.makeJOBS().replace("-j","")))
+                        --with-parallelism=%s' % (langall, jobs.replace("-j","")))
 
 def build():
     autotools.make("build-nocheck")
