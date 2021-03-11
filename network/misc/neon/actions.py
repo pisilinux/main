@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    autotools.autoreconf("-vfi")
     autotools.configure("--with-libxml2 \
                          --with-expat \
                          --without-gssapi \
