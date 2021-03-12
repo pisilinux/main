@@ -21,8 +21,7 @@ def setup():
                           -DENABLE_MYSQLSUPPORT=ON \
                           -DENABLE_APPSTYLES=ON \
                           -DENABLE_QWEBENGINE=ON \
-                          -DOpenGL_GL_PREFERENCE=GLVND", \
-                          sourceDir = '..')
+                          -DOpenGL_GL_PREFERENCE=GLVND", sourceDir = '..')
 
 def build():
     shelltools.cd("build")
