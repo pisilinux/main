@@ -18,7 +18,8 @@ def setup():
     
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-D CMAKE_BUILD_TYPE=Release \
+    cmaketools.configure("-G 'Ninja' \
+		                  -D CMAKE_BUILD_TYPE=Release \
                           -D CMAKE_INSTALL_PREFIX=/usr \
                           -D CMAKE_INSTALL_LIBDIR=lib \
                           -D CMAKE_SKIP_RPATH=ON \
@@ -58,7 +59,7 @@ def setup():
                           -DBUILD_IPP_IW=OFF \
                           -DBUILD_ITT=OFF \
                           -DBUILD_JAVA=OFF \
-                          -DBUILD_PROTOBUF=OFF \
+                          -DBUILD_PROTOBUF=ON \
                           -DBUILD_opencv_java_bindings_generator=OFF \
                           -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
                           -DOPENCV_GENERATE_PKGCONFIG=ON \
@@ -70,11 +71,13 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    cmaketools.make()
+    #cmaketools.make()
+    shelltools.system("ninja")
 
 def install():
     shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
 
     # Move other docs and samples under standart doc dir
     #doc_dir = "usr/share/doc/" + get.srcNAME()
