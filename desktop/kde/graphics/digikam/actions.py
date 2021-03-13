@@ -28,7 +28,9 @@ def build():
     shelltools.system("ninja")
 
 def install():
+    shelltools.cd("build")
     shelltools.system("DESTDIR=%s ninja install" %get.installDIR())
-
+    
+    shelltools.cd("..")
     pisitools.dodoc("COPYING", "COPYING-CMAKE-SCRIPTS", "README*", "NEWS")
     
