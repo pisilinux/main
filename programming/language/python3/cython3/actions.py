@@ -23,3 +23,6 @@ def build():
 
 def install():
     pythonmodules.install(pyVer="3")
+    
+    for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        pisitools.rename("/usr/bin/%s" % bin, "%s3" % bin)
