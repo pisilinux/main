@@ -30,11 +30,12 @@ def setup():
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
                        third_party/blink/renderer/core/xml/parser/xml_document_parser.cc \
-					   third_party/libxml/chromium/libxml_utils.cc")
+                       third_party/libxml/chromium/libxml_utils.cc")
 
     opt = 'custom_toolchain="//build/toolchain/linux/unbundle:default" \
            host_toolchain="//build/toolchain/linux/unbundle:default" \
            use_sysroot=false \
+           chrome_pgo_phase=0 \
            enable_nacl=true \
            enable_nacl_nonsfi=true \
            rtc_use_pipewire=true \
