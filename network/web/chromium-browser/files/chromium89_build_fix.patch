@@ -1,0 +1,54 @@
+--- chromium-89.0.4389.90/base/third_party/libevent/evutil.h.orig	2021-03-13 02:57:15.000000000 +0300
++++ chromium-89.0.4389.90/base/third_party/libevent/evutil.h	2021-03-18 22:45:10.144899935 +0300
+@@ -52,10 +52,10 @@
+ #endif
+ #include <stdarg.h>
+ 
+-#ifdef _EVENT_HAVE_UINT64_T
++/* #ifdef _EVENT_HAVE_UINT64_T */
+ #define ev_uint64_t uint64_t
+ #define ev_int64_t int64_t
+-#elif defined(WIN32)
++#if defined(WIN32)
+ #define ev_uint64_t unsigned __int64
+ #define ev_int64_t signed __int64
+ #elif _EVENT_SIZEOF_LONG_LONG == 8
+@@ -68,9 +68,9 @@
+ #error "No way to define ev_uint64_t"
+ #endif
+ 
+-#ifdef _EVENT_HAVE_UINT32_T
++/* #ifdef _EVENT_HAVE_UINT32_T */
+ #define ev_uint32_t uint32_t
+-#elif defined(WIN32)
++#if defined(WIN32)
+ #define ev_uint32_t unsigned int
+ #elif _EVENT_SIZEOF_LONG == 4
+ #define ev_uint32_t unsigned long
+@@ -80,9 +80,9 @@
+ #error "No way to define ev_uint32_t"
+ #endif
+ 
+-#ifdef _EVENT_HAVE_UINT16_T
++/* #ifdef _EVENT_HAVE_UINT16_T */
+ #define ev_uint16_t uint16_t
+-#elif defined(WIN32)
++#if defined(WIN32)
+ #define ev_uint16_t unsigned short
+ #elif _EVENT_SIZEOF_INT == 2
+ #define ev_uint16_t unsigned int
+@@ -92,11 +92,12 @@
+ #error "No way to define ev_uint16_t"
+ #endif
+ 
+-#ifdef _EVENT_HAVE_UINT8_T
++/* #ifdef _EVENT_HAVE_UINT8_T */
+ #define ev_uint8_t uint8_t
++/*
+ #else
+ #define ev_uint8_t unsigned char
+-#endif
++#endif */
+ 
+ int evutil_socketpair(int d, int type, int protocol, int sv[2]);
+ int evutil_make_socket_nonblocking(int sock);

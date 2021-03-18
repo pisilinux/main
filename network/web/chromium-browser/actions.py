@@ -17,15 +17,17 @@ ARCH = "x64"
 
 def setup():
     shelltools.export("LC_ALL", "C")
-    shelltools.export("JAVA_CMD", "/usr/bin/java_8")
+    #shelltools.export("JAVA_CMD", "/usr/bin/java_8")
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
+    
+    #shelltools.system("sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py")
 
-    #for LIB in ["freetype", "flac", "ffmpeg", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg", "libxml" ,"libxslt", "libwebp", "opus", "re2", "snappy", "yasm"]:
-        #shelltools.system('find -type f -path "*third_party/$LIB/*" \! -path "*third_party/$LIB/chromium/*" \! -path "*third_party/$LIB/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete')
+    #for LIB in ["freetype", "flac", "fontconfig", "libevent", "libwebp", "re2", "snappy"]:
+        #shelltools.system('find -type f -path "*third_party/%s/*" \! -path "*third_party/%s/chromium/*" \! -path "*third_party/%s/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete' %(LIB, LIB, LIB))
 	
 	
-    #shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac ffmpeg fontconfig freetype harfbuzz-ng libdrm libjpeg libxml libxslt libwebp opus re2 snappy yasm")
+    #shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac fontconfig freetype libevent libwebp re2 snappy")
     
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
@@ -37,9 +39,9 @@ def setup():
            use_sysroot=false \
            chrome_pgo_phase=0 \
            enable_nacl=true \
-           enable_nacl_nonsfi=true \
+           enable_nacl_nonsfi=false \
            rtc_use_pipewire=true \
-           use_custom_libcxx=true \
+           use_custom_libcxx=false \
            clang_use_chrome_plugins=false \
            is_official_build=true \
            fieldtrial_testing_like_official_build=true \
@@ -64,12 +66,13 @@ def setup():
            closure_compile=false \
            symbol_level=0'
            
-        
-    #clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin/" %(get.workDIR(), get.srcVERSION())
+    
+    shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")    
+    clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin/" %(get.workDIR(), get.srcVERSION())
 
-    shelltools.export("CC", "clang" )
-    shelltools.export("CXX", "clang++" )
-    shelltools.export("AR", "ar" )
+    shelltools.export("CC", "%s/clang" %clangpath)
+    shelltools.export("CXX", "%s/clang++" %clangpath)
+    shelltools.export("AR", "%s/llvm-ar" %clangpath)
     shelltools.export("NM", "nm" )
     shelltools.export("RANLIB", "ranlib" )
     
@@ -79,7 +82,6 @@ def setup():
     shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
     
     shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
-    #shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")
     shelltools.system("/usr/bin/python3 tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
 
@@ -96,13 +98,21 @@ def install():
 
     #should be checked should for the missing folder "out/Release"
     for vla in ["*.pak", "*.json", "chrome", "locales", "resources", "icudtl.dat", "mksnapshot", "chromedriver", "snapshot_blob.bin", "character_data_generator", \
-			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_helper_nonsfi", "nacl_irt_x86_64.nexe"]:
+			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_irt_x86_64.nexe"]:
         pisitools.insinto("/usr/lib/chromium-browser", "%s" % vla)
-
+	
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
     pisitools.dosym("/usr/lib/chromium-browser/chrome", "/usr/bin/chromium-browser")
  
     shelltools.system("chmod -v 4755 %s/usr/lib/chromium-browser/chrome-sandbox" %get.installDIR())
+    
+    shelltools.system("sed -ni \
+                      -e '/<update_contact>/d' \
+                      -e '/<p>/N;/<p>\n.*\(We invite\|Chromium supports Vorbis\)/,/<\/p>/d' \
+                      -e '/^<?xml/,$p' \
+                      '../../chrome/installer/linux/common/chromium-browser/chromium-browser.appdata.xml'")
+    pisitools.insinto("/usr/share/metainfo", "../../chrome/installer/linux/common/chromium-browser/chromium-browser.appdata.xml")
+    pisitools.insinto("/usr/share/man/man1", "../../chrome/app/resources/manpage.1.in", "chromium-browser.1")
 
     #pisitools.newman("chrome.1", "chromium-browser.1")
 
