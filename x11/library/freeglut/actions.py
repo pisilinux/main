@@ -26,7 +26,8 @@ def setup():
 
         options += "-DCMAKE_INSTALL_LIBDIR=lib \
                    "
-
+    
+    pisitools.cflags.add("-fcommon")
     cmaketools.configure(options)
 
 def build():
