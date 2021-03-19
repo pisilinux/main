@@ -1,0 +1,45 @@
+diff --git a/src/zanshin/kontact/kontact_plugin.cpp b/src/zanshin/kontact/kontact_plugin.cpp
+index b03d967457d6f7a7cc60fd72cb990e8e64f352f0..4b0d2f925a300545ea3f222864b264f12ac38593 100644
+--- a/src/zanshin/kontact/kontact_plugin.cpp
++++ b/src/zanshin/kontact/kontact_plugin.cpp
+@@ -33,9 +33,16 @@ Plugin::Plugin(KontactInterface::Core *core, const QVariantList&)
+     setComponentName(QStringLiteral("zanshin"), QStringLiteral("zanshin"));
+ }
+ 
++#if KONTACTINTERFACE_VERSION >= QT_VERSION_CHECK(5, 14, 42)
++KParts::Part *Plugin::createPart()
++{
++    return loadPart();
++}
++#else
+ KParts::ReadOnlyPart *Plugin::createPart()
+ {
+     return loadPart();
+ }
++#endif
+ 
+ #include "kontact_plugin.moc"
+diff --git a/src/zanshin/kontact/kontact_plugin.h b/src/zanshin/kontact/kontact_plugin.h
+index 0d45564e861f21fc26b4e2b3a21668bd9c757002..a270ba1643bf11bd38f9f08a4096588082f962b2 100644
+--- a/src/zanshin/kontact/kontact_plugin.h
++++ b/src/zanshin/kontact/kontact_plugin.h
+@@ -25,6 +25,7 @@
+ #define ZANSHIN_KONTACT_PLUGIN_H
+ 
+ #include <KontactInterface/Plugin>
++#include <kontactinterface_version.h>
+ 
+ class Plugin : public KontactInterface::Plugin
+ {
+@@ -36,7 +37,11 @@ public:
+     int weight() const override { return 449; }
+ 
+ protected:
++#if KONTACTINTERFACE_VERSION >= QT_VERSION_CHECK(5, 14, 42)
++    KParts::Part *createPart() override;
++#else
+     KParts::ReadOnlyPart *createPart() override;
++#endif
+ };
+ 
+ #endif
