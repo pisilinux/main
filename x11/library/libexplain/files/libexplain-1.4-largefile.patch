@@ -1,0 +1,19 @@
+Index: libexplain/ac/fcntl.h
+===================================================================
+--- libexplain/ac/fcntl.h.orig
++++ libexplain/ac/fcntl.h
+@@ -65,8 +65,14 @@
+  * flags values returned by the kernel.
+  */
+ #if defined(__linux__) && (O_LARGEFILE == 0)
++#if defined(__aarch64__)
++#define O_LARGEFILE_HIDDEN 0400000
++#elif defined(__powerpc64__)
++#define O_LARGEFILE_HIDDEN 0200000
++#else
+ #define O_LARGEFILE_HIDDEN 0100000
+ #endif
++#endif
+ 
+ 
+ /*

@@ -1,0 +1,39 @@
+Index: explain/syscall/ustat.c
+===================================================================
+--- explain/syscall/ustat.c.orig
++++ explain/syscall/ustat.c
+@@ -30,7 +30,7 @@
+ #include <explain/syscall/ustat.h>
+ 
+ 
+-#ifndef HAVE_USTAT
++#if !defined(HAVE_USTAT_H) && !defined(LINUX_TYPES_H_STRUCT_USTAT)
+ 
+ struct ustat
+ {
+Index: libexplain/buffer/enfile.c
+===================================================================
+--- libexplain/buffer/enfile.c.orig
++++ libexplain/buffer/enfile.c
+@@ -38,7 +38,7 @@ get_maxfile(void)
+ {
+     if (explain_option_dialect_specific())
+     {
+-#ifdef __linux__
++#ifdef SYS__sysctl
+         /*
+          * In the linux kernel, if get_empty_filp() returns NULL, the open
+          * system call (and others) will return ENFILE.
+Index: libexplain/buffer/errno/listen.c
+===================================================================
+--- libexplain/buffer/errno/listen.c.orig
++++ libexplain/buffer/errno/listen.c
+@@ -72,7 +72,7 @@ append_getsockname(explain_string_buffer
+ static int
+ get_somaxconn(void)
+ {
+-#ifdef __linux__
++#ifdef SYS__sysctl
+     struct __sysctl_args args;
+     long somaxconn;
+     size_t somaxconn_size = sizeof(somaxconn);

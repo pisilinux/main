@@ -11,9 +11,13 @@ from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.copy("etc/configure.ac", "configure.ac")
     skiptests=["t0555a","t0524a"]
     for t in skiptests:
         shelltools.system('sed -i "s/\([ \t]\)$t\([ \t]\)/\1/g" Makefile.in')
+    
+    shelltools.export("CPPFLAGS", "-fPIC")
+    autotools.autoreconf("-fiv")
     autotools.configure("--disable-static")
 
 def build():

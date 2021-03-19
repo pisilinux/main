@@ -1,9 +1,11 @@
---- libexplain-1.4.D001.orig/libexplain/buffer/file_inode_flags.c
-+++ libexplain-1.4.D001/libexplain/buffer/file_inode_flags.c
+Index: libexplain/buffer/file_inode_flags.c
+===================================================================
+--- libexplain/buffer/file_inode_flags.c.orig
++++ libexplain/buffer/file_inode_flags.c
 @@ -28,6 +28,14 @@
-
+ 
  #if defined(FS_IOC_GETFLAGS) || defined(FS_IOC32_GETFLAGS)
-
+ 
 +#ifndef FS_ECOMPR_FL
 +#define FS_ECOMPR_FL                    0x00000800 /* Compression error */
 +#endif
@@ -15,3 +17,15 @@
  void
  explain_buffer_file_inode_flags(explain_string_buffer_t *sb, int value)
  {
+Index: libexplain/ac/linux/net_tstamp.h
+===================================================================
+--- libexplain/ac/linux/net_tstamp.h.orig
++++ libexplain/ac/linux/net_tstamp.h
+@@ -28,6 +28,7 @@
+ #include <libexplain/config.h>
+ 
+ #ifdef HAVE_LINUX_NET_TSTAMP_H
++#include <bits/types/clockid_t.h>
+ #include <linux/net_tstamp.h>
+ #endif
+ 
