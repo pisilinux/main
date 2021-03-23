@@ -6,9 +6,11 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.dosed("configure.ac", "pardus-release", "pisilinux-release")
     shelltools.system("./bootstrap.sh")
     
     autotools.configure("--sbindir=/usr/bin \
