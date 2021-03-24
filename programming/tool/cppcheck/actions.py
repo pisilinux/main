@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 j = "-DUSE_Z3=ON \
      -DHAVE_RULES=ON \
+     -DPYTHON_EXECUTABLE=/usr/bin/python3 \
      -DBUILD_GUI=ON \
      -DBUILD_SHARED_LIBS=ON \
      -DBUILD_TESTS=OFF \
