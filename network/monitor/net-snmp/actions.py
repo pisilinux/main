@@ -64,7 +64,7 @@ def install():
     pisitools.dodir("/var/lib/net-snmp")
     pisitools.dodir("/etc/snmp")
 
-    pisitools.dodoc("AGENT.txt", "ChangeLog", "FAQ", "NEWS", "PORTING", "README", "TODO")
+    pisitools.dodoc("AGENT.txt", "ChangeLog", "FAQ", "NEWS", "PORTING", "README*", "TODO")
 
     perlmodules.removePacklist()
     perlmodules.removePodfiles()
