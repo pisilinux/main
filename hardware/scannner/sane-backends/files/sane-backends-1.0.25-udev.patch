@@ -1,0 +1,72 @@
+From 252f347d59fff3ab1877f77a36613b318651725e Mon Sep 17 00:00:00 2001
+From: Nils Philippsen <nils@redhat.com>
+Date: Tue, 8 Oct 2013 16:29:13 +0200
+Subject: [PATCH] patch: udev
+
+Squashed commit of the following:
+
+commit fb6d1f4c0d17f1df33429bf03a64cd4fbb819ea5
+Author: Nils Philippsen <nils@redhat.com>
+Date:   Tue Oct 8 16:24:49 2013 +0200
+
+    adapt generated udev rules for Fedora
+
+commit 8bffaccc1eeb19ecbaddb4ac9da73954af4c5d4f
+Author: Nils Philippsen <nils@redhat.com>
+Date:   Mon Sep 10 12:20:43 2012 +0200
+
+    use group and mode macros consistently
+---
+ tools/sane-desc.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/tools/sane-desc.c b/tools/sane-desc.c
+index badc8ce..f992bf5 100644
+--- a/tools/sane-desc.c
++++ b/tools/sane-desc.c
+@@ -57,9 +57,9 @@
+ #define COLOR_NEW          "\"#F00000\""
+ #define COLOR_UNKNOWN      "\"#000000\""
+ 
+-#define DEVMODE  "0664"
++#define DEVMODE  "0644"
+ #define DEVOWNER "root"
+-#define DEVGROUP "scanner"
++#define DEVGROUP "root"
+ 
+ #ifndef PATH_MAX
+ # define PATH_MAX 1024
+@@ -3564,7 +3564,8 @@ print_udev (void)
+     }
+ 
+   printf("\n# The following rule will disable USB autosuspend for the device\n");
+-  printf("ENV{libsane_matched}==\"yes\", RUN+=\"/bin/sh -c 'if test -e /sys/$env{DEVPATH}/power/control; then echo on > /sys/$env{DEVPATH}/power/control; elif test -e /sys/$env{DEVPATH}/power/level; then echo on > /sys/$env{DEVPATH}/power/level; fi'\"\n");
++  printf("ENV{libsane_matched}==\"yes\", TEST==\"power/control\", ATTR{power/control}=\"on\"\n");
++  printf("ENV{libsane_matched}==\"yes\", TEST!=\"power/control\", TEST==\"power/level\", ATTR{power/level}=\"on\"\n");
+ 
+   printf ("\nLABEL=\"libsane_usb_rules_end\"\n\n");
+ 
+@@ -3641,10 +3642,8 @@ print_udev (void)
+     }
+   printf ("LABEL=\"libsane_scsi_rules_end\"\n");
+ 
+-  if (mode == output_mode_udevacl)
+-    printf("\nENV{libsane_matched}==\"yes\", RUN+=\"/bin/setfacl -m g:%s:rw $env{DEVNAME}\"\n", DEVGROUP);
+-  else
+-    printf ("\nENV{libsane_matched}==\"yes\", MODE=\"664\", GROUP=\"scanner\"\n");
++  if (mode != output_mode_udevacl)
++    printf ("\nENV{libsane_matched}==\"yes\", MODE=\"%s\", GROUP=\"%s\"\n", DEVMODE, DEVGROUP);
+ 
+   printf ("\nLABEL=\"libsane_rules_end\"\n");
+ }
+@@ -3695,6 +3694,7 @@ print_udevhwdb (void)
+ 
+   printf("# The following rule will disable USB autosuspend for the device\n");
+   printf("ENV{DEVTYPE}==\"usb_device\", ENV{libsane_matched}==\"yes\", TEST==\"power/control\", ATTR{power/control}=\"on\"\n\n");
++  printf("ENV{DEVTYPE}==\"usb_device\", ENV{libsane_matched}==\"yes\", TEST!=\"power/control\", TEST==\"power/level\", ATTR{power/level}=\"on\"\n");
+ 
+   printf ("SUBSYSTEMS==\"scsi\", GOTO=\"libsane_scsi_rules_begin\"\n");
+   printf ("GOTO=\"libsane_rules_end\"\n\n");
+-- 
+2.5.0
+

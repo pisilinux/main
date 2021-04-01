@@ -14,8 +14,14 @@ def setup():
     # I couldn't find in docs, some comment would be helpful here -gurer
     shelltools.export("SANEI_JPEG", "sanei_jpeg.o")
     shelltools.export("SANEI_JPEG_LO", "sanei_jpeg.lo")
+    
+    pisitools.cflags.add("-fPIC -fno-strict-aliasing")
+    pisitools.ldflags.add("-pie")
+    
+    shelltools.echo(".tarball-version", get.srcVERSION())
+    shelltools.echo(".version", get.srcVERSION())
 
-    #autotools.autoreconf("-fi")
+    autotools.autoreconf("-fiv")
 
     autotools.configure("--enable-ipv6 \
                          --enable-avahi \
