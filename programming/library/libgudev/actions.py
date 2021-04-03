@@ -1,35 +1,31 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# See the file http://www.gnu.org/licenses/gpl.txt
 
-
-from pisi.actionsapi import get
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 def setup():
-
-    options = "--disable-umockdev  \
-             "
-
-    if get.buildTYPE() == "emul32":
-      options += "--disable-introspection \
-                  --disable-gtk-doc \
-                 "
-    else:
-      options += "--enable-introspection \
-                  --enable-gtk-doc \
-                 "
-
-    autotools.configure(options)
-    # fix unused direct dependency analysis
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    options = "--prefix=/usr \
+              "
     
+    if get.buildTYPE() == "emul32":
+        options += " --libdir=lib32 \
+                    -Dvapi=disabled \
+                    -Dintrospection=disabled"
+                    
+    mesontools.configure(options)
+
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dodoc("README*", "COPYING*")
+    mesontools.install()
+    
+    if get.buildTYPE() == "emul32":
+        #pisitools.removeDir("/usr/emul32")
+        return
