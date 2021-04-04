@@ -14,13 +14,16 @@ def setup():
     pisitools.insinto("/usr/include/CL", "OpenCL-Headers-2020.12.18/CL/*")
     shelltools.export("CFLAGS", "-I%s/usr/include -O2")
     shelltools.export("CXXFLAGS", "-I%s/usr/include -O2")
-
+    pisitools.cflags.add("-fcommon")
     autotools.autoreconf("-vfi")
 
     autotools.configure()
 
 def build():
     autotools.make()
+    
+def check():
+    autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
