@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libsrtp</Name>
+        <Homepage>https://github.com/cisco/libsrtp</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Summary>An implementation of the Secure Real-time Transport Protocol (SRTP)</Summary>
+        <Description>SRTP Kitaplığı (Güvenli Gerçek Zamanlı Aktarım Protokolü)</Description>
+        <Archive sha1sum="263a45a82cb1acb1a6c7beef64def31949496a02" type="targz">https://github.com/cisco/libsrtp/archive/refs/tags/v2.3.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>libpcap-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">libsrtp-2.3.0-rtp-header.patch</Patch>
+            <Patch level="1">fedora/libsrtp-2.3.0-shared-fix.patch</Patch>
+            <Patch level="1">fedora/libsrtp-2.3.0-test-util.patch</Patch>
+            <Patch level="1">fedora/libsrtp-2.3.0-shared-test-fix.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libsrtp</Name>
+        <RuntimeDependencies>
+            <Dependency>openssl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libsrtp-devel</Name>
+        <Summary>Development files for libsrtp</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libsrtp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-04-04</Date>
+            <Version>2.3.0</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
