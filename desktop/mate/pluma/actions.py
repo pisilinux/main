@@ -11,9 +11,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.export("PYTHON", "python3")
     autotools.configure("--prefix=/usr \
-						 pythondir=/usr/bin/python3 \
+                         pythondir=/usr/bin/python3 \
                          --libexecdir=/usr/lib/pluma \
                          --disable-schemas-compile \
                          --enable-gtk-doc=no \
@@ -28,4 +27,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("README", "NEWS", "ChangeLog", "AUTHORS", "COPYING")
+    pisitools.dodoc("README*", "NEWS", "ChangeLog", "AUTHORS", "COPYING")
