@@ -93,6 +93,7 @@ def setup():
                             --enable-vaapi \
                             --enable-vdpau \
                             --enable-omx \
+                            --enable-libsrt \
                             --extra-ldflags='-lasound -lm'")
 
 def build():
