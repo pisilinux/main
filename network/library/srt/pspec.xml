@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>srt</Name>
+        <Homepage>https://www.srtalliance.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>MPLv2.0</License>
+        <IsA>library</IsA>
+        <Summary>Secure Reliable Transport protocol tools</Summary>
+        <Description>Güvenli Güvenilir Aktarım protokolü araçları</Description>
+        <Archive sha1sum="af45a788fa34d9010f598b7b199169d300f6c851" type="targz">https://github.com/Haivision/srt/archive/refs/tags/v1.4.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>git</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>gnutls-devel</Dependency>
+            <Dependency>nettle-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>srt.patch</Patch>
+            <Patch level="1">srt.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>srt</Name>
+        <RuntimeDependencies>
+            <Dependency>gnutls</Dependency>
+            <Dependency>nettle</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>srt-devel</Name>
+        <Summary>Development files for srt</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">srt</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-04-04</Date>
+            <Version>1.4.2</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
