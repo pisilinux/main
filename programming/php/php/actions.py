@@ -93,7 +93,9 @@ def setup():
                       --with-imap=shared \
                       --with-imap-ssl \
                       --with-mysql-sock=/run/mysqld/mysqld.sock \
-                      --without-pear \
+                      --with-pear \
+                      --with-zlib \
+					  --with-zip=shared \
                       --disable-rpath \
                      "
 
@@ -192,3 +194,11 @@ def install():
     pisitools.remove("/etc/php-fpm.conf.default")
 
     pisitools.dodir("/var/log/php-fpm/")
+
+    pisitools.remove("/.depdb")
+    pisitools.remove("/.depdblock")
+    pisitools.remove("/.lock")
+    pisitools.remove("/.filemap")
+    pisitools.removeDir("/.channels")
+    pisitools.removeDir("/.registry")
+

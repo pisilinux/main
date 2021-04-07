@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>PHP7 is an HTML-embedded scripting language. The goal of the language is to allow web developers to write dynamically generated pages quickly</Summary>
         <Description>PHP7 is an HTML-embedded scripting language. Much of its syntax is borrowed from C, Java and Perl with a couple of unique PHP-specific features thrown in. The goal of the language is to allow web developers to write dynamically generated pages quickly.</Description>
-        <Archive sha1sum="1f314d52a63ef5d68f8f44a224759b24885cce17" type="tarxz">https://www.php.net/distributions/php-7.4.3.tar.xz</Archive>
+        <Archive sha1sum="d0464bc5d9b2b834d6f28c48983258fbfaacef71" type="tarxz">https://www.php.net/distributions/php-7.4.16.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>gd-devel</Dependency>
             <Dependency>re2c</Dependency>
@@ -117,6 +117,38 @@
         </Files>
     </Package>
 
+     <Package>
+        <Name>php-pear</Name>
+        <Summary>Development files for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">php-common</Dependency>
+        </RuntimeDependencies>
+        <Files>
+	    <Path fileType="config">/etc/pear.conf</Path>
+            <Path fileType="executable">/usr/bin/pear</Path>
+            <Path fileType="executable">/usr/bin/go-pear</Path>
+            <Path fileType="library">/usr/lib/php/PEAR/</Path>
+	    <Path fileType="library">/usr/lib/php/Structures</Path>
+	    <Path fileType="library">/usr/lib/php/.lock</Path>
+	    <Path fileType="library">/usr/lib/php/peclcmd.php</Path>
+	    <Path fileType="library">/usr/lib/php/pearcmd.php</Path>
+	    <Path fileType="library">/usr/lib/php/System.php</Path>
+	    <Path fileType="library">/usr/lib/php/PEAR.php</Path>
+	    <Path fileType="library">/usr/lib/php/.filemap</Path>
+	    <Path fileType="library">/usr/lib/php/.registry/</Path>
+	    <Path fileType="library">/usr/lib/php/Console/Getopt.php</Path>
+	    <Path fileType="library">/usr/lib/php/XML/Util.php</Path>
+	    <Path fileType="library">/usr/lib/php/Archive/Tar.php</Path>
+	    <Path fileType="library">/usr/lib/php/test/XML_Util</Path>
+	    <Path fileType="library">/usr/lib/php/test/Structures_Graph</Path>
+	    <Path fileType="library">/usr/lib/php/test/Console_Getopt</Path>
+	    <Path fileType="library">/usr/lib/php/.channels</Path>
+	    <Path fileType="library">/usr/lib/php/doc/</Path>
+	    <Path fileType="library">/usr/lib/php/data/PEAR/</Path>
+	    <Path fileType="library">/usr/lib/php/OS/Guess.php</Path>
+        </Files>
+    </Package>
+
     <Package>
         <Name>mod_php</Name>
         <PartOf>server.web</PartOf>
@@ -143,6 +175,11 @@
             <Dependency>php-common</Dependency>
             <Dependency>libmcrypt</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
+
+            <Dependency>sqlite</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>e2fsprogs</Dependency>
+            <Dependency>oniguruma</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/apache2/modules/libphp7.so</Path>
@@ -159,6 +196,7 @@
         <Summary>Zip extension for PHP</Summary>
         <RuntimeDependencies>
             <Dependency>php-common</Dependency>
+            <Dependency>pam</Dependency>
             <Dependency>libzip</Dependency>
             <Dependency>mit-kerberos</Dependency>
         </RuntimeDependencies>
@@ -176,6 +214,7 @@
         <Name>php-imap</Name>
         <Summary>Module for PHP to enable IMAP support</Summary>
         <RuntimeDependencies>
+            <Dependency>pam</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>e2fsprogs</Dependency>
             <Dependency>php-common</Dependency>
@@ -202,6 +241,14 @@
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>postgresql-lib</Dependency>
             <Dependency>openldap-client</Dependency>
+
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>oniguruma</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/sbin/php-fpm</Path>
@@ -222,6 +269,13 @@
 
 
     <History>
+        <Update release="12">
+            <Date>2021-02-06</Date>
+            <Version>7.4.16</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
 		<Update release="11">
             <Date>2020-02-22</Date>
             <Version>7.4.3</Version>
