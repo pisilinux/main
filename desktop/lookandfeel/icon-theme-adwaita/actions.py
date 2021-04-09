@@ -10,10 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("sed -i 's|$(datadir)/pkgconfig|$(libdir)/pkgconfig|g' Makefile.in")
-    #shelltools.system("sed -i 's|$(datadir)/pkgconfig|$(libdir)/pkgconfig|g' Makefile.am")
-    #pisitools.dosed("Makefile.in", "pkgconfigdir = $(datadir)/pkgconfig", "pkgconfigdir = $(libdir)/pkgconfig")
-    #pisitools.dosed("Makefile.am", "pkgconfigdir = $(datadir)/pkgconfig", "pkgconfigdir = $(libdir)/pkgconfig")
+    shelltools.system("./autogen.sh")
     autotools.configure()
 
 def build():
