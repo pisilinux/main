@@ -8,11 +8,27 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import shelltools
 
+
 def setup():
-    mesontools.configure("-Dudev=true -Dvalgrind=true")
+    if not get.buildTYPE() == "emul32":
+        options = "-Dudev=true \
+                   -Dvalgrind=true \
+                  "
+    
+    if get.buildTYPE() == "emul32":
+        options = " --libdir=lib32 \
+                    -Dudev=false \
+                    -Dvalgrind=false"
+
+
+                    
+    mesontools.configure(options)
 
 def build():
     mesontools.build()
 
 def install():
     mesontools.install()
+    
+    if get.buildTYPE() == "emul32":
+        return
