@@ -23,7 +23,9 @@ def setup():
 
     # for fix unused dependency
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
-
+    # patched pisi logo
+    pisitools.dosed("savers/gnomelogo-floaters.desktop.in.in", "Floating GNOME", "Floating PISI")
+    pisitools.dosed("po/tr.po", "Yüzen GNOME", "Yüzen PISI")
 def build():
     autotools.make()
 
