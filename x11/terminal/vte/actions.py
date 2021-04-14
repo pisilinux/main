@@ -8,7 +8,8 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-D_systemd=false")
+    mesontools.configure("-D_systemd=false \
+                          -Ddocs=true")
 
 def build():
     mesontools.build()
