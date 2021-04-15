@@ -27,5 +27,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #fixed whisker menu
+    pisitools.dosed("%s/etc/xdg/xfce4/panel/default.xml" % get.installDIR(), "applicationsmenu", "whiskermenu")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS*")
