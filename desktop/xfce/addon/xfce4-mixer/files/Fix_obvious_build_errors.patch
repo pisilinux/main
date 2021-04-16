@@ -1,0 +1,166 @@
+From 2ce5d0624689411d06fd723e317a951de739ee1c Mon Sep 17 00:00:00 2001
+From: Alexander Molodtsov <molodcov.alex@gmail.com>
+Date: Wed, 17 Feb 2021 15:16:18 +0300
+Subject: [PATCH] Fix obvious build errors
+
+---
+ libxfce4mixer/Makefile.am         |  8 +++---
+ libxfce4mixer/alsa/alsa-options.h |  2 +-
+ libxfce4mixer/libxfce4mixer.c     |  8 ++++--
+ libxfce4mixer/sndio/.dirstamp     |  0
+ panel-plugin/xfce-volume-button.c | 41 ++++++++++++++++++++-----------
+ 5 files changed, 37 insertions(+), 22 deletions(-)
+ delete mode 100644 libxfce4mixer/sndio/.dirstamp
+
+diff --git a/libxfce4mixer/Makefile.am b/libxfce4mixer/Makefile.am
+index 625f99f..0426746 100644
+--- a/libxfce4mixer/Makefile.am
++++ b/libxfce4mixer/Makefile.am
+@@ -85,24 +85,24 @@ libxfce4mixer_la_CFLAGS = 						\
+ 
+ if ALSA_BACKEND
+ libxfce4mixer_la_CFLAGS +=						\
+-	-Ialsa								\
++	-I$(srcdir)/alsa								\
+         $(ALSA_CFLAGS)
+ endif
+ 
+ if PULSE_BACKEND
+ libxfce4mixer_la_CFLAGS +=						\
+-	-Ipulse								\
++	-I$(srcdir)/pulse								\
+         $(PULSE_CFLAGS)
+ endif
+ 
+ if OSS_BACKEND
+ libxfce4mixer_la_CFLAGS +=                                              \
+-        -Ioss
++        -I$(srcdir)/oss
+ endif
+ 
+ if SNDIO_BACKEND
+ libxfce4mixer_la_CFLAGS +=                                              \
+-        -Isndio
++        -I$(srcdir)/sndio
+ endif
+ libxfce4mixer_la_LDFLAGS =						\
+ 	-no-undefined
+diff --git a/libxfce4mixer/alsa/alsa-options.h b/libxfce4mixer/alsa/alsa-options.h
+index 083ab5e..5f836f8 100644
+--- a/libxfce4mixer/alsa/alsa-options.h
++++ b/libxfce4mixer/alsa/alsa-options.h
+@@ -38,7 +38,7 @@ struct _GstMixerAlsaOptions
+ 
+ struct _GstMixerAlsaOptionsClass
+ {
+-  GstMixerAlsaTrack parent;
++  GstMixerAlsaTrackClass parent;
+ };
+ 
+ GType                 gst_mixer_alsa_options_get_type (void);
+diff --git a/libxfce4mixer/libxfce4mixer.c b/libxfce4mixer/libxfce4mixer.c
+index f73ef95..3589ddb 100644
+--- a/libxfce4mixer/libxfce4mixer.c
++++ b/libxfce4mixer/libxfce4mixer.c
+@@ -52,7 +52,8 @@
+ 
+ static void     _xfce_mixer_init_mixer       (gpointer    data,
+                                               gpointer    user_data);
+-static void     _xfce_mixer_destroy_mixer    (GstMixer   *mixer);
++static void     _xfce_mixer_destroy_mixer    (gpointer    data,
++                                              gpointer user_data);
+ 
+ 
+ 
+@@ -451,8 +452,11 @@ _xfce_mixer_init_mixer (gpointer data,
+ 
+ 
+ static void
+-_xfce_mixer_destroy_mixer (GstMixer *mixer)
++_xfce_mixer_destroy_mixer (gpointer data,
++                           gpointer user_data)
+ {
++  GstMixer *mixer = GST_MIXER (data);
++
+   gst_element_set_state (GST_ELEMENT (mixer), GST_STATE_NULL);
+   gst_object_unref (GST_OBJECT (mixer));
+ }
+diff --git a/libxfce4mixer/sndio/.dirstamp b/libxfce4mixer/sndio/.dirstamp
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/panel-plugin/xfce-volume-button.c b/panel-plugin/xfce-volume-button.c
+index 0481a66..daee4d5 100644
+--- a/panel-plugin/xfce-volume-button.c
++++ b/panel-plugin/xfce-volume-button.c
+@@ -624,9 +624,14 @@ xfce_volume_button_popup_dock (XfceVolumeButton *button)
+   GtkWidget       *button_widget = GTK_WIDGET (button);
+   GtkOrientation   orientation;
+   GtkRequisition   dock_requisition;
++#if GTK_CHECK_VERSION(3, 22, 0)
++  GdkDisplay      *display;
++  GdkMonitor      *monitor;
++#else
+   GdkScreen       *screen;
+-  GdkRectangle     monitor;
+-  gint             monitor_num;
++  gint             monitor;
++#endif
++  GdkRectangle     monitor_rect;
+   gint             window_x;
+   gint             window_y;
+   GdkWindow       *window;
+@@ -669,10 +674,16 @@ xfce_volume_button_popup_dock (XfceVolumeButton *button)
+   y += button_allocation.y;
+ 
+   /* Determine the geometry of the monitor containing the window containing the button */
+-  screen = gtk_widget_get_screen (button_widget);
+   window = gtk_widget_get_window (GTK_WIDGET (button));
+-  monitor_num = gdk_screen_get_monitor_at_window (screen, window);
+-  gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
++#if GTK_CHECK_VERSION(3, 22, 0)
++  display = gtk_widget_get_display (button_widget);
++  monitor = gdk_display_get_monitor_at_window (display, window);
++  gdk_monitor_get_geometry (monitor, &monitor_rect);
++#else
++  screen = gtk_widget_get_screen (button_widget);
++  monitor = gdk_screen_get_monitor_at_window (screen, window);
++  gdk_screen_get_monitor_geometry (screen, monitor, &monitor_rect);
++#endif
+ 
+   /* Determine the position of the window containing the button */
+   if (xfce_screen_position_is_top (button->screen_position))
+@@ -692,9 +703,9 @@ xfce_volume_button_popup_dock (XfceVolumeButton *button)
+       gdk_window_get_root_origin (window, &window_x, &window_y);
+ 
+       if (button->screen_position == XFCE_SCREEN_POSITION_FLOATING_V)
+-        position = (window_x < (monitor.x + monitor.width / 2)) ? GTK_POS_RIGHT : GTK_POS_LEFT;
++        position = (window_x < (monitor_rect.x + monitor_rect.width / 2)) ? GTK_POS_RIGHT : GTK_POS_LEFT;
+       else
+-        position = (window_y < (monitor.y + monitor.height / 2)) ? GTK_POS_BOTTOM : GTK_POS_TOP;
++        position = (window_y < (monitor_rect.y + monitor_rect.height / 2)) ? GTK_POS_BOTTOM : GTK_POS_TOP;
+     }
+ 
+   /* Place the dock centered on the correct edge of the button */
+@@ -721,14 +732,14 @@ xfce_volume_button_popup_dock (XfceVolumeButton *button)
+     }
+ 
+   /* Ensure the dock remains on the monitor */
+-  if (x > monitor.x + monitor.width - dock_requisition.width)
+-    x = monitor.x + monitor.width - dock_requisition.width;
+-  if (x < monitor.x)
+-    x = monitor.x;
+-  if (y > monitor.y + monitor.height - dock_requisition.height)
+-    y = monitor.y + monitor.height - dock_requisition.height;
+-  if (y < monitor.y)
+-    y = monitor.y;
++  if (x > monitor_rect.x + monitor_rect.width - dock_requisition.width)
++    x = monitor_rect.x + monitor_rect.width - dock_requisition.width;
++  if (x < monitor_rect.x)
++    x = monitor_rect.x;
++  if (y > monitor_rect.y + monitor_rect.height - dock_requisition.height)
++    y = monitor_rect.y + monitor_rect.height - dock_requisition.height;
++  if (y < monitor_rect.y)
++    y = monitor_rect.y;
+ 
+   /* Position the dock */
+   gtk_window_move (GTK_WINDOW (button->dock), x, y);
