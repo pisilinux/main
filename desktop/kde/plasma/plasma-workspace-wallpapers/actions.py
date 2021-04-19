@@ -20,5 +20,6 @@ def install():
     
     pisitools.insinto("/usr/share/wallpapers/pisilinux-blue", "blue/*")
     pisitools.insinto("/usr/share/wallpapers/sweet-cat", "../Sweet-cat/*")
+    pisitools.insinto("/usr/share/wallpapers/pisi-crocus-ancyrensis", "../pisi-crocus-ancyrensis/*")
 
     pisitools.dodoc("COPYING", "AUTHORS")
