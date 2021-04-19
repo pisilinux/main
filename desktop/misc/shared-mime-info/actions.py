@@ -7,20 +7,22 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import get
+
 
 def setup():
     # https://bugs.freedesktop.org/show_bug.cgi?id=70366
-    shelltools.export("ac_cv_func_fdatasync", "no")
-
-    autotools.configure("--disable-update-mimedb")
-
+    #shelltools.export("ac_cv_func_fdatasync", "no")
+    mesontools.configure("-Dupdate-mimedb=false")
+     
 def build():
-    autotools.make('-j1')
+    mesontools.build()
 
 def check():
-    autotools.make("-k check || true")
+    mesontools.build("test")
 
 def install():
-    autotools.install()
+    mesontools.install()
 
-    pisitools.dodoc("ChangeLog", "NEWS", "README")
+    pisitools.dodoc("COPYING", "NEWS", "README*")
