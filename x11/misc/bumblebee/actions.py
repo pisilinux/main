@@ -9,6 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
+    autotools.autoreconf("-fiv")
     autotools.configure("\
                          CONF_DRIVER=nvidia \
                          CONF_DRIVER_MODULE_NVIDIA=nvidia \
