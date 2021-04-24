@@ -26,6 +26,7 @@ j = ''.join([
     ])
 
 def setup():
+    shelltools.export("CONFIG_SHELL", "/bin/bash")
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure(j)
 
