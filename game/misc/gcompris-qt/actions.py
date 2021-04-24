@@ -10,7 +10,6 @@ from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("")
     shelltools.system("cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DQML_BOX2D_LIBRARY=/usr/lib/qt/qml/Box2D.2.0")
 
 def build():
