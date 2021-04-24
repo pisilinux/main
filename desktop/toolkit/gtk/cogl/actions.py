@@ -18,6 +18,9 @@ def setup():
             --enable-gles2 \
             --enable-{kms,wayland,xlib}-egl-platform \
             --enable-wayland-egl-server")
+    
+    # for fix unused dependency
+    pisitools.dosed("libtool"," -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
