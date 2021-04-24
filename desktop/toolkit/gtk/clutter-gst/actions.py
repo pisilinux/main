@@ -13,6 +13,9 @@ def setup():
     shelltools.system("gtkdocize")
     autotools.autoreconf("-vfi")
     autotools.configure("--enable-introspection")
+    
+    # for fix unused dependency
+    pisitools.dosed("libtool"," -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
