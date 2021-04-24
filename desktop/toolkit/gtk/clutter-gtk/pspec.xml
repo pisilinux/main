@@ -1,3 +1,5 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>clutter-gtk</Name>
@@ -12,8 +14,11 @@
         <Description>clutter-gtk provides GTK support for clutter.</Description>
         <Archive sha1sum="417cb1b9aa7cf26253c4791e9361a63543405394" type="targz">https://github.com/GNOME/clutter-gtk/archive/1.8.4.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>clutter-devel</Dependency>
+            <Dependency>meson</Dependency>
+            <Dependency>valgrind</Dependency>
+            <Dependency>cogl-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
+            <Dependency>clutter-devel</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
         </BuildDependencies>
     </Source>
@@ -21,10 +26,13 @@
     <Package>
         <Name>clutter-gtk</Name>
         <RuntimeDependencies>
-            <Dependency>clutter</Dependency>
+            <Dependency>cogl</Dependency>
             <Dependency>gtk3</Dependency>
             <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>clutter</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>wayland-client</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
@@ -38,6 +46,9 @@
         <Name>clutter-gtk-devel</Name>
         <Summary>Development files for clutter-gtk</Summary>
         <RuntimeDependencies>
+            <Dependency>cogl-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>clutter-devel</Dependency>
             <Dependency release="current">clutter-gtk</Dependency>
         </RuntimeDependencies>
         <Files>
