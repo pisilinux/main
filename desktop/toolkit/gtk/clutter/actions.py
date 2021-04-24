@@ -21,6 +21,9 @@ def setup():
     --enable-evdev-input \
     --enable-wayland-compositor \
     --enable-gtk-doc ")
+    
+    # for fix unused dependency
+    pisitools.dosed("libtool"," -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
