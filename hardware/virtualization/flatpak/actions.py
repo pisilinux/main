@@ -12,12 +12,10 @@ from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--with-priv-mode=setuid \
-                          --enable-xauth \
                           --with-system-bubblewrap \
-                          --disable-static \
-                          --disable-selinux-module \
-                          --enable-sandboxed-triggers")
+                          --disable-static")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
