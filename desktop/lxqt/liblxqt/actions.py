@@ -13,8 +13,7 @@ def setup():
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
-                          -DCMAKE_INSTALL_LIBDIR=lib \
-                          -DPULL_TRANSLATIONS=yes", sourceDir="..")
+                          -DCMAKE_INSTALL_LIBDIR=lib", sourceDir="..")
 def build():
     shelltools.cd("build")
     cmaketools.make()
