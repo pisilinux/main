@@ -56,7 +56,7 @@ def setup():
                          --disable-policykit \
                          --disable-doc-build \
                          --disable-foomatic-ppd-install \
-                         --disable-foomatic-rip-hplip-install")
+                         ")
 
     # Remove hardcoded rpaths
     pisitools.dosed("libtool", "^hardcode_libdir_flag_spec=.*", "hardcode_libdir_flag_spec=\"\"")
@@ -70,6 +70,9 @@ def install():
 
     # Create a compatibility symlink for foomatic-rip-hplip
     pisitools.dosym("/usr/lib/cups/filter/foomatic-rip", "/usr/lib/cups/filter/foomatic-rip-hplip")
+    
+    # Install documents
+    pisitools.dodoc("COPYING")
     
     # Remove the hal preprobe rules as they were causing breakage (bug #479648).
     # Remove hal directory as well.
@@ -94,3 +97,4 @@ def install():
 
     # --disable-doc-build used. It doesn't go to the true directory.
     pisitools.dohtml("doc/*")
+    
