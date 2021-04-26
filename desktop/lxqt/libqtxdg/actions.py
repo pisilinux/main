@@ -12,8 +12,7 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_INSTALL_LIBDIR=/usr/lib\
-                          -DUSE_QT5=ON", sourceDir="..")
+                          -DCMAKE_INSTALL_LIBDIR=/usr/lib", sourceDir="..")
 
 def build():
     shelltools.cd("build")
