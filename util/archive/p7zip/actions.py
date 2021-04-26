@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 WorkDir = "p7zip-%s" % get.srcVERSION()
 
 makefiles = {
-             'x86_64'   : "makefile.linux_amd64"
+             'x86_64'   : "makefile.linux_amd64_asm"
             }
 
 def setup():
