@@ -11,7 +11,9 @@ from pisi.actionsapi import autotools
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure("--disable-static")
+    autotools.configure("--disable-static \
+                         --libexecdir=/usr/lib \
+                         --sysconfdir=/etc")
 
 def build():
     autotools.make()
