@@ -15,8 +15,7 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_BUILD_TYPE=Release \
-                          -DPULL_TRANSLATIONS=yes", sourceDir="..")
+                          -DCMAKE_BUILD_TYPE=Release", sourceDir="..")
 def build():
     shelltools.cd("build")
     qt5.make()
