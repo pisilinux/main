@@ -15,7 +15,7 @@ def install():
     shelltools.system("ln -s %s/opt/thunderbird %s/usr/bin/thunderbird" % (get.installDIR(), get.installDIR()))
     for i in ("16", "22", "24", "32", "48", "64", "128", "256"):
         pisitools.dodir("/usr/share/icons/hicolor/%sx%s/apps" % (i, i))
-        pisitools.domove("/opt/chrome/icons/default/default%s.png" % (i), "/usr/share/icons/hicolor/%sx%s/apps/thunderbird.png" % (i, i))
+        pisitools.domove("/opt/chrome/icons/default/default%s.png" % (i), "/usr/share/icons/hicolor/%sx%s/apps" % (i, i),"thunderbird.png")
     # Use system certificates
     pisitools.dodir("/usr/lib")
     shelltools.system("ln -s %s/opt/libnssckbi.so %s/usr/lib/libnssckbi.so" % (get.installDIR(), get.installDIR()))

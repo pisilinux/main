@@ -14,8 +14,10 @@ def setup():
     shelltools.cd("build")
     shelltools.system("meson --prefix=/usr \
                              -Dsystemdsystemunitdir=no \
+                             -Dadmin_group=wheel \
+                             -Ddocbook=true \
                              -Dgtk_doc=true \
-                             --libexecdir=/usr/lib/accountsservice ..")
+                             --libexecdir=/usr/libexec ..")
     
 def build():
     shelltools.cd("build")
