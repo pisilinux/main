@@ -12,6 +12,7 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
 
 def preRemove():
     try:
-        os.system ("groupdel flatpak")
+        os.system("userdel flatpak")
+        os.system("groupdel flatpak")
     except:
         pass
