@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# 
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
@@ -17,9 +18,9 @@ def setup():
                          --libexecdir=/usr/libexec/ \
                          --disable-static \
                          --disable-tests \
-                         --disable-liblightdm-qt5 \
+                         --enable-liblightdm-qt5 \
                          --with-greeter-user=lightdm \
-                         --with-greeter-session=lightdm-gtk-greeter")
+                         --with-greeter-session=pisi-lightdm-greeter")
     
     
 def build():

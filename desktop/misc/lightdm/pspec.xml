@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "github.com/igor0pav/pkg/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>lightdm</Name>
@@ -10,8 +10,8 @@
         </Packager>
         <License>GPL2</License>
         <IsA>app</IsA>
-        <Summary>LightDM Qt client library</Summary>
-        <Description>LightDM Qt client library</Description>
+        <Summary>LightDM is a cross-desktop display manager.</Summary>
+        <Description>LightDM is a cross-desktop display manager.</Description>
         <Archive type="tarxz" sha1sum="d91966f79f173825ac8bb51973842f9fb6c9ef1b">https://github.com/CanonicalLtd/lightdm/releases/download/1.30.0/lightdm-1.30.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>itstool</Dependency>
@@ -26,6 +26,7 @@
             <Dependency>dbus-glib-devel</Dependency>
             <Dependency>libxcb-devel</Dependency>
             <Dependency>libXdmcp-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <Patch level="1">lightdm-default-config.patch</Patch>
@@ -36,7 +37,7 @@
     <Package>
         <Name>lightdm</Name>
         <Conflicts>
-            <Package>lxdm</Package>
+            <!--Package>lxdm</Package-->
             <Package>sddm</Package>
         </Conflicts>
         <RuntimeDependencies>
@@ -51,9 +52,10 @@
         <Files>
             <Path fileType="config">/etc</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="library">/usr/lib/liblightdm-gobject-1.so*</Path>
             <Path fileType="library">/usr/libexec</Path>
+            <Path fileType="library">/usr/lib/tmpfiles.d</Path>
+            <Path fileType="library">/usr/lib/girepository-1.0</Path>
             <Path fileType="data">/usr/share/accountsservice</Path>
             <Path fileType="data">/usr/share/bash-completion</Path>
             <Path fileType="data">/usr/share/dbus-1</Path>
@@ -72,7 +74,7 @@
         </AdditionalFiles>
 
         <Provides>
-            <!--COMAR script="service.py">System.Service</COMAR-->
+            <COMAR script="service.py">System.Service</COMAR>
             <COMAR script="package.py">System.Package</COMAR>
         </Provides>
     </Package>
@@ -80,10 +82,42 @@
     <Package>
         <Name>lightdm-devel</Name>
         <Summary>LightDM is a cross-desktop display manager.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">lightdm</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libxklavier-devel</Dependency>
+        </RuntimeDependencies>
         <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include/lightdm-gobject-1</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/liblightdm-gobject-1.pc</Path>
             <Path fileType="data">/usr/share/gir-1.0</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>liblightdm-qt5</Name>
+        <Summary>Qt5 library for LightDM.</Summary>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>lightdm</Dependency>
+            <Dependency>qt5-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/liblightdm-qt5-3.so*</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>liblightdm-qt5-devel</Name>
+        <Summary>LightDM is a cross-desktop display manager.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">liblightdm-qt5</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/lightdm-qt5-3</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/liblightdm-qt5-3.pc</Path>
         </Files>
     </Package>
 
