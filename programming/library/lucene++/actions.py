@@ -19,7 +19,7 @@ i = "-DCMAKE_BUILD_TYPE=Release \
 
 def setup():
 	shelltools.export("CXXFLAGS", "-DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
-	shelltools.export("CFLAGS", "-lpthread")
+	shelltools.export("CXXFLAGS", "-lpthread")
 	shelltools.makedirs("build")
 	shelltools.cd("build")
 	cmaketools.configure("%s" % i, sourceDir='..')
@@ -32,5 +32,5 @@ def install():
 	shelltools.cd("build")
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("../AUTHORS", "../COPYING", "../README.rst")
+	pisitools.dodoc("../AUTHORS", "../COPYING", "../README.md")
 
