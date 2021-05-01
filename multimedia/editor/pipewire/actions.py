@@ -12,7 +12,15 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("CFLAGS", "%s -Wformat" % get.CFLAGS())
-    mesontools.configure("-D docs=true")
+    mesontools.configure("-Dman=disabled \
+                          -Dgstreamer=enabled \
+                          -Ddocs=enabled \
+                          -Dsystemd=disabled \
+                          -Dbluez5=enabled \
+                          -Dffmpeg=enabled \
+                          -Dpipewire-alsa=enabled \
+                          -Djack=disabled \
+                          -Dlibcamera=disabled")
 
 def build():
     mesontools.build()
