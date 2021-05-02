@@ -14,7 +14,7 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     options = "meson --prefix=/usr --sysconfdir=/etc \
-                     --libexec=/usr/lib/at-spi2-core \
+                     --libexec=/usr/libexec/at-spi2 \
                      -Dintrospection=yes \
                      -D enable_docs=true \
               "
@@ -41,8 +41,9 @@ def install():
     if get.buildTYPE() == "emul32":
         #pisitools.dosed("%s/usr/share/dbus-1/services" % get.installDIR(), "^(Exec=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
         #pisitools.dosed("%s/usr/share/dbus-1/accessibility-services" % get.installDIR(), "^(Exec=)\/usr/tmp", r"\1/usr/libexec/at-spi2")
-        pisitools.dosed("%s/usr/lib/systemd/user" % get.installDIR(), "^(ExecStart=)\/usr/emul32", r"\1/usr/lib/at-spi2-core")
+        pisitools.dosed("%s/usr/lib/systemd/user" % get.installDIR(), "^(ExecStart=)\/usr/emul32", r"\1/usr/libexec/at-spi2")
         pisitools.removeDir("/usr/emul32")
+        pisitools.dosym("/usr/libexec/at-spi2/at-spi-bus-launcher", "/usr/lib/at-spi2-core/at-spi-bus-launcher")
         return
     
     shelltools.cd("..")
