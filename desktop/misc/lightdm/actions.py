@@ -15,7 +15,7 @@ def setup():
                          --localstatedir=/var \
                          --sysconfdir=/etc \
                          --sbindir=/usr/bin \
-                         --libexecdir=/usr/libexec \
+                         --libexecdir=/usr/lib \
                          --disable-static \
                          --disable-tests \
                          --enable-liblightdm-qt5 \
