@@ -41,7 +41,7 @@ def setup():
     shelltools.system('./autogen.sh                       \
                         --prefix=/usr                     \
                         --sysconfdir=/etc                 \
-                        --with-vendor="Pisi Linux"        \
+                        --with-vendor="Pisi GNU/Linux"    \
                         --with-lang="%s"                  \
                         --disable-odk                     \
                         --enable-qt5                      \
@@ -72,6 +72,8 @@ def setup():
                         --with-system-boost               \
                         --with-system-lcms2               \
                         --with-system-libcdr              \
+                        --with-system-gpgmepp             \
+                        --with-system-epoxy               \
                         --with-system-libetonyek          \
                         --with-system-libmspub            \
                         --with-system-libodfgen           \
@@ -106,7 +108,7 @@ def setup():
                         --without-system-firebird         \
                         --without-system-libcmis          \
                         --without-system-orcus            \
-                        --with-jdk-home=/usr/lib/jvm/java-openjdk \
+                        --with-jdk-home=/usr/lib/jvm/java-13-openjdk \
                         --with-external-tar=external/tarballs       \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
                         --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4            \
