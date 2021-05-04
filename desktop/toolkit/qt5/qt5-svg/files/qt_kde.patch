@@ -1,0 +1,240 @@
+diff --git a/dist/changes-5.12.10 b/dist/changes-5.12.10
+new file mode 100644
+index 0000000..b8f8f69
+--- /dev/null
++++ b/dist/changes-5.12.10
+@@ -0,0 +1,46 @@
++Qt 5.12.10 is a bug-fix release. It maintains both forward and backward
++compatibility (source and binary) with Qt 5.12.9.
++
++For more details, refer to the online documentation included in this
++distribution. The documentation is also available online:
++
++  https://doc.qt.io/qt-5.12/index.html
++
++The Qt version 5.12 series is binary compatible with the 5.11.x series.
++Applications compiled for 5.11 will continue to run with 5.12.
++
++Some of the changes listed in this file include issue tracking numbers
++corresponding to tasks in the Qt Bug Tracker:
++
++  https://bugreports.qt.io/
++
++Each of these identifiers can be entered in the bug tracker to obtain more
++information about a particular change.
++
++****************************************************************************
++*                          Library                                         *
++****************************************************************************
++
++ - This release fixes a number of cases where input fuzzing has
++   revealed that corrupt or pathological input could result in crashes
++   or undefined behavior:
++     oss-fuzz-23588
++     oss-fuzz-23606
++     oss-fuzz-23633
++     oss-fuzz-23643
++     oss-fuzz-23644
++     oss-fuzz-23731
++     oss-fuzz-24000
++     oss-fuzz-24028
++     oss-fuzz-24131
++     oss-fuzz-24146
++     oss-fuzz-24308
++     oss-fuzz-24611
++     oss-fuzz-24738
++
++Third-Party Code
++----------------
++
++ - XSVG license was re-classified to HPND-sell-variant, "Historical Permission
++   Notice and Disclaimer - sell variant"
++
+diff --git a/src/plugins/imageformats/svg/qsvgiohandler.cpp b/src/plugins/imageformats/svg/qsvgiohandler.cpp
+index bd39b2a..4136aaf 100644
+--- a/src/plugins/imageformats/svg/qsvgiohandler.cpp
++++ b/src/plugins/imageformats/svg/qsvgiohandler.cpp
+@@ -118,6 +118,24 @@ QSvgIOHandler::~QSvgIOHandler()
+     delete d;
+ }
+ 
++static bool isPossiblySvg(QIODevice *device, bool *isCompressed = nullptr)
++{
++    constexpr int bufSize = 64;
++    char buf[bufSize];
++    const qint64 readLen = device->peek(buf, bufSize);
++    if (readLen < 8)
++        return false;
++#    ifndef QT_NO_COMPRESS
++    if (quint8(buf[0]) == 0x1f && quint8(buf[1]) == 0x8b) {
++        if (isCompressed)
++            *isCompressed = true;
++        return true;
++    }
++#    endif
++    QTextStream str(QByteArray::fromRawData(buf, readLen));
++    QByteArray ba = str.read(16).trimmed().toLatin1();
++    return ba.startsWith("<?xml") || ba.startsWith("<svg") || ba.startsWith("<!--") || ba.startsWith("<!DOCTYPE svg");
++}
+ 
+ bool QSvgIOHandler::canRead() const
+ {
+@@ -126,15 +144,9 @@ bool QSvgIOHandler::canRead() const
+     if (d->loaded && !d->readDone)
+         return true;        // Will happen if we have been asked for the size
+ 
+-    QByteArray buf = device()->peek(16);
+-#ifndef QT_NO_COMPRESS
+-    if (buf.startsWith("\x1f\x8b")) {
+-        setFormat("svgz");
+-        return true;
+-    } else
+-#endif
+-    if (buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--") || buf.contains("<!DOCTYPE svg")) {
+-        setFormat("svg");
++    bool isCompressed = false;
++    if (isPossiblySvg(device(), &isCompressed)) {
++        setFormat(isCompressed ? "svgz" : "svg");
+         return true;
+     }
+     return false;
+@@ -260,12 +272,7 @@ bool QSvgIOHandler::supportsOption(ImageOption option) const
+ 
+ bool QSvgIOHandler::canRead(QIODevice *device)
+ {
+-    QByteArray buf = device->peek(16);
+-    return
+-#ifndef QT_NO_COMPRESS
+-            buf.startsWith("\x1f\x8b") ||
+-#endif
+-            buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--") || buf.contains("<!DOCTYPE svg");
++    return isPossiblySvg(device);
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
+index c937254..9dac05c 100644
+--- a/src/svg/qsvghandler.cpp
++++ b/src/svg/qsvghandler.cpp
+@@ -65,6 +65,7 @@
+ #include "private/qmath_p.h"
+ 
+ #include "float.h"
++#include <cmath>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+@@ -672,6 +673,9 @@ static qreal toDouble(const QChar *&str)
+             val = -val;
+     } else {
+         val = QByteArray::fromRawData(temp, pos).toDouble();
++        // Do not tolerate values too wild to be represented normally by floats
++        if (qFpClassify(float(val)) != FP_NORMAL)
++            val = 0;
+     }
+     return val;
+ 
+@@ -3043,6 +3047,8 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
+         ncy = toDouble(cy);
+     if (!r.isEmpty())
+         nr = toDouble(r);
++    if (nr < 0.5)
++        nr = 0.5;
+ 
+     qreal nfx = ncx;
+     if (!fx.isEmpty())
+diff --git a/src/svg/qsvgstructure.cpp b/src/svg/qsvgstructure.cpp
+index b89608b..89c9e4e 100644
+--- a/src/svg/qsvgstructure.cpp
++++ b/src/svg/qsvgstructure.cpp
+@@ -255,9 +255,13 @@ inline static bool isSupportedSvgFeature(const QString &str)
+     };
+ 
+     if (str.length() <= MAX_WORD_LENGTH && str.length() >= MIN_WORD_LENGTH) {
++        const char16_t unicode44 = str.at(44).unicode();
++        const char16_t unicode45 = str.at(45).unicode();
++        if (unicode44 >= sizeof(asso_values) || unicode45 >= sizeof(asso_values))
++            return false;
+         const int key = str.length()
+-                        + asso_values[str.at(45).unicode()]
+-                        + asso_values[str.at(44).unicode()];
++                        + asso_values[unicode45]
++                        + asso_values[unicode44];
+         if (key <= MAX_HASH_VALUE && key >= 0)
+             return str == QLatin1String(wordlist[key]);
+     }
+diff --git a/tests/auto/qsvgplugin/simple_Utf16BE.svg b/tests/auto/qsvgplugin/simple_Utf16BE.svg
+new file mode 100644
+index 0000000..c3312cb
+Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf16BE.svg differ
+diff --git a/tests/auto/qsvgplugin/simple_Utf16LE.svg b/tests/auto/qsvgplugin/simple_Utf16LE.svg
+new file mode 100644
+index 0000000..cdbeda9
+Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf16LE.svg differ
+diff --git a/tests/auto/qsvgplugin/simple_Utf32BE.svg b/tests/auto/qsvgplugin/simple_Utf32BE.svg
+new file mode 100644
+index 0000000..0d5d02c
+Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf32BE.svg differ
+diff --git a/tests/auto/qsvgplugin/simple_Utf32LE.svg b/tests/auto/qsvgplugin/simple_Utf32LE.svg
+new file mode 100644
+index 0000000..58a7159
+Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf32LE.svg differ
+diff --git a/tests/auto/qsvgplugin/simple_Utf8.svg b/tests/auto/qsvgplugin/simple_Utf8.svg
+new file mode 100644
+index 0000000..2052c48
+--- /dev/null
++++ b/tests/auto/qsvgplugin/simple_Utf8.svg
+@@ -0,0 +1,3 @@
++﻿<svg version="1.0" xmlns="http://www.w3.org/2000/svg">
++  <circle cx="50" cy="50" r="25" fill="#00ff00" />
++</svg>
+diff --git a/tests/auto/qsvgplugin/tst_qsvgplugin.cpp b/tests/auto/qsvgplugin/tst_qsvgplugin.cpp
+index e1f84f3..73bbe8b 100644
+--- a/tests/auto/qsvgplugin/tst_qsvgplugin.cpp
++++ b/tests/auto/qsvgplugin/tst_qsvgplugin.cpp
+@@ -61,6 +61,8 @@ private slots:
+     void checkSize_data();
+     void checkSize();
+     void checkImageInclude();
++    void encodings_data();
++    void encodings();
+ };
+ 
+ 
+@@ -145,6 +147,36 @@ void tst_QSvgPlugin::checkImageInclude()
+     logMessages.clear();
+ }
+ 
++void tst_QSvgPlugin::encodings_data()
++{
++    QTest::addColumn<QString>("filename");
++
++    QTest::newRow("utf-8") << QFINDTESTDATA("simple_Utf8.svg");
++    QTest::newRow("utf-16LE") << QFINDTESTDATA("simple_Utf16LE.svg");
++    QTest::newRow("utf-16BE") << QFINDTESTDATA("simple_Utf16BE.svg");
++    QTest::newRow("utf-32LE") << QFINDTESTDATA("simple_Utf32LE.svg");
++    QTest::newRow("utf-32BE") << QFINDTESTDATA("simple_Utf32BE.svg");
++}
++
++void tst_QSvgPlugin::encodings()
++{
++    QFETCH(QString, filename);
++
++    {
++        QFile file(filename);
++        file.open(QIODevice::ReadOnly);
++        QVERIFY(QSvgIOHandler::canRead(&file));
++    }
++
++    QFile file(filename);
++    file.open(QIODevice::ReadOnly);
++    QSvgIOHandler plugin;
++    plugin.setDevice(&file);
++    QVERIFY(plugin.canRead());
++    QImage img;
++    QVERIFY(plugin.read(&img));
++    QCOMPARE(img.size(), QSize(50, 50));
++}
+ 
+ QTEST_MAIN(tst_QSvgPlugin)
+ #include "tst_qsvgplugin.moc"
