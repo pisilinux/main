@@ -25,6 +25,7 @@ def setup():
                      --sbindir=/usr/sbin32 \
                      --disable-cups"
 
+        shelltools.export("GLIB_MKENUMS", "/usr/bin/glib-mkenums")
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CC())
         shelltools.export("CXXFLAGS", "%s -m32" % get.CFLAGS())
