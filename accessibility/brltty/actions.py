@@ -24,7 +24,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.removeDir("/run")
+    #pisitools.removeDir("/run")
     pisitools.removeDir("/var")
     pisitools.dodoc("LICENSE*", "README")
 	
