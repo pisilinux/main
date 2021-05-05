@@ -23,4 +23,4 @@ def install():
     mesontools.install()
     
     #shelltools.cd("..")
-    pisitools.dodoc("AUTHORS", "ChangeLog*", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README*")
