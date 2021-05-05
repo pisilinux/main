@@ -6,9 +6,12 @@
 
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dnautilus=false")
+    shelltools.system("sed -i -e 's:T1_initLib:T1_InitLib:' meson.build || die")
+    mesontools.configure("-Dnautilus=false -Dps=enabled -Dsystemduserunitdir=no -Dplatform=gnome")
 
 def build():
     mesontools.build()
