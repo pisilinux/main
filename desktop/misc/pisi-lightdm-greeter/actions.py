@@ -16,7 +16,7 @@ def setup():
     
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_libexec_DIR=/usr/libexec", sourceDir="..")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
 
 def build():
     shelltools.cd("build")
