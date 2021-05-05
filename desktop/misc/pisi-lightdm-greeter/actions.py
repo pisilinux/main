@@ -12,9 +12,11 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 
 def setup():
+    pisitools.dosed("src/main.cpp", "/usr/lib/at-spi2-core/at-spi-bus-launcher", "/usr/libexec/at-spi2/at-spi-bus-launcher")
+    
     shelltools.makedirs("build")
     shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_libexec_DIR=/usr/libexec", sourceDir="..")
 
 def build():
     shelltools.cd("build")
