@@ -12,7 +12,8 @@ from pisi.actionsapi import shelltools
 def install():
     pisitools.insinto("/opt/thunderbird", "*")
     shelltools.system("mkdir -p %s/usr/bin" % get.installDIR())
-    shelltools.system("ln -s %s/opt/thunderbird/thunderbird %s/usr/bin/thunderbird" % (get.installDIR(), get.installDIR()))
+    #shelltools.system("ln -s /opt/thunderbird/thunderbird /usr/bin/thunderbird" )
+    pisitools.dosym("/opt/thunderbird/thunderbird","/usr/bin/thunderbird")
     for i in ("16", "22", "24", "32", "48", "64", "128", "256"):
         pisitools.dodir("/usr/share/icons/hicolor/%sx%s/apps" % (i, i))
         pisitools.domove("/opt/thunderbird/chrome/icons/default/default%s.png" % (i), "/usr/share/icons/hicolor/%sx%s/apps" % (i, i),"thunderbird.png")
