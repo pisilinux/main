@@ -11,9 +11,10 @@ from pisi.actionsapi import get
 
 
 def setup():
+    pisitools.dosed("configure.ac", "/usr/libexec/at-spi-bus-launcher", "/usr/libexec/at-spi2/at-spi-bus-launcher")
+
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure(" --prefix=/usr \
-                                    --libexecdir=/usr/lib/lightdm \
                                     --sbindir=/usr/bin \
                                     --sysconfdir=/etc \
                                     --with-libxklavier \
@@ -21,6 +22,7 @@ def setup():
                                     --disable-libido \
                                     --disable-libindicator \
                                     --disable-static \
+                                    --enable-at-spi-command='/usr/libexec/at-spi2/at-spi-bus-launcher --launch-immediately' \
                                     --with-gtk3 \
                                     --enable-nls")
 def build():
