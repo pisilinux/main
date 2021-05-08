@@ -7,6 +7,7 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
@@ -29,6 +30,8 @@ def install():
 
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/usr/bin32")
+        for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
+            pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), "bin32", "bin")
         return
 
     pisitools.dodoc("COPYING", "CONTRIBUTING*", "README")
