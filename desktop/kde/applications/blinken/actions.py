@@ -17,4 +17,4 @@ def install():
     kde5.install()
 
 
-    pisitools.dodoc("AUTHORS", "COPYING-sjfonts", "COPYING.DOC", "COPYING", "README.packagers")
+    pisitools.dodoc("LICENSES/*")
