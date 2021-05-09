@@ -1,10 +1,10 @@
 diff -Nuar a/kwrite/main.cpp b/kwrite/main.cpp
---- a/kwrite/main.cpp	2020-01-06 21:00:06.000000000 +0300
-+++ b/kwrite/main.cpp	2020-02-03 19:11:37.589883499 +0300
-@@ -44,25 +44,8 @@
- 
- #include "../urlinfo.h"
- 
+--- a/kwrite/main.cpp	2021-04-14 18:06:06.000000000 +0300
++++ b/kwrite/main.cpp	2021-05-09 23:16:04.812841633 +0300
+@@ -30,31 +30,8 @@
+
+ #include <urlinfo.h>
+
 -#ifndef Q_OS_WIN
 -#include <unistd.h>
 -#endif
@@ -16,14 +16,20 @@ diff -Nuar a/kwrite/main.cpp b/kwrite/main.cpp
 -    // Prohibit using sudo or kdesu (but allow using the root user directly)
 -    if (getuid() == 0) {
 -        if (!qEnvironmentVariableIsEmpty("SUDO_USER")) {
--            std::cout << "Executing KWrite with sudo is not possible due to unfixable security vulnerabilities." << std::endl;
+-            std::cout << "Executing KWrite with sudo is not possible due to unfixable security vulnerabilities. "
+-                         "It is also not necessary; simply use KWrite normally, and you will be prompted for "
+-                         "elevated privileges when saving documents if needed."
+-                      << std::endl;
 -            return EXIT_FAILURE;
 -        } else if (!qEnvironmentVariableIsEmpty("KDESU_USER")) {
--            std::cout << "Executing KWrite with kdesu is not possible due to unfixable security vulnerabilities." << std::endl;
+-            std::cout << "Executing KWrite with kdesu is not possible due to unfixable security vulnerabilities. "
+-                         "It is also not necessary; simply use KWrite normally, and you will be prompted for "
+-                         "elevated privileges when saving documents if needed."
+-                      << std::endl;
 -            return EXIT_FAILURE;
 -        }
 -    }
 -#endif
- 
+
      /**
       * enable high dpi support
