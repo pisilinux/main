@@ -21,4 +21,4 @@ def build():
 def install():
     cmaketools.install()
     
-    pisitools.dodoc("COPYING*", "ChangeLog", "README*", "TODO")
+    pisitools.dodoc("LICENSES/*")
