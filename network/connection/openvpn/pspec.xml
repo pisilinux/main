@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>openvpn</Name>
+        <Homepage>https://openvpn.net/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>service</IsA>
+        <PartOf>network.connection</PartOf>
+        <Summary>A full featured SSL VPN solution</Summary>
+        <Description>OpenVPN is a full-featured SSL VPN solution which can accomodate a wide range of configurations, including remote access, site-to-site VPNs, WiFi security, and enterprise-scale remote access solutions with load balancing, failover, and fine-grained access-controls.</Description>
+        <Archive sha1sum="95953448917005845e8d3586f93cd5291a0730b6" type="tarxz">https://swupdate.openvpn.org/community/releases/openvpn-2.5.2.tar.xz</Archive>
+        <AdditionalFiles>
+            <AdditionalFile permission="0755" target="openvpn-test.sh">openvpn-test.sh</AdditionalFile>
+        </AdditionalFiles>
+        <BuildDependencies>
+            <Dependency>git</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>iproute2</Dependency>
+            <Dependency>pam-devel</Dependency>
+            <Dependency>lz4-devel</Dependency>
+            <Dependency>lzo-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>p11-kit-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>openvpn</Name>
+        <Summary>A full featured SSL VPN solution</Summary>
+        <RuntimeDependencies>
+            <Dependency>lzo</Dependency>
+            <Dependency>lz4</Dependency>
+            <Dependency>pam</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>p11-kit</Dependency>
+            <Dependency>iproute2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/run/openvpn</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="config">/etc/openvpn</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="data">/usr/share/openvpn</Path>
+            <Path fileType="config">/usr/lib/tmpfiles.d/openvpn.conf</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/openvpn.conf">tmpfiles.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/openvpn/sample-config-files/roadwarrior-client.conf">roadwarrior-client.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/openvpn/sample-config-files/roadwarrior-server.conf">roadwarrior-server.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-05-10</Date>
+            <Version>2.5.2</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
