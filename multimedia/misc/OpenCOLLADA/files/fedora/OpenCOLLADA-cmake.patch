@@ -1,0 +1,62 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -84,7 +84,7 @@ macro(opencollada_add_lib
+ 			message(${name} " WARNING: Shared library support implemented for UNIX-like OS only")
+ 		endif ()
+ 		add_library(${name}_shared SHARED ${sources})
+-		set_target_properties(${name}_shared PROPERTIES OUTPUT_NAME ${name})
++		set_target_properties(${name}_shared PROPERTIES OUTPUT_NAME ${name} SOVERSION ${soversion})
+ 		foreach(target_lib ${target_libs})
+ 			if(TARGET ${target_lib}_shared)
+ 				target_link_libraries(${name}_shared ${target_lib}_shared)
+@@ -190,8 +190,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}
+ #-----------------------------------------------------------------------------
+ # Install vars
+ 
+-set(OPENCOLLADA_INST_INCLUDE ${CMAKE_INSTALL_PREFIX}/include/opencollada)
+-set(OPENCOLLADA_INST_LIBRARY ${CMAKE_INSTALL_PREFIX}/lib/opencollada)
++set(OPENCOLLADA_INST_INCLUDE ${INCLUDE_INSTALL_DIR})
++set(OPENCOLLADA_INST_LIBRARY ${LIB_INSTALL_DIR})
+ set(OPENCOLLADA_INST_CMAKECONFIG ${OPENCOLLADA_INST_LIBRARY}/cmake)
+ 
+ 
+@@ -274,7 +274,10 @@ add_subdirectory(common/libftoa)
+ add_subdirectory(${EXTERNAL_LIBRARIES}/UTF)
+ add_subdirectory(common/libBuffer)
+ add_subdirectory(${EXTERNAL_LIBRARIES}/MathMLSolver)
+-add_subdirectory(${EXTERNAL_LIBRARIES}/zlib)
++#add_subdirectory(${EXTERNAL_LIBRARIES}/zlib)
++pkg_check_modules(ZLIB REQUIRED zlib)
++message(STATUS "zlib libraries: ${ZLIB_LIBRARIES}")
++set(zlib_shared ${ZLIB_LIBRARIES})
+ 
+ # building OpenCOLLADA libs
+ add_subdirectory(COLLADABaseUtils)
+--- a/DAEValidator/CMakeLists.txt
++++ b/DAEValidator/CMakeLists.txt
+@@ -83,7 +83,7 @@ endif ()
+ if (USE_STATIC)
+         list(APPEND Libraries zlib_static)
+     else ()
+-        list(APPEND Libraries zlib_shared)
++        list(APPEND Libraries ${zlib_shared})
+     endif ()
+ if (WIN32)
+ 	list(APPEND Libraries ws2_32.lib)
+@@ -158,7 +158,7 @@ if (WIN32 AND ${CMAKE_MAJOR_VERSION}.${C
+ 	if (USE_STATIC)
+ 		list(APPEND Libraries xml_static zlib_static)
+ 	else ()
+-		list(APPEND Libraries xml_shared zlib_shared)
++		list(APPEND Libraries xml_shared ${zlib_shared})
+ 	endif ()
+ 	if (WIN32)
+ 		list(APPEND Libraries ws2_32.lib)
+@@ -211,7 +211,4 @@ endif ()
+ # zlib
+ if (USE_STATIC)
+ 	add_dependencies(DAEValidatorExecutable zlib_static)
+-else ()
+-	add_dependencies(DAEValidatorExecutable zlib_shared)
+ endif ()
+-include_directories("../Externals/zlib/include")
