@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>OpenCOLLADA</Name>
+        <Homepage>https://collada.org/mediawiki/index.php/OpenCOLLADA</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>app</IsA>
+        <Summary>Collada 3D import and export libraries</Summary>
+        <Description>Collada 3B kütüphaneleri içe ve dışa aktarma</Description>
+        <Archive sha1sum="228625c1ddb8dc1bdb620d0a6532215effbff018" type="targz">https://github.com/KhronosGroup/OpenCOLLADA/archive/refs/tags/v1.6.68.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>libpcre-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+        </BuildDependencies>
+        -->
+        <Patches>
+            <Patch level="1">fedora/OpenCOLLADA-pcre.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>OpenCOLLADA</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpcre</Dependency>
+            <Dependency>libxml2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/ld.so.conf.d/opencollada.conf">opencollada.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>OpenCOLLADA-devel</Name>
+        <Summary>Development files for OpenCOLLADA</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">OpenCOLLADA</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-05-11</Date>
+            <Version>1.6.68</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

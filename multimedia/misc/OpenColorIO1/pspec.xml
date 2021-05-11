@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>OpenColorIO1</Name>
+        <Homepage>http://opencolorio.org/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>app</IsA>
+        <Summary>Enables color transforms and image display across graphics apps</Summary>
+        <Description>Grafik uygulamalarında renk dönüşümlerini ve görüntü ekranını etkinleştirir</Description>
+        <Archive sha1sum="511bbea2ad361ee59b067be85544518f7502fe1c" type="targz">https://github.com/AcademySoftwareFoundation/OpenColorIO/archive/refs/tags/v1.1.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>yaml-cpp</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>tinyxml-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+<!--             <Dependency>openimageio-devel</Dependency> -->
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">8d48ee8da42de2d878db7b42586db8b3c67f83e1.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>OpenColorIO1</Name>
+        <RuntimeDependencies>
+            <Dependency>lcms2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>tinyxml</Dependency>
+<!--             <Dependency>openimageio</Dependency> -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/ocio</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>OpenColorIO1-devel</Name>
+        <Summary>Development files for OpenColorIO1</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">OpenColorIO1</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-05-11</Date>
+            <Version>1.1.1</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
