@@ -13,5 +13,5 @@ def build():
 def install():
 	pythonmodules.install(pyVer="3")
 
-	pisitools.dodoc("AUTHORS", "CHANGELOG", "README.md")
+	pisitools.dodoc("AUTHORS", "PKG-INFO", "README.md")
 
