@@ -8,7 +8,6 @@ from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
 
 def build():
-	
 	pythonmodules.compile(pyVer="3")
 
 def install():
