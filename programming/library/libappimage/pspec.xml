@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libappimage</Name>
+        <Homepage>https://appimage.org/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv3</License>
+        <IsA>library</IsA>
+        <Summary>Reference implementation of the AppImage specification</Summary>
+        <Description>Reference implementation of the AppImage specification</Description>
+        <Archive sha1sum="bee039f3551c2a9cf8af1694fb782260254d1828" type="targz">https://github.com/AppImage/libappimage/archive/refs/tags/v1.0.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>vim</Dependency>
+            <Dependency>wget</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>librsvg-devel</Dependency>
+            <Dependency>desktop-file-utils</Dependency>
+            <Dependency>libarchive-devel</Dependency>
+            <Dependency>squashfuse-devel</Dependency>
+            <Dependency>xdg-utils-cxx-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">libappimage-gcc10.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libappimage</Name>
+        <RuntimeDependencies>
+            <Dependency>boost</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>librsvg</Dependency>
+            <Dependency>libarchive</Dependency>
+            <Dependency>squashfuse</Dependency>
+            <Dependency>xdg-utils-cxx</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libappimage-devel</Name>
+        <Summary>Development files for libappimage</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libappimage</Dependency>
+            <Dependency>xdg-utils-cxx-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-05-19</Date>
+            <Version>1.0.3</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
