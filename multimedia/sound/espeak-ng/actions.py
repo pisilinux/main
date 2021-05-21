@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("sh ./autogen.sh")
-    autotools.configure("--includedir=/usr/include/espeak-ng \
+    autotools.configure("--includedir=/usr/include \
                          --with-extdict-{ru,zh,zhy}")
 
 def build():
@@ -21,8 +21,8 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    pisitools.remove("/usr/bin/speak")
-    pisitools.remove("/usr/bin/espeak")
-    
-    
+    pisitools.rename("/usr/bin/speak", "speak-ng")
+    pisitools.rename("/usr/bin/espeak", "espeak-ng")
+    pisitools.removeDir("/usr/include/espeak")
+
     pisitools.dodoc("AUTHORS", "CHANGELOG*", "COPYING*", "NEWS", "README")
