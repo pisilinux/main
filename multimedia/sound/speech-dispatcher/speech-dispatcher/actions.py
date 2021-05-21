@@ -13,12 +13,15 @@ def setup():
     shelltools.system("sed -i 's/cicero //g' configure.ac")
     shelltools.system("sed -i 's/sd_cicero//g' src/modules/Makefile.am")
     
+    pisitools.cflags.add("-fcommon")
     #autotools.autoreconf("-i")
     autotools.configure("--disable-static \
                          --enable-shared \
                          --without-flite \
-                         --with-alsa \
+                         --without-espeak \
+                         --with-espeak-ng \
                          --with-espeak \
+                         --with-alsa \
                          --with-libao \
                          --with-pulse \
                          --with-ibmtts=no \
