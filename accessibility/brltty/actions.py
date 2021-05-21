@@ -11,10 +11,12 @@ from pisi.actionsapi import shelltools
 
 def setup():
     pisitools.flags.add(" -lspeechd")
+    shelltools.export("PYTHON","/usr/bin/python3")
     autotools.configure(" \
                 --with-tables-directory=/usr/share/brltty \
                 --with-screen-driver=lx \
                 --enable-gpm \
+                --with-espeak \
                 --with-install-root='%s'  \
                 --with-writable-directory='/run/brltty' \
                 --disable-java-bindings" % get.installDIR())
@@ -24,6 +26,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s install-udev" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s install-polkit" % get.installDIR())
     #pisitools.removeDir("/run")
     pisitools.removeDir("/var")
     pisitools.dodoc("LICENSE*", "README")
