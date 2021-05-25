@@ -4,9 +4,11 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import shelltools, autotools, pisitools, get
+
+NoStrip = ["/"]
+shelltools.export("CFLAGS", get.CFLAGS())
+shelltools.export("LDFLAGS", get.LDFLAGS())
 
 def setup():
 	autotools.rawConfigure("--prefix=/usr")
@@ -16,6 +18,4 @@ def build():
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-	pisitools.dodoc("ChangeLog", "ReadMe*")
 
