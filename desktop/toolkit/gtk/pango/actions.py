@@ -28,7 +28,7 @@ def setup():
         options += "-Dintrospection=disabled \
                     --bindir=/usr/bin32"
     else:
-        options += "-Dintrospection=enabled -Dgtk_doc=false"
+        options += "-Dintrospection=enabled -Dgtk_doc=true"
         
     #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     
