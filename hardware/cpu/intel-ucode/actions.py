@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def build():
     shelltools.system("rm -f intel-ucode{,-with-caveats}/list")
     shelltools.system("mkdir -p kernel/x86/microcode")
-    shelltools.system("iucode_tool --write-earlyfw=intel-ucode.cpio intel-ucode{,-with-caveats}/")
+    shelltools.system("iucode_tool --write-earlyfw=intel-ucode.img intel-ucode{,-with-caveats}/")
     shelltools.chmod(get.curDIR() + "/intel-ucode.img", 0644)
 
 def install():
