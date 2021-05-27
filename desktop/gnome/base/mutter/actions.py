@@ -13,7 +13,6 @@ def setup():
                           -Dnative_backend=true \
                           -Dprofiler=false \
                           -Dintrospection=true \
-                          -Dxwayland_path=/usr/bin/Xwayland \
                           -Dxwayland_initfd=disabled \
                           -Dinstalled_tests=false")
 
