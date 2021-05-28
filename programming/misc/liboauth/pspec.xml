@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>liboauth</Name>
+        <Homepage>http://liboauth.sourceforge.net</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>C library implementing the OAuth secure authentication protocol</Summary>
+        <Description>liboauth is a collection of POSIX-c functions implementing the OAuth Core RFC 5849 standard.</Description>
+        <Archive sha1sum="791dbb4166b5d2c843c8ff48ac17284cc0884af2" type="targz">mirrors://sourceforge/liboauth/liboauth-1.0.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>nss-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>liboauth-1.0.1-doxygen-out-of-tree.patch</Patch>
+            <Patch>liboauth-1.0.3-openssl-1.1.patch</Patch>
+            <Patch>liboauth-1.0.3-openssl-1.1_2.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>liboauth</Name>
+        <RuntimeDependencies>
+            <Dependency>nss</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>nspr</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/lib*.so*</Path>
+            <Path fileType="localedata">/usr/share/licenses</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>liboauth-devel</Name>
+        <Summary>Development files for liboauth</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">liboauth</Dependency>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-05-28</Date>
+            <Version>1.0.3</Version>
+            <Comment>First release for Pisi Linux</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
+    </History>
+</PISI>
