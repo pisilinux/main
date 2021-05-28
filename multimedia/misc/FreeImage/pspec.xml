@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>FreeImage</Name>
+        <Homepage>http://freeimage.sourceforge.net</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>An Open Source library project</Summary>
+        <Description>FreeImage is an Open Source library project for developers who would like to support popular graphics image formats like PNG, BMP, JPEG, TIFF and others as needed by today's multimedia applications.</Description>
+        <Archive sha1sum="38daa9d8f1bca2330a2eaa42ec66fbe6ede7dce9" type="zip">https://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.18.0/FreeImage3180.zip</Archive>
+        <BuildDependencies>
+            <Dependency>dos2unix</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>webp-devel</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>libmng-devel</Dependency>
+            <Dependency>libraw-devel</Dependency>
+            <Dependency>openexr-devel</Dependency>
+            <Dependency>mesa-glu-devel</Dependency>
+            <Dependency>openjpeg2-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <!-- Note to the packager: Later, check whether
+            the package can use external raw package or not
+            <Dependency>libopenraw-devel</Dependency>
+            -->
+        </BuildDependencies>
+        <Patches>
+            <Patch>freeimage-libraw-0.20.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>FreeImage</Name>
+        <RuntimeDependencies>
+            <Dependency>tiff</Dependency>
+            <Dependency>webp</Dependency>
+            <Dependency>mesa</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libmng</Dependency>
+            <Dependency>libraw</Dependency>
+            <Dependency>dos2unix</Dependency>
+            <Dependency>mesa-glu</Dependency>
+            <Dependency>openjpeg2</Dependency>
+            <Dependency>openexr-libs</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <!--
+            <Dependency>libopenraw</Dependency>
+            -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>FreeImage-devel</Name>
+        <Summary>Development files for FreeImage</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">FreeImage</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-05-25</Date>
+            <Version>3.18.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
