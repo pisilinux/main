@@ -1,0 +1,263 @@
+From b7726d558c10c2c3b6c987954a0367116ccdfc18 Mon Sep 17 00:00:00 2001
+From: Mart Raudsepp <leio@gentoo.org>
+Date: Mon, 4 Mar 2019 01:22:13 +0200
+Subject: [PATCH 3/5] build: Make grilo and gnome-online-accounts optional
+
+grilo requires goa
+---
+ meson.build                            | 15 ++++++++++++++-
+ meson_options.txt                      |  2 ++
+ panels/background/bg-pictures-source.c | 20 ++++++++++++++++++++
+ panels/background/meson.build          |  7 +++++--
+ panels/meson.build                     |  5 ++++-
+ shell/cc-panel-loader.c                |  4 ++++
+ 6 files changed, 49 insertions(+), 4 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index acf68a1da..24f54815f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -124,7 +124,7 @@ gio_dep = dependency('gio-2.0')
+ glib_dep = dependency('glib-2.0', version: '>= 2.56.0')
+ gnome_desktop_dep = dependency('gnome-desktop-3.0', version: '>= 3.33.4')
+ gnome_settings_dep = dependency('gnome-settings-daemon', version: '>= 3.27.90')
+-goa_dep = dependency('goa-1.0', version: goa_req_version)
++goa_dep = dependency('goa-1.0', version: goa_req_version, required: get_option('goa'))
+ gsettings_desktop_dep = dependency('gsettings-desktop-schemas', version: '>= 3.37.1')
+ libxml_dep = dependency('libxml-2.0')
+ polkit_gobject_dep = dependency('polkit-gobject-1', version: '>= 0.114')
+@@ -138,6 +138,19 @@ epoxy_dep = dependency('epoxy')
+ 
+ m_dep = cc.find_library('m')
+ 
++enable_goa = goa_dep.found()
++config_h.set('BUILD_GOA', enable_goa,
++             description: 'Define to 1 to build the Online Accounts panel')
++
++grilo_dep = dependency('grilo-0.3', version: '>= 0.3.0', required: get_option('grilo'))
++enable_grilo = grilo_dep.found()
++config_h.set('HAVE_GRILO', enable_grilo,
++             description: 'Define to 1 to enable grilo support')
++
++if enable_grilo and not enable_goa
++  error('Grilo support requires goa')
++endif
++
+ common_deps = [
+   gio_dep,
+   glib_dep,
+diff --git a/meson_options.txt b/meson_options.txt
+index 5c558557d..17e3551fa 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,6 +1,8 @@
+ option('bluetooth', type: 'boolean', value: true, description: 'build with Bluetooth support')
+ option('cheese', type: 'boolean', value: true, description: 'build with cheese webcam support')
+ option('documentation', type: 'boolean', value: false, description: 'build documentation')
++option('goa', type: 'feature', value: 'auto', description: 'build with gnome-online-accounts support')
++option('grilo', type: 'feature', value: 'auto', description: 'build with grilo support (background panel)')
+ option('ibus', type: 'boolean', value: true, description: 'build with IBus support')
+ option('kerberos', type: 'feature', value: 'auto', description: 'build with kerberos support')
+ option('network_manager', type: 'boolean', value: true, description: 'build with NetworkManager support')
+diff --git a/panels/background/bg-pictures-source.c b/panels/background/bg-pictures-source.c
+index 3a3027b13..edc6c3247 100644
+--- a/panels/background/bg-pictures-source.c
++++ b/panels/background/bg-pictures-source.c
+@@ -23,13 +23,17 @@
+ 
+ #include "bg-pictures-source.h"
+ 
++#ifdef HAVE_GRILO
+ #include "cc-background-grilo-miner.h"
++#endif
+ #include "cc-background-item.h"
+ 
+ #include <string.h>
+ #include <cairo-gobject.h>
+ #include <gio/gio.h>
++#ifdef HAVE_GRILO
+ #include <grilo.h>
++#endif
+ #include <libgnome-desktop/gnome-desktop-thumbnail.h>
+ #include <gdesktop-enums.h>
+ 
+@@ -43,7 +47,9 @@ struct _BgPicturesSource
+ 
+   GCancellable *cancellable;
+ 
++#ifdef HAVE_GRILO
+   CcBackgroundGriloMiner *grl_miner;
++#endif
+ 
+   GFileMonitor *picture_dir_monitor;
+   GFileMonitor *cache_dir_monitor;
+@@ -83,7 +89,9 @@ bg_pictures_source_dispose (GObject *object)
+       g_clear_object (&source->cancellable);
+     }
+ 
++#ifdef HAVE_GRILO
+   g_clear_object (&source->grl_miner);
++#endif
+ 
+   G_OBJECT_CLASS (bg_pictures_source_parent_class)->dispose (object);
+ }
+@@ -392,7 +400,9 @@ add_single_file (BgPicturesSource     *bg_source,
+   const gchar *pictures_path;
+   g_autoptr(GFile) pictures_dir = NULL;
+   g_autoptr(GFile) cache_dir = NULL;
++#ifdef HAVE_GRILO
+   GrlMedia *media;
++#endif
+ 
+   /* find png and jpeg files */
+   if (!content_type)
+@@ -432,14 +442,17 @@ add_single_file (BgPicturesSource     *bg_source,
+                 "source-url", source_uri,
+ 		NULL);
+ 
++#ifdef HAVE_GRILO
+   media = g_object_get_data (G_OBJECT (file), "grl-media");
+   if (media == NULL)
++#endif
+     {
+       g_object_set_data_full (G_OBJECT (file), "item", g_object_ref (item), g_object_unref);
+       g_file_read_async (file, G_PRIORITY_DEFAULT,
+                          bg_source->cancellable,
+                          picture_opened_for_read, bg_source);
+     }
++#ifdef HAVE_GRILO
+   else
+     {
+       g_autoptr(GFile) native_file = NULL;
+@@ -476,6 +489,7 @@ add_single_file (BgPicturesSource     *bg_source,
+                          picture_copied_for_read,
+                          bg_source);
+     }
++#endif
+ 
+   retval = TRUE;
+ 
+@@ -496,6 +510,7 @@ add_single_file_from_info (BgPicturesSource *bg_source,
+   return add_single_file (bg_source, file, content_type, mtime);
+ }
+ 
++#ifdef HAVE_GRILO
+ static gboolean
+ add_single_file_from_media (BgPicturesSource *bg_source,
+                             GFile            *file,
+@@ -520,6 +535,7 @@ add_single_file_from_media (BgPicturesSource *bg_source,
+ 
+   return add_single_file (bg_source, file, content_type, (guint64) mtime_unix);
+ }
++#endif
+ 
+ gboolean
+ bg_pictures_source_add (BgPicturesSource     *bg_source,
+@@ -804,6 +820,7 @@ monitor_path (BgPicturesSource *self,
+   return monitor;
+ }
+ 
++#ifdef HAVE_GRILO
+ static void
+ media_found_cb (BgPicturesSource *self, GrlMedia *media)
+ {
+@@ -815,6 +832,7 @@ media_found_cb (BgPicturesSource *self, GrlMedia *media)
+   g_object_set_data_full (G_OBJECT (file), "grl-media", g_object_ref (media), g_object_unref);
+   add_single_file_from_media (self, file, media);
+ }
++#endif
+ 
+ static void
+ bg_pictures_source_init (BgPicturesSource *self)
+@@ -837,9 +855,11 @@ bg_pictures_source_init (BgPicturesSource *self)
+   cache_path = bg_pictures_source_get_cache_path ();
+   self->cache_dir_monitor = monitor_path (self, cache_path);
+ 
++#ifdef HAVE_GRILO
+   self->grl_miner = cc_background_grilo_miner_new ();
+   g_signal_connect_object (self->grl_miner, "media-found", G_CALLBACK (media_found_cb), self, G_CONNECT_SWAPPED);
+   cc_background_grilo_miner_start (self->grl_miner);
++#endif
+ }
+ 
+ BgPicturesSource *
+diff --git a/panels/background/meson.build b/panels/background/meson.build
+index e9fa398d4..db18ffd8c 100644
+--- a/panels/background/meson.build
++++ b/panels/background/meson.build
+@@ -81,20 +81,23 @@ sources = common_sources + files(
+   'bg-source.c',
+   'bg-wallpapers-source.c',
+   'cc-background-chooser.c',
+-  'cc-background-grilo-miner.c',
+   'cc-background-item.c',
+   'cc-background-panel.c',
+   'cc-background-preview.c',
+   'cc-background-xml.c',
+ )
+ 
++if enable_grilo
++  sources += files('cc-background-grilo-miner.c')
++endif
++
+ deps = common_deps + [
+   gdk_pixbuf_dep,
+   gnome_desktop_dep,
+   goa_dep,
+   libxml_dep,
+   dependency('cairo-gobject'),
+-  dependency('grilo-0.3', version: '>= 0.3.0')
++  grilo_dep
+ ]
+ 
+ cflags += [
+diff --git a/panels/meson.build b/panels/meson.build
+index 6798f6997..90bb3deef 100644
+--- a/panels/meson.build
++++ b/panels/meson.build
+@@ -16,7 +16,6 @@ panels = [
+   'microphone',
+   'mouse',
+   'notifications',
+-  'online-accounts',
+   'power',
+   'printers',
+   'region',
+@@ -29,6 +28,10 @@ panels = [
+   'user-accounts'
+ ]
+ 
++if enable_goa
++  panels += ['online-accounts']
++endif
++
+ if enable_network_manager
+   panels += ['network']
+ endif
+diff --git a/shell/cc-panel-loader.c b/shell/cc-panel-loader.c
+index f20384394..b10611c80 100644
+--- a/shell/cc-panel-loader.c
++++ b/shell/cc-panel-loader.c
+@@ -48,7 +48,9 @@ extern GType cc_network_panel_get_type (void);
+ extern GType cc_wifi_panel_get_type (void);
+ #endif /* BUILD_NETWORK */
+ extern GType cc_notifications_panel_get_type (void);
++#ifdef BUILD_GOA
+ extern GType cc_goa_panel_get_type (void);
++#endif /* BUILD_GOA */
+ extern GType cc_power_panel_get_type (void);
+ extern GType cc_printers_panel_get_type (void);
+ extern GType cc_region_panel_get_type (void);
+@@ -112,7 +114,9 @@ static CcPanelLoaderVtable default_panels[] =
+   PANEL_TYPE("wifi",             cc_wifi_panel_get_type,                 cc_wifi_panel_static_init_func),
+ #endif
+   PANEL_TYPE("notifications",    cc_notifications_panel_get_type,        NULL),
++#ifdef BUILD_GOA
+   PANEL_TYPE("online-accounts",  cc_goa_panel_get_type,                  NULL),
++#endif
+   PANEL_TYPE("power",            cc_power_panel_get_type,                NULL),
+   PANEL_TYPE("printers",         cc_printers_panel_get_type,             NULL),
+   PANEL_TYPE("region",           cc_region_panel_get_type,               NULL),
+-- 
+2.26.3
+
