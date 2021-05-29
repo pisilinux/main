@@ -23,10 +23,11 @@
             <Dependency>meson</Dependency>
             <Dependency>python3-dbusmock</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
-            <Dependency>vala</Dependency>
+            <Dependency>vala-devel</Dependency>
         </BuildDependencies>
         <Archive sha1sum="d579d056ffe97f53eea274f34f34faaa3c08d18d" type="targz">https://gitlab.gnome.org/GNOME/folks/-/archive/0.14/folks-0.14.tar.gz</Archive>
     </Source>
+
     <Package>
         <Name>folks</Name>
         <Summary>Library to aggregates people into metacontacts</Summary>
@@ -35,21 +36,31 @@
             <Dependency>libgee</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>telepathy-glib</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>readline</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib/folks</Path>
             <Path fileType="library">/usr/lib/girepository-1.0</Path>
-            <Path fileType="library">/usr/lib*.so*</Path>
+            <Path fileType="library">/usr/lib/lib*.so*</Path>
             <Path fileType="data">/usr/share/GConf</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/glib-2.0</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
         </Files>
     </Package>
+
     <Package>
         <Name>folks-devel</Name>
         <Summary>Development files for folks</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">folks</Dependency>
+            <Dependency>evolution-data-server-devel</Dependency>
+            <Dependency>libgee-devel</Dependency>
+            <Dependency>telepathy-glib-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
@@ -57,6 +68,7 @@
             <Path fileType="data">/usr/share/vala</Path>
         </Files>
     </Package>
+
     <History>
         <Update release="1">
             <Date>2021-04-21</Date>
