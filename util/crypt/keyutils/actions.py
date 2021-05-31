@@ -7,6 +7,10 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+
+def setup():
+    shelltools.system("sed -i 's:$(LIBDIR)/$(PKGCONFIG_DIR):/usr/lib/pkgconfig:' Makefile")
 
 def build():
     autotools.make("NO_ARLIB=1 LIBDIR=/lib USRLIBDIR=/usr/lib NO_GLIBC_KEYERR=1 CFLAGS=\"%s\"" % get.CFLAGS())
