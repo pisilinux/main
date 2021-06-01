@@ -2,20 +2,21 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
+from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("""sed -i -r 's:"(/desktop):"/org/gnome\1:' schema/*.xml""")
-    autotools.configure("--disable-static \
+    shelltools.system("sed -i 's:"'/desktop:'"/org:' " + get.curDIR() + "/schema/*.xml")
+
+    autotools.configure("--prefix=/usr \
+                         --sysconfdir=/etc \
                          --with-pam-dir=/lib/security \
-                         --disable-doc")
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+                         --enable-valgrind")
+
 
 def build():
     autotools.make()
@@ -23,4 +24,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("NEWS", "README", "COPYING", "AUTHORS", "ChangeLog")
