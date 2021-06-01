@@ -29,18 +29,17 @@ def setup():
 
     #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
     
-	options = "-Dgtk_doc=true \
-	           -Dx11=true \
+	options = "-Dx11=true \
 	           -Dbuiltin_loaders=png \
 	           -Djasper=true \
 			"
 	
 	if get.buildTYPE()=="emul32" :
-		options += "-Dintrospection=false \
+		options += "-Dintrospection=disabled \
                     -Dinstalled_tests=false \
 		            --bindir=/usr/bin32"
 	else:
-		options += "-Dintrospection=true"
+		options += "-Dintrospection=enabled -Dgtk_doc=true"
 		
 	mesontools.configure(options)
 

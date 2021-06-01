@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>module-nvidia430</Name>
+        <Name>module-nvidia465</Name>
         <Homepage>http://www.nvidia.com</Homepage>
         <Packager>
             <Name>Marcin Bojara</Name>
@@ -11,9 +11,9 @@
         <License>NVIDIA</License>
         <Summary>NVIDIA drivers for GeForce 6xxx and newer GPUs</Summary>
         <Description>NVIDIA graphics drivers provide optimized 2D/3D performance.</Description>
-        <Archive sha1sum="3ff62a457f2570eb67c3ce7fb3800ddcbe54164e" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/430.64/NVIDIA-Linux-x86_64-430.64.run</Archive>
+        <Archive sha1sum="16ca8a3a1416f7fc62e22b2a1cab959c2a07211a" type="binary">http://http.download.nvidia.com/XFree86/Linux-x86_64/465.31/NVIDIA-Linux-x86_64-465.31.run</Archive>
         <BuildDependencies>
-            <Dependency version="5.10.11">kernel-module-headers</Dependency>
+            <Dependency version="5.10.39">kernel-module-headers</Dependency>
             <Dependency>libX11-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
@@ -27,12 +27,12 @@
     </Source>
 
     <Package>
-        <Name>module-nvidia430</Name>
+        <Name>module-nvidia465</Name>
         <IsA>driver</IsA>
         <Summary>Kernel module for current NVIDIA graphics driver releases</Summary>
         <RuntimeDependencies>
-            <Dependency version="5.10.11">kernel</Dependency>
-<!--             <Dependency release="current">module-nvidia430-userspace</Dependency> -->
+            <Dependency version="5.10.39">kernel</Dependency>
+<!--             <Dependency release="current">module-nvidia465-userspace</Dependency> -->
         </RuntimeDependencies>
         <Files>
             <Path fileType="library" permanent="true">/lib/modules</Path>
@@ -45,14 +45,14 @@
             <Flag>noDelta</Flag>
         </BuildFlags>
         <Conflicts>
-            <Package>nvidia430-dkms</Package>
+            <Package>nvidia465-dkms</Package>
         </Conflicts>
     </Package>
 
     <!--<Package>
-        <Name>module-nvidia430-userspace</Name>
+        <Name>module-nvidia465-userspace</Name>
         <IsA>data</IsA>
-        <Summary>Modprobe rules for nvidia430 kernel driver</Summary>
+        <Summary>Modprobe rules for nvidia465 kernel driver</Summary>
         <Files>
             <Path fileType="data">/etc/modprobe.d</Path>
         </Files>
@@ -65,7 +65,7 @@
         <Name>nvidia-settings</Name>
         <IsA>app:gui</IsA>
         <PartOf>hardware.graphics</PartOf>
-        <Summary>Settings for nvidia430 kernel driver</Summary>
+        <Summary>Settings for nvidia465 kernel driver</Summary>
         <RuntimeDependencies>
             <Dependency>atk</Dependency>
             <Dependency>gtk2</Dependency>
@@ -76,7 +76,7 @@
             <Dependency>libX11</Dependency>
             <Dependency>libXext</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
-            <Dependency version="current">module-nvidia430</Dependency>
+            <Dependency version="current">module-nvidia465</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/nvidia-settings</Path>
@@ -95,9 +95,9 @@
         <Name>nvidia-xconfig</Name>
         <IsA>app:console</IsA>
         <PartOf>hardware.graphics</PartOf>
-        <Summary>Xconfig file for nvidia430 kernel driver</Summary>
+        <Summary>Xconfig file for nvidia465 kernel driver</Summary>
         <RuntimeDependencies>
-            <Dependency version="current">module-nvidia430</Dependency>
+            <Dependency version="current">module-nvidia465</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/nvidia-xconfig</Path>
@@ -106,7 +106,7 @@
     </Package>-->
 
     <Package>
-        <Name>xorg-video-nvidia430</Name>
+        <Name>xorg-video-nvidia465</Name>
         <IsA>driver</IsA>
         <RuntimeDependencies>
             <Dependency>libXext</Dependency>
@@ -117,8 +117,8 @@
             <Dependency>vulkan</Dependency>
             <Dependency>libglvnd</Dependency>         
             <AnyDependency>
-                <Dependency version="current">module-nvidia430</Dependency>
-                <Dependency>nvidia430-dkms</Dependency>
+                <Dependency version="current">module-nvidia465</Dependency>
+                <Dependency>nvidia465-dkms</Dependency>
             </AnyDependency>
         </RuntimeDependencies>
         <Files>
@@ -126,7 +126,7 @@
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="data">/usr/share/X11</Path>
-            <Path fileType="data">/usr/share/nvidia430</Path>
+            <Path fileType="data">/usr/share/nvidia465</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
         </Files>
@@ -139,9 +139,9 @@
     </Package>
 
     <Package>
-        <Name>xorg-video-nvidia430-32bit</Name>
+        <Name>xorg-video-nvidia465-32bit</Name>
         <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for xorg-video-nvidia430</Summary>
+        <Summary>32-bit shared libraries for xorg-video-nvidia465</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>libvdpau-32bit</Dependency>
@@ -154,7 +154,7 @@
             <Dependency>opencl-icd-32bit</Dependency>
             <Dependency>vulkan-32bit</Dependency>
             <Dependency>libglvnd-32bit</Dependency>
-            <Dependency release="current">xorg-video-nvidia430</Dependency>
+            <Dependency release="current">xorg-video-nvidia465</Dependency>
             <Dependency>atk</Dependency>
             <Dependency>gtk2</Dependency>
             <Dependency>gtk3</Dependency>
@@ -165,7 +165,7 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
-            <Path fileType="library">/usr/share/nvidia430/32bit-ld.so.conf</Path>
+            <Path fileType="library">/usr/share/nvidia465/32bit-ld.so.conf</Path>
         </Files>
         <BuildFlags>
             <Flag>noDelta</Flag>
@@ -173,40 +173,40 @@
     </Package>
 
     <Package>
-        <Name>nvidia430-dkms</Name>
+        <Name>nvidia465-dkms</Name>
         <IsA>driver</IsA>
         <Summary>NVIDIA driver sources for linux</Summary>
         <RuntimeDependencies>
             <Dependency>dkms</Dependency>
-            <Dependency>xorg-video-nvidia430</Dependency>
+            <Dependency>xorg-video-nvidia465</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="config">/etc/modprobe.d/nvidia430-dkms.conf</Path>
+            <Path fileType="config">/etc/modprobe.d/nvidia465-dkms.conf</Path>
             <Path fileType="data">/usr/src/nvidia*</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/nvidia430-dkms.conf">modprobe.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/modprobe.d/nvidia465-dkms.conf">modprobe.conf</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf">xorg.conf</AdditionalFile>
         </AdditionalFiles>
         <BuildFlags>
             <Flag>noDelta</Flag>
         </BuildFlags>
         <Conflicts>
-            <Package>module-nvidia430</Package>
+            <Package>module-nvidia465</Package>
             <Package>nvidia-current-dkms</Package>
             <Package>nvidia390-dkms</Package>
             <Package>nvidia340-dkms</Package>
-            <Package>nvidia430</Package>
+            <Package>nvidia465</Package>
         </Conflicts>
     </Package>
 
     <Package>
-        <Name>nvidia430</Name>
+        <Name>nvidia465</Name>
         <IsA>driver</IsA>
-        <Summary>Meata package for nvidia430 drivers</Summary>
+        <Summary>Meata package for nvidia465 drivers</Summary>
         <RuntimeDependencies>
-            <Dependency>module-nvidia430</Dependency>
-            <Dependency>xorg-video-nvidia430</Dependency>
+            <Dependency>module-nvidia465</Dependency>
+            <Dependency>xorg-video-nvidia465</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/var/tmp/nvidia</Path>
@@ -223,6 +223,13 @@
     </Package>
 
     <History>
+        <Update release="8">
+            <Date>2021-05-30</Date>
+            <Version>465.31</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="7">
             <Date>2021-01-29</Date>
             <Version>430.64</Version>
