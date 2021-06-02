@@ -1,17 +1,17 @@
 From f4d0b0eb899005b4b8b6388e1d8bb82cc0018fc8 Mon Sep 17 00:00:00 2001
 From: Mike Gilbert <floppym@gentoo.org>
-Date: Sun, 15 Nov 2020 08:37:23 +0000
+Date: Wed, 7 Apr 2021 08:50:04 +0000
 Subject: [PATCH] Disable various compiler configs
 
 ---
- build/config/compiler/BUILD.gn | 52 +++++++++++-----------------------
- 1 file changed, 17 insertions(+), 35 deletions(-)
+ build/config/compiler/BUILD.gn | 59 ++++++++++------------------------
+ 1 file changed, 17 insertions(+), 42 deletions(-)
 
 diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
-index 9d66490..a2bc09e 100644
+index 72ea590..539672d 100644
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -254,8 +254,6 @@ config("compiler") {
+@@ -273,8 +273,6 @@ config("compiler") {
  
    configs += [
      # See the definitions below.
@@ -20,25 +20,32 @@ index 9d66490..a2bc09e 100644
      ":compiler_codegen",
      ":compiler_deterministic",
    ]
-@@ -478,17 +476,6 @@ config("compiler") {
+@@ -518,24 +516,6 @@ config("compiler") {
      ldflags += [ "-Wl,-z,keep-text-section-prefix" ]
    }
  
 -  if (is_clang && !is_nacl && !use_xcode_clang) {
 -    cflags += [ "-fcrash-diagnostics-dir=" + clang_diagnostic_dir ]
 -
+-    # TODO(hans): Remove this once Clang generates better optimized debug info
+-    # by default. https://crbug.com/765793
 -    cflags += [
--      # TODO(hans): Remove this once Clang generates better optimized debug info
--      # by default. https://crbug.com/765793
 -      "-mllvm",
 -      "-instcombine-lower-dbg-declare=0",
 -    ]
+-    if (!is_debug && use_thin_lto && is_a_target_toolchain) {
+-      if (is_win) {
+-        ldflags += [ "-mllvm:-instcombine-lower-dbg-declare=0" ]
+-      } else {
+-        ldflags += [ "-Wl,-mllvm,-instcombine-lower-dbg-declare=0" ]
+-      }
+-    }
 -  }
 -
    # C11/C++11 compiler flags setup.
    # ---------------------------
    if (is_linux || is_chromeos || is_android || (is_nacl && is_clang) ||
-@@ -1574,7 +1561,7 @@ config("chromium_code") {
+@@ -1643,7 +1623,7 @@ config("chromium_code") {
        defines = [ "_HAS_NODISCARD" ]
      }
    } else {
@@ -47,7 +54,7 @@ index 9d66490..a2bc09e 100644
      if (treat_warnings_as_errors) {
        cflags += [ "-Werror" ]
  
-@@ -1583,10 +1570,6 @@ config("chromium_code") {
+@@ -1652,10 +1632,6 @@ config("chromium_code") {
        # well.
        ldflags = [ "-Werror" ]
      }
@@ -58,7 +65,7 @@ index 9d66490..a2bc09e 100644
  
      # In Chromium code, we define __STDC_foo_MACROS in order to get the
      # C99 macros on Mac and Linux.
-@@ -1595,15 +1578,6 @@ config("chromium_code") {
+@@ -1664,15 +1640,6 @@ config("chromium_code") {
        "__STDC_FORMAT_MACROS",
      ]
  
@@ -74,7 +81,7 @@ index 9d66490..a2bc09e 100644
      if (is_mac) {
        cflags_objc = [ "-Wobjc-missing-property-synthesis" ]
        cflags_objcc = [ "-Wobjc-missing-property-synthesis" ]
-@@ -2006,7 +1980,8 @@ config("default_stack_frames") {
+@@ -2068,7 +2035,8 @@ config("default_stack_frames") {
  }
  
  # Default "optimization on" config.
@@ -84,7 +91,7 @@ index 9d66490..a2bc09e 100644
    if (is_win) {
      if (chrome_pgo_phase != 2) {
        # Favor size over speed, /O1 must be before the common flags.
-@@ -2041,7 +2016,8 @@ config("optimize") {
+@@ -2103,7 +2071,8 @@ config("optimize") {
  }
  
  # Turn off optimizations.
@@ -94,7 +101,7 @@ index 9d66490..a2bc09e 100644
    if (is_win) {
      cflags = [
        "/Od",  # Disable optimization.
-@@ -2081,7 +2057,8 @@ config("no_optimize") {
+@@ -2143,7 +2112,8 @@ config("no_optimize") {
  # Turns up the optimization level. On Windows, this implies whole program
  # optimization and link-time code generation which is very expensive and should
  # be used sparingly.
@@ -104,7 +111,7 @@ index 9d66490..a2bc09e 100644
    if (is_nacl && is_nacl_irt) {
      # The NaCl IRT is a special case and always wants its own config.
      # Various components do:
-@@ -2113,7 +2090,8 @@ config("optimize_max") {
+@@ -2175,7 +2145,8 @@ config("optimize_max") {
  #
  # TODO(crbug.com/621335) - rework how all of these configs are related
  # so that we don't need this disclaimer.
@@ -114,7 +121,7 @@ index 9d66490..a2bc09e 100644
    if (is_nacl && is_nacl_irt) {
      # The NaCl IRT is a special case and always wants its own config.
      # Various components do:
-@@ -2138,7 +2116,8 @@ config("optimize_speed") {
+@@ -2200,7 +2171,8 @@ config("optimize_speed") {
    }
  }
  
@@ -124,7 +131,7 @@ index 9d66490..a2bc09e 100644
    cflags = [ "-O1" ] + common_optimize_on_cflags
    ldflags = common_optimize_on_ldflags
    visibility = [ ":default_optimization" ]
-@@ -2267,7 +2246,8 @@ config("win_pdbaltpath") {
+@@ -2319,7 +2291,8 @@ config("win_pdbaltpath") {
  }
  
  # Full symbols.
@@ -134,7 +141,7 @@ index 9d66490..a2bc09e 100644
    if (is_win) {
      if (is_clang) {
        cflags = [ "/Z7" ]  # Debug information in the .obj files.
-@@ -2365,7 +2345,8 @@ config("symbols") {
+@@ -2422,7 +2395,8 @@ config("symbols") {
  # Minimal symbols.
  # This config guarantees to hold symbol for stack trace which are shown to user
  # when crash happens in unittests running on buildbot.
@@ -144,7 +151,7 @@ index 9d66490..a2bc09e 100644
    if (is_win) {
      # Functions, files, and line tables only.
      cflags = []
-@@ -2418,7 +2399,8 @@ config("minimal_symbols") {
+@@ -2481,7 +2455,8 @@ config("minimal_symbols") {
  # This configuration contains function names only. That is, the compiler is
  # told to not generate debug information and the linker then just puts function
  # names in the final debug information.
@@ -155,5 +162,4 @@ index 9d66490..a2bc09e 100644
      ldflags = [ "/DEBUG" ]
  
 -- 
-2.26.2
-
+2.26.3
