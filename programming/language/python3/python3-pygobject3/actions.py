@@ -15,8 +15,8 @@ def build():
     
 def install():
     mesontools.install()
-    pisitools.rename("/usr/lib/pkgconfig/pygobject-3.0.pc", "py3gobject-3.0.pc")
-    pisitools.rename("/usr/include/pygobject-3.0/pygobject.h", "py3gobject.h") 
+    #pisitools.rename("/usr/lib/pkgconfig/pygobject-3.0.pc", "py3gobject-3.0.pc")
+    #pisitools.rename("/usr/include/pygobject-3.0/pygobject.h", "py3gobject.h") 
     
     
     pisitools.dodoc("COP*", "NEWS", "README*")
