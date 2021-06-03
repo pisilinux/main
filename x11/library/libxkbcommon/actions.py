@@ -8,29 +8,29 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build") 
-    options = "meson --prefix=/usr -Denable-docs=false \
-              "
+    
+    options = "-Denable-docs=false"
+    
     
     if get.buildTYPE() == "emul32":
-        options += "--libdir=lib32 .."
-                
-    shelltools.system(options)
-    
-   
+        options += " --libdir=lib32 --bindir=bin32 --libexecdir=libexec32"
+        
+        
+    mesontools.configure(options)
+
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
-    
+	
+    mesontools.build()
+
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    
+    mesontools.install()
+
     if get.buildTYPE() == "emul32":
+        pisitools.removeDir("/usr/libexec32")
+        pisitools.removeDir("/usr/bin32")
         return
     
-    shelltools.cd("..")
     pisitools.dodoc("README*", "NEWS", "LICENSE")
