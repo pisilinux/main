@@ -23,27 +23,27 @@ NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 WorkDir = "llvm-project-%s.src/llvm" % get.srcVERSION()
 
 def setup():
-    pisitools.ldflags.add("-fuse-ld=lld")
-    pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
-    pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
-    shelltools.export("CC", "clang")
-    shelltools.export("CXX", "clang++")
+    #pisitools.ldflags.add("-fuse-ld=lld")
+    #pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
+    #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
+    #shelltools.export("CC", "clang")
+    #shelltools.export("CXX", "clang++")
     
 
     #if get.buildTYPE() == "emul32":
-        #shelltools.export("CC", "gcc -m32")
-        #shelltools.export("CXX", "g++ -m32")
+        shelltools.export("CC", "gcc -m32")
+        shelltools.export("CXX", "g++ -m32")
         #shelltools.export("CC", "clang -m32")
         #shelltools.export("CXX", "clang++ -m32")
-        #shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
+        shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
         #clang patch
         #shelltools.cd("tools")
         #shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
         #shelltools.cd("..")
     #else:
-        #shelltools.export("CC", "gcc")
-        #shelltools.export("CXX", "g++")
+        shelltools.export("CC", "gcc")
+        shelltools.export("CXX", "g++")
         #shelltools.export("CC", "clang")
         #shelltools.export("CXX", "clang++")
 
