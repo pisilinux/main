@@ -9,10 +9,14 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
+import subprocess
+
 projects = "clang;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
 libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else " "
+
+jobs = jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
 
 NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 
@@ -85,7 +89,7 @@ def setup():
 def build():
     shelltools.cd("build")
     #shelltools.system("ninja")
-    cmaketools.make()
+    cmaketools.make(jobs)
 
 def install():
     shelltools.cd("build")
