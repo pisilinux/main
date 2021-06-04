@@ -19,11 +19,11 @@ NoStrip = ["/usr/lib/clang/%s/lib/linux" % get.srcVERSION()]
 WorkDir = "llvm-project-%s.src/llvm" % get.srcVERSION()
 
 def setup():
-    #pisitools.ldflags.add("-fuse-ld=lld")
-    #pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
-    #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
-    #shelltools.export("CC", "clang")
-    #shelltools.export("CXX", "clang++")
+    pisitools.ldflags.add("-fuse-ld=lld")
+    pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
+    pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
+    shelltools.export("CC", "clang")
+    shelltools.export("CXX", "clang++")
     
 
     #if get.buildTYPE() == "emul32":
@@ -67,7 +67,7 @@ def setup():
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -G 'Ninja' \
+                          -G 'Unix Makefiles' \
                           %s \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_LIBDIR_SUFFIX=%s \
@@ -84,13 +84,13 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    shelltools.system("ninja")
-    #cmaketools.make()
+    #shelltools.system("ninja")
+    cmaketools.make()
 
 def install():
     shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
     if get.buildTYPE() == "emul32":        
         pisitools.domove("/emul32/lib32/", "/usr/")
