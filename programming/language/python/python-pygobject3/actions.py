@@ -1,26 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get
-from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build") 
-    shelltools.system("meson .. --prefix=/usr -Dpython=python2.7")   
-   
+    mesontools.configure("-Dpython=python2.7")
+
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
     
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
     
-    shelltools.cd("..")
+    pisitools.rename("/usr/lib/pkgconfig/pygobject-3.0.pc", "py2gobject-3.0.pc")
+    pisitools.rename("/usr/include/pygobject-3.0/pygobject.h", "py2gobject.h") 
+    
     pisitools.dodoc("COP*", "NEWS", "README*")
