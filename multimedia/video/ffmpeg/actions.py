@@ -44,7 +44,7 @@ def setup():
                             --enable-libilbc \
                             --enable-libjack \
                             --enable-libkvazaar \
-                            --enable-liblensfun \
+                            --disable-liblensfun \
                             --enable-libmodplug \
                             --enable-libmp3lame \
                             --enable-libopencore_amrnb \
