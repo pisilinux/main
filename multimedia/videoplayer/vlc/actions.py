@@ -126,6 +126,7 @@ def setup():
                             --enable-x264 \
                             --enable-x265 \
                             --enable-aribsub \
+                            --enable-freerdp \
                             --enable-xvideo \
                            ")
     #enable-skins2 \ --disable-qt4 \

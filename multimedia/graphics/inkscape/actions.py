@@ -9,21 +9,22 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 
-j = "-DWITH_DBUS=ON \
-     -DBUILD_TESTING=OFF -L \
-     -DBUILD_SHARED_LIBS=ON \
-     -DWITH_IMAGE_MAGICK=OFF \
-     -DBUILD_STATIC_LIBS=OFF \
-     -DCMAKE_INSTALL_LIBDIR=lib \
-     -DCMAKE_BUILD_TYPE=Release \
-     -DCMAKE_INSTALL_PREFIX=/usr \
-    "
-
-shelltools.export("PYTHON", "/usr/bin/python3")
+j = ''.join([
+    '-DWITH_DBUS=ON  ',
+    '-DBUILD_TESTING=OFF -L ',
+    '-DWITH_GSPELL=OFF ',
+    '-DBUILD_SHARED_LIBS=ON ',
+    '-DWITH_IMAGE_MAGICK=OFF ',
+    '-DBUILD_STATIC_LIBS=OFF ',
+    '-DCMAKE_INSTALL_LIBDIR=lib ',
+    '-DCYTHON_EXECUTABLE=/usr/bin/cython3 ',
+    '-DCMAKE_BUILD_TYPE=Release ',
+    '-DCMAKE_INSTALL_PREFIX=/usr '
+    ])
 
 def setup():
     # fix shebang
-    shelltools.system("find share/extensions -iname '*.py' -exec sed -i 's|env\ python$|env python3|g' {} \;")
+#    shelltools.system("find share/extensions -iname '*.py' -exec sed -i 's|env\ python$|env python3|g' {} \;")
     # if with imagemagick build.
 #    shelltools.export("PKG_CONFIG_PATH", "${PKG_CONFIG_PATH}:/usr/lib/imagemagick6/pkgconfig")
     shelltools.makedirs("build")

@@ -35,7 +35,7 @@ def setup():
                          --enable-concheck \
                          --without-netconfig \
                          --with-modem-manager-1 \
-                         --with-session-tracking=consolekit \
+                         --with-session-tracking=elogind \
                          --with-suspend-resume=upower \
                          --with-system-ca-path=/etc/ssl/certs \
                          --with-crypto=nss \

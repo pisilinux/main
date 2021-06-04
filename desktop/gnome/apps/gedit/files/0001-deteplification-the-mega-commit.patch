@@ -1,0 +1,4592 @@
+From b190bdb716fc8bb0cd515ee10fb3c51debede5fa Mon Sep 17 00:00:00 2001
+From: Zander Brown <zbrown@gnome.org>
+Date: Tue, 13 Apr 2021 04:53:21 +0000
+Subject: [PATCH] deteplification: the mega commit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This commit is a reverse patch of a rebased version of gedit with
+commits related to tepl/amtk removed
+
+Sébastien Wilmet has stopped development of these libraries, relevant
+commits:
+
+https://gitlab.gnome.org/GNOME/amtk/-/commit/34a1171298808e5d9bd50540ee194b8be35bce9d
+https://gitlab.gnome.org/GNOME/tepl/-/commit/457b5c37ebcb2ebb23cae10cd47f1342db45a98e
+
+As a result usage is being dropped in favour simplifing gedit
+dependencies, because there are not enough developers, and too many bugs.
+Do you prefer a rock-solid text editor? Or a text editor with some shiny
+and non-essential dependencies that complicate the build, at the expense
+of more bugs?
+
+Tracked at: https://gitlab.gnome.org/Infrastructure/Infrastructure/-/issues/564
+
+Commits Dropped:
+cfeb7cb6c build: add Tepl dependency, second try
+872fb4809 Utils: use str truncate functions from Tepl
+9a121d523 Utils: deprecate str_end_truncate()
+e0e602799 No longer use gedit_utils_str_end_truncate()
+657ce9f7a Utils: deprecate str_middle_truncate()
+6eefa74c2 No longer use gedit_utils_str_middle_truncate()
+169c1594e main: call tepl_init() and tepl_finalize()
+ec31f0c22 snap: Fixed build failures by added tepl part
+76cf5562d Document: remove metadata implementation
+75cdb6a77 Document: second pass to remove metadata implementation
+d6b158ca6 App: remove the GeditMetadataManager
+6eccd6672 Remove GeditMetadataManager
+03929157e build: remove enable-gvfs-metadata option
+1dad3bce2 build: remove libxml dependency
+8c0825424 metadata: adapt key names for TeplFileMetadata
+c2904aa80 Document: metadata: create an internal TeplFile
+9c8ede1e2 App: setup Tepl metadata manager
+91bc04efc App: remove leftover comment
+b39dd0201 Document: use TeplFileMetadata to re-implement set/get_metadata()
+494677bfc Utils: use tepl_utils_replace_home_dir_with_tilde()
+aaaa28a87 docs: gtk-doc fixxref: fix the path for gtk and add path for tepl
+8710e89d8 Remove GeditViewCentering
+5e0909c19 ViewFrame: disable overlay scrolling for the GtkScrolledWindow
+7c7296b0e Remove overview map: remove from preferences dialog
+26899e0ba Remove overview map
+27f54a9ae replace-open-button: remove OpenDocumentSelector
+504ced5a9 replace-open-button: Window: remove open document popover
+3a8c5bbc2 replace-open-button: remove open button UI
+abab6529f replace-open-button: re-create a simple Open button
+1ee984a41 replace-open-button: re-create simple Open Recent menu button (UI)
+f1a58a70b replace-open-button: set Open Recent menu with Amtk
+020e0b340 replace-open-button: re-handle the fullscreen mode
+4dfd2104e Window: remove dead code (#defines)
+0caf371b1 Window: make the code a little clearer wrt fullscreen mode
+584aeb202 Window: rename fullscreen_controls -> fullscreen_revealer
+75705bf1d Window: some code cleanup wrt fullscreen mode
+cf0d62617 Window: simplify setting the state of the fullscreen revealer
+8706e5624 Window: fullscreen mode: remove idle function
+6361b281c Window: fullscreen mode: remove no longer needed code
+8d3e6faf2 Window: fullscreen mode: fix headerbar shown/hidden "stuttering"
+a437e5245 Window: fullscreen mode: add comment about the "stuttering" fix
+d064c5f88 Window: remove useless #include
+15833e5c7 build: list of deps: simplify
+007caff57 build: list of deps: simplify version requirements
+72dc3a477 build: avoid the use of a variable
+4a49c8562 flatpak: update Amtk to 5.0.2
+9ab7b0f0a utils: remove GBOOLEAN_TO_POINTER() and GPOINTER_TO_BOOLEAN()
+55c5f1423 Utils: deprecate gedit_warning()
+cbdd3a85d PreferencesDialog: use tepl_utils_show_warning_dialog()
+7a442c766 Utils: deprecate decode_uri(), use the tepl one
+bf3d57003 Use tepl_utils_decode_uri()
+2e45bb03f io-error-info-bar: remove useless #include's
+092411115 io-error-info-bar: use TeplInfoBar for the file_already_open_warning
+8ccb4566f io-error-info-bar: file_already_open_warning moved to Tepl
+8bfe0559a io-error-info-bar: use TeplInfoBar for no_backup_saving_error
+ca582d2c7 io-error-info-bar: fix fixme in no_backup_saving_error
+fa1758081 io-error-info-bar: no_backup_saving_error: show also error->message
+321eccdd7 io-error-info-bar: no_back_saving_error moved to Tepl
+7bb880114 io-error-info-bar: tepl function renamed to have a shorter name
+d1a14a063 io-error-info-bar: externally_modified: use TeplInfoBar
+bf60cc1af io-error-info-bar: invalid_character: TeplInfoBar + other improvements
+44cff9798 io-error-info-bar: externally_modified: remove unneeded code
+873ed25f1 io-error-info-bar: externally_modified: further simplify the code
+a8a4724fc io-error-info-bar: externally_modified: moved to Tepl
+ec8d8c717 io-error-info-bar: invalid_character: moved to Tepl
+2aae17c31 flatpak: switch Tepl to Meson
+9caaddeda Window: fix RTL bug for Open buttons in the headerbar
+82d8c507d View: subclass TeplView
+e23569c59 View: deprecate lots of functions, use the TeplView ones
+291eb9c8e commands-edit: use TeplView functions
+00f8c5e63 Use tepl_view_scroll_to_cursor()
+5fdeaee22 Document: deprecate goto_line() and goto_line_offset()
+d87bf25ba commands-file: use tepl_view_goto_line*()
+fd5500d90 Tab: use tepl_view_goto_line_offset()
+3c8a1dcb8 ViewFrame: use tepl_view_goto_line*()
+079f9699e pkg-config file: add Tepl as public dep
+cf6281d04 docs: document that gedit is in the process of using more Tepl features
+9ac62a6fd build: require Tepl 5
+3f84484d8 App: port to new Tepl metadata API
+9b9fa6c77 Document: port to new Tepl metadata API
+491280c04 docs: roadmap: link to new Tepl roadmap
+49db2a666 PreferencesDialog: use TeplStyleSchemeChooserWidget to fix several bugs
+94c3b70cb PreferencesDialog: improvements to color scheme management
+53cfa1715 PreferencesDialog: fix some bugs when (un)installing color schemes
+da5b9af9f snap: the tepl build is meson only now
+012a07cb7 snap: use the correct option to specify parameters
+325aa857c Factory: class skeleton
+7b8579770 Factory: implement ::create_metadata_manager_file vfunc
+d5a43cece Factory: create it in main() and set it as the TeplAbstractFactory
+392545195 App: use tepl_application_handle_metadata()
+8b2fa9092 Keep default buttons orientation for TeplInfoBars
+efe48bbe8 flatpak: remove uchardet, Tepl no longer depends on it
+5e588d978 PreferencesDialog: improve code to install extra style scheme
+eada68d97 PreferencesDialog: use GtkFileChooserNative, not GeditFileChooserDialog
+55fc5973c FileChooserDialog: remove hide() (now dead code)
+4f5a5681b FileChooserDialog: remove add_pattern_filter() (now dead code)
+105ca1ded File choosers: remove GeditFileChooserFlags
+ff1e9c27c Update Romanian translation
+b4a52f479 Merge branch 'master' of gitlab.gnome.org:GNOME/gedit
+21d94f23b Remove all the deprecated API
+4b5838b1e docs: update path to Amtk docs for the gtk-doc fixxref_args
+a4cf3ac57 Use tepl_pango_font_description_to_css()
+205bfc855 Window: port to TeplLanguageChooserWidget
+ffedbc882 commands-view: port to TeplLanguageChooserDialog
+1dc325294 Remove GeditHighlightModeSelector and GeditHighlightModeDialog
+e487680b2 Use Tepl 6 (currently 5.99)
+ee465ef0c Tab: port to TeplProgressInfoBar
+bc992e11e Remove GeditProgressInfoBar, replaced by TeplProgressInfoBar
+fa9d6aeaa docs: document the GeditProgressInfoBar removal
+bb4ba5543 docs: document that all deprecated APIs have been removed
+325351805 GeditDocument: subclass TeplBuffer
+8b01acace GeditDocument: remove the ::cursor-moved signal
+b938c50f8 Use the TeplBuffer::tepl-cursor-moved signal
+6b6a6e595 GeditDocument: bind GtkSourceFile and TeplFile :location properties
+f73828fe1 GeditDocument: remove unused instance variable
+01d8a1577 flatpak: build amtk from git master, not from an archive
+6e78a57c9 GeditDocument: use tepl_file_get_short_name()
+49749c38a GeditDocument: remove untitled_number handling
+844f6185a Tab: use TeplFile:short-name property notification
+49c0c814a GeditDocument: remove the :shortname property
+a4670d7ce help: "Untitled Document" -> "Untitled File"
+4d4d5d48c Use tepl_buffer_is_untouched()
+b0f67d391 GeditDocument: remove is_untouched()
+85b007052 GeditDocument: use the TeplFile location in is_untitled()
+4df850fb6 View: use TeplSignalGroup
+ef0d0ca9b View: minor code changes
+284e6c05c View: make set_font() private
+6b1e782d9 View: code refactorings for set_font()
+ce790b510 View: use tepl_utils_override_font()
+79b3e3011 GeditSettings: remove no longer needed code
+da4b3e61a GeditSettings: minor code change: removed unused function param
+13033affa GeditSettings: rework fonts changes handling, add ::fonts-changed signal
+878ceb988 GeditSettings: minor code change, improve get_system_font()
+1e89921a3 GeditSettings: add get_selected_font()
+9ef4cf7ed View: simplify the code to update the font
+3a3de93bd debug: remove DEBUG_METADATA (dead code)
+43925dac7 recent: use the TeplFile
+2f7c4a691 recent: move some functions to gedit-recent-osx
+87b1f50d4 recent-osx: add TODO comment
+
+Brought to you by GitLens, which honesntly has been very useful
+unpicking all this and sticking it back together again
+---
+ NEWS                                          |   12 +
+ build-aux/flatpak/org.gnome.gedit.yml         |   15 +-
+ build-aux/snap/snapcraft.yaml                 |   27 +-
+ data/org.gnome.gedit.gschema.xml.in           |    5 +
+ docs/gedit-development-getting-started.md     |    8 +-
+ docs/reference/api-breaks.xml                 |   50 +
+ docs/reference/gedit-docs.xml                 |    1 +
+ docs/reference/gedit-sections.txt             |   36 +
+ docs/reference/meson.build                    |    6 +-
+ docs/roadmap-done.md                          |   56 -
+ docs/roadmap.md                               |   19 +-
+ gedit/Gedit-3.0.metadata                      |    1 +
+ gedit/gedit-app-osx.m                         |    4 +-
+ gedit/gedit-app-private.h                     |    3 +
+ gedit/gedit-app.c                             |   54 +-
+ gedit/gedit-commands-edit.c                   |   28 +-
+ gedit/gedit-commands-file.c                   |   26 +-
+ gedit/gedit-commands-search.c                 |    7 +-
+ gedit/gedit-commands-view.c                   |   42 +-
+ gedit/gedit-debug.c                           |    4 +
+ gedit/gedit-debug.h                           |    2 +
+ gedit/gedit-document-private.h                |   12 +-
+ gedit/gedit-document.c                        |  534 ++++++-
+ gedit/gedit-document.h                        |   18 +-
+ gedit/gedit-documents-panel.c                 |    3 +-
+ gedit/gedit-factory.c                         |   50 -
+ gedit/gedit-factory.h                         |   53 -
+ gedit/gedit-file-chooser-dialog-gtk.c         |   72 +-
+ gedit/gedit-file-chooser-dialog-gtk.h         |    9 +-
+ gedit/gedit-file-chooser-dialog.c             |   40 +-
+ gedit/gedit-file-chooser-dialog.h             |   17 +
+ gedit/gedit-highlight-mode-dialog.c           |  102 ++
+ gedit/gedit-highlight-mode-dialog.h           |   41 +
+ gedit/gedit-highlight-mode-selector.c         |  375 +++++
+ gedit/gedit-highlight-mode-selector.h         |   44 +
+ gedit/gedit-io-error-info-bar.c               |  362 ++++-
+ gedit/gedit-io-error-info-bar.h               |   10 +
+ gedit/gedit-metadata-manager.c                |  650 ++++++++
+ gedit/gedit-metadata-manager.h                |   49 +
+ gedit/gedit-open-document-selector-helper.c   |  103 ++
+ gedit/gedit-open-document-selector-helper.h   |  103 ++
+ gedit/gedit-open-document-selector-store.c    |  820 +++++++++++
+ gedit/gedit-open-document-selector-store.h    |   68 +
+ gedit/gedit-open-document-selector.c          | 1304 +++++++++++++++++
+ gedit/gedit-open-document-selector.h          |   44 +
+ gedit/gedit-pango.c                           |  230 +++
+ gedit/gedit-pango.h                           |   28 +
+ gedit/gedit-preferences-dialog.c              |  447 +++---
+ gedit/gedit-print-job.c                       |    4 +-
+ gedit/gedit-progress-info-bar.c               |  177 +++
+ gedit/gedit-progress-info-bar.h               |   53 +
+ gedit/gedit-recent-osx.c                      |  249 ----
+ gedit/gedit-recent-osx.h                      |   54 -
+ gedit/gedit-recent.c                          |  231 ++-
+ gedit/gedit-recent.h                          |   23 +-
+ gedit/gedit-settings.c                        |  177 ++-
+ gedit/gedit-settings.h                        |    7 +-
+ gedit/gedit-tab.c                             |  115 +-
+ gedit/gedit-utils.c                           |  333 ++++-
+ gedit/gedit-utils.h                           |   21 +-
+ gedit/gedit-view-centering.c                  |  495 +++++++
+ gedit/gedit-view-centering.h                  |   67 +
+ gedit/gedit-view-frame.c                      |   37 +-
+ gedit/gedit-view-frame.h                      |    4 +
+ gedit/gedit-view.c                            |  322 +++-
+ gedit/gedit-view.h                            |   24 +-
+ gedit/gedit-window-private.h                  |   15 +-
+ gedit/gedit-window.c                          |  380 ++---
+ gedit/gedit.c                                 |    8 +-
+ gedit/meson.build                             |   23 +-
+ gedit/resources/css/gedit-style.css           |   12 +
+ gedit/resources/css/gedit.adwaita.css         |   25 +
+ gedit/resources/gedit.gresource.xml.in        |    4 +
+ .../ui/gedit-highlight-mode-dialog.ui         |   87 ++
+ .../ui/gedit-highlight-mode-selector.ui       |   83 ++
+ .../ui/gedit-open-document-selector.ui        |  115 ++
+ .../resources/ui/gedit-preferences-dialog.ui  |   30 +-
+ gedit/resources/ui/gedit-progress-info-bar.ui |   88 ++
+ gedit/resources/ui/gedit-view-frame.ui        |   27 +-
+ gedit/resources/ui/gedit-window.ui            |   87 +-
+ help/C/gedit-tab-groups.page                  |    4 +-
+ meson.build                                   |   34 +-
+ meson_options.txt                             |    7 +
+ plugins/snippets/snippets/document.py         |   10 +-
+ plugins/spell/gedit-spell-plugin.c            |    9 +-
+ po/POTFILES.in                                |    8 +-
+ 86 files changed, 8160 insertions(+), 1283 deletions(-)
+ delete mode 100644 docs/roadmap-done.md
+ delete mode 100644 gedit/gedit-factory.c
+ delete mode 100644 gedit/gedit-factory.h
+ create mode 100644 gedit/gedit-highlight-mode-dialog.c
+ create mode 100644 gedit/gedit-highlight-mode-dialog.h
+ create mode 100644 gedit/gedit-highlight-mode-selector.c
+ create mode 100644 gedit/gedit-highlight-mode-selector.h
+ create mode 100644 gedit/gedit-metadata-manager.c
+ create mode 100644 gedit/gedit-metadata-manager.h
+ create mode 100644 gedit/gedit-open-document-selector-helper.c
+ create mode 100644 gedit/gedit-open-document-selector-helper.h
+ create mode 100644 gedit/gedit-open-document-selector-store.c
+ create mode 100644 gedit/gedit-open-document-selector-store.h
+ create mode 100644 gedit/gedit-open-document-selector.c
+ create mode 100644 gedit/gedit-open-document-selector.h
+ create mode 100644 gedit/gedit-pango.c
+ create mode 100644 gedit/gedit-pango.h
+ create mode 100644 gedit/gedit-progress-info-bar.c
+ create mode 100644 gedit/gedit-progress-info-bar.h
+ delete mode 100644 gedit/gedit-recent-osx.c
+ delete mode 100644 gedit/gedit-recent-osx.h
+ create mode 100644 gedit/gedit-view-centering.c
+ create mode 100644 gedit/gedit-view-centering.h
+ create mode 100644 gedit/resources/ui/gedit-highlight-mode-dialog.ui
+ create mode 100644 gedit/resources/ui/gedit-highlight-mode-selector.ui
+ create mode 100644 gedit/resources/ui/gedit-open-document-selector.ui
+ create mode 100644 gedit/resources/ui/gedit-progress-info-bar.ui
+
+diff --git a/NEWS b/NEWS
+index e7f2c81f3..476a367a7 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,3 +1,15 @@
++News in [unreleased]
++----------------------------
++* Deteplification:
++   - The tepl maintainer has "frozen" the project until further notice
++   - Moving things to tepl introduced some breakage, such as translation of the
++     default filename
++   - gedit didn't use much of the API anyway
++   - Used even less of amtk
++   - Revert all usage of amtk and tepl
++   - Unfortunatly a couple bug fixes may have been lost
++   - Plugin API is essentially reverted to 3.36
++
+ News in 40.1, 2021-04-17
+ ------------------------
+ * Use document folder when opening new files
+diff --git a/build-aux/flatpak/org.gnome.gedit.yml b/build-aux/flatpak/org.gnome.gedit.yml
+index 1438abd07..d3b535176 100644
+--- a/build-aux/flatpak/org.gnome.gedit.yml
++++ b/build-aux/flatpak/org.gnome.gedit.yml
+@@ -32,56 +32,51 @@ cleanup:
+   - "/share/aclocal"
+   - "/man"
+   - "/share/man"
+   - "/share/gtk-doc"
+   - "/share/vala"
+   - "/share/gir-1.0"
+   - "*.la"
+   - "*.a"
+ 
+ modules:
+   - name: libpeas
+     buildsystem: meson
+     config-opts:
+       - "-Dlua51=false"
+       - "-Dvapi=true"
+       - "-Ddemos=false"
+       - "-Dglade_catalog=false"
+     sources:
+       - type: archive
+         url: https://download.gnome.org/sources/libpeas/1.28/libpeas-1.28.0.tar.xz
+         sha256: 42d91993b46ed50f16add6d9577ecc22beb8e2dffa7101e2232c2b63733b8b15
+ 
+   - name: gspell
+     cleanup:
+       - "/bin"
+     sources:
+       - type: archive
+         url: https://download.gnome.org/sources/gspell/1.9/gspell-1.9.1.tar.xz
+         sha256: dcbb769dfdde8e3c0a8ed3102ce7e661abbf7ddf85df08b29915e92cd723abdd
+ 
+-  - name: amtk
+-    buildsystem: meson
++  - name: uchardet
++    buildsystem: cmake-ninja
+     sources:
+-      - type: git
+-        url: https://gitlab.gnome.org/GNOME/amtk.git
+-
+-  - name: tepl
+-    buildsystem: meson
+-    sources:
+-      - type: git
+-        url: https://gitlab.gnome.org/GNOME/tepl.git
++      - type: archive
++        url: https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.6.tar.xz
++        sha256: 8351328cdfbcb2432e63938721dd781eb8c11ebc56e3a89d0f84576b96002c61
+ 
+   - name: gedit
+     buildsystem: meson
+     sources:
+       - type: git
+         url: https://gitlab.gnome.org/GNOME/gedit.git
+         # To build a local branch, comment out 'url' and uncomment:
+         # path: ../../
+         # branch: wip/misc
+ 
+   - name: gedit-plugins
+     buildsystem: meson
+     sources:
+       - type: git
+         url: https://gitlab.gnome.org/GNOME/gedit-plugins.git
+diff --git a/build-aux/snap/snapcraft.yaml b/build-aux/snap/snapcraft.yaml
+index fc49c3949..43db5e027 100644
+--- a/build-aux/snap/snapcraft.yaml
++++ b/build-aux/snap/snapcraft.yaml
+@@ -14,121 +14,98 @@ layout:
+     symlink: $SNAP/usr/share/gedit
+ 
+ slots:
+   # for GtkApplication registration
+   gedit:
+     interface: dbus
+     bus: session
+     name: org.gnome.gedit
+ 
+ apps:
+   gedit:
+     command: usr/bin/gedit
+     extensions: [gnome-3-28]
+     plugs:
+       - avahi-observe
+       - cups-control
+       - gsettings
+       - home
+       - network
+       - mount-observe
+       - removable-media
+     common-id: org.gnome.gedit.desktop
+     environment:
+       GSETTINGS_SCHEMA_DIR: $SNAP/share/glib-2.0/schemas
+       LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+       GI_TYPELIB_PATH: $SNAP/usr/lib/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gedit/girepository-1.0:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:$SNAP/gnome-platform/usr/lib/girepository-1.0:$SNAP/gnome-platform/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+       PYTHONPATH: $SNAP/usr/lib/python3/dist-packages:$SNAP/gnome-platform/usr/lib/python3/dist-packages
+       GTK_USE_PORTAL: 1
+ 
+ parts:
+-  amtk:
+-    source: https://gitlab.gnome.org/GNOME/amtk.git
+-    source-type: git
+-    plugin: autotools
+-    configflags:
+-      - --prefix=/usr
+-      - --enable-introspection=no
+-    organize:
+-      snap/gedit/current/usr: usr
+-
+-  tepl:
+-    after: [amtk, gtksourceview]
+-    source: https://gitlab.gnome.org/GNOME/tepl.git
+-    source-type: git
+-    plugin: meson
+-    meson-parameters:
+-      - --prefix=/usr
+-    organize:
+-      snap/gedit/current/usr: usr
+-    build-packages:
+-      - libuchardet-dev
+-    stage-packages:
+-      - libuchardet0
+-
+   gtksourceview:
+     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
+     source-type: git
+     plugin: meson
+     meson-parameters:
+       - --prefix=/usr
+       - -Dc_args="-Wno-error=undef"
+     organize:
+       snap/gedit/current/usr: usr
+     build-packages:
+       - autoconf-archive
+       - gettext
+       - gobject-introspection
+       - gtk-doc-tools
+       - libfribidi-dev
+       - libgirepository1.0-dev
+       - libglib2.0-dev
+       - libgtk-3-dev
+       - libpeas-dev
+       - libxml2-dev
+       - libxml2-utils
+       - valac
+     # meson gir overrides don't work well
+     override-build: |
+        snapcraftctl build
+        cp $SNAPCRAFT_PART_INSTALL/usr/share/gir-1.0/GtkSource* /usr/share/gir-1.0
+        cp $SNAPCRAFT_PART_INSTALL/usr/share/vala/vapi/gtksource* /usr/share/vala/vapi
+ 
+   gedit:
+-    after: [gtksourceview, tepl]
++    after: [gtksourceview]
+     source: .
+     source-type: git
+     parse-info: [usr/share/metainfo/org.gnome.gedit.appdata.xml]
+     plugin: meson
+     meson-parameters:
+       - --prefix=/usr
+       - -Dvala_args="--vapidir=$SNAPCRAFT_STAGE/usr/share/vala/vapi"
++
+     build-environment:
+       - C_INCLUDE_PATH: $SNAPCRAFT_STAGE/usr/include/gtksourceview-4
+     override-build: |
+        sed -i.bak -e 's|Icon=org.gnome.gedit$|Icon=${SNAP}/meta/gui/org.gnome.gedit.svg|g' data/org.gnome.gedit.desktop.in
+        sed -i.bak -e "s|symlink_media: true|symlink_media: false|g" help/meson.build
+        snapcraftctl build
+        mkdir -p $SNAPCRAFT_PART_INSTALL/meta/gui/
+        cp data/icons/org.gnome.gedit.svg $SNAPCRAFT_PART_INSTALL/meta/gui/
+        cp ../install/usr/share/applications/org.gnome.gedit.desktop $SNAPCRAFT_PART_INSTALL/meta/gui/
+     build-packages:
+       - desktop-file-utils
+       - gettext
+       - gsettings-desktop-schemas-dev
+       - gtk-doc-tools
+       - itstool
+       - libsoup2.4-dev
+       - libgspell-1-dev
+       - libxml2-dev
+       - libglib2.0-dev
+       - libgtk-3-dev
+       - libpeas-dev
+       - libx11-dev
+       - python3
+       - python-gi-dev
+       - gobject-introspection
+       - libgirepository1.0-dev
+       - valac
+     stage-packages:
+       - libfribidi0
+ 
+diff --git a/data/org.gnome.gedit.gschema.xml.in b/data/org.gnome.gedit.gschema.xml.in
+index b797d843c..59325f4ef 100644
+--- a/data/org.gnome.gedit.gschema.xml.in
++++ b/data/org.gnome.gedit.gschema.xml.in
+@@ -99,60 +99,65 @@
+     <key name="auto-indent" type="b">
+       <default>true</default>
+       <summary>Automatic indent</summary>
+       <description>Whether gedit should enable automatic indentation.</description>
+     </key>
+     <key name="display-line-numbers" type="b">
+       <default>true</default>
+       <summary>Display Line Numbers</summary>
+       <description>Whether gedit should display line numbers in the editing area.</description>
+     </key>
+     <key name="highlight-current-line" type="b">
+       <default>true</default>
+       <summary>Highlight Current Line</summary>
+       <description>Whether gedit should highlight the current line.</description>
+     </key>
+     <key name="bracket-matching" type="b">
+       <default>true</default>
+       <summary>Highlight Matching Brackets</summary>
+       <description>Whether gedit should highlight matching brackets.</description>
+     </key>
+     <key name="display-right-margin" type="b">
+       <default>false</default>
+       <summary>Display Right Margin</summary>
+       <description>Whether gedit should display the right margin in the editing area.</description>
+     </key>
+     <key name="right-margin-position" type="u">
+       <default>80</default>
+       <summary>Right Margin Position</summary>
+       <description>Specifies the position of the right margin.</description>
+     </key>
++    <key name="display-overview-map" type="b">
++      <default>false</default>
++      <summary>Display Overview Map</summary>
++      <description>Whether gedit should display the overview map for the document.</description>
++    </key>
+     <key name="background-pattern" enum="org.gnome.gedit.BackgroundPatternType">
+       <default>'none'</default>
+       <summary>Document background pattern type</summary>
+       <description>Whether the document will get a background pattern painted.</description>
+     </key>
+     <key name="smart-home-end" enum="org.gnome.gedit.SmartHomeEnd">
+       <aliases>
+         <alias value='DISABLED' target='disabled'/>
+         <alias value='BEFORE' target='before'/>
+         <alias value='AFTER' target='after'/>
+         <alias value='ALWAYS' target='always'/>
+       </aliases>
+       <default>'after'</default>
+       <summary>Smart Home End</summary>
+       <description>Specifies how the cursor moves when the HOME and END keys are pressed. Use “disabled” to always move at the start/end of the line, “after” to move to the start/end of the line the first time the keys are pressed and to the start/end of the text ignoring whitespaces the second time the keys are pressed, “before” to move to the start/end of the text before moving to the start/end of the line and “always” to always move to the start/end of the text instead of the start/end of the line.</description>
+     </key>
+     <key name="restore-cursor-position" type="b">
+       <default>true</default>
+       <summary>Restore Previous Cursor Position</summary>
+       <description>Whether gedit should restore the previous cursor position when a file is loaded.</description>
+     </key>
+     <key name="syntax-highlighting" type="b">
+       <default>true</default>
+       <summary>Enable Syntax Highlighting</summary>
+       <description>Whether gedit should enable syntax highlighting.</description>
+     </key>
+     <key name="search-highlighting" type="b">
+       <default>true</default>
+       <summary>Enable Search Highlighting</summary>
+       <description>Whether gedit should highlight all the occurrences of the searched text.</description>
+diff --git a/docs/gedit-development-getting-started.md b/docs/gedit-development-getting-started.md
+index 4f930afc7..774bc180f 100644
+--- a/docs/gedit-development-getting-started.md
++++ b/docs/gedit-development-getting-started.md
+@@ -4,65 +4,63 @@ gedit development - getting started
+ The following explanations can be improved over time, if you see something
+ missing, a feedback is welcome.
+ 
+ Programming languages and paradigms
+ -----------------------------------
+ 
+ gedit is mostly written in C, with some plugins in Python or
+ [Vala](https://wiki.gnome.org/Projects/Vala/). The build system is in
+ [Meson](https://mesonbuild.com/).
+ 
+ The code is object-oriented and event-driven. In C, it's thanks to the use of
+ the GObject library (see next section). If you open some `*.c` or `*.h` files,
+ you may think “what is this horror?!” but – don't panic – it's just some
+ C/GObject boilerplate code, and that boilerplate can be generated by a tool. So
+ once you've learned GObject, you will no longer be afraid ;-)
+ 
+ Libraries used
+ --------------
+ 
+ As every GNOME application, gedit uses the GLib, GObject and GTK libraries. To
+ modify the gedit source code, you should be familiar with those libraries. See
+ the [GTK website](https://www.gtk.org/) and the document
+ [The GLib/GTK Development Platform – A Getting Started Guide](https://people.gnome.org/~swilmet/glib-gtk-book/).
+ 
+ The main widget used by gedit is GtkTextView, a general-purpose multiline text
+ editor. To learn that widget API, read the excellent
+ [GtkTextView tutorial](http://www.bravegnu.org/gtktext/) (a bit old but still
+ mostly valid). But GtkTextView is not enough for source code edition. gedit
+ actually uses the
+ [GtkSourceView](https://wiki.gnome.org/Projects/GtkSourceView) library, which
+-contains a subclass of GtkTextView with many features useful for a text editor
+-or an IDE. But GtkSourceView is not enough to have a full-blown text editor,
+-gedit is actually in the process of using more features from the
+-[Tepl](https://wiki.gnome.org/Projects/Tepl) library, and to further develop
+-Tepl alongside gedit.
++contains a subclass of GtkTextView with syntax highlighting, a completion
++framework, the search and replace, and many other features useful for a text
++editor or an IDE.
+ 
+ For its plugin system, gedit uses the
+ [libpeas](https://wiki.gnome.org/Projects/Libpeas) library.
+ 
+ Plugins may have other dependencies, for example the spell-checking plugin uses
+ [gspell](https://wiki.gnome.org/Projects/gspell).
+ 
+ gedit architecture
+ ------------------
+ 
+ The [gedit Git repository](https://gitlab.gnome.org/GNOME/gedit) contains the
+ _gedit core_ plus the default plugins. There is also the
+ [gedit-plugins Git repository](https://gitlab.gnome.org/GNOME/gedit-plugins)
+ for additional official plugins. The gedit core source code is in the `gedit/`
+ directory. The plugins are in … `plugins/`!
+ 
+ gedit core provides:
+ - A basic text editor.
+ - The integration of libpeas, with an API for plugins.
+ 
+ There is a class diagram of gedit core in the file
+ [class-diagram.dia](class-diagram.dia) (but it may be outdated, see the Git log
+ for that file).
+ 
+ Build/Installation
+ ------------------
+ 
+ See the file [build.md](build.md).
+ 
+ First contribution
+diff --git a/docs/reference/api-breaks.xml b/docs/reference/api-breaks.xml
+index f631761a6..f03c35975 100644
+--- a/docs/reference/api-breaks.xml
++++ b/docs/reference/api-breaks.xml
+@@ -1,53 +1,103 @@
+ <?xml version="1.0"?>
+ <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+ [
+  <!ENTITY % local.common.attrib "xmlns:xi CDATA #FIXED 'http://www.w3.org/2003/XInclude'">
+ ]>
+ 
+ <part id="api-breaks">
+   <title>API Breaks</title>
+ 
+   <para>
+     gedit is a quite old piece of software (created in 1998, at the beginnings
+     of the GNOME project), and as every software, the code evolves during its
+     lifetime. So there are sometimes API breaks for gedit plugins, there are no
+     API stability guarantees.
+   </para>
+ 
+   <para>
+     When it is possible, instead of directly removing an API, that API is first
+     marked as deprecated, and then removed for the next API break. See the
+     <link linkend="api-index-deprecated">index of deprecated symbols</link>.
+   </para>
+ 
++  <refsect1>
++    <title>40 -> 41</title>
++    <itemizedlist>
++      <listitem>
++        <para>
++          The <code>GeditProgressInfoBar</code> class has been restored
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          <link linkend="GeditDocument">GeditDocument</link> is no longer a subclass
++          of <link linkend="TeplBuffer">TeplBuffer</link>.
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          The <code>GeditDocument::cursor-moved</code> signal has been restored.
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          The <code>GeditDocument:shortname</code> property has been restored.
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          The <code>gedit_document_is_untouched()</code> function has been
++          restored.
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          The <code>gedit_view_set_font()</code> function has been restored.
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          <code>DEBUG_METADATA</code> has been restored.
++        </para>
++      </listitem>
++      <listitem>
++        <para>
++          The <code>GBOOLEAN_TO_POINTER()</code> and
++          <code>GPOINTER_TO_BOOLEAN()</code> macros have been restored to
++          <code>gedit-utils.h</code>.
++        </para>
++      </listitem>
++    </itemizedlist>
++  </refsect1>
++
+   <refsect1>
+     <title>3.38 -> 40</title>
+     <itemizedlist>
+       <listitem>
+         <para>
+           All previously deprecated APIs have been removed.
+         </para>
+       </listitem>
+       <listitem>
+         <para>
+           The <code>GeditProgressInfoBar</code> class has been removed, you can
+           use <link linkend="TeplProgressInfoBar">TeplProgressInfoBar</link>
+           instead.
+         </para>
+       </listitem>
+       <listitem>
+         <para>
+           <link linkend="GeditDocument">GeditDocument</link> is now a subclass
+           of <link linkend="TeplBuffer">TeplBuffer</link>.
+         </para>
+       </listitem>
+       <listitem>
+         <para>
+           The <code>GeditDocument::cursor-moved</code> signal has been removed.
+           You can use the <link linkend="TeplBuffer">TeplBuffer</link> API
+           instead.
+         </para>
+       </listitem>
+       <listitem>
+         <para>
+diff --git a/docs/reference/gedit-docs.xml b/docs/reference/gedit-docs.xml
+index a0dc624cf..9e32e5469 100644
+--- a/docs/reference/gedit-docs.xml
++++ b/docs/reference/gedit-docs.xml
+@@ -1,48 +1,49 @@
+ <?xml version="1.0"?>
+ <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+                "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+ <book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+   <bookinfo>
+     <title>gedit Reference Manual</title>
+   </bookinfo>
+ 
+   <part id="api-reference">
+     <title>API Reference</title>
+     <xi:include href="xml/gedit-app.xml"/>
+     <xi:include href="xml/gedit-app-activatable.xml"/>
+     <xi:include href="xml/gedit-commands.xml"/>
+     <xi:include href="xml/gedit-document.xml"/>
+     <xi:include href="xml/gedit-encodings-combo-box.xml"/>
+     <xi:include href="xml/gedit-menu-extension.xml"/>
+     <xi:include href="xml/gedit-message-bus.xml"/>
+     <xi:include href="xml/gedit-message.xml"/>
++    <xi:include href="xml/gedit-progress-info-bar.xml"/>
+     <xi:include href="xml/gedit-statusbar.xml"/>
+     <xi:include href="xml/gedit-tab.xml"/>
+     <xi:include href="xml/gedit-view.xml"/>
+     <xi:include href="xml/gedit-view-activatable.xml"/>
+     <xi:include href="xml/gedit-window.xml"/>
+     <xi:include href="xml/gedit-window-activatable.xml"/>
+     <xi:include href="xml/gedit-debug.xml"/>
+     <xi:include href="xml/gedit-utils.xml"/>
+   </part>
+ 
+   <xi:include href="api-breaks.xml"/>
+ 
+   <part id="annexes">
+     <title>Annexes</title>
+ 
+     <chapter>
+       <title>Object Hierarchy</title>
+        <xi:include href="xml/tree_index.sgml"/>
+     </chapter>
+ 
+     <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
+ 
+     <index>
+       <title>Index of all symbols</title>
+       <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
+     </index>
+     <index role="deprecated">
+       <title>Index of deprecated symbols</title>
+       <xi:include href="xml/api-index-deprecated.xml"><xi:fallback /></xi:include>
+     </index>
+diff --git a/docs/reference/gedit-sections.txt b/docs/reference/gedit-sections.txt
+index cec055fce..a71e00faa 100644
+--- a/docs/reference/gedit-sections.txt
++++ b/docs/reference/gedit-sections.txt
+@@ -27,61 +27,64 @@ gedit_app_activatable_activate
+ gedit_app_activatable_deactivate
+ gedit_app_activatable_extend_menu
+ <SUBSECTION Standard>
+ GEDIT_TYPE_APP_ACTIVATABLE
+ GEDIT_APP_ACTIVATABLE
+ GEDIT_APP_ACTIVATABLE_IFACE
+ GEDIT_IS_APP_ACTIVATABLE
+ GEDIT_APP_ACTIVATABLE_GET_IFACE
+ gedit_app_activatable_get_type
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-commands</FILE>
+ <TITLE>GeditCommands</TITLE>
+ gedit_commands_load_location
+ gedit_commands_load_locations
+ gedit_commands_save_document
+ gedit_commands_save_document_async
+ gedit_commands_save_document_finish
+ gedit_commands_save_all_documents
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-document</FILE>
+ <TITLE>GeditDocument</TITLE>
+ GeditDocument
+ gedit_document_new
+ gedit_document_get_file
+ gedit_document_get_short_name_for_display
+ gedit_document_get_mime_type
++gedit_document_is_untouched
+ gedit_document_is_untitled
++gedit_document_goto_line
++gedit_document_goto_line_offset
+ gedit_document_set_language
+ gedit_document_get_content_type
+ gedit_document_get_metadata
+ gedit_document_set_metadata
+ gedit_document_set_search_context
+ gedit_document_get_search_context
+ <SUBSECTION Standard>
+ GEDIT_DOCUMENT
+ GEDIT_IS_DOCUMENT
+ GEDIT_TYPE_DOCUMENT
+ gedit_document_get_type
+ GEDIT_DOCUMENT_CLASS
+ GEDIT_IS_DOCUMENT_CLASS
+ GEDIT_DOCUMENT_GET_CLASS
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-encodings-combo-box</FILE>
+ <TITLE>GeditEncodingsComboBox</TITLE>
+ GeditEncodingsComboBox
+ gedit_encodings_combo_box_new
+ gedit_encodings_combo_box_get_selected_encoding
+ gedit_encodings_combo_box_set_selected_encoding
+ <SUBSECTION Standard>
+ GEDIT_ENCODINGS_COMBO_BOX
+ GEDIT_IS_ENCODINGS_COMBO_BOX
+ GEDIT_TYPE_ENCODINGS_COMBO_BOX
+ gedit_encodings_combo_box_get_type
+ GEDIT_ENCODINGS_COMBO_BOX_CLASS
+ GEDIT_IS_ENCODINGS_COMBO_BOX_CLASS
+@@ -121,111 +124,138 @@ GEDIT_TYPE_MESSAGE_BUS
+ gedit_message_bus_get_type
+ GEDIT_MESSAGE_BUS_CLASS
+ GEDIT_IS_MESSAGE_BUS_CLASS
+ GEDIT_MESSAGE_BUS_GET_CLASS
+ GeditMessageBusPrivate
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-message</FILE>
+ <TITLE>GeditMessage</TITLE>
+ GeditMessage
+ gedit_message_get_object_path
+ gedit_message_get_method
+ gedit_message_type_has
+ gedit_message_type_check
+ gedit_message_has
+ gedit_message_is_valid_object_path
+ gedit_message_type_identifier
+ <SUBSECTION Standard>
+ GEDIT_MESSAGE
+ GEDIT_MESSAGE_CONST
+ GEDIT_IS_MESSAGE
+ GEDIT_TYPE_MESSAGE
+ gedit_message_get_type
+ GEDIT_MESSAGE_CLASS
+ GEDIT_IS_MESSAGE_CLASS
+ GEDIT_MESSAGE_GET_CLASS
+ GeditMessagePrivate
+ </SECTION>
+ 
++<SECTION>
++<FILE>gedit-progress-info-bar</FILE>
++<TITLE>GeditProgressInfoBar</TITLE>
++GeditProgressInfoBar
++gedit_progress_info_bar_new
++gedit_progress_info_bar_set_icon_name
++gedit_progress_info_bar_set_markup
++gedit_progress_info_bar_set_text
++gedit_progress_info_bar_set_fraction
++gedit_progress_info_bar_pulse
++<SUBSECTION Standard>
++GEDIT_PROGRESS_INFO_BAR
++GEDIT_IS_PROGRESS_INFO_BAR
++GEDIT_TYPE_PROGRESS_INFO_BAR
++gedit_progress_info_bar_get_type
++GEDIT_PROGRESS_INFO_BAR_CLASS
++GEDIT_IS_PROGRESS_INFO_BAR_CLASS
++GEDIT_PROGRESS_INFO_BAR_GET_CLASS
++</SECTION>
++
+ <SECTION>
+ <FILE>gedit-statusbar</FILE>
+ <TITLE>GeditStatusbar</TITLE>
+ GeditStatusbar
+ gedit_statusbar_new
+ gedit_statusbar_set_window_state
+ gedit_statusbar_set_overwrite
+ gedit_statusbar_clear_overwrite
+ gedit_statusbar_flash_message
+ <SUBSECTION Standard>
+ GEDIT_STATUSBAR
+ GEDIT_IS_STATUSBAR
+ GEDIT_TYPE_STATUSBAR
+ gedit_statusbar_get_type
+ GEDIT_STATUSBAR_CLASS
+ GEDIT_IS_STATUSBAR_CLASS
+ GEDIT_STATUSBAR_GET_CLASS
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-tab</FILE>
+ <TITLE>GeditTab</TITLE>
+ GeditTab
+ GeditTabState
+ gedit_tab_get_view
+ gedit_tab_get_document
+ gedit_tab_get_from_document
+ gedit_tab_get_state
+ gedit_tab_get_auto_save_enabled
+ gedit_tab_set_auto_save_enabled
+ gedit_tab_get_auto_save_interval
+ gedit_tab_set_auto_save_interval
+ gedit_tab_set_info_bar
+ <SUBSECTION Standard>
+ GEDIT_TAB
+ GEDIT_IS_TAB
+ GEDIT_TYPE_TAB
+ gedit_tab_get_type
+ GEDIT_TAB_CLASS
+ GEDIT_IS_TAB_CLASS
+ GEDIT_TAB_GET_CLASS
+ GEDIT_TYPE_TAB_STATE
+ gedit_tab_state_get_type
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-view</FILE>
+ GeditViewPrivate
+ <TITLE>GeditView</TITLE>
+ GeditView
+ gedit_view_new
++gedit_view_cut_clipboard
++gedit_view_copy_clipboard
++gedit_view_paste_clipboard
++gedit_view_delete_selection
++gedit_view_select_all
++gedit_view_scroll_to_cursor
++gedit_view_set_font
+ <SUBSECTION Standard>
+ GEDIT_VIEW
+ GEDIT_IS_VIEW
+ GEDIT_TYPE_VIEW
+ gedit_view_get_type
+ GEDIT_VIEW_CLASS
+ GEDIT_IS_VIEW_CLASS
+ GEDIT_VIEW_GET_CLASS
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-view-activatable</FILE>
+ <TITLE>GeditViewActivatable</TITLE>
+ GeditViewActivatable
+ gedit_view_activatable_activate
+ gedit_view_activatable_deactivate
+ <SUBSECTION Standard>
+ GEDIT_TYPE_VIEW_ACTIVATABLE
+ GEDIT_VIEW_ACTIVATABLE
+ GEDIT_VIEW_ACTIVATABLE_IFACE
+ GEDIT_IS_VIEW_ACTIVATABLE
+ GEDIT_VIEW_ACTIVATABLE_GET_IFACE
+ gedit_view_activatable_get_type
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-window</FILE>
+ <TITLE>GeditWindow</TITLE>
+ GeditWindow
+ GeditWindowState
+@@ -264,70 +294,76 @@ gedit_window_state_get_type
+ 
+ <SECTION>
+ <FILE>gedit-window-activatable</FILE>
+ <TITLE>GeditWindowActivatable</TITLE>
+ GeditWindowActivatable
+ gedit_window_activatable_activate
+ gedit_window_activatable_deactivate
+ gedit_window_activatable_update_state
+ <SUBSECTION Standard>
+ GEDIT_TYPE_WINDOW_ACTIVATABLE
+ GEDIT_WINDOW_ACTIVATABLE
+ GEDIT_WINDOW_ACTIVATABLE_IFACE
+ GEDIT_IS_WINDOW_ACTIVATABLE
+ GEDIT_WINDOW_ACTIVATABLE_GET_IFACE
+ gedit_window_activatable_get_type
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-debug</FILE>
+ GeditDebugSection
+ DEBUG_VIEW
+ DEBUG_PREFS
+ DEBUG_WINDOW
+ DEBUG_PANEL
+ DEBUG_PLUGINS
+ DEBUG_TAB
+ DEBUG_DOCUMENT
+ DEBUG_COMMANDS
+ DEBUG_APP
+ DEBUG_UTILS
++DEBUG_METADATA
+ gedit_debug_init
+ gedit_debug
+ gedit_debug_message
+ gedit_debug_plugin_message
+ <SUBSECTION Standard>
+ GEDIT_TYPE_DEBUG_SECTION
+ gedit_debug_section_get_type
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-menu-extension</FILE>
+ GeditMenuExtension
+ gedit_menu_extension_new
+ gedit_menu_extension_append_menu_item
+ gedit_menu_extension_prepend_menu_item
+ gedit_menu_extension_remove_items
+ <SUBSECTION Standard>
+ GEDIT_IS_MENU_EXTENSION
+ GEDIT_IS_MENU_EXTENSION_CLASS
+ GEDIT_MENU_EXTENSION
+ GEDIT_MENU_EXTENSION_CLASS
+ GEDIT_MENU_EXTENSION_CONST
+ GEDIT_MENU_EXTENSION_GET_CLASS
+ GEDIT_TYPE_MENU_EXTENSION
+ GeditMenuExtensionClass
+ gedit_menu_extension_get_type
+ </SECTION>
+ 
+ <SECTION>
+ <FILE>gedit-utils</FILE>
++GBOOLEAN_TO_POINTER
++GPOINTER_TO_BOOLEAN
+ gedit_utils_menu_position_under_tree_view
+ gedit_utils_set_atk_name_description
++gedit_warning
++gedit_utils_replace_home_dir_with_tilde
+ gedit_utils_basename_for_display
++gedit_utils_decode_uri
+ gedit_utils_drop_get_uris
+ gedit_utils_get_compression_type_from_content_type
+ gedit_utils_is_valid_location
+ gedit_utils_location_get_dirname_for_display
+ gedit_utils_set_direct_save_filename
+ gedit_utils_newline_type_to_string
+ </SECTION>
+diff --git a/docs/reference/meson.build b/docs/reference/meson.build
+index 9a9c414dc..ed85f9cec 100644
+--- a/docs/reference/meson.build
++++ b/docs/reference/meson.build
+@@ -1,42 +1,38 @@
+ html_dir = get_option('prefix') / gnome.gtkdoc_html_dir('gedit')
+ 
+ glib_docpath = dependency('glib-2.0').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/glib'
+ gobject_docpath = dependency('gobject-2.0').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/gobject'
+ gio_docpath = dependency('gio-2.0').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/gio'
+ gdk_docpath = dependency('gdk-3.0').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/gdk3'
+ gtk_docpath = dependency('gtk+-3.0').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/gtk3'
+ gsv_docpath = dependency('gtksourceview-4').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/gtksourceview-4.0'
+-amtk_docpath = dependency('amtk-5').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/amtk-5'
+-tepl_docpath = dependency('tepl-6').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/tepl-6'
+ libpeas_docpath = dependency('libpeas-1.0').get_pkgconfig_variable('prefix') / 'share/gtk-doc/html/libpeas'
+ 
+ gedit_doc_dep = declare_dependency(
+   link_with: libgedit_shared_lib,
+   include_directories: root_include_dir,
+-  dependencies: deps_basic_list,
++  dependencies: deps_basic_list + [libxml_dep],
+ )
+ 
+ gnome.gtkdoc(
+   'gedit',
+   main_xml: 'gedit-docs.xml',
+   src_dir: include_directories('../../gedit/'),
+   dependencies: gedit_doc_dep,
+   scan_args: ['--rebuild-types'],
+   fixxref_args: [
+     '--html-dir=@0@'.format(html_dir),
+     '--extra-dir=@0@'.format(glib_docpath),
+     '--extra-dir=@0@'.format(gobject_docpath),
+     '--extra-dir=@0@'.format(gio_docpath),
+     '--extra-dir=@0@'.format(gdk_docpath),
+     '--extra-dir=@0@'.format(gtk_docpath),
+     '--extra-dir=@0@'.format(gsv_docpath),
+-    '--extra-dir=@0@'.format(amtk_docpath),
+-    '--extra-dir=@0@'.format(tepl_docpath),
+     '--extra-dir=@0@'.format(libpeas_docpath),
+   ],
+   content_files: [
+     'api-breaks.xml'
+   ],
+   ignore_headers: libgedit_private_headers,
+   install: true,
+ )
+diff --git a/docs/roadmap-done.md b/docs/roadmap-done.md
+deleted file mode 100644
+index 7f210e49b..000000000
+--- a/docs/roadmap-done.md
++++ /dev/null
+@@ -1,56 +0,0 @@
+-gedit roadmap - done tasks
+-==========================
+-
+-Tepl-ification of the gedit core
+---------------------------------
+-
+-- gedit 3.36:
+-	- Start to use the Tepl library.
+-	- Use some Tepl utility functions.
+-	- Use TeplFileMetadata, remove GeditMetadataManager.
+-- gedit 3.38:
+-	- Move some utility functions to the Tepl library.
+-	- Refactor and move some I/O error infobars to Tepl.
+-	- GeditView now inherits from TeplView.
+-	- Port to the new Tepl metadata API.
+-	- Use TeplStyleSchemeChooserWidget in the preferences dialog.
+-	- Create GeditFactory class, subclass of TeplAbstractFactory.
+-- gedit 40:
+-	- Use `tepl_pango_font_description_to_css()`.
+-	- Use TeplLanguageChooser's, for choosing a language for the syntax
+-	  highlighting. Remove GeditHighlightModeSelector and
+-	  GeditHighlightModeDialog.
+-	- Use TeplProgressInfoBar. Remove GeditProgressInfoBar.
+-	- GeditDocument now inherits from TeplBuffer, start to use the
+-	  TeplBuffer and TeplFile APIs.
+-
+-Links:
+-- https://wiki.gnome.org/Projects/Tepl
+-
+-Tepl-ification of the gedit plugins
+------------------------------------
+-
+-- gedit 40:
+-	- Draw Spaces plugin: new implementation based on TeplSpaceDrawerPrefs.
+-
+-Other done tasks in gedit plugins
+----------------------------------
+-
+-- gedit 40:
+-	- Smart Spaces plugin: new implementation based on a GtkSourceView
+-	  feature.
+-
+-New version of gedit on Windows
+--------------------------------
+-
+-[gedit is now available on the Microsoft Store](https://www.microsoft.com/store/apps/9PL1J21XF0PT).
+-It was done during the GNOME 3.38 development cycle. The integration with
+-Windows is not perfect, but it works. It is planned to improve gedit for
+-Windows over time.
+-
+-Documentation for contributors
+-------------------------------
+-
+-Write a guide to get started with gedit development.
+-
+-Done during the GNOME 3.34 development cycle.
+diff --git a/docs/roadmap.md b/docs/roadmap.md
+index 44a2f00b7..ec9445712 100644
+--- a/docs/roadmap.md
++++ b/docs/roadmap.md
+@@ -1,57 +1,40 @@
+ gedit roadmap
+ =============
+ 
+ This page contains the plans for major code changes we hope to get done in the
+ future.
+ 
+-See the [roadmap-done.md](roadmap-done.md) file for done tasks.
++See also the [GtkSourceView](https://wiki.gnome.org/Projects/GtkSourceView/RoadMap).
+ 
+ See the [NEWS file](../NEWS) for a detailed history.
+ 
+-See also the
+-[Tepl roadmap](https://gitlab.gnome.org/GNOME/tepl/blob/master/docs/roadmap.md).
+-
+-Continue to make the gedit source code more re-usable
+------------------------------------------------------
+-
+-Status: **in progress** (this is an ongoing effort)
+-
+-Next steps:
+-- Use more features from the Tepl library, and develop Tepl alongside gedit.
+-  The goal is to reduce the amount of code in gedit, by having re-usable code
+-  in Tepl instead.
+-
+-Links:
+-- https://wiki.gnome.org/Apps/Gedit/ReusableCode
+-- https://wiki.gnome.org/Projects/Tepl
+-
+ Improve gedit on Windows
+ ------------------------
+ 
+ Status: **in progress**
+ 
+ [gedit is now available on the Microsoft Store](https://www.microsoft.com/store/apps/9PL1J21XF0PT).
+ The integration with Windows is not perfect, but it works. It is planned to
+ improve gedit for Windows over time.
+ 
+ Replace search and replace dialog window by an horizontal bar below the text
+ ----------------------------------------------------------------------------
+ 
+ Status: **todo**
+ 
+ To not hide the text.
+ 
+ Be able to quit the application with all documents saved, and restored on next start
+ ------------------------------------------------------------------------------------
+ 
+ Status: **todo**
+ 
+ Even for unsaved and untitled files, be able to quit gedit, restart it later and
+ come back to the state before with all tabs restored.
+ 
+ Improve the workflow for printing to paper
+ ------------------------------------------
+ 
+ Status: **todo**
+ 
+ Implement it like in Firefox, show first a preview of the file to print.
+diff --git a/gedit/Gedit-3.0.metadata b/gedit/Gedit-3.0.metadata
+index e36d7cb30..1a5b45a3a 100644
+--- a/gedit/Gedit-3.0.metadata
++++ b/gedit/Gedit-3.0.metadata
+@@ -1,23 +1,24 @@
+ App cheader_filename="gedit/gedit-app.h"
+ AppActivatable cheader_filename="gedit/gedit-app-activatable.h"
+ DebugSection cheader_filename="gedit/gedit-debug.h"
+ Document cheader_filename="gedit/gedit-document.h"
+ EncodingsComboBox cheader_filename="gedit/gedit-encodings-combo-box.h"
+ MenuExtension cheader_filename="gedit/gedit-menu-extension.h"
+ Message cheader_filename="gedit/gedit-message.h"
+ MessageBus cheader_filename="gedit/gedit-message-bus.h"
++ProgressInfoBar cheader_filename="gedit/gedit-progress-info-bar.h"
+ Statusbar cheader_filename="gedit/gedit-statusbar.h"
+ Tab cheader_filename="gedit/gedit-tab.h"
+ TabState cheader_filename="gedit/gedit-tab.h"
+ View cheader_filename="gedit/gedit-view.h"
+ ViewActivatable cheader_filename="gedit/gedit-view-activatable.h"
+ Window cheader_filename="gedit/gedit-window.h"
+ WindowActivatable cheader_filename="gedit/gedit-window-activatable.h"
+ WindowState cheader_filename="gedit/gedit-window.h"
+ 
+ commands_* cheader_filename="gedit/gedit-commands.h"
+ debug* cheader_filename="gedit/gedit-debug.h"
+ utils_* cheader_filename="gedit/gedit-utils.h"
+ 
+ MessageBusForeach cheader_filename="gedit/gedit-message-bus.h"
+ MessageCallback cheader_filename="gedit/gedit-message-bus.h"
+diff --git a/gedit/gedit-app-osx.m b/gedit/gedit-app-osx.m
+index b02e9a28b..5df1b94da 100644
+--- a/gedit/gedit-app-osx.m
++++ b/gedit/gedit-app-osx.m
+@@ -4,61 +4,61 @@
+  *
+  * Copyright (C) 2010 - Jesse van den Kieboom
+  *
+  * gedit is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * gedit is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with gedit; if not, write to the Free Software
+  * Foundation, Inc., 51 Franklin St, Fifth Floor,
+  * Boston, MA  02110-1301  USA
+  */
+ 
+ #include "gedit-app-osx.h"
+ 
+ #include <gdk/gdkquartz.h>
+ #include <string.h>
+ #include <glib/gi18n.h>
+ 
+ #include "gedit-app-private.h"
+ #include "gedit-dirs.h"
+ #include "gedit-debug.h"
+ #include "gedit-commands.h"
+ #include "gedit-commands-private.h"
+-#include "gedit-recent-osx.h"
++#include "gedit-recent.h"
+ #import <AppKit/AppKit.h>
+ 
+ NSWindow *gdk_quartz_window_get_nswindow(GdkWindow *window);
+ NSEvent *gdk_quartz_event_get_nsevent(GdkEvent *event);
+ 
+ static GeditWindow *
+ ensure_window (GeditAppOSX *app,
+                gboolean     with_empty_document)
+ {
+ 	GList *windows;
+ 	GeditWindow *ret = NULL;
+ 
+ 	windows = gtk_application_get_windows (GTK_APPLICATION (app));
+ 
+ 	while (windows)
+ 	{
+ 		GtkWindow *window;
+ 		GdkWindow *win;
+ 		NSWindow *nswin;
+ 
+ 		window = windows->data;
+ 		windows = g_list_next (windows);
+ 
+ 		if (!gtk_widget_get_realized (GTK_WIDGET (window)))
+ 		{
+ 			continue;
+ 		}
+ 
+ 		if (!GEDIT_IS_WINDOW (window))
+ 		{
+@@ -259,61 +259,61 @@ gedit_app_osx_set_window_title_impl (GeditApp    *app,
+ 	}
+ 
+ 	native = gdk_quartz_window_get_nswindow (wnd);
+ 	document = gedit_window_get_active_document (window);
+ 
+ 	if (document)
+ 	{
+ 		bool ismodified;
+ 
+ 		if (gedit_document_is_untitled (document))
+ 		{
+ 			[native setRepresentedURL:nil];
+ 		}
+ 		else
+ 		{
+ 			GtkSourceFile *file;
+ 			GFile *location;
+ 			gchar *uri;
+ 
+ 			file = gedit_document_get_file (document);
+ 			location = gtk_source_file_get_location (file);
+ 
+ 			uri = g_file_get_uri (location);
+ 
+ 			NSURL *nsurl = [NSURL URLWithString:[NSString stringWithUTF8String:uri]];
+ 
+ 			[native setRepresentedURL:nsurl];
+ 			g_free (uri);
+ 		}
+ 
+-		ismodified = !tepl_buffer_is_untouched (TEPL_BUFFER (document));
++		ismodified = !gedit_document_is_untouched (document);
+ 		[native setDocumentEdited:ismodified];
+ 	}
+ 	else
+ 	{
+ 		[native setRepresentedURL:nil];
+ 		[native setDocumentEdited:false];
+ 	}
+ 
+ 	GEDIT_APP_CLASS (gedit_app_osx_parent_class)->set_window_title (app, window, title);
+ }
+ 
+ typedef struct
+ {
+ 	GeditAppOSX   *app;
+ 	GtkRecentInfo *info;
+ } RecentFileInfo;
+ 
+ static void
+ recent_file_info_free (gpointer  data,
+                        GClosure *closure)
+ {
+ 	RecentFileInfo *info = data;
+ 
+ 	g_object_unref (info->app);
+ 	gtk_recent_info_unref (info->info);
+ 
+ 	g_slice_free (RecentFileInfo, data);
+ }
+ 
+ static void
+diff --git a/gedit/gedit-app-private.h b/gedit/gedit-app-private.h
+index 6e1278a3b..e9c58cc27 100644
+--- a/gedit/gedit-app-private.h
++++ b/gedit/gedit-app-private.h
+@@ -1,52 +1,55 @@
+ /*
+  * gedit-app-private.h
+  * This file is part of gedit
+  *
+  * Copyright (C) 2015 - Sébastien Wilmet <swilmet@gnome.org>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #ifndef GEDIT_APP_PRIVATE_H
+ #define GEDIT_APP_PRIVATE_H
+ 
+ #include "gedit-app.h"
++#include "gedit-metadata-manager.h"
+ #include "gedit-menu-extension.h"
+ 
+ G_BEGIN_DECLS
+ 
+ /* global print config */
+ GtkPageSetup		*_gedit_app_get_default_page_setup	(GeditApp         *app);
+ void			 _gedit_app_set_default_page_setup	(GeditApp         *app,
+ 								 GtkPageSetup     *page_setup);
+ GtkPrintSettings	*_gedit_app_get_default_print_settings	(GeditApp         *app);
+ void			 _gedit_app_set_default_print_settings	(GeditApp         *app,
+ 								 GtkPrintSettings *settings);
+ 
++GeditMetadataManager	*_gedit_app_get_metadata_manager	(GeditApp  *app);
++
+ GMenuModel		*_gedit_app_get_hamburger_menu		(GeditApp  *app);
+ 
+ GMenuModel		*_gedit_app_get_notebook_menu		(GeditApp  *app);
+ 
+ GMenuModel		*_gedit_app_get_tab_width_menu		(GeditApp  *app);
+ 
+ GMenuModel		*_gedit_app_get_line_col_menu		(GeditApp  *app);
+ 
+ GeditMenuExtension	*_gedit_app_extend_menu			(GeditApp    *app,
+ 								 const gchar *extension_point);
+ 
+ G_END_DECLS
+ 
+ #endif /* GEDIT_APP_PRIVATE_H */
+ 
+ /* ex:set ts=8 noet: */
+diff --git a/gedit/gedit-app.c b/gedit/gedit-app.c
+index 5532d5975..27d71a87a 100644
+--- a/gedit/gedit-app.c
++++ b/gedit/gedit-app.c
+@@ -1,83 +1,92 @@
+ /*
+  * gedit-app.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 2005-2006 - Paolo Maggi
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
+ 
+ #include "gedit-app.h"
+ #include "gedit-app-private.h"
+ 
+ #include <string.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+ 
+ #include <glib/gi18n.h>
++#include <gio/gio.h>
+ #include <libpeas/peas-extension-set.h>
+-#include <tepl/tepl.h>
++#include <gtksourceview/gtksource.h>
+ 
+ #include "gedit-commands-private.h"
+ #include "gedit-notebook.h"
+ #include "gedit-debug.h"
+ #include "gedit-utils.h"
+ #include "gedit-enum-types.h"
+ #include "gedit-dirs.h"
+ #include "gedit-settings.h"
+ #include "gedit-app-activatable.h"
+ #include "gedit-plugins-engine.h"
+ #include "gedit-commands.h"
+ #include "gedit-preferences-dialog.h"
+ #include "gedit-tab.h"
+ 
++#ifndef ENABLE_GVFS_METADATA
++#include "gedit-metadata-manager.h"
++#endif
++
+ #define GEDIT_PAGE_SETUP_FILE		"gedit-page-setup"
+ #define GEDIT_PRINT_SETTINGS_FILE	"gedit-print-settings"
+ 
+ typedef struct
+ {
+ 	GeditPluginsEngine *engine;
+ 
++#ifndef ENABLE_GVFS_METADATA
++	GeditMetadataManager *metadata_manager;
++#endif
++
+ 	GtkCssProvider     *theme_provider;
+ 
+ 	GtkPageSetup      *page_setup;
+ 	GtkPrintSettings  *print_settings;
+ 
+ 	GSettings         *ui_settings;
+ 	GSettings         *window_settings;
+ 
+ 	GMenuModel        *hamburger_menu;
+ 	GMenuModel        *notebook_menu;
+ 	GMenuModel        *tab_width_menu;
+ 	GMenuModel        *line_col_menu;
+ 
+ 	PeasExtensionSet  *extensions;
+ 
+ 	/* command line parsing */
+ 	gboolean new_window;
+ 	gboolean new_document;
+ 	const GtkSourceEncoding *encoding;
+ 	GInputStream *stdin_stream;
+ 	GSList *file_list;
+ 	gint line_position;
+ 	gint column_position;
+ 	GApplicationCommandLine *command_line;
+ } GeditAppPrivate;
+ 
+ static const GOptionEntry options[] =
+ {
+ 	/* Version */
+ 	{
+@@ -118,60 +127,64 @@ static const GOptionEntry options[] =
+ 		"wait", 'w', 0, G_OPTION_ARG_NONE, NULL,
+ 		N_("Open files and block process until files are closed"),
+ 		NULL
+ 	},
+ 
+ 	/* New instance */
+ 	{
+ 		"standalone", 's', 0, G_OPTION_ARG_NONE, NULL,
+ 		N_("Run gedit in standalone mode"),
+ 		NULL
+ 	},
+ 
+ 	/* collects file arguments */
+ 	{
+ 		G_OPTION_REMAINING, '\0', 0, G_OPTION_ARG_FILENAME_ARRAY, NULL, NULL,
+ 		N_("[FILE…] [+LINE[:COLUMN]]")
+ 	},
+ 
+ 	{NULL}
+ };
+ 
+ G_DEFINE_TYPE_WITH_PRIVATE (GeditApp, gedit_app, GTK_TYPE_APPLICATION)
+ 
+ static void
+ gedit_app_dispose (GObject *object)
+ {
+ 	GeditAppPrivate *priv;
+ 
+ 	priv = gedit_app_get_instance_private (GEDIT_APP (object));
+ 
++#ifndef ENABLE_GVFS_METADATA
++	g_clear_object (&priv->metadata_manager);
++#endif
++
+ 	g_clear_object (&priv->ui_settings);
+ 	g_clear_object (&priv->window_settings);
+ 
+ 	g_clear_object (&priv->page_setup);
+ 	g_clear_object (&priv->print_settings);
+ 
+ 	/* Note that unreffing the extensions will automatically remove
+ 	 * all extensions which in turn will deactivate the extension
+ 	 */
+ 	g_clear_object (&priv->extensions);
+ 
+ 	g_clear_object (&priv->engine);
+ 
+ 	if (priv->theme_provider != NULL)
+ 	{
+ 		gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (),
+ 		                                              GTK_STYLE_PROVIDER (priv->theme_provider));
+ 		g_clear_object (&priv->theme_provider);
+ 	}
+ 
+ 	g_clear_object (&priv->hamburger_menu);
+ 	g_clear_object (&priv->notebook_menu);
+ 	g_clear_object (&priv->tab_width_menu);
+ 	g_clear_object (&priv->line_col_menu);
+ 
+ 	G_OBJECT_CLASS (gedit_app_parent_class)->dispose (object);
+ }
+ 
+ static gchar *
+ gedit_app_help_link_id_impl (GeditApp    *app,
+@@ -616,71 +629,82 @@ add_accelerator (GtkApplication *app,
+                  const gchar    *action_name,
+                  const gchar    *accel)
+ {
+ 	const gchar *vaccels[] = {
+ 		accel,
+ 		NULL
+ 	};
+ 
+ 	gtk_application_set_accels_for_action (app, action_name, vaccels);
+ }
+ 
+ static gboolean
+ show_menubar (void)
+ {
+ 	GtkSettings *settings = gtk_settings_get_default ();
+ 	gboolean result;
+ 
+ 	g_object_get (settings,
+ 	              "gtk-shell-shows-menubar", &result,
+ 	              NULL);
+ 
+ 	return result;
+ }
+ 
+ static void
+ gedit_app_startup (GApplication *application)
+ {
+ 	GeditAppPrivate *priv;
+ 	GtkCssProvider *css_provider;
+ 	GtkSourceStyleSchemeManager *manager;
++#ifndef ENABLE_GVFS_METADATA
++	const gchar *cache_dir;
++	gchar *metadata_filename;
++#endif
+ 
+ 	priv = gedit_app_get_instance_private (GEDIT_APP (application));
+ 
+ 	G_APPLICATION_CLASS (gedit_app_parent_class)->startup (application);
+ 
+ 	/* Setup debugging */
+ 	gedit_debug_init ();
+ 	gedit_debug_message (DEBUG_APP, "Startup");
+ 
+ 	setup_theme_extensions (GEDIT_APP (application));
+ 
++#ifndef ENABLE_GVFS_METADATA
++	cache_dir = gedit_dirs_get_user_cache_dir ();
++	metadata_filename = g_build_filename (cache_dir, "gedit-metadata.xml", NULL);
++	priv->metadata_manager = gedit_metadata_manager_new (metadata_filename);
++	g_free (metadata_filename);
++#endif
++
+ 	/* Load/init settings */
+ 	_gedit_settings_get_singleton ();
+ 	priv->ui_settings = g_settings_new ("org.gnome.gedit.preferences.ui");
+ 	priv->window_settings = g_settings_new ("org.gnome.gedit.state.window");
+ 
+ 	g_action_map_add_action_entries (G_ACTION_MAP (application),
+ 	                                 app_entries,
+ 	                                 G_N_ELEMENTS (app_entries),
+ 	                                 application);
+ 
+ 	/* menus */
+ 	if (!show_menubar ())
+ 	{
+ 		gtk_application_set_menubar (GTK_APPLICATION (application), NULL);
+ 		priv->hamburger_menu = get_menu_model (GEDIT_APP (application),
+ 		                                       "hamburger-menu");
+ 	}
+ 
+ 	priv->notebook_menu = get_menu_model (GEDIT_APP (application), "notebook-menu");
+ 	priv->tab_width_menu = get_menu_model (GEDIT_APP (application), "tab-width-menu");
+ 	priv->line_col_menu = get_menu_model (GEDIT_APP (application), "line-col-menu");
+ 
+ 	/* Accelerators */
+ 	add_accelerator (GTK_APPLICATION (application), "app.new-window", "<Primary>N");
+ 	add_accelerator (GTK_APPLICATION (application), "app.quit", "<Primary>Q");
+ 	add_accelerator (GTK_APPLICATION (application), "app.help", "F1");
+ 	add_accelerator (GTK_APPLICATION (application), "app.shortcuts", "<Primary>question");
+ 
+ 	add_accelerator (GTK_APPLICATION (application), "win.hamburger-menu", "F10");
+ 	add_accelerator (GTK_APPLICATION (application), "win.open", "<Primary>O");
+@@ -1087,60 +1111,64 @@ save_print_settings (GeditApp *app)
+ 		gchar *filename;
+ 		GError *error = NULL;
+ 
+ 		filename = get_print_settings_file ();
+ 
+ 		gtk_print_settings_to_file (priv->print_settings,
+ 					    filename,
+ 					    &error);
+ 		if (error)
+ 		{
+ 			g_warning ("%s", error->message);
+ 			g_error_free (error);
+ 		}
+ 
+ 		g_free (filename);
+ 	}
+ }
+ 
+ static void
+ gedit_app_shutdown (GApplication *app)
+ {
+ 	gedit_debug_message (DEBUG_APP, "Quitting\n");
+ 
+ 	/* Last window is gone... save some settings and exit */
+ 	ensure_user_config_dir ();
+ 
+ 	save_accels ();
+ 	save_page_setup (GEDIT_APP (app));
+ 	save_print_settings (GEDIT_APP (app));
+ 
++	/* GTK+ can still hold references to some gedit objects, for example
++	 * GeditDocument for the clipboard. So the metadata-manager should be
++	 * shutdown after.
++	 */
+ 	G_APPLICATION_CLASS (gedit_app_parent_class)->shutdown (app);
+ }
+ 
+ static gboolean
+ window_delete_event (GeditWindow *window,
+                      GdkEvent    *event,
+                      GeditApp    *app)
+ {
+ 	GeditWindowState ws;
+ 
+ 	ws = gedit_window_get_state (window);
+ 
+ 	if (ws &
+ 	    (GEDIT_WINDOW_STATE_SAVING | GEDIT_WINDOW_STATE_PRINTING))
+ 	{
+ 		return TRUE;
+ 	}
+ 
+ 	_gedit_cmd_file_quit (NULL, NULL, window);
+ 
+ 	/* Do not destroy the window */
+ 	return TRUE;
+ }
+ 
+ static GeditWindow *
+ gedit_app_create_window_impl (GeditApp *app)
+ {
+ 	GeditWindow *window;
+ 
+ 	window = g_object_new (GEDIT_TYPE_WINDOW, "application", app, NULL);
+@@ -1226,69 +1254,64 @@ load_print_settings (GeditApp *app)
+ 
+ 	priv->print_settings = gtk_print_settings_new_from_file (filename, &error);
+ 	if (error != NULL)
+ 	{
+ 		/* - Ignore file not found error.
+ 		 * - Ignore empty file error, i.e. group not found. This happens
+ 		 *   when we click on cancel in the print dialog, when using the
+ 		 *   printing for the first time in gedit.
+ 		 */
+ 		if (!g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT) &&
+ 		    !g_error_matches (error, G_KEY_FILE_ERROR, G_KEY_FILE_ERROR_GROUP_NOT_FOUND))
+ 		{
+ 			g_warning ("Load print settings error: %s", error->message);
+ 		}
+ 
+ 		g_error_free (error);
+ 	}
+ 
+ 	g_free (filename);
+ 
+ 	/* fall back to default settings */
+ 	if (priv->print_settings == NULL)
+ 	{
+ 		priv->print_settings = gtk_print_settings_new ();
+ 	}
+ }
+ 
+ static void
+ gedit_app_init (GeditApp *app)
+ {
+-	TeplApplication *tepl_app;
+-
+ 	g_set_application_name ("gedit");
+ 	gtk_window_set_default_icon_name ("org.gnome.gedit");
+ 
+ 	g_application_add_main_option_entries (G_APPLICATION (app), options);
+-
+-	tepl_app = tepl_application_get_from_gtk_application (GTK_APPLICATION (app));
+-	tepl_application_handle_metadata (tepl_app);
+ }
+ 
+ /**
+  * gedit_app_create_window:
+  * @app: the #GeditApp
+  * @screen: (allow-none):
+  *
+  * Create a new #GeditWindow part of @app.
+  *
+  * Return value: (transfer none): the new #GeditWindow
+  */
+ GeditWindow *
+ gedit_app_create_window (GeditApp  *app,
+ 			 GdkScreen *screen)
+ {
+ 	GeditAppPrivate *priv;
+ 	GeditWindow *window;
+ 	GdkWindowState state;
+ 	gint w, h;
+ 
+ 	gedit_debug (DEBUG_APP);
+ 
+ 	priv = gedit_app_get_instance_private (app);
+ 
+ 	window = GEDIT_APP_GET_CLASS (app)->create_window (app);
+ 
+ 	if (screen != NULL)
+ 	{
+ 		gtk_window_set_screen (GTK_WINDOW (window), screen);
+ 	}
+@@ -1544,60 +1567,79 @@ _gedit_app_get_default_print_settings (GeditApp *app)
+ 
+ 	priv = gedit_app_get_instance_private (app);
+ 
+ 	if (priv->print_settings == NULL)
+ 	{
+ 		load_print_settings (app);
+ 	}
+ 
+ 	return gtk_print_settings_copy (priv->print_settings);
+ }
+ 
+ void
+ _gedit_app_set_default_print_settings (GeditApp         *app,
+ 				       GtkPrintSettings *settings)
+ {
+ 	GeditAppPrivate *priv;
+ 
+ 	g_return_if_fail (GEDIT_IS_APP (app));
+ 	g_return_if_fail (GTK_IS_PRINT_SETTINGS (settings));
+ 
+ 	priv = gedit_app_get_instance_private (app);
+ 
+ 	if (priv->print_settings != NULL)
+ 	{
+ 		g_object_unref (priv->print_settings);
+ 	}
+ 
+ 	priv->print_settings = g_object_ref (settings);
+ }
+ 
++
++GeditMetadataManager *
++_gedit_app_get_metadata_manager (GeditApp *app)
++{
++#ifndef ENABLE_GVFS_METADATA
++	GeditAppPrivate *priv;
++
++	g_return_val_if_fail (GEDIT_IS_APP (app), NULL);
++
++	priv = gedit_app_get_instance_private (app);
++
++	return priv->metadata_manager;
++#else
++	g_assert_not_reached ();
++	return NULL;
++#endif
++}
++
++
+ GMenuModel *
+ _gedit_app_get_hamburger_menu (GeditApp *app)
+ {
+ 	GeditAppPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_APP (app), NULL);
+ 
+ 	priv = gedit_app_get_instance_private (app);
+ 
+ 	return priv->hamburger_menu;
+ }
+ 
+ GMenuModel *
+ _gedit_app_get_notebook_menu (GeditApp *app)
+ {
+ 	GeditAppPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_APP (app), NULL);
+ 
+ 	priv = gedit_app_get_instance_private (app);
+ 
+ 	return priv->notebook_menu;
+ }
+ 
+ GMenuModel *
+ _gedit_app_get_tab_width_menu (GeditApp *app)
+ {
+ 	GeditAppPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_APP (app), NULL);
+diff --git a/gedit/gedit-commands-edit.c b/gedit/gedit-commands-edit.c
+index 66ea0174b..978440150 100644
+--- a/gedit/gedit-commands-edit.c
++++ b/gedit/gedit-commands-edit.c
+@@ -17,180 +17,180 @@
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
+ 
+ #include "gedit-commands.h"
+ #include "gedit-commands-private.h"
+ 
+ #include <gtk/gtk.h>
+ 
+ #include "gedit-window.h"
+ #include "gedit-debug.h"
+ #include "gedit-view.h"
+ #include "gedit-preferences-dialog.h"
+ 
+ void
+ _gedit_cmd_edit_undo (GSimpleAction *action,
+                       GVariant      *parameter,
+                       gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 	GtkSourceBuffer *active_document;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+ 	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
+ 
+ 	gtk_source_buffer_undo (active_document);
+ 
+-	tepl_view_scroll_to_cursor (TEPL_VIEW (active_view));
++	gedit_view_scroll_to_cursor (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_redo (GSimpleAction *action,
+                       GVariant      *parameter,
+                       gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 	GtkSourceBuffer *active_document;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+ 	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
+ 
+ 	gtk_source_buffer_redo (active_document);
+ 
+-	tepl_view_scroll_to_cursor (TEPL_VIEW (active_view));
++	gedit_view_scroll_to_cursor (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_cut (GSimpleAction *action,
+                      GVariant      *parameter,
+                      gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+-	tepl_view_cut_clipboard (TEPL_VIEW (active_view));
++	gedit_view_cut_clipboard (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_copy (GSimpleAction *action,
+                       GVariant      *parameter,
+                       gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+-	tepl_view_copy_clipboard (TEPL_VIEW (active_view));
++	gedit_view_copy_clipboard (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_paste (GSimpleAction *action,
+                        GVariant      *parameter,
+                        gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+-	tepl_view_paste_clipboard (TEPL_VIEW (active_view));
++	gedit_view_paste_clipboard (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_delete (GSimpleAction *action,
+                         GVariant      *parameter,
+                         gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+-	tepl_view_delete_selection (TEPL_VIEW (active_view));
++	gedit_view_delete_selection (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_select_all (GSimpleAction *action,
+                             GVariant      *parameter,
+                             gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+-	g_return_if_fail (active_view != NULL);
++	g_return_if_fail (active_view);
+ 
+-	tepl_view_select_all (TEPL_VIEW (active_view));
++	gedit_view_select_all (active_view);
+ 
+ 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ }
+ 
+ void
+ _gedit_cmd_edit_preferences (GSimpleAction *action,
+                              GVariant      *parameter,
+                              gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	gedit_show_preferences_dialog (window);
+ }
+ 
+ void
+ _gedit_cmd_edit_overwrite_mode (GSimpleAction *action,
+                                 GVariant      *state,
+                                 gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GeditView *active_view;
+ 	gboolean overwrite;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+ 	g_return_if_fail (active_view);
+ 
+diff --git a/gedit/gedit-commands-file.c b/gedit/gedit-commands-file.c
+index fb64f880d..d1d440a3e 100644
+--- a/gedit/gedit-commands-file.c
++++ b/gedit/gedit-commands-file.c
+@@ -1,80 +1,75 @@
+ /*
+  * gedit-commands-file.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+  * Copyright (C) 2002-2005 Paolo Maggi
+  * Copyright (C) 2014 Sébastien Wilmet
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
+ 
+ #include "gedit-commands.h"
+ #include "gedit-commands-private.h"
+ 
+ #include <glib/gi18n.h>
+-#include <tepl/tepl.h>
+ 
+ #include "gedit-app.h"
+ #include "gedit-debug.h"
+ #include "gedit-document.h"
+ #include "gedit-document-private.h"
+ #include "gedit-tab.h"
+ #include "gedit-tab-private.h"
+ #include "gedit-window.h"
+ #include "gedit-window-private.h"
+ #include "gedit-notebook.h"
+ #include "gedit-statusbar.h"
+ #include "gedit-utils.h"
+ #include "gedit-file-chooser-dialog.h"
+ #include "gedit-file-chooser-open.h"
+ #include "gedit-close-confirmation-dialog.h"
+ 
+-/* useful macro */
+-#define GBOOLEAN_TO_POINTER(i) (GINT_TO_POINTER ((i) ? 2 : 1))
+-#define GPOINTER_TO_BOOLEAN(i) ((gboolean) ((GPOINTER_TO_INT(i) == 2) ? TRUE : FALSE))
+-
+ #define GEDIT_IS_CLOSING_ALL "gedit-is-closing-all"
+ #define GEDIT_NOTEBOOK_TO_CLOSE "gedit-notebook-to-close"
+ #define GEDIT_IS_QUITTING "gedit-is-quitting"
+ #define GEDIT_IS_QUITTING_ALL "gedit-is-quitting-all"
+ 
+ void
+ _gedit_cmd_file_new (GSimpleAction *action,
+                      GVariant      *parameter,
+                      gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	gedit_window_create_tab (window, TRUE);
+ }
+ 
+ static GeditTab *
+ get_tab_from_file (GList *docs,
+ 		   GFile *file)
+ {
+ 	GList *l;
+ 
+ 	for (l = docs; l != NULL; l = l->next)
+ 	{
+ 		GeditDocument *doc;
+ 		GtkSourceFile *source_file;
+ 		GFile *location;
+ 
+ 		doc = l->data;
+@@ -123,105 +118,107 @@ load_file_list (GeditWindow             *window,
+ 	gboolean jump_to = TRUE; /* Whether to jump to the new tab */
+ 	const GSList *l;
+ 	gint num_loaded_files = 0;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	win_docs = gedit_window_get_documents (window);
+ 
+ 	/* Remove the files corresponding to documents already opened in
+ 	 * "window" and remove duplicates from the "files" list.
+ 	 */
+ 	for (l = files; l != NULL; l = l->next)
+ 	{
+ 		GFile *file = l->data;
+ 
+ 		if (is_duplicated_file (files_to_load, file))
+ 		{
+ 			continue;
+ 		}
+ 
+ 		tab = get_tab_from_file (win_docs, file);
+ 
+ 		if (tab == NULL)
+ 		{
+ 			files_to_load = g_slist_prepend (files_to_load, file);
+ 		}
+ 		else
+ 		{
+ 			if (l == files)
+ 			{
+-				TeplView *view;
++				GeditDocument *doc;
+ 
+ 				gedit_window_set_active_tab (window, tab);
+ 				jump_to = FALSE;
+-				view = TEPL_VIEW (gedit_tab_get_view (tab));
++				doc = gedit_tab_get_document (tab);
+ 
+ 				if (line_pos > 0)
+ 				{
+ 					if (column_pos > 0)
+ 					{
+-						tepl_view_goto_line_offset (view,
+-									    line_pos - 1,
+-									    column_pos - 1);
++						gedit_document_goto_line_offset (doc,
++						                                 line_pos - 1,
++						                                 column_pos - 1);
+ 					}
+ 					else
+ 					{
+-						tepl_view_goto_line (view, line_pos - 1);
++						gedit_document_goto_line (doc, line_pos - 1);
+ 					}
++
++					gedit_view_scroll_to_cursor (gedit_tab_get_view (tab));
+ 				}
+ 			}
+ 
+ 			++num_loaded_files;
+ 			loaded_files = g_slist_prepend (loaded_files,
+ 			                                gedit_tab_get_document (tab));
+ 		}
+ 	}
+ 
+ 	g_list_free (win_docs);
+ 
+ 	if (files_to_load == NULL)
+ 	{
+ 		return g_slist_reverse (loaded_files);
+ 	}
+ 
+ 	files_to_load = g_slist_reverse (files_to_load);
+ 	l = files_to_load;
+ 
+ 	tab = gedit_window_get_active_tab (window);
+ 	if (tab != NULL)
+ 	{
+ 		GeditDocument *doc;
+ 
+ 		doc = gedit_tab_get_document (tab);
+ 
+-		if (tepl_buffer_is_untouched (TEPL_BUFFER (doc)) &&
++		if (gedit_document_is_untouched (doc) &&
+ 		    gedit_tab_get_state (tab) == GEDIT_TAB_STATE_NORMAL)
+ 		{
+ 			_gedit_tab_load (tab,
+ 					 l->data,
+ 					 encoding,
+ 					 line_pos,
+ 					 column_pos,
+ 					 create);
+ 
+ 			/* make sure the view has focus */
+ 			gtk_widget_grab_focus (GTK_WIDGET (gedit_tab_get_view (tab)));
+ 
+ 			l = g_slist_next (l);
+ 			jump_to = FALSE;
+ 
+ 			++num_loaded_files;
+ 			loaded_files = g_slist_prepend (loaded_files,
+ 			                                gedit_tab_get_document (tab));
+ 		}
+ 	}
+ 
+ 	while (l != NULL)
+ 	{
+ 		g_return_val_if_fail (l->data != NULL, NULL);
+ 
+ 		tab = gedit_window_create_tab_from_location (window,
+ 							     l->data,
+ 							     encoding,
+ 							     line_pos,
+ 							     column_pos,
+@@ -446,113 +443,113 @@ _gedit_cmd_file_reopen_closed_tab (GSimpleAction *action,
+ 	GFile *file;
+ 
+ 	file = _gedit_window_pop_last_closed_doc (window);
+ 	if (file != NULL)
+ 	{
+ 		gedit_commands_load_location (window, file, NULL, 0, 0);
+ 	}
+ }
+ 
+ /* File saving */
+ 
+ /* FIXME: modify this dialog to be similar to the one provided by gtk+ for
+  * already existing files - Paolo (Oct. 11, 2005) */
+ static gboolean
+ replace_read_only_file (GtkWindow *parent,
+ 			GFile     *file)
+ {
+ 	GtkWidget *dialog;
+ 	gint ret;
+ 	gchar *parse_name;
+ 	gchar *name_for_display;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	parse_name = g_file_get_parse_name (file);
+ 
+ 	/* Truncate the name so it doesn't get insanely wide. Note that even
+ 	 * though the dialog uses wrapped text, if the name doesn't contain
+ 	 * white space then the text-wrapping code is too stupid to wrap it.
+ 	 */
+-	name_for_display = tepl_utils_str_middle_truncate (parse_name, 50);
++	name_for_display = gedit_utils_str_middle_truncate (parse_name, 50);
+ 	g_free (parse_name);
+ 
+ 	dialog = gtk_message_dialog_new (parent,
+ 					 GTK_DIALOG_DESTROY_WITH_PARENT,
+ 					 GTK_MESSAGE_QUESTION,
+ 					 GTK_BUTTONS_NONE,
+ 					 _("The file “%s” is read-only."),
+ 				         name_for_display);
+ 	g_free (name_for_display);
+ 
+ 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+ 						  _("Do you want to try to replace it "
+ 						    "with the one you are saving?"));
+ 
+ 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+ 			        _("_Cancel"), GTK_RESPONSE_CANCEL,
+ 				_("_Replace"), GTK_RESPONSE_YES,
+ 				NULL);
+ 
+ 	gtk_dialog_set_default_response	(GTK_DIALOG (dialog),
+ 					 GTK_RESPONSE_CANCEL);
+ 
+ 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+ 
+ 	ret = gtk_dialog_run (GTK_DIALOG (dialog));
+ 
+ 	gtk_widget_destroy (dialog);
+ 
+ 	return ret == GTK_RESPONSE_YES;
+ }
+ 
+ static gboolean
+ change_compression (GtkWindow *parent,
+                     GFile     *file,
+                     gboolean   compressed)
+ {
+ 	GtkWidget *dialog;
+ 	gint ret;
+ 	gchar *parse_name;
+ 	gchar *name_for_display;
+ 	const gchar *primary_message;
+ 	const gchar *button_label;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	parse_name = g_file_get_parse_name (file);
+ 
+ 	/* Truncate the name so it doesn't get insanely wide. Note that even
+ 	 * though the dialog uses wrapped text, if the name doesn't contain
+ 	 * white space then the text-wrapping code is too stupid to wrap it.
+ 	 */
+-	name_for_display = tepl_utils_str_middle_truncate (parse_name, 50);
++	name_for_display = gedit_utils_str_middle_truncate (parse_name, 50);
+ 	g_free (parse_name);
+ 
+ 	if (compressed)
+ 	{
+ 		primary_message = _("Save the file using compression?");
+ 	}
+ 	else
+ 	{
+ 		primary_message = _("Save the file as plain text?");
+ 	}
+ 
+ 	dialog = gtk_message_dialog_new (parent,
+ 					 GTK_DIALOG_DESTROY_WITH_PARENT,
+ 					 GTK_MESSAGE_QUESTION,
+ 					 GTK_BUTTONS_NONE,
+ 					 "%s",
+ 					 primary_message);
+ 
+ 	if (compressed)
+ 	{
+ 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+ 							  _("The file “%s” was previously saved as plain "
+ 							    "text and will now be saved using compression."),
+ 							  name_for_display);
+ 
+ 		button_label = _("_Save Using Compression");
+ 	}
+ 	else
+ 	{
+ 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+@@ -760,60 +757,61 @@ confirm_overwrite_callback (GeditFileChooserDialog *dialog,
+ 
+ /* Call save_as_tab_finish() in @callback. */
+ static void
+ save_as_tab_async (GeditTab            *tab,
+ 		   GeditWindow         *window,
+ 		   GCancellable        *cancellable,
+ 		   GAsyncReadyCallback  callback,
+ 		   gpointer             user_data)
+ {
+ 	GTask *task;
+ 	GeditFileChooserDialog *save_dialog;
+ 	GtkWindowGroup *window_group;
+ 	GtkWindow *dialog_window;
+ 	GeditDocument *doc;
+ 	GtkSourceFile *file;
+ 	GFile *location;
+ 	const GtkSourceEncoding *encoding;
+ 	GtkSourceNewlineType newline_type;
+ 
+ 	g_return_if_fail (GEDIT_IS_TAB (tab));
+ 	g_return_if_fail (GEDIT_IS_WINDOW (window));
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	task = g_task_new (tab, cancellable, callback, user_data);
+ 	g_task_set_task_data (task, g_object_ref (window), g_object_unref);
+ 
+ 	/* Translators: "Save As" is the title of the file chooser window. */
+ 	save_dialog = gedit_file_chooser_dialog_create (C_("window title", "Save As"),
+ 							GTK_WINDOW (window),
++							GEDIT_FILE_CHOOSER_FLAG_SAVE,
+ 							_("_Save"),
+ 							_("_Cancel"));
+ 
+ 	gedit_file_chooser_dialog_set_do_overwrite_confirmation (save_dialog, TRUE);
+ 
+ 	g_signal_connect (save_dialog,
+ 			  "confirm-overwrite",
+ 			  G_CALLBACK (confirm_overwrite_callback),
+ 			  NULL);
+ 
+ 	window_group = gedit_window_get_group (window);
+ 
+ 	dialog_window = gedit_file_chooser_dialog_get_window (save_dialog);
+ 
+ 	if (dialog_window != NULL)
+ 	{
+ 		gtk_window_group_add_window (window_group, dialog_window);
+ 	}
+ 
+ 	/* Save As dialog is modal to its main window */
+ 	gedit_file_chooser_dialog_set_modal (save_dialog, TRUE);
+ 
+ 	/* Set the suggested file name */
+ 	doc = gedit_tab_get_document (tab);
+ 	file = gedit_document_get_file (doc);
+ 	location = gtk_source_file_get_location (file);
+ 
+ 	if (location != NULL)
+ 	{
+ 		gedit_file_chooser_dialog_set_file (save_dialog, location);
+diff --git a/gedit/gedit-commands-search.c b/gedit/gedit-commands-search.c
+index 22703985e..f120b8bad 100644
+--- a/gedit/gedit-commands-search.c
++++ b/gedit/gedit-commands-search.c
+@@ -2,61 +2,60 @@
+  * gedit-commands-search.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+  * Copyright (C) 2002-2006 Paolo Maggi
+  * Copyright (C) 2013 Sébastien Wilmet
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
+ 
+ #include "gedit-commands.h"
+ #include "gedit-commands-private.h"
+ 
+ #include <string.h>
+ #include <glib/gi18n.h>
+ #include <gdk/gdkkeysyms.h>
+-#include <tepl/tepl.h>
+ 
+ #include "gedit-debug.h"
+ #include "gedit-statusbar.h"
+ #include "gedit-tab.h"
+ #include "gedit-tab-private.h"
+ #include "gedit-view-frame.h"
+ #include "gedit-window.h"
+ #include "gedit-window-private.h"
+ #include "gedit-utils.h"
+ #include "gedit-replace-dialog.h"
+ 
+ #define GEDIT_REPLACE_DIALOG_KEY	"gedit-replace-dialog-key"
+ #define GEDIT_LAST_SEARCH_DATA_KEY	"gedit-last-search-data-key"
+ 
+ typedef struct _LastSearchData LastSearchData;
+ struct _LastSearchData
+ {
+ 	gint x;
+ 	gint y;
+ };
+ 
+ static void
+ last_search_data_free (LastSearchData *data)
+ {
+ 	g_slice_free (LastSearchData, data);
+ }
+ 
+ static void
+ last_search_data_restore_position (GeditReplaceDialog *dlg)
+ {
+@@ -105,117 +104,117 @@ text_found (GeditWindow *window,
+ 					       window->priv->generic_message_cid,
+ 					       ngettext("Found and replaced %d occurrence",
+ 					     	        "Found and replaced %d occurrences",
+ 					     	        occurrences),
+ 					       occurrences);
+ 	}
+ 	else if (occurrences == 1)
+ 	{
+ 		gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
+ 					       window->priv->generic_message_cid,
+ 					       _("Found and replaced one occurrence"));
+ 	}
+ 	else
+ 	{
+ 		gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
+ 					       window->priv->generic_message_cid,
+ 					       " ");
+ 	}
+ }
+ 
+ #define MAX_MSG_LENGTH 40
+ 
+ static void
+ text_not_found (GeditWindow        *window,
+ 		GeditReplaceDialog *replace_dialog)
+ {
+ 	const gchar *search_text;
+ 	gchar *truncated_text;
+ 
+ 	search_text = gedit_replace_dialog_get_search_text (replace_dialog);
+-	truncated_text = tepl_utils_str_end_truncate (search_text, MAX_MSG_LENGTH);
++	truncated_text = gedit_utils_str_end_truncate (search_text, MAX_MSG_LENGTH);
+ 
+ 	gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
+ 				       window->priv->generic_message_cid,
+ 				       /* Translators: %s is replaced by the text
+ 				          entered by the user in the search box */
+ 				       _("“%s” not found"), truncated_text);
+ 
+ 	g_free (truncated_text);
+ }
+ 
+ static void
+ finish_search_from_dialog (GeditWindow *window,
+ 			   gboolean     found)
+ {
+ 	GeditReplaceDialog *replace_dialog;
+ 
+ 	replace_dialog = g_object_get_data (G_OBJECT (window), GEDIT_REPLACE_DIALOG_KEY);
+ 
+ 	g_return_if_fail (replace_dialog != NULL);
+ 
+ 	if (found)
+ 	{
+ 		text_found (window, 0);
+ 	}
+ 	else
+ 	{
+ 		text_not_found (window, replace_dialog);
+ 	}
+ }
+ 
+ static gboolean
+ forward_search_finished (GtkSourceSearchContext *search_context,
+ 			 GAsyncResult           *result,
+ 			 GeditView              *view)
+ {
+ 	gboolean found;
+ 	GtkSourceBuffer *buffer;
+ 	GtkTextIter match_start;
+ 	GtkTextIter match_end;
+ 
+ 	found = gtk_source_search_context_forward_finish (search_context,
+ 							  result,
+ 							  &match_start,
+ 							  &match_end,
+ 							  NULL,
+ 							  NULL);
+ 
+ 	buffer = gtk_source_search_context_get_buffer (search_context);
+ 
+ 	if (found)
+ 	{
+ 		gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer),
+ 					      &match_start,
+ 					      &match_end);
+ 
+-		tepl_view_scroll_to_cursor (TEPL_VIEW (view));
++		gedit_view_scroll_to_cursor (view);
+ 	}
+ 	else
+ 	{
+ 		GtkTextIter end_selection;
+ 
+ 		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer),
+ 						      NULL,
+ 						      &end_selection);
+ 
+ 		gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer),
+ 					      &end_selection,
+ 					      &end_selection);
+ 	}
+ 
+ 	return found;
+ }
+ 
+ static void
+ forward_search_from_dialog_finished (GtkSourceSearchContext *search_context,
+ 				     GAsyncResult           *result,
+ 				     GeditWindow            *window)
+ {
+ 	GeditView *view = gedit_window_get_active_view (window);
+ 	gboolean found;
+ 
+ 	if (view == NULL)
+ 	{
+ 		return;
+ 	}
+ 
+@@ -267,61 +266,61 @@ run_forward_search (GeditWindow *window,
+ 							 (GAsyncReadyCallback)forward_search_finished,
+ 							 view);
+ 	}
+ }
+ 
+ static gboolean
+ backward_search_finished (GtkSourceSearchContext *search_context,
+ 			  GAsyncResult           *result,
+ 			  GeditView              *view)
+ {
+ 	gboolean found;
+ 	GtkTextIter match_start;
+ 	GtkTextIter match_end;
+ 	GtkSourceBuffer *buffer;
+ 
+ 	found = gtk_source_search_context_backward_finish (search_context,
+ 							   result,
+ 							   &match_start,
+ 							   &match_end,
+ 							   NULL,
+ 							   NULL);
+ 
+ 	buffer = gtk_source_search_context_get_buffer (search_context);
+ 
+ 	if (found)
+ 	{
+ 		gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer),
+ 					      &match_start,
+ 					      &match_end);
+ 
+-		tepl_view_scroll_to_cursor (TEPL_VIEW (view));
++		gedit_view_scroll_to_cursor (view);
+ 	}
+ 	else
+ 	{
+ 		GtkTextIter start_selection;
+ 
+ 		gtk_text_buffer_get_selection_bounds (GTK_TEXT_BUFFER (buffer),
+ 						      &start_selection,
+ 						      NULL);
+ 
+ 		gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer),
+ 					      &start_selection,
+ 					      &start_selection);
+ 	}
+ 
+ 	return found;
+ }
+ 
+ static void
+ backward_search_from_dialog_finished (GtkSourceSearchContext *search_context,
+ 				      GAsyncResult           *result,
+ 				      GeditWindow            *window)
+ {
+ 	GeditView *view = gedit_window_get_active_view (window);
+ 	gboolean found;
+ 
+ 	if (view == NULL)
+ 	{
+ 		return;
+ 	}
+ 
+diff --git a/gedit/gedit-commands-view.c b/gedit/gedit-commands-view.c
+index 71785b78f..369bc93b0 100644
+--- a/gedit/gedit-commands-view.c
++++ b/gedit/gedit-commands-view.c
+@@ -1,58 +1,63 @@
+ /*
+  * gedit-view-commands.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+  * Copyright (C) 2002-2005 Paolo Maggi
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
++
+ #include "gedit-commands.h"
+ #include "gedit-commands-private.h"
+-#include <tepl/tepl.h>
++
++#include <gtk/gtk.h>
++
+ #include "gedit-debug.h"
+ #include "gedit-window.h"
++#include "gedit-highlight-mode-dialog.h"
++#include "gedit-highlight-mode-selector.h"
+ 
+ void
+ _gedit_cmd_view_focus_active (GSimpleAction *action,
+                               GVariant      *state,
+                               gpointer       user_data)
+ {
+ 	GeditView *active_view;
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	active_view = gedit_window_get_active_view (window);
+ 
+ 	if (active_view)
+ 	{
+ 		gtk_widget_grab_focus (GTK_WIDGET (active_view));
+ 	}
+ }
+ 
+ void
+ _gedit_cmd_view_toggle_side_panel (GSimpleAction *action,
+                                    GVariant      *state,
+                                    gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 	GtkWidget *panel;
+ 	gboolean visible;
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+@@ -94,88 +99,75 @@ _gedit_cmd_view_toggle_bottom_panel (GSimpleAction *action,
+ }
+ 
+ void
+ _gedit_cmd_view_toggle_fullscreen_mode (GSimpleAction *action,
+                                         GVariant      *state,
+                                         gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+ 
+ 	gedit_debug (DEBUG_COMMANDS);
+ 
+ 	if (g_variant_get_boolean (state))
+ 	{
+ 		_gedit_window_fullscreen (window);
+ 	}
+ 	else
+ 	{
+ 		_gedit_window_unfullscreen (window);
+ 	}
+ }
+ 
+ void
+ _gedit_cmd_view_leave_fullscreen_mode (GSimpleAction *action,
+                                        GVariant      *parameter,
+                                        gpointer       user_data)
+ {
+ 	_gedit_window_unfullscreen (GEDIT_WINDOW (user_data));
+ }
+ 
+ static void
+-language_activated_cb (TeplLanguageChooserDialog *dialog,
+-		       GtkSourceLanguage         *language,
+-		       GeditWindow               *window)
++language_selected_cb (GeditHighlightModeSelector *selector,
++		      GtkSourceLanguage          *language,
++		      GeditWindow                *window)
+ {
+ 	GeditDocument *active_document;
+ 
+ 	active_document = gedit_window_get_active_document (window);
+ 	if (active_document != NULL)
+ 	{
+ 		gedit_document_set_language (active_document, language);
+ 	}
+-
+-	gtk_widget_destroy (GTK_WIDGET (dialog));
+-}
+-
+-static void
+-language_chooser_dialog_response_after_cb (TeplLanguageChooserDialog *dialog,
+-					   gint                       response_id,
+-					   gpointer                   user_data)
+-{
+-	gtk_widget_destroy (GTK_WIDGET (dialog));
+ }
+ 
+ void
+ _gedit_cmd_view_highlight_mode (GSimpleAction *action,
+                                 GVariant      *parameter,
+                                 gpointer       user_data)
+ {
+ 	GeditWindow *window = GEDIT_WINDOW (user_data);
+-	TeplLanguageChooserDialog *dialog;
++	GeditHighlightModeDialog *dialog;
++	GeditHighlightModeSelector *selector;
+ 	GeditDocument *active_document;
+ 
+-	dialog = tepl_language_chooser_dialog_new (GTK_WINDOW (window));
++	dialog = GEDIT_HIGHLIGHT_MODE_DIALOG (gedit_highlight_mode_dialog_new (GTK_WINDOW (window)));
++	selector = gedit_highlight_mode_dialog_get_selector (dialog);
+ 
+ 	active_document = gedit_window_get_active_document (window);
+ 	if (active_document != NULL)
+ 	{
+ 		GtkSourceLanguage *language;
+ 
+ 		language = gedit_document_get_language (active_document);
+-		tepl_language_chooser_select_language (TEPL_LANGUAGE_CHOOSER (dialog), language);
++		gedit_highlight_mode_selector_select_language (selector, language);
+ 	}
+ 
+-	g_signal_connect_object (dialog,
+-				 "language-activated",
+-				 G_CALLBACK (language_activated_cb),
++	g_signal_connect_object (selector,
++				 "language-selected",
++				 G_CALLBACK (language_selected_cb),
+ 				 window,
+ 				 0);
+ 
+-	g_signal_connect_after (dialog,
+-				"response",
+-				G_CALLBACK (language_chooser_dialog_response_after_cb),
+-				NULL);
+-
+ 	gtk_widget_show (GTK_WIDGET (dialog));
+ }
+ 
+ /* ex:set ts=8 noet: */
+diff --git a/gedit/gedit-debug.c b/gedit/gedit-debug.c
+index 5aa82fa51..396dc140f 100644
+--- a/gedit/gedit-debug.c
++++ b/gedit/gedit-debug.c
+@@ -73,60 +73,64 @@ gedit_debug_init (void)
+ 		enabled_sections |= GEDIT_DEBUG_WINDOW;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_PANEL") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_PANEL;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_PLUGINS") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_PLUGINS;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_TAB") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_TAB;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_DOCUMENT") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_DOCUMENT;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_COMMANDS") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_COMMANDS;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_APP") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_APP;
+ 	}
+ 	if (g_getenv ("GEDIT_DEBUG_UTILS") != NULL)
+ 	{
+ 		enabled_sections |= GEDIT_DEBUG_UTILS;
+ 	}
++	if (g_getenv ("GEDIT_DEBUG_METADATA") != NULL)
++	{
++		enabled_sections |= GEDIT_DEBUG_METADATA;
++	}
+ 
+ out:
+ 
+ #ifdef ENABLE_PROFILING
+ 	if (enabled_sections != GEDIT_NO_DEBUG)
+ 	{
+ 		timer = g_timer_new ();
+ 	}
+ #endif
+ }
+ 
+ /**
+  * gedit_debug:
+  * @section: debug section.
+  * @file: file name.
+  * @line: line number.
+  * @function: name of the function that is calling gedit_debug().
+  *
+  * If @section is enabled, then logs the trace information @file, @line, and
+  * @function.
+  */
+ void
+ gedit_debug (GeditDebugSection  section,
+ 	     const gchar       *file,
+ 	     gint               line,
+ 	     const gchar       *function)
+ {
+ 	gedit_debug_message (section, file, line, function, "%s", "");
+ }
+ 
+diff --git a/gedit/gedit-debug.h b/gedit/gedit-debug.h
+index a9d7caf37..49e5127e1 100644
+--- a/gedit/gedit-debug.h
++++ b/gedit/gedit-debug.h
+@@ -21,63 +21,65 @@
+  */
+ 
+ #ifndef GEDIT_DEBUG_H
+ #define GEDIT_DEBUG_H
+ 
+ #include <glib.h>
+ 
+ /**
+  * GeditDebugSection:
+  *
+  * Enumeration of debug sections.
+  *
+  * Debugging output for a section is enabled by setting an environment variable
+  * of the same name. For example, setting the <code>GEDIT_DEBUG_PLUGINS</code>
+  * environment variable enables all debugging output for the %GEDIT_DEBUG_PLUGINS
+  * section. Setting the special environment variable <code>GEDIT_DEBUG</code>
+  * enables output for all sections.
+  */
+ typedef enum {
+ 	GEDIT_NO_DEBUG       = 0,
+ 	GEDIT_DEBUG_VIEW     = 1 << 0,
+ 	GEDIT_DEBUG_PREFS    = 1 << 1,
+ 	GEDIT_DEBUG_WINDOW   = 1 << 2,
+ 	GEDIT_DEBUG_PANEL    = 1 << 3,
+ 	GEDIT_DEBUG_PLUGINS  = 1 << 4,
+ 	GEDIT_DEBUG_TAB      = 1 << 5,
+ 	GEDIT_DEBUG_DOCUMENT = 1 << 6,
+ 	GEDIT_DEBUG_COMMANDS = 1 << 7,
+ 	GEDIT_DEBUG_APP      = 1 << 8,
+ 	GEDIT_DEBUG_UTILS    = 1 << 9,
++	GEDIT_DEBUG_METADATA = 1 << 10,
+ } GeditDebugSection;
+ 
+ #define	DEBUG_VIEW	GEDIT_DEBUG_VIEW,    __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_PREFS	GEDIT_DEBUG_PREFS,   __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_WINDOW	GEDIT_DEBUG_WINDOW,  __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_PANEL	GEDIT_DEBUG_PANEL,   __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_PLUGINS	GEDIT_DEBUG_PLUGINS, __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_TAB	GEDIT_DEBUG_TAB,     __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_DOCUMENT	GEDIT_DEBUG_DOCUMENT,__FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_COMMANDS	GEDIT_DEBUG_COMMANDS,__FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_APP	GEDIT_DEBUG_APP,     __FILE__, __LINE__, G_STRFUNC
+ #define	DEBUG_UTILS	GEDIT_DEBUG_UTILS,   __FILE__, __LINE__, G_STRFUNC
++#define	DEBUG_METADATA	GEDIT_DEBUG_METADATA,__FILE__, __LINE__, G_STRFUNC
+ 
+ void gedit_debug_init (void);
+ 
+ void gedit_debug (GeditDebugSection  section,
+ 		  const gchar       *file,
+ 		  gint               line,
+ 		  const gchar       *function);
+ 
+ void gedit_debug_message (GeditDebugSection  section,
+ 			  const gchar       *file,
+ 			  gint               line,
+ 			  const gchar       *function,
+ 			  const gchar       *format, ...) G_GNUC_PRINTF(5, 6);
+ 
+ void gedit_debug_plugin_message (const gchar       *file,
+ 				 gint               line,
+ 				 const gchar       *function,
+ 				 const gchar       *message);
+ 
+ #endif /* GEDIT_DEBUG_H */
+ /* ex:set ts=8 noet: */
+diff --git a/gedit/gedit-document-private.h b/gedit/gedit-document-private.h
+index 62444cc76..574c0bb89 100644
+--- a/gedit/gedit-document-private.h
++++ b/gedit/gedit-document-private.h
+@@ -1,57 +1,63 @@
+ /*
+  * gedit-document.h
+  * This file is part of gedit
+  *
+  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+  * Copyright (C) 2002-2005 Paolo Maggi
+  * Copyright (C) 2014, 2020 Sébastien Wilmet
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #ifndef GEDIT_DOCUMENT_PRIVATE_H
+ #define GEDIT_DOCUMENT_PRIVATE_H
+ 
+ #include "gedit-document.h"
+ 
+ G_BEGIN_DECLS
+ 
+-#define GEDIT_METADATA_ATTRIBUTE_POSITION "gedit-position"
+-#define GEDIT_METADATA_ATTRIBUTE_ENCODING "gedit-encoding"
+-#define GEDIT_METADATA_ATTRIBUTE_LANGUAGE "gedit-language"
++#ifdef G_OS_WIN32
++#define GEDIT_METADATA_ATTRIBUTE_POSITION "position"
++#define GEDIT_METADATA_ATTRIBUTE_ENCODING "encoding"
++#define GEDIT_METADATA_ATTRIBUTE_LANGUAGE "language"
++#else
++#define GEDIT_METADATA_ATTRIBUTE_POSITION "metadata::gedit-position"
++#define GEDIT_METADATA_ATTRIBUTE_ENCODING "metadata::gedit-encoding"
++#define GEDIT_METADATA_ATTRIBUTE_LANGUAGE "metadata::gedit-language"
++#endif
+ 
+ G_GNUC_INTERNAL
+ glong		_gedit_document_get_seconds_since_last_save_or_load	(GeditDocument *doc);
+ 
+ G_GNUC_INTERNAL
+ gboolean	_gedit_document_needs_saving				(GeditDocument *doc);
+ 
+ G_GNUC_INTERNAL
+ gboolean	_gedit_document_get_empty_search			(GeditDocument *doc);
+ 
+ G_GNUC_INTERNAL
+ void		_gedit_document_set_create				(GeditDocument *doc,
+ 									 gboolean       create);
+ 
+ G_GNUC_INTERNAL
+ gboolean	_gedit_document_get_create				(GeditDocument *doc);
+ 
+ G_GNUC_INTERNAL
+ gchar *		_gedit_document_get_uri_for_display			(GeditDocument *doc);
+ 
+ G_END_DECLS
+ 
+ #endif /* GEDIT_DOCUMENT_PRIVATE_H */
+ /* ex:set ts=8 noet: */
+diff --git a/gedit/gedit-document.c b/gedit/gedit-document.c
+index 54c11a96c..4cb08ee03 100644
+--- a/gedit/gedit-document.c
++++ b/gedit/gedit-document.c
+@@ -1,156 +1,177 @@
+ /*
+  * gedit-document.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+  * Copyright (C) 2002-2005 Paolo Maggi
+- * Copyright (C) 2014-2020 Sébastien Wilmet
++ * Copyright (C) 2014-2015 Sébastien Wilmet
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
++
+ #include "gedit-document.h"
+ #include "gedit-document-private.h"
++
+ #include <string.h>
+ #include <glib/gi18n.h>
++
++#include "gedit-app.h"
++#include "gedit-app-private.h"
+ #include "gedit-settings.h"
+ #include "gedit-debug.h"
+ #include "gedit-utils.h"
++#include "gedit-metadata-manager.h"
++
++#define METADATA_QUERY "metadata::*"
+ 
+ #define NO_LANGUAGE_NAME "_NORMAL_"
+ 
+ static void	gedit_document_loaded_real	(GeditDocument *doc);
+ 
+ static void	gedit_document_saved_real	(GeditDocument *doc);
+ 
+ static void	set_content_type		(GeditDocument *doc,
+ 						 const gchar   *content_type);
+ 
+ typedef struct
+ {
+ 	GtkSourceFile *file;
+ 
+-	TeplMetadata *metadata;
++	GSettings   *editor_settings;
++
++	gint 	     untitled_number;
++
++	GFileInfo   *metadata_info;
+ 
+ 	gchar	    *content_type;
+ 
+ 	GDateTime   *time_of_last_save_or_load;
+ 
+ 	/* The search context for the incremental search, or the search and
+ 	 * replace. They are mutually exclusive.
+ 	 */
+ 	GtkSourceSearchContext *search_context;
+ 
++	GeditMetadataManager *metadata_manager;
++
++	guint user_action;
++
+ 	guint language_set_by_user : 1;
++	guint use_gvfs_metadata : 1;
+ 
+ 	/* The search is empty if there is no search context, or if the
+ 	 * search text is empty. It is used for the sensitivity of some menu
+ 	 * actions.
+ 	 */
+ 	guint empty_search : 1;
+ 
+ 	/* Create file if location points to a non existing file (for example
+ 	 * when opened from the command line).
+ 	 */
+ 	guint create : 1;
+ } GeditDocumentPrivate;
+ 
+ enum
+ {
+ 	PROP_0,
++	PROP_SHORTNAME,
+ 	PROP_CONTENT_TYPE,
+ 	PROP_MIME_TYPE,
+ 	PROP_EMPTY_SEARCH,
++	PROP_USE_GVFS_METADATA,
+ 	LAST_PROP
+ };
+ 
+ static GParamSpec *properties[LAST_PROP];
+ 
+ enum
+ {
++	CURSOR_MOVED,
+ 	LOAD,
+ 	LOADED,
+ 	SAVE,
+ 	SAVED,
+ 	LAST_SIGNAL
+ };
+ 
+ static guint document_signals[LAST_SIGNAL];
+ 
+-G_DEFINE_TYPE_WITH_PRIVATE (GeditDocument, gedit_document, TEPL_TYPE_BUFFER)
++static GHashTable *allocated_untitled_numbers = NULL;
+ 
+-static void
+-load_metadata_from_metadata_manager (GeditDocument *doc)
++G_DEFINE_TYPE_WITH_PRIVATE (GeditDocument, gedit_document, GTK_SOURCE_TYPE_BUFFER)
++
++static gint
++get_untitled_number (void)
+ {
+-	GeditDocumentPrivate *priv = gedit_document_get_instance_private (doc);
+-	GFile *location;
++	gint i = 1;
+ 
+-	location = gtk_source_file_get_location (priv->file);
++	if (allocated_untitled_numbers == NULL)
++		allocated_untitled_numbers = g_hash_table_new (NULL, NULL);
+ 
+-	if (location != NULL)
++	g_return_val_if_fail (allocated_untitled_numbers != NULL, -1);
++
++	while (TRUE)
+ 	{
+-		TeplMetadataManager *manager;
++		if (g_hash_table_lookup (allocated_untitled_numbers, GINT_TO_POINTER (i)) == NULL)
++		{
++			g_hash_table_insert (allocated_untitled_numbers,
++					     GINT_TO_POINTER (i),
++					     GINT_TO_POINTER (i));
+ 
+-		manager = tepl_metadata_manager_get_singleton ();
+-		tepl_metadata_manager_copy_from (manager, location, priv->metadata);
++			return i;
++		}
++
++		++i;
+ 	}
+ }
+ 
+ static void
+-save_metadata_into_metadata_manager (GeditDocument *doc)
++release_untitled_number (gint n)
+ {
+-	GeditDocumentPrivate *priv = gedit_document_get_instance_private (doc);
+-	GFile *location;
+-
+-	location = gtk_source_file_get_location (priv->file);
+-
+-	if (location != NULL)
+-	{
+-		TeplMetadataManager *manager;
++	g_return_if_fail (allocated_untitled_numbers != NULL);
+ 
+-		manager = tepl_metadata_manager_get_singleton ();
+-		tepl_metadata_manager_merge_into (manager, location, priv->metadata);
+-	}
++	g_hash_table_remove (allocated_untitled_numbers, GINT_TO_POINTER (n));
+ }
+ 
+ static void
+ update_time_of_last_save_or_load (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv = gedit_document_get_instance_private (doc);
+ 
+ 	if (priv->time_of_last_save_or_load != NULL)
+ 	{
+ 		g_date_time_unref (priv->time_of_last_save_or_load);
+ 	}
+ 
+ 	priv->time_of_last_save_or_load = g_date_time_new_now_utc ();
+ }
+ 
+ static const gchar *
+ get_language_string (GeditDocument *doc)
+ {
+ 	GtkSourceLanguage *lang = gedit_document_get_language (doc);
+ 
+ 	return lang != NULL ? gtk_source_language_get_id (lang) : NO_LANGUAGE_NAME;
+ }
+ 
+ static void
+ save_metadata (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 	const gchar *language = NULL;
+ 	GtkTextIter iter;
+ 	gchar *position;
+@@ -168,215 +189,361 @@ save_metadata (GeditDocument *doc)
+ 	position = g_strdup_printf ("%d", gtk_text_iter_get_offset (&iter));
+ 
+ 	if (language == NULL)
+ 	{
+ 		gedit_document_set_metadata (doc,
+ 					     GEDIT_METADATA_ATTRIBUTE_POSITION, position,
+ 					     NULL);
+ 	}
+ 	else
+ 	{
+ 		gedit_document_set_metadata (doc,
+ 					     GEDIT_METADATA_ATTRIBUTE_POSITION, position,
+ 					     GEDIT_METADATA_ATTRIBUTE_LANGUAGE, language,
+ 					     NULL);
+ 	}
+ 
+ 	g_free (position);
+ }
+ 
+ static void
+ gedit_document_dispose (GObject *object)
+ {
+ 	GeditDocument *doc = GEDIT_DOCUMENT (object);
+ 	GeditDocumentPrivate *priv = gedit_document_get_instance_private (doc);
+ 
+ 	gedit_debug (DEBUG_DOCUMENT);
+ 
+ 	/* Metadata must be saved here and not in finalize because the language
+ 	 * is gone by the time finalize runs.
+ 	 */
+-	if (priv->metadata != NULL)
++	if (priv->file != NULL)
+ 	{
+ 		save_metadata (doc);
+ 
+-		g_object_unref (priv->metadata);
+-		priv->metadata = NULL;
++		g_object_unref (priv->file);
++		priv->file = NULL;
+ 	}
+ 
+-	g_clear_object (&priv->file);
++	g_clear_object (&priv->metadata_info);
+ 	g_clear_object (&priv->search_context);
++	g_clear_object (&priv->metadata_manager);
+ 
+ 	G_OBJECT_CLASS (gedit_document_parent_class)->dispose (object);
+ }
+ 
+ static void
+ gedit_document_finalize (GObject *object)
+ {
+-	GeditDocumentPrivate *priv = gedit_document_get_instance_private (GEDIT_DOCUMENT (object));
++	GeditDocumentPrivate *priv;
+ 
+ 	gedit_debug (DEBUG_DOCUMENT);
+ 
++	priv = gedit_document_get_instance_private (GEDIT_DOCUMENT (object));
++
++	if (priv->untitled_number > 0)
++	{
++		release_untitled_number (priv->untitled_number);
++	}
++
+ 	g_free (priv->content_type);
+ 
+ 	if (priv->time_of_last_save_or_load != NULL)
+ 	{
+ 		g_date_time_unref (priv->time_of_last_save_or_load);
+ 	}
+ 
+ 	G_OBJECT_CLASS (gedit_document_parent_class)->finalize (object);
+ }
+ 
+ static void
+ gedit_document_get_property (GObject    *object,
+ 			     guint       prop_id,
+ 			     GValue     *value,
+ 			     GParamSpec *pspec)
+ {
+ 	GeditDocument *doc = GEDIT_DOCUMENT (object);
+ 	GeditDocumentPrivate *priv;
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	switch (prop_id)
+ 	{
++		case PROP_SHORTNAME:
++			g_value_take_string (value, gedit_document_get_short_name_for_display (doc));
++			break;
++
+ 		case PROP_CONTENT_TYPE:
+ 			g_value_take_string (value, gedit_document_get_content_type (doc));
+ 			break;
+ 
+ 		case PROP_MIME_TYPE:
+ 			g_value_take_string (value, gedit_document_get_mime_type (doc));
+ 			break;
+ 
+ 		case PROP_EMPTY_SEARCH:
+ 			g_value_set_boolean (value, priv->empty_search);
+ 			break;
+ 
++		case PROP_USE_GVFS_METADATA:
++			g_value_set_boolean (value, priv->use_gvfs_metadata);
++			break;
++
+ 		default:
+ 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+ 			break;
+ 	}
+ }
+ 
+ static void
+ gedit_document_set_property (GObject      *object,
+ 			     guint         prop_id,
+ 			     const GValue *value,
+ 			     GParamSpec   *pspec)
+ {
+ 	GeditDocument *doc = GEDIT_DOCUMENT (object);
++	GeditDocumentPrivate *priv = gedit_document_get_instance_private (doc);
+ 
+ 	switch (prop_id)
+ 	{
+ 		case PROP_CONTENT_TYPE:
+ 			set_content_type (doc, g_value_get_string (value));
+ 			break;
+ 
++		case PROP_USE_GVFS_METADATA:
++			priv->use_gvfs_metadata = g_value_get_boolean (value);
++			break;
++
+ 		default:
+ 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+ 			break;
+ 	}
+ }
+ 
++static void
++gedit_document_begin_user_action (GtkTextBuffer *buffer)
++{
++	GeditDocumentPrivate *priv;
++
++	priv = gedit_document_get_instance_private (GEDIT_DOCUMENT (buffer));
++
++	++priv->user_action;
++
++	if (GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->begin_user_action != NULL)
++	{
++		GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->begin_user_action (buffer);
++	}
++}
++
++static void
++gedit_document_end_user_action (GtkTextBuffer *buffer)
++{
++	GeditDocumentPrivate *priv;
++
++	priv = gedit_document_get_instance_private (GEDIT_DOCUMENT (buffer));
++
++	--priv->user_action;
++
++	if (GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->end_user_action != NULL)
++	{
++		GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->end_user_action (buffer);
++	}
++}
++
++static void
++gedit_document_mark_set (GtkTextBuffer     *buffer,
++                         const GtkTextIter *iter,
++                         GtkTextMark       *mark)
++{
++	GeditDocument *doc = GEDIT_DOCUMENT (buffer);
++	GeditDocumentPrivate *priv;
++
++	priv = gedit_document_get_instance_private (doc);
++
++	if (GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->mark_set != NULL)
++	{
++		GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->mark_set (buffer, iter, mark);
++	}
++
++	if (mark == gtk_text_buffer_get_insert (buffer) && (priv->user_action == 0))
++	{
++		g_signal_emit (doc, document_signals[CURSOR_MOVED], 0);
++	}
++}
++
++static void
++gedit_document_changed (GtkTextBuffer *buffer)
++{
++	g_signal_emit (GEDIT_DOCUMENT (buffer), document_signals[CURSOR_MOVED], 0);
++
++	GTK_TEXT_BUFFER_CLASS (gedit_document_parent_class)->changed (buffer);
++}
++
+ static void
+ gedit_document_constructed (GObject *object)
+ {
+ 	GeditDocument *doc = GEDIT_DOCUMENT (object);
++	GeditDocumentPrivate *priv;
+ 	GeditSettings *settings;
+ 	GSettings *editor_settings;
+ 
++	priv = gedit_document_get_instance_private (doc);
++
+ 	settings = _gedit_settings_get_singleton ();
+ 	editor_settings = _gedit_settings_peek_editor_settings (settings);
+ 
++	if (!priv->use_gvfs_metadata)
++	{
++		GeditMetadataManager *metadata_manager;
++
++		metadata_manager = _gedit_app_get_metadata_manager (GEDIT_APP (g_application_get_default ()));
++		g_assert (GEDIT_IS_METADATA_MANAGER (metadata_manager));
++		priv->metadata_manager = g_object_ref (metadata_manager);
++	}
++
+ 	/* Bind construct properties. */
+ 	g_settings_bind (editor_settings, GEDIT_SETTINGS_ENSURE_TRAILING_NEWLINE,
+ 			 doc, "implicit-trailing-newline",
+ 			 G_SETTINGS_BIND_GET | G_SETTINGS_BIND_NO_SENSITIVITY);
+ 
+ 	G_OBJECT_CLASS (gedit_document_parent_class)->constructed (object);
+ }
+ 
+ static void
+ gedit_document_class_init (GeditDocumentClass *klass)
+ {
+ 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
++	GtkTextBufferClass *buf_class = GTK_TEXT_BUFFER_CLASS (klass);
+ 
+ 	object_class->dispose = gedit_document_dispose;
+ 	object_class->finalize = gedit_document_finalize;
+ 	object_class->get_property = gedit_document_get_property;
+ 	object_class->set_property = gedit_document_set_property;
+ 	object_class->constructed = gedit_document_constructed;
+ 
++	buf_class->begin_user_action = gedit_document_begin_user_action;
++	buf_class->end_user_action = gedit_document_end_user_action;
++	buf_class->mark_set = gedit_document_mark_set;
++	buf_class->changed = gedit_document_changed;
++
+ 	klass->loaded = gedit_document_loaded_real;
+ 	klass->saved = gedit_document_saved_real;
+ 
++	/**
++	 * GeditDocument:shortname:
++	 *
++	 * The document's short name.
++	 */
++	properties[PROP_SHORTNAME] =
++		g_param_spec_string ("shortname",
++		                     "Short Name",
++		                     "The document's short name",
++		                     NULL,
++		                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
++
+ 	/**
+ 	 * GeditDocument:content-type:
+ 	 *
+ 	 * The document's content type.
+ 	 */
+ 	properties[PROP_CONTENT_TYPE] =
+ 		g_param_spec_string ("content-type",
+ 		                     "Content Type",
+ 		                     "The document's Content Type",
+ 		                     NULL,
+ 		                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+ 
+ 	/**
+ 	 * GeditDocument:mime-type:
+ 	 *
+ 	 * The document's MIME type.
+ 	 */
+ 	properties[PROP_MIME_TYPE] =
+ 		g_param_spec_string ("mime-type",
+ 		                     "MIME Type",
+ 		                     "The document's MIME Type",
+ 		                     "text/plain",
+ 		                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+ 
+ 	/**
+ 	 * GeditDocument:empty-search:
+ 	 *
+ 	 * <warning>
+ 	 * The property is used internally by gedit. It must not be used in a
+ 	 * gedit plugin. The property can be modified or removed at any time.
+ 	 * </warning>
+ 	 */
+ 	properties[PROP_EMPTY_SEARCH] =
+ 		g_param_spec_boolean ("empty-search",
+ 		                      "Empty search",
+ 		                      "Whether the search is empty",
+ 		                      TRUE,
+ 		                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+ 
++	/**
++	 * GeditDocument:use-gvfs-metadata:
++	 *
++	 * Whether to use GVFS metadata. If %FALSE, use the gedit metadata
++	 * manager that stores the metadata in an XML file in the user cache
++	 * directory.
++	 *
++	 * <warning>
++	 * The property is used internally by gedit. It must not be used in a
++	 * gedit plugin. The property can be modified or removed at any time.
++	 * </warning>
++	 */
++	properties[PROP_USE_GVFS_METADATA] =
++		g_param_spec_boolean ("use-gvfs-metadata",
++		                      "Use GVFS metadata",
++		                      "",
++		                      TRUE,
++		                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
++
+ 	g_object_class_install_properties (object_class, LAST_PROP, properties);
+ 
++	/* This signal is used to update the cursor position in the statusbar,
++	 * it's emitted either when the insert mark is moved explicitely or
++	 * when the buffer changes (insert/delete).
++	 * FIXME When the replace_all was implemented in gedit, this signal was
++	 * not emitted during the replace_all to improve performance. Now the
++	 * replace_all is implemented in GtkSourceView, so the signal is
++	 * emitted.
++	 */
++	document_signals[CURSOR_MOVED] =
++		g_signal_new ("cursor-moved",
++			      G_OBJECT_CLASS_TYPE (object_class),
++			      G_SIGNAL_RUN_LAST,
++			      G_STRUCT_OFFSET (GeditDocumentClass, cursor_moved),
++			      NULL, NULL, NULL,
++			      G_TYPE_NONE,
++			      0);
++
+ 	/**
+ 	 * GeditDocument::load:
+ 	 * @document: the #GeditDocument.
+ 	 *
+ 	 * The "load" signal is emitted at the beginning of a file loading.
+ 	 *
+ 	 * Before gedit 3.14 this signal contained parameters to configure the
+ 	 * file loading (the location, encoding, etc). Plugins should not need
+ 	 * those parameters.
+ 	 */
+ 	document_signals[LOAD] =
+ 		g_signal_new ("load",
+ 			      G_OBJECT_CLASS_TYPE (object_class),
+ 			      G_SIGNAL_RUN_LAST,
+ 			      G_STRUCT_OFFSET (GeditDocumentClass, load),
+ 			      NULL, NULL, NULL,
+ 			      G_TYPE_NONE, 0);
+ 
+ 	/**
+ 	 * GeditDocument::loaded:
+ 	 * @document: the #GeditDocument.
+ 	 *
+ 	 * The "loaded" signal is emitted at the end of a successful file
+ 	 * loading.
+ 	 *
+ 	 * Before gedit 3.14 this signal contained a #GError parameter, and the
+ 	 * signal was also emitted if an error occurred. Plugins should not need
+ 	 * the error parameter.
+ 	 */
+ 	document_signals[LOADED] =
+@@ -605,128 +772,188 @@ static void
+ on_content_type_changed (GeditDocument *doc,
+ 			 GParamSpec    *pspec,
+ 			 gpointer       useless)
+ {
+ 	GeditDocumentPrivate *priv;
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	if (!priv->language_set_by_user)
+ 	{
+ 		GtkSourceLanguage *language = guess_language (doc);
+ 
+ 		gedit_debug_message (DEBUG_DOCUMENT, "Language: %s",
+ 				     language != NULL ? gtk_source_language_get_name (language) : "None");
+ 
+ 		set_language (doc, language, FALSE);
+ 	}
+ }
+ 
+ static gchar *
+ get_default_content_type (void)
+ {
+ 	return g_content_type_from_mime_type ("text/plain");
+ }
+ 
+ static void
+ on_location_changed (GtkSourceFile *file,
+ 		     GParamSpec    *pspec,
+ 		     GeditDocument *doc)
+ {
++	GeditDocumentPrivate *priv;
++	GFile *location;
++
+ 	gedit_debug (DEBUG_DOCUMENT);
+-	load_metadata_from_metadata_manager (doc);
++
++	priv = gedit_document_get_instance_private (doc);
++
++	location = gtk_source_file_get_location (file);
++
++	if (location != NULL && priv->untitled_number > 0)
++	{
++		release_untitled_number (priv->untitled_number);
++		priv->untitled_number = 0;
++	}
++
++	g_object_notify_by_pspec (G_OBJECT (doc), properties[PROP_SHORTNAME]);
++
++	/* Load metadata for this location: we load sync since metadata is
++	 * always local so it should be fast and we need the information
++	 * right after the location was set.
++	 * TODO: do async I/O for the metadata.
++	 */
++	if (priv->use_gvfs_metadata && location != NULL)
++	{
++		GError *error = NULL;
++
++		if (priv->metadata_info != NULL)
++		{
++			g_object_unref (priv->metadata_info);
++		}
++
++		priv->metadata_info = g_file_query_info (location,
++		                                         METADATA_QUERY,
++		                                         G_FILE_QUERY_INFO_NONE,
++		                                         NULL,
++		                                         &error);
++
++		if (error != NULL)
++		{
++			/* Do not complain about metadata if we are opening a
++			 * non existing file.
++			 */
++			if (!g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_ISDIR) &&
++			    !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOTDIR) &&
++			    !g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT) &&
++			    !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
++			{
++				g_warning ("%s", error->message);
++			}
++
++			g_error_free (error);
++		}
++
++		if (priv->metadata_info == NULL)
++		{
++			priv->metadata_info = g_file_info_new ();
++		}
++	}
+ }
+ 
+ static void
+ gedit_document_init (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv = gedit_document_get_instance_private (doc);
+-	TeplFile *tepl_file;
+ 	GeditSettings *settings;
+ 	GSettings *editor_settings;
+ 
+ 	gedit_debug (DEBUG_DOCUMENT);
+ 
++	settings = _gedit_settings_get_singleton ();
++	editor_settings = _gedit_settings_peek_editor_settings (settings);
++
++	priv->untitled_number = get_untitled_number ();
+ 	priv->content_type = get_default_content_type ();
+ 	priv->language_set_by_user = FALSE;
+ 	priv->empty_search = TRUE;
+ 
+ 	update_time_of_last_save_or_load (doc);
+ 
+ 	priv->file = gtk_source_file_new ();
+-	tepl_file = tepl_buffer_get_file (TEPL_BUFFER (doc));
+-
+-	g_object_bind_property (priv->file, "location",
+-				tepl_file, "location",
+-				G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+-
+-	priv->metadata = tepl_metadata_new ();
++	priv->metadata_info = g_file_info_new ();
+ 
+ 	g_signal_connect_object (priv->file,
+ 				 "notify::location",
+ 				 G_CALLBACK (on_location_changed),
+ 				 doc,
+ 				 0);
+ 
+-	settings = _gedit_settings_get_singleton ();
+-	editor_settings = _gedit_settings_peek_editor_settings (settings);
+-
+ 	g_settings_bind (editor_settings, GEDIT_SETTINGS_MAX_UNDO_ACTIONS,
+ 	                 doc, "max-undo-levels",
+ 	                 G_SETTINGS_BIND_GET | G_SETTINGS_BIND_NO_SENSITIVITY);
+ 
+ 	g_settings_bind (editor_settings, GEDIT_SETTINGS_SYNTAX_HIGHLIGHTING,
+ 			 doc, "highlight-syntax",
+ 			 G_SETTINGS_BIND_GET | G_SETTINGS_BIND_NO_SENSITIVITY);
+ 
+ 	g_settings_bind (editor_settings, GEDIT_SETTINGS_BRACKET_MATCHING,
+ 	                 doc, "highlight-matching-brackets",
+ 	                 G_SETTINGS_BIND_GET | G_SETTINGS_BIND_NO_SENSITIVITY);
+ 
+ 	g_signal_connect_object (editor_settings,
+ 				 "changed::" GEDIT_SETTINGS_SCHEME,
+ 				 G_CALLBACK (editor_settings_scheme_changed_cb),
+ 				 doc,
+ 				 0);
+ 
+ 	update_style_scheme (doc);
+ 
+ 	g_signal_connect (doc,
+ 			  "notify::content-type",
+ 			  G_CALLBACK (on_content_type_changed),
+ 			  NULL);
+ }
+ 
+ GeditDocument *
+ gedit_document_new (void)
+ {
+-	return g_object_new (GEDIT_TYPE_DOCUMENT, NULL);
++	gboolean use_gvfs_metadata;
++
++#ifdef ENABLE_GVFS_METADATA
++	use_gvfs_metadata = TRUE;
++#else
++	use_gvfs_metadata = FALSE;
++#endif
++
++	return g_object_new (GEDIT_TYPE_DOCUMENT,
++			     "use-gvfs-metadata", use_gvfs_metadata,
++			     NULL);
+ }
+ 
+ static gchar *
+ get_content_type_from_content (GeditDocument *doc)
+ {
+ 	gchar *content_type;
+ 	gchar *data;
+ 	GtkTextBuffer *buffer;
+ 	GtkTextIter start;
+ 	GtkTextIter end;
+ 
+ 	buffer = GTK_TEXT_BUFFER (doc);
+ 
+ 	gtk_text_buffer_get_start_iter (buffer, &start);
+ 	end = start;
+ 	gtk_text_iter_forward_chars (&end, 255);
+ 
+ 	data = gtk_text_buffer_get_text (buffer, &start, &end, TRUE);
+ 
+ 	content_type = g_content_type_guess (NULL,
+ 	                                     (const guchar *)data,
+ 	                                     strlen (data),
+ 	                                     NULL);
+ 
+ 	g_free (data);
+ 
+ 	return content_type;
+ }
+ 
+ static void
+@@ -787,93 +1014,107 @@ set_content_type (GeditDocument *doc,
+ 	if (content_type == NULL)
+ 	{
+ 		GFile *location;
+ 		gchar *guessed_type = NULL;
+ 
+ 		/* If content type is null, we guess from the filename */
+ 		location = gtk_source_file_get_location (priv->file);
+ 		if (location != NULL)
+ 		{
+ 			gchar *basename;
+ 
+ 			basename = g_file_get_basename (location);
+ 			guessed_type = g_content_type_guess (basename, NULL, 0, NULL);
+ 
+ 			g_free (basename);
+ 		}
+ 
+ 		set_content_type_no_guess (doc, guessed_type);
+ 		g_free (guessed_type);
+ 	}
+ 	else
+ 	{
+ 		set_content_type_no_guess (doc, content_type);
+ 	}
+ }
+ 
+ /* Note: this never returns %NULL. */
+ gchar *
+ _gedit_document_get_uri_for_display (GeditDocument *doc)
+ {
+-	TeplFile *file;
++	GeditDocumentPrivate *priv;
+ 	GFile *location;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), g_strdup (""));
+ 
+-	file = tepl_buffer_get_file (TEPL_BUFFER (doc));
+-	location = tepl_file_get_location (file);
++	priv = gedit_document_get_instance_private (doc);
++
++	location = gtk_source_file_get_location (priv->file);
+ 
+ 	if (location == NULL)
+ 	{
+-		return tepl_file_get_short_name (file);
++		return g_strdup_printf (_("Untitled Document %d"),
++					priv->untitled_number);
+ 	}
+ 	else
+ 	{
+ 		return g_file_get_parse_name (location);
+ 	}
+ }
+ 
+ /**
+  * gedit_document_get_short_name_for_display:
+  * @doc: a #GeditDocument.
+  *
+  * Note: this never returns %NULL.
+  **/
+ gchar *
+ gedit_document_get_short_name_for_display (GeditDocument *doc)
+ {
+-	TeplFile *file;
++	GeditDocumentPrivate *priv;
++	GFile *location;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), g_strdup (""));
+ 
+-	file = tepl_buffer_get_file (TEPL_BUFFER (doc));
+-	return tepl_file_get_short_name (file);
++	priv = gedit_document_get_instance_private (doc);
++
++	location = gtk_source_file_get_location (priv->file);
++
++	if (location == NULL)
++	{
++		return g_strdup_printf (_("Untitled Document %d"),
++					priv->untitled_number);
++	}
++	else
++	{
++		return gedit_utils_basename_for_display (location);
++	}
+ }
+ 
+ gchar *
+ gedit_document_get_content_type (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), NULL);
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	return g_strdup (priv->content_type);
+ }
+ 
+ /**
+  * gedit_document_get_mime_type:
+  * @doc: a #GeditDocument.
+  *
+  * Note: this never returns %NULL.
+  **/
+ gchar *
+ gedit_document_get_mime_type (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), g_strdup ("text/plain"));
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	if (priv->content_type != NULL &&
+@@ -1005,225 +1246,398 @@ saved_query_info_cb (GFile         *location,
+ 	priv->create = FALSE;
+ 
+ 	save_encoding_metadata (doc);
+ 
+ 	/* Async operation finished. */
+ 	g_object_unref (doc);
+ }
+ 
+ static void
+ gedit_document_saved_real (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 	GFile *location;
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	location = gtk_source_file_get_location (priv->file);
+ 
+ 	/* Keep the doc alive during the async operation. */
+ 	g_object_ref (doc);
+ 
+ 	g_file_query_info_async (location,
+ 				 G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+ 				 G_FILE_QUERY_INFO_NONE,
+ 				 G_PRIORITY_DEFAULT,
+ 				 NULL,
+ 				 (GAsyncReadyCallback) saved_query_info_cb,
+ 				 doc);
+ }
+ 
++gboolean
++gedit_document_is_untouched (GeditDocument *doc)
++{
++	GeditDocumentPrivate *priv;
++	GFile *location;
++
++	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), TRUE);
++
++	priv = gedit_document_get_instance_private (doc);
++
++	location = gtk_source_file_get_location (priv->file);
++
++	return location == NULL && !gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (doc));
++}
++
+ gboolean
+ gedit_document_is_untitled (GeditDocument *doc)
+ {
+-	TeplFile *file;
++	GeditDocumentPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), TRUE);
+ 
+-	file = tepl_buffer_get_file (TEPL_BUFFER (doc));
+-	return tepl_file_get_location (file) == NULL;
++	priv = gedit_document_get_instance_private (doc);
++
++	return gtk_source_file_get_location (priv->file) == NULL;
+ }
+ 
+ /*
+  * Deletion and external modification is only checked for local files.
+  */
+ gboolean
+ _gedit_document_needs_saving (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 	gboolean externally_modified = FALSE;
+ 	gboolean deleted = FALSE;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), FALSE);
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	if (gtk_text_buffer_get_modified (GTK_TEXT_BUFFER (doc)))
+ 	{
+ 		return TRUE;
+ 	}
+ 
+ 	if (gtk_source_file_is_local (priv->file))
+ 	{
+ 		gtk_source_file_check_file_on_disk (priv->file);
+ 		externally_modified = gtk_source_file_is_externally_modified (priv->file);
+ 		deleted = gtk_source_file_is_deleted (priv->file);
+ 	}
+ 
+ 	return (externally_modified || deleted) && !priv->create;
+ }
+ 
++/* If @line is bigger than the lines of the document, the cursor is moved
++ * to the last line and FALSE is returned.
++ */
++gboolean
++gedit_document_goto_line (GeditDocument *doc,
++			  gint           line)
++{
++	GtkTextIter iter;
++
++	gedit_debug (DEBUG_DOCUMENT);
++
++	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), FALSE);
++	g_return_val_if_fail (line >= -1, FALSE);
++
++	gtk_text_buffer_get_iter_at_line (GTK_TEXT_BUFFER (doc),
++					  &iter,
++					  line);
++
++	gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (doc), &iter);
++
++	return gtk_text_iter_get_line (&iter) == line;
++}
++
++gboolean
++gedit_document_goto_line_offset (GeditDocument *doc,
++				 gint           line,
++				 gint           line_offset)
++{
++	GtkTextIter iter;
++
++	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), FALSE);
++	g_return_val_if_fail (line >= -1, FALSE);
++	g_return_val_if_fail (line_offset >= -1, FALSE);
++
++	gtk_text_buffer_get_iter_at_line_offset (GTK_TEXT_BUFFER (doc),
++						 &iter,
++						 line,
++						 line_offset);
++
++	gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (doc), &iter);
++
++	return (gtk_text_iter_get_line (&iter) == line &&
++		gtk_text_iter_get_line_offset (&iter) == line_offset);
++}
++
+ /**
+  * gedit_document_set_language:
+  * @doc:
+  * @lang: (allow-none):
+  **/
+ void
+ gedit_document_set_language (GeditDocument     *doc,
+ 			     GtkSourceLanguage *lang)
+ {
+ 	g_return_if_fail (GEDIT_IS_DOCUMENT (doc));
+ 
+ 	set_language (doc, lang, TRUE);
+ }
+ 
+ /**
+  * gedit_document_get_language:
+  * @doc:
+  *
+  * Return value: (transfer none):
+  */
+ GtkSourceLanguage *
+ gedit_document_get_language (GeditDocument *doc)
+ {
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), NULL);
+ 
+ 	return gtk_source_buffer_get_language (GTK_SOURCE_BUFFER (doc));
+ }
+ 
+ glong
+ _gedit_document_get_seconds_since_last_save_or_load (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 	GDateTime *now;
+ 	GTimeSpan n_microseconds;
+ 
+ 	gedit_debug (DEBUG_DOCUMENT);
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), -1);
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	if (priv->time_of_last_save_or_load == NULL)
+ 	{
+ 		return -1;
+ 	}
+ 
+ 	now = g_date_time_new_now_utc ();
+ 	if (now == NULL)
+ 	{
+ 		return -1;
+ 	}
+ 
+ 	n_microseconds = g_date_time_difference (now, priv->time_of_last_save_or_load);
+ 	g_date_time_unref (now);
+ 
+ 	return n_microseconds / (1000 * 1000);
+ }
+ 
++static gchar *
++get_metadata_from_metadata_manager (GeditDocument *doc,
++				    const gchar   *key)
++{
++	GeditDocumentPrivate *priv;
++	GFile *location;
++
++	priv = gedit_document_get_instance_private (doc);
++
++	location = gtk_source_file_get_location (priv->file);
++
++	if (location != NULL)
++	{
++		return gedit_metadata_manager_get (priv->metadata_manager, location, key);
++	}
++
++	return NULL;
++}
++
++static gchar *
++get_metadata_from_gvfs (GeditDocument *doc,
++			const gchar   *key)
++{
++	GeditDocumentPrivate *priv;
++
++	priv = gedit_document_get_instance_private (doc);
++
++	if (priv->metadata_info != NULL &&
++	    g_file_info_has_attribute (priv->metadata_info, key) &&
++	    g_file_info_get_attribute_type (priv->metadata_info, key) == G_FILE_ATTRIBUTE_TYPE_STRING)
++	{
++		return g_strdup (g_file_info_get_attribute_string (priv->metadata_info, key));
++	}
++
++	return NULL;
++}
++
++static void
++set_gvfs_metadata (GFileInfo   *info,
++		   const gchar *key,
++		   const gchar *value)
++{
++	g_return_if_fail (G_IS_FILE_INFO (info));
++
++	if (value != NULL)
++	{
++		g_file_info_set_attribute_string (info, key, value);
++	}
++	else
++	{
++		/* Unset the key */
++		g_file_info_set_attribute (info,
++					   key,
++					   G_FILE_ATTRIBUTE_TYPE_INVALID,
++					   NULL);
++	}
++}
++
+ /**
+  * gedit_document_get_metadata:
+  * @doc: a #GeditDocument
+  * @key: name of the key
+  *
+  * Gets the metadata assigned to @key.
+  *
+  * Returns: the value assigned to @key. Free with g_free().
+  */
+ gchar *
+ gedit_document_get_metadata (GeditDocument *doc,
+ 			     const gchar   *key)
+ {
+ 	GeditDocumentPrivate *priv;
+ 
+ 	g_return_val_if_fail (GEDIT_IS_DOCUMENT (doc), NULL);
+ 	g_return_val_if_fail (key != NULL, NULL);
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+-	if (priv->metadata == NULL)
++	if (priv->use_gvfs_metadata)
+ 	{
+-		return NULL;
++		return get_metadata_from_gvfs (doc, key);
+ 	}
+ 
+-	return tepl_metadata_get (priv->metadata, key);
++	return get_metadata_from_metadata_manager (doc, key);
+ }
+ 
+ /**
+  * gedit_document_set_metadata:
+  * @doc: a #GeditDocument
+  * @first_key: name of the first key to set
+  * @...: (allow-none): value for the first key, followed optionally by more key/value pairs,
+  * followed by %NULL.
+  *
+  * Sets metadata on a document.
+  */
+ void
+ gedit_document_set_metadata (GeditDocument *doc,
+ 			     const gchar   *first_key,
+ 			     ...)
+ {
+ 	GeditDocumentPrivate *priv;
+-	va_list var_args;
++	GFile *location;
+ 	const gchar *key;
++	va_list var_args;
++	GFileInfo *info = NULL;
+ 
+ 	g_return_if_fail (GEDIT_IS_DOCUMENT (doc));
+ 	g_return_if_fail (first_key != NULL);
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+-	if (priv->metadata == NULL)
++	location = gtk_source_file_get_location (priv->file);
++
++	/* With the metadata manager, can't set metadata for untitled documents.
++	 * With GVFS metadata, if the location is NULL the metadata is stored in
++	 * priv->metadata_info, so that it can be saved later if the document is
++	 * saved.
++	 */
++	if (!priv->use_gvfs_metadata && location == NULL)
+ 	{
+ 		return;
+ 	}
+ 
++	if (priv->use_gvfs_metadata)
++	{
++		info = g_file_info_new ();
++	}
++
+ 	va_start (var_args, first_key);
+ 
+-	for (key = first_key; key != NULL; key = va_arg (var_args, const gchar *))
++	for (key = first_key; key; key = va_arg (var_args, const gchar *))
+ 	{
+ 		const gchar *value = va_arg (var_args, const gchar *);
+-		tepl_metadata_set (priv->metadata, key, value);
++
++		if (priv->use_gvfs_metadata)
++		{
++			set_gvfs_metadata (info, key, value);
++			set_gvfs_metadata (priv->metadata_info, key, value);
++		}
++		else
++		{
++			gedit_metadata_manager_set (priv->metadata_manager, location, key, value);
++		}
+ 	}
+ 
+ 	va_end (var_args);
+ 
+-	save_metadata_into_metadata_manager (doc);
++	if (priv->use_gvfs_metadata && location != NULL)
++	{
++		GError *error = NULL;
++
++		/* We save synchronously since metadata is always local so it
++		 * should be fast. Moreover this function can be called on
++		 * application shutdown, when the main loop has already exited,
++		 * so an async operation would not terminate.
++		 * https://bugzilla.gnome.org/show_bug.cgi?id=736591
++		 */
++		g_file_set_attributes_from_info (location,
++						 info,
++						 G_FILE_QUERY_INFO_NONE,
++						 NULL,
++						 &error);
++
++		if (error != NULL)
++		{
++			/* Do not complain about metadata if we are closing a
++			 * document for a non existing file.
++			 */
++			if (!g_error_matches (error, G_FILE_ERROR, G_FILE_ERROR_NOENT) &&
++			    !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_NOT_FOUND))
++			{
++				g_warning ("Set document metadata failed: %s", error->message);
++			}
++
++			g_error_free (error);
++		}
++	}
++
++	g_clear_object (&info);
+ }
+ 
+ static void
+ update_empty_search (GeditDocument *doc)
+ {
+ 	GeditDocumentPrivate *priv;
+ 	gboolean new_value;
+ 
+ 	priv = gedit_document_get_instance_private (doc);
+ 
+ 	if (priv->search_context == NULL)
+ 	{
+ 		new_value = TRUE;
+ 	}
+ 	else
+ 	{
+ 		GtkSourceSearchSettings *search_settings;
+ 
+ 		search_settings = gtk_source_search_context_get_settings (priv->search_context);
+ 
+ 		new_value = gtk_source_search_settings_get_search_text (search_settings) == NULL;
+ 	}
+ 
+ 	if (priv->empty_search != new_value)
+ 	{
+ 		priv->empty_search = new_value;
+ 		g_object_notify_by_pspec (G_OBJECT (doc), properties[PROP_EMPTY_SEARCH]);
+ 	}
+ }
+ 
+diff --git a/gedit/gedit-document.h b/gedit/gedit-document.h
+index 901d02dc0..ed52a42fb 100644
+--- a/gedit/gedit-document.h
++++ b/gedit/gedit-document.h
+@@ -1,83 +1,93 @@
+ /*
+  * gedit-document.h
+  * This file is part of gedit
+  *
+  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+  * Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+  * Copyright (C) 2002-2005 Paolo Maggi
+- * Copyright (C) 2014-2020 Sébastien Wilmet
++ * Copyright (C) 2014 Sébastien Wilmet
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #ifndef GEDIT_DOCUMENT_H
+ #define GEDIT_DOCUMENT_H
+ 
+-#include <tepl/tepl.h>
++#include <gtksourceview/gtksource.h>
+ 
+ G_BEGIN_DECLS
+ 
+ #define GEDIT_TYPE_DOCUMENT (gedit_document_get_type())
+ 
+-G_DECLARE_DERIVABLE_TYPE (GeditDocument, gedit_document, GEDIT, DOCUMENT, TeplBuffer)
++G_DECLARE_DERIVABLE_TYPE (GeditDocument, gedit_document, GEDIT, DOCUMENT, GtkSourceBuffer)
+ 
+ struct _GeditDocumentClass
+ {
+-	TeplBufferClass parent_class;
++	GtkSourceBufferClass parent_class;
+ 
+ 	/* Signals */
++	void (* cursor_moved)		(GeditDocument *document);
+ 
+ 	void (* load)			(GeditDocument *document);
+ 
+ 	void (* loaded)			(GeditDocument *document);
+ 
+ 	void (* save)			(GeditDocument *document);
+ 
+ 	void (* saved)  		(GeditDocument *document);
+ };
+ 
+ GeditDocument   *gedit_document_new				(void);
+ 
+ GtkSourceFile	*gedit_document_get_file			(GeditDocument       *doc);
+ 
+ gchar		*gedit_document_get_short_name_for_display	(GeditDocument       *doc);
+ 
+ gchar		*gedit_document_get_content_type		(GeditDocument       *doc);
+ 
+ gchar		*gedit_document_get_mime_type			(GeditDocument       *doc);
+ 
++gboolean	 gedit_document_is_untouched			(GeditDocument       *doc);
++
+ gboolean	 gedit_document_is_untitled			(GeditDocument       *doc);
+ 
++gboolean	 gedit_document_goto_line			(GeditDocument       *doc,
++								gint                 line);
++
++gboolean	 gedit_document_goto_line_offset		(GeditDocument       *doc,
++								 gint                 line,
++								 gint                 line_offset);
++
+ void 		 gedit_document_set_language			(GeditDocument       *doc,
+ 								 GtkSourceLanguage   *lang);
+ GtkSourceLanguage
+ 		*gedit_document_get_language			(GeditDocument       *doc);
+ 
+ gchar		*gedit_document_get_metadata			(GeditDocument       *doc,
+ 								 const gchar         *key);
+ 
+ void		 gedit_document_set_metadata			(GeditDocument       *doc,
+ 								 const gchar         *first_key,
+ 								 ...);
+ 
+ void		 gedit_document_set_search_context		(GeditDocument          *doc,
+ 								 GtkSourceSearchContext *search_context);
+ 
+ GtkSourceSearchContext *
+ 		 gedit_document_get_search_context		(GeditDocument       *doc);
+ 
+ G_END_DECLS
+ 
+ #endif /* GEDIT_DOCUMENT_H */
+ /* ex:set ts=8 noet: */
+diff --git a/gedit/gedit-documents-panel.c b/gedit/gedit-documents-panel.c
+index 98d84a98f..8033f944e 100644
+--- a/gedit/gedit-documents-panel.c
++++ b/gedit/gedit-documents-panel.c
+@@ -1,56 +1,55 @@
+ /*
+  * gedit-documents-panel.c
+  * This file is part of gedit
+  *
+  * Copyright (C) 2014 - Sébastien Lafargue <slafargue@gnome.org>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+ #include "config.h"
+ 
+ #include "gedit-documents-panel.h"
+ 
+ #include <glib/gi18n.h>
+-#include <tepl/tepl.h>
+ 
+ #include "gedit-debug.h"
+ #include "gedit-document.h"
+ #include "gedit-multi-notebook.h"
+ #include "gedit-notebook.h"
+ #include "gedit-notebook-popup-menu.h"
+ #include "gedit-tab.h"
+ #include "gedit-tab-private.h"
+ #include "gedit-utils.h"
+ #include "gedit-commands-private.h"
+ 
+ typedef struct _GeditDocumentsGenericRow GeditDocumentsGenericRow;
+ typedef struct _GeditDocumentsGenericRow GeditDocumentsGroupRo
