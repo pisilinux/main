@@ -30,7 +30,7 @@ def setup():
     #shelltools.export("CXX", "clang++")
     
 
-    #if get.buildTYPE() == "emul32":
+    if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         #shelltools.export("CC", "clang -m32")
@@ -41,7 +41,7 @@ def setup():
         #shelltools.cd("tools")
         #shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
         #shelltools.cd("..")
-    #else:
+    else:
         shelltools.export("CC", "gcc")
         shelltools.export("CXX", "g++")
         #shelltools.export("CC", "clang")
