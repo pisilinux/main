@@ -28,7 +28,7 @@ def setup():
     #pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
     #shelltools.export("CC", "clang")
     #shelltools.export("CXX", "clang++")
-    
+
 
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
@@ -36,7 +36,7 @@ def setup():
         #shelltools.export("CC", "clang -m32")
         #shelltools.export("CXX", "clang++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
-        
+
         #clang patch
         #shelltools.cd("tools")
         #shelltools.system("patch -p1 < enable-SSP-and-PIE-by-default.patch")
@@ -48,28 +48,28 @@ def setup():
         #shelltools.export("CXX", "clang++")
 
     shelltools.makedirs("build")
-    
+
     shelltools.cd("build")
-    
+
     if get.buildTYPE() != "emul32":
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
                    -DLLDB_ENABLE_LUA=OFF \
                    -DLLVM_DEFAULT_TARGET_TRIPLE=%s " % get.HOST()
-                          
-    
+
+
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         #pisitools.cflags.add("-m32 ")
-        #pisitools.cxxflags.add("-m32")        
+        #pisitools.cxxflags.add("-m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
                      -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu'"
-    
-    
+
+
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -G 'Unix Makefiles' \
                           %s \
@@ -79,12 +79,15 @@ def setup():
                           -DLLVM_BUILD_DOCS=OFF \
                           -DLLVM_ENABLE_RTTI=ON \
                           -DLLVM_ENABLE_EH=ON \
-                          -DBUILD_SHARED_LIBS=ON \ \
+                          -DLLVM_BUILD_LLVM_DYLIB=ON \
+                          -DLLVM_LINK_LLVM_DYLIB=ON \
+                          -DLLVM_ENABLE_SPHINX=ON \
                           -DLLDB_USE_SYSTEM_SIX=1 \
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
-                          -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
+                          -DLLVM_BINUTILS_INCDIR=/usr/include \
+                          -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." )
 
 def build():
     shelltools.cd("build")
@@ -95,14 +98,16 @@ def install():
     shelltools.cd("build")
     #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-        
-    if get.buildTYPE() == "emul32":        
+
+    if get.buildTYPE() == "emul32":
         pisitools.domove("/emul32/lib32/", "/usr/")
         pisitools.insinto("/usr/include/llvm/Config/","%s/emul32/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
+        pisitools.dosym("/usr/lib/LLVMgold.so", "/usr/lib/bfd-plugins/LLVMgold.so")
+        pisitools.dosym("/usr/lib32/LLVMgold.so", "/usr/lib32/bfd-plugins/LLVMgold.so")
         pisitools.removeDir("/emul32")
-        pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
-   
+        #pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
+
     shelltools.cd ("..")
-    
+
     pisitools.dodoc("LICENSE.TXT", "README.txt")
