@@ -24,6 +24,7 @@ def setup():
         shelltools.system("chmod +x clang32")
         options = "-DLLVM_CLANG='%s/%s-%s.src/clang32' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config-32' \
+                  -DLLVM_SPIRV='/usr/bin/llvm-spirv' \
                   -DCMAKE_INSTALL_LIBDIR=lib32 \
                  " % (get.workDIR(), get.srcNAME(), get.srcVERSION())
     else:
@@ -31,7 +32,7 @@ def setup():
         pisitools.cxxflags.add("-m64")
         options = "-DLLVM_CLANG='/usr/bin/clang' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config' \
-                  -DLLVM_SPIRV='/usr/lib' \
+                  -DLLVM_SPIRV='/usr/bin/llvm-spirv' \
                   -DCMAKE_INSTALL_LIBDIR=lib \
                  "
                  
