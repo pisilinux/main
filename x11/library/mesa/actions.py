@@ -40,7 +40,7 @@ def setup():
                -Dvalgrind=enabled \
                -Dlibunwind=enabled \
                -Dbuild-tests=false \
-               -Dosmesa=gallium \
+               -Dosmesa=true \
                -Dswr-arches=avx,avx2 \
                -Dgallium-opencl=icd \
               " % ((libdir, ) * 2)
