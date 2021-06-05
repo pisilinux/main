@@ -31,7 +31,7 @@ def setup():
         pisitools.cxxflags.add("-m64")
         options = "-DLLVM_CLANG='/usr/bin/clang' \
                   -DLLVM_CONFIG='/usr/bin/llvm-config' \
-                  -DLLVM_SPIRV=/usr/lib \
+                  -DLLVM_SPIRV='/usr/lib' \
                   -DCMAKE_INSTALL_LIBDIR=lib \
                  "
                  
