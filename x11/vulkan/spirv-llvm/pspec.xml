@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>spirv-llvm</Name>
+        <Homepage>https://github.com/KhronosGroup/SPIRV-LLVM-Translator</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>custom</License>
+        <IsA>library</IsA>
+        <Summary>Tool and a library for bi-directional translation between SPIR-V and LLVM IR</Summary>
+        <Description>Tool and a library for bi-directional translation between SPIR-V and LLVM IR</Description>
+        <Archive sha1sum="d4ab8f0bb0a442e65328c17ac49757dea4cacfe7" type="targz">https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v12.0.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>python3=devel</Dependency>
+            <Dependency>llvm-mlir</Dependency>
+            <Dependency>llvm-libs</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>llvm-clang-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>spirv-llvm.patch</Patch>
+            <Patch level="1">spirv-llvm.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>spirv-llvm</Name>
+        <RuntimeDependencies>
+            <Dependency>llvm</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>spirv-llvm-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for spirv-llvm</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>llvm-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>llvm-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>spirv-llvm-devel</Name>
+        <Summary>Development files for spirv-llvm</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">spirv-llvm</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-06-05</Date>
+            <Version>12.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
