@@ -5,10 +5,13 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Drootlibdir=/usr/lib \
-                          --prefix=/usr \
+    mesontools.configure("--prefix=/usr \
+                          -Drootlibdir=/usr/lib \
                           -Dpolkit=true \
                           -Dsplit-bin=true \
                           -Dsplit-usr=false \
@@ -28,3 +31,7 @@ def build():
 
 def install():
     mesontools.install()
+
+    shelltools.system("ln -s libelogind.pc %s/usr/lib/pkgconfig/libsystemd.pc" % get.installDIR())
+    shelltools.system("ln -s libelogind.pc %s/usr/lib/pkgconfig/libsystemd-logind.pc" % get.installDIR())
+    shelltools.system("ln -sr %s/usr/include/elogind %s/usr/include/systemd" % (get.installDIR(), get.installDIR()))

@@ -19,7 +19,6 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
 
     except:
         pass
-    
 
     if not os.path.exists(Cache):
        os.makedirs(Cache, mode=0755)
@@ -28,20 +27,20 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
        os.makedirs(Libdir, mode=0770)
        os.system("chown -R lightdm:lightdm /var/lib/lightdm-data")
 
-    
+
     if not os.path.exists(Libdir1):
        os.makedirs(Libdir1, mode=0770)
        os.system("chown -R lightdm:lightdm /var/lib/lightdm")
- 
+
     if not os.path.exists(Logdir):
        os.makedirs(Logdir, mode=0711)
 
     os.system("/bin/chgrp -R lightdm /var/log/lightdm")
-    os.system("chmod +t /var/{cache/lightdm,lib/lightdm{,-data}}")
+    os.system("chmod 755 /var/{cache/lightdm,lib/lightdm{,-data}}")
 
 def postRemove():
     try:
         os.system ("userdel %s" % OUR_NAME)
         os.system ("groupdel %s" % OUR_NAME)
     except:
-        pass 
+        pass

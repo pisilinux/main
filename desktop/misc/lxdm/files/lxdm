@@ -1,13 +1,15 @@
-# Begin /etc/pam.d/kde
+# Begin /etc/pam.d/lxdm
 
 auth     requisite      pam_nologin.so
 auth     required       pam_env.so
-
 auth     required       pam_succeed_if.so uid >= 0 quiet
 auth     include        system-auth
 
 account  include        system-account
+
 password include        system-password
+
+session  required       pam_limits.so
 session  include        system-session
 
-# End /etc/pam.d/kde
+# End /etc/pam.d/lxdm

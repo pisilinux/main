@@ -5,7 +5,7 @@ import os
 permissions = {
                 "/etc/sudoers"          :   ["0440", "root:root"],
                 "/etc/sudoers.d"        :   ["0750", "root:root"],
-                "/var/db/sudo"          :   ["0700", "root:root"],
+                "/var/db/sudo"          :   ["0711", "root:root"],
                 "/usr/bin/sudo"         :   ["4111", "root:root"],
                 "/usr/bin/sudoedit"     :   ["4111", "root:root"],
                 "/usr/bin/sudoreplay"   :   ["0111", "root:root"],

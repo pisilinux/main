@@ -11,10 +11,12 @@ from pisi.actionsapi import shelltools
 def setup():
     autotools.autoreconf("-fiv")
     #shelltools.system("./autogen.sh")
-    autotools.configure("--prefix=/usr     \
-                         --sysconfdir=/etc \
-                         --with-pam        \
-                         --enable-gtk3")
+    autotools.configure("--prefix=/usr        \
+                         --sysconfdir=/etc    \
+                         --with-pam           \
+                         --enable-gtk3        \
+                         --disable-consolekit \
+                         --with-systemdsystemunitdir=no")
 
 def build():
     autotools.make()
