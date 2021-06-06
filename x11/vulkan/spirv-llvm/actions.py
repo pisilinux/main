@@ -18,6 +18,7 @@ def setup():
                           -DCMAKE_SKIP_RPATH=ON \
                           -DLLVM_SPIRV_BUILD_EXTERNAL=YES \
                           -DLLVM_INCLUDE_TESTS=ON \
+                          -DLLVM_EXTERNAL_LIT=/usr/bin/lit \
                           %s \
                           -Wno-dev" %tools)
 
