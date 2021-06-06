@@ -1,13 +1,14 @@
-#%PAM-1.0
+# Begin /etc/pam.d/xdm
 
-auth       include      system-auth
-auth       required     pam_nologin.so
+auth     requisite      pam_nologin.so
+auth     required       pam_env.so
+auth     include        system-auth
 
-account    include      system-auth
+account  include        system-account
 
-password   include      system-auth
+password include        system-password
 
-session    include      system-auth
+session  required       pam_limits.so
+session  include        system-session
 
-session    optional     pam_console.so
-session    optional     pam_polkit_console.so
+# End /etc/pam.d/xdm

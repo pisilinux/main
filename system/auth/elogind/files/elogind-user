@@ -1,13 +1,16 @@
 # Begin /etc/pam.d/elogind-user
 
-#%PAM-1.0
-auth       required     pam_unix.so
-auth       required     pam_nologin.so
-account    required     pam_unix.so
-password   required     pam_unix.so
-session    required     pam_unix.so
-session    required     pam_loginuid.so
-session    required     pam_elogind.so
+account  required    pam_access.so
+account  include     system-account
 
+session  required    pam_env.so
+session  required    pam_limits.so
+session  required    pam_unix.so
+session  required    pam_loginuid.so
+session  optional    pam_keyinit.so force revoke
+session  optional    pam_elogind.so
+
+auth     required    pam_deny.so
+password required    pam_deny.so
 
 # End /etc/pam.d/elogind-user

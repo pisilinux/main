@@ -1,10 +1,13 @@
-#%PAM-1.0
+# Begin /etc/pam.d/kde-np
 
-auth       required     pam_nologin.so
-auth       required     pam_permit.so
+auth     requisite      pam_nologin.so
+auth     required       pam_env.so
 
-account    include      system-auth
+auth     required       pam_succeed_if.so uid >= 0 quiet
+auth     required       pam_permit.so
 
-password   include      system-auth
+account  include        system-account
+password include        system-password
+session  include        system-session
 
-session    include      system-auth
+# End /etc/pam.d/kde-np

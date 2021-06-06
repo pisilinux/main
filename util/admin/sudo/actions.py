@@ -25,12 +25,13 @@ def setup():
                          --with-env-editor \
                          --with-ignore-dot \
                          --with-tty-tickets \
+                         --with-all-insults \
                          --with-ldap \
                          --enable-shell-sets-home \
                          --without-selinux \
                          --with-sendmail=/usr/sbin/sendmail \
                          --without-rpath")
-    
+
     # fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 

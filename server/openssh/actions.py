@@ -16,30 +16,30 @@ def setup():
     shelltools.export("LDFLAGS","%s -pie" % get.LDFLAGS())
 
     #pisitools.dosed("pathnames.h", "/usr/X11R6/bin/xauth", r"/usr/bin/xauth")
-    #pisitools.dosed("sshd_config", "(?m)^(^#UsePAM ).*", r"UsePAM yes")
-    #pisitools.dosed("sshd_config", "(?m)^(^#PasswordAuthentication ).*", r"PasswordAuthentication no")
-    #pisitools.dosed("sshd_config", "(?m)^(^#X11Forwarding ).*", r"X11Forwarding yes")
-    #pisitools.dosed("sshd_config", "(?m)^(^#UseDNS ).*", r"UseDNS no")
-    #pisitools.dosed("sshd_config", "(?m)^(^#PermitRootLogin ).*", r"PermitRootLogin no")
+    pisitools.dosed("sshd_config", "(?m)^(^#UsePAM ).*", r"UsePAM yes")
+    pisitools.dosed("sshd_config", "(?m)^(^#PasswordAuthentication ).*", r"PasswordAuthentication no")
+    pisitools.dosed("sshd_config", "(?m)^(^#X11Forwarding ).*", r"X11Forwarding yes")
+    pisitools.dosed("sshd_config", "(?m)^(^#UseDNS ).*", r"UseDNS no")
+    pisitools.dosed("sshd_config", "(?m)^(^#PermitRootLogin ).*", r"PermitRootLogin no")
 
     autotools.autoreconf("-fi")
 
     # Kerberos support is a must, libedit is optional
     # Update configure parameters when both are ready
-    autotools.configure("--sysconfdir=/etc/ssh \
-                         --libexecdir=/usr/libexec/openssh \
-                         --datadir=/usr/share/openssh \
-                         --disable-strip \
+    autotools.configure("--prefix=/usr \
+                         --sysconfdir=/etc/ssh \
+                         --datadir=/usr/share/sshd \
                          --with-pam \
                          --with-libedit \
                          --with-kerberos5 \
-                         --with-tcp-wrappers \
                          --with-md5-passwords \
                          --with-ipaddr-display \
                          --with-privsep-user=sshd \
                          --with-privsep-path=/var/empty \
+                         --with-default-path=/usr/bin \
                          --without-zlib-version-check \
-                         --without-ssl-engine")
+                         --with-superuser-path=/sbin:/bin:/usr/sbin:/usr/bin \
+                         --with-pid-dir=/run")
 
 def build():
     autotools.make()
@@ -47,17 +47,20 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    # PAM configuration
+    pisitools.dodir("/etc/pam.d")
+    shelltools.system("sed 's@d/login@d/sshd@g' /etc/pam.d/login > " + get.installDIR() + "/etc/pam.d/sshd")
+    shelltools.system("chmod 644 " + get.installDIR() + "/etc/pam.d/sshd")
+
     # fixes #10992
     pisitools.dobin("contrib/ssh-copy-id")
     pisitools.doman("contrib/ssh-copy-id.1")
-    
+
     # an script in contrib
     pisitools.dobin("contrib/findssl.sh")
-    
+
     shelltools.chmod("%s/etc/ssh/sshd_config" % get.installDIR(), 0600)
     # special request by merensan
     shelltools.echo("%s/etc/ssh/ssh_config" % get.installDIR(), "ServerAliveInterval 5")
-
-    pisitools.dodir("/var/empty/sshd")
 
     pisitools.dodoc("ChangeLog", "CREDITS", "OVERVIEW", "README*", "TODO", "sshd_config")
