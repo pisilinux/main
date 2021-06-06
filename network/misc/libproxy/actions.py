@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.dosed("libproxy/cmake/modules/pacrunner_mozjs.cmk", "mozjs-68", "mozjs-78")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_SKIP_RPATH=ON \
                           -DPERL_VENDORINSTALL=yes \
