@@ -22,13 +22,13 @@ def setup():
                      --datadir=/usr/lib32/share \
                      --libexecdir=/usr/lib32/libexec \
                      --localedir=/usr/lib32/share/locale \
-                     -Dintrospection=false \
+                     -Dintrospection=disabled \
                    "
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
     else:
-        options += "-Dintrospection=true \
+        options += "-Dintrospection=enabled \
                    "
 
     mesontools.configure(options)
