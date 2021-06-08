@@ -15,6 +15,7 @@ docs = ["AUTHORS", "COPYING.LIB", "THANKS", \
 
 def setup():
     #shelltools.system("rm -r Source/ThirdParty/gtest/")
+    #pisitools.dosed("Source/cmake/OptionsGTK.cmake", "2.99.5", "2.72.0")
     cmaketools.configure("-DPORT=GTK \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_SKIP_RPATH=ON \
@@ -27,9 +28,11 @@ def setup():
                           -DENABLE_WEB_AUDIO=ON \
                           -DENABLE_WEBGL=ON \
                           -DUSE_LIBHYPHEN=OFF \
+                          -DUSE_SOUP2=ON \
                           -DUSE_WOFF2=OFF \
                           -DUSE_SYSTEMD=OFF \
-                          -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.3 \
+                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+                          -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.4 \
                           -DSHOULD_INSTALL_JS_SHELL=ON \
                           -DUSE_WPE_RENDERER=OFF \
                           -DENABLE_MINIBROWSER=ON")
