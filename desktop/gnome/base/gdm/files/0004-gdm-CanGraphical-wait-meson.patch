@@ -1,0 +1,160 @@
+--- a/meson.build	2021-03-21 16:32:37.222883748 +0100
++++ b/meson.build	2021-03-21 16:32:42.114763457 +0100
+@@ -38,6 +38,7 @@
+ 
+ # Dependencies
+ udev_dep = dependency('udev')
++gudev_dep = dependency('gudev-1.0')
+ 
+ glib_min_version = '2.56.0'
+ 
+
+--- a/data/meson.build	2021-03-21 16:07:53.023644342 +0100
++++ b/data/meson.build	2021-03-21 16:09:14.557724574 +0100
+@@ -161,6 +161,7 @@
+ # DBus service files
+ service_config = configuration_data()
+ service_config.set('sbindir', gdm_prefix / get_option('sbindir'))
++service_config.set('libexecdir', gdm_prefix / get_option('libexecdir'))
+ service_config.set('GDM_INITIAL_VT', get_option('initial-vt'))
+ service_config.set('LANG_CONFIG_FILE', lang_config_file)
+ if plymouth_dep.found()
+
+--- a/data/gdm.service.in
++++ b/data/gdm.service.in
+@@ -30,6 +30,7 @@ StandardError=inherit
+ EnvironmentFile=-@LANG_CONFIG_FILE@
+ ExecReload=/bin/kill -SIGHUP $MAINPID
+ KeyringMode=shared
++ExecStartPre=@libexecdir@/gdm-wait-for-drm
+ 
+ [Install]
+ Alias=display-manager.service
+
+--- a/utils/meson.build.ori	2021-03-21 16:15:47.036216779 +0100
++++ b/utils/meson.build	2021-03-21 16:15:25.328751199 +0100
+@@ -39,3 +39,16 @@
+   install_dir: get_option('libexecdir'),
+ )
+ 
++# gdm-wait-for-drm
++gdm_wait_for_drm_deps = [
++  glib_dep,
++  gudev_dep
++]
++
++gdm_wait_for_drm = executable('gdm-wait-for-drm',
++  'gdm-wait-for-drm.c',
++  dependencies: gdm_wait_for_drm_deps,
++  include_directories: config_h_dir,
++  install: true,
++  install_dir: get_option('libexecdir'),
++)
+
+--- /dev/null
++++ b/utils/gdm-wait-for-drm.c
+@@ -0,0 +1,101 @@
++#include <glib.h>
++#include <gudev/gudev.h>
++
++/*
++ * Workaround for LP: #1794280.
++ *
++ * That bug is because the DRM device isn't ready by the time GDM tries to
++ * start wayland/X.
++ * This is a script to add to ExecStartPre of gdm.service. It does the
++ * following:
++ *
++ * 1. Enumerate drm devices from udev, looking for a DRM master. If found,
++ *    exit.
++ * 2. Connect to the 'uevent' signal of gudev, watching for the same to be
++ *    added. Again exit if any are found.
++ * 3. If, after 10 seconds, we haven't seen anything, try to proceed anyway as
++ *    a failsafe.
++ */
++
++static gboolean
++handle_device (GUdevDevice *device)
++{
++        const gchar * const * tags;
++        tags = g_udev_device_get_tags (device);
++        g_debug ("%s\n", g_udev_device_get_name (device));
++        if (g_strv_contains (tags, "master-of-seat"))
++        {
++                g_debug ("    is seat master\n");
++                return TRUE;
++        }
++
++        return FALSE;
++}
++
++static void
++uevent_cb (GUdevClient *client G_GNUC_UNUSED,
++           gchar       *action,
++           GUdevDevice *device,
++           gpointer     user_data)
++{
++        GMainLoop *loop;
++
++        g_debug ("uevent action: %s\n", action);
++
++        loop = (GMainLoop *) user_data;
++
++        if (g_strcmp0 (action, "add") == 0)
++        {
++                if (handle_device (device))
++                {
++                        g_debug ("        this is good\n");
++                        g_main_loop_quit (loop);
++                }
++                else
++                {
++                        g_debug ("        this is bad\n");
++                }
++        }
++}
++
++int
++main()
++{
++        const gchar * const subsystems[] = { "drm", NULL };
++
++        g_autoptr(GList) devices = NULL;
++        g_autoptr(GMainLoop) loop = NULL;
++        g_autoptr(GUdevClient) udev_client = NULL;
++        g_autoptr(GUdevEnumerator) enumerator = NULL;
++
++        loop = g_main_loop_new (NULL, FALSE);
++
++        udev_client = g_udev_client_new (subsystems);
++        enumerator = g_udev_enumerator_new (udev_client);
++        g_udev_enumerator_add_match_is_initialized (enumerator);
++        g_udev_enumerator_add_match_subsystem (enumerator, "drm");
++
++        devices = g_udev_enumerator_execute (enumerator);
++
++        g_debug ("enumerating devices...\n");
++
++        for (GList *l = devices; l != NULL; l = l->next)
++        {
++                g_autoptr(GUdevDevice) device = G_UDEV_DEVICE (l->data);
++
++                if (handle_device (device))
++                {
++                        g_debug ("        good enough for gdm\n");
++                        return EXIT_SUCCESS;
++                }
++        }
++
++        g_signal_connect (udev_client, "uevent", G_CALLBACK (uevent_cb), loop);
++
++        /* after 10 seconds we try anyway */
++        g_timeout_add_seconds (10, (GSourceFunc) g_main_loop_quit, loop);
++
++        g_main_loop_run (loop);
++
++        return EXIT_SUCCESS;
++}
+-- 
+2.17.0
+
