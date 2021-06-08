@@ -1,0 +1,34 @@
+From 25ee070ad16e21b32b637744ad4905dd942a8aff Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mcatanzaro@igalia.com>
+Date: Wed, 3 Jul 2019 18:50:49 -0500
+Subject: [PATCH] Avoid crashing when year view's weather icon is NULL
+
+This is not a proper solution, because I don't see how it could possibly
+ever be NULL here. But a huge number of users are reporting this crash,
+so we have to try something.
+
+This fixes #299, but I'm not happy with it.
+---
+ src/gui/views/gcal-year-view.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/gui/views/gcal-year-view.c b/src/gui/views/gcal-year-view.c
+index ac32a8f9..532425c1 100644
+--- a/src/gui/views/gcal-year-view.c
++++ b/src/gui/views/gcal-year-view.c
+@@ -2158,7 +2158,11 @@ update_weather (GcalYearView *self)
+   if (!updated)
+     {
+       gtk_label_set_text (self->temp_label, "");
+-      gtk_image_clear (self->weather_icon);
++      /* FIXME: This should never be NULL, but it somehow is.
++       * https://gitlab.gnome.org/GNOME/gnome-calendar/issues/299
++       */
++      if (self->weather_icon != NULL)
++        gtk_image_clear (self->weather_icon);
+     }
+ }
+ 
+-- 
+2.29.2
+
