@@ -12,7 +12,7 @@ def setup():
     pisitools.cflags.add("-fpie")
     pisitools.ldflags.add("-pie -Wl,-z,relro -Wl,-z,now")
 
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
 
     autotools.configure("--libexecdir=/usr/libexec/sudo \
                          --with-rundir=/run/sudo \
