@@ -26,6 +26,7 @@ j = ''.join([
     ])
 
 def setup():
+    shelltools.system("""sed -i '/LIBPOSTFIX="64"/s/64//' configure.ac""")
     shelltools.export("CONFIG_SHELL", "/bin/bash")
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure(j)
