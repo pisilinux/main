@@ -12,6 +12,10 @@ from pisi.actionsapi import get
 shelltools.export("python2", "/usr/bin/python2.7")
 
 def setup():
+    shelltools.system("sed 's/g_memdup/&2/' -i             \
+                            src/lib/plugin_apis/vdo.{c,api} \
+                            src/plugins/vdo.c")
+
     shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure("--without-gtk-doc \
                          --without-nvdimm \
@@ -25,7 +29,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    pisitools.domove("/gi/overrides/BlockDev.py", "/usr/lib/python2.7/site-packages/gi/overrides")
-    pisitools.removeDir("/gi")
+    #pisitools.domove("/gi/overrides/BlockDev.py", "/usr/lib/python2.7/site-packages/gi/overrides")
+    #pisitools.removeDir("/gi")
 
     pisitools.dodoc("LICENSE")
