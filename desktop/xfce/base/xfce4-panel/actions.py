@@ -18,6 +18,8 @@ i = "--enable-introspection  \
 
 def setup():
     pisitools.cflags.add("-Wno-deprecated-declarations")
+    # windowmenu plugin: list width.
+    pisitools.dosed("plugins/windowmenu/windowmenu.c", "24", "300")
     autotools.configure(i)
 
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
