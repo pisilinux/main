@@ -8,10 +8,10 @@
             <Name>Ertuğrul Erata</Name>
             <Email>ertugrulerata@gmail.com</Email>
         </Packager>
-        <License>LGPLv2</License>
+        <License>LGPLv2.1</License>
         <Summary>Application distribution framework</Summary>
         <Description>Linux application sandboxing and distribution framework, formerly xdg-app</Description>
-        <Archive sha1sum="1cd25f8577ba55d1370652e9bd24e8a2d254143a" type="tarxz">https://github.com/flatpak/flatpak/releases/download/1.10.2/flatpak-1.10.2.tar.xz</Archive>
+        <Archive sha1sum="2f3af33693b03c6fc981155f6d7cecd8590be752" type="tarxz">https://github.com/flatpak/flatpak/releases/download/1.11.1/flatpak-1.11.1.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>xmlto</Dependency>
             <Dependency>util-linux</Dependency>
@@ -28,6 +28,8 @@
             <Dependency>python-six</Dependency>
             <Dependency versionFrom="2019.2">ostree-devel</Dependency>
             <Dependency>python3-pyparsing</Dependency>
+            <Dependency>xdg-dbus-proxy</Dependency>
+            <Dependency>elogind-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <!--Patch level="1">bubblewrap_libglnx_submodule.patch</Patch-->
@@ -56,13 +58,15 @@
             <Dependency>polkit</Dependency>
             <Dependency>appstream-glib</Dependency>
             <Dependency>python3-pyparsing</Dependency>
+            <Dependency>libassuan</Dependency>
+            <Dependency>libgpg-error</Dependency>
+            <Dependency>xdg-dbus-proxy</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="config">/etc</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="library">/usr/libexec</Path>
-            <Path fileType="library">/usr/share/gir-1.0</Path>
             <Path fileType="data">/usr/share/bash-completion</Path>
             <Path fileType="data">/usr/share/fish/vendor_completions.d/</Path>
             <Path fileType="data">/usr/share/dbus-1</Path>
@@ -72,15 +76,14 @@
             <Path fileType="locale">/usr/share/locale</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="doc">/usr/share/gtk-doc</Path>
-            <Path fileType="data">/usr/share/gdm</Path>
             <Path fileType="doc">/usr/share/zsh</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile target="/etc/profile.d/flatpak-bindir.sh" permission="0644" owner="root">flatpak-bindir.sh</AdditionalFile>
-            <AdditionalFile target="/usr/share/flatpak/flathub.flatpakrepo" permission="0644" owner="root">flathub.flatpakrepo</AdditionalFile>
+            <!--AdditionalFile target="/etc/profile.d/flatpak-bindir.sh" permission="0644" owner="root">flatpak-bindir.sh</AdditionalFile-->
+            <AdditionalFile target="/etc/flatpak/remotes.d/flathub.flatpakrepo" permission="0644" owner="root">flathub.flatpakrepo</AdditionalFile>
         </AdditionalFiles>
         <Provides>
-            <COMAR script="package.py">System.Package</COMAR>
+            <!--COMAR script="package.py">System.Package</COMAR-->
         </Provides>
     </Package>
 
@@ -89,26 +92,24 @@
         <Summary>Development files for flatpak</Summary>
         <RuntimeDependencies>
             <Dependency release="current">flatpak</Dependency>
-            <Dependency>fuse-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
-            <Dependency>gpgme-devel</Dependency>
-            <Dependency>libXau-devel</Dependency>
-            <Dependency>libxml2-devel</Dependency>
-            <Dependency>libsoup-devel</Dependency>
-            <Dependency>json-glib-devel</Dependency>
-            <Dependency>libarchive-devel</Dependency>
-            <Dependency>libseccomp-devel</Dependency>
             <Dependency>ostree-devel</Dependency>
-            <Dependency>polkit-devel</Dependency>
-            <Dependency>appstream-glib-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="14">
+            <Date>2021-06-07</Date>
+            <Version>1.11.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
         <Update release="13">
             <Date>2021-04-29</Date>
             <Version>1.10.2</Version>
