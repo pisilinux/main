@@ -14,6 +14,11 @@ from pisi.actionsapi import get
 def setup():
     # https://bugs.freedesktop.org/show_bug.cgi?id=70366
     #shelltools.export("ac_cv_func_fdatasync", "no")
+
+    shelltools.move("../xdgmime-*", "xdgmime")
+
+    autotools.make("-C xdgmime")
+
     mesontools.configure("-Dupdate-mimedb=true")
      
 def build():
