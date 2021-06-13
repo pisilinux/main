@@ -14,7 +14,7 @@ from pisi.actionsapi import get
 def setup():
     # https://bugs.freedesktop.org/show_bug.cgi?id=70366
     #shelltools.export("ac_cv_func_fdatasync", "no")
-    mesontools.configure("-Dupdate-mimedb=false")
+    mesontools.configure("-Dupdate-mimedb=true")
      
 def build():
     mesontools.build()
