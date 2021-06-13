@@ -1,18 +1,25 @@
 #!/usr/bin/python
+#
+# Currently, as in some other LFS based distros, providing an user account for flatpak breaks
+# the FUSE and non-sudo installations.
+# However, I am leaving this file in the repo just in case.
 
 import os, re
 
+OUR_NAME = "flatpak"
+OUR_DESC = "flatpak"
+
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     try:
-        os.system("getent group flatpak || /usr/sbin/groupadd -g 93 flatpak")
-        os.system("getent passwd flatpak || /usr/sbin/useradd -g flatpak -u 93 -d /var/empty -s /bin/false -c 'flatpak User' flatpak")
-        os.system("/usr/bin/passwd -l flatpak")
+        os.system("groupadd -r %s" % OUR_NAME)
+        os.system("useradd -r -g %s -d / -s /bin/false -c %s %s" % (OUR_NAME, OUR_DESC, OUR_NAME))
+
     except:
         pass
 
-def preRemove():
+def postRemove():
     try:
-        os.system("userdel flatpak")
-        os.system("groupdel flatpak")
+        os.system("userdel %s" % OUR_NAME)
+        os.system("groupdel %s" % OUR_NAME)
     except:
         pass

@@ -10,7 +10,7 @@ serviceDesc = _({
     "tr": "GNOME Masaüstü",
 })
 serviceDefault="on"
-PIDFILE="/var/run/gdm/gdm.pid"
+PIDFILE="/run/gdm/gdm.pid"
 DAEMON="/usr/sbin/gdm"
 
 @synchronized
