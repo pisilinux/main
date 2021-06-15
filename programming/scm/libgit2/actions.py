@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 
 def setup():
-    cmaketools.configure("-DTHREADSAFE=ON \
+    cmaketools.configure("-DTHREADSAFE:BOOL=ON \
                           -DUSE_HTTP_PARSER=system")
 
 def build():
