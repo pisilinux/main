@@ -15,4 +15,6 @@ def build():
 def install():
     mesontools.install()
 
+    pisitools.removeDir("/usr/lib/pkgconfig")
+
     pisitools.dodoc("LICENSE", "README*", "NEWS")
