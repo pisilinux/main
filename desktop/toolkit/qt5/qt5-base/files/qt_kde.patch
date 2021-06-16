@@ -20272,6 +20272,21 @@ index 9a64251ee3..35a63498f8 100644
      RETURN = $$escape_expand(\\n\\t)
      equals(QMAKE_HOST.os, Windows) {
          RETURN = $$escape_expand(\\r\\n\\t)
+diff --git a/src/concurrent/qtconcurrentthreadengine.h b/src/concurrent/qtconcurrentthreadengine.h
+index af413707e4..a4c8548cc4 100644
+--- a/src/concurrent/qtconcurrentthreadengine.h
++++ b/src/concurrent/qtconcurrentthreadengine.h
+@@ -247,8 +247,8 @@ template <>
+ class ThreadEngineStarter<void> : public ThreadEngineStarterBase<void>
+ {
+ public:
+-    ThreadEngineStarter<void>(ThreadEngine<void> *_threadEngine)
+-    :ThreadEngineStarterBase<void>(_threadEngine) {}
++    ThreadEngineStarter(ThreadEngine<void> *_threadEngine)
++        : ThreadEngineStarterBase<void>(_threadEngine) {}
+ 
+     void startBlocking()
+     {
 diff --git a/src/corelib/Qt5AndroidSupport.cmake b/src/corelib/Qt5AndroidSupport.cmake
 index 5a616faa4c..5512635f97 100644
 --- a/src/corelib/Qt5AndroidSupport.cmake
@@ -20423,6 +20438,18 @@ index 501c542157..12ac48f3cb 100644
  
  #ifdef Q_QDOC
  
+diff --git a/src/corelib/global/qrandom.cpp b/src/corelib/global/qrandom.cpp
+index 10672c1f92..25f87c7e6a 100644
+--- a/src/corelib/global/qrandom.cpp
++++ b/src/corelib/global/qrandom.cpp
+@@ -383,7 +383,6 @@ struct QRandomGenerator::SystemAndGlobalGenerators
+ 
+         constexpr SystemAndGlobalGenerators g = {};
+         Q_UNUSED(g);
+-        Q_STATIC_ASSERT(std::is_literal_type<SystemAndGlobalGenerators>::value);
+ #endif
+     }
+ 
 diff --git a/src/corelib/io/qdiriterator.cpp b/src/corelib/io/qdiriterator.cpp
 index 7411eab68b..c58dde8bfd 100644
 --- a/src/corelib/io/qdiriterator.cpp
@@ -20449,6 +20476,21 @@ index 7411eab68b..c58dde8bfd 100644
        , iteratorFlags(flags)
  {
  #if defined(QT_BOOTSTRAPPED)
+diff --git a/src/corelib/io/qfilesystemwatcher_inotify.cpp b/src/corelib/io/qfilesystemwatcher_inotify.cpp
+index 94d9d06bcb..27e0b13b0b 100644
+--- a/src/corelib/io/qfilesystemwatcher_inotify.cpp
++++ b/src/corelib/io/qfilesystemwatcher_inotify.cpp
+@@ -366,7 +366,9 @@ void QInotifyFileSystemWatcherEngine::readFromInotify()
+     // qDebug("QInotifyFileSystemWatcherEngine::readFromInotify");
+ 
+     int buffSize = 0;
+-    ioctl(inotifyFd, FIONREAD, (char *) &buffSize);
++    if (ioctl(inotifyFd, FIONREAD, (char *) &buffSize) == -1 || buffSize == 0)
++        return;
++
+     QVarLengthArray<char, 4096> buffer(buffSize);
+     buffSize = read(inotifyFd, buffer.data(), buffSize);
+     char *at = buffer.data();
 diff --git a/src/corelib/io/qiodevice.cpp b/src/corelib/io/qiodevice.cpp
 index cc1d110252..0f11c2e805 100644
 --- a/src/corelib/io/qiodevice.cpp
@@ -34193,6 +34235,20 @@ index 8d1b15b507..d61c26dc2e 100644
                      }
                  }
              } QT_CATCH (...) {
+diff --git a/src/dbus/qdbusmetaobject.cpp b/src/dbus/qdbusmetaobject.cpp
+index 5265568f42..7e9f0f1acc 100644
+--- a/src/dbus/qdbusmetaobject.cpp
++++ b/src/dbus/qdbusmetaobject.cpp
+@@ -210,6 +210,9 @@ QDBusMetaObjectGenerator::findType(const QByteArray &signature,
+         } else if (signature == "a{ss}") {
+             result.name = "QMap<QString,QString>";
+             type = qMetaTypeId<QMap<QString, QString> >();
++        } else if (signature == "aay") {
++            result.name = "QByteArrayList";
++            type = qMetaTypeId<QByteArrayList>();
+         } else {
+             result.name = "{D-Bus type \"" + signature + "\"}";
+             type = registerComplexDBusType(result.name);
 diff --git a/src/gui/configure.json b/src/gui/configure.json
 index c8c4864eca..1f08795c57 100644
 --- a/src/gui/configure.json
@@ -34719,6 +34775,36 @@ index 663f727145..7f2c01d4d3 100644
      return true;
  }
  
+diff --git a/src/gui/text/qfont.cpp b/src/gui/text/qfont.cpp
+index 94020dc665..d792d43dd7 100644
+--- a/src/gui/text/qfont.cpp
++++ b/src/gui/text/qfont.cpp
+@@ -220,8 +220,10 @@ QFontPrivate::~QFontPrivate()
+     if (engineData && !engineData->ref.deref())
+         delete engineData;
+     engineData = nullptr;
+-    if (scFont && scFont != this)
+-        scFont->ref.deref();
++    if (scFont && scFont != this) {
++        if (!scFont->ref.deref())
++            delete scFont;
++    }
+     scFont = nullptr;
+ }
+ 
+@@ -630,8 +632,10 @@ void QFont::detach()
+         if (d->engineData && !d->engineData->ref.deref())
+             delete d->engineData;
+         d->engineData = nullptr;
+-        if (d->scFont && d->scFont != d.data())
+-            d->scFont->ref.deref();
++        if (d->scFont && d->scFont != d.data()) {
++            if (!d->scFont->ref.deref())
++                delete d->scFont;
++        }
+         d->scFont = nullptr;
+         return;
+     }
 diff --git a/src/gui/text/qfontdatabase.cpp b/src/gui/text/qfontdatabase.cpp
 index 1a4d8f938b..0f5219410d 100644
 --- a/src/gui/text/qfontdatabase.cpp
@@ -35350,7 +35436,7 @@ index bf986aab77..69750bdbb0 100644
  #endif
  
 diff --git a/src/platformsupport/input/xkbcommon/qxkbcommon.cpp b/src/platformsupport/input/xkbcommon/qxkbcommon.cpp
-index 877c5d848f..6a692a2456 100644
+index 877c5d848f..f1e478274c 100644
 --- a/src/platformsupport/input/xkbcommon/qxkbcommon.cpp
 +++ b/src/platformsupport/input/xkbcommon/qxkbcommon.cpp
 @@ -93,6 +93,7 @@ static constexpr const auto KeyTbl = qMakeArray(
@@ -35361,6 +35447,75 @@ index 877c5d848f..6a692a2456 100644
          Xkb2Qt<0x1005FF60,                      Qt::Key_SysReq>,         // hardcoded Sun SysReq
          Xkb2Qt<0x1007ff00,                      Qt::Key_SysReq>,         // hardcoded X386 SysReq
  
+@@ -469,7 +470,7 @@ QVector<xkb_keysym_t> QXkbCommon::toKeysym(QKeyEvent *event)
+     } else if (event->modifiers() & Qt::KeypadModifier) {
+         if (qtKey >= Qt::Key_0 && qtKey <= Qt::Key_9)
+             keysyms.append(XKB_KEY_KP_0 + (qtKey - Qt::Key_0));
+-    } else if (isLatin(qtKey) && event->text().isUpper()) {
++    } else if (isLatin1(qtKey) && event->text().isUpper()) {
+         keysyms.append(qtKey);
+     }
+ 
+@@ -521,7 +522,7 @@ int QXkbCommon::keysymToQtKey(xkb_keysym_t keysym, Qt::KeyboardModifiers modifie
+         // With standard shortcuts we should prefer a latin character, this is
+         // for checks like "some qkeyevent == QKeySequence::Copy" to work even
+         // when using for example 'russian' keyboard layout.
+-        if (!QXkbCommon::isLatin(keysym)) {
++        if (!QXkbCommon::isLatin1(keysym)) {
+             xkb_keysym_t latinKeysym = QXkbCommon::lookupLatinKeysym(state, code);
+             if (latinKeysym != XKB_KEY_NoSymbol)
+                 keysym = latinKeysym;
+@@ -544,7 +545,7 @@ static int keysymToQtKey_internal(xkb_keysym_t keysym, Qt::KeyboardModifiers mod
+     } else if (keysym >= XKB_KEY_KP_0 && keysym <= XKB_KEY_KP_9) {
+         // numeric keypad keys
+         qtKey = Qt::Key_0 + (keysym - XKB_KEY_KP_0);
+-    } else if (QXkbCommon::isLatin(keysym)) {
++    } else if (QXkbCommon::isLatin1(keysym)) {
+         qtKey = QXkbCommon::qxkbcommon_xkb_keysym_to_upper(keysym);
+     } else {
+         // check if we have a direct mapping
+@@ -674,7 +675,7 @@ QList<int> QXkbCommon::possibleKeys(xkb_state *state, const QKeyEvent *event,
+         Qt::KeyboardModifiers neededMods = ModsTbl[i];
+         if ((modifiers & neededMods) == neededMods) {
+             if (i == 8) {
+-                if (isLatin(baseQtKey))
++                if (isLatin1(baseQtKey))
+                     continue;
+                 // add a latin key as a fall back key
+                 sym = lookupLatinKeysym(state, keycode);
+@@ -729,7 +730,7 @@ void QXkbCommon::verifyHasLatinLayout(xkb_keymap *keymap)
+     for (xkb_layout_index_t layout = 0; layout < layoutCount; ++layout) {
+         for (xkb_keycode_t code = minKeycode; code < maxKeycode; ++code) {
+             xkb_keymap_key_get_syms_by_level(keymap, code, layout, 0, &keysyms);
+-            if (keysyms && isLatin(keysyms[0]))
++            if (keysyms && isLatin1(keysyms[0]))
+                 nrLatinKeys++;
+             if (nrLatinKeys > 10) // arbitrarily chosen threshold
+                 return;
+@@ -762,7 +763,7 @@ xkb_keysym_t QXkbCommon::lookupLatinKeysym(xkb_state *state, xkb_keycode_t keyco
+         xkb_level_index_t level = xkb_state_key_get_level(state, keycode, layout);
+         if (xkb_keymap_key_get_syms_by_level(keymap, keycode, layout, level, &syms) != 1)
+             continue;
+-        if (isLatin(syms[0])) {
++        if (isLatin1(syms[0])) {
+             sym = syms[0];
+             break;
+         }
+diff --git a/src/platformsupport/input/xkbcommon/qxkbcommon_p.h b/src/platformsupport/input/xkbcommon/qxkbcommon_p.h
+index 561eae03db..8389bd8f5a 100644
+--- a/src/platformsupport/input/xkbcommon/qxkbcommon_p.h
++++ b/src/platformsupport/input/xkbcommon/qxkbcommon_p.h
+@@ -94,8 +94,8 @@ public:
+     static void verifyHasLatinLayout(xkb_keymap *keymap);
+     static xkb_keysym_t lookupLatinKeysym(xkb_state *state, xkb_keycode_t keycode);
+ 
+-    static bool isLatin(xkb_keysym_t sym) {
+-        return ((sym >= 'a' && sym <= 'z') || (sym >= 'A' && sym <= 'Z'));
++    static bool isLatin1(xkb_keysym_t sym) {
++        return sym <= 0xff;
+     }
+     static bool isKeypad(xkb_keysym_t sym) {
+         return sym >= XKB_KEY_KP_Space && sym <= XKB_KEY_KP_9;
 diff --git a/src/platformsupport/linuxaccessibility/atspiadaptor.cpp b/src/platformsupport/linuxaccessibility/atspiadaptor.cpp
 index 88539b7220..9153fd20bb 100644
 --- a/src/platformsupport/linuxaccessibility/atspiadaptor.cpp
@@ -36392,6 +36547,19 @@ index d1febd81d4..67c045e8bd 100644
                      }
                  }
  
+diff --git a/src/printsupport/dialogs/qprintdialog_unix.cpp b/src/printsupport/dialogs/qprintdialog_unix.cpp
+index bf77666c41..c5b845f4ec 100644
+--- a/src/printsupport/dialogs/qprintdialog_unix.cpp
++++ b/src/printsupport/dialogs/qprintdialog_unix.cpp
+@@ -1184,6 +1184,8 @@ void QUnixPrintWidgetPrivate::updateWidget()
+             widget.printers->insertSeparator(widget.printers->count());
+         widget.printers->addItem(QPrintDialog::tr("Print to File (PDF)"));
+         filePrintersAdded = true;
++        if (widget.printers->count() == 1)
++            _q_printerChanged(0);
+     }
+     if (!printToFile && filePrintersAdded) {
+         widget.printers->removeItem(widget.printers->count()-1);
 diff --git a/src/src.pro b/src/src.pro
 index f3f8d57af7..8990109743 100644
 --- a/src/src.pro
