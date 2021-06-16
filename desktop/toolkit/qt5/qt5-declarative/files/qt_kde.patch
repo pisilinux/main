@@ -560,6 +560,18 @@ index a729729b67..7b0910fa13 100644
  
  #if !defined(QT_QMLDEVTOOLS_LIB) && !defined(QT_BUILD_QMLDEVTOOLS_LIB)
  #  define Q_QML_AUTOTEST_EXPORT Q_AUTOTEST_EXPORT
+diff --git a/src/qmldebug/qqmlprofilerevent_p.h b/src/qmldebug/qqmlprofilerevent_p.h
+index a7e37d1964..01b2f58f16 100644
+--- a/src/qmldebug/qqmlprofilerevent_p.h
++++ b/src/qmldebug/qqmlprofilerevent_p.h
+@@ -48,6 +48,7 @@
+ #include <QtCore/qmetatype.h>
+ 
+ #include <initializer_list>
++#include <limits>
+ #include <type_traits>
+ 
+ //
 diff --git a/src/qmlmodels/qqmldelegatemodel.cpp b/src/qmlmodels/qqmldelegatemodel.cpp
 index 725b9e8bc3..12c3d11937 100644
 --- a/src/qmlmodels/qqmldelegatemodel.cpp
@@ -788,7 +800,7 @@ index 7b73fcb393..1349d308d7 100644
          }
  
 diff --git a/src/quick/items/qquicktext.cpp b/src/quick/items/qquicktext.cpp
-index 90469ee82b..581ab9f76a 100644
+index 90469ee82b..4ddd2a41bc 100644
 --- a/src/quick/items/qquicktext.cpp
 +++ b/src/quick/items/qquicktext.cpp
 @@ -398,6 +398,8 @@ void QQuickTextPrivate::updateSize()
@@ -800,6 +812,15 @@ index 90469ee82b..581ab9f76a 100644
          updateType = UpdatePaintNode;
          q->update();
          return;
+@@ -2166,7 +2168,7 @@ void QQuickText::resetMaximumLineCount()
+     <img src="" align="top,middle,bottom" width="" height=""> - inline images
+     <ol type="">, <ul type=""> and <li> - ordered and unordered lists
+     <pre></pre> - preformatted
+-    &gt; &lt; &amp;
++    &gt; &lt; &amp; &quot; &nbsp; &apos;
+     \endcode
+ 
+     \c Text.StyledText parser is strict, requiring tags to be correctly nested.
 diff --git a/src/quick/items/qquicktextinput.cpp b/src/quick/items/qquicktextinput.cpp
 index 6275b298ed..bb78ead0e8 100644
 --- a/src/quick/items/qquicktextinput.cpp
@@ -893,6 +914,34 @@ index 80e59563c7..97680569e7 100644
  
  QT_BEGIN_NAMESPACE
  
+diff --git a/src/quick/util/qquickstyledtext.cpp b/src/quick/util/qquickstyledtext.cpp
+index 660852ba83..a25af90414 100644
+--- a/src/quick/util/qquickstyledtext.cpp
++++ b/src/quick/util/qquickstyledtext.cpp
+@@ -46,6 +46,8 @@
+ #include "qquickstyledtext_p.h"
+ #include <QQmlContext>
+ 
++Q_LOGGING_CATEGORY(lcStyledText, "qt.quick.styledtext")
++
+ /*
+     QQuickStyledText supports few tags:
+ 
+@@ -562,10 +564,14 @@ void QQuickStyledTextPrivate::parseEntity(const QChar *&ch, const QString &textI
+                 textOut += QChar(60);
+             else if (entity == QLatin1String("amp"))
+                 textOut += QChar(38);
++            else if (entity == QLatin1String("apos"))
++                textOut += QChar(39);
+             else if (entity == QLatin1String("quot"))
+                 textOut += QChar(34);
+             else if (entity == QLatin1String("nbsp"))
+                 textOut += QChar(QChar::Nbsp);
++            else
++                qCWarning(lcStyledText) << "StyledText doesn't support entity" << entity;
+             return;
+         } else if (*ch == QLatin1Char(' ')) {
+             QStringRef entity(&textIn, entityStart - 1, entityLength + 1);
 diff --git a/src/quickshapes/qquickshapesglobal_p.h b/src/quickshapes/qquickshapesglobal_p.h
 index 40f6cfbdcf..37386c23b2 100644
 --- a/src/quickshapes/qquickshapesglobal_p.h
