@@ -18,6 +18,18 @@ index 87dd6cea..b6ee43c9 100644
      return r;
  }
  
+diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
+index 19944a34..54a69c3c 100644
+--- a/src/client/qwaylanddatadevice.cpp
++++ b/src/client/qwaylanddatadevice.cpp
+@@ -124,6 +124,7 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
+ 
+     m_dragSource.reset(new QWaylandDataSource(m_display->dndSelectionHandler(), mimeData));
+     connect(m_dragSource.data(), &QWaylandDataSource::cancelled, this, &QWaylandDataDevice::dragSourceCancelled);
++    connect(m_dragSource.data(), &QWaylandDataSource::targetChanged, this, &QWaylandDataDevice::dragSourceTargetChanged);
+ 
+     start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
+     return true;
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
 index fe094f6f..f10c1f79 100644
 --- a/src/client/qwaylanddisplay.cpp
@@ -58,10 +70,21 @@ index 188e9131..3b092bc8 100644
      void registry_global(uint32_t id, const QString &interface, uint32_t version) override;
      void registry_global_remove(uint32_t id) override;
 diff --git a/src/client/qwaylandinputcontext.cpp b/src/client/qwaylandinputcontext.cpp
-index e9afe05e..ef5aa375 100644
+index e9afe05e..503fd735 100644
 --- a/src/client/qwaylandinputcontext.cpp
 +++ b/src/client/qwaylandinputcontext.cpp
-@@ -406,6 +406,8 @@ bool QWaylandInputContext::isValid() const
+@@ -51,6 +51,10 @@
+ #include "qwaylandinputmethodeventbuilder_p.h"
+ #include "qwaylandwindow_p.h"
+ 
++#if QT_CONFIG(xkbcommon)
++#include <locale.h>
++#endif
++
+ QT_BEGIN_NAMESPACE
+ 
+ Q_LOGGING_CATEGORY(qLcQpaInputMethods, "qt.qpa.input.methods")
+@@ -406,6 +410,8 @@ bool QWaylandInputContext::isValid() const
  void QWaylandInputContext::reset()
  {
      qCDebug(qLcQpaInputMethods) << Q_FUNC_INFO;
@@ -70,7 +93,7 @@ index e9afe05e..ef5aa375 100644
  
      QPlatformInputContext::reset();
  
-@@ -526,9 +528,14 @@ Qt::LayoutDirection QWaylandInputContext::inputDirection() const
+@@ -526,9 +532,14 @@ Qt::LayoutDirection QWaylandInputContext::inputDirection() const
      return textInput()->inputDirection();
  }
  
@@ -86,7 +109,7 @@ index e9afe05e..ef5aa375 100644
  
      if (!textInput())
          return;
-@@ -561,6 +568,92 @@ QWaylandTextInput *QWaylandInputContext::textInput() const
+@@ -561,6 +572,92 @@ QWaylandTextInput *QWaylandInputContext::textInput() const
      return mDisplay->defaultInputDevice()->textInput();
  }
  
@@ -257,6 +280,110 @@ index 7ad8e05e..c53ccb78 100644
      qCDebug(lcQpaWayland) << "using input method:" << inputContext()->metaObject()->className();
  }
  
+diff --git a/src/client/qwaylandscreen.cpp b/src/client/qwaylandscreen.cpp
+index 6cb337de..7c2d9be3 100644
+--- a/src/client/qwaylandscreen.cpp
++++ b/src/client/qwaylandscreen.cpp
+@@ -72,7 +72,7 @@ QWaylandScreen::QWaylandScreen(QWaylandDisplay *waylandDisplay, int version, uin
+         qCWarning(lcQpaWayland) << "wl_output done event not supported by compositor,"
+                                 << "QScreen may not work correctly";
+         mWaylandDisplay->forceRoundTrip(); // Give the compositor a chance to send geometry etc.
+-        mOutputDone = true; // Fake the done event
++        mProcessedEvents |= OutputDoneEvent; // Fake the done event
+         maybeInitialize();
+     }
+ }
+@@ -83,14 +83,25 @@ QWaylandScreen::~QWaylandScreen()
+         zxdg_output_v1::destroy();
+ }
+ 
++uint QWaylandScreen::requiredEvents() const
++{
++    uint ret = OutputDoneEvent;
++
++    if (mWaylandDisplay->xdgOutputManager()) {
++        ret |= XdgOutputNameEvent;
++
++        if (mWaylandDisplay->xdgOutputManager()->version() < 3)
++            ret |= XdgOutputDoneEvent;
++    }
++    return ret;
++}
++
+ void QWaylandScreen::maybeInitialize()
+ {
+     Q_ASSERT(!mInitialized);
+ 
+-    if (!mOutputDone)
+-        return;
+-
+-    if (mWaylandDisplay->xdgOutputManager() && !mXdgOutputDone)
++    const uint requiredEvents = this->requiredEvents();
++    if ((mProcessedEvents & requiredEvents) != requiredEvents)
+         return;
+ 
+     mInitialized = true;
+@@ -276,9 +287,8 @@ void QWaylandScreen::output_scale(int32_t factor)
+ 
+ void QWaylandScreen::output_done()
+ {
+-    mOutputDone = true;
+-    if (zxdg_output_v1::isInitialized() && mWaylandDisplay->xdgOutputManager()->version() >= 3)
+-        mXdgOutputDone = true;
++    mProcessedEvents |= OutputDoneEvent;
++
+     if (mInitialized) {
+         updateOutputProperties();
+         if (zxdg_output_v1::isInitialized())
+@@ -339,7 +349,7 @@ void QWaylandScreen::zxdg_output_v1_done()
+     if (Q_UNLIKELY(mWaylandDisplay->xdgOutputManager()->version() >= 3))
+         qWarning(lcQpaWayland) << "zxdg_output_v1.done received on version 3 or newer, this is most likely a bug in the compositor";
+ 
+-    mXdgOutputDone = true;
++    mProcessedEvents |= XdgOutputDoneEvent;
+     if (mInitialized)
+         updateXdgOutputProperties();
+     else
+@@ -348,7 +358,11 @@ void QWaylandScreen::zxdg_output_v1_done()
+ 
+ void QWaylandScreen::zxdg_output_v1_name(const QString &name)
+ {
++    if (Q_UNLIKELY(mInitialized))
++        qWarning(lcQpaWayland) << "zxdg_output_v1.name received after output has been initialized, this is most likely a bug in the compositor";
++
+     mOutputName = name;
++    mProcessedEvents |= XdgOutputNameEvent;
+ }
+ 
+ void QWaylandScreen::updateXdgOutputProperties()
+diff --git a/src/client/qwaylandscreen_p.h b/src/client/qwaylandscreen_p.h
+index df1c94f2..050cfdc0 100644
+--- a/src/client/qwaylandscreen_p.h
++++ b/src/client/qwaylandscreen_p.h
+@@ -116,6 +116,13 @@ public:
+     static QWaylandScreen *fromWlOutput(::wl_output *output);
+ 
+ private:
++    enum Event : uint {
++        XdgOutputDoneEvent = 0x1,
++        OutputDoneEvent = 0x2,
++        XdgOutputNameEvent = 0x4,
++    };
++    uint requiredEvents() const;
++
+     void output_mode(uint32_t flags, int width, int height, int refresh) override;
+     void output_geometry(int32_t x, int32_t y,
+                          int32_t width, int32_t height,
+@@ -148,8 +155,7 @@ private:
+     QSize mPhysicalSize;
+     QString mOutputName;
+     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
+-    bool mOutputDone = false;
+-    bool mXdgOutputDone = false;
++    uint mProcessedEvents = 0;
+     bool mInitialized = false;
+ 
+ #if QT_CONFIG(cursor)
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
 index bc031ed5..e96d8fe9 100644
 --- a/src/client/qwaylandwindow.cpp
@@ -361,6 +488,40 @@ index 15f0195c..2218f43a 100644
      } else {
          bool success = QMetaObject::invokeMethod(d->subsurfaceHandler, "handleSubsurfaceAdded", Q_ARG(QWaylandSurface *, childSurface));
          if (!success)
+diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
+index 7889f575..201b583b 100644
+--- a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
++++ b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
+@@ -131,14 +131,16 @@ void QWaylandEglWindow::updateSurface(bool create)
+             if (!disableResizeCheck) {
+                 wl_egl_window_get_attached_size(m_waylandEglWindow, &current_width, &current_height);
+             }
+-            if (disableResizeCheck || (current_width != sizeWithMargins.width() || current_height != sizeWithMargins.height())) {
++            if (disableResizeCheck || (current_width != sizeWithMargins.width() || current_height != sizeWithMargins.height()) || m_requestedSize != sizeWithMargins) {
+                 wl_egl_window_resize(m_waylandEglWindow, sizeWithMargins.width(), sizeWithMargins.height(), mOffset.x(), mOffset.y());
++                m_requestedSize = sizeWithMargins;
+                 mOffset = QPoint();
+ 
+                 m_resize = true;
+             }
+         } else if (create && wlSurface()) {
+             m_waylandEglWindow = wl_egl_window_create(wlSurface(), sizeWithMargins.width(), sizeWithMargins.height());
++            m_requestedSize = sizeWithMargins;
+         }
+ 
+         if (!m_eglSurface && m_waylandEglWindow && create) {
+diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h
+index 5b1f4d56..0079dfef 100644
+--- a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h
++++ b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h
+@@ -88,6 +88,7 @@ private:
+     mutable QOpenGLFramebufferObject *m_contentFBO = nullptr;
+ 
+     QSurfaceFormat m_format;
++    QSize m_requestedSize;
+ };
+ 
+ }
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
 index ccebf43d..95d1049c 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
