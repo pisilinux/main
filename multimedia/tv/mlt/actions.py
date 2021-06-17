@@ -37,4 +37,4 @@ def install():
     pisitools.insinto("/usr/lib/perl5/vendor_perl/%s/" % get.curPERL(), "src/swig/perl/blib/lib/mlt.pm")
     pisitools.dolib("src/swig/perl/blib/arch/auto/mlt/mlt.so", "/usr/lib/perl5/vendor_perl/%s/i686-linux-thread-multi/auto/mlt/" % get.curPERL())
 
-    pisitools.dodoc("ChangeLog", "COPYING", "GPL*", "README")
+    pisitools.dodoc("COPYING", "GPL*", "README")
