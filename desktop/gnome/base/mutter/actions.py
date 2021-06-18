@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     mesontools.configure("-Degl_device=true \
+                          -Dwayland_eglstream=true \
                           -Dudev=true \
                           -Dnative_backend=true \
                           -Dprofiler=false \
