@@ -24,5 +24,8 @@ def install():
     
     autotools.rawInstall("DESTDIR=%s prefix=/usr" % get.installDIR())
     
+    pisitools.dosed("lmdb.pc", "@PKGVER@", "%s" % get.srcVERSION())
+    pisitools.insinto("/usr/lib/pkgconfig", "lmdb.pc")
+
     pisitools.domove("/usr/man", "/usr/share")
     pisitools.dodoc("LICENSE", "CHANGES", "COPYRIGHT")
