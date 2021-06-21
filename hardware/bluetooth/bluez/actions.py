@@ -6,17 +6,15 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-  
+    #shelltools.export("PYHTON", "/usr/bin/python3")
     #shelltools.system("sed -i -e '/SystemdService/d' obexd/src/org.bluez.obex.service.in")
     pisitools.dosed("obexd/src/org.bluez.obex.service.in", "SystemdService", deleteLine=True)
     autotools.autoreconf("-fi")
-    autotools.configure("--prefix=/usr \
-                         --sysconfdir=/etc \
-                         --localstatedir=/var \
-                         --libexecdir=/usr/libexec/ \
+    autotools.configure("--localstatedir=/var \
                          --enable-sixaxis \
                          --enable-experimental \
                          --disable-android \
@@ -33,6 +31,9 @@ def setup():
                          --enable-test \
                          --enable-testing \
                          --enable-mesh \
+                         --enable-hid2hci \
+                         --enable-nfc \
+                         --enable-deprecated \
                          --disable-systemd")
                          
     
@@ -43,7 +44,7 @@ def build():
     
 def install():
     autotools.rawInstall("DESTDIR=%s install-pkglibexecPROGRAMS install-dbussessionbusDATA install-dbussystembusDATA install-dbusDATA install-man8" % get.installDIR())
- 
+
     
     # Install conf files
     for i in ["profiles/input", "profiles/network" ,"src"]:
