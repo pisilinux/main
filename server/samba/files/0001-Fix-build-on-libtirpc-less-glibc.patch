@@ -1,0 +1,23 @@
+From: Berk Cakar <berk2238@hotmail.com>
+Date: Tue, 22 Jun 2021 20:19:32 +0300
+Subject: [PATCH] Fix build on libtirpc-less glibc
+
+---
+ lib/replace/wscript | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/replace/wscript b/lib/replace/wscript
+index 5d6324ef619..80afda75c96 100644
+--- a/lib/replace/wscript
++++ b/lib/replace/wscript
+@@ -109,6 +109,7 @@ def configure(conf):
+ 
+     conf.CHECK_HEADERS('sys/fileio.h sys/filesys.h sys/dustat.h sys/sysmacros.h')
+     conf.CHECK_HEADERS('xfs/libxfs.h netgroup.h')
++    conf.CHECK_CODE('', headers='rpc/rpc.h rpcsvc/yp_prot.h', define='HAVE_RPCSVC_YP_PROT_H')
+
+     conf.CHECK_HEADERS('valgrind.h valgrind/valgrind.h')
+     conf.CHECK_HEADERS('valgrind/memcheck.h valgrind/helgrind.h')
+-- 
+2.24.3 (Apple Git-128)
+
