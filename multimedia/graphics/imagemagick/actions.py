@@ -40,6 +40,8 @@ def setup():
                          --enable-shared \
                          --disable-static \
                          --with-magick_plus_plus \
+                         PSDelegate=/usr/bin/gs \
+                         PCLDelegate=/usr/bin/gpcl6 \
                          --docdir=/usr/share/doc/imagemagick \
                          --with-perl-options='INSTALLDIRS=vendor' \
                          --with-gs-font-dir=/usr/share/fonts/default/ghostscript")
