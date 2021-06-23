@@ -1,0 +1,25 @@
+From e70d519db7c6aeeea79cbb4a78a204ebc91be6f8 Mon Sep 17 00:00:00 2001
+From: Yaroslav Sidlovsky <zawertun@gmail.com>
+Date: Fri, 18 Jun 2021 02:30:10 +0300
+Subject: [PATCH] Fix for black borders around some application windows
+
+---
+ gtk3-nocsd.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/gtk3-nocsd.c b/gtk3-nocsd.c
+index 94e1bbe..f1d3176 100644
+--- a/gtk3-nocsd.c
++++ b/gtk3-nocsd.c
+@@ -871,6 +871,11 @@ extern void gtk_header_bar_set_decoration_layout (GtkHeaderBar *bar, const gchar
+     }
+ }
+ 
++extern gboolean gtk_window_get_decorated (GtkWindow *window)
++{
++    return FALSE;
++}
++
+ extern gboolean gdk_screen_is_composited (GdkScreen *screen) {
+     /* With Gtk+3 3.16.1+ we reimplement gtk_window_set_titlebar ourselves, hence
+      * we don't want to re-use the compositing hack, especially since it causes
