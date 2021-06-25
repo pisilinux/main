@@ -15,7 +15,6 @@ def setup():
                          --enable-more-warnings=yes \
                          --with-udev-base-dir=/lib/udev \
                          --enable-gtk-doc \
-                         --enable-more-warnings=no \
                          --with-systemd-journal=no \
                          --with-systemd-suspend-resume=no \
                          --with-polkit=permissive")
