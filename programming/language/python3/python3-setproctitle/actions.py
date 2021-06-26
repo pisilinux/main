@@ -10,8 +10,8 @@ from pisi.actionsapi import shelltools
 def build():
     pythonmodules.compile(pyVer="3")
     
-def check():
-    pythonmodules.compile("test", pyVer="3")
+#def check():
+    #pythonmodules.compile("test", pyVer="3")
 
 def install():
     pythonmodules.install(pyVer="3")
