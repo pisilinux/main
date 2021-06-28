@@ -36,6 +36,7 @@ def setup():
                         -DBUILD_WSI_WAYLAND_SUPPORT=On \
                         -DBUILD_SHARED_LIBS=ON \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
+                        -DSPIRV_TOOLS_INSTALL_DIR='/usr' \
                         -DSPIRV_HEADERS_INSTALL_DIR='/usr/include/spirv' \
                         -DUSE_ROBIN_HOOD_HASHING=OFF \
                         -DGLSLANG_INSTALL_DIR=/usr \
@@ -62,6 +63,8 @@ def setup():
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
+                            -DSPIRV_TOOLS_LIB='/usr/lib32' \
+                            -DSPIRV_TOOLS_OPT_LIB='/usr/lib32' \
                             -DCMAKE_ASM_FLAGS='--32' \
                            "
                            
@@ -83,6 +86,8 @@ def setup():
         #shelltools.system("../scripts/update_deps.py")
         
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
+                            -DSPIRV_TOOLS_LIB='/usr/lib' \
+                            -DSPIRV_TOOLS_OPT_LIB='/usr/lib' \
                            "
                            
         cmaketools.configure(validation_opts, sourceDir="..")
