@@ -39,6 +39,7 @@ def setup():
               --enable-multibyte \
               --enable-perlinterp \
               --enable-pythoninterp \
+              --enable-python3interp \
               --enable-rubyinterp \
               --enable-gui=no \
               --with-tlib=ncurses \
