@@ -13,6 +13,7 @@ from pisi.actionsapi import perlmodules
 
 def setup():
     shelltools.export("AUTOPOINT", "/bin/true")
+    shelltools.export("PYTHON", "/usr/bin/python3")
     #autotools.autoreconf("-vfi")
     # suppress compiler warnings
     pisitools.cflags.add("-Wno-missing-prototypes -Wno-format-truncation -Wno-implicit-fallthrough -Wno-cast-function-type -Wstringop-truncation")
