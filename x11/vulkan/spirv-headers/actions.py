@@ -13,7 +13,8 @@ from pisi.actionsapi import get
 pisitools.cxxflags.add("-std=gnu++11")
 
 def setup():
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_INSTALL_DATADIR=/usr/lib")
     
 
 def build():
