@@ -19,13 +19,12 @@ shelltools.export("DRAKETHREADS", get.makeJOBS().replace("-j", ""))
 pisitools.flags.add("-DBOOST_FILESYSTEM_VERSION=3")
 
 def setup():
+    #shelltools.system("rm -rf lib/{boost,fmt,jpcre2,libebml,libmatroska,nlohmann-json,pugixml,utf8-cpp}")
    # pisitools.dosed("configure.in", "curl", deleteLine=True)
 
     shelltools.system("./autogen.sh")
     autotools.autoreconf("-fiv")
-    autotools.configure("--enable-gui \
-                         --without-curl \
-                         --with-flac \
+    autotools.configure("--with-flac \
                          --disable-update-check \
                          --with-boost-libdir=/usr/lib ")
 
