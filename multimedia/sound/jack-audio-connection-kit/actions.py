@@ -16,6 +16,7 @@ def setup():
                         --prefix=/usr \
                         --libdir=/usr/lib \
                         --alsa \
+                        --dbus \
                         --firewire=no \
                         ")
 
