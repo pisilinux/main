@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>opencolorio</Name>
+        <Homepage>http://opencolorio.org/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>app</IsA>
+        <Summary>Enables color transforms and image display across graphics apps</Summary>
+        <Description>Grafik uygulamalarında renk dönüşümlerini ve görüntü ekranını etkinleştirir</Description>
+        <Archive sha1sum="79054e95ca37ba65e91b2b32447f9640f4213cb0" type="targz">https://github.com/AcademySoftwareFoundation/OpenColorIO/archive/refs/tags/v2.0.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>pybind11</Dependency>
+            <Dependency>yaml-cpp</Dependency>
+            <Dependency>glew-devel</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>pystring-devel</Dependency>
+            <Dependency>freeglut-devel</Dependency>
+            <Dependency>tinyxml-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>ilmbase-devel</Dependency>
+            <Dependency>openimageio-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1">opencolorio-openexr3.patch</Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>opencolorio</Name>
+        <Conflicts>
+            <Package>OpenColorIO1</Package>
+        </Conflicts>
+        <RuntimeDependencies>
+            <Dependency>glew</Dependency>
+            <Dependency>expat</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>ilmbase</Dependency>
+            <Dependency>lcms2</Dependency>
+            <Dependency>freeglut</Dependency>
+            <Dependency>libglvnd</Dependency>
+            <Dependency>mesa-glu</Dependency>
+            <Dependency>pystring</Dependency>
+            <Dependency>openimageio</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/ocio</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>opencolorio-devel</Name>
+        <Summary>Development files for opencolorio</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">opencolorio</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="2">
+            <Date>2021-06-30</Date>
+            <Version>2.0.1</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
