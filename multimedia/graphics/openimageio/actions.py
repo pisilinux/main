@@ -21,6 +21,7 @@ def setup():
                            -DCMAKE_INSTALL_LIBDIR=lib \
                            -DPYLIB_INSTALL_DIR=lib/python3.8/site-packages \
                            -DUSE_OCIO= OFF \
+                           -DOpenGL_GL_PREFERENCE=GLVND \
                            -DUSE_OPENSSL:BOOL=TRUE \
                            -DSTOP_ON_WARNING:BOOL=FALSE \
                            -DOIIO_BUILD_TESTS=OFF", sourceDir="..")
