@@ -5,7 +5,7 @@ DESTDIR=$1
 mkdir -p $DESTDIR/usr/{lib,include}
 
 pushd build/obj_release
-    for file in libtbb{,malloc}; do
+    for file in libtbb{,malloc,malloc_proxy}; do
         install -p -D -m 755 ${file}.so.2 $DESTDIR/usr/lib/
         ln -s $file.so.2 $DESTDIR/usr/lib/$file.so
     done
