@@ -24,8 +24,9 @@ def setup():
                       -DWITH_JACK=ON \
                       -DWITH_JACK_DYNLOAD=ON \
                       -DWITH_IMAGE_OPENEXR=ON \
-                      -DWITH_OPENCOLORIO=OFF \
+                      -DWITH_OPENCOLORIO=ON \
                       -DWITH_OPENIMAGEIO=ON \
+                      -DWITH_OPENIMAGEDENOISE=ON \
                       -DWITH_FFTW3=ON\
                       -DWITH_PLAYER=ON \
                       -DWITH_CODEC_FFMPEG=ON \
