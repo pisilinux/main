@@ -18,7 +18,7 @@ def setup():
                           -Wno-misleading-indentation")
     # autoreconf is for under linking problem
     autotools.autoreconf("-fi")
-    autotools.configure("--disable-introspection")
+    autotools.configure("--enable-introspection=no")
     # fix unused dependency analysis
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
