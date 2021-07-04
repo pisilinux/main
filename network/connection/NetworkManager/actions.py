@@ -69,4 +69,4 @@ def install():
 
     pisitools.dodir("/etc/NetworkManager/VPN")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "CONTRIBUTING", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "CONTRIBUTING*", "COPYING", "NEWS", "README*")
