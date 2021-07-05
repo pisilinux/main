@@ -4,20 +4,40 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools, pisitools, get
+from pisi.actionsapi import autotools, pisitools, shelltools, get
 
 def setup():
-	pisitools.dosed("src/Makefile.am", "-Werror", "")
-	autotools.autoreconf("-fiv")
-	autotools.configure("--with-gtk=3 --disable-static")
+    #shelltools.export("PYTHON", "/usr/bin/python3")
+    shelltools.copytree("../libappindicator-%s" % (get.srcVERSION().replace("_", "~")), "../libappindicator-%s-gtk3" % get.srcVERSION())
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    pisitools.dosed("src/Makefile.am", "-Werror", "")
+    autotools.autoreconf("-fiv")
+    autotools.configure("--with-gtk=2 \
+                         --enable-introspection=no \
+                         --disable-static")
+
+    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+
+    shelltools.cd("../libappindicator-%s-gtk3" % get.srcVERSION())
+    pisitools.dosed("src/Makefile.am", "-Werror", "")
+    autotools.autoreconf("-fiv")
+    autotools.configure("--with-gtk=3 \
+                         --disable-static")
+
+    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+
 
 def build():
-	autotools.make()
+    autotools.make()
+
+    shelltools.cd("../libappindicator-%s-gtk3" % get.srcVERSION())
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog")
+    shelltools.cd("../libappindicator-%s-gtk3" % get.srcVERSION())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.dodoc("AUTHORS", "ChangeLog")
 

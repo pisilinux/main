@@ -21,16 +21,18 @@
 			<Dependency>gtk3-devel</Dependency>
 			<Dependency>python-devel</Dependency>
 			<Dependency>python3-devel</Dependency>
-			<Dependency>python-gtk-devel</Dependency>
+<!-- 			<Dependency>python-gtk-devel</Dependency> -->
 			<Dependency>libdbusmenu-gtk3</Dependency>
 			<Dependency>libdbusmenu-devel</Dependency>
 			<Dependency>libindicator-devel</Dependency>
-			<Dependency>python-pygobject-devel</Dependency>
-			<Dependency>python-pygobject3-devel</Dependency>
+            <Dependency>libindicator-gtk2-devel</Dependency>
+<!-- 			<Dependency>python-pygobject-devel</Dependency> -->
+			<Dependency>python3-pygobject3-devel</Dependency>
 			<Dependency>gobject-introspection-devel</Dependency>
 		</BuildDependencies>
 		<Patches>
-			<!-- <Patch level="1">missing.patch</Patch> -->
+			<Patch level="1">incompatible_pointer_build_fix.patch</Patch>
+            <Patch level="1">nopython.patch</Patch>
 		</Patches>
 	</Source>
 
@@ -54,7 +56,7 @@
 		</Files>
 	</Package>
 
-	<Package>
+    	<Package>
 		<Name>libappindicator-devel</Name>
 		<RuntimeDependencies>
 			<Dependency release="current">libappindicator</Dependency>
@@ -69,6 +71,30 @@
 		</Files>
 	</Package>
 
+    <Package>
+		<Name>libappindicator-gtk2</Name>
+		<RuntimeDependencies>
+			<Dependency>gtk2</Dependency>
+            <Dependency>libindicator-gtk2</Dependency>
+			<Dependency>libdbusmenu-gtk</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/libappindicator.so*</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libappindicator-gtk2-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">libappindicator-gtk2</Dependency>
+			<Dependency>gtk2-devel</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/pkgconfig/appindicator-0.1.pc</Path>
+			<Path fileType="header">/usr/include/libappindicator-0.1/libappindicator</Path>
+		</Files>
+	</Package>
+
 	<Package>
 		<Name>libappindicator-docs</Name>
 		<RuntimeDependencies>
@@ -80,6 +106,13 @@
 	</Package>
 
 	<History>
+        <Update release="2">
+            <Date>2021-07-04</Date>
+            <Version>12.10.0</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
 		<Update release="1">
 			<Date>2021-01-28</Date>
 			<Version>12.10.0</Version>
