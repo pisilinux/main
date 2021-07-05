@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
+    shelltools.export("rst2man", "rst2man_3")
     if not get.buildTYPE() == "emul32":
         options = "-Dudev=true \
                    -Dvalgrind=true \
@@ -21,7 +22,7 @@ def setup():
                     -Dvalgrind=false"
 
 
-                    
+
     mesontools.configure(options)
 
 def build():
