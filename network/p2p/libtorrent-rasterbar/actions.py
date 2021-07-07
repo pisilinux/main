@@ -1,38 +1,43 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-#WorkDir = "libtorrent-rasterbar-%s" % get.srcVERSION()
-
-
 def setup():
-    autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static \
-                         --enable-python-binding \
-                         --enable-encryption \
-                         --with-boost-filesystem=mt \
-                         --with-boost-thread=mt \
-                         --with-zlib=system \
-                         --with-libiconv \
-                         --with-libgeoip=system \
-                         --enable-export-all")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    pisitools.dosed("Makefile", "PREFIX=/usr/local/", "PREFIX=/usr")
+    shelltools.system("mkdir build")
+    shelltools.cd("build")
+    cmaketools.configure("-GNinja .. \
+                            -DCMAKE_SKIP_RPATH=TRUE \
+                            -DCMAKE_INSTALL_PREFIX=/usr \
+                            -DCMAKE_INSTALL_LIBDIR=lib \
+                            -Dbuild_examples=ON \
+                            -Dbuild_tests=ON \
+                            -Dbuild_tools=ON \
+                            -Dpython-bindings=ON \
+                            -Dpython-egg-info=ON \
+                            -Dpython-install-system-dir=ON", sourceDir="..")
 
 def build():
-    autotools.make("CXX=%s" % get.CXX())
+    shelltools.cd("build")
+    shelltools.system("ninja")
+    #cmaketools.make()
+
+#def check():
+    #cmaketools.make("test")
+
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    #cmaketools.rawInstall("DESTDIR=%s ninja install" % get.installDIR())
 
-    #pisitools.removeDir("/usr/bin")
-
+    shelltools.cd("..")
     pisitools.dohtml("docs/*")
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "LICENSE")
