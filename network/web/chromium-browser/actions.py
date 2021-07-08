@@ -21,13 +21,13 @@ def setup():
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
     
-    #shelltools.system("sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py")
+    shelltools.system("sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py")
 
-    #for LIB in ["freetype", "flac", "fontconfig", "libevent", "libwebp", "re2", "snappy"]:
-        #shelltools.system('find -type f -path "*third_party/%s/*" \! -path "*third_party/%s/chromium/*" \! -path "*third_party/%s/google/*" \! -regex ".*\.\(gn\|gni\|isolate\|py\)" -delete' %(LIB, LIB, LIB))
+    for LIB in ["ffmpeg", "freetype", "flac", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg_turbo", "libpng", "libwebp", "libxml", "libxslt", "opus", "re2", "snappy", "zlib"]:
+        shelltools.system('find "third_party/%s" -type f  \! -path "third_party/%s/chromium/*" \! -path "*third_party/%s/google/*" \! -path "third_party/harfbuzz-ng/utils/hb_scoped.h" \! -regex ".*\.\(gn\|gni\|isolate\)" -delete' %(LIB, LIB, LIB))
 	
 	
-    #shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries flac fontconfig freetype libevent libwebp re2 snappy")
+    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries ffmpeg freetype flac fontconfig harfbuzz-ng libdrm libjpeg libpng libwebp libxml libxslt re2 opus snappy zlib")
     
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
@@ -64,11 +64,16 @@ def setup():
            enable_swiftshader=false \
            use_vaapi=true \
            closure_compile=false \
-           symbol_level=0'
+           symbol_level=0 \
+           use_thin_lto=false \
+           thin_lto_enable_optimizations=false \
+           is_cfi=false'
+
            
     
     shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")    
     clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin/" %(get.workDIR(), get.srcVERSION())
+    #clangpath = "/usr/bin"
 
     shelltools.export("CC", "%s/clang" %clangpath)
     shelltools.export("CXX", "%s/clang++" %clangpath)
@@ -76,8 +81,8 @@ def setup():
     shelltools.export("NM", "nm" )
     shelltools.export("RANLIB", "ranlib" )
     
-    pisitools.cflags.add("-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
-    pisitools.cxxflags.add("-Wno-builtin-macro-redefined -Wno-unknown-warning-option")
+    pisitools.cflags.add("-Wno-builtin-macro-redefined -Wno-unknown-warning-option -fdebug-types-section")
+    pisitools.cxxflags.add("-Wno-builtin-macro-redefined -Wno-unknown-warning-option -fdebug-types-section")
     pisitools.ldflags.add(" -fuse-ld=lld")
     shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
     
