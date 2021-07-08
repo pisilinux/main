@@ -19,4 +19,3 @@ def install():
         pisitools.insinto("%s/html/%s/package-manager/" % (kde5.docdir, lang),
                           "help/%s/main_help.html" % lang, "index.html")
 
-
