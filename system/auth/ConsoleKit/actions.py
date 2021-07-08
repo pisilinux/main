@@ -16,7 +16,7 @@ def setup():
     #shelltools.system("sed -i -e '/SystemdService/d' data/org.freedesktop.ConsoleKit.service.in")
 
     #autotools.autoreconf("-fi")
-
+    shelltools.system("sh ./autogen.sh")
     autotools.configure("--prefix=/usr \
                          --sysconfdir=/etc \
                          --sbindir=/usr/sbin \
