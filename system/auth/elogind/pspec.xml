@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>elogind</Name>
+        <Homepage>https://github.com/elogind</Homepage>
+        <Packager>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2.1</License>
+        <IsA>app:console</IsA>
+        <Summary>Elogind User, Seat and Session Manager</Summary>
+        <Description>Elogind is the systemd project's "logind", extracted out to be a standalone daemon.  It integrates with PAM to know the set of users that are logged in to a system and whether they are logged in graphically, on the console, or remotely.</Description>
+        <Archive sha1sum="f2538df81689c280b081c902f19dd538f5d1feae" type="targz">https://github.com/elogind/elogind/archive/refs/tags/v246.10.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gperf</Dependency>
+            <Dependency>meson</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>sysvinit</Dependency>
+            <Dependency>acl-devel</Dependency>
+            <Dependency>pam-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>audit-devel</Dependency>
+            <Dependency>docbook-xsl</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libcap-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>cgmanager-devel</Dependency>
+            <Dependency>libevdev-devel</Dependency>
+            <Dependency>p11-kit-devel</Dependency>
+            <Dependency>kernel-headers</Dependency>
+            <Dependency>libpcre2-devel</Dependency>
+            <Dependency>bash-completion</Dependency>
+        </BuildDependencies>
+        <!--Patches>
+            <Patch>reverse_DISABLE_BUFFER_in_cg_attach.patch</Patch>
+            <Patch>reverse_CLOSE_ON_EXEC_removal.patch</Patch>
+        </Patches-->
+    </Source>
+
+    <Package>
+        <Name>elogind</Name>
+        <Summary>Elogind User, Seat and Session Manager</Summary>
+        <RuntimeDependencies>
+            <Dependency>acl</Dependency>
+            <Dependency>pam</Dependency>
+            <Dependency>audit</Dependency>
+            <Dependency>eudev</Dependency>
+            <Dependency>libevdev</Dependency>
+            <Dependency>dbus</Dependency>
+            <!--Dependency>polkit</Dependency--> <!--elogind çember-->
+            <Dependency>cgmanager</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>bash-completion</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="conf">/etc</Path>
+            <Path fileType="library">/lib</Path>
+            <Path fileType="executable">/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/zsh</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="data">/usr/share/factory</Path>
+            <Path fileType="data">/usr/share/polkit-1</Path>
+            <Path fileType="locale">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/tmpfiles.d/elogind.conf">tmpfiles.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/polkit-1/rules.d/75-elogind.rules">25-elogind.rules</AdditionalFile>
+            <AdditionalFile permission="0644" target="/usr/share/polkit-1/rules.d/75-elogind.rules">25-elogind.rules</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/pam.d/elogind-user">elogind-user</AdditionalFile>
+            <!--AdditionalFile owner="root" permission="0644" target="/etc/pam.d/system-login">system-login</AdditionalFile-->
+            <!--AdditionalFile owner="root" permission="0755" target="/etc/pam.d/elogind">elogind.pamd</AdditionalFile-->
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+            <COMAR script="package.py">System.Package</COMAR>
+        </Provides>
+        <Conflicts>
+            <!-- Package>ConsoleKit</Package -->
+        </Conflicts>
+    </Package>
+
+    <Package>
+        <Name>elogind-devel</Name>
+        <Summary>Development files for elogind</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">elogind</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="header">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="4">
+            <Date>2021-07-08</Date>
+            <Version>246.10</Version>
+            <Comment>elogind rebuild</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="3">
+            <Date>2021-06-16</Date>
+            <Version>246.10</Version>
+            <Comment>elogind rebuild</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
+        <Update release="2">
+            <Date>2021-05-03</Date>
+            <Version>246.10</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Ali Cengiz Kurt</Name>
+            <Email>alicengizkurt@gmail.com</Email>
+        </Update>
+        <Update release="1">
+            <Date>2021-03-17</Date>
+            <Version>246.9.2</Version>
+            <Comment>First release</Comment>
+            <Name>Ali Cengiz Kurt</Name>
+            <Email>alicengizkurt@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
