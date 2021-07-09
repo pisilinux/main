@@ -1,3 +1,57 @@
+diff --git a/src/client/global/qwaylandclientextension.cpp b/src/client/global/qwaylandclientextension.cpp
+index 125b1e19..edccfe63 100644
+--- a/src/client/global/qwaylandclientextension.cpp
++++ b/src/client/global/qwaylandclientextension.cpp
+@@ -74,7 +74,10 @@ void QWaylandClientExtensionPrivate::handleRegistryGlobal(void *data, ::wl_regis
+ void QWaylandClientExtension::addRegistryListener()
+ {
+     Q_D(QWaylandClientExtension);
+-    d->waylandIntegration->display()->addRegistryListener(&QWaylandClientExtensionPrivate::handleRegistryGlobal, this);
++    if (!d->registered) {
++        d->waylandIntegration->display()->addRegistryListener(&QWaylandClientExtensionPrivate::handleRegistryGlobal, this);
++        d->registered = true;
++    }
+ }
+ 
+ QWaylandClientExtension::QWaylandClientExtension(const int ver)
+@@ -88,6 +91,13 @@ QWaylandClientExtension::QWaylandClientExtension(const int ver)
+     QMetaObject::invokeMethod(this, "addRegistryListener", Qt::QueuedConnection);
+ }
+ 
++QWaylandClientExtension::~QWaylandClientExtension()
++{
++    Q_D(QWaylandClientExtension);
++    if (d->registered && !QCoreApplication::closingDown())
++        d->waylandIntegration->display()->removeListener(&QWaylandClientExtensionPrivate::handleRegistryGlobal, this);
++}
++
+ QtWaylandClient::QWaylandIntegration *QWaylandClientExtension::integration() const
+ {
+     Q_D(const QWaylandClientExtension);
+diff --git a/src/client/global/qwaylandclientextension.h b/src/client/global/qwaylandclientextension.h
+index 98272e57..5bd28398 100644
+--- a/src/client/global/qwaylandclientextension.h
++++ b/src/client/global/qwaylandclientextension.h
+@@ -63,6 +63,7 @@ class Q_WAYLAND_CLIENT_EXPORT QWaylandClientExtension : public QObject
+     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+ public:
+     QWaylandClientExtension(const int version);
++    ~QWaylandClientExtension();
+ 
+     QtWaylandClient::QWaylandIntegration *integration() const;
+     int version() const;
+diff --git a/src/client/global/qwaylandclientextension_p.h b/src/client/global/qwaylandclientextension_p.h
+index 69cc46a0..9091efbe 100644
+--- a/src/client/global/qwaylandclientextension_p.h
++++ b/src/client/global/qwaylandclientextension_p.h
+@@ -68,6 +68,7 @@ public:
+     QtWaylandClient::QWaylandIntegration *waylandIntegration = nullptr;
+     int version = -1;
+     bool active = false;
++    bool registered = false;
+ };
+ 
+ class Q_WAYLAND_CLIENT_EXPORT QWaylandClientExtensionTemplatePrivate : public QWaylandClientExtensionPrivate
 diff --git a/src/client/qwaylandabstractdecoration.cpp b/src/client/qwaylandabstractdecoration.cpp
 index 87dd6cea..b6ee43c9 100644
 --- a/src/client/qwaylandabstractdecoration.cpp
@@ -31,7 +85,7 @@ index 19944a34..54a69c3c 100644
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index fe094f6f..f10c1f79 100644
+index fe094f6f..e0dfe8b2 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -206,10 +206,11 @@ void QWaylandDisplay::checkError() const
@@ -48,6 +102,18 @@ index fe094f6f..f10c1f79 100644
  }
  
  void QWaylandDisplay::flushRequests()
+@@ -451,9 +452,10 @@ void QWaylandDisplay::addRegistryListener(RegistryListener listener, void *data)
+ 
+ void QWaylandDisplay::removeListener(RegistryListener listener, void *data)
+ {
+-    std::remove_if(mRegistryListeners.begin(), mRegistryListeners.end(), [=](Listener l){
++    auto iter = std::remove_if(mRegistryListeners.begin(), mRegistryListeners.end(), [=](Listener l){
+         return (l.listener == listener && l.data == data);
+     });
++    mRegistryListeners.erase(iter, mRegistryListeners.end());
+ }
+ 
+ uint32_t QWaylandDisplay::currentTimeMillisec()
 diff --git a/src/client/qwaylanddisplay_p.h b/src/client/qwaylanddisplay_p.h
 index 188e9131..3b092bc8 100644
 --- a/src/client/qwaylanddisplay_p.h
@@ -260,10 +326,25 @@ index ed4a0eb4..ae045f4f 100644
                          nativeModifiers, text, autorepeat, count);
          event.setTimestamp(timestamp);
 diff --git a/src/client/qwaylandintegration.cpp b/src/client/qwaylandintegration.cpp
-index 7ad8e05e..c53ccb78 100644
+index 7ad8e05e..e5e7dd42 100644
 --- a/src/client/qwaylandintegration.cpp
 +++ b/src/client/qwaylandintegration.cpp
-@@ -474,13 +474,11 @@ void QWaylandIntegration::reconfigureInputContext()
+@@ -262,6 +262,14 @@ QWaylandDisplay *QWaylandIntegration::display() const
+     return mDisplay.data();
+ }
+ 
++Qt::KeyboardModifiers QWaylandIntegration::queryKeyboardModifiers() const
++{
++    if (auto *seat = mDisplay->currentInputDevice()) {
++        return seat->modifiers();
++    }
++    return Qt::NoModifier;
++}
++
+ QList<int> QWaylandIntegration::possibleKeys(const QKeyEvent *event) const
+ {
+     if (auto *seat = mDisplay->currentInputDevice())
+@@ -474,13 +482,11 @@ void QWaylandIntegration::reconfigureInputContext()
  
  #if QT_CONFIG(xkbcommon)
      QXkbCommon::setXkbContext(mInputContext.data(), mDisplay->xkbContext());
@@ -280,6 +361,19 @@ index 7ad8e05e..c53ccb78 100644
      qCDebug(lcQpaWayland) << "using input method:" << inputContext()->metaObject()->className();
  }
  
+diff --git a/src/client/qwaylandintegration_p.h b/src/client/qwaylandintegration_p.h
+index ff70ae25..73b80658 100644
+--- a/src/client/qwaylandintegration_p.h
++++ b/src/client/qwaylandintegration_p.h
+@@ -107,6 +107,8 @@ public:
+ 
+     QWaylandDisplay *display() const;
+ 
++    Qt::KeyboardModifiers queryKeyboardModifiers() const override;
++
+     QList<int> possibleKeys(const QKeyEvent *event) const override;
+ 
+     QStringList themeNames() const override;
 diff --git a/src/client/qwaylandscreen.cpp b/src/client/qwaylandscreen.cpp
 index 6cb337de..7c2d9be3 100644
 --- a/src/client/qwaylandscreen.cpp
@@ -609,7 +703,7 @@ index c137b308..8c371661 100644
      if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive))
          m_xdgSurface->m_window->display()->handleWindowActivated(m_xdgSurface->m_window);
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index b6d23ac1..3a1569f7 100644
+index b6d23ac1..7d33dabd 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 @@ -83,7 +83,7 @@ QWaylandXdgSurface::Toplevel::~Toplevel()
@@ -621,7 +715,16 @@ index b6d23ac1..3a1569f7 100644
  
      if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive))
          m_xdgSurface->m_window->display()->handleWindowActivated(m_xdgSurface->m_window);
-@@ -178,9 +178,12 @@ void QWaylandXdgSurface::Toplevel::requestWindowStates(Qt::WindowStates states)
+@@ -105,8 +105,6 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
+         m_xdgSurface->m_window->resizeFromApplyConfigure(m_pending.size);
+     }
+ 
+-    m_xdgSurface->setSizeHints();
+-
+     m_applied = m_pending;
+     qCDebug(lcQpaWayland) << "Applied pending xdg_toplevel configure event:" << m_applied.size << m_applied.states;
+ }
+@@ -178,9 +176,12 @@ void QWaylandXdgSurface::Toplevel::requestWindowStates(Qt::WindowStates states)
      }
  
      if (changedStates & Qt::WindowFullScreen) {
@@ -637,6 +740,14 @@ index b6d23ac1..3a1569f7 100644
              unset_fullscreen();
      }
  
+@@ -254,6 +255,7 @@ QWaylandXdgSurface::QWaylandXdgSurface(QWaylandXdgShell *shell, ::xdg_surface *s
+                 m_toplevel->set_parent(parentXdgSurface->m_toplevel->object());
+         }
+     }
++    setSizeHints();
+ }
+ 
+ QWaylandXdgSurface::~QWaylandXdgSurface()
 diff --git a/src/qtwaylandscanner/qtwaylandscanner.cpp b/src/qtwaylandscanner/qtwaylandscanner.cpp
 index 1d635f06..e2f87bbd 100644
 --- a/src/qtwaylandscanner/qtwaylandscanner.cpp
@@ -702,3 +813,16 @@ index b8a65f15..95e4e609 100644
  }
  
  // Used to cause a crash in libwayland (QTBUG-79674)
+diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
+index 2277bbb8..2fdd0a7c 100644
+--- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
++++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
+@@ -505,7 +505,7 @@ void tst_xdgshell::minMaxSize()
+     window.show();
+     QCOMPOSITOR_TRY_VERIFY(xdgToplevel());
+ 
+-    exec([=] { xdgToplevel()->sendCompleteConfigure(); });
++    // we don't roundtrip with our configuration the initial commit should be correct
+ 
+     QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.minSize, QSize(100, 100));
+     QCOMPOSITOR_TRY_COMPARE(xdgToplevel()->m_committed.maxSize, QSize(1000, 1000));
