@@ -17,8 +17,11 @@ shelltools.export("JOBS", get.makeJOBS().replace("-j5", "-j2"))
 
 def setup():
     autotools.rawConfigure("--prefix=/usr \
-                            --with-intl=system-icu \
-                            --shared-openssl")
+                            --shared-libuv \
+                            --shared-openssl \
+                            --shared-nghttp2 \
+                            --shared-zlib \
+                            --with-intl=system-icu")
 
 def build():
     autotools.make()
