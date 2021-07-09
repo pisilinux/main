@@ -76,9 +76,6 @@ def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -G 'Unix Makefiles' \
                           %s \
-                          -DCMAKE_AR=/usr/bin/llvm-ar \
-                          -DCMAKE_NM=/usr/bin/llvm-nm \
-                          -DCMAKE_RANLIB=/usr/bin/llvm-ranlib \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_LIBDIR_SUFFIX=%s \
                           -DLLVM_ENABLE_FFI=ON \
@@ -91,7 +88,10 @@ def setup():
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
-                          -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
+                          -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." )
+                          #-DCMAKE_AR=/usr/bin/llvm-ar \
+                          #-DCMAKE_NM=/usr/bin/llvm-nm \
+                          #-DCMAKE_RANLIB=/usr/bin/llvm-ranlib \
 
 def build():
     shelltools.cd("build")
