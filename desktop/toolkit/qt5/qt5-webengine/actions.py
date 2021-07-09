@@ -11,8 +11,21 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
+    shelltools.cd("%s" % get.workDIR())
+
+    shelltools.system("sh ./qtwebengine-release.sh")
+
+    shelltools.cd("qtwebengine-everywhere-src-%s" % get.srcVERSION())
+
+
+
     # Disable jumbo build https://bugreports.qt.io/browse/QTBUG-88657 gcc10
     shelltools.system("sed -i 's|use_jumbo_build=true|use_jumbo_build=false|' -i src/buildtools/config/common.pri")
+
+    #shelltools.system("sh ./qtwebengine-release.sh")
+    #shelltools.system("git submodule init")
+    #shelltools.system("git submodule update")
     
     shelltools.makedirs("build")
     shelltools.cd("build")
@@ -24,11 +37,14 @@ def setup():
     #shelltools.export("NINJAJOBS", "-j 4")
     shelltools.system("qmake .. -- -proprietary-codecs \
                    -system-ffmpeg \
-                   -system-opus \
                    -system-webp \
+                   -system-opus \
                    -spellchecker \
                    -webengine-icu \
-                   -webengine-kerberos")
+                   -webengine-kerberos \
+                   -webengine-webrtc-pipewire")
+
+    qt5.configure("..")
     
 def build():
     shelltools.cd("build")
