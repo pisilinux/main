@@ -26,11 +26,11 @@
             <Dependency versionFrom="3.8.6">python3-devel</Dependency>
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
 <!--            <Dependency>binutils</Dependency-->
-            <Dependency>gcc</Dependency>
-            <!--Dependency>llvm</Dependency>
+<!--             <Dependency>gcc</Dependency> -->
+            <Dependency>llvm</Dependency>
             <Dependency>llvm-clang-devel</Dependency>
             <Dependency>lld</Dependency> 
-            <Dependency>llvm-polly</Dependency-->
+            <Dependency>llvm-polly</Dependency>
         </BuildDependencies>
         <!--<AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="../support-linking-ScopPassManager-against-LLVM-dylib.patch">support-linking-ScopPassManager-against-LLVM-dylib.patch</AdditionalFile>
@@ -86,7 +86,7 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
-            <Path fileType="library">/usr/lib/libLLVM*.so.11</Path>
+            <Path fileType="library">/usr/lib/libLLVM*.so.12</Path>
             <Path fileType="library">/usr/lib/LLVMgold.*</Path>
             <Path fileType="library">/usr/lib/libLTO.*</Path>
             <Path fileType="library">/usr/lib/libRemarks.so*</Path>
@@ -235,6 +235,18 @@
     </Package>
 
     <Package>
+        <Name>llvm-clang-32bit</Name>
+        <Summary>A C language family front-end for LLVM</Summary>
+        <Description>The goal of the Clang project is to create a new C, C++, Objective C and Objective C++ front-end for the LLVM compiler.</Description>
+        <Files>
+            <Path fileType="library">/usr/lib32/libclang*</Path>
+            <Path fileType="library">/usr/lib32/clang/</Path>
+            <Path fileType="library">/usr/lib32/libfindAllSymbols.so*</Path>
+            <Path fileType="data">/usr/lib32/cmake/clang/Clang*</Path>
+        </Files>
+    </Package>
+
+    <Package>
         <Name>llvm-clang-devel</Name>
         <Summary>Development headers for llvm-clang</Summary>
         <RuntimeDependencies>
@@ -242,7 +254,7 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/clang</Path>
-            <Path fileType="header">/usr/lib/clang/11.0.0/include</Path>
+            <Path fileType="header">/usr/lib/clang/12.0.1/include</Path>
             <Path fileType="header">/usr/include/clang-c</Path>
             <Path fileType="header">/usr/include/clang-tidy</Path>
         </Files>
@@ -305,6 +317,7 @@
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">llvm</Dependency>
+            <Dependency release="current">llvm-clang-32bit</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libxml2-32bit</Dependency>
             <Dependency>ncurses-32bit</Dependency>
