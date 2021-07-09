@@ -11,7 +11,7 @@
         <License>NCSA</License>
         <Summary>The Low Level Virtual Machine</Summary>
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
-       <Archive sha1sum="b84b53e788926d1b13c1bb9f289edb62862959c4" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/llvm-project-12.0.0.src.tar.xz</Archive>
+       <Archive sha1sum="f38496e31e0dc80dc9e4a682a4020ec25af09887" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/llvm-project-12.0.1.src.tar.xz</Archive>
        <BuildDependencies>
             <Dependency>ninja</Dependency>
             <Dependency>zlib-devel</Dependency>
@@ -24,26 +24,26 @@
             <Dependency>libedit-devel</Dependency>
             <Dependency versionFrom="3.18.3">cmake</Dependency>
             <Dependency versionFrom="3.8.6">python3-devel</Dependency>
-            <Dependency>python3-sphinx</Dependency>
             <!-- Use new plugin-api.h header file from binutils to enable LLVM gold plugin -->
-            <Dependency>binutils</Dependency>
-            <Dependency>gcc</Dependency>
-<!--            <Dependency>llvm</Dependency>
+<!--            <Dependency>binutils</Dependency>
+            <Dependency>gcc</Dependency>-->
+            <Dependency>llvm</Dependency>
             <Dependency>llvm-clang-devel</Dependency>
-            <Dependency>lld</Dependency>
-            <Dependency>llvm-polly</Dependency> -->
+            <Dependency>lld</Dependency> 
+            <Dependency>llvm-polly</Dependency>
         </BuildDependencies>
         <!--<AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="../support-linking-ScopPassManager-against-LLVM-dylib.patch">support-linking-ScopPassManager-against-LLVM-dylib.patch</AdditionalFile>
         </AdditionalFiles>-->
         <Patches>
-            <Patch level="2">add-fno-semantic-interposition.patch</Patch>
-            <Patch level="2">force-visibility-of-llvm-Any-to-external.patch</Patch>
+<!--             <Patch level="2">add-fno-semantic-interposition.patch</Patch> -->
+<!--             <Patch level="2">force-visibility-of-llvm-Any-to-external.patch</Patch> -->
             <Patch level="2">llvm-link-with-Bsymbolic-functions.patch</Patch>
+            <Patch level="2">no-strict-aliasing-DwarfCompileUnit.patch</Patch>
         </Patches>
     </Source>
 
-     <Package>
+    <Package>
         <Name>llvm</Name>
         <IsA>app:console</IsA>
         <IsA>library</IsA>
@@ -52,6 +52,7 @@
             <Dependency>zlib</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
+            <Dependency>llvm-polly</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -81,6 +82,7 @@
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>libxml2</Dependency>
+            <Dependency>llvm-polly</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
@@ -92,7 +94,7 @@
             <Path fileType="data">/usr/share/licenses/llvm-libs/LICENSE</Path>
         </Files>
     </Package>
-
+    
     <Package>
         <Name>lldb</Name>
         <Summary>Next generation, high-performance debugger</Summary>
@@ -103,7 +105,8 @@
             <Dependency>libedit</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>ncurses</Dependency>
-            <Dependency>python3</Dependency>
+            <Dependency>python3</Dependency>            
+            <Dependency>llvm-polly</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/argdumper</Path>
@@ -136,13 +139,14 @@
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>llvm-polly</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/ld.lld</Path>
             <Path fileType="executable">/usr/bin/ld64.lld</Path>
             <Path fileType="executable">/usr/bin/lld</Path>
             <Path fileType="executable">/usr/bin/lld-link</Path>
-            <Path fileType="executable">/usr/bin/wasm-ld</Path>
+            <Path fileType="executable">/usr/bin/wasm-ld</Path>		
             <Path fileType="library">/usr/lib/liblldMachO2.so*</Path>
             <Path fileType="library">/usr/lib/liblldCOFF.*</Path>
             <Path fileType="library">/usr/lib/liblldCommon.*</Path>
@@ -190,7 +194,7 @@
             <Path fileType="man">/usr/share/man/man1/scan-build.1</Path>
         </Files>
     </Package>
-
+	
     <Package>
         <Name>compiler-rt</Name>
         <Summary>Various runtime libraries used by Clang</Summary>
@@ -198,15 +202,7 @@
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/lib/clang/12.0.0/bin</Path>
-            <Path fileType="header">/usr/lib/clang/12.0.0/include/xray</Path>
-            <Path fileType="header">/usr/lib/clang/12.0.0/include/fuzzer</Path>
-            <Path fileType="header">/usr/lib/clang/12.0.0/include/sanitizer</Path>
-            <Path fileType="data">/usr/lib/clang/12.0.0/share</Path>
-            <Path fileType="library">/usr/lib/clang/12.0.0/lib/linux/*.a</Path>
-            <Path fileType="library">/usr/lib/clang/12.0.0/lib/linux/*.a.*</Path>
-            <Path fileType="library">/usr/lib/clang/12.0.0/lib/linux/*.o</Path>
-            <Path fileType="library">/usr/lib/clang/12.0.0/lib/linux/*.so</Path>
+            <Path fileType="library">/usr/lib/clang/12.0.1/lib/linux/*.so</Path>
         </Files>
     </Package>
 
@@ -218,6 +214,7 @@
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>llvm-polly</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/diagtool</Path>
@@ -238,18 +235,6 @@
     </Package>
 
     <Package>
-        <Name>llvm-clang-32bit</Name>
-        <Summary>A C language family front-end for LLVM</Summary>
-        <Description>The goal of the Clang project is to create a new C, C++, Objective C and Objective C++ front-end for the LLVM compiler.</Description>
-        <Files>
-            <Path fileType="library">/usr/lib32/libclang*</Path>
-            <Path fileType="library">/usr/lib32/clang/</Path>
-            <Path fileType="library">/usr/lib32/libfindAllSymbols.so*</Path>
-            <Path fileType="data">/usr/lib32/cmake/clang/Clang*</Path>
-        </Files>
-    </Package>
-
-    <Package>
         <Name>llvm-clang-devel</Name>
         <Summary>Development headers for llvm-clang</Summary>
         <RuntimeDependencies>
@@ -257,12 +242,12 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/clang</Path>
-            <Path fileType="header">/usr/lib/clang/12.0.0/include</Path>
+            <Path fileType="header">/usr/lib/clang/11.0.0/include</Path>
             <Path fileType="header">/usr/include/clang-c</Path>
             <Path fileType="header">/usr/include/clang-tidy</Path>
         </Files>
     </Package>
-
+    
     <Package>
         <Name>llvm-mlir</Name>
         <Summary>MLIR is intended to be a hybrid IR which can support multiple different requirements in a unified infrastructure</Summary>
@@ -270,6 +255,7 @@
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
+            <Dependency>llvm-polly</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/mlir*</Path>
@@ -279,7 +265,7 @@
             <Path fileType="data">/usr/lib/cmake/mlir</Path>
         </Files>
     </Package>
-
+    
     <Package>
         <Name>llvm-polly</Name>
         <Summary>High-level loop and data-locality optimizer and optimization infrastructure for LLVM</Summary>
@@ -288,12 +274,12 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/LLVMPolly.so</Path>
-            <Path fileType="library">/usr/lib/libPolly*.a*</Path>
+            <Path fileType="library">/usr/lib/libPolly*.so*</Path>
             <Path fileType="header">/usr/include/polly</Path>
             <Path fileType="data">/usr/lib/cmake/polly</Path>
         </Files>
     </Package>
-
+	
     <!--Package>
         <Name>llvm-docs</Name>
         <PartOf>programming.docs</PartOf>
@@ -315,15 +301,16 @@
             <Dependency>libffi-32bit</Dependency>
             <Dependency>libxml2-32bit</Dependency>
             <Dependency>ncurses-32bit</Dependency>
+<!--             <Dependency>libcxx-32bit</Dependency>  -->
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency release="current">llvm</Dependency>
-            <Dependency release="current">llvm-clang-32bit</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libxml2-32bit</Dependency>
             <Dependency>ncurses-32bit</Dependency>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>libffi-32bit</Dependency>
+<!--             <Dependency>libcxx-32bit</Dependency>  -->
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/llvm-config-32</Path>
@@ -332,6 +319,13 @@
     </Package>
 
     <History>
+        <Update release="17">
+            <Date>2021-07-07</Date>
+            <Version>12.0.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="16">
             <Date>2021-06-03</Date>
             <Version>12.0.0</Version>
