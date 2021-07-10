@@ -1,0 +1,128 @@
+From 7c3980b2dc488e789b9df8d2fe376bf3c8cd2df7 Mon Sep 17 00:00:00 2001
+From: Ikey Doherty <ikey@solus-project.com>
+Date: Sun, 26 Jul 2015 17:01:01 +0100
+Subject: [PATCH 2/2] pisi: Enable comparison by release field (highest wins)
+
+As of 25 Jun 2021, this patch adapted for appstream-glib 0.7.18 and .pisi format by:
+Berk Çakar <berkcakar@pisilinux.org>
+
+Signed-off-by: Ikey Doherty <ikey@solus-project.com>
+---
+ libappstream-builder/asb-package-pisi.c | 54 ++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 3 deletions(-)
+
+diff --git a/libappstream-builder/asb-package-pisi.c b/libappstream-builder/asb-package-pisi.c
+index cf6572c..4a5bfa6 100644
+--- a/libappstream-builder/asb-package-pisi.c
++++ b/libappstream-builder/asb-package-pisi.c
+@@ -38,8 +38,6 @@
+ #include <errno.h>
+ #include <string.h>
+
+-G_DEFINE_TYPE (AsbPackagePisi, asb_package_pisi, ASB_TYPE_PACKAGE)
+-
+ /**
+  * Storage for pisi metadata
+  */
+@@ -87,6 +85,17 @@ typedef struct pisi_t {
+ } pisi_t;
+
+
++
++typedef struct _AsbPackagePisiPrivate	AsbPackagePisiPrivate;
++struct _AsbPackagePisiPrivate
++{
++	pisi_t	*package;
++};
++
++G_DEFINE_TYPE_WITH_PRIVATE (AsbPackagePisi, asb_package_pisi, ASB_TYPE_PACKAGE)
++
++#define GET_PRIVATE(o) (asb_package_pisi_get_instance_private (o))
++
+ /**
+  * Process metadata.xml node
+  */
+@@ -438,6 +447,19 @@ asb_package_pisi_init (AsbPackagePisi *pkg)
+ {
+ }
+
++/**
++ * asb_package_pisi_finalize:
++ **/
++static void
++asb_package_pisi_finalize (GObject *object)
++{
++	AsbPackagePisi *pkg = ASB_PACKAGE_PISI (object);
++	AsbPackagePisiPrivate *priv = GET_PRIVATE (pkg);
++
++	close_pisi (priv->package);
++
++	G_OBJECT_CLASS (asb_package_pisi_parent_class)->finalize (object);
++}
+
+ /**
+  * asb_package_pisi_open:
+@@ -448,11 +470,14 @@ asb_package_pisi_open (AsbPackage *pkg, const gchar *filename, GError **error)
+ 	pisi_t *pisi = NULL;
+ 	gchar *rel = NULL;
+ 	GSList *elem = NULL;
++	AsbPackagePisiPrivate *priv = NULL;
+
+ 	pisi = open_pisi(filename);
+ 	if (!pisi)
+ 		return FALSE;
+
++	priv = GET_PRIVATE(ASB_PACKAGE_PISI(pkg));
++
+ 	asb_package_set_name (pkg, pisi->meta->name);
+ 	asb_package_set_source (pkg, pisi->meta->source);
+
+@@ -469,7 +494,7 @@ asb_package_pisi_open (AsbPackage *pkg, const gchar *filename, GError **error)
+
+ 	asb_package_set_license (pkg, pisi->meta->licenses->data);
+
+-	close_pisi(pisi);
++	priv->package = pisi;
+
+ 	return TRUE;
+ }
+@@ -504,14 +529,37 @@ asb_package_pisi_explode (AsbPackage *pkg,
+ }
+
+ /**
++ * asb_package_pisi_compare:
++ **/
++static gint
++asb_package_pisi_compare (AsbPackage *pkg1, AsbPackage *pkg2)
++{
++	AsbPackagePisi *pkg_pisi1 = ASB_PACKAGE_PISI (pkg1);
++	AsbPackagePisiPrivate *priv1 = GET_PRIVATE (pkg_pisi1);
++
++	AsbPackagePisi *pkg_pisi2 = ASB_PACKAGE_PISI (pkg2);
++	AsbPackagePisiPrivate *priv2 = GET_PRIVATE (pkg_pisi2);
++
++	gint rel1 = priv1->package->meta->release;
++	gint rel2 = priv2->package->meta->release;
++
++	return (rel1 > rel2) - (rel1 < rel2);
++}
++
++/**
+  * asb_package_pisi_class_init:
+  **/
+ static void
+ asb_package_pisi_class_init (AsbPackagePisiClass *klass)
+ {
+ 	AsbPackageClass *package_class = ASB_PACKAGE_CLASS (klass);
++	GObjectClass *object_class = G_OBJECT_CLASS (klass);
++
++	object_class->finalize = asb_package_pisi_finalize;
++
+ 	package_class->open = asb_package_pisi_open;
+ 	package_class->explode = asb_package_pisi_explode;
++	package_class->compare = asb_package_pisi_compare;
+ }
+
+ /**
+--
+2.11.0

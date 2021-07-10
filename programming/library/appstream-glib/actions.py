@@ -4,23 +4,19 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
-from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import mesontools
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    shelltools.system("meson --prefix=/usr -Dstemmer=false -Drpm=false ..")
+    mesontools.configure("--prefix=/usr \
+                          -Dstemmer=false \
+                          -Drpm=false \
+                          -Dpisi=true")
     
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
     
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    
-    shelltools.cd("..")
+    mesontools.install()
+
     pisitools.dodoc("README*", "NEWS", "COPYING", "AUTHORS")
