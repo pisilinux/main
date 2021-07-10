@@ -44,7 +44,7 @@ def setup():
                    -webengine-kerberos \
                    -webengine-webrtc-pipewire")
 
-    qt5.configure("..")
+    #qt5.configure("..")
     
 def build():
     shelltools.cd("build")
