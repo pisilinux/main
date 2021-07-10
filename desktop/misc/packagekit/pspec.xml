@@ -1,0 +1,86 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>packagekit</Name>
+        <Homepage>https://www.freedesktop.org/software/PackageKit/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <Summary>A system designed to make installation and updates of packages easier.</Summary>
+        <Description>PackageKit is a system designed to make installing and updating software on your computer easier. The primary design goal is to unify all the software graphical tools used in different distributions, and use some of the latest technology like PolicyKit.</Description>
+	    <Archive sha1sum="b7805e8ddd6cee697575afe0931f10ab2e09aed0" type="tarxz">http://www.freedesktop.org/software/PackageKit/releases/PackageKit-1.1.5.tar.xz</Archive>
+	    <BuildDependencies>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>elogind-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+	<Package>
+        <Name>packagekit</Name>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>harfbuzz</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/var</Path>
+            <Path fileType="data">/etc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
+            <Path fileType="data">/usr/share/bash-completion</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="data">/usr/share/PackageKit</Path>
+            <Path fileType="data">/usr/share/polkit-1</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/PackageKit/pisi.conf">pisi.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>packagekit-devel</Name>
+        <Summary>Development files for packagekit</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">packagekit</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <!--Path fileType="data">/usr/share/vala</Path-->
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-06-05</Date>
+            <Version>1.1.5</Version>
+            <Comment>First release for Pisi Linux</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
+    </History>
+</PISI>
