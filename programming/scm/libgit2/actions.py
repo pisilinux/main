@@ -8,6 +8,7 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 
@@ -20,5 +21,7 @@ def build():
 
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    shelltools.system("ln -s %s/usr/lib/libgit2.so.1.1 %s/usr/lib/libgit2.so.1.0" % (get.installDIR(), get.installDIR()))
 
     #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
