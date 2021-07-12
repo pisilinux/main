@@ -11,12 +11,12 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
-    shelltools.cd("%s" % get.workDIR())
+    #shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
+    #shelltools.cd("%s" % get.workDIR())
 
-    shelltools.system("sh ./qtwebengine-release.sh")
+    #shelltools.system("sh ./qtwebengine-release.sh")
 
-    shelltools.cd("qtwebengine-everywhere-src-%s" % get.srcVERSION())
+    #shelltools.cd("qtwebengine-everywhere-src-%s" % get.srcVERSION())
 
 
 
