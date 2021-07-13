@@ -23,7 +23,7 @@ def build():
     #cmaketools.make("-C build doc")
 
 def install():
-    pisitools.dodoc("README*", "COPYING*")
+    pisitools.dodoc("README*", "LICENSES/*")
 
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
