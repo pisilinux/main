@@ -10,11 +10,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
+    shelltools.system("./autogen.sh")
+   #autotools.autoreconf("-fi")
     autotools.configure("--disable-oss \
                          --disable-lynx \
                          --disable-gtk-doc \
-                         --disable-schemas-install \
                          --enable-gstreamer \
                          --enable-gtk3 \
                          --enable-pulse \
@@ -33,6 +33,6 @@ def install():
     autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
     
     #pisitools.remove("/usr/lib/gtk-3.0/modules/libcanberra-gtk-module.so")
-    pisitools.removeDir("/usr/share/gtk-doc")
+    #pisitools.removeDir("/usr/share/gtk-doc")
     
-    pisitools.dodoc("LGPL", "README")
+    pisitools.dodoc("LGPL")
