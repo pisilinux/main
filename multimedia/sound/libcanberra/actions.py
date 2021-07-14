@@ -14,7 +14,6 @@ def setup():
    #autotools.autoreconf("-fi")
     autotools.configure("--disable-oss \
                          --disable-lynx \
-                         --disable-gtk-doc \
                          --enable-gstreamer \
                          --enable-gtk3 \
                          --enable-pulse \
@@ -22,6 +21,7 @@ def setup():
                          --enable-null \
                          --enable-tdb \
                          --with-builtin=dso \
+                         --with-systemd-unit-dir=no \
                          --disable-static")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
