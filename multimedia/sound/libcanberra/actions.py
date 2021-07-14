@@ -14,7 +14,6 @@ def setup():
    #autotools.autoreconf("-fi")
     autotools.configure("--disable-oss \
                          --disable-lynx \
-                         --disable-gtk-doc \
                          --enable-gstreamer \
                          --enable-gtk3 \
                          --enable-pulse \
