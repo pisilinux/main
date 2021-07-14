@@ -22,7 +22,7 @@ def setup():
                          --enable-null \
                          --enable-tdb \
                          --with-builtin=dso \
-                         --without-systemd \
+                         --with-systemd-unit-dir=no \
                          --disable-static")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
