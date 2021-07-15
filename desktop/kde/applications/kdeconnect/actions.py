@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    pisitools.dosed("CMakeLists.txt", "5.64.0", "5.62.0")
+    #pisitools.dosed("CMakeLists.txt", "5.64.0", "5.62.0")
     kde5.configure()
 
 def build():
@@ -16,3 +16,5 @@ def build():
 
 def install():
     kde5.install()
+
+    pisitools.dodoc("README.md")
