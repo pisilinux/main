@@ -26,7 +26,6 @@ def setup():
                --with-php=/usr/bin/php-cgi \
                --with-cupsd-file-perm=0755 \
                --with-log-file-perm=0600 \
-               --without-java \
                --enable-acl \
                --enable-ssl=yes \
                --enable-libpaper \
@@ -43,9 +42,8 @@ def setup():
                --disable-gnutls \
                --disable-launchd \
                --disable-libusb \
-               --without-rcdir \
+               --with-rcdir=no \
                --libdir=/usr/lib \
-               --without-perl \
                --with-logdir=/var/log/cups \
                KRB5CONFIG=/usr/bin/krb5-config \
                --localstatedir=/var \
