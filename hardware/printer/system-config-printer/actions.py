@@ -17,7 +17,8 @@ def setup():
     pisitools.dosed("Makefile.am", "xmlto man", "xmlto --skip-validation man")
     for i in ["README", "ChangeLog"]:
         shelltools.touch(i)
-    autotools.autoreconf("-fi")
+    #autotools.autoreconf("-fi")
+    shelltools.system("./bootstrap")
     autotools.configure("--with-udev-rules \
                          --with-systemdsystemunitdir=no \
                          --sysconfdir=/etc")
