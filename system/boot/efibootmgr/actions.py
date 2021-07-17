@@ -10,6 +10,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
+    shelltools.system("sed -e '/extern int efi_set_verbose/d' -i src/efibootmgr.c")
+
     shelltools.export("CFLAGS", "-Os")
     autotools.make("EFIDIR='/boot/EFI'")
 
