@@ -10,8 +10,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
-    shelltools.export("CFLAGS", "-Os")
+    shelltools.export("CFLAGS", "-Os -O2 -Wno-stringop-truncation")
     pisitools.dosed("Make.defaults","-O0","-Os")
+    pisitools.system("sed -i 's/-Werror //' Make.defaults || die")
     pisitools.dosed("src/test/Makefile","-rpath=$(TOPDIR)/src/","-rpath=$(libdir)|g")
     autotools.make("libdir=/usr/lib bindir=/usr/bin includedir=/usr/include/ V=1 -j1")
 
