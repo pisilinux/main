@@ -1,27 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# Licensed under the GNU General Public License, version 2.
+# See the file http://www.gnu.org/copyleft/gpl.txt.
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed 's/0.19.6/0.20/' -i configure.ac")
-    shelltools.system("env NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure("--disable-appor")
-
-
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    mesontools.configure("-Denable-apport=false")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README.md")
