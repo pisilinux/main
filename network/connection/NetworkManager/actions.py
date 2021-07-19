@@ -8,6 +8,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 
 def setup():
@@ -19,53 +20,44 @@ def setup():
     
     shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
     pisitools.cxxflags.add("-O2 -fPIC")
-    autotools.autoreconf("-fiv")
-    shelltools.system("intltoolize --force --copy --automake")
 
-    autotools.configure("--disable-static \
-                         --disable-silent-rules \
-                         --disable-lto \
-                         --disable-config-plugin-ibft \
-                         --disable-ifnet \
-                         --disable-more-warnings \
-                         --enable-wifi \
-                         --enable-modify-system \
-                         --enable-ppp=yes \
-                         --enable-bluez5-dun \
-                         --enable-concheck \
-                         --without-netconfig \
-                         --with-modem-manager-1 \
-                         --with-session-tracking=elogind \
-                         --with-suspend-resume=upower \
-                         --with-system-ca-path=/etc/ssl/certs \
-                         --with-crypto=nss \
-                         --with-dhcpcd=/usr/bin/dhcpcd \
-                         --with-pppd=/usr/sbin/pppd \
-                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7 \
-                         --with-dbus-sys-dir=/etc/dbus-1/system.d \
-                         --with-dhclient=/usr/sbin/dhclient \
-                         --with-kernel-firmware-dir=/lib/firmware \
-                         --with-udev-dir=/lib/udev \
-                         --with-resolvconf=/etc/resolv.default.conf \
-                         --with-iptables=/sbin/iptables \
-                         --with-dnsmasq=/usr/sbin/dnsmasq \
-                         --with-systemdsystemunitdir=no \
-                         --with-nmtui \
-                         --localstatedir=/var \
-                         --sysconfdir=/etc \
-                         --libexecdir=/usr/lib/NetworkManager \
-                        ")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    mesontools.configure("-Dmodify_system=true \
+                          -Dqt=false \
+                          -Dselinux=false \
+                          -Debpf=true \
+                          -Ddocs=true \
+                          -Diwd=true \
+                          -Difcfg_rh=true \
+                          --buildtype=release \
+                          -Dbluez5_dun=true \
+                          -Dnetconfig=false \
+                          -Dsession_tracking=elogind \
+                          -Dsession_tracking_consolekit=false \
+                          -Dsuspend_resume=upower \
+                          -Dcrypto=nss \
+                          -Ddhcpcd=enabled \
+                          -Dpppd=/usr/sbin/pppd \
+                          -Dpppd_plugin_dir=/usr/lib/pppd/2.4.9 \
+                          -Ddbus_conf_dir=/usr/share/dbus-1/system.d \
+                          -Ddhclient=enabled \
+                          -Dudev_dir=/lib/udev \
+                          -Dresolvconf=enabled \
+                          -Diptables=/sbin/iptables \
+                          -Ddnsmasq=/usr/sbin/dnsmasq \
+                          -Dsystemdsystemunitdir=no \
+                          -Dsystemd_journal=false \
+                          --localstatedir=/var \
+                          --sysconfdir=/etc \
+                          --libexecdir=/usr/lib/NetworkManager")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 #def check():
-    #autotools.make("-k check")
+    #mesontools.build("test")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodir("/etc/NetworkManager/VPN")
 
