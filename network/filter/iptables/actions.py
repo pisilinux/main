@@ -10,9 +10,10 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("rm -f include/linux/types.h")
     autotools.configure("--sbindir=/sbin \
                          --libexecdir=/usr/lib \
-                         --without-kernel \
+                         --enable-bpf-compiler \
                          --enable-devel \
                          --disable-nftables \
                          --enable-libipq \
