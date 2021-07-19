@@ -19,7 +19,8 @@ def setup():
                          --enable-json \
                          --with-graphviz \
                          --with-ui \
-                         --enable-system-sqlite")
+                         --enable-system-sqlite \
+                         --enable-vala")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 

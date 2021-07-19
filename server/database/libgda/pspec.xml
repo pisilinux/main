@@ -5,10 +5,10 @@
         <Name>libgda</Name>
         <Homepage>http://www.gnome-db.org/</Homepage>
         <Packager>
-            <Name>Berk Çakar</Name>
-            <Email>berk2238@hotmail.com</Email>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
         </Packager>
-        <License>GPLv3</License>
+        <License>GPLv2</License>
         <PartOf>server.database</PartOf>
         <IsA>library</IsA>
         <Summary>Library for writing gnome database programs</Summary>
@@ -36,51 +36,64 @@
             <Dependency>pango-devel</Dependency>
             <Dependency>sqlcipher-devel</Dependency>
             <Dependency>sqlite-devel</Dependency>
-            
             <Dependency>readline-devel</Dependency>
             <Dependency>gtk-doc</Dependency>
+            <Dependency>vala-devel</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>openldap-client</Dependency>
         </BuildDependencies>
         <Archive sha1sum="005d3be4448ae9faa5fe422f8479630793adf89e" type="tarxz">https://ftp.gnome.org/pub/GNOME/sources/libgda/5.2/libgda-5.2.9.tar.xz</Archive>
     </Source>
+    
     <Package>
         <Name>libgda</Name>
-        <Summary>Web provider for libgda</Summary>
+        <Summary>Library for writing gnome database programs</Summary>
         <RuntimeDependencies>
-            <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>goocanvas</Dependency>
-            <Dependency>libsecret</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libxml2</Dependency>
             <Dependency>libxslt</Dependency>
-            <Dependency>openssl</Dependency>
-            <Dependency>sqlcipher</Dependency>
+            <Dependency>libsecret</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="library">/usr/lib/girepository-1.0/Gda-5.0.typelib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/help</Path>
             <Path fileType="data">/usr/share/libgda-5.0</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
             <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="data">/usr/share/vala</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-devel</Name>
-        <Summary>libgda header files</Summary>
+        <Summary>Development files for libgda</Summary>
         <RuntimeDependencies>
-            <Dependency>gtk3-devel</Dependency>
             <Dependency version="current">libgda</Dependency>
+            <Dependency>gtk3-devel</Dependency>
             <Dependency>libxslt-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
             <Path fileType="data">/usr/share/gir-1.0</Path>
-            <Path fileType="data">/usr/share/gnome</Path>
+            <Path fileType="data">/usr/share/vala</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libgda-docs</Name>
+        <IsA>data:doc</IsA>
+        <Summary>libgda reference documents</Summary>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="doc">/usr/share/gtk-doc</Path>
         </Files>
     </Package>
+
     <Package>
         <Name>libgda-bdb</Name>
         <Summary>Berkeley DB provider for libgda</Summary>
@@ -92,12 +105,13 @@
             <Path fileType="data">/usr/share/libgda-5.0/bdb_specs_dsn.xml</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-java</Name>
         <Summary>Java provider for libgda</Summary>
         <RuntimeDependencies>
-            <Dependency>json-glib</Dependency>
             <Dependency version="current">libgda</Dependency>
+            <Dependency>jdk8-openjdk</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libgda-5.0/providers/gdaprovider-5.0.jar</Path>
@@ -105,6 +119,7 @@
             <Path fileType="data">/usr/share/libgda-5.0/jdbc*</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-ldap</Name>
         <Summary>Ldap provider for libgda</Summary>
@@ -117,12 +132,12 @@
             <Path fileType="data">/usr/share/libgda-5.0/ldap*</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-mysql</Name>
         <Summary>Mysql provider for libgda</Summary>
         <RuntimeDependencies>
             <Dependency version="current">libgda</Dependency>
-            <Dependency>libsecret</Dependency>
             <Dependency>mariadb-lib</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -130,12 +145,12 @@
             <Path fileType="data">/usr/share/libgda-5.0/mysql*</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-postgres</Name>
         <Summary>Postgres provider for libgda</Summary>
         <RuntimeDependencies>
             <Dependency version="current">libgda</Dependency>
-            <Dependency>libsecret</Dependency>
             <Dependency>postgresql-lib</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -143,17 +158,21 @@
             <Path fileType="data">/usr/share/libgda-5.0/postgres*</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-sqlcipher</Name>
         <Summary>SQLiteCipher provider for libgda</Summary>
         <RuntimeDependencies>
             <Dependency version="current">libgda</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>sqlcipher</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libgda-5.0/providers/libgda-sqlcipher.so</Path>
             <Path fileType="data">/usr/share/libgda-5.0/sqlcipher*</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-sqlite</Name>
         <Summary>SQLite provider for libgda</Summary>
@@ -166,6 +185,7 @@
             <Path fileType="data">/usr/share/libgda-5.0/sqlite*</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-mdb</Name>
         <Summary>Mdb provider for libgda</Summary>
@@ -178,37 +198,35 @@
             <Path fileType="data">/usr/share/libgda-5.0/mdb_specs_dsn.xml</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-tools</Name>
         <Summary>Graphical tools for libgda</Summary>
         <RuntimeDependencies>
-            <Dependency>cairo</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>goocanvas</Dependency>
-            <Dependency>graphviz</Dependency>
-            <Dependency>gtk3</Dependency>
-            <Dependency>gtksourceview3</Dependency>
             <Dependency version="current">libgda</Dependency>
-            <Dependency>libgda-ui</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
             <Dependency>libsoup</Dependency>
+            <Dependency>graphviz</Dependency>
+            <Dependency>readline</Dependency>
+            <Dependency>goocanvas</Dependency>
+            <Dependency>libgda-ui</Dependency>
+            <Dependency>gtksourceview3</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="data">/usr/share/appdata</Path>
             <Path fileType="data">/usr/share/applications</Path>
-            <Path fileType="data">/usr/share/gnome/gda-browser/</Path>
+            <Path fileType="data">/usr/share/gnome/gda-browser</Path>
             <Path fileType="data">/usr/share/icons</Path>
             <Path fileType="data">/usr/share/pixmaps</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-ui</Name>
         <Summary>UI extensions for libgda</Summary>
         <RuntimeDependencies>
-            <Dependency>atk</Dependency>
-            <Dependency>cairo</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>gtk3</Dependency>
             <Dependency version="current">libgda</Dependency>
             <Dependency>pango</Dependency>
         </RuntimeDependencies>
@@ -223,22 +241,17 @@
             <Path fileType="data">/usr/share/libgda-5.0/ui</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-ui-devel</Name>
         <Summary>Development files for libgda-ui</Summary>
         <RuntimeDependencies>
-            <Dependency>atk</Dependency>
-            <Dependency>cairo</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>gtk3</Dependency>
-            <Dependency>gtksourceview3</Dependency>
             <Dependency version="current">libgda</Dependency>
             <Dependency version="current">libgda-ui</Dependency>
-            <Dependency>pango</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/gdaui-demo-5.0</Path>
-            <Path fileType="header">/usr/include/libgda-5.0/libgda-ui/</Path>
+            <Path fileType="header">/usr/include/libgda-5.0/libgda-ui</Path>
             <Path fileType="library">/usr/lib/libgda-5.0/plugins/libgda-ui-plugins.so</Path>
             <Path fileType="library">/usr/lib/libgda-ui-5.0.so</Path>
             <Path fileType="data">/usr/share/glade/catalogs/gdaui-catalog.xml</Path>
@@ -246,21 +259,29 @@
             <Path fileType="data">/usr/share/libgda-5.0/demo</Path>
         </Files>
     </Package>
+    
     <Package>
         <Name>libgda-web</Name>
         <Summary>Web provider for libgda</Summary>
         <RuntimeDependencies>
             <Dependency version="current">libgda</Dependency>
-            <Dependency>libsecret</Dependency>
             <Dependency>libsoup</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libgda-5.0/providers/libgda-web.so</Path>
-            <Path fileType="data">/usr/share/libgda-5.0/php/</Path>
-            <Path fileType="data">/usr/share/libgda-5.0/web/</Path>
+            <Path fileType="data">/usr/share/libgda-5.0/php</Path>
+            <Path fileType="data">/usr/share/libgda-5.0/web</Path>
         </Files>
     </Package>
+    
     <History>
+        <Update release="2">
+            <Date>2021-07-19</Date>
+            <Version>5.2.9</Version>
+            <Comment>Rebuild</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
         <Update release="1">
             <Date>2021-04-20</Date>
             <Version>5.2.9</Version>
