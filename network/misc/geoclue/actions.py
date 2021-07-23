@@ -4,22 +4,18 @@
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
 from pisi.actionsapi import autotools
-from pisi.actionsapi import get
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
+
 
 def setup():
-    autotools.configure("--disable-3g-source \
-                         --disable-modem-gps-source \
-                         --disable-cdma-source \
-                         --with-systemdsystemunitdir=no")
-    
-    # for remove unused
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("NEWS", "COPYING", "README")
+    pisitools.dodoc("NEWS", "COPYING", "README*")
