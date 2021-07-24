@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure("--disable-zstd")
+    autotools.configure()
 
 def build():
     autotools.make("CC=%s" % get.CC())
@@ -22,7 +22,7 @@ def install():
     autotools.rawInstall("prefix=/usr DESTDIR=%s" % get.installDIR())
     pisitools.remove("/usr/lib/*.a")
 
-    pisitools.insinto("/usr/bin", "bcp", "btrfs-bcp")
+    #pisitools.insinto("/usr/bin", "bcp", "btrfs-bcp")
     pisitools.insinto("/usr/bin", "show-blocks", "btrfs-show-blocks")
     
     pisitools.dodoc("COPYING")
