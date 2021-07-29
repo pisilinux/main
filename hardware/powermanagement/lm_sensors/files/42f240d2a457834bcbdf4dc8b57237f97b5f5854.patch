@@ -1,0 +1,1369 @@
+diff -Nuar a/configs/ASRock/A300M-STX-DeskMini.conf b/configs/ASRock/A300M-STX-DeskMini.conf
+--- a/configs/ASRock/A300M-STX-DeskMini.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/ASRock/A300M-STX-DeskMini.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,93 @@
++# ASRock A300M-STX (as included in DeskMini A300 barebone)
++# manufacturing date April 2020 (came with UEFI BIOS 3.60)
++# board does have connectors for 2 fans (CPU_FAN1 and CPU_FAN2)
++# board does have a connector for intrusion detection
++# board does not have a speaker connector
++# dmesg: "nct6775: Found NCT6793D or compatible chip at 0x2e:0x290"
++
++chip "nct6793-*"
++
++   # board has no speaker connector
++   set beep_enable 0
++
++   # voltages
++   label   in0     "Vcore"
++   compute in0     @*2, @/2
++   set     in0_min 0.16
++   set     in0_max 1.46
++
++   label   in2     "AVCC"
++   set     in2_min 3.30 * 0.90
++   set     in2_max 3.30 * 1.10
++
++   label   in3     "+3.3V"
++   set     in3_min 3.30 * 0.90
++   set     in3_max 3.30 * 1.10
++
++   label   in7     "3VSB"
++   set     in7_min 3.30 * 0.90
++   set     in7_max 3.30 * 1.10
++
++   label   in8 "VBAT"
++   set     in8_min 3.00 * 0.90
++   set     in8_max 3.30 * 1.10
++
++   label   in9 "+12V"
++   compute in9 @*(53/8), @/(53/8)
++   set     in9_min 12 * 0.90
++   set     in9_max 12 * 1.10
++
++   label   in13     "+5V"
++   compute in13 @*(24/8), @/(24/8)
++   set     in13_min 5 * 0.90
++   set     in13_max 5 * 1.10
++
++   # these have non-zero input, but are unknown
++   ignore  in1
++   ignore  in4
++   ignore  in5
++   ignore  in6
++   ignore  in10
++   ignore  in11
++   ignore  in12
++   ignore  in14
++
++   # temperatures
++   # not sure about temp2 and temp3
++   label   temp2 "VRM(?) temp"
++   set temp2_max      75
++   set temp2_max_hyst 70
++
++   label   temp3 "MB(?) temp"
++   set temp3_max      55
++   set temp3_max_hyst 50
++
++   label   temp7 "CPU temp"
++
++   # other temps are zero or unreasonably high/low
++   ignore  temp1
++   ignore  temp4
++   ignore  temp5
++   ignore  temp6
++   ignore  temp8
++   ignore  temp9
++   ignore  temp10
++
++   # fans
++   label fan2 "CPU_FAN1"
++   set fan2_min 500
++
++   label fan1 "CPU_FAN2"
++   set fan1_min 500
++
++   # these don't have connectors
++   ignore  fan3
++   ignore  fan4
++   ignore  fan5
++
++   # intrusion
++   # the DeskMini A300 has an intrusion detection connector
++   # on board, but the case has no switch, so you might want to
++   # ignore these (don't know which one is actually connected)
++   label intrusion0 "intrusion0"
++   label intrusion1 "intrusion1"
+diff -Nuar a/configs/ASRock/B450-Gaming-ITX-ac.conf b/configs/ASRock/B450-Gaming-ITX-ac.conf
+--- a/configs/ASRock/B450-Gaming-ITX-ac.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/ASRock/B450-Gaming-ITX-ac.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,100 @@
++# ASRock B450 Gaming-ITX/ac
++# manufacturing date July 2019 (came with Zen2-aware BIOS)
++# board does have connectors for buzzer and 3 fans (2 case + 1 CPU)
++# board does not have a connector for intrusion detection
++# dmesg: "nct6775: Found NCT6792D or compatible chip at 0x2e:0x290"
++
++chip "nct6792-*"
++
++   # beeping appears to not work
++   set beep_enable 1
++
++   # voltages
++
++   label   in0     "Vcore"
++   compute in0     @*2, @/2
++   set     in0_min 0.16
++   set     in0_max 1.46
++   set     in0_beep 1
++
++   label   in2     "AVCC"
++   set     in2_min 3.30 * 0.90
++   set     in2_max 3.30 * 1.10
++
++   label   in3     "+3.3V"
++   set     in3_min 3.30 * 0.90
++   set     in3_max 3.30 * 1.10
++
++   label   in7     "3VSB"
++   set     in7_min 3.30 * 0.90
++   set     in7_max 3.30 * 1.10
++
++   label   in8 "VBAT"
++   set     in8_min 3.00 * 0.90
++   set     in8_max 3.30 * 1.10
++
++   label   in9 "+12V"
++   compute in9 @*(53/8), @/(53/8)
++   set     in9_min 12 * 0.90
++   set     in9_max 12 * 1.10
++
++   label   in13     "+5V"
++   compute in13 @*(24/8), @/(24/8)
++   set     in13_min 5 * 0.90
++   set     in13_max 5 * 1.10
++
++   # these are all zero
++   ignore  in1
++   ignore  in4
++   ignore  in5
++   ignore  in6
++   ignore  in14
++
++   # these have non-zero input, but are unknown
++   ignore  in10
++   ignore  in11
++   ignore  in12
++
++   # temperatures
++   # not sure about temp2 and temp3 
++   label   temp2 "VRM(?) temp"
++   set temp2_max      55
++   set temp2_max_hyst 50
++   set temp2_beep 1
++   label   temp3 "MB(?) temp"
++   set temp3_max      55
++   set temp3_max_hyst 50
++   set temp3_beep 1
++   label   temp7 "CPU temp"
++
++   # temp2 has similar readings to temp3
++   # other temps are zero or unreasonably high/low
++   ignore  temp1
++   ignore  temp4
++   ignore  temp5
++   ignore  temp6
++   ignore  temp8
++   ignore  temp9
++   ignore  temp10
++
++   # fans
++
++   label fan1 "CHA_FAN1"
++   set fan1_min 300
++   set fan1_beep 1
++   label fan2 "CPU_FAN1"
++   set fan2_min 600
++   set fan2_beep 1
++   label fan3 "CHA_FAN2"
++   set fan3_min 300
++   set fan3_beep 1
++
++   # these are not on the mainboard
++   ignore  fan4
++   ignore  fan5
++
++   # misc
++
++   ignore intrusion0
++   ignore intrusion1
++
+diff -Nuar a/configs/ASRock/Z390-Extreme4.conf b/configs/ASRock/Z390-Extreme4.conf
+--- a/configs/ASRock/Z390-Extreme4.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/ASRock/Z390-Extreme4.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,107 @@
++# ASRock Z3900 Extreme4
++# 2019, contributed by Alex Cherkayev <doctor64@gmail.com>
++#
++# dmi: board_name:   Z390 Extreme4
++# dmi: board_vendor: ASRock
++# dmi: bios_version: P4.00
++# cpu: Intel(R) Core(TM) i7-9700K CPU
++chip "nct6791-isa-*"
++
++    # Fans
++    label fan1 "CHA Fan 3/WP"
++    label fan2 "CPU Fan 1"
++    label fan3 "CPU Fan 2/WP"
++    label fan4 "CHA Fan 1/WP"
++    label fan5 "CHA Fan 2/WP"
++
++    # Temperatures
++    label temp1 "Motherboard"
++    set temp1_max 55
++    set temp1_max_hyst 50
++    label temp2 "CPU MB"
++    set temp2_max 100
++    set temp2_max_hyst 75
++
++    # temp3 always 22
++    # temp4 102 in idle, 103 under load
++    # temp5 always 15
++    # temp6 always 12 
++    ignore temp3
++    ignore temp4
++    ignore temp5
++    ignore temp6
++    
++    #PECI Agent 0 match CPU cores temp    
++    label temp7 "CPU Core"
++    
++    # PCH_CHIP_CPU_MAX_TEMP PCH_CHIP_TEMP PCH_CPU_TEMP always 0.0C, ignore
++    ignore temp8
++    ignore temp9
++    ignore temp10
++
++    # Voltages
++    
++    label in0 "VCore Voltage"
++    compute in0 @*2, @/2
++    set in0_min 0.40 
++    set in0_max 1.40
++
++    label in1 "+5V"
++    # deduced, not confirmed
++    compute in1 ((20/10)+1)*@, @/((20/10)+1)
++    set in1_min 5 * 0.95
++    set in1_max 5 * 1.05
++
++    label in4 "+12V" 
++    # deduced, not confirmed
++    compute in4 @*12, @/12
++    set in4_min 12 * 0.95
++    set in4_max 12 * 1.05
++
++    #unknown, always 1.18V just set limits to remove alarm
++    set in5_min 1.1
++    set in5_max 1.3
++
++    label in6 "PCH +1.0V"
++    # limit taken from intel 300 series pch datasheet
++    # set in6_min 0.99
++    # set in6_max 1.10 
++    # verified by changing in bios, limit taken from bios
++    set in6_min 0.9
++    set in6_max 1.3
++
++    label in9 "VCCST"
++    # verified by changing in bios, limit taken from bios
++    set in9_min 0.9
++    set in9_max 1.25
++
++    # unknown, always 0.24V, just set limit to remove alarm
++    set in10_min 0.1
++    set in10_max 0.3
++
++    label in11 "VCCIO"
++    # verified by changing in bios, limit taken from bios
++    # limit taken from bios
++    set in11_min 0.85
++    set in11_max 1.35
++
++    label in12 "DRAM Voltage"
++    # verified by changing in bios, limit taken from bios
++    set in12_min 1.10 
++    set in12_max 1.40
++
++    label in13 "DRAM VPP"
++    # verified by changing in bios, limit taken from bios +- 0.1V
++    compute in13 @*2, @/2
++    set in13_min 2.4
++    set in13_max 2.8
++    
++    label in14 "VCCSA"
++    # verified by changing in bios, limit taken from bios
++    set in14_min 0.95
++    set in14_max 1.35
++
++    # Potential things to filter
++    # These inputs are unused unless you have a case intrusion switch connected.
++    # ignore intrusion0
++    # ignore intrusion1
+diff -Nuar a/configs/ASRock/Z390M-ITX-ac.conf b/configs/ASRock/Z390M-ITX-ac.conf
+--- a/configs/ASRock/Z390M-ITX-ac.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/ASRock/Z390M-ITX-ac.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,162 @@
++# Board: ASRock Z390M-ITX/ac
++# Contributed by: Aaron Bockelie
++# Processor: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz (6/158/10)
++# Board has connectors for buzzer and 3 fans (2 case + 1 CPU)
++# board does not have a connector for intrusion detection
++# dmesg: "nct6775: Found NCT6793D or compatible chip at 0x2e:0x290"
++
++chip "nct6793-*"
++
++   # Cross referenced with ASRock A-Tuning Application on 6/29/2020
++   # Install in Windows and see /Program Files (x86)/ASRock Utility/A-Tuning/Conf/Z390MITX.xml
++   # There is also an NCT3933U on the board for measuring the PCH and VCCST voltages, but it
++   # is not accessible due to no kernel driver for it.
++   
++   # Referenced from NCT677xF (NCT6793D) Data Sheet Page 57
++   # All the internal inputs of the ADC, AVSB, VBAT, 3VSB, and 3VCC utilize an integrated voltage
++   # divider with both resistors equal to 34K, yielding a voltage one half of the power supply.
++   # Vin = VCC * (34K/(34K+34K)=1.65V where VCC is set to 3.3V
++   
++   # ID   NCTSpec   NCTDesc    ASRock Utility Description
++   # in0  index80   CPUVCORE   CPU_INPUT_V (Interface IR35201)
++   # in1  index81   VIN1       <none>
++   # in2  index82   AVSB       <none>
++   # in3  index83   3VCC       P3P3_V
++   # in4  index84   VIN0       <none>
++   # in5  N/A       N/A        N/A
++   # in6  index86   VIN4       SIO3_V
++   # in7  index87   3VSB       <none>
++   # in8  index88   VBAT       <none>
++   # in9  index89   VTT        <none>
++   # in10 index8a   VIN5       <none>, SIO6_V
++   # in11 index8b   VIN6       <none>, SIO4_V
++   # in12 index8c   VIN2       P12_V, SIO1_V
++   # in13 index8d   VIN3       P5P0_V, SIO2_V
++   # in14 index8e   VIN7       SIO5_V
++ 
++   
++   set beep_enable 1
++
++   # voltages
++   # The CPUVCORE pin feeds directly into the ADC with no voltage divider since the nominal
++   # voltage on this pin is only 1.2V
++   
++   label   in0     "Vcore"
++   compute in0 @*2, @/2
++   set     in0_min 0.16
++   set     in0_max 1.48
++   set     in0_beep 1
++   
++   ignore  in1
++  
++   label   in2     "AVCC"
++   set     in2_min 3.30 * 0.90
++   set     in2_max 3.30 * 1.10
++
++   label   in3     "+3.3V"
++   set     in3_min 3.30 * 0.90
++   set     in3_max 3.30 * 1.10
++   
++   ignore  in4
++   
++   ignore  in5
++   
++   ignore  in6
++
++   label   in7     "3VSB"
++   set     in7_min 3.30 * 0.90
++   set     in7_max 3.30 * 1.10
++   
++   # This is the CMOS battery.
++   
++   label   in8     "VBATT"
++   set     in8_min 3.3 * 0.75
++   set     in8_max 3.3 * 1.10
++   
++   label   in9     "VTT"
++   set     in9_min 1.2 * 0.90
++   set     in9_max 1.2 * 1.25
++
++   ignore  in10
++
++   ignore  in11
++
++   label   in12     "+12V"
++   #((56+10)/10)
++   compute in12 @*6.6, @/6.6
++   set     in12_min 12 * 0.95
++   set     in12_max 12 * 1.05
++
++   label   in13     "+5V"
++   compute in13 @*(24/8), @/(24/8)
++   set     in13_min 5 * 0.90
++   set     in13_max 5 * 1.10
++
++   ignore  in14
++   
++   
++   # temperatures
++   # see NCT677xF (NCT6793D) Data Sheet Section 8.5.3.4 Temperature Reading
++   # a customized nct6775 kernel driver is probably needed to reference the bank measurement method correctly
++   # it appears that the temp sensor registers are off by one with the default driver
++   # so SYSTIN is offset incorrectly and referenced as one of the AUXTIN values.
++   
++   # I have interpeted the NCT spec as 
++   # ID    NCTSpec   Other Notes
++   # temp1 SYSTIN    Incorrect driver mapping of AUXTIN0
++   # temp2 CPUTIN    Actual CPU temperature verified physically
++   # temp3 AUXTIN0   Actual motherboard temperature verified physically
++   # temp4 AUXTIN1   Unused
++   # temp5 AUXTIN2   Unused
++   # temp6 AUXTIN3   Unused
++
++   ignore  temp1 
++
++   label   temp2          "CPU"
++   set     temp2_max      85
++   set     temp2_max_hyst 50
++   #set     temp2_beep     1
++
++   label   temp3          "MB"
++   set     temp3_max      75
++   set     temp3_max_hyst 50
++   #set     temp3_beep     1
++   
++   ignore  temp4
++   
++   ignore  temp5
++   
++   ignore  temp6
++   
++   label   temp7          "CPU_PECI"
++   set     temp7_max      85
++   set     temp7_max_hyst 50
++   #set     temp7_beep     1
++   
++   ignore  temp8
++   ignore  temp9
++   ignore  temp10
++
++   # fans
++   # thankfully, fan PWM counters seem to function out of the box.
++   # labels are based on the board documentation
++
++   label   fan1           "Chassis_Fan_1/Pump"
++   set     fan1_min       300
++   set     fan1_beep      1
++   
++   label   fan2           "CPU_Fan_1"
++   set     fan2_min       600
++   set     fan2_beep      1
++   
++   label   fan5           "Chassis_Fan_2"
++   set     fan5_min       300
++   set     fan5_beep      1
++
++   # these are not on the mainboard
++   ignore  fan3
++   ignore  fan4
++
++   # misc
++   #intrusion0 is actually available. When disabled in BIOS it returns OK
++   ignore intrusion1
+diff -Nuar a/configs/Asus/P10S-M_WS.conf b/configs/Asus/P10S-M_WS.conf
+--- a/configs/Asus/P10S-M_WS.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Asus/P10S-M_WS.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,61 @@
++# Asus P10S-M WS
++chip   "nct6791-*"
++    ignore temp1 # -62.0 all the time
++    ignore temp2 # -45.0
++    ignore temp3 # 23.0 all the time
++    ignore temp4 # 26.0 all the time
++    ignore temp6 # -62.0
++    # temp8 - temp10 always 0
++    ignore temp8
++    ignore temp9
++    ignore temp10
++    label temp7 "CPU"
++    label temp5 "MB"
++
++    label in0 "VCORE"
++
++    ignore in2 # same as in3
++    ignore in5 # 2040 all the time
++    ignore in11 # same as VCCIO (in9)
++    ignore in13 # same as in9
++    ignore in14 # 2040 all the time
++
++    label in1 "+5V"
++    compute in1 @ * 5, @ / 5
++    set in1_min 5 * 0.95
++    set in1_max 5 * 1.05
++
++    label in3 "+3.3V"
++    set in3_min 3.3 * 0.95
++    set in3_max 3.3 * 1.05
++
++    label in4 "+12V"
++    compute in4 @ * 12, @ / 12
++    set in4_min 12 * 0.95
++    set in4_max 12 * 1.05
++
++    label in6 "VCCSA"
++
++    label in7 "+3.3VSB"
++    set in7_min 3.3 * 0.95
++    set in7_max 3.3 * 1.05
++
++    label in9 "VCCIO"
++
++    label in10 "+5VSB"
++    compute in10 @ * 5, @ / 5
++    set in10_min 5 * 0.95
++    set in10_max 5 * 1.05
++
++    label in12 "VDDQ_AB_CPU1"
++
++    label fan1 "REAR_FAN"
++    label fan2 "CPU_FAN1"
++    label fan3 "FRNT_FAN1"
++    label fan4 "FRNT_FAN2"
++    label fan5 "FRNT_FAN3"
++    label fan6 "FRNT_FAN4"
++
++    #ignore intrusion0
++    #ignore intrusion1
++    ignore beep_enable
+diff -Nuar a/configs/Asus/TUF-GAMING-X570-PLUS.conf b/configs/Asus/TUF-GAMING-X570-PLUS.conf
+--- a/configs/Asus/TUF-GAMING-X570-PLUS.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Asus/TUF-GAMING-X570-PLUS.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,61 @@
++chip "nct6798-*"
++# nct6798 values for Asus TUF GAMING X570-PLUS (WI-FI)
++# I'm not entirely sure everything here is correct since no HW monitoring
++# application under Windows shows all the names for all the found sensors.
++# Some of the names and formulas are best guesstimates and could be wrong.
++# You will have to unignore fans if you want them to be monitored.
++
++label in0 "Vcore"
++    set in0_min 0.2
++    set in0_max 1.5
++
++label in2 "AVSB"
++    set in2_min  3.3 * 0.95
++    set in2_max  3.3 * 1.05
++
++label in3 "3VCC"
++    set in3_min  3.3 * 0.95
++    set in3_max  3.3 * 1.05
++
++label in4 "+12V"
++    compute in4 @ * 12, @ / 12
++    set in4_min  12 * 0.95
++    set in4_max  12 * 1.05
++
++label in6 "+5V"
++    compute in6 @ * 5, @ / 5
++    set in6_min  5 * 0.95
++    set in6_max  5 * 1.05
++
++label in7 "3.3V"
++    set in7_min  3.3 * 0.95
++    set in7_max  3.3 * 1.05
++
++label in8 "Vbat"
++    set in8_min  3.3 * 0.95
++    set in8_max  3.3 * 1.05
++
++# always shows a constant value after boot - either 0.272 or 0.288
++ignore in10
++
++# constant 0.544
++ignore in11
++
++# constant 1.032
++ignore in12
++
++label fan2 "CPU Fan"
++    set fan2_min 200
++
++# The X570 chipset is quite power hungry, so let's put 1000 in to be safe
++label fan5 "CHA_FAN1"
++    set fan5_min 1000
++
++# Always show zeros
++ignore temp8
++ignore temp9
++ignore temp10
++
++# The motherboard doesn't seem to have them physically connected or present
++ignore intrusion0
++ignore intrusion1
+diff -Nuar a/configs/Biostar/A960D+V2.conf b/configs/Biostar/A960D+V2.conf
+--- a/configs/Biostar/A960D+V2.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Biostar/A960D+V2.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,51 @@
++# Configuration file contributed by Leandro Nini.
++
++
++# libsensors configuration file
++# -----------------------------
++#
++# This is a first attempt at a custom configuration file for the Biostar A960D+V2.
++# This custom configuration file should be copied to /etc/sensors.d/Biostar-A960D+V2.conf.
++#
++# Custom configuration files for some specific mainboards can be found at
++# https://github.com/lm-sensors/lm-sensors/tree/master/configs
++
++# READ THE MAN PAGE DOCUMENTATION OF 'sensors.conf' FOR MORE
++# COMPLETE INFORMATION. ie:
++
++# man sensors.conf
++
++chip "it8728-*"
++
++# All labels set to match Biostar A960D+V2 BIOS displayed labels. See
++# the 'PC Health' screen in the BIOS.
++
++# Voltage settings
++
++    label in0 "CPU"
++    label in1 "DDR"
++    label in2 "+12V"
++    label in3 "+5V"
++    ignore in4
++    ignore in5
++    label in6 "Chip" 
++
++    compute in2 6.0*@,@/6.0
++    compute in3 ((15/10)+1)*@ , @/((15/10)+1)
++
++# Fan settings
++
++    label fan1 "CPU Fan"
++    label fan2 "Sys1 Fan"
++    ignore fan3
++
++# Temperature sensor settings
++
++    label temp1 "CPU Temp"
++    label temp3 "Sys Temp"
++
++# temp2 is not identified
++    ignore temp2
++
++    ignore intrusion0
++
+diff -Nuar a/configs/Gigabyte/GA-AB350-GAMING.conf b/configs/Gigabyte/GA-AB350-GAMING.conf
+--- a/configs/Gigabyte/GA-AB350-GAMING.conf	2019-10-17 18:43:18.000000000 +0300
++++ b/configs/Gigabyte/GA-AB350-GAMING.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -21,6 +21,12 @@
+   label in0 "CPU Vcore"
+   label in6 "DRAM Channel A/B"
+ 
++  ignore in1
++  ignore in2
++  ignore in3
++  ignore in4
++  ignore in5
++
+ # A configuration for the Super-IO chip it8792 can be taken from the configuration
+ # file for the board GA-AB350-GAMING3 but has not been checked for this board
+ 
+@@ -29,3 +35,10 @@
+   ignore fan2
+   ignore fan3
+ 
++  ignore in0
++  ignore in1
++  ignore in2
++  ignore in3
++  ignore in4
++  ignore in5
++  ignore in6
+diff -Nuar a/configs/Gigabyte/GA-AB350N-GAMING-WIFI-REV1.0.conf b/configs/Gigabyte/GA-AB350N-GAMING-WIFI-REV1.0.conf
+--- a/configs/Gigabyte/GA-AB350N-GAMING-WIFI-REV1.0.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Gigabyte/GA-AB350N-GAMING-WIFI-REV1.0.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,91 @@
++# GA-AB350N-Gaming WIFI (rev. 1.0)
++
++# dmi: board_name: AB350N-Gaming WIFI-CF
++# dmi: board_vendor: Gigabyte Technology Co., Ltd.
++# dmi: board_version: x.x
++# dmi: bios_version: F50a
++
++chip "it8686-isa-0a40"
++  label temp1 "System 1"
++  label temp2 "Chipset"
++  label temp3 "CPU Socket"
++  label temp4 "PCI-EX16"
++  label temp5 "VRM MOS"
++  label temp6 "vSOC MOS"
++
++  label in0 "CPU Vcore"
++  label in1 "+3.3v"
++  label in2 "+12v"
++  label in3 "+5v"
++  label in4 "CPU Vcore SOC"
++  label in5 "CPU VDDP"
++  label in6 "DRAM A/B"
++  label in7 "3VSB"
++  label in8 "Battery"
++
++  label fan1 "CPU_FAN"
++  label fan2 "SYS_FAN1"
++
++  compute in1 @*1.650,@/1.650
++  compute in2 @*6,@/6
++  compute in3 @*2.5,@/2.5
++
++  set temp1_min 15
++  set temp1_max 65
++  set temp2_min 15
++  set temp2_max 80
++  set temp3_min 15
++  set temp3_max 85
++  set temp4_min 15
++  set temp4_max 30
++  set temp5_min 15
++  set temp5_max 95
++  set temp6_min 15
++  set temp6_max 90
++
++  set in0_min 0.6
++  set in0_max 1.45
++  set in1_min 3.135
++  set in1_max 3.465
++  set in2_min 11.400
++  set in2_max 12.600
++  set in3_min 4.750
++  set in3_max 5.250
++  set in6_min 1.2 * 0.97
++  set in6_max 1.2 * 1.2
++  set in7_min 3.3 * 0.97
++  set in7_max 3.3 * 1.05
++
++  set fan1_min 900
++  set fan2_min 900
++  
++chip "it8792-isa-0a60"
++  label temp1 "PCI-EX8"
++  label temp2 "Temp 2"
++  label temp3 "System 2"
++
++  label in0 "CPU Vcore"
++  label in1 "DDR VTT"
++  label in2 "Chipset Core"
++  label in3 "VIN3"
++  label in4 "CPU VDD18"
++  label in5 "DDR VPP"
++  label in7 "3VSB"
++  label in8 "VBAT"
++
++  set temp1_min 15
++  set temp1_max 60
++  set temp2_min 15
++  set temp2_max 60
++  set temp3_min 15
++  set temp3_max 60
++
++  set in0_min 0.6
++  set in0_max 1.45
++  set in7_min 3.135
++  set in7_max 3.465
++
++  ignore in6
++  ignore fan1
++  ignore fan2
++  ignore fan3
+diff -Nuar a/configs/Gigabyte/GA-H170M-D3H.conf b/configs/Gigabyte/GA-H170M-D3H.conf
+--- a/configs/Gigabyte/GA-H170M-D3H.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Gigabyte/GA-H170M-D3H.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,30 @@
++# Configuration for the Gigabyte GA-H170M-D3H (name from the manual) mainboard.
++# Name from dmidecode -s baseboard-product-name: H170M-D3H-CF
++# BIOS version: F23f
++# Driver: it87
++# added by dokutan, 2020
++
++chip "it8628-isa-*"
++   
++    ### voltage sensors
++    ### these labels are mostly determined by comparing the values to the values from the bios
++    # in1 - 1n5: i have no clue, the bios reports +5V and +12V values,
++    # the it87 kernel documentation suggests in3 might be internal to the chip
++    # label  in0 "Vcore"     # this value scales with CPU load but seems a bit low (~0.7V to 1.2V)
++    # label  in2 "+12V"      # in2*6 is exactly the +12V value from the bios
++    label  in6 "Vmemory"     # this is stable and the value from the bios
++   
++    ### fans
++    ### the mappings fan to label are all tested
++    label  fan1 "CPU fan"
++    label  fan2 "Case fan 1"
++    label  fan3 "Case fan 2"
++    ignore fan4              # there are only 3 fan headers + CPU fan on this mainboard
++    label  fan5 "Case fan 3"
++    
++    ### temperature sensors
++    ### these labels are determined by comparison with other sensors under different load scenarios
++    # temp5 correlates with CPU temp, but stays significantly lower
++    # temp1, temp4 and temp6 stay relatively low, even under CPU load   
++    ignore temp2             # this always gives a reading of +127.0°C
++    label  temp3 "CPU temp"  # this might have a 1-2°C difference to the coretemp package sensor
+diff -Nuar a/configs/Lenovo/ThinkPad-T490s-i7.conf b/configs/Lenovo/ThinkPad-T490s-i7.conf
+--- a/configs/Lenovo/ThinkPad-T490s-i7.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Lenovo/ThinkPad-T490s-i7.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,41 @@
++chip "ucsi_source_psy_USBC000:001-isa-*"
++    label in0 "Voltage"
++    label curr1 "Current"
++
++chip "pch_cannonlake-virtual-0"
++    label temp1 "Chipset" 
++
++chip "BAT0-*"
++    label in0 "Internal battery"
++
++chip "ucsi_source_psy_USBC000:002-isa-*"
++    label in0 "Voltage"
++    label curr1 "Current"
++
++chip "iwlwifi_1-*"
++    label temp1 "WiFi Card"
++
++# The following labeling found here:
++# https://www.kernel.org/doc/html/latest/admin-guide/laptops/thinkpad-acpi.html#temperature-sensors
++chip "thinkpad-isa-*"
++    label fan1 "Fan speed"
++    label temp1 "Case (near CPU)"
++    label temp5 "Main battery: main sensor"
++    label temp11 "Power regulator"
++
++    ignore temp2
++    ignore temp3
++    ignore temp4
++    ignore temp6
++    ignore temp7
++    ignore temp8
++    ignore temp9
++    ignore temp10
++    ignore temp12
++    ignore temp13
++    ignore temp14
++    ignore temp15
++    ignore temp16
++
++chip "acpitz-acpi-*"
++    label temp1 "Case (ACPI thermal zone)"
+diff -Nuar a/configs/Lenovo/ThinkPad-X1-Carbon.conf b/configs/Lenovo/ThinkPad-X1-Carbon.conf
+--- a/configs/Lenovo/ThinkPad-X1-Carbon.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Lenovo/ThinkPad-X1-Carbon.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,22 @@
++# Tested with Lenovo ThinkPad X1 Carbon Gen 6
++
++chip "thinkpad-isa-0000"
++    # always zero
++    ignore temp2
++    ignore temp3
++    ignore temp4
++    ignore temp5
++    ignore temp6
++    ignore temp7
++    ignore temp8
++    ignore temp9
++    ignore temp10
++    ignore temp12
++    ignore temp13
++    ignore temp14
++    ignore temp15
++    ignore temp16
++
++    label fan1 "Fan"
++    label temp1 "CPU"
++    label temp11 "Power circuitry"
+diff -Nuar a/configs/Lenovo/ThinkPad-X260-i5.conf b/configs/Lenovo/ThinkPad-X260-i5.conf
+--- a/configs/Lenovo/ThinkPad-X260-i5.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/Lenovo/ThinkPad-X260-i5.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,31 @@
++chip "iwlwifi_1-*"
++    label temp1 "WiFi Card"
++
++chip "thinkpad-isa-*"
++    label fan1 "Fan Speed"
++    label temp1 "Case (near CPU)"
++
++    ignore temp2
++    ignore temp3
++    ignore temp4
++    ignore temp5
++    ignore temp6
++    ignore temp7
++    ignore temp8
++
++chip "BAT0-*"
++    label in0 "Internal Battery"
++
++chip "BAT1-*"
++    label in0 "Removable Battery"
++
++chip "coretemp-isa-*"
++    label temp1 "CPU Package"
++    label temp2 "CPU Core 0"
++    label temp3 "CPU Core 1"
++
++chip "pch_skylake-*"
++    label temp1 "Chipset/Southbridge"
++
++chip "acpitz-acpi-*"
++    label temp1 "Case (ACPI Thermal Zone)"
+diff -Nuar a/configs/MSI/MS-7B89-B450M-MORTAR.conf b/configs/MSI/MS-7B89-B450M-MORTAR.conf
+--- a/configs/MSI/MS-7B89-B450M-MORTAR.conf	1970-01-01 02:00:00.000000000 +0200
++++ b/configs/MSI/MS-7B89-B450M-MORTAR.conf	2021-02-24 18:12:40.000000000 +0300
+@@ -0,0 +1,100 @@
++# MS-7B89 B450-MORTAR config
++#
++# Based on MS-7A34 B350-TOMAHAWK config
++# unknown labels taken from MS-7B79 X470 GAMING PRO config
++#
++# Tested on a B450M Mortar Titanium board,
++# but it shares the same ID with the B450M Mortar board.
++
++chip "nct6797-*"
++	label in0 "Vcore"
++	set in0_min 0.4
++	set in0_max 1.45 # max recommended voltage
++
++	label in1 "ATX 5V"
++	compute in1 ((12 / 3) + 1) * @, @ / ((12 / 3) + 1)
++	set in1_min 5 * 0.95
++	set in1_max 5 * 1.05
++
++	label in2 "AVCC Analog"
++	set in2_min 3.3 * 0.95  # assume ATX ±5% is enough
++	set in2_max 3.3 * 1.05  # assume ATX ±5% is enough
++
++	label in3 "ATX 3.3V"
++	set in3_min 3.3 * 0.95  # ATX 2.4
++	set in3_max 3.3 * 1.05  # ATX 2.4
++
++	label in4 "ATX 12V"
++	compute in4 ((220 / 20) + 1) * @, @ / ((220 / 20) + 1)
++	set in4_min 12 * 0.95
++	set in4_max 12 * 1.05
++
++	# no VIN8 input in this chip?
++	ignore in5
++
++	# likely AUXTIN0 thermistor
++	ignore in6
++
++	label in7 "3VSB Standby"
++	set in7_min 3.3 * 0.95  # assume ATX ±5% is enough
++	set in7_max 3.3 * 1.05  # assume ATX ±5% is enough
++
++	label in8 "RTC Battery"
++	set in8_min 2.0  # from Intel 200-series chipset spec
++	set in8_max 3.4  # from random CR2032 datasheet
++
++	label in9 "CPU 1.8V"
++	set in9_min  1.82 * 0.90
++	set in9_max  1.82 * 1.10
++
++	# might read as 0V if a CPU without iGPU is installed
++	label in10 "CPU VDDP"
++
++	# likely AUXTIN2 thermistor
++	ignore in11
++
++	label in12 "Vsoc"
++	set in12_min  0.8
++	set in12_max  1.45 #max rating
++
++	label in13 "Vdram"
++	compute in13 2 * @, @ / 2
++	set in13_min  1.1 # DDR min voltage
++	set in13_max  1.5 # DDR max voltage
++
++	label in14 "5VSB Standby"
++	compute in14 ((768 / 330) + 1) * @, @ / ((768 / 330) + 1)
++	set in14_min 5 * 0.95
++	set in14_max 5 * 1.05
++
++
++	ignore fan1
++	label fan2 "CPU 1"
++	label fan3 "SYSTEM 1"
++	label fan4 "SYSTEM 2"
++	label fan5 "SYSTEM 3"
++
++
++	label temp1 "Super I/O"
++	label temp2 "SoC VRM"
++	label temp3 "CPU VRM"
++
++	# AUXTIN1 is used as VIN5
++	ignore temp4
++
++	# Termistor Chipset?
++	label temp5 "PCH"
++
++	# AUXTIN3 is used as VIN7
++	ignore temp6
++
++	# the same temperature as reported by k10temp
++	label temp7 "CPU die"
++
++	# stuck at 0°C
++	ignore temp8
++	ignore temp9
++	ignore temp10
++
++	# likely DEEP_S5 signal
++	ignore intrusion1
+diff -Nuar a/lib/sysfs.c b/lib/sysfs.c
+--- a/lib/sysfs.c	2019-10-17 18:43:18.000000000 +0300
++++ b/lib/sysfs.c	2021-02-24 18:12:40.000000000 +0300
+@@ -663,7 +663,7 @@
+ 	if ((!subsys || !strcmp(subsys, "platform") ||
+ 			!strcmp(subsys, "of_platform"))) {
+ 		/* must be new ISA (platform driver) */
+-		if (sscanf(dev_name, "%*[a-z0-9_].%d", &entry->chip.addr) != 1)
++		if (sscanf(dev_name, "%*[a-zA-Z0-9_]%*1[.:]%d", &entry->chip.addr) != 1)
+ 			entry->chip.addr = 0;
+ 		entry->chip.bus.type = SENSORS_BUS_TYPE_ISA;
+ 		entry->chip.bus.nr = 0;
+@@ -938,7 +938,7 @@
+ 		if (res == EOF) {
+ 			if (errno == EIO)
+ 				return -SENSORS_ERR_IO;
+-			else 
++			else
+ 				return -SENSORS_ERR_ACCESS_R;
+ 		}
+ 		*value /= get_type_scaling(subfeature->type);
+@@ -972,7 +972,7 @@
+ 		if (res == EOF) {
+ 			if (errno == EIO)
+ 				return -SENSORS_ERR_IO;
+-			else 
++			else
+ 				return -SENSORS_ERR_ACCESS_W;
+ 		}
+ 	} else
+diff -Nuar a/prog/detect/sensors-detect b/prog/detect/sensors-detect
+--- a/prog/detect/sensors-detect	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/detect/sensors-detect	2021-02-24 18:12:40.000000000 +0300
+@@ -38,7 +38,7 @@
+ #########################
+ 
+ use constant NO_CACHE => 1;
+-use constant LM_VERSION => '3.6.0';
++use constant LM_VERSION => '3.6.0+git';
+ use vars qw(@pci_adapters @chip_ids @ipmi_ifs @non_hwmon_chip_ids
+ 	    $i2c_addresses_to_scan @i2c_byte_cache %opt);
+ 
+@@ -719,11 +719,6 @@
+ 		i2c_addrs => [0x2c..0x2e],
+ 		i2c_detect => sub { emc6w201_detect(@_); },
+ 	}, {
+-		name => "Winbond WPCD377I",
+-		driver => "not-a-sensor",
+-		i2c_addrs => [0x2c..0x2e],
+-		i2c_detect => sub { lm85_detect(@_, 7); },
+-	}, {
+ 		name => "Analog Devices ADT7462",
+ 		driver => "adt7462",
+ 		i2c_addrs => [0x5c, 0x58],
+@@ -1392,6 +1387,11 @@
+ 		i2c_addrs => [0x73],
+ 		i2c_detect => sub { fsc_detect(@_, 7); },
+ 	}, {
++		name => "FTS Teutates",
++		driver => "ftsteutates",
++		i2c_addrs => [0x73],
++		i2c_detect => sub { fts_detect(@_); },
++	}, {
+ 		name => "ALi M5879",
+ 		driver => "to-be-written",
+ 		i2c_addrs => [0x2c..0x2d],
+@@ -1679,6 +1679,10 @@
+ 		i2c_addrs => [0x2c..0x2f],
+ 		i2c_detect => sub { w83791sd_detect(@_); },
+ 	}, {
++		name => "Winbond WPCD377I",
++		i2c_addrs => [0x2c..0x2e],
++		i2c_detect => sub { lm85_detect(@_, 7); },
++	}, {
+ 		name => "Fintek F75111R/RG/N (GPIO)",
+ 		i2c_addrs => [0x37, 0x4e],
+ 		i2c_detect => sub { fintek_detect(@_, 1); },
+@@ -2268,7 +2272,7 @@
+ 		features => FEAT_IN | FEAT_FAN | FEAT_TEMP,
+ 	}, {
+ 		name => "Nuvoton W83677HG-I (NCT5572D/NCT6771F/NCT6772F/NCT6775F) Super IO Sensors",
+-		driver => "w83627ehf",
++		driver => sub { kernel_version_at_least(3, 10, 0) ? "nct6775" : "w83627ehf" },
+ 		devid => 0xB470,
+ 		devid_mask => 0xFFF0,
+ 		logdev => 0x0b,
+@@ -2285,6 +2289,13 @@
+ 		logdev => 0x0b,
+ 		features => FEAT_IN | FEAT_FAN | FEAT_TEMP,
+ 	}, {
++		name => "Nuvoton NCT6687D eSIO",
++		driver => "nct6683",
++		devid => 0xD590,
++		devid_mask => 0xFFF0,
++		logdev => 0x0b,
++		features => FEAT_IN | FEAT_FAN | FEAT_TEMP,
++	}, {
+ 		name => "Nuvoton NCT6102D/NCT6104D/NCT6106D Super IO Sensors",
+ 		driver => "nct6775",
+ 		devid => 0xC450,
+@@ -2807,6 +2818,10 @@
+ 		driver => "k10temp",
+ 		detect => sub { hygon_pci_detect('1463') },
+ 	}, {
++		name => "AMD Family 19h thermal sensors",
++		driver => "k10temp",
++		detect => sub { amd_pci_detect('1653') },
++	}, {
+ 		name => "Intel digital thermal sensor",
+ 		driver => "coretemp",
+ 		detect => \&coretemp_detect,
+@@ -4569,7 +4584,9 @@
+ sub chip_special_cases
+ {
+ 	# Some chip to driver mappings depend on the environment
+-	foreach my $chip (@chip_ids) {
++	foreach my $chip (@chip_ids, @superio_ids_natsemi, @superio_ids_smsc,
++			  @superio_ids_smsc_ns, @superio_ids_winbond,
++			  @superio_ids_ite) {
+ 		if (ref($chip->{driver}) eq 'CODE') {
+ 			$chip->{driver} = $chip->{driver}->();
+ 		}
+@@ -6363,6 +6380,33 @@
+ 
+ 	return 8;
+ }
++
++# Chip to detect: FTS Teutates
++# Registers used:
++#   0x00: Device ID
++#   0x01: Revision
++#   0x0C: Device Detection Register 1
++#   0x0D: Device Detection Register 2
++#   0x0E: Device Detection Register 3
++sub fts_detect
++{
++	my ($file) = @_;
++
++	# Device ID must be 0x11
++	# 0x10 == Baseboard Management Controller
++	# 0x01 == Teutates
++	return unless i2c_smbus_read_byte_data($file, 0x00) == 0x11;
++
++	# Revision must be greater or equal 0x2b to use device detection
++	return unless i2c_smbus_read_byte_data($file, 0x01) >= 0x2b;
++
++	# Device Detection Registers must be 0x17, 0x34, 0x54
++	return unless i2c_smbus_read_byte_data($file, 0x0C) == 0x17
++	          and i2c_smbus_read_byte_data($file, 0x0D) == 0x34
++	          and i2c_smbus_read_byte_data($file, 0x0E) == 0x54;
++
++	return 8;
++}
+ 
+ # Chip to detect: 0 = LM93, 1 = LM94
+ # Registers used:
+diff -Nuar a/prog/detect/sensors-detect.8 b/prog/detect/sensors-detect.8
+--- a/prog/detect/sensors-detect.8	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/detect/sensors-detect.8	2021-02-24 18:12:40.000000000 +0300
+@@ -38,6 +38,8 @@
+ questions. Note that this isn't necessarily safe as the internal logic may
+ lead to potentially dangerous probes being attempted. See the WARNING section
+ below.
++.IP "--stat"
++Display I2C address statistics.
+ 
+ .SH WARNING
+ sensors-detect needs to access the hardware for most of the chip detections.
+diff -Nuar a/prog/init/fancontrol.service b/prog/init/fancontrol.service
+--- a/prog/init/fancontrol.service	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/init/fancontrol.service	2021-02-24 18:12:40.000000000 +0300
+@@ -5,7 +5,7 @@
+ 
+ [Service]
+ Type=simple
+-PIDFile=/var/run/fancontrol.pid
++PIDFile=/run/fancontrol.pid
+ ExecStart=/usr/sbin/fancontrol
+ 
+ [Install]
+diff -Nuar a/prog/init/sensord.service b/prog/init/sensord.service
+--- a/prog/init/sensord.service	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/init/sensord.service	2021-02-24 18:12:40.000000000 +0300
+@@ -5,7 +5,7 @@
+ [Service]
+ EnvironmentFile=/etc/sysconfig/sensord
+ Type=forking
+-PIDFile=/var/run/sensord.pid
++PIDFile=/run/sensord.pid
+ ExecStart=/usr/sbin/sensord -i $INTERVAL -l $LOG_INTERVAL -f daemon
+ 
+ [Install]
+diff -Nuar a/prog/pwm/fancontrol b/prog/pwm/fancontrol
+--- a/prog/pwm/fancontrol	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/pwm/fancontrol	2021-02-24 18:12:40.000000000 +0300
+@@ -287,7 +287,7 @@
+ 		pwmo=${AFCPWM[$fcvcount]}
+ 		if [ ! -w $pwmo ]
+ 		then
+-			echo "Error: file $pwmo doesn't exist" >&2
++			echo "Error: file $pwmo doesn't exist or isn't writable" >&2
+ 			outdated=1
+ 		fi
+ 		let fcvcount=$fcvcount+1
+@@ -299,7 +299,7 @@
+ 		tsen=${AFCTEMP[$fcvcount]}
+ 		if [ ! -r $tsen ]
+ 		then
+-			echo "Error: file $tsen doesn't exist" >&2
++			echo "Error: file $tsen doesn't exist or isn't readable" >&2
+ 			outdated=1
+ 		fi
+ 		let fcvcount=$fcvcount+1
+@@ -313,7 +313,7 @@
+ 		do
+ 			if [ ! -r $fan ]
+ 			then
+-				echo "Error: file $fan doesn't exist" >&2
++				echo "Error: file $fan doesn't exist or isn't readable" >&2
+ 				outdated=1
+ 			fi
+ 		done
+@@ -323,7 +323,8 @@
+ 	if [ $outdated -eq 1 ]
+ 	then
+ 		echo >&2
+-		echo "At least one referenced file is missing. Either some required kernel" >&2
++		echo "At least one referenced file is missing or doesn't have" >&2
++		echo "correct privileges. Either some required kernel" >&2
+ 		echo "modules haven't been loaded, or your configuration file is outdated." >&2
+ 		echo "In the latter case, you should run pwmconfig again." >&2
+ 	fi
+diff -Nuar a/prog/pwm/pwmconfig b/prog/pwm/pwmconfig
+--- a/prog/pwm/pwmconfig	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/pwm/pwmconfig	2021-02-24 18:12:40.000000000 +0300
+@@ -29,7 +29,7 @@
+ #
+ #
+ 
+-LM_VERSION='3.6.0'
++LM_VERSION='3.6.0+git'
+ PIDFILE="/var/run/fancontrol.pid"
+ 
+ if [ -f "$PIDFILE" ]
+diff -Nuar a/prog/sensors/main.c b/prog/sensors/main.c
+--- a/prog/sensors/main.c	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/sensors/main.c	2021-02-24 18:12:40.000000000 +0300
+@@ -54,15 +54,16 @@
+ static void print_long_help(void)
+ {
+ 	printf("Usage: %s [OPTION]... [CHIP]...\n", PROGRAM);
+-	puts("  -c, --config-file     Specify a config file\n"
+-	     "  -h, --help            Display this help text\n"
+-	     "  -s, --set             Execute `set' statements (root only)\n"
+-	     "  -f, --fahrenheit      Show temperatures in degrees fahrenheit\n"
+-	     "  -A, --no-adapter      Do not show adapter for each chip\n"
+-	     "      --bus-list        Generate bus statements for sensors.conf\n"
+-	     "  -u                    Raw output\n"
+-	     "  -j                    Json output\n"
+-	     "  -v, --version         Display the program version\n"
++	puts("  -c, --config-file      Specify a config file\n"
++	     "  -h, --help             Display this help text\n"
++	     "  -s, --set              Execute `set' statements (root only)\n"
++	     "  -f, --fahrenheit       Show temperatures in degrees fahrenheit\n"
++	     "  -A, --no-adapter       Do not show adapter for each chip\n"
++	     "      --bus-list         Generate bus statements for sensors.conf\n"
++	     "  -u                     Raw output\n"
++	     "  -j                     Json output\n"
++	     "  -v, --version          Display the program version\n"
++	     "  -n, --allow-no-sensors Do not fail if no sensors found\n"
+ 	     "\n"
+ 	     "Use `-' after `-c' to read the config file from stdin.\n"
+ 	     "If no chips are specified, all chip info will be printed.\n"
+@@ -270,7 +271,7 @@
+ 
+ int main(int argc, char *argv[])
+ {
+-	int c, i, err, do_bus_list;
++	int c, i, err, do_bus_list, allow_no_sensors;
+ 	const char *config_file_name = NULL;
+ 
+ 	struct option long_opts[] =  {
+@@ -281,6 +282,7 @@
+ 		{ "no-adapter", no_argument, NULL, 'A' },
+ 		{ "config-file", required_argument, NULL, 'c' },
+ 		{ "bus-list", no_argument, NULL, 'B' },
++		{ "allow-no-sensors", no_argument, NULL, 'n' },
+ 		{ 0, 0, 0, 0 }
+ 	};
+ 
+@@ -291,8 +293,9 @@
+ 	do_sets = 0;
+ 	do_bus_list = 0;
+ 	hide_adapter = 0;
++	allow_no_sensors = 0;
+ 	while (1) {
+-		c = getopt_long(argc, argv, "hsvfAc:uj", long_opts, NULL);
++		c = getopt_long(argc, argv, "hsvfAc:ujn", long_opts, NULL);
+ 		if (c == EOF)
+ 			break;
+ 		switch(c) {
+@@ -327,6 +330,9 @@
+ 		case 'B':
+ 			do_bus_list = 1;
+ 			break;
++		case 'n':
++			allow_no_sensors = 1;
++			break;
+ 		default:
+ 			fprintf(stderr,
+ 				"Internal error while parsing options!\n");
+@@ -349,7 +355,9 @@
+ 				"No sensors found!\n"
+ 				"Make sure you loaded all the kernel drivers you need.\n"
+ 				"Try sensors-detect to find out which these are.\n");
+-			err = 1;
++			if (!allow_no_sensors) {
++				err = 1;
++			}
+ 		}
+ 	} else {
+ 		int cnt = 0;
+diff -Nuar a/prog/sensors/sensors.1 b/prog/sensors/sensors.1
+--- a/prog/sensors/sensors.1	2019-10-17 18:43:18.000000000 +0300
++++ b/prog/sensors/sensors.1	2021-02-24 18:12:40.000000000 +0300
+@@ -78,6 +78,8 @@
+ buses of the same type. As bus numbers are usually not guaranteed to be stable
+ over reboots, these statements let you refer to each bus by its name rather
+ than numbers.
++.IP "-n, --allow-no-sensors"
++Do not fail if no sensors found. The error message will be printed in the log.
+ .SH FILES
+ .I /etc/sensors3.conf
+ .br
+diff -Nuar a/version.h b/version.h
+--- a/version.h	2019-10-17 18:43:18.000000000 +0300
++++ b/version.h	2021-02-24 18:12:40.000000000 +0300
+@@ -1 +1 @@
+-#define LM_VERSION "3.6.0"
++#define LM_VERSION "3.6.0+git"
