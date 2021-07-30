@@ -15,6 +15,8 @@ VBoxDataDir = "/usr/share/virtualbox"
 KDIR = kerneltools.getKernelVersion()
 
 def setup():
+    shelltools.system("sed -i -e 's|pkg-config Qt5Core Qt5Gui|pkg-config Qt5Core|' configure")
+
     pisitools.dosed("LocalConfig.kmk", "__VBOXLIBDIR__", VBoxLibDir)
     pisitools.dosed("LocalConfig.kmk", "__VBOXDATADIR__", VBoxDataDir)
 
