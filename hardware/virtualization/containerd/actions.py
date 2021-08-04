@@ -24,16 +24,19 @@ def build():
 
     shelltools.cd("src/github.com/containerd/containerd")
     
-    shelltools.system("LDFLAGS= GOPATH=%s make GIT_COMMIT=209a7fc" % get.curDIR())
+    #shelltools.system("LDFLAGS= GOPATH=%s make GIT_COMMIT=72cec4b" % get.curDIR())
+
+    shelltools.system("LDFLAGS= make GIT_COMMIT=72cec4b EXTRA_LDFLAGS='-buildid='")
 
 def install():
     shelltools.cd("%s/containerd" % get.workDIR())
 
-    pisitools.dobin("bin/*")
-    
+    #pisitools.dobin("bin/*")
+    autotools.rawInstall("DESTDIR=%s/usr" % get.installDIR())
+
     # symlink containerd/run (nice integration with docker)
     pisitools.dosym("/usr/bin/containerd", "/usr/bin/docker-containerd")
     pisitools.dosym("/usr/bin/containerd-shim", "/usr/bin/docker-containerd-shim")
     pisitools.dosym("/usr/bin/ctr", "/usr/bin/docker-containerd-ctr")
     
-    pisitools.dodoc("MAINTAINERS", "README*")
+    pisitools.dodoc("LICENSE", "README*")
