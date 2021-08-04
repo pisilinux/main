@@ -10,13 +10,21 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("./autogen.sh")
-    autotools.configure("--disable-static \
+    shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
+    #shelltools.system("./autogen.sh")
+    autotools.autoreconf("-fiv")
+    autotools.configure("--prefix=/usr --disable-static \
                          --enable-more-warnings=yes \
                          --with-udev-base-dir=/lib/udev \
                          --enable-gtk-doc \
+                         --enable-plugin-qcom-soc \
+                         --with-qmi=yes \
+                         --with-mbim=yes \
+                         --disable-rpath \
+                         --disable-silent-rules \
                          --with-systemd-journal=no \
                          --with-systemd-suspend-resume=no \
+                         --enable-introspection=no \
                          --with-polkit=permissive")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
