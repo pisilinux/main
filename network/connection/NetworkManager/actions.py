@@ -30,7 +30,7 @@ def setup():
                           -Difcfg_rh=true \
                           --buildtype=release \
                           -Dbluez5_dun=true \
-                          -Dnetconfig=false \
+                          -Dnetconfig=no \
                           -Dsession_tracking=elogind \
                           -Dsession_tracking_consolekit=false \
                           -Dsuspend_resume=upower \
@@ -41,7 +41,7 @@ def setup():
                           -Ddbus_conf_dir=/usr/share/dbus-1/system.d \
                           -Ddhclient=enabled \
                           -Dudev_dir=/lib/udev \
-                          -Dresolvconf=enabled \
+                          -Dresolvconf=/etc/resolv.default.conf \
                           -Diptables=/sbin/iptables \
                           -Ddnsmasq=/usr/sbin/dnsmasq \
                           -Dsystemdsystemunitdir=no \
