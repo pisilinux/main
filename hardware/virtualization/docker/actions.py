@@ -10,9 +10,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT","f150324")
+shelltools.export("DOCKER_GITCOMMIT","99e3ed8")
 shelltools.export("IAMSTATIC", "false")
-shelltools.export("VERSION", "18.05.0")
+shelltools.export("VERSION", "19.03.15")
 shelltools.export("GOROOT","/usr/lib/go")
 
 shelltools.export("GOPATH", "%s" % get.workDIR())
@@ -29,16 +29,16 @@ def setup():
 
 def build():
     shelltools.cd("%s" % get.workDIR())
-    shelltools.cd("docker-ce-%s-ce/components/engine" % get.srcVERSION())
+    shelltools.cd("docker-ce-%s/components/engine" % get.srcVERSION())
     shelltools.system("hack/make.sh dynbinary-daemon")
     
     # build cli
     shelltools.cd("%s" % get.workDIR())
-    shelltools.cd("docker-ce-%s-ce/components/cli" % get.srcVERSION())
-    shelltools.system("LDFLAGS='' GOPATH=%s/docker-ce-%s-ce/components/cli ./scripts/build/dynbinary" % (get.workDIR(), get.srcVERSION()))
+    shelltools.cd("docker-ce-%s/components/cli" % get.srcVERSION())
+    shelltools.system("LDFLAGS='' GOPATH=%s/docker-ce-%s/components/cli ./scripts/build/dynbinary" % (get.workDIR(), get.srcVERSION()))
 
 def install():
-    shelltools.cd("%s/docker-ce-%s-ce" % (get.workDIR(), get.srcVERSION()))
+    shelltools.cd("%s/docker-ce-%s" % (get.workDIR(), get.srcVERSION()))
     
     pisitools.dobin("components/cli/build/docker*")
     pisitools.dobin("components/engine/bundles/dynbinary-daemon/*")
