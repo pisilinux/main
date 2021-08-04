@@ -6,8 +6,10 @@
 
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def build():
+    shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
     pythonmodules.compile(pyVer="3")
 
 def install():
