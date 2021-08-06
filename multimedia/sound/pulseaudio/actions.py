@@ -24,7 +24,7 @@ j = ''.join([
     '-Dfftw=disabled ',
     '-Dgtk=disabled ',
     '-Dx11=disabled ',
-    '-Dbluez5=false ',
+    '-Dbluez5=disabled ',
     '-Dtests=false ',
     ])
 
@@ -48,14 +48,14 @@ def install():
 		shelltools.cd("build/src")
 		pisitools.insinto("/usr/lib32/cmake", "../*.cmake")
 		pisitools.insinto("/usr/lib32/pkgconfig", "../*.pc")
-		pisitools.dolib_so("libpulsecommon-14.2.so", "/usr/lib32/pulseaudio")
-		pisitools.dolib_so("libpulsecommon-14.2.so", "/usr/lib32")
+		pisitools.dolib_so("libpulsecommon-15.0.so", "/usr/lib32/pulseaudio")
+		pisitools.dolib_so("libpulsecommon-15.0.so", "/usr/lib32")
 		pisitools.dolib_so("utils/libpulsedsp.so", "/usr/lib32/pulseaudio")
 		shelltools.cd("pulse")
 		for t in [
 		"libpulse.so",
 		"libpulse.so.0",
-		"libpulse.so.0.23.0",
+		"libpulse.so.0.24.0",
 		"libpulse-simple.so",
 		"libpulse-simple.so.0",
 		"libpulse-simple.so.0.1.1",
