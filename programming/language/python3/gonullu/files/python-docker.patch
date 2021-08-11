@@ -1,0 +1,29 @@
+diff -Nuar a/gonullu/docker.py b/gonullu/docker.py
+--- a/gonullu/docker.py	2019-10-03 22:07:47.000000000 +0300
++++ b/gonullu/docker.py	2021-08-10 23:55:04.540780000 +0300
+@@ -3,7 +3,8 @@
+ import shutil
+ 
+ import psutil
+-from docker import Client
++from docker import client
++from docker import APIClient
+ 
+ from gonullu.log import Log
+ 
+@@ -28,7 +29,7 @@
+         # containerımızı parametreleri ile çalıştıracağımız fonksiyonumuz.
+         if not self.my_client:
+             # my_client'de çalışan docker process'ini yakalıyorum.
+-            self.my_client = Client(base_url='unix://var/run/docker.sock', version='1.23')
++            self.my_client = APIClient(base_url='unix://var/run/docker.sock', version='1.35')
+ 
+         # container'ımızın host configlerini yapalım.
+         self.host_config = self.my_client.create_host_config(mem_limit='%sM' % self.memory_limit, binds=self.binds, security_opt=['seccomp:unconfined'])
+@@ -143,4 +144,4 @@
+ 
+         self.log.blank_line()
+         self.log.warning(message='CTRL+C\'ye tıkladınız!')
+-        self.log.get_exit()
+\ Dosya sonunda yenisatır yok.
++        self.log.get_exit()
