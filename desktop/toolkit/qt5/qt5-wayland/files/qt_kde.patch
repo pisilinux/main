@@ -479,7 +479,7 @@ index df1c94f2..050cfdc0 100644
  
  #if QT_CONFIG(cursor)
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index bc031ed5..e96d8fe9 100644
+index bc031ed5..bd70f4af 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -194,10 +194,11 @@ void QWaylandWindow::initWindow()
@@ -539,7 +539,26 @@ index bc031ed5..e96d8fe9 100644
          // Don't flush the events here, or else the newly visible window may start drawing, but since
          // there was no frame before it will be stuck at the waitForFrameSync() in
          // QWaylandShmBackingStore::beginPaint().
-@@ -1231,12 +1239,14 @@ bool QWaylandWindow::isOpaque() const
+@@ -456,14 +464,15 @@ void QWaylandWindow::lower()
+ 
+ void QWaylandWindow::setMask(const QRegion &mask)
+ {
++    QReadLocker locker(&mSurfaceLock);
++    if (!mSurface)
++        return;
++
+     if (mMask == mask)
+         return;
+ 
+     mMask = mask;
+ 
+-    if (!mSurface)
+-        return;
+-
+     if (mMask.isEmpty()) {
+         mSurface->set_input_region(nullptr);
+ 
+@@ -1231,12 +1240,14 @@ bool QWaylandWindow::isOpaque() const
  
  void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
  {
