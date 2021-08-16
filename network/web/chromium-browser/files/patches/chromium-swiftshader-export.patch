@@ -1,0 +1,26 @@
+diff --git a/third_party/swiftshader/src/OpenGL/libEGL/BUILD.gn b/third_party/swiftshader/src/OpenGL/libEGL/BUILD.gn
+index 1421911..cf86974 100644
+--- a/third_party/swiftshader/src/OpenGL/libEGL/BUILD.gn
++++ b/third_party/swiftshader/src/OpenGL/libEGL/BUILD.gn
+@@ -42,7 +42,7 @@ config("swiftshader_libEGL_private_config") {
+     } else if (is_clang) {
+       defines += [ "EGLAPI=__attribute__((visibility(\"protected\"))) __attribute__((no_sanitize(\"function\")))" ]
+     } else {
+-      defines += [ "EGLAPI= " ]
++      defines += [ "EGLAPI=__attribute__((visibility(\"protected\")))" ]
+     }
+   }
+ }
+diff --git a/third_party/swiftshader/src/OpenGL/libGLESv2/BUILD.gn b/third_party/swiftshader/src/OpenGL/libGLESv2/BUILD.gn
+index f71dc68..fc3ba3a 100644
+--- a/third_party/swiftshader/src/OpenGL/libGLESv2/BUILD.gn
++++ b/third_party/swiftshader/src/OpenGL/libGLESv2/BUILD.gn
+@@ -57,7 +57,7 @@ config("swiftshader_libGLESv2_private_config") {
+     } else if (is_clang) {
+       defines += [ "GL_APICALL=__attribute__((visibility(\"protected\"))) __attribute__((no_sanitize(\"function\")))" ]
+     } else {
+-      defines += [ "GL_APICALL= " ]
++      defines += [ "GL_APICALL=__attribute__((visibility(\"protected\")))" ]
+     }
+   }
+ }

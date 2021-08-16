@@ -23,11 +23,11 @@ def setup():
     
     shelltools.system("sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py")
 
-    for LIB in ["ffmpeg", "freetype", "flac", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg_turbo", "libpng", "libwebp", "libxml", "libxslt", "opus", "re2", "snappy", "zlib"]:
+    for LIB in ["ffmpeg", "freetype", "flac", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg_turbo", "libpng", "libwebp", "libxml", "libxslt", "opus", "snappy", "zlib"]:
         shelltools.system('find "third_party/%s" -type f  \! -path "third_party/%s/chromium/*" \! -path "*third_party/%s/google/*" \! -path "third_party/harfbuzz-ng/utils/hb_scoped.h" \! -regex ".*\.\(gn\|gni\|isolate\)" -delete' %(LIB, LIB, LIB))
 	
 	
-    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries ffmpeg freetype flac fontconfig harfbuzz-ng libdrm libjpeg libpng libwebp libxml libxslt re2 opus snappy zlib")
+    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries ffmpeg freetype flac fontconfig harfbuzz-ng libdrm libjpeg libpng libwebp libxml libxslt opus snappy zlib")
     
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
@@ -37,11 +37,10 @@ def setup():
     opt = 'custom_toolchain="//build/toolchain/linux/unbundle:default" \
            host_toolchain="//build/toolchain/linux/unbundle:default" \
            use_sysroot=false \
-           chrome_pgo_phase=0 \
            enable_nacl=true \
            enable_nacl_nonsfi=false \
            rtc_use_pipewire=true \
-           use_custom_libcxx=false \
+           use_custom_libcxx=true \
            clang_use_chrome_plugins=false \
            is_official_build=true \
            fieldtrial_testing_like_official_build=true \
@@ -65,9 +64,20 @@ def setup():
            use_vaapi=true \
            closure_compile=false \
            symbol_level=0 \
+           use_lld=true \
+           chrome_pgo_phase=2 \
            use_thin_lto=false \
-           thin_lto_enable_optimizations=false \
-           is_cfi=false'
+           is_cfi=false \
+           enable_mse_mpeg2ts_stream_parser=true \
+           enable_platform_dolby_vision=true \
+           enable_platform_mpeg_h_audio=true \
+           enable_platform_ac3_eac3_audio=true \
+           enable_platform_hevc=true \
+           use_aura=true \
+           use_ozone=true \
+           use_dbus=true \
+           ozone_auto_platforms=false \
+           ozone_platform_headless=true'
 
            
     
@@ -87,6 +97,7 @@ def setup():
     shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
     
     shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
+    shelltools.system("/usr/bin/python3 tools/update_pgo_profiles.py --target=linux update --gs-url-base=chromium-optimization-profiles/pgo_profiles")
     shelltools.system("/usr/bin/python3 tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
 
