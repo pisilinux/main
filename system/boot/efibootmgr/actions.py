@@ -13,13 +13,13 @@ def build():
     shelltools.system("sed -e '/extern int efi_set_verbose/d' -i src/efibootmgr.c")
 
     shelltools.export("CFLAGS", "-Os")
-    autotools.make("EFIDIR='/boot/EFI'")
+    autotools.make("EFIDIR=pisilinux EFI_LOADER=grubx64.efi")
 
 def install():
     shelltools.makedirs("%s/usr/sbin" % get.installDIR())
     shelltools.makedirs("%s/usr/share/man" % get.installDIR())
     shelltools.makedirs("%s/usr/include" % get.installDIR())
     
-    autotools.rawInstall("EFIDIR='/boot/EFI' DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("EFIDIR=pisilinux DESTDIR=%s" % get.installDIR())
     pisitools.insinto("/usr/share/man", "src/*.8")
     pisitools.insinto("/usr/include", "src/include/*.h")
