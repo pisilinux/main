@@ -20,6 +20,6 @@ def build():
 def install():
     qt5.install()
     #autotools.rawInstall("PREFIX=/usr DESTDIR=%s DOC_PATH=/usr/share/doc/%s" % (get.installDIR(),get.srcNAME()))
-    pisitools.dodoc("Readme.txt","Release_notes.txt","Changelog","Copying.txt")
+    pisitools.dodoc("Readme.txt","Release_notes.md","README.md","Copying.txt")
     
     pisitools.dosed("%s/usr/share/applications/smtube.desktop" % get.installDIR(), "Icon=smtube", "Icon=smtube.png")
