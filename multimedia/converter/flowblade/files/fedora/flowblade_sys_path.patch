@@ -1,0 +1,23 @@
+--- flowblade-trunk/flowblade.orig	2021-02-15 17:46:41.584404702 +0100
++++ flowblade-trunk/flowblade	2021-02-15 17:52:37.697270687 +0100
+@@ -36,10 +36,10 @@
+ # - When running on distro.
+ if os.path.realpath(launch_dir) == "/usr/bin":
+     print ("Running from installation...")
+-    modules_path = "/usr/share/flowblade/Flowblade"
++    from distutils.sysconfig import get_python_lib
++    modules_path = "%s/Flowblade" % get_python_lib()
+     if not os.path.isdir(modules_path):
+         modules_path = "/usr/share/pyshared/Flowblade"
+-    print ("modules path:", modules_path)
+ # - When running in flatpak.
+ elif launch_dir == "/app/bin":
+     print ("Running from Flatpak installation...")
+@@ -51,6 +51,7 @@
+ else:
+     print ("Running from filesystem...")
+     modules_path = launch_dir + "/Flowblade"
++    print ("modules path:", modules_path)
+ 
+ sys.path.insert(0, modules_path)
+ 
