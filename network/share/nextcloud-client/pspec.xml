@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>nextcloud-client</Name>
+        <Homepage>https://nextcloud.com/install</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2+</License>
+        <License>GPLv2</License>
+        <IsA>app:gui</IsA>
+        <Summary>The Nextcloud Client</Summary>
+        <Description>Nextcloud-client enables you to connect to your private Nextcloud Server. With it you can create folders in your home directory, and keep the contents of those folders synced with your Nextcloud server.</Description>
+        <Archive sha1sum="5aaf6a048381abab50e2dbad831b31e10ad3bbc9" type="targz">https://github.com/nextcloud/desktop/archive/v3.3.2/desktop-3.3.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>check-devel</Dependency>
+            <Dependency>chrpath</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>desktop-file-utils</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>libcloudproviders-devel</Dependency>
+            <Dependency>appstream-devel</Dependency>
+            <Dependency>appstream-glib-devel</Dependency>
+            <Dependency>neon-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>python3-sphinx</Dependency>
+            <Dependency>qt5-keychain-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-xmlpatterns-devel</Dependency>
+            <Dependency>qt5-location-devel</Dependency>
+            <Dependency>qt5-quickcontrols2-devel</Dependency>
+            <Dependency>qt5-websockets-devel</Dependency>
+            <Dependency>qt5-svg-devel</Dependency>
+            <Dependency>qt5-declarative-devel</Dependency>
+            <Dependency>qt5-linguist</Dependency>
+            <Dependency>extra-cmake-modules</Dependency>
+            <Dependency>inkscape</Dependency>
+            <Dependency>kcoreaddons-devel</Dependency>
+            <Dependency>kio-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>libgnome-keyring</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">xcb.patch</Patch>
+            <Patch level="1">require-cmake-3.16.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>nextcloud-client</Name>
+        <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>qt5-svg</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>qt5-keychain</Dependency>
+            <Dependency>qt5-websockets</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/etc/Nextcloud</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libnextcloudsync.so.0</Path>
+            <Path fileType="library">/usr/lib/libnextcloudsync.so.3.3.2</Path>
+            <Path fileType="library">/usr/lib/libnextcloud_csync.so*</Path>
+            <Path fileType="data">/usr/share/appdata</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/cloud-providers</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="data">/usr/share/mime</Path>
+            <Path fileType="data">/usr/share/nextcloud</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/appdata/nextcloud.appdata.xml">nextcloud.appdata.xml</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>nextcloud-client-nautilus</Name>
+        <Summary>nextcloud-client's Nautilus file manager extension</Summary>
+        <Description>nextcloud-client extension for the Nautilus file manager.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">nextcloud-client</Dependency>
+            <Dependency>nautilus</Dependency>
+            <Dependency>nautilus-python</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/nautilus-python/extensions</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>nextcloud-client-dolphin</Name>
+        <Summary>nextcloud-client overlay icons for the Dolphin file manager</Summary>
+        <Description>nextcloud-client extension for the Dolphin file manager.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">nextcloud-client</Dependency>
+            <Dependency>dolphin</Dependency>
+            <Dependency>kio</Dependency>
+            <Dependency>kcoreaddons</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libnextclouddolphinpluginhelper.so</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/nextclouddolphinactionplugin.so</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/kf5/overlayicon/nextclouddolphinoverlayplugin.so</Path>
+            <Path fileType="data">/usr/share/kservices5/nextclouddolphinactionplugin.desktop</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>nextcloud-client-caja</Name>
+        <Summary>nextcloud-client overlay icons for the Caja file manager</Summary>
+        <Description>This package provides overlay icons to visualize the sync state in the Caja file manager.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">nextcloud-client</Dependency>
+            <Dependency>caja</Dependency>
+            <Dependency>python-caja</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/caja-python/extensions</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>nextcloud-client-devel</Name>
+        <Summary>Development files for nextcloud-client</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">nextcloud-client</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/nextcloudsync</Path>
+            <Path fileType="library">/usr/lib/libnextcloudsync.so</Path>
+            <Path fileType="library">/usr/lib/nextcloudsync_vfs_suffix.so</Path>
+            <Path fileType="library">/usr/lib/nextcloudsync_vfs_xattr.so</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-09-01</Date>
+            <Version>3.3.2</Version>
+            <Comment>First release for Pisi Linux</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
+    </History>
+</PISI>
