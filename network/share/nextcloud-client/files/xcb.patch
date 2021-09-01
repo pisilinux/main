@@ -1,0 +1,29 @@
+--- desktop-3.2.2-orig/src/gui/main.cpp	2021-06-14 20:40:51.378471413 -0400
++++ desktop-3.2.2/src/gui/main.cpp	2021-06-14 20:42:21.630180229 -0400
+@@ -49,8 +49,26 @@
+             .arg(Theme::instance()->appNameGUI()));
+ }
+ 
++#ifdef Q_OS_LINUX
++void wayland_hacks()
++{
++    QByteArray currentDesktop = qgetenv("XDG_CURRENT_DESKTOP").toLower();
++    QByteArray sessionDesktop = qgetenv("XDG_SESSION_DESKTOP").toLower();
++    QByteArray sessionType = qgetenv("XDG_SESSION_TYPE").toLower();
++    if (sessionType.contains("wayland") && (currentDesktop.contains("gnome") || sessionDesktop.contains("gnome")))
++    {
++        qputenv("QT_QPA_PLATFORM", "xcb");
++    }
++}
++#endif
++
+ int main(int argc, char **argv)
+ {
++
++#ifdef Q_OS_LINUX
++wayland_hacks();
++#endif
++
+     Q_INIT_RESOURCE(resources);
+     Q_INIT_RESOURCE(theme);
+ 
