@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
+    autotools.rawConfigure()
 
 def build():
     autotools.make('CC="%s" RPM_OPT_FLAGS="%s"' % (get.CC(), get.CFLAGS()))
