@@ -52,7 +52,6 @@ def setup():
 	-Dzlib=enabled \
 	-Dzzip=enabled \
 	-Dqobuz=enabled \
-	-Dtidal=enabled \
 	-Diconv=enabled \
 	-Dshout=enabled \
 	-Dbzip2=enabled \
