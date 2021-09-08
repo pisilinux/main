@@ -8,20 +8,16 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
+    mesontools.configure()
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make("..")
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    shelltools.cd("..")
+    mesontools.install()
+
     pisitools.dodoc("AUTHORS", "LICENSE", "NEWS")
