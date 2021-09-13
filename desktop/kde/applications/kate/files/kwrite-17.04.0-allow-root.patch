@@ -1,10 +1,10 @@
-diff -Nuar a/kwrite/main.cpp b/kwrite/main.cpp
---- a/kwrite/main.cpp	2021-04-14 18:06:06.000000000 +0300
-+++ b/kwrite/main.cpp	2021-05-09 23:16:04.812841633 +0300
+diff -Nuar a/kwirte/main.cpp b/kwirte/main.cpp
+--- a/kwirte/main.cpp	2021-08-27 23:54:04.000000000 +0300
++++ b/kwirte/main.cpp	2021-09-13 17:58:21.634483000 +0300
 @@ -30,31 +30,8 @@
-
+ 
  #include <urlinfo.h>
-
+ 
 -#ifndef Q_OS_WIN
 -#include <unistd.h>
 -#endif
@@ -12,7 +12,7 @@ diff -Nuar a/kwrite/main.cpp b/kwrite/main.cpp
 -
  extern "C" Q_DECL_EXPORT int main(int argc, char **argv)
  {
--#ifndef Q_OS_WIN
+-#if !defined(Q_OS_WIN) && !defined(Q_OS_HAIKU)
 -    // Prohibit using sudo or kdesu (but allow using the root user directly)
 -    if (getuid() == 0) {
 -        if (!qEnvironmentVariableIsEmpty("SUDO_USER")) {
@@ -30,6 +30,6 @@ diff -Nuar a/kwrite/main.cpp b/kwrite/main.cpp
 -        }
 -    }
 -#endif
-
+ 
      /**
       * enable high dpi support
