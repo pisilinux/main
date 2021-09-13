@@ -1,10 +1,10 @@
 diff -Nuar a/kate/main.cpp b/kate/main.cpp
---- a/kate/main.cpp	2021-04-14 18:06:06.000000000 +0300
-+++ b/kate/main.cpp	2021-05-09 23:14:47.943847179 +0300
+--- a/kate/main.cpp	2021-08-27 23:54:04.000000000 +0300
++++ b/kate/main.cpp	2021-09-13 17:57:18.358487000 +0300
 @@ -38,31 +38,8 @@
  #include "qtsingleapplication/qtsingleapplication.h"
  #endif
-
+ 
 -#ifndef Q_OS_WIN
 -#include <unistd.h>
 -#endif
@@ -12,7 +12,7 @@ diff -Nuar a/kate/main.cpp b/kate/main.cpp
 -
  int main(int argc, char **argv)
  {
--#ifndef Q_OS_WIN
+-#if !defined(Q_OS_WIN) && !defined(Q_OS_HAIKU)
 -    // Prohibit using sudo or kdesu (but allow using the root user directly)
 -    if (getuid() == 0) {
 -        if (!qEnvironmentVariableIsEmpty("SUDO_USER")) {
