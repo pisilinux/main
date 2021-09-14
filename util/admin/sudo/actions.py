@@ -14,7 +14,7 @@ def setup():
 
     #autotools.autoreconf("-fi")
 
-    autotools.configure("--libexecdir=/usr/libexec/sudo \
+    autotools.configure("--libexecdir=/usr/libexec \
                          --with-rundir=/run/sudo \
                          --with-noexec=/usr/libexec/sudo/sudo_noexec.so \
                          --with-logging=syslog \
@@ -29,8 +29,7 @@ def setup():
                          --with-ldap \
                          --enable-shell-sets-home \
                          --without-selinux \
-                         --with-sendmail=/usr/sbin/sendmail \
-                         --without-rpath")
+                         --with-sendmail=/usr/sbin/sendmail")
 
     # fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
