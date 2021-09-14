@@ -10,6 +10,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("rm -f po/de/docs/kstars/index.docbook")
     kde5.configure()
 
 def build():
