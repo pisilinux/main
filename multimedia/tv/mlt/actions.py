@@ -19,7 +19,6 @@ def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DMOD_OPENCV=ON \
                           -DSWIG_PERL=ON \
-                          -DMOD_RTAUDIO=OFF \
                           -DSWIG_PYTHON=ON", sourceDir="..")
 
     #autotools.configure("--enable-gpl \
