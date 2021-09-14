@@ -17,4 +17,4 @@ def install():
     kde5.install()
 
     #pisitools.removeDir("/usr/share/locale/")
-    pisitools.dodoc("COPYING", "DESIGN")
+    pisitools.dodoc("LICENSE/*")
