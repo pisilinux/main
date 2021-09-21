@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    autotools.autoreconf("-fiv")
     autotools.configure("--disable-static")
 
 def build():
