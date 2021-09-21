@@ -7,8 +7,10 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     pisitools.dosed("configure", "DISABLE_DEPRECATED", deleteLine=True)
 
     autotools.configure("--disable-static \
@@ -25,4 +27,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog", "COPYING", "README")
+    pisitools.dodoc("COPYING", "README")
