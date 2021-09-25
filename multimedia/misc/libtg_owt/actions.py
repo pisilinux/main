@@ -17,13 +17,15 @@ def setup():
     #shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv")
     shelltools.cd("tg-owt-%s" % get.srcVERSION())
     
-    shelltools.move("../libvpx/*", "src/third_party/libvpx/source/libvpx")
-    shelltools.move("../libyuv/*", "src/third_party/libyuv")
+    shelltools.move("../libvpx-20210924/*", "src/third_party/libvpx/source/libvpx")
+    shelltools.move("../libyuv-20210924/*", "src/third_party/libyuv")
+    #shelltools.move("../pipewire-0.3.37/*", "src/third_party/pipewire")
     
     pisitools.flags.add("-fPIC")
     cmaketools.configure("-G Ninja -DCMAKE_BUILD_TYPE=Release \
                                     -DCMAKE_INSTALL_PREFIX=/usr \
                                     -DTG_OWT_SPECIAL_TARGET=linux \
+                                    -DTG_OWT_USE_PIPEWIRE=OFF \
                                     -DTG_OWT_LIBJPEG_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPENSSL_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPUS_INCLUDE_PATH=/usr/include/opus \
