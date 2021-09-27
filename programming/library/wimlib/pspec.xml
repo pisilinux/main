@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>wimlib</Name>
+        <Homepage>https://wimlib.net/index.html</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>custom</License>
+        <IsA>app</IsA>
+        <Summary>A library and program to extract, create, and modify WIM files</Summary>
+        <Description>WIM dosyalarını ayıklamak, oluşturmak ve değiştirmek için bir kitaplık ve program</Description>
+        <Archive sha1sum="50ecf8e2e2e0931cae65e285e547357040bfe6d1" type="targz">https://wimlib.net/downloads/wimlib-1.13.4.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>attr-devel</Dependency>
+            <Dependency>fuse-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>ntfs-3g</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>wimlib.patch</Patch>
+            <Patch level="1">wimlib.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>wimlib</Name>
+        <RuntimeDependencies>
+            <Dependency>fuse</Dependency>
+            <Dependency>cdrkit</Dependency>
+            <Dependency>mtools</Dependency>
+            <Dependency>cabextract</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>ntfs-3g</Dependency>
+            <Dependency>openssl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>wimlib-devel</Name>
+        <Summary>Development files for wimlib</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">wimlib</Dependency>
+            <Dependency>fuse-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-09-27</Date>
+            <Version>1.13.4</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
