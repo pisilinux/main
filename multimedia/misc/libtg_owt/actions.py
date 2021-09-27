@@ -26,7 +26,6 @@ def setup():
                                     -DCMAKE_INSTALL_PREFIX=/usr \
                                     -DTG_OWT_SPECIAL_TARGET=linux \
                                     -DBUILD_SHARED_LIBS=ON \
-                                    -DTG_OWT_USE_PIPEWIRE=OFF \
                                     -DTG_OWT_LIBJPEG_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPENSSL_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPUS_INCLUDE_PATH=/usr/include/opus \
