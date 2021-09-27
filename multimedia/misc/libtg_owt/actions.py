@@ -19,7 +19,7 @@ def setup():
     
     shelltools.move("../libvpx-20210924/*", "src/third_party/libvpx/source/libvpx")
     shelltools.move("../libyuv-20210924/*", "src/third_party/libyuv")
-    #shelltools.move("../pipewire-0.3.37/*", "src/third_party/pipewire")
+    shelltools.move("../pipewire-0.3.37/*", "src/third_party/pipewire")
     
     pisitools.flags.add("-fPIC")
     cmaketools.configure("-G Ninja -DCMAKE_BUILD_TYPE=Release \
