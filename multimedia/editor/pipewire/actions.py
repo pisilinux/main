@@ -33,5 +33,9 @@ def install():
     
     pisitools.dosym("/usr/share/alsa/alsa.conf.d/50-pipewire.conf", "/etc/alsa/conf.d/50-pipewire.conf")
 
+    #tg_owt
+    pisitools.dosym("/usr/include/pipewire-0.3/pipewire", "/usr/include/pipewire")
+    pisitools.dosym("/usr/include/spa-0.2/spa", "/usr/include/spa")
+
     #shelltools.cd("..")
     pisitools.dodoc("LICENSE", "COPYING", "NEWS", "README*")
