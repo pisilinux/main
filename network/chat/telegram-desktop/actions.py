@@ -17,7 +17,7 @@ def setup():
     #shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.system("sed -i 's/DESKTOP_APP_USE_PACKAGED/NO_ONE_WILL_EVER_SET_THIS/' \
 		cmake/external/rlottie/CMakeLists.txt || die")
-    shelltools.system('echo "target_link_libraries(external_webrtc INTERFACE jpeg)" | tee -a cmake/external/webrtc/CMakeLists.txt')
+    shelltools.system('echo "target_link_libraries(external_webrtc INTERFACE jpeg Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst)" | tee -a cmake/external/webrtc/CMakeLists.txt')
     pisitools.cxxflags.add("-Wno-deprecated-declarations -Wno-error=deprecated-declarations -Wno-switch")
     params = ' '.join([
         '-B build',
@@ -25,17 +25,12 @@ def setup():
         '-DCMAKE_BUILD_TYPE=Release',
         '-DCMAKE_INSTALL_PREFIX="/usr"',
         '-DTDESKTOP_API_TEST=ON',
-        '-DDESKTOP_APP_USE_GLIBC_WRAPS=OFF',
         '-DDESKTOP_APP_USE_PACKAGED=ON',
-        '-DDESKTOP_APP_USE_PACKAGED_GSL=OFF',
-        '-DDESKTOP_APP_USE_PACKAGED_RLOTTIE=OFF',
-        '-DDESKTOP_APP_USE_PACKAGED_VARIANT=OFF',
         '-DDESKTOP_APP_DISABLE_CRASH_REPORTS=ON',
-        '-DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON',
-        '-DTDESKTOP_DISABLE_DESKTOP_FILE_GENERATION=ON',
-        '-DTDESKTOP_USE_PACKAGED_TGVOIP=OFF',
         '-DDESKTOP_APP_SPECIAL_TARGET=""',
-	'-DDESKTOP_APP_DISABLE_WAYLAND_INTEGRATION=OFF'
+        '-DDESKTOP_APP_DISABLE_WAYLAND_INTEGRATION=OFF'
+        '-DTDESKTOP_API_ID=611335',
+        '-DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c',
         '-DTDESKTOP_LAUNCHER_BASENAME="telegramdesktop"'
     ])
 
