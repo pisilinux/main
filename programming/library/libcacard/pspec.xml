@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libcacard</Name>
+        <Homepage>https://gitlab.freedesktop.org/spice/libcacard</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <PartOf>science.misc</PartOf>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>CAC (Common Access Card) library</Summary>
+        <Description>This library provides emulation of smart cards to a virtual card
+reader running in a guest virtual machine.</Description>
+        <Archive sha1sum="293c2a535fbfad816bb5aac7494cfa7cb6ef32d5" type="tarxz">https://www.spice-space.org/download/libcacard/libcacard-2.8.1.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>nspr-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>pcsc-lite-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libcacard</Name>
+        <Summary>CAC (Common Access Card) library</Summary>
+        <RuntimeDependencies>
+            <Dependency>nss</Dependency>
+            <Dependency>nspr</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pcsc-lite</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="doc">/usr/share/doc/</Path>
+            <Path fileType="library">/usr/lib/libcacard.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libcacard-devel</Name>
+        <Summary>Development files for libcacard</Summary>
+        <RuntimeDependencies>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>pcsc-lite-devel</Dependency>
+            <Dependency release="current">libcacard</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-02-10</Date>
+            <Version>2.8.1</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
