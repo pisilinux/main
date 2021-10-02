@@ -10,9 +10,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.aclocal()
-    autotools.automake("--add-missing")
-    autotools.autoreconf()
+    autotools.autoreconf("-fi")
+    #autotools.aclocal()
+    #autotools.automake("--add-missing")
+    #autotools.autoreconf()
     autotools.configure("--libexecdir=/usr/lib \
                          --with-gtk3")
 
