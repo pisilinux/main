@@ -9,7 +9,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static --enable-gtk-doc --enable-compile-warnings=minimum")
+    autotools.configure("--disable-static \
+                         --enable-gtk-doc \
+                         --with-webkit2gtk-4.0 \
+                         --enable-compile-warnings=minimum")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 

@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("""sed -i 's:"/desktop:"/org:' schema/*.xml""")
-    mesontools.configure()
+    mesontools.configure("-Dssh_agent=false")
 
 def build():
     mesontools.build()
