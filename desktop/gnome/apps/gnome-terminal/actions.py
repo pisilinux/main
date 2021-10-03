@@ -6,17 +6,16 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-fi")
-    autotools.configure("--disable-static \
-                         --with-nautilus-extension")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog*", "COPYING*", "NEWS")
+    pisitools.dodoc("AUTHORS", "ChangeLog*", "COPYING*", "README*")
