@@ -6,9 +6,11 @@
 
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dwith-gtk-doc=false")
+    mesontools.configure()
 
 def build():
     mesontools.build()
