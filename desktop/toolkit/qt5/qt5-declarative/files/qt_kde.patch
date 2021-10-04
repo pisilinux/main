@@ -113,6 +113,18 @@ index a439c53827..f984704023 100644
  
      QV4::ExecutableAllocator::ChunkOfPages *chunk() const
      { return m_allocator->chunkForAllocation(m_allocation); }
+diff --git a/src/3rdparty/masm/yarr/Yarr.h b/src/3rdparty/masm/yarr/Yarr.h
+index ccf78f9880..2955ea7e72 100644
+--- a/src/3rdparty/masm/yarr/Yarr.h
++++ b/src/3rdparty/masm/yarr/Yarr.h
+@@ -28,6 +28,7 @@
+ #pragma once
+ 
+ #include <limits.h>
++#include <limits>
+ #include "YarrErrorCode.h"
+ 
+ namespace JSC { namespace Yarr {
 diff --git a/src/imports/folderlistmodel/plugin.cpp b/src/imports/folderlistmodel/plugin.cpp
 index 7a38769b77..7206df6664 100644
 --- a/src/imports/folderlistmodel/plugin.cpp
@@ -781,6 +793,20 @@ index 67c4611d9e..e02df00595 100644
  void QQuickItem::setAcceptedMouseButtons(Qt::MouseButtons buttons)
  {
      Q_D(QQuickItem);
+diff --git a/src/quick/items/qquickloader.cpp b/src/quick/items/qquickloader.cpp
+index 8cd63a4236..a6f7009946 100644
+--- a/src/quick/items/qquickloader.cpp
++++ b/src/quick/items/qquickloader.cpp
+@@ -738,6 +738,9 @@ void QQuickLoaderPrivate::_q_sourceLoaded()
+         return;
+     }
+ 
++    if (!active)
++        return;
++
+     QQmlContext *creationContext = component->creationContext();
+     if (!creationContext) creationContext = qmlContext(q);
+     itemContext = new QQmlContext(creationContext);
 diff --git a/src/quick/items/qquickmousearea_p_p.h b/src/quick/items/qquickmousearea_p_p.h
 index fba383e268..0d63618622 100644
 --- a/src/quick/items/qquickmousearea_p_p.h
@@ -1177,6 +1203,79 @@ index d54e3467b7..1953798a15 100644
  
  QTEST_MAIN(tst_qqmllistmodel)
  
+diff --git a/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
+new file mode 100644
+index 0000000000..a56dcea5ad
+--- /dev/null
++++ b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
+@@ -0,0 +1,10 @@
++import QtQuick 2.15
++
++Rectangle {
++    anchors.fill: parent
++    color: "blue"
++    Item {
++        Item {
++        }
++    }
++}
+diff --git a/tests/auto/quick/qquickloader/data/loader-async-race.qml b/tests/auto/quick/qquickloader/data/loader-async-race.qml
+new file mode 100644
+index 0000000000..8ba625c5c1
+--- /dev/null
++++ b/tests/auto/quick/qquickloader/data/loader-async-race.qml
+@@ -0,0 +1,14 @@
++import QtQuick 2.15
++
++Item {
++    id: root
++    Component.onCompleted: {
++        myloader.active = false
++    }
++    Loader {
++        id: myloader
++        anchors.fill: parent
++        asynchronous: true
++        source: "loader-async-race-rect.qml"
++    }
++}
+diff --git a/tests/auto/quick/qquickloader/tst_qquickloader.cpp b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
+index f4b682f3f4..fe2d71b037 100644
+--- a/tests/auto/quick/qquickloader/tst_qquickloader.cpp
++++ b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
+@@ -132,6 +132,7 @@ private slots:
+     void statusChangeOnlyEmittedOnce();
+ 
+     void setSourceAndCheckStatus();
++    void asyncLoaderRace();
+ };
+ 
+ Q_DECLARE_METATYPE(QList<QQmlError>)
+@@ -1491,6 +1492,24 @@ void tst_QQuickLoader::setSourceAndCheckStatus()
+     QCOMPARE(loader->status(), QQuickLoader::Null);
+ }
+ 
++void tst_QQuickLoader::asyncLoaderRace()
++{
++    QQmlApplicationEngine engine;
++    auto url = testFileUrl("loader-async-race.qml");
++    engine.load(url);
++    auto root = engine.rootObjects().at(0);
++    QVERIFY(root);
++
++    QQuickLoader *loader = root->findChild<QQuickLoader *>();
++    QCOMPARE(loader->active(), false);
++    QCOMPARE(loader->status(), QQuickLoader::Null);
++    QCOMPARE(loader->item(), nullptr);
++
++    QSignalSpy spy(loader, &QQuickLoader::itemChanged);
++    QVERIFY(!spy.wait(100));
++    QCOMPARE(loader->item(), nullptr);
++}
++
+ QTEST_MAIN(tst_QQuickLoader)
+ 
+ #include "tst_qquickloader.moc"
 diff --git a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp b/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
 index 54f73c6e0c..d489a873e4 100644
 --- a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp

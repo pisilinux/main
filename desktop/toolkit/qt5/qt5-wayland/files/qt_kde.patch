@@ -73,7 +73,7 @@ index 87dd6cea..b6ee43c9 100644
  }
  
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index 19944a34..54a69c3c 100644
+index 19944a34..bbd2d568 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -124,6 +124,7 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
@@ -84,6 +84,15 @@ index 19944a34..54a69c3c 100644
  
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
+@@ -168,7 +169,7 @@ void QWaylandDataDevice::data_device_drop()
+ 
+ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface, wl_fixed_t x, wl_fixed_t y, wl_data_offer *id)
+ {
+-    auto *dragWaylandWindow = QWaylandWindow::fromWlSurface(surface);
++    auto *dragWaylandWindow = surface ? QWaylandWindow::fromWlSurface(surface) : nullptr;
+     if (!dragWaylandWindow)
+         return; // Ignore foreign surfaces
+ 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
 index fe094f6f..e0dfe8b2 100644
 --- a/src/client/qwaylanddisplay.cpp
@@ -479,7 +488,7 @@ index df1c94f2..050cfdc0 100644
  
  #if QT_CONFIG(cursor)
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index bc031ed5..bd70f4af 100644
+index bc031ed5..c020a58f 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -194,10 +194,11 @@ void QWaylandWindow::initWindow()
@@ -558,7 +567,43 @@ index bc031ed5..bd70f4af 100644
      if (mMask.isEmpty()) {
          mSurface->set_input_region(nullptr);
  
-@@ -1231,12 +1240,14 @@ bool QWaylandWindow::isOpaque() const
+@@ -613,9 +622,13 @@ void QWaylandWindow::commit()
+ 
+ const wl_callback_listener QWaylandWindow::callbackListener = {
+     [](void *data, wl_callback *callback, uint32_t time) {
+-        Q_UNUSED(callback);
+         Q_UNUSED(time);
+         auto *window = static_cast<QWaylandWindow*>(data);
++
++        Q_ASSERT(callback == window->mFrameCallback);
++        wl_callback_destroy(callback);
++        window->mFrameCallback = nullptr;
++
+         window->handleFrameCallback();
+     }
+ };
+@@ -1161,16 +1174,15 @@ void QWaylandWindow::requestUpdate()
+ void QWaylandWindow::handleUpdate()
+ {
+     qCDebug(lcWaylandBackingstore) << "handleUpdate" << QThread::currentThread();
++
++    if (mWaitingForFrameCallback)
++        return;
++
+     // TODO: Should sync subsurfaces avoid requesting frame callbacks?
+     QReadLocker lock(&mSurfaceLock);
+     if (!mSurface)
+         return;
+ 
+-    if (mFrameCallback) {
+-        wl_callback_destroy(mFrameCallback);
+-        mFrameCallback = nullptr;
+-    }
+-
+     QMutexLocker locker(mFrameQueue.mutex);
+     struct ::wl_surface *wrappedSurface = reinterpret_cast<struct ::wl_surface *>(wl_proxy_create_wrapper(mSurface->object()));
+     wl_proxy_set_queue(reinterpret_cast<wl_proxy *>(wrappedSurface), mFrameQueue.queue);
+@@ -1231,12 +1243,14 @@ bool QWaylandWindow::isOpaque() const
  
  void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
  {
@@ -782,6 +827,19 @@ index 1d635f06..e2f87bbd 100644
              printf("                that->m_resource = nullptr;\n");
              printf("        }\n");
              printf("        delete resource;\n");
+diff --git a/src/shared/qwaylandmimehelper.cpp b/src/shared/qwaylandmimehelper.cpp
+index a5fdd34d..051a91dc 100644
+--- a/src/shared/qwaylandmimehelper.cpp
++++ b/src/shared/qwaylandmimehelper.cpp
+@@ -60,7 +60,7 @@ QByteArray QWaylandMimeHelper::getByteArray(QMimeData *mimeData, const QString &
+             buf.open(QIODevice::ReadWrite);
+             QByteArray fmt = "BMP";
+             if (mimeType.startsWith(QLatin1String("image/"))) {
+-                QByteArray imgFmt = mimeType.mid(6).toUpper().toLatin1();
++                QByteArray imgFmt = mimeType.mid(6).toLower().toLatin1();
+                 if (QImageWriter::supportedImageFormats().contains(imgFmt))
+                     fmt = imgFmt;
+             }
 diff --git a/tests/auto/client/surface/tst_surface.cpp b/tests/auto/client/surface/tst_surface.cpp
 index b8a65f15..95e4e609 100644
 --- a/tests/auto/client/surface/tst_surface.cpp
@@ -833,10 +891,26 @@ index b8a65f15..95e4e609 100644
  
  // Used to cause a crash in libwayland (QTBUG-79674)
 diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-index 2277bbb8..2fdd0a7c 100644
+index 2277bbb8..e2593314 100644
 --- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
 +++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-@@ -505,7 +505,7 @@ void tst_xdgshell::minMaxSize()
+@@ -138,6 +138,7 @@ void tst_xdgshell::configureSize()
+ 
+ void tst_xdgshell::configureStates()
+ {
++    QVERIFY(qputenv("QT_WAYLAND_FRAME_CALLBACK_TIMEOUT", "0"));
+     QRasterWindow window;
+     window.resize(64, 48);
+     window.show();
+@@ -186,6 +187,7 @@ void tst_xdgshell::configureStates()
+     QCOMPARE(window.windowStates(), Qt::WindowNoState);
+     QCOMPARE(window.frameGeometry().size(), windowedSize);
+ //    QCOMPARE(window.frameGeometry().topLeft(), QPoint()); // TODO: this doesn't currently work when window decorations are enabled
++    QVERIFY(qunsetenv("QT_WAYLAND_FRAME_CALLBACK_TIMEOUT"));
+ }
+ 
+ void tst_xdgshell::popup()
+@@ -505,7 +507,7 @@ void tst_xdgshell::minMaxSize()
      window.show();
      QCOMPOSITOR_TRY_VERIFY(xdgToplevel());
  
