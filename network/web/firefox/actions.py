@@ -18,6 +18,7 @@ ver = ".".join(get.srcVERSION().split(".")[:3])
 
 shelltools.export("SHELL", "/bin/sh")
 shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
+shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 
 def setup():
     # Google API key
