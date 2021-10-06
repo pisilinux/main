@@ -14,7 +14,6 @@ def setup():
                           -Dnative_backend=true \
                           -Dprofiler=false \
                           -Dintrospection=true \
-                          -Dxwayland_initfd=disabled \
                           -Dinstalled_tests=false")
 
 def build():
