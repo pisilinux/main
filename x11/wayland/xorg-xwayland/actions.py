@@ -12,9 +12,14 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-D ipv6=true \
-                            -D xvfb=false \
-                            -D xdmcp=false \
+                            -D glx=true \
+                            -D dpms=true \
+                            -D xace=true \
+                            -D xvfb=true \
+                            -D xdmcp=true \
+                            -D xinerama=true \
                             -D xcsecurity=true \
+                            -D screensaver=true \
                             -D dri3=true \
                             -D xwayland_eglstream=true \
                             -D glamor=true \
