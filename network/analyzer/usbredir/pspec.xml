@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>usbredir</Name>
+        <Homepage>https://www.spice-space.org/usbredir.html</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>USB traffic redirection protocol</Summary>
+        <Description>usbredir is the name of a network protocol for sending USB device traffic over a network connection. It is also the name of the software package offering a parsing library, a usbredirhost library and several utilities implementing this protocol.</Description>
+        <Archive sha1sum="326c504991cbbad18850d139f6247c556b14a03a" type="tarxz">https://spice-space.org/download/usbredir/usbredir-0.11.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>libusb-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>usbredir</Name>
+        <Summary>a network protocol for sending USB device traffic over a network connection.</Summary>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>libusb</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="doc">/usr/share/doc/</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/lib/libusbredirhost.so*</Path>
+            <Path fileType="data">/usr/lib/libusbredirparser.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>usbredir-devel</Name>
+        <Summary>Development files for usbredir</Summary>
+        <RuntimeDependencies>
+            <Dependency>libusb-devel</Dependency>
+            <Dependency release="current">usbredir</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-10-10</Date>
+            <Version>0.11.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
