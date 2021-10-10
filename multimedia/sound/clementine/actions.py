@@ -16,7 +16,7 @@ j = "-DCMAKE_INSTALL_PREFIX=/usr \
     "
 
 def setup():
-    shelltools.system("sed -i 's|Exec=clementine %U|Exec=clementine|g' dist/clementine.desktop")
+    #shelltools.system("sed -i 's|Exec=clementine %U|Exec=clementine|g' dist/clementine.desktop")
     cmaketools.configure(j)
 
 def build():
