@@ -53,4 +53,4 @@ def install():
     libtools.preplib()
 
 
-    pisitools.dodoc("BUGS.txt", "CREDITS.txt", "COPYING.txt", "README.txt", "README-SDL.txt", "TODO.txt", "WhatsNew.txt")
+    pisitools.dodoc("BUGS.txt", "CREDITS.txt", "README*", "README-SDL.txt", "TODO.txt", "WhatsNew.txt")
