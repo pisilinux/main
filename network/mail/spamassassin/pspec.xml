@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>spamassassin</Name>
+		<Homepage>https://spamassassin.apache.org/</Homepage>
+		<Packager>
+			<Name>Pisi Linux Community</Name>
+			<Email>admins@pisilinux.org</Email>
+		</Packager>
+		<License>Apache-2</License>
+		<IsA>server</IsA>
+		<PartOf>network.mail</PartOf>
+		<Summary>Spam detector and markup engine.</Summary>
+		<Description>Apache SpamAssassin is the Open Source anti-spam platform giving system administrators a filter to classify email and block spam (unsolicited bulk email).</Description>
+		<Archive sha1sum="26390aa8c9176c7d280252e4f01defe031373d32" type="tarbz2">
+			mirrors://apache/spamassassin/source/Mail-SpamAssassin-3.4.6.tar.bz2
+		</Archive>
+		<BuildDependencies>
+			<Dependency>re2c</Dependency>
+			<Dependency>perl</Dependency>
+			<Dependency>razor</Dependency>
+			<Dependency>gnupg</Dependency>
+			<Dependency>perl-DBI</Dependency>
+			<Dependency>openssl-devel</Dependency>
+			<Dependency>perl-Mail-DKIM</Dependency>
+			<Dependency>libsocket-devel</Dependency>
+			<Dependency>perl-NetAddr-IP</Dependency>
+			<Dependency>perl-HTML-Parser</Dependency>
+		</BuildDependencies>
+	</Source>
+
+	<Package>
+		<Name>spamassassin</Name>
+		<RuntimeDependencies>
+			<Dependency>re2c</Dependency>
+			<Dependency>perl</Dependency>
+			<Dependency>razor</Dependency>
+			<Dependency>gnupg</Dependency>
+			<Dependency>openssl</Dependency>
+			<Dependency>perl-DBI</Dependency>
+			<Dependency>libsocket</Dependency>
+			<Dependency>perl-libwww</Dependency>
+			<Dependency>perl-Net-DNS</Dependency>
+			<Dependency>perl-NET-HTTP</Dependency>
+			<Dependency>perl-Mail-SPF</Dependency>
+			<Dependency>perl-Mail-DKIM</Dependency>
+			<Dependency>perl-NetAddr-IP</Dependency>
+			<Dependency>perl-HTML-Parser</Dependency>
+			<Dependency>perl-HTTP-Message</Dependency>
+			<Dependency>perl-IO-Socket-SSL</Dependency>
+			<Dependency>perl-IO-Socket-INET6</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="config">/etc/conf.d/spamd</Path>
+			<Path fileType="config">/etc/mail/spamassassin</Path>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib/perl5</Path>
+			<Path fileType="data">/usr/lib/tmpfiles.d</Path>
+			<Path fileType="data">/usr/share/spamassassin</Path>
+			<Path fileType="data">/run/spamd</Path>
+			<Path fileType="data">/var/lib/spamd</Path>
+			<Path fileType="man">/usr/share/man/man1</Path>
+			<Path fileType="man">/usr/share/man/man3</Path>
+		</Files>
+		<AdditionalFiles>
+			<AdditionalFile target="/etc/conf.d/spamd" permission="0644" owner="root">spamd-confd</AdditionalFile>
+		</AdditionalFiles>
+		<Provides>
+			<COMAR script="package.py">System.Package</COMAR>
+			<COMAR script="service.py">System.Service</COMAR>
+		</Provides>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2021-09-23</Date>
+			<Version>3.4.6</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
+
