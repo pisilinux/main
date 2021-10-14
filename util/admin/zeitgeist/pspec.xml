@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>zeitgeist</Name>
+		<Homepage>https://zeitgeist.freedesktop.org/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>LGPL-2.1</License>
+		<IsA>library</IsA>
+		<PartOf>util.admin</PartOf>
+		<Summary>Activity logging framework.</Summary>
+		<Description>Zeitgeist is a service which logs the users's activities and events (files opened, websites visites, conversations held with other people, etc.) and makes relevant information available to other applications.</Description>
+		<Archive sha1sum="c54ca4b03f69426ffca7ffde73a571b261c403de" type="tarbz2">
+			https://gitlab.freedesktop.org/zeitgeist/zeitgeist/-/archive/v1.0.3/zeitgeist-v1.0.3.tar.bz2
+		</Archive>
+		<BuildDependencies>
+			<Dependency>dbus-devel</Dependency>
+			<Dependency>gtk3-devel</Dependency>
+			<Dependency>vala-devel</Dependency>
+			<Dependency>glib2-devel</Dependency>
+			<Dependency>sqlite-devel</Dependency>
+			<Dependency>python3-six</Dependency>
+			<Dependency>python3-devel</Dependency>
+			<Dependency>python3-rdflib</Dependency>
+			<Dependency>python3-isodate</Dependency>
+			<Dependency>json-glib-devel</Dependency>
+			<Dependency>python3-pyparsing</Dependency>
+			<Dependency>telepathy-glib-devel</Dependency>
+			<Dependency>gobject-introspection-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<Patch level='1'>Use_GenericArray_API_only.patch</Patch>
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>zeitgeist</Name>
+		<RuntimeDependencies>
+			<Dependency>gtk3</Dependency>
+			<Dependency>glib2</Dependency>
+			<Dependency>sqlite</Dependency>
+			<Dependency>python3</Dependency>
+			<Dependency>json-glib</Dependency>
+			<Dependency>dbus-python3</Dependency>
+			<Dependency>telepathy-glib</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="config">/etc/xdg</Path>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="data">/usr/share</Path>
+			<Path fileType="man">/usr/share/man</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>zeitgeist-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release='current'>zeitgeist</Dependency>
+			<Dependency>glib2-devel</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include</Path>
+			<Path fileType="library">/usr/lib/pkgconfig</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2021-10-13</Date>
+			<Version>1.0.3</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
+

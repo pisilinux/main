@@ -1,0 +1,117 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>transmission</Name>
+		<Homepage>https://transmissionbt.com/</Homepage>
+		<Packager>
+			<Name>PisiLinux Community</Name>
+			<Email>admins@pisilinux.org</Email>
+		</Packager>
+		<License>MIT</License>
+		<License>GPL-2</License>
+		<IsA>service</IsA>
+		<IsA>app:gui</IsA>
+		<IsA>app:console</IsA>
+		<PartOf>network.p2p</PartOf>
+		<Summary>A fast, easy, and free BitTorrent client.</Summary>
+		<Description>Transmission is a free, lightweight Bittorrent client. It features a simple, intuitive interface on top of an efficient backend. This package provides only daemon, web interface and command line client. If you want use Transmission with graphical interface, you should install transmission-gtk or transmission-qt.</Description>
+		<Archive sha1sum="fd6bd78cfe5a612b422a49e8193d82df2486a3c4" type="tarxz">
+			https://github.com/transmission/transmission-releases/raw/master/transmission-3.00.tar.xz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>intltool</Dependency>
+			<Dependency>curl-devel</Dependency>
+			<Dependency>gtk3-devel</Dependency>
+			<Dependency>qt5-linguist</Dependency>
+			<Dependency>openssl-devel</Dependency>
+			<Dependency>qt5-base-devel</Dependency>
+			<Dependency>xfsprogs-devel</Dependency>
+			<Dependency>libevent-devel</Dependency>
+			<Dependency>libnotify-devel</Dependency>
+			<Dependency>miniupnpc-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level="1">missing.patch</Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>transmission-cli</Name>
+		<IsA>app:console</IsA>
+		<Summary>Transmission's cli tools, web interface and daemon.</Summary>
+		<RuntimeDependencies>
+			<Dependency>zlib</Dependency>
+			<Dependency>curl</Dependency>
+			<Dependency>openssl</Dependency>
+			<Dependency>libevent</Dependency>
+			<Dependency>miniupnpc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="config">/etc</Path>
+			<Path fileType="data">/usr/share</Path>
+			<Path fileType="man">/usr/share/man</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>transmission-gtk</Name>
+		<IsA>app:gui</IsA>
+		<Summary>Transmission's GTK+ interface (default).</Summary>
+		<RuntimeDependencies>
+			<Dependency release="current">transmission-cli</Dependency>
+			<Dependency>zlib</Dependency>
+			<Dependency>curl</Dependency>
+			<Dependency>gtk3</Dependency>
+			<Dependency>glib2</Dependency>
+			<Dependency>pango</Dependency>
+			<Dependency>openssl</Dependency>
+			<Dependency>libevent</Dependency>
+			<Dependency>miniupnpc</Dependency>
+			<Dependency>libnotify</Dependency>
+			<Dependency>gdk-pixbuf</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin/transmission-gtk</Path>
+			<Path fileType="data">/usr/share/appdata/transmission-gtk.xml</Path>
+			<Path fileType="data">/usr/share/applications/transmission-gtk.desktop</Path>
+			<Path fileType="localedata">/usr/share/locale</Path>
+			<Path fileType="man">/usr/share/man/man1/transmission-gtk.1</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>transmission-qt</Name>
+		<IsA>app:gui</IsA>
+		<Summary>Transmission's Qt interface.</Summary>
+		<RuntimeDependencies>
+			<Dependency release="current">transmission-cli</Dependency>
+			<Dependency>zlib</Dependency>
+			<Dependency>curl</Dependency>
+			<Dependency>libgcc</Dependency>
+			<Dependency>openssl</Dependency>
+			<Dependency>libevent</Dependency>
+			<Dependency>qt5-base</Dependency>
+			<Dependency>miniupnpc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin/transmission-qt</Path>
+			<Path fileType="data">/usr/share/applications/transmission-qt.desktop</Path>
+			<Path fileType="man">/usr/share/man/man1/transmission-qt.1</Path>
+			<Path fileType="doc">/usr/share/doc/transmission/README-QT</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2021-10-14</Date>
+			<Version>3.00</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
+
