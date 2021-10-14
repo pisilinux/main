@@ -26,7 +26,7 @@ def setup():
 	shelltools.cd("gtk")
 	autotools.autoreconf("-fiv")
 	shelltools.cd("..")
-	autotools.rawConfigure("--prefix=/usr --force %s" % i)
+	autotools.rawConfigure("--prefix=/usr --force %s" % J)
 
 def build():
 	shelltools.cd("build")
