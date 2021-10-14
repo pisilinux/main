@@ -11,24 +11,39 @@
         <License>Copyright (c) 2005-2011, Thomas BERNARD.All rights reserved.</License>
         <!--Icon></Icon-->
         <IsA>library</IsA>
-        <Summary>miniupnpc is a UPnP Control Point. </Summary>
-        <Description>miniupnpc, the client library, enabling applications to access the services provided by an UPnP "Internet Gateway Device" present on the network. In UPnP terminology,miniupnpc is a UPnP Control Point. </Description>
-        <Archive sha1sum="f92fced1381ab0d8a6d31f75fab2c67df0c4a144" type="targz">http://miniupnp.free.fr/files/download.php?file=miniupnpc-2.1.20191224.tar.gz</Archive>
+        <Summary>miniupnpc is a UPnP Control Point.</Summary>
+        <Description>miniupnpc, the client library, enabling applications to access the services provided by an UPnP "Internet Gateway Device" present on the network. In UPnP terminology,miniupnpc is a UPnP Control Point.</Description>
+        <Archive sha1sum="0806a7524b9436b5875acd1c0f040b717ddf9d14" type="targz">http://miniupnp.free.fr/files/miniupnpc-2.2.3.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch level="1">fix_install_for_headers.patch</Patch>
+            <Patch level="1">fix_install_rules_to_account_for_BUILD_var.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
         <Name>miniupnpc</Name>
         <RuntimeDependencies>
-            <!--Dependency></Dependency-->
+            <!-- <Dependency></Dependency> -->
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/doc</Path>
         </Files>
     </Package>
-    
+
+    <Package>
+        <Name>python3-miniupnpc</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">miniupnpc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/python3.8</Path>
+        </Files>
+    </Package>
+
     <Package>
         <Name>miniupnpc-devel</Name>
         <RuntimeDependencies>
@@ -37,10 +52,18 @@
         <Files>
             <Path fileType="header">/usr/include/miniupnpc</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/cmake/miniupnpc</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2021-10-14</Date>
+            <Version>2.2.3</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2020-06-04</Date>
             <Version>2.1.20191224</Version>
