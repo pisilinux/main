@@ -9,17 +9,21 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
+j = ''.join([
+    ' --enable-vte',
+    ' --with-python-command=python3',
+    ' --disable-static '
+    ])
+
 def setup():
 	shelltools.export("PYTHON", "/usr/bin/python3")
-	autotools.configure("--enable-vte --enable-plugins --disable-static")
+	autotools.configure(j)
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+	pisitools.dosed("libtool", " -shared ", " -Wl,-O2,--as-needed -shared ")
 
 def build():
 	autotools.make()
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-#	pisitools.dodoc("AUTHORS", "ChangeLog", "HACKING", "NEWS", "README*", "THANKS", "TODO")
 
