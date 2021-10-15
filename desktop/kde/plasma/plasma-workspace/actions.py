@@ -25,4 +25,4 @@ def install():
     #set pisi-crocus-ancyrensis photos as default wallpapers
     pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breeze.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
 
-    pisitools.dodoc("COPYING", "HACKING")
+    pisitools.dodoc("LICENSES/*")
