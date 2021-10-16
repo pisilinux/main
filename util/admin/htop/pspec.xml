@@ -3,43 +3,53 @@
 <PISI>
     <Source>
         <Name>htop</Name>
-        <Homepage>https://github.com/htop-dev/htop</Homepage>
+        <Homepage>https://htop.dev/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>GPLv2</License>
+        <License>GPL-2</License>
         <Icon>htop</Icon>
         <IsA>app:console</IsA>
-        <IsA>app:gui</IsA>
-        <Summary>An interactive process viewer for Linux</Summary>
+        <Summary>An interactive process viewer for Linux.</Summary>
         <Description>htop is an interactive text-mode process viewer for Linux. It aims to be a better 'top'.</Description>
-        <Archive sha1sum="5bbd6a29b77302b5793c311e72a13b6a424a557e" type="targz">https://dl.bintray.com/htop/source/htop-3.0.1.tar.gz</Archive>
+        <Archive sha1sum="d7985915443cc4c1d3201e57e589d62cb4a337ee" type="targz">https://github.com/htop-dev/htop/archive/refs/tags/3.1.1.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>python3</Dependency>
+            <Dependency>libcap-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
             <Dependency>gettext-devel</Dependency>
+            <Dependency>libunwind-devel</Dependency>
+            <Dependency>lm_sensors-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <!--<Patch>desktop_tr.patch</Patch>-->
+            <!-- <Patch>missing.patch</Patch> -->
         </Patches>
     </Source>
 
     <Package>
         <Name>htop</Name>
         <RuntimeDependencies>
+            <Dependency>libcap</Dependency>
             <Dependency>ncurses</Dependency>
-            </RuntimeDependencies>
+            <Dependency>libunwind</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share</Path>
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/applications</Path>
-            <Path fileType="data">/usr/share/pixmaps</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2021-10-17</Date>
+            <Version>3.1.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="5">
             <Date>2020-09-11</Date>
             <Version>3.0.1</Version>
