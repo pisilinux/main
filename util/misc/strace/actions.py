@@ -9,16 +9,16 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-vif")
-    autotools.configure()
+    autotools.configure("--enable-mpers=check")
 
 def build():
     autotools.make()
 
 def check():
-    autotools.make()
+    pass
+    #autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog", "COPYING", "CREDITS", "NEWS", "README", "README-linux-ptrace",)
+    pisitools.dodoc("CREDITS", "NEWS", "README*",)
