@@ -15,12 +15,13 @@
 		<Description>
 			Music Player Daemon (MPD) is a flexible, powerful, server-side application for playing music. Through plugins and libraries it can play a variety of sound files while being controlled by its network protocol.
 		</Description>
-		<Archive sha1sum="51b069bcddd3a476fad0020cd4a253f0050bebb4" type="tarxz">
-			https://www.musicpd.org/download/mpd/0.22/mpd-0.22.11.tar.xz
+		<Archive sha1sum="128707c716591e96768e3c53cf52c0c3f2241d45" type="tarxz">
+			http://www.musicpd.org/download/mpd/0.23/mpd-0.23.tar.xz
 		</Archive>
 		<BuildDependencies>
 			<Dependency>meson</Dependency>
 			<Dependency>cmake</Dependency>
+			<Dependency>fmt-devel</Dependency>
 			<Dependency>curl-devel</Dependency>
 			<Dependency>flac-devel</Dependency>
 			<Dependency>yajl-devel</Dependency>
@@ -54,6 +55,7 @@
 			<Dependency>alsa-lib-devel</Dependency>
 			<Dependency>libshout-devel</Dependency>
 			<Dependency>liburing-devel</Dependency>
+			<Dependency>pipewire-devel</Dependency>
 			<Dependency>libmpcdec-devel</Dependency>
 			<Dependency>libgcrypt-devel</Dependency>
 			<Dependency>audiofile-devel</Dependency>
@@ -63,6 +65,7 @@
 			<Dependency>fluidsynth-devel</Dependency>
 			<Dependency>libmodplug-devel</Dependency>
 			<Dependency>libsndfile-devel</Dependency>
+			<Dependency>libopenmpt-devel</Dependency>
 			<Dependency>libmpdclient-devel</Dependency>
 			<Dependency>libsamplerate-devel</Dependency>
 			<Dependency>libchromaprint-devel</Dependency>
@@ -80,6 +83,12 @@
 			<Dependency>python3-sphinx-alabaster-theme</Dependency>
 			<Dependency>python3-sphinxcontrib-websupport</Dependency>
 		</BuildDependencies>
+		<Patches>
+			<Patch level="1">gcc_pure_fix.patch</Patch>
+			<Patch level="1">add_missing_include.patch</Patch>
+			<Patch level="1">FmtError_instead_of_FormatErrno.patch</Patch>
+			<Patch level="1">add_StoragePlugin_prefix.patch</Patch>
+		</Patches>
 	</Source>
 
 	<Package>
@@ -118,6 +127,7 @@
 			<Dependency>alsa-lib</Dependency>
 			<Dependency>libshout</Dependency>
 			<Dependency>liburing</Dependency>
+			<Dependency>pipewire</Dependency>
 			<Dependency>libmpcdec</Dependency>
 			<Dependency>libgcrypt</Dependency>
 			<Dependency>audiofile</Dependency>
@@ -128,6 +138,7 @@
 			<Dependency>fluidsynth</Dependency>
 			<Dependency>libmodplug</Dependency>
 			<Dependency>libsndfile</Dependency>
+			<Dependency>libopenmpt</Dependency>
 			<Dependency>libmpdclient</Dependency>
 			<Dependency>libsamplerate</Dependency>
 			<Dependency>libchromaprint</Dependency>
@@ -155,6 +166,13 @@
 	</Package>
 
 	<History>
+		<Update release="8">
+			<Date>2021-10-17</Date>
+			<Version>0.23</Version>
+			<Comment>Version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
 		<Update release="7">
 			<Date>2021-09-07</Date>
 			<Version>0.22.11</Version>

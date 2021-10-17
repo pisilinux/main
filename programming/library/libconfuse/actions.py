@@ -6,15 +6,10 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("./autogen.sh")
-    
-    autotools.configure("--enable-static=no \
-                         --enable-shared=yes \
-                         --enable-nls")
+    autotools.configure("--disable-static")
 
 def build():
     autotools.make()
@@ -22,4 +17,3 @@ def build():
 def install():
     autotools.install()
 
-    pisitools.dodoc("AUTHORS", "README.md", "LICENSE")

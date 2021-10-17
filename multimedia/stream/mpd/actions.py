@@ -39,7 +39,6 @@ def setup():
 	-Dfaad=enabled \
 	-Dflac=enabled \
 	-Dipv6=enabled \
-	-Dupnp=enabled \
 	-Dcurl=enabled \
 	-Dalsa=enabled \
 	-Dopus=enabled \
@@ -84,6 +83,7 @@ def setup():
 	-Dcdio_paranoia=enabled \
 	-Dsolaris_output=enabled \
 	\
+	-Dupnp=auto \
 	-Dzeroconf=auto \
 	\
 	-Dsndio=disabled \
