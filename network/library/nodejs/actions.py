@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 # WorkDir = ""
 # NoStrip = "/"
 
-#shelltools.export("JOBS", get.makeJOBS().replace("-j5", "-j2"))
+shelltools.export("JOBS", get.makeJOBS().replace("-j5", "-j2"))
 
 def setup():
     autotools.rawConfigure("--prefix=/usr \
