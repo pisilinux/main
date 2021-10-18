@@ -1,0 +1,214 @@
+From 5b42865796c6bf768d4d11e3c93dc0994d46f783 Mon Sep 17 00:00:00 2001
+From: Christian Heimes <christian@python.org>
+Date: Sat, 1 May 2021 20:53:10 +0200
+Subject: [PATCH 17/17] bpo-43998: Default to TLS 1.2 and increase cipher suite
+ security (GH-25778)
+
+The ssl module now has more secure default settings. Ciphers without forward
+secrecy or SHA-1 MAC are disabled by default. Security level 2 prohibits
+weak RSA, DH, and ECC keys with less than 112 bits of security.
+:class:`~ssl.SSLContext` defaults to minimum protocol version TLS 1.2.
+Settings are based on Hynek Schlawack's research.
+
+```
+$ openssl version
+OpenSSL 1.1.1k  FIPS 25 Mar 2021
+$ openssl ciphers -v '@SECLEVEL=2:ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES:DHE+AES:!aNULL:!eNULL:!aDSS:!SHA1:!AESCCM'
+TLS_AES_256_GCM_SHA384  TLSv1.3 Kx=any      Au=any  Enc=AESGCM(256) Mac=AEAD
+TLS_CHACHA20_POLY1305_SHA256 TLSv1.3 Kx=any      Au=any  Enc=CHACHA20/POLY1305(256) Mac=AEAD
+TLS_AES_128_GCM_SHA256  TLSv1.3 Kx=any      Au=any  Enc=AESGCM(128) Mac=AEAD
+TLS_AES_128_CCM_SHA256  TLSv1.3 Kx=any      Au=any  Enc=AESCCM(128) Mac=AEAD
+ECDHE-ECDSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AESGCM(256) Mac=AEAD
+ECDHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AESGCM(256) Mac=AEAD
+ECDHE-ECDSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AESGCM(128) Mac=AEAD
+ECDHE-RSA-AES128-GCM-SHA256 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AESGCM(128) Mac=AEAD
+ECDHE-ECDSA-CHACHA20-POLY1305 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=CHACHA20/POLY1305(256) Mac=AEAD
+ECDHE-RSA-CHACHA20-POLY1305 TLSv1.2 Kx=ECDH     Au=RSA  Enc=CHACHA20/POLY1305(256) Mac=AEAD
+ECDHE-ECDSA-AES256-SHA384 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AES(256)  Mac=SHA384
+ECDHE-RSA-AES256-SHA384 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AES(256)  Mac=SHA384
+ECDHE-ECDSA-AES128-SHA256 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=AES(128)  Mac=SHA256
+ECDHE-RSA-AES128-SHA256 TLSv1.2 Kx=ECDH     Au=RSA  Enc=AES(128)  Mac=SHA256
+DHE-RSA-AES256-GCM-SHA384 TLSv1.2 Kx=DH       Au=RSA  Enc=AESGCM(256) Mac=AEAD
+DHE-RSA-AES128-GCM-SHA256 TLSv1.2 Kx=DH       Au=RSA  Enc=AESGCM(128) Mac=AEAD
+DHE-RSA-AES256-SHA256   TLSv1.2 Kx=DH       Au=RSA  Enc=AES(256)  Mac=SHA256
+DHE-RSA-AES128-SHA256   TLSv1.2 Kx=DH       Au=RSA  Enc=AES(128)  Mac=SHA256
+```
+
+Signed-off-by: Christian Heimes <christian@python.org>
+---
+ Doc/library/ssl.rst                           |  8 ++++
+ Lib/test/test_nntplib.py                      | 24 +++++++++--
+ .../2021-05-01-13-13-40.bpo-43998.xhmWD7.rst  |  5 +++
+ Modules/_ssl.c                                | 43 ++++++++++++++++---
+ 4 files changed, 72 insertions(+), 8 deletions(-)
+ create mode 100644 Misc/NEWS.d/next/Security/2021-05-01-13-13-40.bpo-43998.xhmWD7.rst
+
+diff --git a/Doc/library/ssl.rst b/Doc/library/ssl.rst
+index a58717c3ab..f1c43ee3d8 100644
+--- a/Doc/library/ssl.rst
++++ b/Doc/library/ssl.rst
+@@ -1471,6 +1471,14 @@ to speed up repeated connections from the same clients.
+       ciphers, no ``NULL`` ciphers and no ``MD5`` ciphers (except for
+       :data:`PROTOCOL_SSLv2`).
+ 
++   .. versionchanged:: 3.9.5_p2 (Gentoo)
++
++      The default cipher suites now include only secure AES and ChaCha20
++      ciphers with forward secrecy and security level 2. RSA and DH keys with
++      less than 2048 bits and ECC keys with less than 224 bits are prohibited.
++      :data:`PROTOCOL_TLS`, :data:`PROTOCOL_TLS_CLIENT`, and
++      :data:`PROTOCOL_TLS_SERVER` use TLS 1.2 as minimum TLS version.
++
+ 
+ :class:`SSLContext` objects have the following methods and attributes:
+ 
+diff --git a/Lib/test/test_nntplib.py b/Lib/test/test_nntplib.py
+index 89a2004dfb..d27e4abae8 100644
+--- a/Lib/test/test_nntplib.py
++++ b/Lib/test/test_nntplib.py
+@@ -37,6 +37,8 @@ else:
+ 
+ class NetworkedNNTPTestsMixin:
+ 
++    ssl_context = None
++
+     def test_welcome(self):
+         welcome = self.server.getwelcome()
+         self.assertEqual(str, type(welcome))
+@@ -269,6 +271,13 @@ class NetworkedNNTPTestsMixin:
+                 return False
+             return True
+ 
++        kwargs = dict(
++            timeout=support.INTERNET_TIMEOUT,
++            usenetrc=False
++        )
++        if self.ssl_context is not None:
++            kwargs["ssl_context"] = self.ssl_context
++
+         try:
+             with self.NNTP_CLASS(self.NNTP_HOST, timeout=TIMEOUT, usenetrc=False) as server:
+                 self.assertTrue(is_connected())
+@@ -306,15 +315,21 @@ class NetworkedNNTPTests(NetworkedNNTPTestsMixin, unittest.TestCase):
+     @classmethod
+     def setUpClass(cls):
+         support.requires("network")
+-        with support.transient_internet(cls.NNTP_HOST):
++        kwargs = dict(
++            timeout=support.INTERNET_TIMEOUT,
++            usenetrc=False
++        )
++        if cls.ssl_context is not None:
++            kwargs["ssl_context"] = cls.ssl_context
++        with socket_helper.transient_internet(cls.NNTP_HOST):
+             try:
+-                cls.server = cls.NNTP_CLASS(cls.NNTP_HOST, timeout=TIMEOUT,
+-                                            usenetrc=False)
++                cls.server = cls.NNTP_CLASS(cls.NNTP_HOST, **kwargs)
+             except SSLError as ssl_err:
+                 # matches "[SSL: DH_KEY_TOO_SMALL] dh key too small"
+                 if re.search(r'(?i)KEY.TOO.SMALL', ssl_err.reason):
+                     raise unittest.SkipTest(f"{cls} got {ssl_err} connecting "
+                                             f"to {cls.NNTP_HOST!r}")
++                print(cls.NNTP_HOST)
+                 raise
+             except EOF_ERRORS:
+                 raise unittest.SkipTest(f"{cls} got EOF error on connecting "
+@@ -347,6 +362,9 @@ class NetworkedNNTP_SSLTests(NetworkedNNTPTests):
+     # Disabled as the connection will already be encrypted.
+     test_starttls = None
+ 
++    ssl_context = ssl._create_unverified_context()
++    ssl_context.set_ciphers("DEFAULT")
++    ssl_context.maximum_version = ssl.TLSVersion.TLSv1_2
+ 
+ #
+ # Non-networked tests using a local server (or something mocking it).
+diff --git a/Misc/NEWS.d/next/Security/2021-05-01-13-13-40.bpo-43998.xhmWD7.rst b/Misc/NEWS.d/next/Security/2021-05-01-13-13-40.bpo-43998.xhmWD7.rst
+new file mode 100644
+index 0000000000..6a40346128
+--- /dev/null
++++ b/Misc/NEWS.d/next/Security/2021-05-01-13-13-40.bpo-43998.xhmWD7.rst
+@@ -0,0 +1,5 @@
++The :mod:`ssl` module sets more secure cipher suites defaults. Ciphers
++without forward secrecy and with SHA-1 MAC are disabled by default. Security
++level 2 prohibits weak RSA, DH, and ECC keys with less than 112 bits of
++security. :class:`~ssl.SSLContext` defaults to minimum protocol version TLS
++1.2. Settings are based on Hynek Schlawack's research.
+diff --git a/Modules/_ssl.c b/Modules/_ssl.c
+index bc665db0d5..01a2067596 100644
+--- a/Modules/_ssl.c
++++ b/Modules/_ssl.c
+@@ -300,15 +300,27 @@ SSL_SESSION_get_ticket_lifetime_hint(const SSL_SESSION *s)
+   #ifndef PY_SSL_DEFAULT_CIPHER_STRING
+      #error "Py_SSL_DEFAULT_CIPHERS 0 needs Py_SSL_DEFAULT_CIPHER_STRING"
+   #endif
++  #ifndef PY_SSL_MIN_PROTOCOL
++    #define PY_SSL_MIN_PROTOCOL TLS1_2_VERSION
++  #endif
+ #elif PY_SSL_DEFAULT_CIPHERS == 1
+ /* Python custom selection of sensible cipher suites
+- * DEFAULT: OpenSSL's default cipher list. Since 1.0.2 the list is in sensible order.
++ * @SECLEVEL=2: security level 2 with 112 bits minimum security (e.g. 2048 bits RSA key)
++ * ECDH+*: enable ephemeral elliptic curve Diffie-Hellman
++ * DHE+*: fallback to ephemeral finite field Diffie-Hellman
++ * encryption order: AES AEAD (GCM), ChaCha AEAD, AES CBC
+  * !aNULL:!eNULL: really no NULL ciphers
+- * !MD5:!3DES:!DES:!RC4:!IDEA:!SEED: no weak or broken algorithms on old OpenSSL versions.
+  * !aDSS: no authentication with discrete logarithm DSA algorithm
+- * !SRP:!PSK: no secure remote password or pre-shared key authentication
++ * !SHA1: no weak SHA1 MAC
++ * !AESCCM: no CCM mode, it's uncommon and slow
++ *
++ * Based on Hynek's excellent blog post (update 2021-02-11)
++ * https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
+  */
+-  #define PY_SSL_DEFAULT_CIPHER_STRING "DEFAULT:!aNULL:!eNULL:!MD5:!3DES:!DES:!RC4:!IDEA:!SEED:!aDSS:!SRP:!PSK"
++  #define PY_SSL_DEFAULT_CIPHER_STRING "@SECLEVEL=2:ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES:DHE+AES:!aNULL:!eNULL:!aDSS:!SHA1:!AESCCM"
++  #ifndef PY_SSL_MIN_PROTOCOL
++    #define PY_SSL_MIN_PROTOCOL TLS1_2_VERSION
++  #endif
+ #elif PY_SSL_DEFAULT_CIPHERS == 2
+ /* Ignored in SSLContext constructor, only used to as _ssl.DEFAULT_CIPHER_STRING */
+   #define PY_SSL_DEFAULT_CIPHER_STRING SSL_DEFAULT_CIPHER_LIST
+@@ -3249,8 +3261,25 @@ _ssl__SSLContext_impl(PyTypeObject *type, int proto_version)
+         ERR_clear_error();
+         PyErr_SetString(PySSLErrorObject,
+                         "No cipher can be selected.");
+-        return NULL;
++        goto error;
++    }
++#ifdef PY_SSL_MIN_PROTOCOL
++    switch(proto_version) {
++    case PY_SSL_VERSION_TLS:
++    case PY_SSL_VERSION_TLS_CLIENT:
++    case PY_SSL_VERSION_TLS_SERVER:
++        result = SSL_CTX_set_min_proto_version(ctx, PY_SSL_MIN_PROTOCOL);
++        if (result == 0) {
++            PyErr_Format(PyExc_ValueError,
++                         "Failed to set minimum protocol 0x%x",
++                          PY_SSL_MIN_PROTOCOL);
++            goto error;
++        }
++        break;
++    default:
++        break;
+     }
++#endif
+ 
+ #if defined(SSL_MODE_RELEASE_BUFFERS)
+     /* Set SSL_MODE_RELEASE_BUFFERS. This potentially greatly reduces memory
+@@ -3303,6 +3332,10 @@ _ssl__SSLContext_impl(PyTypeObject *type, int proto_version)
+ #endif
+ 
+     return (PyObject *)self;
++  error:
++    Py_XDECREF(self);
++    ERR_clear_error();
++    return NULL;
+ }
+ 
+ static int
+-- 
+2.32.0
+

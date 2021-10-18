@@ -1,0 +1,53 @@
+From dbb695267eb05999d2af3ce85200c3ebdf53b1e5 Mon Sep 17 00:00:00 2001
+From: Mike Gilbert <floppym@gentoo.org>
+Date: Fri, 5 Jan 2018 13:32:45 -0500
+Subject: [PATCH 04/16] setup.py: exit with non-zero status on failure
+
+https://bugs.gentoo.org/show_bug.cgi?id=281968
+https://bugs.python.org/issue6731
+---
+ setup.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/setup.py b/setup.py
+index 53591bc1e6..2b362029ac 100644
+--- a/setup.py
++++ b/setup.py
+@@ -86,6 +86,7 @@ Programming Language :: Python
+ Topic :: Software Development
+ """
+ 
++exit_status = 0
+ 
+ # Set common compiler and linker flags derived from the Makefile,
+ # reserved for building the interpreter and the stdlib modules.
+@@ -430,7 +431,10 @@ class PyBuildExt(build_ext):
+             print_three_column([ext.name for ext in mods_disabled])
+             print()
+ 
++        global exit_status
++
+         if self.failed:
++            exit_status = 1
+             failed = self.failed[:]
+             print()
+             print("Failed to build these modules:")
+@@ -438,6 +442,7 @@ class PyBuildExt(build_ext):
+             print()
+ 
+         if self.failed_on_import:
++            exit_status = 1
+             failed = self.failed_on_import[:]
+             print()
+             print("Following modules built successfully"
+@@ -2415,6 +2420,7 @@ def main():
+           scripts = ["Tools/scripts/pydoc3", "Tools/scripts/idle3",
+                      "Tools/scripts/2to3"]
+         )
++    sys.exit(exit_status)
+ 
+ # --install-platlib
+ if __name__ == '__main__':
+-- 
+2.33.0
+

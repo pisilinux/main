@@ -1,0 +1,81 @@
+From cb8a5266fd6cef5f523f64f95905d684766c68de Mon Sep 17 00:00:00 2001
+From: Mike Gilbert <floppym@gentoo.org>
+Date: Fri, 5 Jan 2018 13:28:45 -0500
+Subject: [PATCH 01/16] Install libpythonX.Y.a in /usr/lib instead of
+ /usr/lib/pythonX.Y/config
+
+https://bugs.gentoo.org/show_bug.cgi?id=252372
+https://bugs.python.org/issue6103
+---
+ Makefile.pre.in          | 4 ++--
+ Misc/python-config.in    | 6 ------
+ Misc/python-config.sh.in | 6 +-----
+ Modules/makesetup        | 2 +-
+ 4 files changed, 4 insertions(+), 14 deletions(-)
+
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index 7e381283fe..37cbb02890 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -1582,9 +1582,9 @@ libainstall:	@DEF_MAKE_RULE@ python-config
+ 	@if test -d $(LIBRARY); then :; else \
+ 		if test "$(PYTHONFRAMEWORKDIR)" = no-framework; then \
+ 			if test "$(SHLIB_SUFFIX)" = .dll; then \
+-				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBPL) ; \
++				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBDIR) ; \
+ 			else \
+-				$(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(LIBPL)/$(LIBRARY) ; \
++				$(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(LIBDIR)/$(LIBRARY) ; \
+ 			fi; \
+ 		else \
+ 			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
+diff --git a/Misc/python-config.in b/Misc/python-config.in
+index 727c4a8682..bab60cf2d1 100644
+--- a/Misc/python-config.in
++++ b/Misc/python-config.in
+@@ -56,12 +56,6 @@ for opt in opt_flags:
+             if libpython:
+                 libs.append(libpython)
+         libs.extend(getvar('LIBS').split() + getvar('SYSLIBS').split())
+-
+-        # add the prefix/lib/pythonX.Y/config dir, but only if there is no
+-        # shared library in prefix/lib/.
+-        if opt == '--ldflags':
+-            if not getvar('Py_ENABLE_SHARED'):
+-                libs.insert(0, '-L' + getvar('LIBPL'))
+         print(' '.join(libs))
+ 
+     elif opt == '--extension-suffix':
+diff --git a/Misc/python-config.sh.in b/Misc/python-config.sh.in
+index 2602fe24c0..8ef19cade3 100644
+--- a/Misc/python-config.sh.in
++++ b/Misc/python-config.sh.in
+@@ -97,11 +97,7 @@ do
+             echo "$LIBS"
+         ;;
+         --ldflags)
+-            LIBPLUSED=
+-            if [ "$PY_ENABLE_SHARED" = "0" ] ; then
+-                LIBPLUSED="-L$LIBPL"
+-            fi
+-            echo "$LIBPLUSED -L$libdir $LIBS"
++            echo "-L$libdir $LIBS"
+         ;;
+         --extension-suffix)
+             echo "$SO"
+diff --git a/Modules/makesetup b/Modules/makesetup
+index fefe3fd129..ec7f2c098b 100755
+--- a/Modules/makesetup
++++ b/Modules/makesetup
+@@ -92,7 +92,7 @@ CYGWIN*) if test $libdir = .
+ 	 then
+ 	 	ExtraLibDir=.
+ 	 else
+-	 	ExtraLibDir='$(LIBPL)'
++	 	ExtraLibDir='$(LIBDIR)'
+ 	 fi
+ 	 ExtraLibs="-L$ExtraLibDir -lpython\$(LDVERSION)";;
+ esac
+-- 
+2.33.0
+

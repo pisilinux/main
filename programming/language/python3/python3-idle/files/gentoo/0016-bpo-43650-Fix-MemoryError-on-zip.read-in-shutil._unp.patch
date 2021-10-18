@@ -1,0 +1,61 @@
+From 5a5335aba36f6c4204ba65faa8b2e67025c1bd4a Mon Sep 17 00:00:00 2001
+From: "Miss Islington (bot)"
+ <31488909+miss-islington@users.noreply.github.com>
+Date: Mon, 17 May 2021 10:34:39 -0700
+Subject: [PATCH 16/17] bpo-43650: Fix MemoryError on zip.read in
+ shutil._unpack_zipfile for large files (GH-25058)
+
+`shutil.unpack_archive()` tries to read the whole file into memory, making no use of any kind of smaller buffer. Process crashes for really large files: I.e. archive: ~1.7G, unpacked: ~10G. Before the crash it can easily take away all available RAM on smaller systems. Had to pull the code form `zipfile.Zipfile.extractall()` to fix this
+
+Automerge-Triggered-By: GH:gpshead
+(cherry picked from commit f32c7950e0077b6d9a8e217c2796fc582f18ca08)
+
+Co-authored-by: Igor Bolshakov <ibolsch@gmail.com>
+---
+ Lib/shutil.py                                    | 16 ++++++----------
+ .../2021-03-29-00-23-30.bpo-43650.v01tic.rst     |  2 ++
+ 2 files changed, 8 insertions(+), 10 deletions(-)
+ create mode 100644 Misc/NEWS.d/next/Library/2021-03-29-00-23-30.bpo-43650.v01tic.rst
+
+diff --git a/Lib/shutil.py b/Lib/shutil.py
+index fdadb83800..aaf76c651b 100644
+--- a/Lib/shutil.py
++++ b/Lib/shutil.py
+@@ -1144,20 +1144,16 @@ def _unpack_zipfile(filename, extract_dir):
+             if name.startswith('/') or '..' in name:
+                 continue
+ 
+-            target = os.path.join(extract_dir, *name.split('/'))
+-            if not target:
++            targetpath = os.path.join(extract_dir, *name.split('/'))
++            if not targetpath:
+                 continue
+ 
+-            _ensure_directory(target)
++            _ensure_directory(targetpath)
+             if not name.endswith('/'):
+                 # file
+-                data = zip.read(info.filename)
+-                f = open(target, 'wb')
+-                try:
+-                    f.write(data)
+-                finally:
+-                    f.close()
+-                    del data
++                with zip.open(name, 'r') as source, \
++                        open(targetpath, 'wb') as target:
++                    copyfileobj(source, target)
+     finally:
+         zip.close()
+ 
+diff --git a/Misc/NEWS.d/next/Library/2021-03-29-00-23-30.bpo-43650.v01tic.rst b/Misc/NEWS.d/next/Library/2021-03-29-00-23-30.bpo-43650.v01tic.rst
+new file mode 100644
+index 0000000000..a2ea4a4800
+--- /dev/null
++++ b/Misc/NEWS.d/next/Library/2021-03-29-00-23-30.bpo-43650.v01tic.rst
+@@ -0,0 +1,2 @@
++Fix :exc:`MemoryError` in :func:`shutil.unpack_archive` which fails inside
++:func:`shutil._unpack_zipfile` on large files. Patch by Igor Bolshakov.
+-- 
+2.32.0
+
