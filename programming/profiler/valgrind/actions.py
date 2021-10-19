@@ -10,12 +10,16 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    autotools.autoreconf("-ifv")
     shelltools.export("CFLAGS", get.CFLAGS().replace("-fstack-protector",""))
     shelltools.export("CPPFLAGS", get.CXXFLAGS().replace("-fstack-protector",""))
-    autotools.configure("--without-mpicc")
+    autotools.configure("--without-mpicc --libexecdir=/usr/lib")
 
 def build():
     autotools.make()
+
+def check():
+    autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
