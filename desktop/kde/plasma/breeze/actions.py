@@ -7,8 +7,10 @@
 from pisi.actionsapi import kde5
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("sed -i 's|5.23.0|5.23.1|g' CMakeLists.txt")
     kde5.configure()
 
 def build():
