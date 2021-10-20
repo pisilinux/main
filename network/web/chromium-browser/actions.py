@@ -23,11 +23,11 @@ def setup():
     
     shelltools.system("sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py")
 
-    for LIB in ["ffmpeg", "freetype", "flac", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg_turbo", "libpng", "libwebp", "libxml", "libxslt", "opus", "snappy", "zlib"]:
-        shelltools.system('find "third_party/%s" -type f  \! -path "third_party/%s/chromium/*" \! -path "*third_party/%s/google/*" \! -path "third_party/harfbuzz-ng/utils/hb_scoped.h" \! -regex ".*\.\(gn\|gni\|isolate\)" -delete' %(LIB, LIB, LIB))
+    #for LIB in ["ffmpeg", "freetype", "flac", "fontconfig", "harfbuzz-ng", "libdrm", "libjpeg_turbo", "libpng", "libwebp", "libxml", "libxslt", "opus", "snappy", "zlib"]:
+        #shelltools.system('find "third_party/%s" -type f  \! -path "third_party/%s/chromium/*" \! -path "*third_party/%s/google/*" \! -path "third_party/harfbuzz-ng/utils/hb_scoped.h" \! -regex ".*\.\(gn\|gni\|isolate\)" -delete' %(LIB, LIB, LIB))
 	
 	
-    shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries ffmpeg freetype flac fontconfig harfbuzz-ng libdrm libjpeg libpng libwebp libxml libxslt opus snappy zlib")
+    #shelltools.system("build/linux/unbundle/replace_gn_files.py --system-libraries ffmpeg freetype flac fontconfig harfbuzz-ng libdrm libjpeg libpng libwebp libxml libxslt opus snappy zlib")
     
     shelltools.system("sed -i -e 's/\<xmlMalloc\>/malloc/' -e 's/\<xmlFree\>/free/' \
                        third_party/blink/renderer/core/xml/*.cc \
@@ -41,7 +41,7 @@ def setup():
            enable_nacl_nonsfi=false \
            rtc_use_pipewire=true \
            use_custom_libcxx=true \
-           clang_use_chrome_plugins=false \
+           clang_use_chrome_plugins=true \
            is_official_build=true \
            fieldtrial_testing_like_official_build=true \
            clang_use_chrome_plugins=false \
@@ -65,9 +65,8 @@ def setup():
            closure_compile=false \
            symbol_level=0 \
            use_lld=true \
+           thin_lto_enable_optimizations = true \
            chrome_pgo_phase=2 \
-           use_thin_lto=false \
-           is_cfi=false \
            enable_mse_mpeg2ts_stream_parser=true \
            enable_platform_dolby_vision=true \
            enable_platform_mpeg_h_audio=true \
@@ -75,9 +74,7 @@ def setup():
            enable_platform_hevc=true \
            use_aura=true \
            use_ozone=true \
-           use_dbus=true \
-           ozone_auto_platforms=false \
-           ozone_platform_headless=true'
+           use_dbus=true'
 
            
     
@@ -114,7 +111,7 @@ def install():
 
     #should be checked should for the missing folder "out/Release"
     for vla in ["*.pak", "*.json", "chrome", "locales", "resources", "icudtl.dat", "mksnapshot", "chromedriver", "snapshot_blob.bin", "character_data_generator", \
-			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_irt_x86_64.nexe"]:
+			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_irt_x86_64.nexe", "chrome_crashpad_handler"]:
         pisitools.insinto("/usr/lib/chromium-browser", "%s" % vla)
 	
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
