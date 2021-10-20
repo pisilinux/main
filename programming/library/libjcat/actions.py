@@ -19,4 +19,7 @@ def build():
 def install():
     mesontools.install()
     
+    pisitools.removeDir("/usr/libexec/installed-tests")
+    pisitools.removeDir("/usr/share/installed-tests")
+    
     pisitools.dodoc("LICENSE", "NEWS", "README*")
