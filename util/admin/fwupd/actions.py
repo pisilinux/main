@@ -8,24 +8,24 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    
-    shelltools.system("meson .. --prefix=/usr --sysconfdir=/etc --localstatedir=/var -Dsystemd=false -Dconsolekit=true -Dplugin_uefi_labels=false -Dplugin_thunderbolt=false -Dgtkdoc=false -Dman=false")
+    mesontools.configure("--localstatedir=/var \
+                                -Delogind=true \
+                                -Dsystemd=false \
+                                -Dconsolekit=false \
+                                -Dplugin_thunderbolt=false \
+                                -Dgtkdoc=false \
+                                -Dman=false")
 
 def build():
-    shelltools.cd("build")
-    
-    shelltools.system("ninja")
+    mesontools.build()
     
 
 def install():
-    shelltools.cd("build")
+    mesontools.install()
     
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-
-    #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
+    pisitools.dodoc("AUTHORS", "COPYING", "README*")
