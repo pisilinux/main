@@ -54,6 +54,7 @@ def setup():
                         --enable-ext-wiki-publisher       \
                         --enable-ext-numbertext           \
                         --enable-ext-nlpsolver            \
+                        --disable-fetch-external          \
                         --with-help                       \
                         --with-myspell-dicts              \
                         --with-java                       \
@@ -108,13 +109,16 @@ def setup():
                         --without-system-firebird         \
                         --without-system-libcmis          \
                         --without-system-orcus            \
-                        --with-jdk-home=/usr/lib/jvm/java-13-openjdk \
+                        --with-jdk-home=/usr/lib/jvm/java-openjdk \
                         --with-external-tar=external/tarballs       \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
                         --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4            \
                         --with-parallelism=%s' % (langall, jobs.replace("-j","")))
 
 def build():
+    shelltools.system("sed -i 's/.PHONY : check-if-root/.PHONY : /g' Makefile")
+    shelltools.system("sed -i 's/bootstrap: check-if-root/bootstrap: /g' Makefile")
+    shelltools.system("touch src.downloaded")
     autotools.make("build-nocheck")
 
 def install():
