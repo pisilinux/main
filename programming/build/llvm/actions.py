@@ -26,6 +26,8 @@ def setup():
     pisitools.ldflags.add("-fuse-ld=lld")
     pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
     pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
+    pisitools.cflags.add("-mllvm -polly")
+    pisitools.cxxflags.add("-mllvm -polly")
     shelltools.export("CC", "clang")
     shelltools.export("CXX", "clang++")
     shelltools.export("AR", "llvm-ar")
@@ -87,6 +89,7 @@ def setup():
                           -DLLVM_ENABLE_EH=ON \
                           -DLLVM_BUILD_LLVM_DYLIB=ON \
                           -DLLVM_LINK_LLVM_DYLIB=ON \
+                          -DLLVM_ENABLE_LTO=Thin \
                           -DLLDB_USE_SYSTEM_SIX=1 \
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
