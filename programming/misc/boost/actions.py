@@ -34,7 +34,7 @@ def build():
                        runtime-link=shared \
                        link=shared,static \
                        toolset=gcc \
-                       python=3.8 \
+                       python=3.9 \
                        cflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
                        cxxflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
                        --layout=system \
@@ -57,8 +57,8 @@ def install():
     pisitools.dosym("/usr/lib/libboost_python38.so.1.75.0", "/usr/lib/libboost_python3.so")
 
     shelltools.touch("__init__.py")
-    pisitools.insinto("/usr/lib/python3.8/site-packages/openmpi/boost", "__init__.py")
+    pisitools.insinto("/usr/lib/python3.9/site-packages/openmpi/boost", "__init__.py")
 
-    pisitools.domove("/usr/lib/boost-python3.8/mpi.so", "/usr/lib/python3.8/site-packages/boost/")
+    pisitools.domove("/usr/lib/boost-python3.9/mpi.so", "/usr/lib/python3.9/site-packages/boost/")
 
-    pisitools.removeDir("/usr/lib/boost-python3.8")
+    pisitools.removeDir("/usr/lib/boost-python3.9")
