@@ -54,7 +54,7 @@ def install():
     shelltools.cd("..")
     
     # some packages need this library as : libboost_python3.so
-    pisitools.dosym("/usr/lib/libboost_python38.so.1.75.0", "/usr/lib/libboost_python3.so")
+    pisitools.dosym("/usr/lib/libboost_python39.so.1.77.0", "/usr/lib/libboost_python3.so")
 
     shelltools.touch("__init__.py")
     pisitools.insinto("/usr/lib/python3.9/site-packages/openmpi/boost", "__init__.py")
