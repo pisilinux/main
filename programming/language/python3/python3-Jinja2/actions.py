@@ -15,8 +15,8 @@ examples = "%s/%s/examples" % (get.docDIR(), get.srcNAME())
 def build():
     pythonmodules.compile(pyVer="3")
     # build documentation
-    shelltools.cd("docs")
-    autotools.make("html")
+    #shelltools.cd("docs")
+    autotools.make("-C docs html PYTHONPATH=$(pwd)/src SPHINXBUILD=sphinx-build ")
 
 def install():
     pythonmodules.install(pyVer="3")

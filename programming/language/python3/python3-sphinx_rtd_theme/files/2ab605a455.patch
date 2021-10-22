@@ -1,0 +1,40 @@
+From 2ab605a455960523bf56bb305e254db3ebc5d00c Mon Sep 17 00:00:00 2001
+From: Aaron Carlisle <carlisle.b3d@gmail.com>
+Date: Tue, 13 Jul 2021 05:16:47 -0400
+Subject: [PATCH] Tests: Fix deprecation warning with new sphinx versions
+ (#1105)
+
+* Tests: Fix deprecation warning with new sphinx versions
+
+These builders where split in sphinx and the old import path will be removed in the upcoming Sphinx 4 release.
+
+This patch requires sphinx 2 so this will be committed into the v2 release.
+
+* Fix imports
+
+* Use try/except for backwards compatibility
+---
+ tests/test_builders.py | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/tests/test_builders.py b/tests/test_builders.py
+index ce8fb3cc1..d3d3c51b7 100644
+--- a/tests/test_builders.py
++++ b/tests/test_builders.py
+@@ -3,7 +3,15 @@
+ import pytest
+ import sphinx
+ from sphinx import addnodes
+-from sphinx.builders.html import SingleFileHTMLBuilder, DirectoryHTMLBuilder
++try:
++    # Available from Sphinx 2.0
++    from sphinx.builders.dirhtml import DirectoryHTMLBuilder
++    from sphinx.builders.singlehtml import SingleFileHTMLBuilder
++except ImportError:
++    from sphinx.builders.html import (
++        DirectoryHTMLBuilder,
++        SingleFileHTMLBuilder,
++    )
+ 
+ from .util import build_all
+ 

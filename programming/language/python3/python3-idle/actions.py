@@ -42,13 +42,13 @@ def install():
     
     shelltools.makedirs("%s/usr" % get.installDIR())
     
-    pisitools.domove("/temp/lib/python3.8/tkinter", "/usr/lib/python3.8")
-    pisitools.domove("/temp/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.so", "/usr/lib/python3.8/lib-dynload")
-    pisitools.domove("/temp/lib/python3.8/turtledemo", "/usr/lib/python3.8")
+    pisitools.domove("/temp/lib/python3.9/tkinter", "/usr/lib/python3.9")
+    pisitools.domove("/temp/lib/python3.9/lib-dynload/_tkinter.cpython-39-x86_64-linux-gnu.so", "/usr/lib/python3.9/lib-dynload")
+    pisitools.domove("/temp/lib/python3.9/turtledemo", "/usr/lib/python3.9")
     pisitools.domove("/temp/bin/idle3*", "/usr/bin/")
-    pisitools.domove("/temp/lib/python3.8/idlelib", "/usr/lib/python3.8")
+    pisitools.domove("/temp/lib/python3.9/idlelib", "/usr/lib/python3.9")
     
-    shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.8" % get.installDIR())
+    shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.9" % get.installDIR())
     
     pisitools.removeDir("/temp")
     #pisitools.remove("/usr/bin/2to3")
