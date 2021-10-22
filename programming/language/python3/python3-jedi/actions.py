@@ -17,7 +17,7 @@ def setup():
     # and copy the header files to the corresponding path
     for files in ["../typeshed-jedi_v0.16.0/*"]:
         shelltools.copy("%s" % files,"jedi/third_party/typeshed")
-    for files in ["../django-stubs-1.5.0/*"]:
+    for files in ["../django-stubs-1.7.0/*"]:
         shelltools.copy("%s" % files,"jedi/third_party/django-stubs")
 
 def build():
