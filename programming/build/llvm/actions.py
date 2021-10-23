@@ -89,7 +89,6 @@ def setup():
                           -DLLVM_ENABLE_EH=ON \
                           -DLLVM_BUILD_LLVM_DYLIB=ON \
                           -DLLVM_LINK_LLVM_DYLIB=ON \
-                          -DLLVM_ENABLE_LTO=Thin \
                           -DLLDB_USE_SYSTEM_SIX=1 \
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
