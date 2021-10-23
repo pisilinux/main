@@ -19,4 +19,4 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS","COPYING*")
+    pisitools.dodoc("AUTHORS", "COPYING*")
