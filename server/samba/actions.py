@@ -62,7 +62,7 @@ def install():
     shelltools.system("install -d %s/usr/lib/cups/backend" % get.installDIR())
     pisitools.dosym("/usr/bin/smbspool", "/usr/lib/cups/backend/smb")
 
-    pisitools.remove("/usr/lib/python3.8/site-packages/_tdb_text.py")
-    pisitools.remove("/usr/lib/python3.8/site-packages/tdb.cpython-38-x86_64-linux-gnu.so")
-    pisitools.remove("/usr/lib/python3.8/site-packages/tevent.py")
-    pisitools.remove("/usr/lib/python3.8/site-packages/_tevent.cpython-38-x86_64-linux-gnu.so")
+    pisitools.remove("/usr/lib/python3.9/site-packages/_tdb_text.py")
+    pisitools.remove("/usr/lib/python3.9/site-packages/tdb.cpython-39-x86_64-linux-gnu.so")
+    pisitools.remove("/usr/lib/python3.9/site-packages/tevent.py")
+    pisitools.remove("/usr/lib/python3.9/site-packages/_tevent.cpython-39-x86_64-linux-gnu.so")
