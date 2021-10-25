@@ -25,7 +25,7 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    cmaketools.make()
+    cmaketools.make("-j2")
 
 def install():
     shelltools.cd("build")
