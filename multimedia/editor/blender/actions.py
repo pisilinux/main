@@ -34,11 +34,11 @@ def setup():
                       -DWITH_GAMEENGINE=ON \
                       -DWITH_PYTHON_INSTALL=OFF \
                       -DWITH_MOD_OCEANSIM=ON \
-                      -DPYTHON_VERSION=3.8 \
+                      -DPYTHON_VERSION=3.9 \
                       -DPYTHON_LIBPATH=/usr/lib \
-                      -DPYTHON_LIBRARY=python3.8 \
-                      -DPYTHON_INCLUDE_DIRS=/usr/include/python3.8 \
-                      -DPYTHON_NUMPY_INCLUDE_DIRS=/usr/lib/python3.8/site-packages/numpy/core/include \
+                      -DPYTHON_LIBRARY=python3.9 \
+                      -DPYTHON_INCLUDE_DIRS=/usr/include/python3.9 \
+                      -DPYTHON_NUMPY_INCLUDE_DIRS=/usr/lib/python3.9/site-packages/numpy/core/include \
                       -DWITH_CYCLES_EMBREE=OFF \
                       -DWITH_CODEC_SNDFILE=ON " % get.srcVERSION())
 
