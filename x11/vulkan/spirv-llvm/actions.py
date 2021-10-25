@@ -19,6 +19,7 @@ def setup():
                           -DLLVM_SPIRV_BUILD_EXTERNAL=YES \
                           -DLLVM_INCLUDE_TESTS=ON \
                           -DLLVM_EXTERNAL_LIT=/usr/bin/lit \
+                          -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/ \
                           %s \
                           -Wno-dev" %tools)
 
