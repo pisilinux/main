@@ -16,10 +16,10 @@ def setup():
      shelltools.cd("build")
      cmaketools.configure("-DUSE_QT=0  \
                            -DUSE_PYTHON=ON \
-                           -DPYTHON_VERSION=3.8 \
+                           -DPYTHON_VERSION=3.9 \
                            -DCMAKE_INSTALL_PREFIX=/usr \
                            -DCMAKE_INSTALL_LIBDIR=lib \
-                           -DPYLIB_INSTALL_DIR=lib/python3.8/site-packages \
+                           -DPYLIB_INSTALL_DIR=lib/python3.9/site-packages \
                            -DUSE_OCIO= OFF \
                            -DOpenGL_GL_PREFERENCE=GLVND \
                            -DUSE_OPENSSL:BOOL=TRUE \
