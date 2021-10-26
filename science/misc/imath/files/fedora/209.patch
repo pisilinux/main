@@ -1,0 +1,538 @@
+From 814a3b00fe6e6d9b52cd95d8a348b2ce632be168 Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Tue, 7 Sep 2021 12:46:27 -0400
+Subject: [PATCH 1/6] Successor/predecessor functions use isnan() and isinf()
+
+isnan() and isinf() should more robust across different architectures
+than testing bit patterns.
+
+Also, the unions should use uint32_t/uint64_t since they're guaranteed
+to be the appropriate size.
+
+Signed-off-by: Cary Phillips <cary@ilm.com>
+---
+ src/Imath/ImathFun.cpp    | 10 +++++-----
+ src/ImathTest/testFun.cpp |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/Imath/ImathFun.cpp b/src/Imath/ImathFun.cpp
+index da4af12..7479936 100644
+--- a/src/Imath/ImathFun.cpp
++++ b/src/Imath/ImathFun.cpp
+@@ -13,11 +13,11 @@ succf (float f) IMATH_NOEXCEPT
+     union
+     {
+         float f;
+-        unsigned int i;
++        uint32_t i;
+     } u;
+     u.f = f;
+ 
+-    if ((u.i & 0x7f800000) == 0x7f800000)
++    if (isinf(f) || isnan (f))
+     {
+         // Nan or infinity; don't change value.
+     }
+@@ -51,11 +51,11 @@ predf (float f) IMATH_NOEXCEPT
+     union
+     {
+         float f;
+-        unsigned int i;
++        uint32_t i;
+     } u;
+     u.f = f;
+ 
+-    if ((u.i & 0x7f800000) == 0x7f800000)
++    if (isinf(f) || isnan (f))
+     {
+         // Nan or infinity; don't change value.
+     }
+@@ -93,7 +93,7 @@ succd (double d) IMATH_NOEXCEPT
+     } u;
+     u.d = d;
+ 
+-    if ((u.i & 0x7ff0000000000000LL) == 0x7ff0000000000000LL)
++    if (isinf(d) || isnan (d))
+     {
+         // Nan or infinity; don't change value.
+     }
+diff --git a/src/ImathTest/testFun.cpp b/src/ImathTest/testFun.cpp
+index 8b04f69..31f965c 100644
+--- a/src/ImathTest/testFun.cpp
++++ b/src/ImathTest/testFun.cpp
+@@ -244,7 +244,7 @@ testFun()
+     testf (7);
+     testf (0.7);
+ 
+-    union {float f; int i;} u;
++    union {float f; uint32_t i;} u;
+     u.i = 0x7f800000; //  inf
+     testf (u.f, false);
+     u.i = 0xff800000; // -inf
+@@ -264,7 +264,7 @@ testFun()
+     testd (7);
+     testd (0.7);
+ 
+-    union {double d; Int64 i;} v;
++    union {double d; uint64_t i;} v;
+     v.i = 0x7ff0000000000000ULL; //  inf
+     testd (v.d, false);
+     v.i = 0xfff0000000000000ULL; // -inf
+
+From fec07ba4bea34620f75fafc3d9a841f9fa4e4399 Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Tue, 7 Sep 2021 16:34:48 -0400
+Subject: [PATCH 2/6] Add debugging info to testf()/testd()
+
+Signed-off-by: Cary Phillips <cary@ilm.com>
+---
+ src/ImathTest/testFun.cpp | 58 +++++++++++++++++++++++++--------------
+ 1 file changed, 38 insertions(+), 20 deletions(-)
+
+diff --git a/src/ImathTest/testFun.cpp b/src/ImathTest/testFun.cpp
+index 31f965c..64dc06b 100644
+--- a/src/ImathTest/testFun.cpp
++++ b/src/ImathTest/testFun.cpp
+@@ -19,17 +19,12 @@
+ 
+ using namespace std;
+ 
+-#if ULONG_MAX == 18446744073709551615LU
+-typedef long unsigned int Int64;
+-#else
+-    typedef long long unsigned int Int64;
+-#endif
+-
+ #if __cplusplus < 202002L
+     template <typename To, typename From>
+     static inline To
+     bit_cast (From from)
+     {
++#warning "using custom bit_cast"
+         static_assert (sizeof (From) == sizeof (To), "Type sizes do not match");
+         union
+         {
+@@ -51,11 +46,17 @@ testf (float f, bool changeExpected = true)
+     float spf = IMATH_INTERNAL_NAMESPACE::succf (IMATH_INTERNAL_NAMESPACE::predf (f));
+     float psf = IMATH_INTERNAL_NAMESPACE::predf (IMATH_INTERNAL_NAMESPACE::succf (f));
+ 
+-    printf ("f %.9g\n", f);
+-    printf ("sf %.9g\n", sf);
+-    printf ("pf %.9g\n", pf);
+-    printf ("spf %.9g\n", spf);
+-    printf ("psf %.9g\n", psf);
++    union {float f; uint32_t i;} u;
++    u.f = f;
++    printf ("f %.9g %x\n", f, u.i);
++    u.f = sf;
++    printf ("sf %.9g %x\n", sf, u.i);
++    u.f = pf;
++    printf ("pf %.9g %x\n", pf, u.i);
++    u.f = spf;
++    printf ("spf %.9g %x\n", spf, u.i);
++    u.f = psf;
++    printf ("psf %.9g %x\n", psf, u.i);
+ 
+     fflush (stdout);
+ 
+@@ -67,8 +68,13 @@ testf (float f, bool changeExpected = true)
+     else
+     {
+         // No bit change expected if input was inf or NaN
+-        assert (bit_cast<unsigned> (pf) == bit_cast<unsigned> (f));
+-        assert (bit_cast<unsigned> (sf) == bit_cast<unsigned> (f));
++        uint32_t bc_f = bit_cast<uint32_t> (f);
++        uint32_t bc_pf = bit_cast<uint32_t> (pf);
++        uint32_t bc_sf = bit_cast<uint32_t> (sf);
++        printf ("no change expected: f=%x pf=%x sf=%x\n", bc_f, bc_pf, bc_sf);
++        
++        assert (bit_cast<uint32_t> (pf) == bit_cast<uint32_t> (f));
++        assert (bit_cast<uint32_t> (sf) == bit_cast<uint32_t> (f));
+     }
+ }
+ 
+@@ -82,11 +88,18 @@ testd (double d, bool changeExpected = true)
+     double spd = IMATH_INTERNAL_NAMESPACE::succd (IMATH_INTERNAL_NAMESPACE::predd (d));
+     double psd = IMATH_INTERNAL_NAMESPACE::predd (IMATH_INTERNAL_NAMESPACE::succd (d));
+ 
+-    printf ("d %.18lg\n", d);
+-    printf ("sd %.18lg\n", sd);
+-    printf ("pd %.18lg\n", pd);
+-    printf ("spd %.18lg\n", spd);
+-    printf ("psd %.18lg\n", psd);
++    union {double d; uint64_t i;} u;
++
++    u.d = d;
++    printf ("d %.18lg %lx\n", d, u.i);
++    u.d = sd;
++    printf ("sd %.18lg %lx\n", sd, u.i);
++    u.d = pd;
++    printf ("pd %.18lg %lx\n", pd, u.i);
++    u.d = spd;
++    printf ("spd %.18lg %lx\n", spd, u.i);
++    u.d = psd;
++    printf ("psd %.18lg %lx\n", psd, u.i);
+ 
+     fflush (stdout);
+ 
+@@ -97,9 +110,14 @@ testd (double d, bool changeExpected = true)
+     }
+     else
+     {
++        uint64_t bc_d = bit_cast<uint64_t> (d);
++        uint64_t bc_pd = bit_cast<uint64_t> (pd);
++        uint64_t bc_sd = bit_cast<uint64_t> (sd);
++        printf ("no change expected: d=%lx pd=%lx sd=%lx\n", bc_d, bc_pd, bc_sd);
++
+         // No bit change expected if input was inf or NaN
+-        assert (bit_cast<Int64> (pd) == bit_cast<Int64> (d));
+-        assert (bit_cast<Int64> (sd) == bit_cast<Int64> (d));
++        assert (bit_cast<uint64_t> (pd) == bit_cast<uint64_t> (d));
++        assert (bit_cast<uint64_t> (sd) == bit_cast<uint64_t> (d));
+     }
+ }
+ 
+
+From a811db96bea18bc7daead22686b8f1eb0c9b9652 Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Wed, 8 Sep 2021 10:55:21 -0400
+Subject: [PATCH 3/6] testf()/testd() checks isnan()
+
+Signed-off-by: Cary Phillips <cary@ilm.com>
+---
+ src/ImathTest/testFun.cpp | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/src/ImathTest/testFun.cpp b/src/ImathTest/testFun.cpp
+index 64dc06b..6493737 100644
+--- a/src/ImathTest/testFun.cpp
++++ b/src/ImathTest/testFun.cpp
+@@ -24,7 +24,6 @@ using namespace std;
+     static inline To
+     bit_cast (From from)
+     {
+-#warning "using custom bit_cast"
+         static_assert (sizeof (From) == sizeof (To), "Type sizes do not match");
+         union
+         {
+@@ -71,10 +70,19 @@ testf (float f, bool changeExpected = true)
+         uint32_t bc_f = bit_cast<uint32_t> (f);
+         uint32_t bc_pf = bit_cast<uint32_t> (pf);
+         uint32_t bc_sf = bit_cast<uint32_t> (sf);
+-        printf ("no change expected: f=%x pf=%x sf=%x\n", bc_f, bc_pf, bc_sf);
+         
+-        assert (bit_cast<uint32_t> (pf) == bit_cast<uint32_t> (f));
+-        assert (bit_cast<uint32_t> (sf) == bit_cast<uint32_t> (f));
++        if (isnan(f))
++        {
++            printf ("no change expected [isnan(f)]: f=%x pf=%x sf=%x\n", bc_f, bc_pf, bc_sf);
++            assert (isnan(pf));
++            assert (isnan(sf));
++        }
++        else
++        {
++            printf ("no change expected: [!isnan(f)]: f=%x pf=%x sf=%x\n", bc_f, bc_pf, bc_sf);
++            assert (bit_cast<uint32_t> (pf) == bit_cast<uint32_t> (f));
++            assert (bit_cast<uint32_t> (sf) == bit_cast<uint32_t> (f));
++        }
+     }
+ }
+ 
+@@ -118,6 +126,19 @@ testd (double d, bool changeExpected = true)
+         // No bit change expected if input was inf or NaN
+         assert (bit_cast<uint64_t> (pd) == bit_cast<uint64_t> (d));
+         assert (bit_cast<uint64_t> (sd) == bit_cast<uint64_t> (d));
++
++        if (isnan(d))
++        {
++            printf ("no change expected [isnan(d)]: d=%lx pd=%lx sd=%lx\n", bc_d, bc_pd, bc_sd);
++            assert (isnan(pd));
++            assert (isnan(sd));
++        }
++        else
++        {
++            printf ("no change expected: [!isnan(d)]: d=%lx pd=%lx sd=%lx\n", bc_d, bc_pd, bc_sd);
++            assert (bit_cast<uint64_t> (pd) == bit_cast<uint64_t> (d));
++            assert (bit_cast<uint64_t> (sd) == bit_cast<uint64_t> (d));
++        }
+     }
+ }
+ 
+
+From b2025649b4b242aeef3abee52f687c081e3ad651 Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Wed, 8 Sep 2021 13:53:57 -0400
+Subject: [PATCH 4/6] Fix typo in testd()
+
+Signed-off-by: Cary Phillips <cary@ilm.com>
+---
+ src/ImathTest/testFun.cpp | 41 ++++++++++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
+
+diff --git a/src/ImathTest/testFun.cpp b/src/ImathTest/testFun.cpp
+index 6493737..dac195f 100644
+--- a/src/ImathTest/testFun.cpp
++++ b/src/ImathTest/testFun.cpp
+@@ -14,6 +14,7 @@
+ #include <iostream>
+ #include <assert.h>
+ #include <iostream>
++#include <sstream>
+ #include <stdio.h>
+ #include "testFun.h"
+ 
+@@ -35,6 +36,25 @@ using namespace std;
+     }
+ #endif
+ 
++std::string
++formatBits (uint64_t x)
++{
++    std::stringstream s;
++    uint64_t mask = 0x1ULL << 63;
++    for (int i=0; i<64; i++)
++    {
++        if (i > 0 && i%4 == 0)
++            s << " ";
++        if (x & mask)
++            s << "1";
++        else
++            s << "0";
++        mask >>= 1;
++    }
++
++    return s.str();
++}
++
+ void
+ testf (float f, bool changeExpected = true)
+ {
+@@ -99,15 +119,15 @@ testd (double d, bool changeExpected = true)
+     union {double d; uint64_t i;} u;
+ 
+     u.d = d;
+-    printf ("d %.18lg %lx\n", d, u.i);
++    printf ("d   %0.18lg %s\n", d, formatBits (u.i).c_str());
+     u.d = sd;
+-    printf ("sd %.18lg %lx\n", sd, u.i);
++    printf ("sd  %0.18lg %s\n", sd, formatBits (u.i).c_str());
+     u.d = pd;
+-    printf ("pd %.18lg %lx\n", pd, u.i);
++    printf ("pd  %0.18lg %s\n", pd, formatBits (u.i).c_str());
+     u.d = spd;
+-    printf ("spd %.18lg %lx\n", spd, u.i);
++    printf ("spd %0.18lg %s\n", spd, formatBits (u.i).c_str());
+     u.d = psd;
+-    printf ("psd %.18lg %lx\n", psd, u.i);
++    printf ("psd %0.18lg %s\n", psd, formatBits (u.i).c_str());
+ 
+     fflush (stdout);
+ 
+@@ -118,24 +138,17 @@ testd (double d, bool changeExpected = true)
+     }
+     else
+     {
+-        uint64_t bc_d = bit_cast<uint64_t> (d);
+-        uint64_t bc_pd = bit_cast<uint64_t> (pd);
+-        uint64_t bc_sd = bit_cast<uint64_t> (sd);
+-        printf ("no change expected: d=%lx pd=%lx sd=%lx\n", bc_d, bc_pd, bc_sd);
+-
+         // No bit change expected if input was inf or NaN
+-        assert (bit_cast<uint64_t> (pd) == bit_cast<uint64_t> (d));
+-        assert (bit_cast<uint64_t> (sd) == bit_cast<uint64_t> (d));
+ 
+         if (isnan(d))
+         {
+-            printf ("no change expected [isnan(d)]: d=%lx pd=%lx sd=%lx\n", bc_d, bc_pd, bc_sd);
++            printf ("no change expected [isnan(d)]\n");
+             assert (isnan(pd));
+             assert (isnan(sd));
+         }
+         else
+         {
+-            printf ("no change expected: [!isnan(d)]: d=%lx pd=%lx sd=%lx\n", bc_d, bc_pd, bc_sd);
++            printf ("no change expected: [!isnan(d)]\n");
+             assert (bit_cast<uint64_t> (pd) == bit_cast<uint64_t> (d));
+             assert (bit_cast<uint64_t> (sd) == bit_cast<uint64_t> (d));
+         }
+
+From 1e1b4cd0110c97e39d4e54b0364c28bc676e9dcb Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Wed, 8 Sep 2021 15:31:21 -0400
+Subject: [PATCH 5/6] Cleanup & remove debugging info
+
+Signed-off-by: Cary Phillips <cary@ilm.com>
+---
+ src/ImathTest/testFun.cpp | 70 +++++++++------------------------------
+ 1 file changed, 16 insertions(+), 54 deletions(-)
+
+diff --git a/src/ImathTest/testFun.cpp b/src/ImathTest/testFun.cpp
+index dac195f..0fa3ad1 100644
+--- a/src/ImathTest/testFun.cpp
++++ b/src/ImathTest/testFun.cpp
+@@ -14,7 +14,6 @@
+ #include <iostream>
+ #include <assert.h>
+ #include <iostream>
+-#include <sstream>
+ #include <stdio.h>
+ #include "testFun.h"
+ 
+@@ -36,25 +35,6 @@ using namespace std;
+     }
+ #endif
+ 
+-std::string
+-formatBits (uint64_t x)
+-{
+-    std::stringstream s;
+-    uint64_t mask = 0x1ULL << 63;
+-    for (int i=0; i<64; i++)
+-    {
+-        if (i > 0 && i%4 == 0)
+-            s << " ";
+-        if (x & mask)
+-            s << "1";
+-        else
+-            s << "0";
+-        mask >>= 1;
+-    }
+-
+-    return s.str();
+-}
+-
+ void
+ testf (float f, bool changeExpected = true)
+ {
+@@ -65,17 +45,11 @@ testf (float f, bool changeExpected = true)
+     float spf = IMATH_INTERNAL_NAMESPACE::succf (IMATH_INTERNAL_NAMESPACE::predf (f));
+     float psf = IMATH_INTERNAL_NAMESPACE::predf (IMATH_INTERNAL_NAMESPACE::succf (f));
+ 
+-    union {float f; uint32_t i;} u;
+-    u.f = f;
+-    printf ("f %.9g %x\n", f, u.i);
+-    u.f = sf;
+-    printf ("sf %.9g %x\n", sf, u.i);
+-    u.f = pf;
+-    printf ("pf %.9g %x\n", pf, u.i);
+-    u.f = spf;
+-    printf ("spf %.9g %x\n", spf, u.i);
+-    u.f = psf;
+-    printf ("psf %.9g %x\n", psf, u.i);
++    printf ("f %.9g %x\n", f, bit_cast<uin32_t>(f));
++    printf ("sf %.9g %x\n", sf, bit_cast<uin32_t>(sf));
++    printf ("pf %.9g %x\n", pf, bit_cast<uin32_t>(pf));
++    printf ("spf %.9g %x\n", spf, bit_cast<uin32_t>(spf));
++    printf ("psf %.9g %x\n", psf, bit_cast<uin32_t>(psf));
+ 
+     fflush (stdout);
+ 
+@@ -86,20 +60,16 @@ testf (float f, bool changeExpected = true)
+     }
+     else
+     {
+-        // No bit change expected if input was inf or NaN
+-        uint32_t bc_f = bit_cast<uint32_t> (f);
+-        uint32_t bc_pf = bit_cast<uint32_t> (pf);
+-        uint32_t bc_sf = bit_cast<uint32_t> (sf);
+-        
+         if (isnan(f))
+         {
+-            printf ("no change expected [isnan(f)]: f=%x pf=%x sf=%x\n", bc_f, bc_pf, bc_sf);
++            // If f is nan, pf and sf may be converted from signaling
++            // to quiet nan, but they'll still be nan's.
+             assert (isnan(pf));
+             assert (isnan(sf));
+         }
+         else
+         {
+-            printf ("no change expected: [!isnan(f)]: f=%x pf=%x sf=%x\n", bc_f, bc_pf, bc_sf);
++            // No bit change expected if input was inf.
+             assert (bit_cast<uint32_t> (pf) == bit_cast<uint32_t> (f));
+             assert (bit_cast<uint32_t> (sf) == bit_cast<uint32_t> (f));
+         }
+@@ -116,18 +86,11 @@ testd (double d, bool changeExpected = true)
+     double spd = IMATH_INTERNAL_NAMESPACE::succd (IMATH_INTERNAL_NAMESPACE::predd (d));
+     double psd = IMATH_INTERNAL_NAMESPACE::predd (IMATH_INTERNAL_NAMESPACE::succd (d));
+ 
+-    union {double d; uint64_t i;} u;
+-
+-    u.d = d;
+-    printf ("d   %0.18lg %s\n", d, formatBits (u.i).c_str());
+-    u.d = sd;
+-    printf ("sd  %0.18lg %s\n", sd, formatBits (u.i).c_str());
+-    u.d = pd;
+-    printf ("pd  %0.18lg %s\n", pd, formatBits (u.i).c_str());
+-    u.d = spd;
+-    printf ("spd %0.18lg %s\n", spd, formatBits (u.i).c_str());
+-    u.d = psd;
+-    printf ("psd %0.18lg %s\n", psd, formatBits (u.i).c_str());
++    printf ("d   %0.18lg %lx\n", d, bit_cast<uint64_t>(d));
++    printf ("sd  %0.18lg %lx\n", sd, bit_cast<uint64_t>(sd));
++    printf ("pd  %0.18lg %lx\n", pd, bit_cast<uint64_t>(pd));
++    printf ("spd %0.18lg %lx\n", spd, bit_cast<uint64_t>(spd));
++    printf ("psd %0.18lg %lx\n", psd, bit_cast<uint64_t>(psd));
+ 
+     fflush (stdout);
+ 
+@@ -138,17 +101,16 @@ testd (double d, bool changeExpected = true)
+     }
+     else
+     {
+-        // No bit change expected if input was inf or NaN
+-
+         if (isnan(d))
+         {
+-            printf ("no change expected [isnan(d)]\n");
++            // If f is nan, pf and sf may be converted from signaling
++            // to quiet nan, but they'll still be nan's.
+             assert (isnan(pd));
+             assert (isnan(sd));
+         }
+         else
+         {
+-            printf ("no change expected: [!isnan(d)]\n");
++            // No bit change expected if input was inf.
+             assert (bit_cast<uint64_t> (pd) == bit_cast<uint64_t> (d));
+             assert (bit_cast<uint64_t> (sd) == bit_cast<uint64_t> (d));
+         }
+
+From d3ed6c46d5f3677fb97f7a8b2bbeb3d4e5674fca Mon Sep 17 00:00:00 2001
+From: Cary Phillips <cary@ilm.com>
+Date: Wed, 8 Sep 2021 16:01:48 -0400
+Subject: [PATCH 6/6] typo
+
+Signed-off-by: Cary Phillips <cary@ilm.com>
+---
+ src/ImathTest/testFun.cpp | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/src/ImathTest/testFun.cpp b/src/ImathTest/testFun.cpp
+index 0fa3ad1..91f25ae 100644
+--- a/src/ImathTest/testFun.cpp
++++ b/src/ImathTest/testFun.cpp
+@@ -14,6 +14,7 @@
+ #include <iostream>
+ #include <assert.h>
+ #include <iostream>
++#include <cstdint>
+ #include <stdio.h>
+ #include "testFun.h"
+ 
+@@ -45,11 +46,11 @@ testf (float f, bool changeExpected = true)
+     float spf = IMATH_INTERNAL_NAMESPACE::succf (IMATH_INTERNAL_NAMESPACE::predf (f));
+     float psf = IMATH_INTERNAL_NAMESPACE::predf (IMATH_INTERNAL_NAMESPACE::succf (f));
+ 
+-    printf ("f %.9g %x\n", f, bit_cast<uin32_t>(f));
+-    printf ("sf %.9g %x\n", sf, bit_cast<uin32_t>(sf));
+-    printf ("pf %.9g %x\n", pf, bit_cast<uin32_t>(pf));
+-    printf ("spf %.9g %x\n", spf, bit_cast<uin32_t>(spf));
+-    printf ("psf %.9g %x\n", psf, bit_cast<uin32_t>(psf));
++    printf ("f %.9g %x\n", f, bit_cast<uint32_t>(f));
++    printf ("sf %.9g %x\n", sf, bit_cast<uint32_t>(sf));
++    printf ("pf %.9g %x\n", pf, bit_cast<uint32_t>(pf));
++    printf ("spf %.9g %x\n", spf, bit_cast<uint32_t>(spf));
++    printf ("psf %.9g %x\n", psf, bit_cast<uint32_t>(psf));
+ 
+     fflush (stdout);
+ 
