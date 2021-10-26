@@ -19,7 +19,7 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.removeDir("/usr/share/doc/Imath/sphinx/.doctrees")
-    pisitools.remove("/usr/share/doc/Imath/sphinx/.buildinfo")
+    #pisitools.removeDir("/usr/share/doc/Imath/sphinx/.doctrees")
+    #pisitools.remove("/usr/share/doc/Imath/sphinx/.buildinfo")
 
     pisitools.dodoc("CHANGES*", "LICENSE*", "README*")
