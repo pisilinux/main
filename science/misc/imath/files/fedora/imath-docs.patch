@@ -1,0 +1,28 @@
+Index: Imath-3.1.3/docs/CMakeLists.txt
+===================================================================
+--- Imath-3.1.3.orig/docs/CMakeLists.txt
++++ Imath-3.1.3/docs/CMakeLists.txt
+@@ -42,6 +42,8 @@ add_custom_command(OUTPUT ${SPHINX_INDEX
+ add_custom_target(Sphinx ALL DEPENDS ${SPHINX_INDEX_FILE})
+ 
+ # Add an install target to install the docs
+-include(GNUInstallDirs)
+-install(DIRECTORY ${SPHINX_BUILD}
+-DESTINATION ${CMAKE_INSTALL_DOCDIR})
++if(INSTALL_DOCS)
++    include(GNUInstallDirs)
++    install(DIRECTORY ${SPHINX_BUILD}
++    DESTINATION ${CMAKE_INSTALL_DOCDIR})
++endif()
+Index: Imath-3.1.3/CMakeLists.txt
+===================================================================
+--- Imath-3.1.3.orig/CMakeLists.txt
++++ Imath-3.1.3/CMakeLists.txt
+@@ -75,6 +75,7 @@ endif()
+ 
+ option(DOCS "Set ON to build html documentation")
+ if (DOCS)
++  option(INSTALL_DOCS "Set ON to install html documentation" ON)
+   add_subdirectory(docs)
+ endif()
+ 
