@@ -72,7 +72,7 @@ def setup():
 def build():
     shelltools.cd("build")
     #cmaketools.make()
-    shelltools.system("ninja")
+    shelltools.system("ninja -j2")
 
 def install():
     shelltools.cd("build")
