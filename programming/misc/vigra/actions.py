@@ -14,6 +14,7 @@ NoStrip=["/usr/share/doc"]
 def setup():
     cmaketools.configure("-DWITH_VIGRANUMPY=1 \
                           -DWITH_OPENEXR=1 \
+                          -DWITH_OPENEXR=true \
                           -DDOXYGEN_FOUND=0")
 
 def build():
