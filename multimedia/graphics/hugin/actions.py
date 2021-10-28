@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.unlink("CMakeModules/FindZLIB.cmake")
     shelltools.makedirs("build")
     shelltools.cd("build") 
     
