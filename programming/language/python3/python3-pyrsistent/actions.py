@@ -17,4 +17,4 @@ def build():
 
 def install():
     pythonmodules.install(pyVer="3")
-    pisitools.dodoc("LICENCE*")
+    #pisitools.dodoc("LICENCE*")
