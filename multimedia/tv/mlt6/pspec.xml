@@ -1,0 +1,126 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>mlt6</Name>
+        <Homepage>https://www.mltframework.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>app:console</IsA>
+        <Summary>A multimedia framework, designed and developed for television broadcasting</Summary>
+        <Description>MLT is an open source multimedia framework, designed and developed for television broadcasting.</Description>
+        <Archive sha1sum="1540b23483cf9c741795321404dac2446d517366" type="targz">https://github.com/mltframework/mlt/releases/download/v6.26.1/mlt-6.26.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>swig</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>opencv-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>frei0r-plugins-devel</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>jack-audio-connection-kit-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-svg-devel</Dependency>
+            <Dependency>perl</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>libsamplerate-devel</Dependency>
+            <Dependency>ladspa-sdk-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>libvorbis-devel</Dependency>
+            <Dependency>sdl-image-devel</Dependency>
+            <Dependency>libexif-devel</Dependency>
+<!--             <Dependency>swfdec-devel</Dependency> -->
+            <Dependency>libsdl2-devel</Dependency>
+            <Dependency>ffmpeg-devel</Dependency>
+            <Dependency>libdv-devel</Dependency>
+            <Dependency>sox-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">7063e88e.patch</Patch>
+            <Patch level="1">a87229bc.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>python-mlt6</Name>
+        <PartOf>programming.language.python</PartOf>
+        <Summary>Python bindings for MLT</Summary>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>python3</Dependency>
+            <Dependency release="current">mlt6</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/python*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>mlt6</Name>
+        <RuntimeDependencies>
+            <Dependency>sox</Dependency>
+            <Dependency>gtk2</Dependency>
+            <Dependency>fftw3</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>opencv</Dependency>
+            <Dependency>ffmpeg</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libsdl</Dependency>
+            <Dependency>libsdl2</Dependency>
+            <Dependency>libexif</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>qt5-svg</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libvorbis</Dependency>
+            <Dependency>sdl-image</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>libsamplerate</Dependency>
+            <Dependency>pulseaudio-libs</Dependency>
+            <Dependency>jack-audio-connection-kit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/mlt</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share/mlt/modules</Path>
+            <Path fileType="data">/usr/share/mlt/modules/lumas/PAL</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>mlt6-devel</Name>
+        <Summary>Development files for mlt</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">mlt6</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="man">/usr/share/man/man3</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-08-31</Date>
+            <Version>6.26.1</Version>
+            <Comment>First release</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
