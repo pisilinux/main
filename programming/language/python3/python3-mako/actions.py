@@ -13,6 +13,9 @@ shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
 WorkDir = "Mako-%s" % get.srcVERSION()
 
+def build():
+    pythonmodules.compile(pyVer="3")
+
 def install():
     shelltools.system('sed -i "s:mako-render:&3:g" setup.py')
     pythonmodules.install(pyVer="3")
