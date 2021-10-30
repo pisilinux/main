@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sh ./autogen.sh")
+    autotools.autoreconf("-fiv")
     autotools.configure("--enable-introspection")
     
     
