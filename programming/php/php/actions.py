@@ -15,10 +15,10 @@ def extensions():
     configure_enabled = [
         'exif', 'ftp', 'soap', 'sockets', 'bcmath',
         'dom', 'wddx', 'tokenizer', 'simplexml', 'mbstring', 'calendar',
-        'gd-native-ttf'
+        'gd-native-ttf', 'gd'
     ]
     configure_shared = [
-        'dba', 'embedded-mysqli', 'zip'
+        'dba', 'embedded-mysqli', 'zip', 'gd'
     ]
     configure_with = [
         'bz2', 'curl', 'iconv', 'mysql', 'mysqli', 'kerberos', 'sqlite3',
@@ -88,6 +88,8 @@ def setup():
                       --with-pic \
                       --with-libzip \
                       --with-gnu-ld \
+                      --enable-gd=shared \
+                      --with-external-gd \
                       --with-system-tzdata=/usr/share/zoneinfo \
                       --with-mcrypt=/usr/bin/mcrypt \
                       --with-imap=shared \
