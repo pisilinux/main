@@ -197,7 +197,7 @@ def install():
 
     pisitools.dodir("/var/log/php-fpm/")
 
-    #pisitools.remove("/.depdb")
+    pisitools.remove("/.depdb")
     pisitools.remove("/.depdblock")
     pisitools.remove("/.lock")
     pisitools.remove("/.filemap")
