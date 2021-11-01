@@ -10,6 +10,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("patch -p1 -R < bdc281eadb1d58d5c0c7bbc1125ee4674256df08.patch")
+
     shelltools.system("./bootstrap.sh")
     
     autotools.configure("--disable-static \
