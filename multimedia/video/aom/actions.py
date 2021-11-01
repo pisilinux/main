@@ -10,20 +10,27 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-def setup():
-	shelltools.system("mkdir build_")
-	shelltools.cd("build_")
+#WorkDir="."
 
-	shelltools.system("cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib -DBUILD_SHARED_LIBS=1 -DENABLE_TESTS=0")
+def setup():
+    #shelltools.cd("%s" % get.workDIR())
+    #shelltools.move("/*", "aom-%s" % get.srcVERSION())
+    #shelltools.cd("aom-%s" % get.srcVERSION())
+    cmaketools.configure("-S . -B build -G Ninja \
+                          -DBUILD_SHARED_LIBS=1 \
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DENABLE_TESTS=0", sourceDir="..")
 
 def build():
-	shelltools.cd("build_")
-	cmaketools.make()
+    shelltools.cd("build")
+    shelltools.system("ninja")
 
 def install():
-	shelltools.cd("build_")
-	autotools.rawInstall("DESTDIR=%s" %get.installDIR())
-	
-	shelltools.cd("..")
-	pisitools.dodoc("AUTHORS", "CHANGELOG", "README.md")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+
+    pisitools.dosym("/usr/lib/libaom.so.3.2.0", "/usr/lib/libaom.so.0")
+
+    shelltools.cd("%s" % get.workDIR())
+    pisitools.dodoc("AUTHORS", "CHANGELOG", "README.md")
 
