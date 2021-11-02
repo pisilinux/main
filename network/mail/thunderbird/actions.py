@@ -52,6 +52,8 @@ def install():
     # Install fix language packs
     pisitools.insinto("/usr/lib/thunderbird/extensions", "langpack-tb/*")
 
+    pisitools.insinto("/usr/share/metainfo", "comm/mail/branding/thunderbird/net.thunderbird.Thunderbird.appdata.xml")
+
     # Install icons
     pisitools.insinto("/usr/share/pixmaps", "comm/mail/branding/thunderbird/default256.png", "thunderbird.png")
     pisitools.insinto("%s/icons" % MOZAPPDIR, "comm/mail/branding/thunderbird/default16.png")
