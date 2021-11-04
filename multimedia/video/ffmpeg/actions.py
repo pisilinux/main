@@ -78,8 +78,10 @@ def setup():
                             --enable-libzimg \
                             --enable-pic \
                             --enable-postproc \
+                            --enable-librav1e \
                             --enable-runtime-cpudetect \
                             --enable-shared \
+                            --enable-libsvtav1 \
                             --enable-swresample \
                             --enable-vdpau \
                             --enable-openal \
