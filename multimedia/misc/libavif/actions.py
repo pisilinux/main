@@ -13,6 +13,7 @@ def setup():
                           -DAVIF_CODEC_AOM=ON \
                           -DAVIF_CODEC_DAV1D=ON \
                           -DAVIF_CODEC_SVT=ON \
+                          -DAVIF_CODEC_RAV1E=ON \
                           -DAVIF_BUILD_GDK_PIXBUF=ON")
 
 def build():
