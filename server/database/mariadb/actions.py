@@ -41,6 +41,7 @@ def setup():
                           -DWITH_SSL=system \
                           -DWITH_LIBWRAP=OFF \
                           -DWITH_JEMALLOC=ON \
+                          -DWITH_PCRE=system \
                           -DWITH_EXTRA_CHARSETS=complex \
                           -DWITH_EMBEDDED_SERVER=ON \
                           -DWITH_ARCHIVE_STORAGE_ENGINE=1 \
