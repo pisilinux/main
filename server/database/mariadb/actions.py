@@ -74,7 +74,7 @@ def install():
     pisitools.dodoc("COPYING", "INSTALL-SOURCE", "README*", "VERSION")
 
     # Remove not needed files
-    pisitools.removeDir("/usr/data")
+    #pisitools.removeDir("/usr/data")
     pisitools.removeDir("/usr/mysql-test")
     pisitools.removeDir("/usr/sql-bench")
     #pisitools.remove("/usr/share/man/man1/mysql-test-run.pl.1")
