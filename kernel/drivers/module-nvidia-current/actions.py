@@ -218,7 +218,7 @@ def install():
         pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so" % libdir)
 
         # OpenGL core library and others
-        for lib in ("allocator", "cbl", "eglcore", "encode", "ngx", "fbc", "glcore", \
+        for lib in ("allocator", "eglcore", "encode", "ngx", "fbc", "glcore", \
                     "glsi", "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
             pisitools.dolib("libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
