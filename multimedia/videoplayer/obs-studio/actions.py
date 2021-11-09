@@ -10,7 +10,11 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_INSTALL_LIBDIR=lib")
+                          -DCMAKE_INSTALL_LIBDIR=lib \
+                          -DBUILD_VST=OFF \
+                          -DUNIX_STRUCTURE=1 \
+                          -DBUILD_BROWSER=OFF \
+                          -DOpenGL_GL_PREFERENCE=GLVND")
 
 def build():
     cmaketools.make()
