@@ -212,14 +212,26 @@ def install():
         pisitools.dolib("libnvoptix.so.%s" % version, libdir)
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so" % libdir)
+        
+        pisitools.dolib("libnvidia-nvvm.so.4.0.0", libdir)
+        pisitools.dosym("libnvidia-nvvm.so.4.0.0", "%s/libnvidia-nvvm.so.4" % libdir)
+        pisitools.dosym("libnvidia-nvvm.so.4.0.0", "%s/libnvidia-nvvm.so" % libdir)
 
         pisitools.dolib("libnvidia-egl-wayland.so.1.1.9", libdir)
         pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so.1" % libdir)
         pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so" % libdir)
+        
+        pisitools.dolib("libnvidia-egl-gbm.so.1.1.0", libdir)
+        pisitools.dosym("libnvidia-egl-gbm.so.1.1.0", "%s/libnvidia-egl-gbm.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-gbm.so.1.1.0", "%s/libnvidia-egl-gbm.so" % libdir)
+        
+        pisitools.dolib("libnvidia-vulkan-producer.so.%s" % version, libdir)
+        pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so.1" % libdir)
+        pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so" % libdir)
 
         # OpenGL core library and others
-        for lib in ("allocator", "eglcore", "encode", "ngx", "fbc", "glcore", \
-                    "glsi", "glvkspirv", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
+        for lib in ("allocator", "eglcore", "encode", "ngx", "fbc", "glcore", "glsi", \
+                     "glvkspirv", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
             pisitools.dolib("libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so" %(libdir, lib))
