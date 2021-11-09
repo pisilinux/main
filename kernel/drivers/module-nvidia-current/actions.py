@@ -213,9 +213,9 @@ def install():
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so" % libdir)
 
-        pisitools.dolib("libnvidia-egl-wayland.so.1.1.5", libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.5", "%s/libnvidia-egl-wayland.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.5", "%s/libnvidia-egl-wayland.so" % libdir)
+        pisitools.dolib("libnvidia-egl-wayland.so.1.1.9", libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so" % libdir)
 
         # OpenGL core library and others
         for lib in ("allocator", "cbl", "eglcore", "encode", "ngx", "fbc", "glcore", \
