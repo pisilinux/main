@@ -1,0 +1,75 @@
+From 3dc5722d5c7673a879f2b4680369d3ac8b6b64b6 Mon Sep 17 00:00:00 2001
+From: Tom Stellard <tstellar@redhat.com>
+Date: Wed, 4 Aug 2021 14:05:38 -0700
+Subject: [PATCH] cmake: Allow shared libraries to customize the soname using
+ LLVM_ABI_REVISION
+
+The LLVM_ABI_REVISION variable is intended to be used for release
+candidates which introduce an ABI change to a shared library.  This
+variable can be specified per library, so there is not one global value
+for all of LLVM.
+
+For example, if we LLVM X.0.0-rc2 introduces an ABI change for a library
+compared with LLVM X.0.0-rc1, then the LLVM_ABI_REVISION number for
+library will be incremented by 1.
+
+In the main branch, LLVM_ABI_REVISION should always be 0, it is only
+meant to be used in the release branch.
+
+Differential Revision: https://reviews.llvm.org/D105594
+---
+ llvm/cmake/modules/AddLLVM.cmake       | 7 +++++--
+ llvm/tools/llvm-shlib/CMakeLists.txt   | 9 +++++++++
+ 3 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
+index 3e009f5061d3..a09405a1be3e 100644
+--- a/llvm/cmake/modules/AddLLVM.cmake
++++ b/llvm/cmake/modules/AddLLVM.cmake
+@@ -586,11 +586,14 @@ function(llvm_add_library name)
+     # Set SOVERSION on shared libraries that lack explicit SONAME
+     # specifier, on *nix systems that are not Darwin.
+     if(UNIX AND NOT APPLE AND NOT ARG_SONAME)
++      if (NOT LLVM_ABI_REVISION)
++        set(LLVM_ABI_REVISION 0)
++      endif()
+       set_target_properties(${name}
+         PROPERTIES
+         # Since 4.0.0, the ABI version is indicated by the major version
+-        SOVERSION ${LLVM_VERSION_MAJOR}${LLVM_VERSION_SUFFIX}
+-        VERSION ${LLVM_VERSION_MAJOR}${LLVM_VERSION_SUFFIX})
++	SOVERSION ${LLVM_VERSION_MAJOR}.${LLVM_ABI_REVISION}
++	VERSION ${LLVM_VERSION_MAJOR}.${LLVM_ABI_REVISION})
+     endif()
+   endif()
+ 
+diff --git a/llvm/tools/llvm-shlib/CMakeLists.txt b/llvm/tools/llvm-shlib/CMakeLists.txt
+index 76b9a25cbbcd..b876e7fed6b5 100644
+--- a/llvm/tools/llvm-shlib/CMakeLists.txt
++++ b/llvm/tools/llvm-shlib/CMakeLists.txt
+@@ -2,6 +2,11 @@
+ # library is enabled by setting LLVM_BUILD_LLVM_DYLIB=yes on the CMake
+ # commandline. By default the shared library only exports the LLVM C API.
+ 
++# In the main branch, LLVM_ABI_REVISION should always be 0.  In the release
++# branches, this should be incremented before each release candidate every
++# time the ABI of libLLVM.so changes.
++set(LLVM_ABI_REVISION 0 CACHE STRING "ABI Revision number for SONAMEs (default: 0)")
++
+ set(SOURCES
+   libllvm.cpp
+   )
+@@ -67,6 +72,10 @@ if(LLVM_BUILD_LLVM_DYLIB)
+     set_property(TARGET LLVM APPEND_STRING PROPERTY
+                 LINK_FLAGS
+                 " -compatibility_version 1 -current_version ${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}")
++  else()
++    set_target_properties(LLVM
++      PROPERTIES
++      SOVERSION ${LLVM_ABI_REVISION})
+   endif()
+ 
+   if(TARGET libLLVMExports)
+-- 
+2.27.0
+
