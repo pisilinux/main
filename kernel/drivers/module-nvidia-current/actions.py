@@ -135,7 +135,7 @@ def install():
         pisitools.dosym("libnvidia-ml.so.%s" % version, "%s/libnvidia-ml.so.1" % libdir)
 
         for lib in ("eglcore", "encode", "fbc", "glcore",  "glsi", \
-                    "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "tls", "allocator" ):
+                    "glvkspirv", "opticalflow", "ptxjitcompiler", "tls", "allocator" ):
             pisitools.dolib("32/libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so" %(libdir, lib))
@@ -219,7 +219,7 @@ def install():
 
         # OpenGL core library and others
         for lib in ("allocator", "eglcore", "encode", "ngx", "fbc", "glcore", \
-                    "glsi", "glvkspirv", "ifr", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
+                    "glsi", "glvkspirv", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
             pisitools.dolib("libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so" %(libdir, lib))
