@@ -94,7 +94,7 @@ index 19944a34..bbd2d568 100644
          return; // Ignore foreign surfaces
  
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index fe094f6f..e0dfe8b2 100644
+index fe094f6f..9f595af3 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -206,10 +206,11 @@ void QWaylandDisplay::checkError() const
@@ -123,8 +123,61 @@ index fe094f6f..e0dfe8b2 100644
  }
  
  uint32_t QWaylandDisplay::currentTimeMillisec()
+@@ -573,14 +575,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
+     if (mLastKeyboardFocus == keyboardFocus)
+         return;
+ 
+-    if (mWaylandIntegration->mShellIntegration) {
+-        mWaylandIntegration->mShellIntegration->handleKeyboardFocusChanged(keyboardFocus, mLastKeyboardFocus);
+-    } else {
+-        if (keyboardFocus)
+-            handleWindowActivated(keyboardFocus);
+-        if (mLastKeyboardFocus)
+-            handleWindowDeactivated(mLastKeyboardFocus);
+-    }
++    if (keyboardFocus)
++        handleWindowActivated(keyboardFocus);
++    if (mLastKeyboardFocus)
++        handleWindowDeactivated(mLastKeyboardFocus);
+ 
+     mLastKeyboardFocus = keyboardFocus;
+ }
+@@ -599,6 +597,19 @@ void QWaylandDisplay::handleWaylandSync()
+     QWindow *activeWindow = mActiveWindows.empty() ? nullptr : mActiveWindows.last()->window();
+     if (activeWindow != QGuiApplication::focusWindow())
+         QWindowSystemInterface::handleWindowActivated(activeWindow);
++
++    if (!activeWindow) {
++        if (lastInputDevice()) {
++#if QT_CONFIG(clipboard)
++            if (auto *dataDevice = lastInputDevice()->dataDevice())
++                dataDevice->invalidateSelectionOffer();
++#endif
++#if QT_CONFIG(wayland_client_primary_selection)
++            if (auto *device = lastInputDevice()->primarySelectionDevice())
++                device->invalidateSelectionOffer();
++#endif
++        }
++    }
+ }
+ 
+ const wl_callback_listener QWaylandDisplay::syncCallbackListener = {
+@@ -625,6 +636,13 @@ QWaylandInputDevice *QWaylandDisplay::defaultInputDevice() const
+     return mInputDevices.isEmpty() ? 0 : mInputDevices.first();
+ }
+ 
++bool QWaylandDisplay::isKeyboardAvailable() const
++{
++    return std::any_of(
++            mInputDevices.constBegin(), mInputDevices.constEnd(),
++            [this](const QWaylandInputDevice *device) { return device->keyboard() != nullptr; });
++}
++
+ #if QT_CONFIG(cursor)
+ 
+ QWaylandCursor *QWaylandDisplay::waylandCursor()
 diff --git a/src/client/qwaylanddisplay_p.h b/src/client/qwaylanddisplay_p.h
-index 188e9131..3b092bc8 100644
+index 188e9131..09a1736a 100644
 --- a/src/client/qwaylanddisplay_p.h
 +++ b/src/client/qwaylanddisplay_p.h
 @@ -175,8 +175,6 @@ public:
@@ -136,7 +189,15 @@ index 188e9131..3b092bc8 100644
      struct RegistryGlobal {
          uint32_t id;
          QString interface;
-@@ -282,7 +280,6 @@ private:
+@@ -217,6 +215,7 @@ public:
+     void destroyFrameQueue(const FrameQueue &q);
+     void dispatchQueueWhile(wl_event_queue *queue, std::function<bool()> condition, int timeout = -1);
+ 
++    bool isKeyboardAvailable() const;
+ public slots:
+     void blockingReadEvents();
+     void flushRequests();
+@@ -282,7 +281,6 @@ private:
      QReadWriteLock m_frameQueueLock;
  
      bool mClientSideInputContextRequested = !QPlatformInputContextFactory::requested().isNull();
@@ -145,7 +206,7 @@ index 188e9131..3b092bc8 100644
      void registry_global(uint32_t id, const QString &interface, uint32_t version) override;
      void registry_global_remove(uint32_t id) override;
 diff --git a/src/client/qwaylandinputcontext.cpp b/src/client/qwaylandinputcontext.cpp
-index e9afe05e..503fd735 100644
+index e9afe05e..e290baa2 100644
 --- a/src/client/qwaylandinputcontext.cpp
 +++ b/src/client/qwaylandinputcontext.cpp
 @@ -51,6 +51,10 @@
@@ -159,7 +220,20 @@ index e9afe05e..503fd735 100644
  QT_BEGIN_NAMESPACE
  
  Q_LOGGING_CATEGORY(qLcQpaInputMethods, "qt.qpa.input.methods")
-@@ -406,6 +410,8 @@ bool QWaylandInputContext::isValid() const
+@@ -383,8 +387,10 @@ void QWaylandTextInput::zwp_text_input_v2_input_method_changed(uint32_t serial,
+ Qt::KeyboardModifiers QWaylandTextInput::modifiersToQtModifiers(uint32_t modifiers)
+ {
+     Qt::KeyboardModifiers ret = Qt::NoModifier;
+-    for (int i = 0; modifiers >>= 1; ++i) {
+-        ret |= m_modifiersMap[i];
++    for (int i = 0; i < m_modifiersMap.size(); ++i) {
++        if (modifiers & (1 << i)) {
++            ret |= m_modifiersMap[i];
++        }
+     }
+     return ret;
+ }
+@@ -406,6 +412,8 @@ bool QWaylandInputContext::isValid() const
  void QWaylandInputContext::reset()
  {
      qCDebug(qLcQpaInputMethods) << Q_FUNC_INFO;
@@ -168,7 +242,7 @@ index e9afe05e..503fd735 100644
  
      QPlatformInputContext::reset();
  
-@@ -526,9 +532,14 @@ Qt::LayoutDirection QWaylandInputContext::inputDirection() const
+@@ -526,9 +534,14 @@ Qt::LayoutDirection QWaylandInputContext::inputDirection() const
      return textInput()->inputDirection();
  }
  
@@ -184,7 +258,7 @@ index e9afe05e..503fd735 100644
  
      if (!textInput())
          return;
-@@ -561,6 +572,92 @@ QWaylandTextInput *QWaylandInputContext::textInput() const
+@@ -561,6 +574,92 @@ QWaylandTextInput *QWaylandInputContext::textInput() const
      return mDisplay->defaultInputDevice()->textInput();
  }
  
@@ -322,7 +396,7 @@ index 10132dfe..50db6344 100644
  
  }
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
-index ed4a0eb4..ae045f4f 100644
+index ed4a0eb4..514457e9 100644
 --- a/src/client/qwaylandinputdevice.cpp
 +++ b/src/client/qwaylandinputdevice.cpp
 @@ -1201,7 +1201,7 @@ void QWaylandInputDevice::Keyboard::handleKey(ulong timestamp, QEvent::Type type
@@ -334,6 +408,21 @@ index ed4a0eb4..ae045f4f 100644
          QKeyEvent event(type, key, modifiers, nativeScanCode, nativeVirtualKey,
                          nativeModifiers, text, autorepeat, count);
          event.setTimestamp(timestamp);
+@@ -1300,14 +1300,6 @@ void QWaylandInputDevice::Keyboard::handleFocusDestroyed()
+ void QWaylandInputDevice::Keyboard::handleFocusLost()
+ {
+     mFocus = nullptr;
+-#if QT_CONFIG(clipboard)
+-    if (auto *dataDevice = mParent->dataDevice())
+-        dataDevice->invalidateSelectionOffer();
+-#endif
+-#if QT_CONFIG(wayland_client_primary_selection)
+-    if (auto *device = mParent->primarySelectionDevice())
+-        device->invalidateSelectionOffer();
+-#endif
+     mParent->mQDisplay->handleKeyboardFocusChanged(mParent);
+     mRepeatTimer.stop();
+ }
 diff --git a/src/client/qwaylandintegration.cpp b/src/client/qwaylandintegration.cpp
 index 7ad8e05e..e5e7dd42 100644
 --- a/src/client/qwaylandintegration.cpp
@@ -488,10 +577,18 @@ index df1c94f2..050cfdc0 100644
  
  #if QT_CONFIG(cursor)
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index bc031ed5..c020a58f 100644
+index bc031ed5..ba881cb3 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
-@@ -194,10 +194,11 @@ void QWaylandWindow::initWindow()
+@@ -96,7 +96,6 @@ QWaylandWindow::QWaylandWindow(QWindow *window, QWaylandDisplay *display)
+ QWaylandWindow::~QWaylandWindow()
+ {
+     mDisplay->destroyFrameQueue(mFrameQueue);
+-    mDisplay->handleWindowDestroyed(this);
+ 
+     delete mWindowDecoration;
+ 
+@@ -194,10 +193,11 @@ void QWaylandWindow::initWindow()
      if (QScreen *s = window()->screen())
          setOrientationMask(s->orientationUpdateMask());
      setWindowFlags(window()->flags());
@@ -505,7 +602,16 @@ index bc031ed5..c020a58f 100644
      setMask(window()->mask());
      if (mShellSurface)
          mShellSurface->requestWindowStates(window()->windowStates());
-@@ -332,14 +333,21 @@ void QWaylandWindow::setWindowIcon(const QIcon &icon)
+@@ -265,6 +265,8 @@ void QWaylandWindow::reset()
+ 
+     mMask = QRegion();
+     mQueuedBuffer = nullptr;
++
++    mDisplay->handleWindowDestroyed(this);
+ }
+ 
+ QWaylandWindow *QWaylandWindow::fromWlSurface(::wl_surface *surface)
+@@ -332,14 +334,21 @@ void QWaylandWindow::setWindowIcon(const QIcon &icon)
  
  void QWaylandWindow::setGeometry_helper(const QRect &rect)
  {
@@ -530,7 +636,7 @@ index bc031ed5..c020a58f 100644
      }
  }
  
-@@ -362,7 +370,7 @@ void QWaylandWindow::setGeometry(const QRect &rect)
+@@ -362,7 +371,7 @@ void QWaylandWindow::setGeometry(const QRect &rect)
      if (isExposed() && !mInResizeFromApplyConfigure && exposeGeometry != mLastExposeGeometry)
          sendExposeEvent(exposeGeometry);
  
@@ -539,7 +645,7 @@ index bc031ed5..c020a58f 100644
          mShellSurface->setWindowGeometry(windowContentGeometry());
  
      if (isOpaque() && mMask.isEmpty())
-@@ -429,7 +437,7 @@ void QWaylandWindow::setVisible(bool visible)
+@@ -429,7 +438,7 @@ void QWaylandWindow::setVisible(bool visible)
          initWindow();
          mDisplay->flushRequests();
  
@@ -548,7 +654,7 @@ index bc031ed5..c020a58f 100644
          // Don't flush the events here, or else the newly visible window may start drawing, but since
          // there was no frame before it will be stuck at the waitForFrameSync() in
          // QWaylandShmBackingStore::beginPaint().
-@@ -456,14 +464,15 @@ void QWaylandWindow::lower()
+@@ -456,14 +465,15 @@ void QWaylandWindow::lower()
  
  void QWaylandWindow::setMask(const QRegion &mask)
  {
@@ -567,7 +673,7 @@ index bc031ed5..c020a58f 100644
      if (mMask.isEmpty()) {
          mSurface->set_input_region(nullptr);
  
-@@ -613,9 +622,13 @@ void QWaylandWindow::commit()
+@@ -613,9 +623,13 @@ void QWaylandWindow::commit()
  
  const wl_callback_listener QWaylandWindow::callbackListener = {
      [](void *data, wl_callback *callback, uint32_t time) {
@@ -582,7 +688,27 @@ index bc031ed5..c020a58f 100644
          window->handleFrameCallback();
      }
  };
-@@ -1161,16 +1174,15 @@ void QWaylandWindow::requestUpdate()
+@@ -1070,10 +1084,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
+     return true;
+ }
+ 
++Qt::WindowStates QWaylandWindow::windowStates() const
++{
++    return mLastReportedWindowStates;
++}
++
+ void QWaylandWindow::handleWindowStatesChanged(Qt::WindowStates states)
+ {
+     createDecoration();
+-    QWindowSystemInterface::handleWindowStateChanged(window(), states, mLastReportedWindowStates);
++    Qt::WindowStates statesWithoutActive = states & ~Qt::WindowActive;
++    Qt::WindowStates lastStatesWithoutActive = mLastReportedWindowStates & ~Qt::WindowActive;
++    QWindowSystemInterface::handleWindowStateChanged(window(), statesWithoutActive,
++                                                     lastStatesWithoutActive);
+     mLastReportedWindowStates = states;
+ }
+ 
+@@ -1161,16 +1183,15 @@ void QWaylandWindow::requestUpdate()
  void QWaylandWindow::handleUpdate()
  {
      qCDebug(lcWaylandBackingstore) << "handleUpdate" << QThread::currentThread();
@@ -603,7 +729,7 @@ index bc031ed5..c020a58f 100644
      QMutexLocker locker(mFrameQueue.mutex);
      struct ::wl_surface *wrappedSurface = reinterpret_cast<struct ::wl_surface *>(wl_proxy_create_wrapper(mSurface->object()));
      wl_proxy_set_queue(reinterpret_cast<wl_proxy *>(wrappedSurface), mFrameQueue.queue);
-@@ -1231,12 +1243,14 @@ bool QWaylandWindow::isOpaque() const
+@@ -1231,12 +1252,14 @@ bool QWaylandWindow::isOpaque() const
  
  void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
  {
@@ -621,6 +747,37 @@ index bc031ed5..c020a58f 100644
      mSurface->set_opaque_region(region);
      wl_region_destroy(region);
  }
+diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
+index 6cc1664b..e0687962 100644
+--- a/src/client/qwaylandwindow_p.h
++++ b/src/client/qwaylandwindow_p.h
+@@ -148,6 +148,7 @@ public:
+     void setWindowState(Qt::WindowStates states) override;
+     void setWindowFlags(Qt::WindowFlags flags) override;
+     void handleWindowStatesChanged(Qt::WindowStates states);
++    Qt::WindowStates windowStates() const;
+ 
+     void raise() override;
+     void lower() override;
+diff --git a/src/client/shellintegration/qwaylandshellintegration_p.h b/src/client/shellintegration/qwaylandshellintegration_p.h
+index ccad0048..4cc9b3b8 100644
+--- a/src/client/shellintegration/qwaylandshellintegration_p.h
++++ b/src/client/shellintegration/qwaylandshellintegration_p.h
+@@ -73,11 +73,10 @@ public:
+         return true;
+     }
+     virtual QWaylandShellSurface *createShellSurface(QWaylandWindow *window) = 0;
++    // kept for binary compat with layer-shell-qt
+     virtual void handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus) {
+-        if (newFocus)
+-            m_display->handleWindowActivated(newFocus);
+-        if (oldFocus)
+-            m_display->handleWindowDeactivated(oldFocus);
++        Q_UNUSED(newFocus);
++        Q_UNUSED(oldFocus);
+     }
+     virtual void *nativeResourceForWindow(const QByteArray &resource, QWindow *window) {
+         Q_UNUSED(resource);
 diff --git a/src/compositor/compositor_api/qwaylandquickcompositor.cpp b/src/compositor/compositor_api/qwaylandquickcompositor.cpp
 index 49f0860e..db1cf00f 100644
 --- a/src/compositor/compositor_api/qwaylandquickcompositor.cpp
@@ -740,6 +897,36 @@ index 245fec19..8f41118d 100644
      }
  
      if (m_pending.states != m_applied.states)
+diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp
+index 4e25949f..cfc60939 100644
+--- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp
++++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration.cpp
+@@ -85,13 +85,6 @@ QWaylandShellSurface *QWaylandXdgShellV5Integration::createShellSurface(QWayland
+     return m_xdgShell->createXdgSurface(window);
+ }
+ 
+-void QWaylandXdgShellV5Integration::handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus) {
+-    if (newFocus && qobject_cast<QWaylandXdgPopupV5 *>(newFocus->shellSurface()))
+-        m_display->handleWindowActivated(newFocus);
+-    if (oldFocus && qobject_cast<QWaylandXdgPopupV5 *>(oldFocus->shellSurface()))
+-        m_display->handleWindowDeactivated(oldFocus);
+-}
+-
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h
+index ce6bdb9e..aed88670 100644
+--- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h
++++ b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgshellv5integration_p.h
+@@ -67,7 +67,6 @@ public:
+     QWaylandXdgShellV5Integration() {}
+     bool initialize(QWaylandDisplay *display) override;
+     QWaylandShellSurface *createShellSurface(QWaylandWindow *window) override;
+-    void handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus) override;
+ 
+ private:
+     QScopedPointer<QWaylandXdgShellV5> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgsurfacev5.cpp b/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgsurfacev5.cpp
 index 770fad7e..73aba1ee 100644
 --- a/src/plugins/shellintegration/xdg-shell-v5/qwaylandxdgsurfacev5.cpp
@@ -766,20 +953,85 @@ index c137b308..8c371661 100644
  
      if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive))
          m_xdgSurface->m_window->display()->handleWindowActivated(m_xdgSurface->m_window);
+diff --git a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp
+index 03164316..e8da8ba1 100644
+--- a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp
++++ b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration.cpp
+@@ -68,20 +68,6 @@ QWaylandShellSurface *QWaylandXdgShellV6Integration::createShellSurface(QWayland
+     return m_xdgShell->getXdgSurface(window);
+ }
+ 
+-void QWaylandXdgShellV6Integration::handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus)
+-{
+-    if (newFocus) {
+-        auto *xdgSurface = qobject_cast<QWaylandXdgSurfaceV6 *>(newFocus->shellSurface());
+-        if (xdgSurface && !xdgSurface->handlesActiveState())
+-            m_display->handleWindowActivated(newFocus);
+-    }
+-    if (oldFocus && qobject_cast<QWaylandXdgSurfaceV6 *>(oldFocus->shellSurface())) {
+-        auto *xdgSurface = qobject_cast<QWaylandXdgSurfaceV6 *>(oldFocus->shellSurface());
+-        if (xdgSurface && !xdgSurface->handlesActiveState())
+-            m_display->handleWindowDeactivated(oldFocus);
+-    }
+-}
+-
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h
+index 261f8cbb..c1bcd5c6 100644
+--- a/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h
++++ b/src/plugins/shellintegration/xdg-shell-v6/qwaylandxdgshellv6integration_p.h
+@@ -65,7 +65,6 @@ public:
+     QWaylandXdgShellV6Integration() {}
+     bool initialize(QWaylandDisplay *display) override;
+     QWaylandShellSurface *createShellSurface(QWaylandWindow *window) override;
+-    void handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus) override;
+ 
+ private:
+     QScopedPointer<QWaylandXdgShellV6> m_xdgShell;
 diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-index b6d23ac1..7d33dabd 100644
+index b6d23ac1..d7d0ddf7 100644
 --- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
 +++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
-@@ -83,7 +83,7 @@ QWaylandXdgSurface::Toplevel::~Toplevel()
+@@ -67,11 +67,6 @@ QWaylandXdgSurface::Toplevel::Toplevel(QWaylandXdgSurface *xdgSurface)
+ 
+ QWaylandXdgSurface::Toplevel::~Toplevel()
+ {
+-    if (m_applied.states & Qt::WindowActive) {
+-        QWaylandWindow *window = m_xdgSurface->window();
+-        window->display()->handleWindowDeactivated(window);
+-    }
+-
+     // The protocol spec requires that the decoration object is deleted before xdg_toplevel.
+     delete m_decoration;
+     m_decoration = nullptr;
+@@ -83,18 +78,17 @@ QWaylandXdgSurface::Toplevel::~Toplevel()
  void QWaylandXdgSurface::Toplevel::applyConfigure()
  {
      if (!(m_applied.states & (Qt::WindowMaximized|Qt::WindowFullScreen)))
 -        m_normalSize = m_xdgSurface->m_window->window()->frameGeometry().size();
 +        m_normalSize = m_xdgSurface->m_window->windowFrameGeometry().size();
  
-     if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive))
+-    if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive))
++    if ((m_pending.states & Qt::WindowActive) && !(m_applied.states & Qt::WindowActive)
++        && !m_xdgSurface->m_window->display()->isKeyboardAvailable())
          m_xdgSurface->m_window->display()->handleWindowActivated(m_xdgSurface->m_window);
-@@ -105,8 +105,6 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
+ 
+-    if (!(m_pending.states & Qt::WindowActive) && (m_applied.states & Qt::WindowActive))
++    if (!(m_pending.states & Qt::WindowActive) && (m_applied.states & Qt::WindowActive)
++        && !m_xdgSurface->m_window->display()->isKeyboardAvailable())
+         m_xdgSurface->m_window->display()->handleWindowDeactivated(m_xdgSurface->m_window);
+ 
+-    // TODO: none of the other plugins send WindowActive either, but is it on purpose?
+-    Qt::WindowStates statesWithoutActive = m_pending.states & ~Qt::WindowActive;
+-
+-    m_xdgSurface->m_window->handleWindowStatesChanged(statesWithoutActive);
++    m_xdgSurface->m_window->handleWindowStatesChanged(m_pending.states);
+ 
+     if (m_pending.size.isEmpty()) {
+         // An empty size in the configure means it's up to the client to choose the size
+@@ -105,8 +99,6 @@ void QWaylandXdgSurface::Toplevel::applyConfigure()
          m_xdgSurface->m_window->resizeFromApplyConfigure(m_pending.size);
      }
  
@@ -788,7 +1040,7 @@ index b6d23ac1..7d33dabd 100644
      m_applied = m_pending;
      qCDebug(lcQpaWayland) << "Applied pending xdg_toplevel configure event:" << m_applied.size << m_applied.states;
  }
-@@ -178,9 +176,12 @@ void QWaylandXdgSurface::Toplevel::requestWindowStates(Qt::WindowStates states)
+@@ -178,9 +170,12 @@ void QWaylandXdgSurface::Toplevel::requestWindowStates(Qt::WindowStates states)
      }
  
      if (changedStates & Qt::WindowFullScreen) {
@@ -804,7 +1056,7 @@ index b6d23ac1..7d33dabd 100644
              unset_fullscreen();
      }
  
-@@ -254,6 +255,7 @@ QWaylandXdgSurface::QWaylandXdgSurface(QWaylandXdgShell *shell, ::xdg_surface *s
+@@ -254,6 +249,7 @@ QWaylandXdgSurface::QWaylandXdgSurface(QWaylandXdgShell *shell, ::xdg_surface *s
                  m_toplevel->set_parent(parentXdgSurface->m_toplevel->object());
          }
      }
@@ -812,6 +1064,43 @@ index b6d23ac1..7d33dabd 100644
  }
  
  QWaylandXdgSurface::~QWaylandXdgSurface()
+diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp
+index 8769d971..da0dd6a7 100644
+--- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp
++++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration.cpp
+@@ -69,20 +69,6 @@ QWaylandShellSurface *QWaylandXdgShellIntegration::createShellSurface(QWaylandWi
+     return m_xdgShell->getXdgSurface(window);
+ }
+ 
+-void QWaylandXdgShellIntegration::handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus)
+-{
+-    if (newFocus) {
+-        auto *xdgSurface = qobject_cast<QWaylandXdgSurface *>(newFocus->shellSurface());
+-        if (xdgSurface && !xdgSurface->handlesActiveState())
+-            m_display->handleWindowActivated(newFocus);
+-    }
+-    if (oldFocus && qobject_cast<QWaylandXdgSurface *>(oldFocus->shellSurface())) {
+-        auto *xdgSurface = qobject_cast<QWaylandXdgSurface *>(oldFocus->shellSurface());
+-        if (xdgSurface && !xdgSurface->handlesActiveState())
+-            m_display->handleWindowDeactivated(oldFocus);
+-    }
+-}
+-
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h
+index b6caa6c9..2f929f98 100644
+--- a/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h
++++ b/src/plugins/shellintegration/xdg-shell/qwaylandxdgshellintegration_p.h
+@@ -65,7 +65,6 @@ public:
+     QWaylandXdgShellIntegration() {}
+     bool initialize(QWaylandDisplay *display) override;
+     QWaylandShellSurface *createShellSurface(QWaylandWindow *window) override;
+-    void handleKeyboardFocusChanged(QWaylandWindow *newFocus, QWaylandWindow *oldFocus) override;
+ 
+ private:
+     QScopedPointer<QWaylandXdgShell> m_xdgShell;
 diff --git a/src/qtwaylandscanner/qtwaylandscanner.cpp b/src/qtwaylandscanner/qtwaylandscanner.cpp
 index 1d635f06..e2f87bbd 100644
 --- a/src/qtwaylandscanner/qtwaylandscanner.cpp
@@ -891,10 +1180,18 @@ index b8a65f15..95e4e609 100644
  
  // Used to cause a crash in libwayland (QTBUG-79674)
 diff --git a/tests/auto/client/xdgshell/tst_xdgshell.cpp b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-index 2277bbb8..e2593314 100644
+index 2277bbb8..73d1eb9c 100644
 --- a/tests/auto/client/xdgshell/tst_xdgshell.cpp
 +++ b/tests/auto/client/xdgshell/tst_xdgshell.cpp
-@@ -138,6 +138,7 @@ void tst_xdgshell::configureSize()
+@@ -31,6 +31,7 @@
+ #include <QtGui/QOpenGLWindow>
+ #include <QtGui/qpa/qplatformnativeinterface.h>
+ #include <QtWaylandClient/private/wayland-wayland-client-protocol.h>
++#include <QtWaylandClient/private/qwaylandwindow_p.h>
+ 
+ using namespace MockCompositor;
+ 
+@@ -138,6 +139,7 @@ void tst_xdgshell::configureSize()
  
  void tst_xdgshell::configureStates()
  {
@@ -902,7 +1199,23 @@ index 2277bbb8..e2593314 100644
      QRasterWindow window;
      window.resize(64, 48);
      window.show();
-@@ -186,6 +187,7 @@ void tst_xdgshell::configureStates()
+@@ -154,9 +156,12 @@ void tst_xdgshell::configureStates()
+     // Toplevel windows don't know their position on xdg-shell
+ //    QCOMPARE(window.frameGeometry().topLeft(), QPoint()); // TODO: this doesn't currently work when window decorations are enabled
+ 
+-//    QEXPECT_FAIL("", "configure has already been acked, we shouldn't have to wait for isActive", Continue);
+-//    QVERIFY(window.isActive());
+-    QTRY_VERIFY(window.isActive()); // Just make sure it eventually get's set correctly
++    // window.windowstate() is driven by keyboard focus, however for decorations we want to follow
++    // XDGShell this is internal to QtWayland so it is queried directly
++    auto waylandWindow = static_cast<QtWaylandClient::QWaylandWindow *>(window.handle());
++    Q_ASSERT(waylandWindow);
++    QTRY_VERIFY(waylandWindow->windowStates().testFlag(
++            Qt::WindowActive)); // Just make sure it eventually get's set correctly
+ 
+     const QSize screenSize(640, 480);
+     const uint maximizedSerial = exec([=] {
+@@ -186,6 +191,7 @@ void tst_xdgshell::configureStates()
      QCOMPARE(window.windowStates(), Qt::WindowNoState);
      QCOMPARE(window.frameGeometry().size(), windowedSize);
  //    QCOMPARE(window.frameGeometry().topLeft(), QPoint()); // TODO: this doesn't currently work when window decorations are enabled
@@ -910,7 +1223,7 @@ index 2277bbb8..e2593314 100644
  }
  
  void tst_xdgshell::popup()
-@@ -505,7 +507,7 @@ void tst_xdgshell::minMaxSize()
+@@ -505,7 +511,7 @@ void tst_xdgshell::minMaxSize()
      window.show();
      QCOMPOSITOR_TRY_VERIFY(xdgToplevel());
  
