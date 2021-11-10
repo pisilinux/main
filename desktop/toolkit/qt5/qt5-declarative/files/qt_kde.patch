@@ -443,6 +443,19 @@ index e2d3b98ff6..6eece147a6 100644
              break;
      }
  
+diff --git a/src/qml/memory/qv4mm.cpp b/src/qml/memory/qv4mm.cpp
+index 06caf04e5a..da149a67c4 100644
+--- a/src/qml/memory/qv4mm.cpp
++++ b/src/qml/memory/qv4mm.cpp
+@@ -981,7 +981,7 @@ void MemoryManager::sweep(bool lastSweep, ClassDestroyStatsCallback classCountPt
+ 
+     if (MultiplyWrappedQObjectMap *multiplyWrappedQObjects = engine->m_multiplyWrappedQObjects) {
+         for (MultiplyWrappedQObjectMap::Iterator it = multiplyWrappedQObjects->begin(); it != multiplyWrappedQObjects->end();) {
+-            if (!it.value().isNullOrUndefined())
++            if (it.value().isNullOrUndefined())
+                 it = multiplyWrappedQObjects->erase(it);
+             else
+                 ++it;
 diff --git a/src/qml/qml/qqmlextensionplugin.h b/src/qml/qml/qqmlextensionplugin.h
 index ef7ff422cd..afb3f99c4a 100644
 --- a/src/qml/qml/qqmlextensionplugin.h
@@ -585,7 +598,7 @@ index a7e37d1964..01b2f58f16 100644
  
  //
 diff --git a/src/qmlmodels/qqmldelegatemodel.cpp b/src/qmlmodels/qqmldelegatemodel.cpp
-index 725b9e8bc3..12c3d11937 100644
+index 725b9e8bc3..8a74a854f4 100644
 --- a/src/qmlmodels/qqmldelegatemodel.cpp
 +++ b/src/qmlmodels/qqmldelegatemodel.cpp
 @@ -1,6 +1,6 @@
@@ -596,7 +609,81 @@ index 725b9e8bc3..12c3d11937 100644
  ** Contact: https://www.qt.io/licensing/
  **
  ** This file is part of the QtQml module of the Qt Toolkit.
-@@ -2379,6 +2379,15 @@ void QQmlDelegateModelItem::destroyObject()
+@@ -389,6 +389,12 @@ void QQmlDelegateModelPrivate::connectToAbstractItemModel()
+                       q,  QQmlDelegateModel, SLOT(_q_rowsRemoved(QModelIndex,int,int)));
+     qmlobject_connect(aim, QAbstractItemModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+                       q,  QQmlDelegateModel, SLOT(_q_rowsAboutToBeRemoved(QModelIndex,int,int)));
++    qmlobject_connect(aim, QAbstractItemModel, SIGNAL(columnsInserted(QModelIndex,int,int)),
++                      q, QQmlDelegateModel, SLOT(_q_columnsInserted(QModelIndex,int,int)));
++    qmlobject_connect(aim, QAbstractItemModel, SIGNAL(columnsRemoved(QModelIndex,int,int)),
++                      q, QQmlDelegateModel, SLOT(_q_columnsRemoved(QModelIndex,int,int)));
++    qmlobject_connect(aim, QAbstractItemModel, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
++                      q, QQmlDelegateModel, SLOT(_q_columnsMoved(QModelIndex,int,int,QModelIndex,int)));
+     qmlobject_connect(aim, QAbstractItemModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                       q, QQmlDelegateModel, SLOT(_q_dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+     qmlobject_connect(aim, QAbstractItemModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+@@ -413,6 +419,12 @@ void QQmlDelegateModelPrivate::disconnectFromAbstractItemModel()
+                         q, SLOT(_q_rowsAboutToBeRemoved(QModelIndex,int,int)));
+     QObject::disconnect(aim, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+                         q, SLOT(_q_rowsRemoved(QModelIndex,int,int)));
++    QObject::disconnect(aim, SIGNAL(columnsInserted(QModelIndex,int,int)), q,
++                        SLOT(_q_columnsInserted(QModelIndex,int,int)));
++    QObject::disconnect(aim, SIGNAL(columnsRemoved(QModelIndex,int,int)), q,
++                        SLOT(_q_columnsRemoved(QModelIndex,int,int)));
++    QObject::disconnect(aim, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), q,
++                        SLOT(_q_columnsMoved(QModelIndex,int,int,QModelIndex,int)));
+     QObject::disconnect(aim, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                         q, SLOT(_q_dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+     QObject::disconnect(aim, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+@@ -1609,7 +1621,7 @@ void QQmlDelegateModelPrivate::itemsRemoved(
+         removed[i] = 0;
+ 
+     for (const Compositor::Remove &remove : removes) {
+-        for (; cacheIndex < remove.cacheIndex; ++cacheIndex)
++        for (; cacheIndex < remove.cacheIndex && cacheIndex < m_cache.size(); ++cacheIndex)
+             incrementIndexes(m_cache.at(cacheIndex), m_groupCount, removed);
+ 
+         for (int i = 1; i < m_groupCount; ++i) {
+@@ -1953,6 +1965,38 @@ void QQmlDelegateModel::_q_rowsMoved(
+     }
+ }
+ 
++void QQmlDelegateModel::_q_columnsInserted(const QModelIndex &parent, int begin, int end)
++{
++    Q_D(QQmlDelegateModel);
++    Q_UNUSED(end);
++    if (parent == d->m_adaptorModel.rootIndex && begin == 0) {
++        // mark all items as changed
++        _q_itemsChanged(0, d->m_count, QVector<int>());
++    }
++}
++
++void QQmlDelegateModel::_q_columnsRemoved(const QModelIndex &parent, int begin, int end)
++{
++    Q_D(QQmlDelegateModel);
++    Q_UNUSED(end);
++    if (parent == d->m_adaptorModel.rootIndex && begin == 0) {
++        // mark all items as changed
++        _q_itemsChanged(0, d->m_count, QVector<int>());
++    }
++}
++
++void QQmlDelegateModel::_q_columnsMoved(const QModelIndex &parent, int start, int end,
++                                        const QModelIndex &destination, int column)
++{
++    Q_D(QQmlDelegateModel);
++    Q_UNUSED(end);
++    if ((parent == d->m_adaptorModel.rootIndex && start == 0)
++        || (destination == d->m_adaptorModel.rootIndex && column == 0)) {
++        // mark all items as changed
++        _q_itemsChanged(0, d->m_count, QVector<int>());
++    }
++}
++
+ void QQmlDelegateModel::_q_dataChanged(const QModelIndex &begin, const QModelIndex &end, const QVector<int> &roles)
+ {
+     Q_D(QQmlDelegateModel);
+@@ -2379,6 +2423,15 @@ void QQmlDelegateModelItem::destroyObject()
          data->ownContext = nullptr;
          data->context = nullptr;
      }
@@ -612,6 +699,20 @@ index 725b9e8bc3..12c3d11937 100644
      object->deleteLater();
  
      if (attached) {
+diff --git a/src/qmlmodels/qqmldelegatemodel_p.h b/src/qmlmodels/qqmldelegatemodel_p.h
+index 8aab4badca..d140bfbaaf 100644
+--- a/src/qmlmodels/qqmldelegatemodel_p.h
++++ b/src/qmlmodels/qqmldelegatemodel_p.h
+@@ -152,6 +152,9 @@ private Q_SLOTS:
+     void _q_itemsMoved(int from, int to, int count);
+     void _q_modelReset();
+     void _q_rowsInserted(const QModelIndex &,int,int);
++    void _q_columnsInserted(const QModelIndex &, int, int);
++    void _q_columnsRemoved(const QModelIndex &, int, int);
++    void _q_columnsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
+     void _q_rowsAboutToBeRemoved(const QModelIndex &parent, int begin, int end);
+     void _q_rowsRemoved(const QModelIndex &,int,int);
+     void _q_rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
 diff --git a/src/qmlmodels/qqmllistmodel.cpp b/src/qmlmodels/qqmllistmodel.cpp
 index e07951cab3..8830e08097 100644
 --- a/src/qmlmodels/qqmllistmodel.cpp
@@ -793,6 +894,42 @@ index 67c4611d9e..e02df00595 100644
  void QQuickItem::setAcceptedMouseButtons(Qt::MouseButtons buttons)
  {
      Q_D(QQuickItem);
+diff --git a/src/quick/items/qquickitemanimation.cpp b/src/quick/items/qquickitemanimation.cpp
+index 23694e2de3..dfb56ccc00 100644
+--- a/src/quick/items/qquickitemanimation.cpp
++++ b/src/quick/items/qquickitemanimation.cpp
+@@ -230,8 +230,8 @@ QAbstractAnimationJob* QQuickParentAnimation::transition(QQuickStateActions &act
+ {
+     Q_D(QQuickParentAnimation);
+ 
+-    QQuickParentAnimationData *data = new QQuickParentAnimationData;
+-    QQuickParentAnimationData *viaData = new QQuickParentAnimationData;
++    std::unique_ptr<QQuickParentAnimationData> data(new QQuickParentAnimationData);
++    std::unique_ptr<QQuickParentAnimationData> viaData(new QQuickParentAnimationData);
+ 
+     bool hasExplicit = false;
+     if (d->target && d->newParent) {
+@@ -377,8 +377,8 @@ QAbstractAnimationJob* QQuickParentAnimation::transition(QQuickStateActions &act
+         QParallelAnimationGroupJob *ag = new QParallelAnimationGroupJob;
+ 
+         if (d->via)
+-            viaAction->setAnimAction(viaData);
+-        targetAction->setAnimAction(data);
++            viaAction->setAnimAction(viaData.release());
++        targetAction->setAnimAction(data.release());
+ 
+         //take care of any child animations
+         bool valid = d->defaultProperty.isValid();
+@@ -405,9 +405,6 @@ QAbstractAnimationJob* QQuickParentAnimation::transition(QQuickStateActions &act
+             topLevelGroup->appendAnimation(d->via ? viaAction : targetAction);
+         }
+         return initInstance(topLevelGroup);
+-    } else {
+-        delete data;
+-        delete viaData;
+     }
+     return nullptr;
+ }
 diff --git a/src/quick/items/qquickloader.cpp b/src/quick/items/qquickloader.cpp
 index 8cd63a4236..a6f7009946 100644
 --- a/src/quick/items/qquickloader.cpp
@@ -827,6 +964,44 @@ index fba383e268..0d63618622 100644
      QPointF startScene;
      QPointF targetStartPos;
      QPointF lastPos;
+diff --git a/src/quick/items/qquickshadereffectsource.cpp b/src/quick/items/qquickshadereffectsource.cpp
+index 4f61d61309..b298ed74da 100644
+--- a/src/quick/items/qquickshadereffectsource.cpp
++++ b/src/quick/items/qquickshadereffectsource.cpp
+@@ -344,7 +344,6 @@ void QQuickShaderEffectSource::setSourceItem(QQuickItem *item)
+             d->refFromEffectItem(m_hideSource);
+             d->addItemChangeListener(this, QQuickItemPrivate::Geometry);
+             connect(m_sourceItem, SIGNAL(destroyed(QObject*)), this, SLOT(sourceItemDestroyed(QObject*)));
+-            connect(m_sourceItem, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(sourceItemParentChanged(QQuickItem*)));
+         } else {
+             qWarning("ShaderEffectSource: sourceItem and ShaderEffectSource must both be children of the same window.");
+             m_sourceItem = nullptr;
+@@ -364,13 +363,6 @@ void QQuickShaderEffectSource::sourceItemDestroyed(QObject *item)
+ }
+ 
+ 
+-void QQuickShaderEffectSource::sourceItemParentChanged(QQuickItem *parent)
+-{
+-    if (!parent && m_texture)
+-        m_texture->setItem(0);
+-}
+-
+-
+ /*!
+     \qmlproperty rect QtQuick::ShaderEffectSource::sourceRect
+ 
+diff --git a/src/quick/items/qquickshadereffectsource_p.h b/src/quick/items/qquickshadereffectsource_p.h
+index 4deb6c70a3..c0a1ccab78 100644
+--- a/src/quick/items/qquickshadereffectsource_p.h
++++ b/src/quick/items/qquickshadereffectsource_p.h
+@@ -173,7 +173,6 @@ Q_SIGNALS:
+ private Q_SLOTS:
+     void sourceItemDestroyed(QObject *item);
+     void invalidateSceneGraph();
+-    void sourceItemParentChanged(QQuickItem *parent);
+ 
+ protected:
+     void releaseResources() override;
 diff --git a/src/quick/items/qquicktableview.cpp b/src/quick/items/qquicktableview.cpp
 index 7b73fcb393..1349d308d7 100644
 --- a/src/quick/items/qquicktableview.cpp
@@ -930,10 +1105,29 @@ index 97f6689d8a..b3a5270e9b 100644
     \sa QQmlComponent::createWithInitialProperties()
     \since 5.14
 diff --git a/src/quick/items/qquickwindow.cpp b/src/quick/items/qquickwindow.cpp
-index d0c9ad5454..9ff91eb9a0 100644
+index d0c9ad5454..fbb807ca96 100644
 --- a/src/quick/items/qquickwindow.cpp
 +++ b/src/quick/items/qquickwindow.cpp
-@@ -2864,6 +2864,14 @@ void QQuickWindowPrivate::deliverMatchingPointsToItem(QQuickItem *item, QQuickPo
+@@ -450,15 +450,14 @@ void QQuickWindow::physicalDpiChanged()
+ void QQuickWindow::handleScreenChanged(QScreen *screen)
+ {
+     Q_D(QQuickWindow);
++    disconnect(d->physicalDpiChangedConnection);
+     if (screen) {
+         physicalDpiChanged();
+         // When physical DPI changes on the same screen, either the resolution or the device pixel
+         // ratio changed. We must check what it is. Device pixel ratio does not have its own
+         // ...Changed() signal.
+-        d->physicalDpiChangedConnection = connect(screen, SIGNAL(physicalDotsPerInchChanged(qreal)),
+-                                                  this, SLOT(physicalDpiChanged()));
+-    } else {
+-        disconnect(d->physicalDpiChangedConnection);
++        d->physicalDpiChangedConnection = connect(screen, &QScreen::physicalDotsPerInchChanged,
++                                                  this, &QQuickWindow::physicalDpiChanged);
+     }
+ 
+     d->forcePolish();
+@@ -2864,6 +2863,14 @@ void QQuickWindowPrivate::deliverMatchingPointsToItem(QQuickItem *item, QQuickPo
  {
      Q_Q(QQuickWindow);
      QQuickItemPrivate *itemPrivate = QQuickItemPrivate::get(item);
@@ -959,6 +1153,361 @@ index 80e59563c7..97680569e7 100644
 +GHS_KEEP_REFERENCE(qml_register_types_QtQuick);
  
  QT_BEGIN_NAMESPACE
+ 
+diff --git a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
+index 3c60f830de..0fd6581dc4 100644
+--- a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
++++ b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
+@@ -428,6 +428,18 @@ QSGTextMaskRhiShader::QSGTextMaskRhiShader(QFontEngine::GlyphFormat glyphFormat)
+                       QStringLiteral(":/qt-project.org/scenegraph/shaders_ng/textmask.frag.qsb"));
+ }
+ 
++enum UbufOffset {
++    ModelViewMatrixOffset = 0,
++    ProjectionMatrixOffset = ModelViewMatrixOffset + 64,
++    ColorOffset = ProjectionMatrixOffset + 64,
++    TextureScaleOffset = ColorOffset + 16,
++    DprOffset = TextureScaleOffset + 8,
++
++    // + 1 float padding (vec4 must be aligned to 16)
++    StyleColorOffset = DprOffset + 4 + 4,
++    ShiftOffset = StyleColorOffset + 16
++};
++
+ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
+                                              QSGMaterial *newMaterial, QSGMaterial *oldMaterial)
+ {
+@@ -443,11 +455,14 @@ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
+ 
+     bool changed = false;
+     QByteArray *buf = state.uniformData();
+-    Q_ASSERT(buf->size() >= 92);
++    Q_ASSERT(buf->size() >= DprOffset + 4);
+ 
+     if (state.isMatrixDirty()) {
+-        const QMatrix4x4 m = state.combinedMatrix();
+-        memcpy(buf->data(), m.constData(), 64);
++        const QMatrix4x4 mv = state.modelViewMatrix();
++        memcpy(buf->data() + ModelViewMatrixOffset, mv.constData(), 64);
++        const QMatrix4x4 p = state.projectionMatrix();
++        memcpy(buf->data() + ProjectionMatrixOffset, p.constData(), 64);
++
+         changed = true;
+     }
+ 
+@@ -456,13 +471,13 @@ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
+     if (updated || !oldMat || oldRtex != newRtex) {
+         const QVector2D textureScale = QVector2D(1.0f / mat->rhiGlyphCache()->width(),
+                                                  1.0f / mat->rhiGlyphCache()->height());
+-        memcpy(buf->data() + 64 + 16, &textureScale, 8);
++        memcpy(buf->data() + TextureScaleOffset, &textureScale, 8);
+         changed = true;
+     }
+ 
+     if (!oldMat) {
+         float dpr = state.devicePixelRatio();
+-        memcpy(buf->data() + 64 + 16 + 8, &dpr, 4);
++        memcpy(buf->data() + DprOffset, &dpr, 4);
+     }
+ 
+     // move texture uploads/copies onto the renderer's soon-to-be-committed list
+@@ -510,11 +525,11 @@ bool QSG8BitTextMaskRhiShader::updateUniformData(RenderState &state,
+     QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
+ 
+     QByteArray *buf = state.uniformData();
+-    Q_ASSERT(buf->size() >= 80);
++    Q_ASSERT(buf->size() >= ColorOffset + 16);
+ 
+     if (oldMat == nullptr || mat->color() != oldMat->color() || state.isOpacityDirty()) {
+         const QVector4D color = qsg_premultiply(mat->color(), state.opacity());
+-        memcpy(buf->data() + 64, &color, 16);
++        memcpy(buf->data() + ColorOffset, &color, 16);
+         changed = true;
+     }
+ 
+@@ -553,12 +568,12 @@ bool QSG24BitTextMaskRhiShader::updateUniformData(RenderState &state,
+     QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
+ 
+     QByteArray *buf = state.uniformData();
+-    Q_ASSERT(buf->size() >= 92);
++    Q_ASSERT(buf->size() >= ColorOffset + 16);
+ 
+     if (oldMat == nullptr || mat->color() != oldMat->color() || state.isOpacityDirty()) {
+         // shader takes vec4 but uses alpha only; coloring happens via the blend constant
+         const QVector4D color = qsg_premultiply(mat->color(), state.opacity());
+-        memcpy(buf->data() + 64, &color, 16);
++        memcpy(buf->data() + ColorOffset, &color, 16);
+         changed = true;
+     }
+ 
+@@ -608,12 +623,12 @@ bool QSG32BitColorTextRhiShader::updateUniformData(RenderState &state,
+     QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
+ 
+     QByteArray *buf = state.uniformData();
+-    Q_ASSERT(buf->size() >= 92);
++    Q_ASSERT(buf->size() >= ColorOffset + 16);
+ 
+     if (oldMat == nullptr || mat->color() != oldMat->color() || state.isOpacityDirty()) {
+         // shader takes vec4 but uses alpha only
+         const QVector4D color(0, 0, 0, mat->color().w() * state.opacity());
+-        memcpy(buf->data() + 64, &color, 16);
++        memcpy(buf->data() + ColorOffset, &color, 16);
+         changed = true;
+     }
+ 
+@@ -649,20 +664,17 @@ bool QSGStyledTextRhiShader::updateUniformData(RenderState &state,
+     QSGStyledTextMaterial *oldMat = static_cast<QSGStyledTextMaterial *>(oldMaterial);
+ 
+     QByteArray *buf = state.uniformData();
+-    Q_ASSERT(buf->size() >= 120);
+-
+-    // matrix..dpr + 1 float padding (vec4 must be aligned to 16)
+-    const int startOffset = 64 + 16 + 8 + 4 + 4;
++    Q_ASSERT(buf->size() >= ShiftOffset + 8);
+ 
+     if (oldMat == nullptr || mat->styleColor() != oldMat->styleColor() || state.isOpacityDirty()) {
+         const QVector4D styleColor = qsg_premultiply(mat->styleColor(), state.opacity());
+-        memcpy(buf->data() + startOffset, &styleColor, 16);
++        memcpy(buf->data() + StyleColorOffset, &styleColor, 16);
+         changed = true;
+     }
+ 
+     if (oldMat == nullptr || oldMat->styleShift() != mat->styleShift()) {
+         const QVector2D v = mat->styleShift();
+-        memcpy(buf->data() + startOffset + 16, &v, 8);
++        memcpy(buf->data() + ShiftOffset, &v, 8);
+         changed = true;
+     }
+ 
+diff --git a/src/quick/scenegraph/shaders_ng/24bittextmask.frag b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
+index bc3826a924..ed8da4cd30 100644
+--- a/src/quick/scenegraph/shaders_ng/24bittextmask.frag
++++ b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
+@@ -6,8 +6,9 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
+-    vec4 color; // only alpha is used, but must be vec4 due to layout compat
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
++    vec4 color;
+     vec2 textureScale;
+     float dpr;
+ } ubuf;
+diff --git a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
+index 63e445f90b..4198a4d339 100644
+--- a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
++++ b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
+@@ -6,8 +6,9 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
+-    vec4 color; // only alpha is used, but must be vec4 due to layout compat
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
++    vec4 color;
+     vec2 textureScale;
+     float dpr;
+ } ubuf;
+diff --git a/src/quick/scenegraph/shaders_ng/8bittextmask.frag b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
+index 6304e821ff..a06743876d 100644
+--- a/src/quick/scenegraph/shaders_ng/8bittextmask.frag
++++ b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
+@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+diff --git a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
+index 0d0fa1cd3a..f725cbc5e7 100644
+--- a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
++++ b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
+@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext.frag b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
+index 947d161a50..e2f82d3845 100644
+--- a/src/quick/scenegraph/shaders_ng/outlinedtext.frag
++++ b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
+@@ -11,11 +11,12 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    // must match styledtext
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
++    // the above must stay compatible with textmask/8bittextmask
+     vec4 styleColor;
+     vec2 shift;
+ } ubuf;
+diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext.vert b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
+index 023f9dfdc2..4068e42f28 100644
+--- a/src/quick/scenegraph/shaders_ng/outlinedtext.vert
++++ b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
+@@ -10,11 +10,12 @@ layout(location = 3) out vec2 sCoordLeft;
+ layout(location = 4) out vec2 sCoordRight;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    // must match styledtext
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
++    // the above must stay compatible with textmask/8bittextmask
+     vec4 styleColor;
+     vec2 shift;
+ } ubuf;
+@@ -28,6 +29,6 @@ void main()
+      sCoordDown = (tCoord - vec2(0.0, 1.0)) * ubuf.textureScale;
+      sCoordLeft = (tCoord - vec2(-1.0, 0.0)) * ubuf.textureScale;
+      sCoordRight = (tCoord - vec2(1.0, 0.0)) * ubuf.textureScale;
+-     vec3 dprSnapPos = floor(vCoord.xyz * ubuf.dpr + 0.5) / ubuf.dpr;
+-     gl_Position = ubuf.matrix * vec4(dprSnapPos, vCoord.w);
++     vec4 xformed = ubuf.modelViewMatrix * vCoord;
++     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
+ }
+diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
+index 5b7bd9ca82..274d891a3c 100644
+--- a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
++++ b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
+@@ -11,11 +11,12 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    // must match styledtext
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
++    // the above must stay compatible with textmask/8bittextmask
+     vec4 styleColor;
+     vec2 shift;
+ } ubuf;
+diff --git a/src/quick/scenegraph/shaders_ng/styledtext.frag b/src/quick/scenegraph/shaders_ng/styledtext.frag
+index 0b16396037..2e380dfeae 100644
+--- a/src/quick/scenegraph/shaders_ng/styledtext.frag
++++ b/src/quick/scenegraph/shaders_ng/styledtext.frag
+@@ -8,7 +8,8 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+diff --git a/src/quick/scenegraph/shaders_ng/styledtext.vert b/src/quick/scenegraph/shaders_ng/styledtext.vert
+index beadf07c79..271dae8d8a 100644
+--- a/src/quick/scenegraph/shaders_ng/styledtext.vert
++++ b/src/quick/scenegraph/shaders_ng/styledtext.vert
+@@ -7,7 +7,8 @@ layout(location = 0) out vec2 sampleCoord;
+ layout(location = 1) out vec2 shiftedSampleCoord;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+@@ -22,6 +23,6 @@ void main()
+ {
+      sampleCoord = tCoord * ubuf.textureScale;
+      shiftedSampleCoord = (tCoord - ubuf.shift) * ubuf.textureScale;
+-     vec3 dprSnapPos = floor(vCoord.xyz * ubuf.dpr + 0.5) / ubuf.dpr;
+-     gl_Position = ubuf.matrix * vec4(dprSnapPos, vCoord.w);
++     vec4 xformed = ubuf.modelViewMatrix * vCoord;
++     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
+ }
+diff --git a/src/quick/scenegraph/shaders_ng/styledtext_a.frag b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
+index b673137895..62e162c851 100644
+--- a/src/quick/scenegraph/shaders_ng/styledtext_a.frag
++++ b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
+@@ -8,7 +8,8 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+diff --git a/src/quick/scenegraph/shaders_ng/textmask.frag b/src/quick/scenegraph/shaders_ng/textmask.frag
+index 518d5c965f..ed8da4cd30 100644
+--- a/src/quick/scenegraph/shaders_ng/textmask.frag
++++ b/src/quick/scenegraph/shaders_ng/textmask.frag
+@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+diff --git a/src/quick/scenegraph/shaders_ng/textmask.vert b/src/quick/scenegraph/shaders_ng/textmask.vert
+index 9d80d5dadb..e0b3c01bce 100644
+--- a/src/quick/scenegraph/shaders_ng/textmask.vert
++++ b/src/quick/scenegraph/shaders_ng/textmask.vert
+@@ -6,7 +6,8 @@ layout(location = 1) in vec2 tCoord;
+ layout(location = 0) out vec2 sampleCoord;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+@@ -17,6 +18,6 @@ out gl_PerVertex { vec4 gl_Position; };
+ void main()
+ {
+      sampleCoord = tCoord * ubuf.textureScale;
+-     vec3 dprSnapPos = floor(vCoord.xyz * ubuf.dpr + 0.5) / ubuf.dpr;
+-     gl_Position = ubuf.matrix * vec4(dprSnapPos, vCoord.w);
++     vec4 xformed = ubuf.modelViewMatrix * vCoord;
++     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
+ }
+diff --git a/src/quick/util/qquickstate.cpp b/src/quick/util/qquickstate.cpp
+index 71ab1f4d62..6a72754bde 100644
+--- a/src/quick/util/qquickstate.cpp
++++ b/src/quick/util/qquickstate.cpp
+@@ -635,6 +635,11 @@ void QQuickState::apply(QQuickTransition *trans, QQuickState *revert)
+             }
+         }
+         if (!found) {
++            // If revert list contains bindings assigned to deleted objects, we need to
++            // prevent reverting properties of those objects.
++            if (d->revertList.at(ii).binding() && !d->revertList.at(ii).property().object()) {
++                continue;
++            }
+             QVariant cur = d->revertList.at(ii).property().read();
+             QQmlPropertyPrivate::removeBinding(d->revertList.at(ii).property());
  
 diff --git a/src/quick/util/qquickstyledtext.cpp b/src/quick/util/qquickstyledtext.cpp
 index 660852ba83..a25af90414 100644
@@ -1040,6 +1589,149 @@ index 84f5eebd10..e3cbeb9891 100644
  }
  
  QTEST_MAIN(tst_qv4debugger)
+diff --git a/tests/auto/qml/qjsengine/tst_qjsengine.cpp b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
+index 3b7d74df63..b75bf820d5 100644
+--- a/tests/auto/qml/qjsengine/tst_qjsengine.cpp
++++ b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
+@@ -102,6 +102,7 @@ private slots:
+     void valueConversion_RegularExpression();
+     void castWithMultipleInheritance();
+     void collectGarbage();
++    void collectGarbageNestedWrappersTwoEngines();
+     void gcWithNestedDataStructure();
+     void stacktrace();
+     void numberParsing_data();
+@@ -1809,6 +1810,44 @@ void tst_QJSEngine::collectGarbage()
+     QVERIFY(ptr.isNull());
+ }
+ 
++class TestObjectContainer : public QObject
++{
++    Q_OBJECT
++    Q_PROPERTY(QObject *dummy MEMBER m_dummy CONSTANT)
++
++public:
++    TestObjectContainer() : m_dummy(new QObject(this)) {}
++
++private:
++    QObject *m_dummy;
++};
++
++void tst_QJSEngine::collectGarbageNestedWrappersTwoEngines()
++{
++    QJSEngine engine1;
++    QJSEngine engine2;
++
++    TestObjectContainer container;
++    QQmlEngine::setObjectOwnership(&container, QQmlEngine::CppOwnership);
++
++    engine1.globalObject().setProperty("foobar", engine1.newQObject(&container));
++    engine2.globalObject().setProperty("foobar", engine2.newQObject(&container));
++
++    engine1.evaluate("foobar.dummy.baz = 42");
++    engine2.evaluate("foobar.dummy.baz = 43");
++
++    QCOMPARE(engine1.evaluate("foobar.dummy.baz").toInt(), 42);
++    QCOMPARE(engine2.evaluate("foobar.dummy.baz").toInt(), 43);
++
++    engine1.collectGarbage();
++    engine2.collectGarbage();
++
++    // The GC should not collect dummy object wrappers neither in engine1 nor engine2, we
++    // verify that by checking whether the baz property still has its previous value.
++    QCOMPARE(engine1.evaluate("foobar.dummy.baz").toInt(), 42);
++    QCOMPARE(engine2.evaluate("foobar.dummy.baz").toInt(), 43);
++}
++
+ void tst_QJSEngine::gcWithNestedDataStructure()
+ {
+     // The GC must be able to traverse deeply nested objects, otherwise this
+diff --git a/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml b/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml
+new file mode 100644
+index 0000000000..206133bb39
+--- /dev/null
++++ b/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml
+@@ -0,0 +1,11 @@
++import QtQuick 2.8
++
++ListView {
++    id: root
++    width: 200
++    height: 200
++
++    delegate: Text {
++        text: display
++    }
++}
+diff --git a/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro b/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
+index 7fdd3ab5f1..fbd72f6a44 100644
+--- a/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
++++ b/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
+@@ -2,7 +2,7 @@ CONFIG += testcase
+ TARGET = tst_qqmldelegatemodel
+ macos:CONFIG -= app_bundle
+ 
+-QT += qml testlib core-private qml-private qmlmodels-private
++QT += qml quick testlib core-private qml-private qmlmodels-private
+ 
+ SOURCES += tst_qqmldelegatemodel.cpp
+ 
+diff --git a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
+index 87f42c0c8a..1d338ac330 100644
+--- a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
++++ b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
+@@ -27,8 +27,12 @@
+ ****************************************************************************/
+ 
+ #include <QtTest/qtest.h>
++#include <QtCore/QConcatenateTablesProxyModel>
++#include <QtGui/QStandardItemModel>
+ #include <QtQml/qqmlcomponent.h>
+ #include <QtQmlModels/private/qqmldelegatemodel_p.h>
++#include <QtQuick/qquickview.h>
++#include <QtQuick/qquickitem.h>
+ 
+ #include "../../shared/util.h"
+ 
+@@ -42,6 +46,7 @@ public:
+ private slots:
+     void valueWithoutCallingObjectFirst_data();
+     void valueWithoutCallingObjectFirst();
++    void redrawUponColumnChange();
+ };
+ 
+ class AbstractItemModel : public QAbstractItemModel
+@@ -134,6 +139,30 @@ void tst_QQmlDelegateModel::valueWithoutCallingObjectFirst()
+     QCOMPARE(model->variantValue(index, role), expectedValue);
+ }
+ 
++void tst_QQmlDelegateModel::redrawUponColumnChange()
++{
++    QStandardItemModel m1;
++    m1.appendRow({
++            new QStandardItem("Banana"),
++            new QStandardItem("Coconut"),
++    });
++
++    QQuickView view(testFileUrl("redrawUponColumnChange.qml"));
++    QCOMPARE(view.status(), QQuickView::Ready);
++    view.show();
++    QQuickItem *root = view.rootObject();
++    root->setProperty("model", QVariant::fromValue<QObject *>(&m1));
++
++    QObject *item = root->property("currentItem").value<QObject *>();
++    QVERIFY(item);
++    QCOMPARE(item->property("text").toString(), "Banana");
++
++    QVERIFY(root);
++    m1.removeColumn(0);
++
++    QCOMPARE(item->property("text").toString(), "Coconut");
++}
++
+ QTEST_MAIN(tst_QQmlDelegateModel)
+ 
+ #include "tst_qqmldelegatemodel.moc"
 diff --git a/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml b/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml
 new file mode 100644
 index 0000000000..affba7d9f1
@@ -1203,6 +1895,24 @@ index d54e3467b7..1953798a15 100644
  
  QTEST_MAIN(tst_qqmllistmodel)
  
+diff --git a/tests/auto/qml/qv4mm/tst_qv4mm.cpp b/tests/auto/qml/qv4mm/tst_qv4mm.cpp
+index 5d635aa63b..824fd89e5b 100644
+--- a/tests/auto/qml/qv4mm/tst_qv4mm.cpp
++++ b/tests/auto/qml/qv4mm/tst_qv4mm.cpp
+@@ -76,10 +76,10 @@ void tst_qv4mm::multiWrappedQObjects()
+         QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 1);
+         QCOMPARE(engine2.memoryManager->m_pendingFreedObjectWrapperValue.size(), 0);
+ 
+-        // Moves the additional WeakValue from m_multiplyWrappedQObjects to
+-        // m_pendingFreedObjectWrapperValue. It's still alive after all.
++        // The additional WeakValue from m_multiplyWrappedQObjects hasn't been moved
++        // to m_pendingFreedObjectWrapperValue yet. It's still alive after all.
+         engine1.memoryManager->runGC();
+-        QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 2);
++        QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 1);
+ 
+         // engine2 doesn't own the object as engine1 was the first to wrap it above.
+         // Therefore, no effect here.
 diff --git a/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
 new file mode 100644
 index 0000000000..a56dcea5ad
@@ -1276,6 +1986,159 @@ index f4b682f3f4..fe2d71b037 100644
  QTEST_MAIN(tst_QQuickLoader)
  
  #include "tst_qquickloader.moc"
+diff --git a/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml b/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml
+new file mode 100644
+index 0000000000..dee82f52ed
+--- /dev/null
++++ b/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml
+@@ -0,0 +1,48 @@
++import QtQuick 2.12
++import Qt.test 1.0
++
++Item {
++    id: root
++    readonly property int someProp: 1234
++
++    property bool state1Active: false
++    property bool state2Active: false
++    StateGroup {
++        states: [
++            State {
++                id: state1
++                name: "state1"
++                when: state1Active
++                changes: [
++                    PropertyChanges {
++                        objectName: "propertyChanges1"
++                        target: ContainingObj.obj
++                        prop: root.someProp
++                    }
++                ]
++            }
++    ]}
++    StateGroup {
++        states: [
++            State {
++                id: state2
++                name: "state2"
++                when: state2Active
++                changes: [
++                    PropertyChanges {
++                        objectName: "propertyChanges2"
++                        target: ContainingObj.obj
++                        prop: 11111
++                    }
++                ]
++            }
++        ]
++    }
++
++    Component.onCompleted: {
++        state1Active = true;
++        state2Active = true;
++
++        ContainingObj.reset()
++    }
++}
+diff --git a/tests/auto/quick/qquickstates/tst_qquickstates.cpp b/tests/auto/quick/qquickstates/tst_qquickstates.cpp
+index d5fea3cb28..849522454f 100644
+--- a/tests/auto/quick/qquickstates/tst_qquickstates.cpp
++++ b/tests/auto/quick/qquickstates/tst_qquickstates.cpp
+@@ -79,6 +79,55 @@ private:
+ QML_DECLARE_TYPE(MyRect)
+ QML_DECLARE_TYPEINFO(MyRect, QML_HAS_ATTACHED_PROPERTIES)
+ 
++class RemovableObj : public QObject
++{
++    Q_OBJECT
++    Q_PROPERTY(int prop READ prop WRITE setProp NOTIFY propChanged)
++
++public:
++    RemovableObj(QObject *parent) : QObject(parent), m_prop(4321) { }
++    int prop() const { return m_prop; }
++
++public slots:
++    void setProp(int prop)
++    {
++        if (m_prop == prop)
++            return;
++
++        m_prop = prop;
++        emit propChanged(m_prop);
++    }
++
++signals:
++    void propChanged(int prop);
++
++private:
++    int m_prop;
++};
++
++class ContainingObj : public QObject
++{
++    Q_OBJECT
++    Q_PROPERTY(RemovableObj *obj READ obj NOTIFY objChanged)
++    RemovableObj *m_obj;
++
++public:
++    ContainingObj() : m_obj(new RemovableObj(this)) { }
++    RemovableObj *obj() const { return m_obj; }
++
++    Q_INVOKABLE void reset()
++    {
++        if (m_obj) {
++            m_obj->deleteLater();
++        }
++
++        m_obj = new RemovableObj(this);
++        emit objChanged();
++    }
++signals:
++    void objChanged();
++};
++
+ class tst_qquickstates : public QQmlDataTest
+ {
+     Q_OBJECT
+@@ -140,12 +189,20 @@ private slots:
+     void duplicateStateName();
+     void trivialWhen();
+     void parentChangeCorrectReversal();
++    void revertNullObjectBinding();
+ };
+ 
+ void tst_qquickstates::initTestCase()
+ {
+     QQmlDataTest::initTestCase();
+     qmlRegisterType<MyRect>("Qt.test", 1, 0, "MyRectangle");
++    qmlRegisterSingletonType<ContainingObj>(
++            "Qt.test", 1, 0, "ContainingObj", [](QQmlEngine *engine, QJSEngine *) {
++                static ContainingObj instance;
++                engine->setObjectOwnership(&instance, QQmlEngine::CppOwnership);
++                return &instance;
++            });
++    qmlRegisterUncreatableType<RemovableObj>("Qt.test", 1, 0, "RemovableObj", "Uncreatable");
+ }
+ 
+ QByteArray tst_qquickstates::fullDataPath(const QString &path) const
+@@ -1692,6 +1749,17 @@ void tst_qquickstates::parentChangeCorrectReversal()
+     QCOMPARE(oldX, stayingRectX.read().toDouble());
+ }
+ 
++void tst_qquickstates::revertNullObjectBinding()
++{
++    QQmlEngine engine;
++
++    QQmlComponent c(&engine, testFileUrl("revertNullObjectBinding.qml"));
++    QScopedPointer<QObject> root { c.create() };
++    QVERIFY(root);
++    QTest::qWait(10);
++    QQmlProperty state2Active(root.get(), "state2Active");
++    state2Active.write(false);
++}
+ 
+ QTEST_MAIN(tst_qquickstates)
+ 
 diff --git a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp b/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
 index 54f73c6e0c..d489a873e4 100644
 --- a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
@@ -1534,6 +2397,103 @@ index 541bfdd527..45bcf8a9ce 100644
      qquickcanvasitem \
      qquickdesignersupport \
      qquickscreen \
+diff --git a/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
+new file mode 100644
+index 0000000000..c60fc4d8b0
+--- /dev/null
++++ b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
+@@ -0,0 +1,91 @@
++import QtQuick 2.0
++
++//vary font style, native rendering at non-integer offsets
++
++Item {
++    id: topLevel
++    width: 320
++    height: 580
++
++    Repeater {
++        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
++        Text {
++            y: 20 * index
++            clip: true
++            renderType: Text.NativeRendering
++            width: parent.width
++            wrapMode: Text.Wrap
++            font.pointSize: 10
++            style: modelData
++            styleColor: "green"
++            text: "The quick fox jumps in style " + modelData
++        }
++    }
++
++    Repeater {
++        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
++        Text {
++            y: 100.5 + 20 * index
++            clip: true
++            renderType: Text.NativeRendering
++            width: parent.width
++            wrapMode: Text.Wrap
++            font.pointSize: 10
++            style: modelData
++            styleColor: "green"
++            text: "The quick fox jumps in style " + modelData
++        }
++    }
++
++    Repeater {
++        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
++        Text {
++            y: 200.5 + 20 * index
++            x: 0.5
++            clip: true
++            renderType: Text.NativeRendering
++            width: parent.width
++            wrapMode: Text.Wrap
++            font.pointSize: 10
++            style: modelData
++            styleColor: "green"
++            text: "The quick fox jumps in style " + modelData
++        }
++    }
++
++    Repeater {
++        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
++        Text {
++            y: 300.5 + 20 * index
++            x: 0.5
++            clip: true
++            renderType: Text.NativeRendering
++            width: parent.width
++            wrapMode: Text.Wrap
++            font.pointSize: 10
++            style: modelData
++            styleColor: "green"
++            text: "The quick fox jumps in style " + modelData
++        }
++    }
++
++    Repeater {
++        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
++        Rectangle {
++            y: 400.5 + 20 * index
++            x: 0.5
++            width: topLevel.width
++            height: topLevel.height
++            clip: true
++            Text {
++                renderType: Text.NativeRendering
++                width: parent.width
++                wrapMode: Text.Wrap
++                font.pointSize: 10
++                style: modelData
++                styleColor: "green"
++                text: "The quick fox jumps in style " + modelData
++            }
++        }
++    }
++}
 diff --git a/tools/qmltime/qmltime.pro b/tools/qmltime/qmltime.pro
 index c915f6e8c1..366d90f75b 100644
 --- a/tools/qmltime/qmltime.pro

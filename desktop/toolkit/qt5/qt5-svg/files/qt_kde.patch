@@ -113,7 +113,7 @@ index bd39b2a..4136aaf 100644
  
  QT_END_NAMESPACE
 diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
-index c937254..9dac05c 100644
+index c937254..b542089 100644
 --- a/src/svg/qsvghandler.cpp
 +++ b/src/svg/qsvghandler.cpp
 @@ -65,6 +65,7 @@
@@ -134,15 +134,188 @@ index c937254..9dac05c 100644
      }
      return val;
  
-@@ -3043,6 +3047,8 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
+@@ -724,15 +728,25 @@ static QVector<qreal> parseNumbersList(const QChar *&str)
+     return points;
+ }
+ 
+-static inline void parseNumbersArray(const QChar *&str, QVarLengthArray<qreal, 8> &points)
++static inline void parseNumbersArray(const QChar *&str, QVarLengthArray<qreal, 8> &points,
++                                     const char *pattern = nullptr)
+ {
++    const size_t patternLen = qstrlen(pattern);
+     while (str->isSpace())
+         ++str;
+     while (isDigit(str->unicode()) ||
+            *str == QLatin1Char('-') || *str == QLatin1Char('+') ||
+            *str == QLatin1Char('.')) {
+ 
+-        points.append(toDouble(str));
++        if (patternLen && pattern[points.size() % patternLen] == 'f') {
++            // flag expected, may only be 0 or 1
++            if (*str != QLatin1Char('0') && *str != QLatin1Char('1'))
++                return;
++            points.append(*str == QLatin1Char('0') ? 0.0 : 1.0);
++            ++str;
++        } else {
++            points.append(toDouble(str));
++        }
+ 
+         while (str->isSpace())
+             ++str;
+@@ -1379,8 +1393,10 @@ static void parseFont(QSvgNode *node,
+         case FontSizeNone:
+             break;
+         case FontSizeValue: {
+-            QSvgHandler::LengthType dummy; // should always be pixel size
+-            fontStyle->setSize(parseLength(attributes.fontSize, dummy, handler));
++            QSvgHandler::LengthType type;
++            qreal fs = parseLength(attributes.fontSize, type, handler);
++            fs = convertToPixels(fs, true, type);
++            fontStyle->setSize(qMin(fs, qreal(0xffff)));
+         }
+             break;
+         default:
+@@ -1625,8 +1641,11 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+         ++str;
+         QChar endc = *end;
+         *const_cast<QChar *>(end) = 0; // parseNumbersArray requires 0-termination that QStringRef cannot guarantee
++        const char *pattern = nullptr;
++        if (pathElem == QLatin1Char('a') || pathElem == QLatin1Char('A'))
++            pattern = "rrrffrr";
+         QVarLengthArray<qreal, 8> arg;
+-        parseNumbersArray(str, arg);
++        parseNumbersArray(str, arg, pattern);
+         *const_cast<QChar *>(end) = endc;
+         if (pathElem == QLatin1Char('z') || pathElem == QLatin1Char('Z'))
+             arg.append(0);//dummy
+@@ -2354,6 +2373,27 @@ static bool parseAnimateNode(QSvgNode *parent,
+     return true;
+ }
+ 
++static int parseClockValue(QString str, bool *ok)
++{
++    int res = 0;
++    int ms = 1000;
++    str = str.trimmed();
++    if (str.endsWith(QLatin1String("ms"))) {
++        str.chop(2);
++        ms = 1;
++    } else if (str.endsWith(QLatin1String("s"))) {
++        str.chop(1);
++    }
++    double val = ms * toDouble(str, ok);
++    if (ok) {
++        if (val > std::numeric_limits<int>::min() && val < std::numeric_limits<int>::max())
++            res = static_cast<int>(val);
++        else
++            *ok = false;
++    }
++    return res;
++}
++
+ static bool parseAnimateColorNode(QSvgNode *parent,
+                                   const QXmlStreamAttributes &attributes,
+                                   QSvgHandler *handler)
+@@ -2387,23 +2427,13 @@ static bool parseAnimateColorNode(QSvgNode *parent,
+         }
+     }
+ 
+-    int ms = 1000;
+-    beginStr = beginStr.trimmed();
+-    if (beginStr.endsWith(QLatin1String("ms"))) {
+-        beginStr.chop(2);
+-        ms = 1;
+-    } else if (beginStr.endsWith(QLatin1String("s"))) {
+-        beginStr.chop(1);
+-    }
+-    durStr = durStr.trimmed();
+-    if (durStr.endsWith(QLatin1String("ms"))) {
+-        durStr.chop(2);
+-        ms = 1;
+-    } else if (durStr.endsWith(QLatin1String("s"))) {
+-        durStr.chop(1);
+-    }
+-    int begin = static_cast<int>(toDouble(beginStr) * ms);
+-    int end   = static_cast<int>((toDouble(durStr) + begin) * ms);
++    bool ok = true;
++    int begin = parseClockValue(beginStr, &ok);
++    if (!ok)
++        return false;
++    int end = begin + parseClockValue(durStr, &ok);
++    if (!ok || end <= begin)
++        return false;
+ 
+     QSvgAnimateColor *anim = new QSvgAnimateColor(begin, end, 0);
+     anim->setArgs((targetStr == QLatin1String("fill")), colors);
+@@ -2493,24 +2523,13 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
+         }
+     }
+ 
+-    int ms = 1000;
+-    beginStr = beginStr.trimmed();
+-    if (beginStr.endsWith(QLatin1String("ms"))) {
+-        beginStr.chop(2);
+-        ms = 1;
+-    } else if (beginStr.endsWith(QLatin1String("s"))) {
+-        beginStr.chop(1);
+-    }
+-    int begin = static_cast<int>(toDouble(beginStr) * ms);
+-    durStr = durStr.trimmed();
+-    if (durStr.endsWith(QLatin1String("ms"))) {
+-        durStr.chop(2);
+-        ms = 1;
+-    } else if (durStr.endsWith(QLatin1String("s"))) {
+-        durStr.chop(1);
+-        ms = 1000;
+-    }
+-    int end = static_cast<int>(toDouble(durStr)*ms) + begin;
++    bool ok = true;
++    int begin = parseClockValue(beginStr, &ok);
++    if (!ok)
++        return false;
++    int end = begin + parseClockValue(durStr, &ok);
++    if (!ok || end <= begin)
++        return false;
+ 
+     QSvgAnimateTransform::TransformType type = QSvgAnimateTransform::Empty;
+     if (typeStr == QLatin1String("translate")) {
+@@ -2566,6 +2585,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
+     qreal ncx = toDouble(cx);
+     qreal ncy = toDouble(cy);
+     qreal nr  = toDouble(r);
++    if (nr < 0.0)
++        return nullptr;
+ 
+     QRectF rect(ncx-nr, ncy-nr, nr*2, nr*2);
+     QSvgNode *circle = new QSvgCircle(parent, rect);
+@@ -3036,13 +3057,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
+ 
+     qreal ncx = 0.5;
+     qreal ncy = 0.5;
+-    qreal nr  = 0.5;
+     if (!cx.isEmpty())
+         ncx = toDouble(cx);
+     if (!cy.isEmpty())
          ncy = toDouble(cy);
++
++    qreal nr = 0.0;
      if (!r.isEmpty())
          nr = toDouble(r);
-+    if (nr < 0.5)
-+        nr = 0.5;
++    if (nr <= 0.0)
++        return nullptr;
  
      qreal nfx = ncx;
      if (!fx.isEmpty())
+@@ -3338,7 +3362,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
+     //### editable and rotate not handled
+     QSvgHandler::LengthType type;
+     qreal nx = parseLength(x, type, handler);
++    nx = convertToPixels(nx, true, type);
+     qreal ny = parseLength(y, type, handler);
++    ny = convertToPixels(ny, true, type);
+ 
+     QSvgNode *text = new QSvgText(parent, QPointF(nx, ny));
+     return text;
 diff --git a/src/svg/qsvgstructure.cpp b/src/svg/qsvgstructure.cpp
 index b89608b..89c9e4e 100644
 --- a/src/svg/qsvgstructure.cpp
@@ -238,3 +411,35 @@ index e1f84f3..73bbe8b 100644
  
  QTEST_MAIN(tst_QSvgPlugin)
  #include "tst_qsvgplugin.moc"
+diff --git a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp b/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
+index 8f1f03b..36c76ec 100644
+--- a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
++++ b/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
+@@ -74,6 +74,7 @@ private slots:
+     void fillRule();
+     void opacity();
+     void paths();
++    void paths2();
+     void displayMode();
+     void strokeInherit();
+     void testFillInheritance();
+@@ -1047,6 +1048,19 @@ void tst_QSvgRenderer::paths()
+     }
+ }
+ 
++void tst_QSvgRenderer::paths2()
++{
++    const char *svg =
++        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\">"
++            "<path d=\"M 3 8 A 5 5 0 1013 8\" id=\"path1\"/>"
++        "</svg>";
++
++    QByteArray data(svg);
++    QSvgRenderer renderer(data);
++    QVERIFY(renderer.isValid());
++    QCOMPARE(renderer.boundsOnElement(QLatin1String("path1")).toRect(), QRect(3, 8, 10, 5));
++}
++
+ void tst_QSvgRenderer::displayMode()
+ {
+     static const char *svgs[] = {
