@@ -1,0 +1,45 @@
+
+Commit:
+
+From 2f064a59a11ff9bc22e52e9678bc601404c7cb34 Mon Sep 17 00:00:00 2001
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri, 11 Jun 2021 10:28:17 +0200
+Subject: sched: Change task_struct::state
+
+changed "state" to "__state" to catch callers that could use READ_ONCE/WRITE_ONCE
+as appropriate.
+
+so lets switch to using set_current_state()
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+diff -Nurp NVIDIA-Linux-x86_64-390.144.orig/kernel/nvidia/nvlink_linux.c NVIDIA-Linux-x86_64-390.144/kernel/nvidia/nvlink_linux.c
+--- NVIDIA-Linux-x86_64-390.144.orig/kernel/nvidia/nvlink_linux.c	2021-06-03 02:10:01.000000000 +0300
++++ NVIDIA-Linux-x86_64-390.144/kernel/nvidia/nvlink_linux.c	2021-08-31 21:48:30.559918371 +0300
+@@ -597,7 +597,11 @@ void NVLINK_API_CALL nvlink_sleep(unsign
+         // the requested timeout has expired, loop until less
+         // than a jiffie of the desired delay remains.
+         //
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 14, 0)
+         current->state = TASK_INTERRUPTIBLE;
++#else
++        set_current_state(TASK_INTERRUPTIBLE);
++#endif
+         do
+         {
+             schedule_timeout(jiffies);
+diff -Nurp NVIDIA-Linux-x86_64-390.144.orig/kernel/nvidia/os-interface.c NVIDIA-Linux-x86_64-390.144/kernel/nvidia/os-interface.c
+--- NVIDIA-Linux-x86_64-390.144.orig/kernel/nvidia/os-interface.c	2021-06-03 02:09:57.000000000 +0300
++++ NVIDIA-Linux-x86_64-390.144/kernel/nvidia/os-interface.c	2021-08-31 21:49:57.002092986 +0300
+@@ -580,7 +580,11 @@ NV_STATUS NV_API_CALL os_delay(NvU32 Mil
+         // the requested timeout has expired, loop until less
+         // than a jiffie of the desired delay remains.
+         //
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 14, 0)
+         current->state = TASK_INTERRUPTIBLE;
++#else
++        set_current_state(TASK_INTERRUPTIBLE);
++#endif
+         do
+         {
+             schedule_timeout(jiffies);
