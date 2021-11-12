@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-#    shelltools.chmod("hw/vnc/symlink-vnc.sh")
+    shelltools.system("patch -Rp1 < 0001-revert-dpi-calculation.patch")
     autotools.autoreconf("-fi")
 
     autotools.configure("--enable-install-libxf86config \
@@ -23,7 +23,7 @@ def setup():
                          --enable-dri \
                          --enable-dri2 \
                          --enable-glamor \
-                         --enable-xwayland \
+                         --disable-xwayland \
                          --enable-config-udev \
                          --disable-config-hal \
                          --enable-xfree86-utils \

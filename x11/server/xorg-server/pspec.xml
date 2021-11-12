@@ -11,7 +11,10 @@
         <License>MIT</License>
         <Summary>X.Org X Server</Summary>
         <Description>X server is the main application that allows a graphical interface.</Description>
-        <Archive sha1sum="4a846a4affeb3863e23c1d57a3b1bca4374a2ddb" type="tarxz">mirrors://xorg/individual/xserver/xorg-server-1.20.13.tar.xz</Archive>
+        <Archive sha1sum="feb1b35841cf64dcbef23802d7e0510e204361f9" type="tarxz">mirrors://xorg/individual/xserver/xorg-server-21.1.1.tar.xz</Archive>
+        <AdditionalFiles>
+            <AdditionalFile target="0001-revert-dpi-calculation.patch">0001-revert-dpi-calculation.patch</AdditionalFile>
+        </AdditionalFiles>
         <BuildDependencies>
             <Dependency>valgrind</Dependency>
             <Dependency>elogind-devel</Dependency>
@@ -60,17 +63,19 @@
             <Dependency>wayland-protocols-devel</Dependency>
             <Dependency>libglvnd-devel</Dependency>
             <Dependency>xkeyboard-config</Dependency>
+
+            <Dependency>libxcvt-devel</Dependency>
         </BuildDependencies>
         <Patches>
 <!--             <Patch level="1">nvidia-add-modulepath-support.patch</Patch> -->
-            <Patch level="1">xserver-autobind-hotplug.patch</Patch>
+<!--             <Patch level="1">xserver-autobind-hotplug.patch</Patch> -->
             <Patch level="1">xorg-server-1.12-unloadsubmodule.patch</Patch>
             <Patch level="1">xorg-server-1.18-support-multiple-Files-sections.patch</Patch>
 <!--             <Patch level="1">xorg-server-1.19.4-sysmacros.patch</Patch> -->
         </Patches>
     </Source>
 
-    <Package>
+    <!--Package>
         <Name>xorg-server-common</Name>
         <IsA>data</IsA>
         <Summary>Common files for X servers</Summary>
@@ -85,7 +90,7 @@
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man/man1/Xserver.1</Path>
         </Files>
-    </Package>
+    </Package-->
 
     <Package>
         <Name>xorg-server</Name>
@@ -101,6 +106,7 @@
             <Dependency>elogind</Dependency>
             <Dependency>libXdmcp</Dependency>
             <Dependency>mesa</Dependency>
+            <Dependency>libxcvt</Dependency>
             <Dependency>libdrm</Dependency>
             <Dependency>pixman</Dependency>
             <Dependency>libglvnd</Dependency>
@@ -130,6 +136,12 @@
             <Path fileType="man">/usr/share/man/man4/fbdevhw.4</Path>
             <Path fileType="man">/usr/share/man/man5/xorg.conf.5</Path>
             <Path fileType="man">/usr/share/man/man5/xorg.conf.d.5</Path>
+            <Path fileType="man">/usr/share/man/man4/inputtestdrv.4</Path>
+
+            <Path fileType="data">/etc/X11/fontpath.d</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/var/lib/xkb</Path>
+            <Path fileType="man">/usr/share/man/man1/Xserver.1</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0755" target="/usr/libexec/xorg-save-xkb-config.sh">xorg-save-xkb-config.sh</AdditionalFile>
@@ -138,7 +150,7 @@
         </AdditionalFiles>
     </Package>
 
-    <Package>
+    <!--Package>
         <Name>xorg-server-xdmx</Name>
         <IsA>app:console</IsA>
         <Summary>Distributed Multihead X Server</Summary>
@@ -163,9 +175,9 @@
             <Path fileType="executable">/usr/bin/*dmx*</Path>
             <Path fileType="man">/usr/share/man/man1/*dmx*</Path>
         </Files>
-    </Package>
+    </Package-->
   
-    <Package>
+    <!--Package>
         <Name>xorg-server-xwayland</Name>
         <IsA>app:console</IsA>
         <Summary>Run X clients under wayland</Summary>
@@ -188,7 +200,7 @@
         <Files>
             <Path fileType="executable">/usr/bin/Xwayland</Path>
         </Files>
-    </Package>
+    </Package-->
 
     <Package>
         <Name>xorg-server-xephyr</Name>
@@ -273,6 +285,7 @@
             <Dependency>pixman-devel</Dependency>
             <Dependency>mesa-devel</Dependency>
             <Dependency>xorg-proto</Dependency>
+            <Dependency>libxcvt-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/xorg</Path>
@@ -283,6 +296,13 @@
     </Package>
 
     <History>
+        <Update release="21">
+            <Date>2021-11-12</Date>
+            <Version>21.1.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="20">
             <Date>2021-10-01</Date>
             <Version>1.20.13</Version>
