@@ -27,15 +27,15 @@ def setup():
 
     shelltools.move("tmp/*", ".")
     
-    #5.5 patch icin
+    #5.5 patch
     shelltools.move("tmp/.manifest", ".")
-    #shelltools.system("patch -p1 < kernel-5.5.patch")
-    #shelltools.system("patch -p1 < kernel-5.6.patch")
-    #shelltools.system("patch -p1 < unfuck-340.108-build-fix.patch")
     shelltools.system("patch -p1 < kernel-5.7.patch")
     shelltools.system("patch -p1 < kernel-5.8.patch")
     shelltools.system("patch -p1 < kernel-5.9.patch")
     shelltools.system("patch -p1 < kernel-5.10.patch")
+    shelltools.system("patch -p1 < kernel-5.11.patch")
+    shelltools.system("patch -p1 < kernel-5.14.patch")
+    shelltools.system("patch -p1 < kernel-5.15.patch")
     
 
     # Our libc is TLS enabled so use TLS library
