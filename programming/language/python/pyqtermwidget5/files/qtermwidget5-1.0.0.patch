@@ -1,0 +1,4667 @@
+diff -Nuar a/lib/BlockArray.cpp b/lib/BlockArray.cpp
+--- a/lib/BlockArray.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/BlockArray.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -30,7 +30,7 @@
+ #include <sys/mman.h>
+ #include <sys/param.h>
+ #include <unistd.h>
+-#include <stdio.h>
++#include <cstdio>
+ 
+ 
+ using namespace Konsole;
+@@ -41,9 +41,9 @@
+         : size(0),
+         current(size_t(-1)),
+         index(size_t(-1)),
+-        lastmap(0),
++        lastmap(nullptr),
+         lastmap_index(size_t(-1)),
+-        lastblock(0), ion(-1),
++        lastblock(nullptr), ion(-1),
+         length(0)
+ {
+     // lastmap_index = index = current = size_t(-1);
+@@ -138,7 +138,7 @@
+ 
+     if (i > index) {
+         qDebug() << "BlockArray::at() i > index\n";
+-        return 0;
++        return nullptr;
+     }
+ 
+ //     if (index - i >= length) {
+@@ -151,11 +151,11 @@
+     Q_ASSERT(j < size);
+     unmap();
+ 
+-    Block * block = (Block *)mmap(0, blocksize, PROT_READ, MAP_PRIVATE, ion, j * blocksize);
++    Block * block = (Block *)mmap(nullptr, blocksize, PROT_READ, MAP_PRIVATE, ion, j * blocksize);
+ 
+     if (block == (Block *)-1) {
+         perror("mmap");
+-        return 0;
++        return nullptr;
+     }
+ 
+     lastmap = block;
+@@ -172,7 +172,7 @@
+             perror("munmap");
+         }
+     }
+-    lastmap = 0;
++    lastmap = nullptr;
+     lastmap_index = size_t(-1);
+ }
+ 
+@@ -193,7 +193,7 @@
+ 
+     if (!newsize) {
+         delete lastblock;
+-        lastblock = 0;
++        lastblock = nullptr;
+         if (ion >= 0) {
+             close(ion);
+         }
+diff -Nuar a/lib/BlockArray.h b/lib/BlockArray.h
+--- a/lib/BlockArray.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/BlockArray.h	2021-11-05 13:18:23.000000000 +0300
+@@ -27,8 +27,8 @@
+ 
+ //#error Do not use in KDE 2.1
+ 
+-#define BlockSize (1 << 12)
+-#define ENTRIES   ((BlockSize - sizeof(size_t) ) / sizeof(unsigned char))
++#define QTERMWIDGET_BLOCKSIZE (1 << 12)
++#define ENTRIES   ((QTERMWIDGET_BLOCKSIZE - sizeof(size_t) ) / sizeof(unsigned char))
+ 
+ namespace Konsole {
+ 
+diff -Nuar a/lib/CharacterColor.h b/lib/CharacterColor.h
+--- a/lib/CharacterColor.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/CharacterColor.h	2021-11-05 13:18:23.000000000 +0300
+@@ -78,16 +78,6 @@
+    */
+   ColorEntry() : transparent(false), fontWeight(UseCurrentFormat) {}
+ 
+-  /**
+-   * Sets the color, transparency and boldness of this color to those of @p rhs.
+-   */
+-  void operator=(const ColorEntry& rhs)
+-  {
+-       color = rhs.color;
+-       transparent = rhs.transparent;
+-       fontWeight = rhs.fontWeight;
+-  }
+-
+   /** The color value of this entry for display. */
+   QColor color;
+ 
+@@ -278,7 +268,7 @@
+     case COLOR_SPACE_DEFAULT: return base[_u+0+(_v?BASE_COLORS:0)].color;
+     case COLOR_SPACE_SYSTEM: return base[_u+2+(_v?BASE_COLORS:0)].color;
+     case COLOR_SPACE_256: return color256(_u,base);
+-    case COLOR_SPACE_RGB: return QColor(_u,_v,_w);
++    case COLOR_SPACE_RGB: return {_u,_v,_w};
+     case COLOR_SPACE_UNDEFINED: return QColor();
+   }
+ 
+diff -Nuar a/lib/ColorScheme.cpp b/lib/ColorScheme.cpp
+--- a/lib/ColorScheme.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/ColorScheme.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -31,6 +31,7 @@
+ #include <QSettings>
+ #include <QDir>
+ #include <QRegularExpression>
++#include <QRandomGenerator>
+ 
+ 
+ // KDE
+@@ -48,27 +49,27 @@
+  // gamma correction for the dim colors to compensate for bright X screens.
+  // It contains the 8 ansiterm/xterm colors in 2 intensities.
+ {
+-    ColorEntry( QColor(0x00,0x00,0x00), 0), ColorEntry(
+-QColor(0xFF,0xFF,0xFF), 1), // Dfore, Dback
+-    ColorEntry( QColor(0x00,0x00,0x00), 0), ColorEntry(
+-QColor(0xB2,0x18,0x18), 0), // Black, Red
+-    ColorEntry( QColor(0x18,0xB2,0x18), 0), ColorEntry(
+-QColor(0xB2,0x68,0x18), 0), // Green, Yellow
+-    ColorEntry( QColor(0x18,0x18,0xB2), 0), ColorEntry(
+-QColor(0xB2,0x18,0xB2), 0), // Blue, Magenta
+-    ColorEntry( QColor(0x18,0xB2,0xB2), 0), ColorEntry(
+-QColor(0xB2,0xB2,0xB2), 0), // Cyan, White
++    ColorEntry( QColor(0x00,0x00,0x00), false), ColorEntry(
++QColor(0xFF,0xFF,0xFF), true), // Dfore, Dback
++    ColorEntry( QColor(0x00,0x00,0x00), false), ColorEntry(
++QColor(0xB2,0x18,0x18), false), // Black, Red
++    ColorEntry( QColor(0x18,0xB2,0x18), false), ColorEntry(
++QColor(0xB2,0x68,0x18), false), // Green, Yellow
++    ColorEntry( QColor(0x18,0x18,0xB2), false), ColorEntry(
++QColor(0xB2,0x18,0xB2), false), // Blue, Magenta
++    ColorEntry( QColor(0x18,0xB2,0xB2), false), ColorEntry(
++QColor(0xB2,0xB2,0xB2), false), // Cyan, White
+     // intensive
+-    ColorEntry( QColor(0x00,0x00,0x00), 0), ColorEntry(
+-QColor(0xFF,0xFF,0xFF), 1),
+-    ColorEntry( QColor(0x68,0x68,0x68), 0), ColorEntry(
+-QColor(0xFF,0x54,0x54), 0),
+-    ColorEntry( QColor(0x54,0xFF,0x54), 0), ColorEntry(
+-QColor(0xFF,0xFF,0x54), 0),
+-    ColorEntry( QColor(0x54,0x54,0xFF), 0), ColorEntry(
+-QColor(0xFF,0x54,0xFF), 0),
+-    ColorEntry( QColor(0x54,0xFF,0xFF), 0), ColorEntry(
+-QColor(0xFF,0xFF,0xFF), 0)
++    ColorEntry( QColor(0x00,0x00,0x00), false), ColorEntry(
++QColor(0xFF,0xFF,0xFF), true),
++    ColorEntry( QColor(0x68,0x68,0x68), false), ColorEntry(
++QColor(0xFF,0x54,0x54), false),
++    ColorEntry( QColor(0x54,0xFF,0x54), false), ColorEntry(
++QColor(0xFF,0xFF,0x54), false),
++    ColorEntry( QColor(0x54,0x54,0xFF), false), ColorEntry(
++QColor(0xFF,0x54,0xFF), false),
++    ColorEntry( QColor(0x54,0xFF,0xFF), false), ColorEntry(
++QColor(0xFF,0xFF,0xFF), false)
+ };
+ 
+ const char* const ColorScheme::colorNames[TABLE_COLORS] =
+@@ -122,25 +123,25 @@
+ 
+ ColorScheme::ColorScheme()
+ {
+-    _table = 0;
+-    _randomTable = 0;
++    _table = nullptr;
++    _randomTable = nullptr;
+     _opacity = 1.0;
+ }
+ ColorScheme::ColorScheme(const ColorScheme& other)
+       : _opacity(other._opacity)
+-       ,_table(0)
+-       ,_randomTable(0)
++       ,_table(nullptr)
++       ,_randomTable(nullptr)
+ {
+     setName(other.name());
+     setDescription(other.description());
+ 
+-    if ( other._table != 0 )
++    if ( other._table != nullptr )
+     {
+         for ( int i = 0 ; i < TABLE_COLORS ; i++ )
+             setColorTableEntry(i,other._table[i]);
+     }
+ 
+-    if ( other._randomTable != 0 )
++    if ( other._randomTable != nullptr )
+     {
+         for ( int i = 0 ; i < TABLE_COLORS ; i++ )
+         {
+@@ -175,25 +176,21 @@
+ 
+     _table[index] = entry;
+ }
+-ColorEntry ColorScheme::colorEntry(int index , uint randomSeed) const
++ColorEntry ColorScheme::colorEntry(int index) const
+ {
+     Q_ASSERT( index >= 0 && index < TABLE_COLORS );
+ 
+-    if ( randomSeed != 0 )
+-        qsrand(randomSeed);
+-
+     ColorEntry entry = colorTable()[index];
+ 
+-    if ( randomSeed != 0 &&
+-        _randomTable != 0 &&
++    if ( _randomTable != nullptr &&
+         !_randomTable[index].isNull() )
+     {
+         const RandomizationRange& range = _randomTable[index];
+ 
+ 
+-        int hueDifference = range.hue ? (qrand() % range.hue) - range.hue/2 : 0;
+-        int saturationDifference = range.saturation ? (qrand() % range.saturation) - range.saturation/2 : 0;
+-        int  valueDifference = range.value ? (qrand() % range.value) - range.value/2 : 0;
++        int hueDifference = range.hue ? QRandomGenerator::global()->bounded(range.hue) - range.hue/2 : 0;
++        int saturationDifference = range.saturation ? QRandomGenerator::global()->bounded(range.saturation) - range.saturation/2 : 0;
++        int valueDifference = range.value ? QRandomGenerator::global()->bounded(range.value) - range.value/2 : 0;
+ 
+         QColor& color = entry.color;
+ 
+@@ -206,14 +203,14 @@
+ 
+     return entry;
+ }
+-void ColorScheme::getColorTable(ColorEntry* table , uint randomSeed) const
++void ColorScheme::getColorTable(ColorEntry* table) const
+ {
+     for ( int i = 0 ; i < TABLE_COLORS ; i++ )
+-        table[i] = colorEntry(i,randomSeed);
++        table[i] = colorEntry(i);
+ }
+ bool ColorScheme::randomizedBackgroundColor() const
+ {
+-    return _randomTable == 0 ? false : !_randomTable[1].isNull();
++    return _randomTable == nullptr ? false : !_randomTable[1].isNull();
+ }
+ void ColorScheme::setRandomizedBackgroundColor(bool randomize)
+ {
+@@ -238,7 +235,7 @@
+     Q_ASSERT( hue <= MAX_HUE );
+     Q_ASSERT( index >= 0 && index < TABLE_COLORS );
+ 
+-    if ( _randomTable == 0 )
++    if ( _randomTable == nullptr )
+         _randomTable = new RandomizationRange[TABLE_COLORS];
+ 
+     _randomTable[index].hue = hue;
+@@ -491,94 +488,6 @@
+ #endif
+ }
+ 
+-KDE3ColorSchemeReader::KDE3ColorSchemeReader( QIODevice* device ) :
+-    _device(device)
+-{
+-}
+-ColorScheme* KDE3ColorSchemeReader::read()
+-{
+-    Q_ASSERT( _device->openMode() == QIODevice::ReadOnly ||
+-              _device->openMode() == QIODevice::ReadWrite  );
+-
+-    ColorScheme* scheme = new ColorScheme();
+-
+-    QRegExp comment(QLatin1String("#.*$"));
+-    while ( !_device->atEnd() )
+-    {
+-        QString line(QString::fromUtf8(_device->readLine()));
+-        line.remove(comment);
+-        line = line.simplified();
+-
+-        if ( line.isEmpty() )
+-            continue;
+-
+-        if ( line.startsWith(QLatin1String("color")) )
+-        {
+-            if (!readColorLine(line,scheme))
+-                qDebug() << "Failed to read KDE 3 color scheme line" << line;
+-        }
+-        else if ( line.startsWith(QLatin1String("title")) )
+-        {
+-            if (!readTitleLine(line,scheme))
+-                qDebug() << "Failed to read KDE 3 color scheme title line" << line;
+-        }
+-        else
+-        {
+-            qDebug() << "KDE 3 color scheme contains an unsupported feature, '" <<
+-                line << "'";
+-        }
+-    }
+-
+-    return scheme;
+-}
+-bool KDE3ColorSchemeReader::readColorLine(const QString& line,ColorScheme* scheme)
+-{
+-    QStringList list = line.split(QLatin1Char(' '));
+-
+-    if (list.count() != 7)
+-        return false;
+-    if (list.first() != QLatin1String("color"))
+-        return false;
+-
+-    int index = list[1].toInt();
+-    int red = list[2].toInt();
+-    int green = list[3].toInt();
+-    int blue = list[4].toInt();
+-    int transparent = list[5].toInt();
+-    int bold = list[6].toInt();
+-
+-    const int MAX_COLOR_VALUE = 255;
+-
+-    if(     (index < 0 || index >= TABLE_COLORS )
+-        ||  (red < 0 || red > MAX_COLOR_VALUE )
+-        ||  (blue < 0 || blue > MAX_COLOR_VALUE )
+-        ||  (green < 0 || green > MAX_COLOR_VALUE )
+-        ||  (transparent != 0 && transparent != 1 )
+-        ||  (bold != 0 && bold != 1)    )
+-        return false;
+-
+-    ColorEntry entry;
+-    entry.color = QColor(red,green,blue);
+-    entry.transparent = ( transparent != 0 );
+-    entry.fontWeight = ( bold != 0 ) ? ColorEntry::Bold : ColorEntry::UseCurrentFormat;
+-
+-    scheme->setColorTableEntry(index,entry);
+-    return true;
+-}
+-bool KDE3ColorSchemeReader::readTitleLine(const QString& line,ColorScheme* scheme)
+-{
+-    if( !line.startsWith(QLatin1String("title")) )
+-        return false;
+-
+-    int spacePos = line.indexOf(QLatin1Char(' '));
+-    if( spacePos == -1 )
+-        return false;
+-
+-    QString description = line.mid(spacePos+1);
+-
+-    scheme->setDescription(description);
+-    return true;
+-}
+ ColorSchemeManager::ColorSchemeManager()
+     : _haveLoadedAll(false)
+ {
+@@ -594,7 +503,7 @@
+ }
+ void ColorSchemeManager::loadAllColorSchemes()
+ {
+-    qDebug() << "loadAllColorSchemes";
++    //qDebug() << "loadAllColorSchemes";
+     int failed = 0;
+ 
+     QList<QString> nativeColorSchemes = listColorSchemes();
+@@ -605,16 +514,8 @@
+             failed++;
+     }
+ 
+-    QList<QString> kde3ColorSchemes = listKDE3ColorSchemes();
+-    QListIterator<QString> kde3Iter(kde3ColorSchemes);
+-    while ( kde3Iter.hasNext() )
+-    {
+-        if ( !loadKDE3ColorScheme( kde3Iter.next() ) )
+-            failed++;
+-    }
+-
+-    if ( failed > 0 )
+-        qDebug() << "failed to load " << failed << " color schemes.";
++    /*if ( failed > 0 )
++        qDebug() << "failed to load " << failed << " color schemes.";*/
+ 
+     _haveLoadedAll = true;
+ }
+@@ -627,37 +528,6 @@
+ 
+     return _colorSchemes.values();
+ }
+-bool ColorSchemeManager::loadKDE3ColorScheme(const QString& filePath)
+-{
+-    QFile file(filePath);
+-    if (!filePath.endsWith(QLatin1String(".schema")) || !file.open(QIODevice::ReadOnly))
+-        return false;
+-
+-    KDE3ColorSchemeReader reader(&file);
+-    ColorScheme* scheme = reader.read();
+-    scheme->setName(QFileInfo(file).baseName());
+-    file.close();
+-
+-    if (scheme->name().isEmpty())
+-    {
+-        qDebug() << "color scheme name is not valid.";
+-        delete scheme;
+-        return false;
+-    }
+-
+-    QFileInfo info(filePath);
+-
+-    if ( !_colorSchemes.contains(info.baseName()) )
+-        _colorSchemes.insert(scheme->name(),scheme);
+-    else
+-    {
+-        qDebug() << "color scheme with name" << scheme->name() << "has already been" <<
+-            "found, ignoring.";
+-        delete scheme;
+-    }
+-
+-    return true;
+-}
+ #if 0
+ void ColorSchemeManager::addColorScheme(ColorScheme* scheme)
+ {
+@@ -675,10 +545,8 @@
+ {
+     if (path.endsWith(QLatin1String(".colorscheme")))
+         return loadColorScheme(path);
+-    else if (path.endsWith(QLatin1String(".schema")))
+-        return loadKDE3ColorScheme(path);
+-    else
+-        return false;
++
++    return false;
+ }
+ 
+ void ColorSchemeManager::addCustomColorSchemeDir(const QString& custom_dir)
+@@ -701,7 +569,7 @@
+ 
+     if (scheme->name().isEmpty())
+     {
+-        qDebug() << "Color scheme in" << filePath << "does not have a valid name and was not loaded.";
++        //qDebug() << "Color scheme in" << filePath << "does not have a valid name and was not loaded.";
+         delete scheme;
+         return false;
+     }
+@@ -712,34 +580,14 @@
+     }
+     else
+     {
+-        qDebug() << "color scheme with name" << schemeName << "has already been" <<
+-            "found, ignoring.";
++        /*qDebug() << "color scheme with name" << schemeName << "has already been" <<
++            "found, ignoring.";*/
+ 
+         delete scheme;
+     }
+ 
+     return true;
+ }
+-QList<QString> ColorSchemeManager::listKDE3ColorSchemes()
+-{
+-    QList<QString> ret;
+-    for (const QString &scheme_dir : get_color_schemes_dirs())
+-    {
+-        const QString dname(scheme_dir);
+-        QDir dir(dname);
+-        QStringList filters;
+-        filters << QLatin1String("*.schema");
+-        dir.setNameFilters(filters);
+-        QStringList list = dir.entryList(filters);
+-        for (const QString &i : list)
+-            ret << dname + QLatin1Char('/') + i;
+-    }
+-    return ret;
+-    //return KGlobal::dirs()->findAllResources("data",
+-    //                                         "konsole/*.schema",
+-    //                                          KStandardDirs::NoDuplicates);
+-    //
+-}
+ QList<QString> ColorSchemeManager::listColorSchemes()
+ {
+     QList<QString> ret;
+@@ -750,7 +598,7 @@
+         QStringList filters;
+         filters << QLatin1String("*.colorscheme");
+         dir.setNameFilters(filters);
+-        QStringList list = dir.entryList(filters);
++        const QStringList list = dir.entryList(filters);
+         for (const QString &i : list)
+             ret << dname + QLatin1Char('/') + i;
+     }
+@@ -777,7 +625,7 @@
+     }
+     else
+     {
+-        qDebug() << "Failed to remove color scheme -" << path;
++        //qDebug() << "Failed to remove color scheme -" << path;
+         return false;
+     }
+ }
+@@ -813,15 +661,10 @@
+         {
+             return findColorScheme(name);
+         }
+-        else
+-        {
+-            if (!path.isEmpty() && loadKDE3ColorScheme(path))
+-                return findColorScheme(name);
+-        }
+ 
+-        qDebug() << "Could not find color scheme - " << name;
++        //qDebug() << "Could not find color scheme - " << name;
+ 
+-        return 0;
++        return nullptr;
+     }
+ }
+ Q_GLOBAL_STATIC(ColorSchemeManager, theColorSchemeManager)
+diff -Nuar a/lib/ColorScheme.h b/lib/ColorScheme.h
+--- a/lib/ColorScheme.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/ColorScheme.h	2021-11-05 13:18:23.000000000 +0300
+@@ -87,14 +87,14 @@
+      * @param randomSeed Color schemes may allow certain colors in their
+      * palette to be randomized.  The seed is used to pick the random color.
+      */
+-    void getColorTable(ColorEntry* table, uint randomSeed = 0) const;
++    void getColorTable(ColorEntry* table) const;
+ 
+     /**
+      * Retrieves a single color entry from the table.
+      *
+      * See getColorTable()
+      */
+-    ColorEntry colorEntry(int index , uint randomSeed = 0) const;
++    ColorEntry colorEntry(int index) const;
+ 
+     /**
+      * Convenience method.  Returns the
+@@ -218,41 +218,6 @@
+ };
+ 
+ /**
+- * Reads a color scheme stored in the .schema format used in the KDE 3 incarnation
+- * of Konsole
+- *
+- * Only the basic essentials ( title and color palette entries ) are currently
+- * supported.  Additional options such as background image and background
+- * blend colors are ignored.
+- */
+-class KDE3ColorSchemeReader
+-{
+-public:
+-    /**
+-     * Constructs a new reader which reads from the specified device.
+-     * The device should be open in read-only mode.
+-     */
+-    KDE3ColorSchemeReader( QIODevice* device );
+-
+-    /**
+-     * Reads and parses the contents of the .schema file from the input
+-     * device and returns the ColorScheme defined within it.
+-     *
+-     * Returns a null pointer if an error occurs whilst parsing
+-     * the contents of the file.
+-     */
+-    ColorScheme* read();
+-
+-private:
+-    // reads a line from the file specifying a colour palette entry
+-    // format is: color [index] [red] [green] [blue] [transparent] [bold]
+-    bool readColorLine(const QString& line , ColorScheme* scheme);
+-    bool readTitleLine(const QString& line , ColorScheme* scheme);
+-
+-    QIODevice* _device;
+-};
+-
+-/**
+  * Manages the color schemes available for use by terminal displays.
+  * See ColorScheme
+  */
+@@ -338,13 +303,8 @@
+ private:
+     // loads a color scheme from a KDE 4+ .colorscheme file
+     bool loadColorScheme(const QString& path);
+-    // loads a color scheme from a KDE 3 .schema file
+-    bool loadKDE3ColorScheme(const QString& path);
+     // returns a list of paths of color schemes in the KDE 4+ .colorscheme file format
+     QList<QString> listColorSchemes();
+-    // returns a list of paths of color schemes in the .schema file format
+-    // used in KDE 3
+-    QList<QString> listKDE3ColorSchemes();
+     // loads all of the color schemes
+     void loadAllColorSchemes();
+     // finds the path of a color scheme
+diff -Nuar a/lib/color-schemes/BlackOnLightYellow.colorscheme b/lib/color-schemes/BlackOnLightYellow.colorscheme
+--- a/lib/color-schemes/BlackOnLightYellow.colorscheme	1970-01-01 02:00:00.000000000 +0200
++++ b/lib/color-schemes/BlackOnLightYellow.colorscheme	2021-11-05 13:18:23.000000000 +0300
+@@ -0,0 +1,94 @@
++[Background]
++Color=255,255,221
++
++[BackgroundIntense]
++Color=255,255,221
++
++[BackgroundFaint]
++Color=255,255,221
++
++[Color0]
++Color=0,0,0
++
++[Color0Intense]
++Color=104,104,104
++
++[Color0Faint]
++Color=192,192,192
++
++[Color1]
++Color=178,24,24
++
++[Color1Intense]
++Color=255,84,84
++
++[Color1Faint]
++Color=224,142,142
++
++[Color2]
++Color=24,178,24
++
++[Color2Intense]
++Color=84,255,84
++
++[Color2Faint]
++Color=142,224,142
++
++[Color3]
++Color=178,104,24
++
++[Color3Intense]
++Color=255,255,84
++
++[Color3Faint]
++Color=224,224,142
++
++[Color4]
++Color=24,24,178
++
++[Color4Intense]
++Color=84,84,255
++
++[Color4Faint]
++Color=142,142,224
++
++[Color5]
++Color=178,24,178
++
++[Color5Intense]
++Color=255,84,255
++
++[Color5Faint]
++Color=224,142,224
++
++[Color6]
++Color=24,178,178
++
++[Color6Intense]
++Color=84,255,255
++
++[Color6Faint]
++Color=142,224,224
++
++[Color7]
++Color=178,178,178
++
++[Color7Intense]
++Color=255,255,255
++
++[Color7Faint]
++Color=142,142,142
++
++[Foreground]
++Color=0,0,0
++
++[ForegroundIntense]
++Bold=true
++Color=0,0,0
++
++[ForegroundFaint]
++Color=0,0,0
++
++[General]
++Description=Black on Light Yellow
++Opacity=1
+diff -Nuar a/lib/color-schemes/BlackOnWhite.colorscheme b/lib/color-schemes/BlackOnWhite.colorscheme
+--- a/lib/color-schemes/BlackOnWhite.colorscheme	1970-01-01 02:00:00.000000000 +0200
++++ b/lib/color-schemes/BlackOnWhite.colorscheme	2021-11-05 13:18:23.000000000 +0300
+@@ -0,0 +1,94 @@
++[Background]
++Color=255,255,255
++
++[BackgroundIntense]
++Color=255,255,255
++
++[BackgroundFaint]
++Color=255,255,255
++
++[Color0]
++Color=0,0,0
++
++[Color0Intense]
++Color=104,104,104
++
++[Color0Faint]
++Color=192,192,192
++
++[Color1]
++Color=178,24,24
++
++[Color1Intense]
++Color=255,84,84
++
++[Color1Faint]
++Color=224,142,142
++
++[Color2]
++Color=24,178,24
++
++[Color2Intense]
++Color=84,255,84
++
++[Color2Faint]
++Color=142,224,142
++
++[Color3]
++Color=178,104,24
++
++[Color3Intense]
++Color=255,255,84
++
++[Color3Faint]
++Color=224,224,142
++
++[Color4]
++Color=24,24,178
++
++[Color4Intense]
++Color=84,84,255
++
++[Color4Faint]
++Color=142,142,224
++
++[Color5]
++Color=178,24,178
++
++[Color5Intense]
++Color=255,84,255
++
++[Color5Faint]
++Color=224,142,224
++
++[Color6]
++Color=24,178,178
++
++[Color6Intense]
++Color=84,255,255
++
++[Color6Faint]
++Color=142,224,224
++
++[Color7]
++Color=178,178,178
++
++[Color7Intense]
++Color=255,255,255
++
++[Color7Faint]
++Color=142,142,142
++
++[Foreground]
++Color=0,0,0
++
++[ForegroundIntense]
++Bold=true
++Color=0,0,0
++
++[ForegroundFaint]
++Color=0,0,0
++
++[General]
++Description=Black on White
++Opacity=1
+diff -Nuar a/lib/color-schemes/WhiteOnBlack.colorscheme b/lib/color-schemes/WhiteOnBlack.colorscheme
+--- a/lib/color-schemes/WhiteOnBlack.colorscheme	1970-01-01 02:00:00.000000000 +0200
++++ b/lib/color-schemes/WhiteOnBlack.colorscheme	2021-11-05 13:18:23.000000000 +0300
+@@ -0,0 +1,94 @@
++[Background]
++Color=0,0,0
++
++[BackgroundIntense]
++Color=0,0,0
++
++[BackgroundFaint]
++Color=0,0,0
++
++[Color0]
++Color=0,0,0
++
++[Color0Intense]
++Color=104,104,104
++
++[Color0Faint]
++Color=24,24,24
++
++[Color1]
++Color=178,24,24
++
++[Color1Intense]
++Color=255,84,84
++
++[Color1Faint]
++Color=101,0,0
++
++[Color2]
++Color=24,178,24
++
++[Color2Intense]
++Color=84,255,84
++
++[Color2Faint]
++Color=0,101,0
++
++[Color3]
++Color=178,104,24
++
++[Color3Intense]
++Color=255,255,84
++
++[Color3Faint]
++Color=101,74,0
++
++[Color4]
++Color=24,24,178
++
++[Color4Intense]
++Color=84,84,255
++
++[Color4Faint]
++Color=0,0,101
++
++[Color5]
++Color=178,24,178
++
++[Color5Intense]
++Color=255,84,255
++
++[Color5Faint]
++Color=95,5,95
++
++[Color6]
++Color=24,178,178
++
++[Color6Intense]
++Color=84,255,255
++
++[Color6Faint]
++Color=24,178,178
++
++[Color7]
++Color=178,178,178
++
++[Color7Intense]
++Color=255,255,255
++
++[Color7Faint]
++Color=101,101,101
++
++[Foreground]
++Color=255,255,255
++
++[ForegroundIntense]
++Bold=true
++Color=255,255,255
++
++[ForegroundFaint]
++Color=255,255,255
++
++[General]
++Description=White on Black
++Opacity=1
+diff -Nuar a/lib/Emulation.cpp b/lib/Emulation.cpp
+--- a/lib/Emulation.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Emulation.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -23,8 +23,8 @@
+ #include "Emulation.h"
+ 
+ // System
+-#include <stdio.h>
+-#include <stdlib.h>
++#include <cstdio>
++#include <cstdlib>
+ #include <unistd.h>
+ #include <string>
+ 
+@@ -51,10 +51,10 @@
+ using namespace Konsole;
+ 
+ Emulation::Emulation() :
+-  _currentScreen(0),
+-  _codec(0),
+-  _decoder(0),
+-  _keyTranslator(0),
++  _currentScreen(nullptr),
++  _codec(nullptr),
++  _decoder(nullptr),
++  _keyTranslator(nullptr),
+   _usesMouse(false),
+   _bracketedPasteMode(false)
+ {
+@@ -109,6 +109,12 @@
+ 
+     connect(this , SIGNAL(outputChanged()),
+             window , SLOT(notifyOutputChanged()) );
++
++    connect(this, &Emulation::handleCommandFromKeyboard,
++            window, &ScreenWindow::handleCommandFromKeyboard);
++    connect(this, &Emulation::outputFromKeypressEvent,
++            window, &ScreenWindow::scrollToEnd);
++
+     return window;
+ }
+ 
+@@ -133,7 +139,7 @@
+   if (_currentScreen != old)
+   {
+      // tell all windows onto this emulation to switch to the newly active screen
+-     for(ScreenWindow* window : const_cast<const QList<ScreenWindow*>&>(_windows))
++     for(ScreenWindow* window : qAsConst(_windows))
+          window->setScreen(_currentScreen);
+   }
+ }
+@@ -206,7 +212,7 @@
+   };
+ }
+ 
+-void Emulation::sendKeyEvent( QKeyEvent* ev )
++void Emulation::sendKeyEvent(QKeyEvent* ev, bool)
+ {
+   emit stateSet(NOTIFYNORMAL);
+ 
+@@ -380,7 +386,7 @@
+ 
+ QSize Emulation::imageSize() const
+ {
+-  return QSize(_currentScreen->getColumns(), _currentScreen->getLines());
++  return {_currentScreen->getColumns(), _currentScreen->getLines()};
+ }
+ 
+ ushort ExtendedCharTable::extendedCharHash(ushort* unicodePoints , ushort length) const
+@@ -398,7 +404,7 @@
+ 
+     // compare given length with stored sequence length ( given as the first ushort in the
+     // stored buffer )
+-    if ( entry == 0 || entry[0] != length )
++    if ( entry == nullptr || entry[0] != length )
+        return false;
+     // if the lengths match, each character must be checked.  the stored buffer starts at
+     // entry[1]
+@@ -458,7 +464,7 @@
+     else
+     {
+         length = 0;
+-        return 0;
++        return nullptr;
+     }
+ }
+ 
+diff -Nuar a/lib/Emulation.h b/lib/Emulation.h
+--- a/lib/Emulation.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Emulation.h	2021-11-05 13:18:23.000000000 +0300
+@@ -24,7 +24,7 @@
+ #define EMULATION_H
+ 
+ // System
+-#include <stdio.h>
++#include <cstdio>
+ 
+ // Qt
+ #include <QKeyEvent>
+@@ -33,14 +33,12 @@
+ #include <QTextStream>
+ #include <QTimer>
+ 
+-// Konsole
+-//#include "konsole_export.h"
+-#define KONSOLEPRIVATE_EXPORT
++#include "qtermwidget_export.h"
++#include "KeyboardTranslator.h"
+ 
+ namespace Konsole
+ {
+ 
+-class KeyboardTranslator;
+ class HistoryType;
+ class Screen;
+ class ScreenWindow;
+@@ -120,7 +118,7 @@
+  * how long the emulation has been active/idle for and also respond to
+  * a 'bell' event in different ways.
+  */
+-class KONSOLEPRIVATE_EXPORT Emulation : public QObject
++class QTERMWIDGET_EXPORT Emulation : public QObject
+ {
+ Q_OBJECT
+ 
+@@ -148,7 +146,7 @@
+ 
+    /** Constructs a new terminal emulation */
+    Emulation();
+-  ~Emulation();
++  ~Emulation() override;
+ 
+   /**
+    * Creates a new window onto the output from this emulation.  The contents
+@@ -255,7 +253,7 @@
+    * Interprets a key press event and emits the sendData() signal with
+    * the resulting character stream.
+    */
+-  virtual void sendKeyEvent(QKeyEvent*);
++  virtual void sendKeyEvent(QKeyEvent*, bool fromPaste);
+ 
+   /**
+    * Converts information about a mouse event into an xterm-compatible escape
+@@ -444,6 +442,9 @@
+    */
+   void cursorChanged(KeyboardCursorShape cursorShape, bool blinkingCursorEnabled);
+ 
++  void handleCommandFromKeyboard(KeyboardTranslator::Command command);
++  void outputFromKeypressEvent(void);
++
+ protected:
+   virtual void setMode(int mode) = 0;
+   virtual void resetMode(int mode) = 0;
+diff -Nuar a/lib/Filter.cpp b/lib/Filter.cpp
+--- a/lib/Filter.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Filter.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -98,13 +98,13 @@
+     {
+         Filter* filter = iter.next();
+         Filter::HotSpot* spot = filter->hotSpotAt(line,column);
+-        if ( spot != 0 )
++        if ( spot != nullptr )
+         {
+             return spot;
+         }
+     }
+ 
+-    return 0;
++    return nullptr;
+ }
+ 
+ QList<Filter::HotSpot*> FilterChain::hotSpots() const
+@@ -121,8 +121,8 @@
+ //QList<Filter::HotSpot*> FilterChain::hotSpotsAtLine(int line) const;
+ 
+ TerminalImageFilterChain::TerminalImageFilterChain()
+-: _buffer(0)
+-, _linePositions(0)
++: _buffer(nullptr)
++, _linePositions(nullptr)
+ {
+ }
+ 
+@@ -180,8 +180,8 @@
+ }
+ 
+ Filter::Filter() :
+-_linePositions(0),
+-_buffer(0)
++_linePositions(nullptr),
++_buffer(nullptr)
+ {
+ }
+ 
+@@ -275,7 +275,7 @@
+         return spot;
+     }
+ 
+-    return 0;
++    return nullptr;
+ }
+ 
+ Filter::HotSpot::HotSpot(int startLine , int startColumn , int endLine , int endColumn)
+diff -Nuar a/lib/Filter.h b/lib/Filter.h
+--- a/lib/Filter.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Filter.h	2021-11-05 13:18:23.000000000 +0300
+@@ -29,6 +29,7 @@
+ #include <QRegExp>
+ 
+ // Local
++#include "qtermwidget_export.h"
+ 
+ namespace Konsole
+ {
+@@ -54,7 +55,7 @@
+  * When processing the text they should create instances of Filter::HotSpot subclasses for sections of interest
+  * and add them to the filter's list of hotspots using addHotSpot()
+  */
+-class Filter : public QObject
++class QTERMWIDGET_EXPORT Filter : public QObject
+ {
+ public:
+     /**
+@@ -132,7 +133,7 @@
+ 
+     /** Constructs a new filter. */
+     Filter();
+-    virtual ~Filter();
++    ~Filter() override;
+ 
+     /** Causes the filter to process the block of text currently in its internal buffer */
+     virtual void process() = 0;
+@@ -183,7 +184,7 @@
+  * Subclasses can reimplement newHotSpot() to return custom hotspot types when matches for the regular expression
+  * are found.
+  */
+-class RegExpFilter : public Filter
++class QTERMWIDGET_EXPORT RegExpFilter : public Filter
+ {
+ public:
+     /**
+@@ -194,7 +195,7 @@
+     {
+     public:
+         HotSpot(int startLine, int startColumn, int endLine , int endColumn);
+-        virtual void activate(const QString& action = QString());
++        void activate(const QString& action = QString()) override;
+ 
+         /** Sets the captured texts associated with this hotspot */
+         void setCapturedTexts(const QStringList& texts);
+@@ -223,7 +224,7 @@
+      * If regexp matches the empty string, then process() will return immediately
+      * without finding results.
+      */
+-    virtual void process();
++    void process() override;
+ 
+ protected:
+     /**
+@@ -240,7 +241,7 @@
+ class FilterObject;
+ 
+ /** A filter which matches URLs in blocks of text */
+-class UrlFilter : public RegExpFilter
++class QTERMWIDGET_EXPORT UrlFilter : public RegExpFilter
+ {
+     Q_OBJECT
+ public:
+@@ -252,17 +253,17 @@
+     {
+     public:
+         HotSpot(int startLine,int startColumn,int endLine,int endColumn);
+-        virtual ~HotSpot();
++        ~HotSpot() override;
+ 
+         FilterObject* getUrlObject() const;
+ 
+-        virtual QList<QAction*> actions();
++        QList<QAction*> actions() override;
+ 
+         /**
+          * Open a web browser at the current URL.  The url itself can be determined using
+          * the capturedTexts() method.
+          */
+-        virtual void activate(const QString& action = QString());
++        void activate(const QString& action = QString()) override;
+ 
+     private:
+         enum UrlType
+@@ -279,7 +280,7 @@
+     UrlFilter();
+ 
+ protected:
+-    virtual RegExpFilter::HotSpot* newHotSpot(int,int,int,int);
++    RegExpFilter::HotSpot* newHotSpot(int,int,int,int) override;
+ 
+ private:
+ 
+@@ -292,7 +293,7 @@
+     void activated(const QUrl& url, bool fromContextMenu);
+ };
+ 
+-class FilterObject : public QObject
++class QTERMWIDGET_NO_EXPORT FilterObject : public QObject
+ {
+     Q_OBJECT
+ public:
+@@ -324,7 +325,7 @@
+  * The hotSpots() and hotSpotsAtLine() method return all of the hotspots in the text and on
+  * a given line respectively.
+  */
+-class FilterChain : protected QList<Filter*>
++class QTERMWIDGET_EXPORT FilterChain : protected QList<Filter*>
+ {
+ public:
+     virtual ~FilterChain();
+@@ -358,11 +359,11 @@
+ };
+ 
+ /** A filter chain which processes character images from terminal displays */
+-class TerminalImageFilterChain : public FilterChain
++class QTERMWIDGET_NO_EXPORT TerminalImageFilterChain : public FilterChain
+ {
+ public:
+     TerminalImageFilterChain();
+-    virtual ~TerminalImageFilterChain();
++    ~TerminalImageFilterChain() override;
+ 
+     /**
+      * Set the current terminal image to @p image.
+diff -Nuar a/lib/History.cpp b/lib/History.cpp
+--- a/lib/History.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/History.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -22,13 +22,14 @@
+ #include "History.h"
+ 
+ // System
++#include <algorithm>
+ #include <iostream>
+-#include <stdlib.h>
+-#include <stdio.h>
++#include <cstdlib>
++#include <cstdio>
+ #include <sys/types.h>
+ #include <sys/mman.h>
+ #include <unistd.h>
+-#include <errno.h>
++#include <cerrno>
+ 
+ #include <QtDebug>
+ 
+@@ -89,7 +90,8 @@
+ HistoryFile::HistoryFile()
+   : ion(-1),
+     length(0),
+-    fileMap(0)
++    fileMap(nullptr),
++    readWriteBalance(0)
+ {
+   if (tmpFile.open())
+   {
+@@ -109,15 +111,15 @@
+ //to avoid this.
+ void HistoryFile::map()
+ {
+-    Q_ASSERT( fileMap == 0 );
++    Q_ASSERT( fileMap == nullptr );
+ 
+-    fileMap = (char*)mmap( 0 , length , PROT_READ , MAP_PRIVATE , ion , 0 );
++    fileMap = (char*)mmap( nullptr , length , PROT_READ , MAP_PRIVATE , ion , 0 );
+ 
+     //if mmap'ing fails, fall back to the read-lseek combination
+     if ( fileMap == MAP_FAILED )
+     {
+             readWriteBalance = 0;
+-            fileMap = 0;
++            fileMap = nullptr;
+             //qDebug() << __FILE__ << __LINE__ << ": mmap'ing history failed.  errno = " << errno;
+     }
+ }
+@@ -127,12 +129,12 @@
+     int result = munmap( fileMap , length );
+     Q_ASSERT( result == 0 ); Q_UNUSED( result );
+ 
+-    fileMap = 0;
++    fileMap = nullptr;
+ }
+ 
+ bool HistoryFile::isMapped() const
+ {
+-    return (fileMap != 0);
++    return (fileMap != nullptr);
+ }
+ 
+ void HistoryFile::add(const unsigned char* bytes, int len)
+@@ -313,7 +315,7 @@
+ void HistoryScrollBuffer::addCells(const Character a[], int count)
+ {
+   HistoryLine newLine(count);
+-  qCopy(a,a+count,newLine.begin());
++  std::copy(a,a+count,newLine.begin());
+ 
+   addCellsVector(newLine);
+ }
+@@ -399,7 +401,7 @@
+     dynamic_cast<HistoryTypeBuffer*>(m_histType)->m_nbLines = lineCount;
+ }
+ 
+-int HistoryScrollBuffer::bufferIndex(int lineNumber)
++int HistoryScrollBuffer::bufferIndex(int lineNumber) const
+ {
+     Q_ASSERT( lineNumber >= 0 );
+     Q_ASSERT( lineNumber < _maxLineCount );
+@@ -537,7 +539,7 @@
+ {
+  Q_ASSERT ( length > 0 );
+   if ( tail-blockStart+length > blockLength )
+-    return NULL;
++    return nullptr;
+ 
+   void* block = tail;
+   tail += length;
+@@ -610,7 +612,7 @@
+ {
+   length=line.size();
+ 
+-  if (line.size() > 0) {
++  if (!line.empty()) {
+     formatLength=1;
+     int k=1;
+ 
+@@ -628,9 +630,9 @@
+ 
+     //kDebug() << "number of different formats in string: " << formatLength;
+     formatArray = (CharacterFormat*) blockList.allocate(sizeof(CharacterFormat)*formatLength);
+-    Q_ASSERT (formatArray!=NULL);
++    Q_ASSERT (formatArray!=nullptr);
+     text = (quint16*) blockList.allocate(sizeof(quint16)*line.size());
+-    Q_ASSERT (text!=NULL);
++    Q_ASSERT (text!=nullptr);
+ 
+     length=line.size();
+     wrapped=false;
+@@ -729,7 +731,7 @@
+ void CompactHistoryScroll::addCells ( const Character a[], int count )
+ {
+   TextLine newLine ( count );
+-  qCopy ( a,a+count,newLine.begin() );
++  std::copy ( a,a+count,newLine.begin() );
+   addCellsVector ( newLine );
+ }
+ 
+@@ -923,7 +925,7 @@
+   HistoryScroll *newScroll = new HistoryScrollFile(m_fileName);
+ 
+   Character line[LINE_SIZE];
+-  int lines = (old != 0) ? old->getLines() : 0;
++  int lines = (old != nullptr) ? old->getLines() : 0;
+   for(int i = 0; i < lines; i++)
+   {
+      int size = old->getLineLen(i);
+diff -Nuar a/lib/History.h b/lib/History.h
+--- a/lib/History.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/History.h	2021-11-05 13:18:23.000000000 +0300
+@@ -139,15 +139,15 @@
+ {
+ public:
+   HistoryScrollFile(const QString &logFileName);
+-  virtual ~HistoryScrollFile();
++  ~HistoryScrollFile() override;
+ 
+-  virtual int  getLines();
+-  virtual int  getLineLen(int lineno);
+-  virtual void getCells(int lineno, int colno, int count, Character res[]);
+-  virtual bool isWrappedLine(int lineno);
++  int  getLines() override;
++  int  getLineLen(int lineno) override;
++  void getCells(int lineno, int colno, int count, Character res[]) override;
++  bool isWrappedLine(int lineno) override;
+ 
+-  virtual void addCells(const Character a[], int count);
+-  virtual void addLine(bool previousWrapped=false);
++  void addCells(const Character a[], int count) override;
++  void addLine(bool previousWrapped=false) override;
+ 
+ private:
+   int startOfLine(int lineno);
+@@ -168,23 +168,23 @@
+   typedef QVector<Character> HistoryLine;
+ 
+   HistoryScrollBuffer(unsigned int maxNbLines = 1000);
+-  virtual ~HistoryScrollBuffer();
+-
+-  virtual int  getLines();
+-  virtual int  getLineLen(int lineno);
+-  virtual void getCells(int lineno, int colno, int count, Character res[]);
+-  virtual bool isWrappedLine(int lineno);
++  ~HistoryScrollBuffer() override;
+ 
+-  virtual void addCells(const Character a[], int count);
+-  virtual void addCellsVector(const QVector<Character>& cells);
+-  virtual void addLine(bool previousWrapped=false);
++  int  getLines() override;
++  int  getLineLen(int lineno) override;
++  void getCells(int lineno, int colno, int count, Character res[]) override;
++  bool isWrappedLine(int lineno) override;
++
++  void addCells(const Character a[], int count) override;
++  void addCellsVector(const QVector<Character>& cells) override;
++  void addLine(bool previousWrapped=false) override;
+ 
+   void setMaxNbLines(unsigned int nbLines);
+   unsigned int maxNbLines() const { return _maxLineCount; }
+ 
+ 
+ private:
+-  int bufferIndex(int lineNumber);
++  int bufferIndex(int lineNumber) const;
+ 
+   HistoryLine* _historyBuffer;
+   QBitArray _wrappedLine;
+@@ -223,17 +223,17 @@
+ {
+ public:
+   HistoryScrollNone();
+-  virtual ~HistoryScrollNone();
++  ~HistoryScrollNone() override;
+ 
+-  virtual bool hasScroll();
++  bool hasScroll() override;
+ 
+-  virtual int  getLines();
+-  virtual int  getLineLen(int lineno);
+-  virtual void getCells(int lineno, int colno, int count, Character res[]);
+-  virtual bool isWrappedLine(int lineno);
++  int  getLines() override;
++  int  getLineLen(int lineno) override;
++  void getCells(int lineno, int colno, int count, Character res[]) override;
++  bool isWrappedLine(int lineno) override;
+ 
+-  virtual void addCells(const Character a[], int count);
+-  virtual void addLine(bool previousWrapped=false);
++  void addCells(const Character a[], int count) override;
++  void addLine(bool previousWrapped=false) override;
+ };
+ 
+ //////////////////////////////////////////////////////////////////////
+@@ -243,15 +243,15 @@
+ {
+ public:
+   HistoryScrollBlockArray(size_t size);
+-  virtual ~HistoryScrollBlockArray();
++  ~HistoryScrollBlockArray() override;
+ 
+-  virtual int  getLines();
+-  virtual int  getLineLen(int lineno);
+-  virtual void getCells(int lineno, int colno, int count, Character res[]);
+-  virtual bool isWrappedLine(int lineno);
++  int  getLines() override;
++  int  getLineLen(int lineno) override;
++  void getCells(int lineno, int colno, int count, Character res[]) override;
++  bool isWrappedLine(int lineno) override;
+ 
+-  virtual void addCells(const Character a[], int count);
+-  virtual void addLine(bool previousWrapped=false);
++  void addCells(const Character a[], int count) override;
++  void addLine(bool previousWrapped=false) override;
+ 
+ protected:
+   BlockArray m_blockArray;
+@@ -293,7 +293,7 @@
+ 
+   CompactHistoryBlock(){
+     blockLength = 4096*64; // 256kb
+-    head = (quint8*) mmap(0, blockLength, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
++    head = (quint8*) mmap(nullptr, blockLength, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+     //head = (quint8*) malloc(blockLength);
+     Q_ASSERT(head != MAP_FAILED);
+     tail = blockStart = head;
+@@ -363,16 +363,16 @@
+ 
+ public:
+   CompactHistoryScroll(unsigned int maxNbLines = 1000);
+-  virtual ~CompactHistoryScroll();
+-
+-  virtual int  getLines();
+-  virtual int  getLineLen(int lineno);
+-  virtual void getCells(int lineno, int colno, int count, Character res[]);
+-  virtual bool isWrappedLine(int lineno);
++  ~CompactHistoryScroll() override;
+ 
+-  virtual void addCells(const Character a[], int count);
+-  virtual void addCellsVector(const TextLine& cells);
+-  virtual void addLine(bool previousWrapped=false);
++  int  getLines() override;
++  int  getLineLen(int lineno) override;
++  void getCells(int lineno, int colno, int count, Character res[]) override;
++  bool isWrappedLine(int lineno) override;
++
++  void addCells(const Character a[], int count) override;
++  void addCellsVector(const TextLine& cells) override;
++  void addLine(bool previousWrapped=false) override;
+ 
+   void setMaxNbLines(unsigned int nbLines);
+   unsigned int maxNbLines() const { return _maxLineCount; }
+@@ -418,10 +418,10 @@
+ public:
+   HistoryTypeNone();
+ 
+-  virtual bool isEnabled() const;
+-  virtual int maximumLineCount() const;
++  bool isEnabled() const override;
++  int maximumLineCount() const override;
+ 
+-  virtual HistoryScroll* scroll(HistoryScroll *) const;
++  HistoryScroll* scroll(HistoryScroll *) const override;
+ };
+ 
+ class HistoryTypeBlockArray : public HistoryType
+@@ -429,10 +429,10 @@
+ public:
+   HistoryTypeBlockArray(size_t size);
+ 
+-  virtual bool isEnabled() const;
+-  virtual int maximumLineCount() const;
++  bool isEnabled() const override;
++  int maximumLineCount() const override;
+ 
+-  virtual HistoryScroll* scroll(HistoryScroll *) const;
++  HistoryScroll* scroll(HistoryScroll *) const override;
+ 
+ protected:
+   size_t m_size;
+@@ -444,11 +444,11 @@
+ public:
+   HistoryTypeFile(const QString& fileName=QString());
+ 
+-  virtual bool isEnabled() const;
++  bool isEnabled() const override;
+   virtual const QString& getFileName() const;
+-  virtual int maximumLineCount() const;
++  int maximumLineCount() const override;
+ 
+-  virtual HistoryScroll* scroll(HistoryScroll *) const;
++  HistoryScroll* scroll(HistoryScroll *) const override;
+ 
+ protected:
+   QString m_fileName;
+@@ -462,10 +462,10 @@
+ public:
+   HistoryTypeBuffer(unsigned int nbLines);
+ 
+-  virtual bool isEnabled() const;
+-  virtual int maximumLineCount() const;
++  bool isEnabled() const override;
++  int maximumLineCount() const override;
+ 
+-  virtual HistoryScroll* scroll(HistoryScroll *) const;
++  HistoryScroll* scroll(HistoryScroll *) const override;
+ 
+ protected:
+   unsigned int m_nbLines;
+@@ -476,10 +476,10 @@
+ public:
+   CompactHistoryType(unsigned int size);
+ 
+-  virtual bool isEnabled() const;
+-  virtual int maximumLineCount() const;
++  bool isEnabled() const override;
++  int maximumLineCount() const override;
+ 
+-  virtual HistoryScroll* scroll(HistoryScroll *) const;
++  HistoryScroll* scroll(HistoryScroll *) const override;
+ 
+ protected:
+   unsigned int m_nbLines;
+diff -Nuar a/lib/HistorySearch.cpp b/lib/HistorySearch.cpp
+--- a/lib/HistorySearch.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/HistorySearch.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -24,7 +24,7 @@
+ #include "Emulation.h"
+ #include "HistorySearch.h"
+ 
+-HistorySearch::HistorySearch(EmulationPtr emulation, QRegExp regExp,
++HistorySearch::HistorySearch(EmulationPtr emulation, const QRegExp& regExp,
+         bool forwards, int startColumn, int startLine,
+         QObject* parent) :
+ QObject(parent),
+diff -Nuar a/lib/HistorySearch.h b/lib/HistorySearch.h
+--- a/lib/HistorySearch.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/HistorySearch.h	2021-11-05 13:18:23.000000000 +0300
+@@ -38,10 +38,10 @@
+     Q_OBJECT
+ 
+ public:
+-    explicit HistorySearch(EmulationPtr emulation, QRegExp regExp, bool forwards,
++    explicit HistorySearch(EmulationPtr emulation, const QRegExp& regExp, bool forwards,
+                            int startColumn, int startLine, QObject* parent);
+ 
+-    ~HistorySearch();
++    ~HistorySearch() override;
+ 
+     void search();
+ 
+diff -Nuar a/lib/kb-layouts/default.keytab b/lib/kb-layouts/default.keytab
+--- a/lib/kb-layouts/default.keytab	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kb-layouts/default.keytab	2021-11-05 13:18:23.000000000 +0300
+@@ -114,6 +114,9 @@
+ key PgUp    -Shift+KeyPad : "\E[5~"
+ key PgDown  -Shift+KeyPad : "\E[6~"
+ 
++key Clear -AnyMod+KeyPad+AppKeyPad : "\E[OE"
++key Clear +AnyMod+KeyPad+AppKeyPad : "\E[1;*E"
++
+ # other grey PC keys
+ 
+ key Enter+NewLine : "\r\n"
+@@ -178,4 +181,3 @@
+ key End     +Shift-AppScreen : scrollDownToBottom
+ 
+ key ScrollLock     : scrollLock
+-
+diff -Nuar a/lib/KeyboardTranslator.cpp b/lib/KeyboardTranslator.cpp
+--- a/lib/KeyboardTranslator.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/KeyboardTranslator.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -23,8 +23,8 @@
+ #include "KeyboardTranslator.h"
+ 
+ // System
+-#include <ctype.h>
+-#include <stdio.h>
++#include <cctype>
++#include <cstdio>
+ 
+ // Qt
+ #include <QBuffer>
+@@ -50,6 +50,13 @@
+ "key Tab : \"\\t\""
+ );
+ 
++#ifdef Q_OS_MAC
++// On Mac, Qt::ControlModifier means Cmd, and MetaModifier means Ctrl
++const Qt::KeyboardModifier KeyboardTranslator::CTRL_MOD = Qt::MetaModifier;
++#else
++const Qt::KeyboardModifier KeyboardTranslator::CTRL_MOD = Qt::ControlModifier;
++#endif
++
+ KeyboardTranslatorManager::KeyboardTranslatorManager()
+     : _haveLoadedAll(false)
+ {
+@@ -102,7 +109,7 @@
+ 
+     KeyboardTranslator* translator = loadTranslator(name);
+ 
+-    if ( translator != 0 )
++    if ( translator != nullptr )
+         _translators[name] = translator;
+     else if ( !name.isEmpty() )
+         qDebug() << "Unable to load translator" << name;
+@@ -148,7 +155,7 @@
+ 
+     QFile source(path);
+     if (name.isEmpty() || !source.open(QIODevice::ReadOnly | QIODevice::Text))
+-        return 0;
++        return nullptr;
+ 
+     return loadTranslator(&source,name);
+ }
+@@ -185,7 +192,7 @@
+     else
+     {
+         delete translator;
+-        return 0;
++        return nullptr;
+     }
+ }
+ 
+@@ -468,7 +475,7 @@
+ {
+     return _description;
+ }
+-bool KeyboardTranslatorReader::hasNextEntry()
++bool KeyboardTranslatorReader::hasNextEntry() const
+ {
+     return _hasNext;
+ }
+@@ -613,6 +620,11 @@
+                                         Qt::KeyboardModifiers modifiers,
+                                         States testState) const
+ {
++#ifdef Q_OS_MAC
++    // On Mac, arrow keys are considered part of keypad. Ignore that.
++    modifiers &= ~Qt::KeypadModifier;
++#endif
++
+     if ( _keyCode != keyCode )
+         return false;
+ 
+@@ -620,7 +632,7 @@
+         return false;
+ 
+     // if modifiers is non-zero, the 'any modifier' state is implicit
+-    if ( modifiers != 0 )
++    if ( (modifiers & ~Qt::KeypadModifier) != 0 )
+         testState |= AnyModifierState;
+ 
+     if ( (testState & _stateMask) != (_state & _stateMask) )
+diff -Nuar a/lib/KeyboardTranslator.h b/lib/KeyboardTranslator.h
+--- a/lib/KeyboardTranslator.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/KeyboardTranslator.h	2021-11-05 13:18:23.000000000 +0300
+@@ -314,6 +314,9 @@
+     /** Returns a list of all entries in the translator. */
+     QList<Entry> entries() const;
+ 
++    /** The modifier code for the actual Ctrl key on this OS. */
++    static const Qt::KeyboardModifier CTRL_MOD;
++
+ private:
+ 
+     QMultiHash<int,Entry> _entries; // entries in this keyboard translation,
+@@ -366,7 +369,7 @@
+     QString description() const;
+ 
+     /** Returns true if there is another entry in the source stream */
+-    bool hasNextEntry();
++    bool hasNextEntry() const;
+     /** Returns the next entry found in the source stream */
+     KeyboardTranslator::Entry nextEntry();
+ 
+@@ -558,8 +561,8 @@
+     {
+         int modifierValue = 1;
+         modifierValue += oneOrZero(modifiers & Qt::ShiftModifier);
+-        modifierValue += oneOrZero(modifiers & Qt::AltModifier)     << 1;
+-        modifierValue += oneOrZero(modifiers & Qt::ControlModifier) << 2;
++        modifierValue += oneOrZero(modifiers & Qt::AltModifier) << 1;
++        modifierValue += oneOrZero(modifiers & KeyboardTranslator::CTRL_MOD) << 2;
+ 
+         for (int i=0;i<_text.length();i++)
+         {
+diff -Nuar a/lib/kprocess.cpp b/lib/kprocess.cpp
+--- a/lib/kprocess.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kprocess.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -35,7 +35,7 @@
+ # include <windows.h>
+ #else
+ # include <unistd.h>
+-# include <errno.h>
++# include <cerrno>
+ #endif
+ 
+ #ifndef Q_OS_WIN
+@@ -400,13 +400,3 @@
+     QString prog = args.takeFirst();
+     return startDetached(prog, args);
+ }
+-
+-int KProcess::pid() const
+-{
+-#ifdef Q_OS_UNIX
+-    return (int) QProcess::pid();
+-#else
+-    return QProcess::pid() ? QProcess::pid()->dwProcessId : 0;
+-#endif
+-}
+-
+diff -Nuar a/lib/kprocess.h b/lib/kprocess.h
+--- a/lib/kprocess.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kprocess.h	2021-11-05 13:18:23.000000000 +0300
+@@ -77,12 +77,12 @@
+     /**
+      * Constructor
+      */
+-    explicit KProcess(QObject *parent = 0);
++    explicit KProcess(QObject *parent = nullptr);
+ 
+     /**
+      * Destructor
+      */
+-    virtual ~KProcess();
++    ~KProcess() override;
+ 
+     /**
+      * Set how to handle the output channels of the child process.
+@@ -311,18 +311,6 @@
+      */
+     static int startDetached(const QStringList &argv);
+ 
+-    /**
+-     * Obtain the process' ID as known to the system.
+-     *
+-     * Unlike with QProcess::pid(), this is a real PID also on Windows.
+-     *
+-     * This function can be called only while the process is running.
+-     * It cannot be applied to detached processes.
+-     *
+-     * @return the process ID
+-     */
+-    int pid() const;
+-
+ protected:
+     /**
+      * @internal
+diff -Nuar a/lib/kpty.cpp b/lib/kpty.cpp
+--- a/lib/kpty.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kpty.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -27,7 +27,7 @@
+ #include <QtDebug>
+ 
+ 
+-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__DragonFly__)
++#if defined(__FreeBSD__) || defined(__DragonFly__)
+ #define HAVE_LOGIN
+ #define HAVE_LIBUTIL_H
+ #endif
+@@ -37,6 +37,12 @@
+ #define HAVE_UTIL_H
+ #endif
+ 
++#if defined(__NetBSD__)
++#define HAVE_LOGIN
++#define HAVE_UTIL_H
++#define HAVE_OPENPTY
++#endif
++
+ #if defined(__APPLE__)
+ #define HAVE_OPENPTY
+ #define HAVE_UTIL_H
+@@ -70,12 +76,12 @@
+ #include <sys/stat.h>
+ #include <sys/param.h>
+ 
+-#include <errno.h>
++#include <cerrno>
+ #include <fcntl.h>
+-#include <time.h>
+-#include <stdlib.h>
+-#include <stdio.h>
+-#include <string.h>
++#include <ctime>
++#include <cstdlib>
++#include <cstdio>
++#include <cstring>
+ #include <unistd.h>
+ #include <grp.h>
+ 
+@@ -174,14 +180,12 @@
+ {
+ }
+ 
+-#ifndef HAVE_OPENPTY
+ bool KPtyPrivate::chownpty(bool)
+ {
+ //    return !QProcess::execute(KStandardDirs::findExe("kgrantpty"),
+ //        QStringList() << (grant?"--grant":"--revoke") << QString::number(masterFd));
+     return true;
+ }
+-#endif
+ 
+ /////////////////////////////
+ // public member functions //
+@@ -261,7 +265,7 @@
+             d->ttyName = ptsn;
+ #else
+     int ptyno;
+-    if (!ioctl(d->masterFd, TIOCGPTN, &ptyno)) {
++    if (ioctl(d->masterFd, TIOCGPTN, &ptyno) != -1) {
+         d->ttyName = QByteArray("/dev/pts/") + QByteArray::number(ptyno);
+ #endif
+ #ifdef HAVE_GRANTPT
+@@ -281,8 +285,8 @@
+     // Linux device names, FIXME: Trouble on other systems?
+     for (const char * s3 = "pqrstuvwxyzabcde"; *s3; s3++) {
+         for (const char * s4 = "0123456789abcdef"; *s4; s4++) {
+-            ptyName = QString().sprintf("/dev/pty%c%c", *s3, *s4).toUtf8();
+-            d->ttyName = QString().sprintf("/dev/tty%c%c", *s3, *s4).toUtf8();
++            ptyName = QByteArrayLiteral("/dev/pty") + *s3 + *s4;
++            d->ttyName = QByteArrayLiteral("/dev/tty") + *s3 + *s4;
+ 
+             d->masterFd = ::open(ptyName.data(), O_RDWR);
+             if (d->masterFd >= 0) {
+@@ -292,7 +296,7 @@
+                  * and we need to get another one.
+                  */
+                 int pgrp_rtn;
+-                if (ioctl(d->masterFd, TIOCGPGRP, &pgrp_rtn) == 0 || errno != EIO) {
++                if (ioctl(d->masterFd, TIOCGPGRP, &pgrp_rtn) != -1 || errno != EIO) {
+                     ::close(d->masterFd);
+                     d->masterFd = -1;
+                     continue;
+@@ -333,7 +337,8 @@
+             !d->chownpty(true)) {
+         qWarning()
+         << "chownpty failed for device " << ptyName << "::" << d->ttyName
+-        << "\nThis means the communication can be eavesdropped." << endl;
++        << "\nThis means the communication can be eavesdropped."
++        << Qt::endl;
+     }
+ 
+ #if defined (HAVE__GETPTY) || defined (HAVE_GRANTPT)
+@@ -394,9 +399,13 @@
+         d->ttyName = ptsn;
+ # else
+     int ptyno;
+-    if (!ioctl(fd, TIOCGPTN, &ptyno)) {
+-        char buf[32];
+-        sprintf(buf, "/dev/pts/%d", ptyno);
++    if (ioctl(fd, TIOCGPTN, &ptyno) != -1) {
++        const size_t sz = 32;
++        char buf[sz];
++        const size_t r = snprintf(buf, sz, "/dev/pts/%d", ptyno);
++        if (sz <= r) {
++            qWarning("KPty::open: Buffer too small\n");
++        }
+         d->ttyName = buf;
+ # endif
+     } else {
+@@ -546,7 +555,7 @@
+ # ifdef HAVE_UTMPX
+     gettimeofday(&l_struct.ut_tv, 0);
+ # else
+-    l_struct.ut_time = time(0);
++    l_struct.ut_time = time(nullptr);
+ # endif
+ 
+ # ifdef HAVE_LOGIN
+@@ -648,7 +657,7 @@
+     }
+     endutxent();
+ #  else
+-    ut->ut_time = time(0);
++    ut->ut_time = time(nullptr);
+     pututline(ut);
+ }
+ endutent();
+@@ -682,7 +691,7 @@
+     memset(&winSize, 0, sizeof(winSize));
+     winSize.ws_row = (unsigned short)lines;
+     winSize.ws_col = (unsigned short)columns;
+-    return ioctl(d->masterFd, TIOCSWINSZ, (char *)&winSize) == 0;
++    return ioctl(d->masterFd, TIOCSWINSZ, (char *)&winSize) != -1;
+ }
+ 
+ bool KPty::setEcho(bool echo)
+diff -Nuar a/lib/kptydevice.cpp b/lib/kptydevice.cpp
+--- a/lib/kptydevice.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kptydevice.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -35,8 +35,8 @@
+ #include <QSocketNotifier>
+ 
+ #include <unistd.h>
+-#include <errno.h>
+-#include <signal.h>
++#include <cerrno>
++#include <csignal>
+ #include <termios.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+@@ -74,7 +74,7 @@
+         struct sigaction noaction;
+         memset(&noaction, 0, sizeof(noaction));
+         noaction.sa_handler = SIG_IGN;
+-        sigaction(SIGPIPE, &noaction, 0);
++        sigaction(SIGPIPE, &noaction, nullptr);
+     }
+ }
+ 
+@@ -90,7 +90,7 @@
+ #else
+     int available;
+ #endif
+-    if (!::ioctl(q->masterFd(), PTY_BYTES_AVAILABLE, (char *) &available)) {
++    if (::ioctl(q->masterFd(), PTY_BYTES_AVAILABLE, (char *) &available) != -1) {
+ #ifdef Q_OS_SOLARIS
+         // A Pty is a STREAMS module, and those can be activated
+         // with 0 bytes available. This happens either when ^C is
+@@ -211,7 +211,7 @@
+     struct timeval tv, *tvp;
+ 
+     if (msecs < 0)
+-        tvp = 0;
++        tvp = nullptr;
+     else {
+         tv.tv_sec = msecs / 1000;
+         tv.tv_usec = (msecs % 1000) * 1000;
+@@ -243,7 +243,7 @@
+         }
+ #endif
+ 
+-        switch (select(q->masterFd() + 1, &rfds, &wfds, 0, tvp)) {
++        switch (select(q->masterFd() + 1, &rfds, &wfds, nullptr, tvp)) {
+         case -1:
+             if (errno == EINTR)
+                 break;
+diff -Nuar a/lib/kptydevice.h b/lib/kptydevice.h
+--- a/lib/kptydevice.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kptydevice.h	2021-11-05 13:18:23.000000000 +0300
+@@ -55,7 +55,7 @@
+     /**
+      * Constructor
+      */
+-    KPtyDevice(QObject *parent = 0);
++    KPtyDevice(QObject *parent = nullptr);
+ 
+     /**
+      * Destructor:
+@@ -63,14 +63,14 @@
+      *  If the pty is still open, it will be closed. Note, however, that
+      *  an utmp registration is @em not undone.
+      */
+-    virtual ~KPtyDevice();
++    ~KPtyDevice() override;
+ 
+     /**
+      * Create a pty master/slave pair.
+      *
+      * @return true if a pty pair was successfully opened
+      */
+-    virtual bool open(OpenMode mode = ReadWrite | Unbuffered);
++    bool open(OpenMode mode = ReadWrite | Unbuffered) override;
+ 
+     /**
+      * Open using an existing pty master. The ownership of the fd
+@@ -90,7 +90,7 @@
+     /**
+      * Close the pty master/slave pair.
+      */
+-    virtual void close();
++    void close() override;
+ 
+     /**
+      * Sets whether the KPtyDevice monitors the pty for incoming data.
+@@ -119,30 +119,30 @@
+     /**
+      * @return always true
+      */
+-    virtual bool isSequential() const;
++    bool isSequential() const override;
+ 
+     /**
+      * @reimp
+      */
+-    bool canReadLine() const;
++    bool canReadLine() const override;
+ 
+     /**
+      * @reimp
+      */
+-    bool atEnd() const;
++    bool atEnd() const override;
+ 
+     /**
+      * @reimp
+      */
+-    qint64 bytesAvailable() const;
++    qint64 bytesAvailable() const override;
+ 
+     /**
+      * @reimp
+      */
+-    qint64 bytesToWrite() const;
++    qint64 bytesToWrite() const override;
+ 
+-    bool waitForBytesWritten(int msecs = -1);
+-    bool waitForReadyRead(int msecs = -1);
++    bool waitForBytesWritten(int msecs = -1) override;
++    bool waitForReadyRead(int msecs = -1) override;
+ 
+ 
+ Q_SIGNALS:
+@@ -154,9 +154,9 @@
+     void readEof();
+ 
+ protected:
+-    virtual qint64 readData(char *data, qint64 maxSize);
+-    virtual qint64 readLineData(char *data, qint64 maxSize);
+-    virtual qint64 writeData(const char *data, qint64 maxSize);
++    qint64 readData(char *data, qint64 maxSize) override;
++    qint64 readLineData(char *data, qint64 maxSize) override;
++    qint64 writeData(const char *data, qint64 maxSize) override;
+ 
+ private:
+     Q_PRIVATE_SLOT(d_func(), bool _k_canRead())
+@@ -168,7 +168,7 @@
+ /////////////////////////////////////////////////////
+ 
+ #include <QByteArray>
+-#include <QLinkedList>
++#include <list>
+ 
+ #define CHUNKSIZE 4096
+ 
+@@ -185,14 +185,14 @@
+         buffers.clear();
+         QByteArray tmp;
+         tmp.resize(CHUNKSIZE);
+-        buffers << tmp;
++        buffers.push_back(tmp);
+         head = tail = 0;
+         totalSize = 0;
+     }
+ 
+     inline bool isEmpty() const
+     {
+-        return buffers.count() == 1 && !tail;
++        return buffers.size() == 1 && !tail;
+     }
+ 
+     inline int size() const
+@@ -202,13 +202,13 @@
+ 
+     inline int readSize() const
+     {
+-        return (buffers.count() == 1 ? tail : buffers.first().size()) - head;
++        return (buffers.size() == 1 ? tail : buffers.front().size()) - head;
+     }
+ 
+     inline const char *readPointer() const
+     {
+         Q_ASSERT(totalSize > 0);
+-        return buffers.first().constData() + head;
++        return buffers.front().constData() + head;
+     }
+ 
+     void free(int bytes)
+@@ -221,21 +221,21 @@
+ 
+             if (bytes < nbs) {
+                 head += bytes;
+-                if (head == tail && buffers.count() == 1) {
+-                    buffers.first().resize(CHUNKSIZE);
++                if (head == tail && buffers.size() == 1) {
++                    buffers.front().resize(CHUNKSIZE);
+                     head = tail = 0;
+                 }
+                 break;
+             }
+ 
+             bytes -= nbs;
+-            if (buffers.count() == 1) {
+-                buffers.first().resize(CHUNKSIZE);
++            if (buffers.size() == 1) {
++                buffers.front().resize(CHUNKSIZE);
+                 head = tail = 0;
+                 break;
+             }
+ 
+-            buffers.removeFirst();
++            buffers.pop_front();
+             head = 0;
+         }
+     }
+@@ -245,15 +245,15 @@
+         totalSize += bytes;
+ 
+         char *ptr;
+-        if (tail + bytes <= buffers.last().size()) {
+-            ptr = buffers.last().data() + tail;
++        if (tail + bytes <= buffers.back().size()) {
++            ptr = buffers.back().data() + tail;
+             tail += bytes;
+         } else {
+-            buffers.last().resize(tail);
++            buffers.back().resize(tail);
+             QByteArray tmp;
+             tmp.resize(qMax(CHUNKSIZE, bytes));
+             ptr = tmp.data();
+-            buffers << tmp;
++            buffers.push_back(tmp);
+             tail = bytes;
+         }
+         return ptr;
+@@ -278,7 +278,7 @@
+     {
+         int index = 0;
+         int start = head;
+-        QLinkedList<QByteArray>::ConstIterator it = buffers.constBegin();
++        std::list<QByteArray>::const_iterator it = buffers.cbegin();
+         forever {
+             if (!maxLength)
+                 return index;
+@@ -286,7 +286,7 @@
+                 return -1;
+             const QByteArray &buf = *it;
+             ++it;
+-            int len = qMin((it == buffers.end() ? tail : buf.size()) - start,
++            int len = qMin((it == buffers.cend() ? tail : buf.size()) - start,
+                            maxLength);
+             const char *ptr = buf.data() + start;
+             if (const char *rptr = (const char *)memchr(ptr, c, len))
+@@ -327,7 +327,7 @@
+     }
+ 
+ private:
+-    QLinkedList<QByteArray> buffers;
++    std::list<QByteArray> buffers;
+     int head, tail;
+     int totalSize;
+ };
+@@ -339,7 +339,7 @@
+     KPtyDevicePrivate(KPty* parent) :
+         KPtyPrivate(parent),
+         emittedReadyRead(false), emittedBytesWritten(false),
+-        readNotifier(0), writeNotifier(0)
++        readNotifier(nullptr), writeNotifier(nullptr)
+     {
+     }
+ 
+diff -Nuar a/lib/kpty.h b/lib/kpty.h
+--- a/lib/kpty.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kpty.h	2021-11-05 13:18:23.000000000 +0300
+@@ -50,6 +50,9 @@
+     */
+     ~KPty();
+ 
++    KPty(const KPty &) = delete;
++    KPty &operator=(const KPty &) = delete;
++
+     /**
+      * Create a pty master/slave pair.
+      *
+@@ -95,7 +98,7 @@
+      *  of the client. For local logins from inside an X session it should
+      *  be the name of the X display. Otherwise it should be empty.
+      */
+-    void login(const char * user = 0, const char * remotehost = 0);
++    void login(const char * user = nullptr, const char * remotehost = nullptr);
+ 
+     /**
+      * Removes the utmp entry for this tty.
+diff -Nuar a/lib/kpty_p.h b/lib/kpty_p.h
+--- a/lib/kpty_p.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kpty_p.h	2021-11-05 13:18:23.000000000 +0300
+@@ -35,9 +35,7 @@
+     KPtyPrivate(KPty* parent);
+     virtual ~KPtyPrivate();
+ 
+-#ifndef HAVE_OPENPTY
+     bool chownpty(bool grant);
+-#endif
+ 
+     int masterFd;
+     int slaveFd;
+diff -Nuar a/lib/kptyprocess.cpp b/lib/kptyprocess.cpp
+--- a/lib/kptyprocess.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kptyprocess.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -32,9 +32,9 @@
+ #include "kprocess.h"
+ #include "kptydevice.h"
+ 
+-#include <stdlib.h>
++#include <cstdlib>
+ #include <unistd.h>
+-#include <signal.h>
++#include <csignal>
+ #include <QDebug>
+ 
+ KPtyProcess::KPtyProcess(QObject *parent) :
+@@ -77,7 +77,7 @@
+     if (state() != QProcess::NotRunning)
+     {
+         qWarning() << Q_FUNC_INFO << "the terminal process is still running, trying to stop it by SIGHUP";
+-        ::kill(pid(), SIGHUP);
++        ::kill(static_cast<pid_t>(processId()), SIGHUP);
+         waitForFinished(300);
+         if (state() != QProcess::NotRunning)
+             qCritical() << Q_FUNC_INFO << "process didn't stop upon SIGHUP and will be SIGKILL-ed";
+diff -Nuar a/lib/kptyprocess.h b/lib/kptyprocess.h
+--- a/lib/kptyprocess.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/kptyprocess.h	2021-11-05 13:18:23.000000000 +0300
+@@ -33,7 +33,7 @@
+ #include "kprocess.h"
+ #include "kptydevice.h"
+ 
+-#include <signal.h>
++#include <csignal>
+ 
+ class KPtyDevice;
+ 
+@@ -74,7 +74,7 @@
+     /**
+      * Constructor
+      */
+-    explicit KPtyProcess(QObject *parent = 0);
++    explicit KPtyProcess(QObject *parent = nullptr);
+ 
+     /**
+      * Construct a process using an open pty master.
+@@ -83,12 +83,12 @@
+      *   The process does not take ownership of the descriptor;
+      *   it will not be automatically closed at any point.
+      */
+-    KPtyProcess(int ptyMasterFd, QObject *parent = 0);
++    KPtyProcess(int ptyMasterFd, QObject *parent = nullptr);
+ 
+     /**
+      * Destructor
+      */
+-    virtual ~KPtyProcess();
++    ~KPtyProcess() override;
+ 
+     /**
+      * Set to which channels the PTY should be assigned.
+@@ -102,7 +102,7 @@
+     bool isRunning() const
+     {
+         bool rval;
+-        (pid() > 0) ? rval= true : rval= false;
++        (processId() > 0) ? rval= true : rval= false;
+         return rval;
+ 
+     }
+@@ -144,7 +144,7 @@
+     /**
+      * @reimp
+      */
+-    virtual void setupChildProcess();
++    void setupChildProcess() override;
+ 
+ private:
+     Q_PRIVATE_SLOT(d_func(), void _k_onStateChanged(QProcess::ProcessState))
+diff -Nuar a/lib/Pty.cpp b/lib/Pty.cpp
+--- a/lib/Pty.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Pty.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -33,9 +33,9 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+-#include <errno.h>
++#include <cerrno>
+ #include <termios.h>
+-#include <signal.h>
++#include <csignal>
+ 
+ // Qt
+ #include <QStringList>
+@@ -56,7 +56,7 @@
+ }
+ QSize Pty::windowSize() const
+ {
+-    return QSize(_windowColumns,_windowLines);
++    return {_windowColumns,_windowLines};
+ }
+ 
+ void Pty::setFlowControlEnabled(bool enable)
+@@ -173,6 +173,7 @@
+   addEnvironmentVariables(environment);
+ 
+   setEnv(QLatin1String("WINDOWID"), QString::number(winid));
++  setEnv(QLatin1String("COLORTERM"), QLatin1String("truecolor"));
+ 
+   // unless the LANGUAGE environment variable has been set explicitly
+   // set it to a null string
+@@ -328,11 +329,12 @@
+     struct sigaction action;
+     sigset_t sigset;
+     sigemptyset(&action.sa_mask);
++    sigemptyset(&sigset);
+     action.sa_handler = SIG_DFL;
+     action.sa_flags = 0;
+     for (int signal=1;signal < NSIG; signal++) {
+-        sigaction(signal,&action,0L);
++        sigaction(signal,&action,nullptr);
+         sigaddset(&sigset, signal);
+     }
+-    sigprocmask(SIG_UNBLOCK, &sigset, NULL);
++    sigprocmask(SIG_UNBLOCK, &sigset, nullptr);
+ }
+diff -Nuar a/lib/Pty.h b/lib/Pty.h
+--- a/lib/Pty.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Pty.h	2021-11-05 13:18:23.000000000 +0300
+@@ -70,15 +70,15 @@
+      * To start the terminal process, call the run() method with the
+      * name of the program to start and appropriate arguments.
+      */
+-    explicit Pty(QObject* parent = 0);
++    explicit Pty(QObject* parent = nullptr);
+ 
+     /**
+      * Construct a process using an open pty master.
+      * See KPtyProcess::KPtyProcess()
+      */
+-    explicit Pty(int ptyMasterFd, QObject* parent = 0);
++    explicit Pty(int ptyMasterFd, QObject* parent = nullptr);
+ 
+-    ~Pty();
++    ~Pty() override;
+ 
+     /**
+      * Starts the terminal process.
+@@ -189,7 +189,7 @@
+     void receivedData(const char* buffer, int length);
+ 
+   protected:
+-      void setupChildProcess();
++      void setupChildProcess() override;
+ 
+   private slots:
+     // called when data is received from the terminal process
+diff -Nuar a/lib/qtermwidget.cpp b/lib/qtermwidget.cpp
+--- a/lib/qtermwidget.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/qtermwidget.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -33,6 +33,12 @@
+ #include "SearchBar.h"
+ #include "qtermwidget.h"
+ 
++#ifdef Q_OS_MACOS
++// Qt does not support fontconfig on macOS, so we need to use a "real" font name.
++#define DEFAULT_FONT_FAMILY                   "Menlo"
++#else
++#define DEFAULT_FONT_FAMILY                   "Monospace"
++#endif
+ 
+ #define STEP_ZOOM 1
+ 
+@@ -43,8 +49,10 @@
+     return (void*) new QTermWidget(startnow, (QWidget*)parent);
+ }
+ 
+-struct TermWidgetImpl {
+-    TermWidgetImpl(QWidget* parent = 0);
++class TermWidgetImpl {
++
++public:
++    TermWidgetImpl(QWidget* parent = nullptr);
+ 
+     TerminalDisplay *m_terminalDisplay;
+     Session *m_session;
+@@ -156,8 +164,8 @@
+         m_impl->m_terminalDisplay->screenWindow()->screen()->getSelectionStart(startColumn, startLine);
+     }
+ 
+-    qDebug() << "current selection starts at: " << startColumn << startLine;
+-    qDebug() << "current cursor position: " << m_impl->m_terminalDisplay->screenWindow()->cursorPosition();
++    //qDebug() << "current selection starts at: " << startColumn << startLine;
++    //qDebug() << "current cursor position: " << m_impl->m_terminalDisplay->screenWindow()->cursorPosition();
+ 
+     QRegExp regExp(m_searchBar->searchText());
+     regExp.setPatternSyntax(m_searchBar->useRegularExpression() ? QRegExp::RegExp : QRegExp::FixedString);
+@@ -175,7 +183,7 @@
+ void QTermWidget::matchFound(int startColumn, int startLine, int endColumn, int endLine)
+ {
+     ScreenWindow* sw = m_impl->m_terminalDisplay->screenWindow();
+-    qDebug() << "Scroll to" << startLine;
++    //qDebug() << "Scroll to" << startLine;
+     sw->scrollTo(startLine);
+     sw->setTrackOutput(false);
+     sw->notifyOutputChanged();
+@@ -259,7 +267,7 @@
+     // translations
+     // First check $XDG_DATA_DIRS. This follows the implementation in libqtxdg
+     QString d = QFile::decodeName(qgetenv("XDG_DATA_DIRS"));
+-    QStringList dirs = d.split(QLatin1Char(':'), QString::SkipEmptyParts);
++    QStringList dirs = d.split(QLatin1Char(':'), Qt::SkipEmptyParts);
+     if (dirs.isEmpty()) {
+         dirs.append(QString::fromLatin1("/usr/local/share"));
+         dirs.append(QString::fromLatin1("/usr/share"));
+@@ -268,11 +276,11 @@
+ 
+     m_translator = new QTranslator(this);
+ 
+-    for (const QString& dir : dirs) {
+-        qDebug() << "Trying to load translation file from dir" << dir;
++    for (const QString& dir : qAsConst(dirs)) {
++        //qDebug() << "Trying to load translation file from dir" << dir;
+         if (m_translator->load(QLocale::system(), QLatin1String("qtermwidget"), QLatin1String(QLatin1String("_")), dir)) {
+             qApp->installTranslator(m_translator);
+-            qDebug() << "Translations found in" << dir;
++            //qDebug() << "Translations found in" << dir;
+             break;
+         }
+     }
+@@ -316,12 +324,12 @@
+             this, SIGNAL(termGetFocus()));
+     connect(m_impl->m_terminalDisplay, SIGNAL(termLostFocus()),
+             this, SIGNAL(termLostFocus()));
+-    connect(m_impl->m_terminalDisplay, SIGNAL(keyPressedSignal(QKeyEvent *)),
+-            this, SIGNAL(termKeyPressed(QKeyEvent *)));
++    connect(m_impl->m_terminalDisplay, &TerminalDisplay::keyPressedSignal,
++            [this] (QKeyEvent* e, bool) { Q_EMIT termKeyPressed(e); });
+ //    m_impl->m_terminalDisplay->setSize(80, 40);
+ 
+     QFont font = QApplication::font();
+-    font.setFamily(QLatin1String("Monospace"));
++    font.setFamily(QLatin1String(DEFAULT_FONT_FAMILY));
+     font.setPointSize(10);
+     font.setStyleHint(QFont::TypeWriter);
+     setTerminalFont(font);
+@@ -361,11 +369,16 @@
+     m_impl->m_terminalDisplay->setOpacity(level);
+ }
+ 
+-void QTermWidget::setTerminalBackgroundImage(QString backgroundImage)
++void QTermWidget::setTerminalBackgroundImage(const QString& backgroundImage)
+ {
+     m_impl->m_terminalDisplay->setBackgroundImage(backgroundImage);
+ }
+ 
++void QTermWidget::setTerminalBackgroundMode(int mode)
++{
++    m_impl->m_terminalDisplay->setBackgroundMode((Konsole::BackgroundMode)mode);
++}
++
+ void QTermWidget::setShellProgram(const QString &progname)
+ {
+     if (!m_impl->m_session)
+@@ -419,7 +432,7 @@
+ 
+ void QTermWidget::setColorScheme(const QString& origName)
+ {
+-    const ColorScheme *cs = 0;
++    const ColorScheme *cs = nullptr;
+ 
+     const bool isFile = QFile::exists(origName);
+     const QString& name = isFile ?
+@@ -499,6 +512,11 @@
+     m_impl->m_session->sendText(text);
+ }
+ 
++void QTermWidget::sendKeyEvent(QKeyEvent *e)
++{
++    m_impl->m_session->sendKeyEvent(e);
++}
++
+ void QTermWidget::resizeEvent(QResizeEvent*)
+ {
+ //qDebug("global window resizing...with %d %d", this->size().width(), this->size().height());
+@@ -516,6 +534,16 @@
+     m_impl->m_terminalDisplay->bracketText(text);
+ }
+ 
++void QTermWidget::disableBracketedPasteMode(bool disable)
++{
++    m_impl->m_terminalDisplay->disableBracketedPasteMode(disable);
++}
++
++bool QTermWidget::bracketedPasteModeIsDisabled() const
++{
++    return m_impl->m_terminalDisplay->bracketedPasteModeIsDisabled();
++}
++
+ void QTermWidget::copyClipboard()
+ {
+     m_impl->m_terminalDisplay->copyClipboard();
+@@ -743,3 +771,29 @@
+ {
+     return m_impl->m_terminalDisplay->margin();
+ }
++
++void QTermWidget::saveHistory(QIODevice *device)
++{
++    QTextStream stream(device);
++    PlainTextDecoder decoder;
++    decoder.begin(&stream);
++    m_impl->m_session->emulation()->writeToStream(&decoder, 0, m_impl->m_session->emulation()->lineCount());
++}
++
++void QTermWidget::setDrawLineChars(bool drawLineChars)
++{
++    m_impl->m_terminalDisplay->setDrawLineChars(drawLineChars);
++}
++
++void QTermWidget::setBoldIntense(bool boldIntense)
++{
++    m_impl->m_terminalDisplay->setBoldIntense(boldIntense);
++}
++
++void QTermWidget::setConfirmMultilinePaste(bool confirmMultilinePaste) {
++    m_impl->m_terminalDisplay->setConfirmMultilinePaste(confirmMultilinePaste);
++}
++
++void QTermWidget::setTrimPastedTrailingNewlines(bool trimPastedTrailingNewlines) {
++    m_impl->m_terminalDisplay->setTrimPastedTrailingNewlines(trimPastedTrailingNewlines);
++}
+diff -Nuar a/lib/qtermwidget_export.h b/lib/qtermwidget_export.h
+--- a/lib/qtermwidget_export.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/qtermwidget_export.h	2021-11-14 11:40:30.000000000 +0300
+@@ -2,9 +2,9 @@
+ #ifndef QTERMWIDGET_EXPORT_H
+ #define QTERMWIDGET_EXPORT_H
+ 
+-#ifdef QTERMWIDGET5_STATIC_DEFINE
++#ifdef QTERMWIDGET_STATIC_DEFINE
+ #  define QTERMWIDGET_EXPORT
+-#  define QTERMWIDGET5_NO_EXPORT
++#  define QTERMWIDGET_NO_EXPORT
+ #else
+ #  ifndef QTERMWIDGET_EXPORT
+ #    ifdef qtermwidget5_EXPORTS
+@@ -16,26 +16,26 @@
+ #    endif
+ #  endif
+ 
+-#  ifndef QTERMWIDGET5_NO_EXPORT
+-#    define QTERMWIDGET5_NO_EXPORT __attribute__((visibility("hidden")))
++#  ifndef QTERMWIDGET_NO_EXPORT
++#    define QTERMWIDGET_NO_EXPORT __attribute__((visibility("hidden")))
+ #  endif
+ #endif
+ 
+-#ifndef QTERMWIDGET5_DEPRECATED
+-#  define QTERMWIDGET5_DEPRECATED __attribute__ ((__deprecated__))
++#ifndef QTERMWIDGET_DEPRECATED
++#  define QTERMWIDGET_DEPRECATED __attribute__ ((__deprecated__))
+ #endif
+ 
+-#ifndef QTERMWIDGET5_DEPRECATED_EXPORT
+-#  define QTERMWIDGET5_DEPRECATED_EXPORT QTERMWIDGET_EXPORT QTERMWIDGET5_DEPRECATED
++#ifndef QTERMWIDGET_DEPRECATED_EXPORT
++#  define QTERMWIDGET_DEPRECATED_EXPORT QTERMWIDGET_EXPORT QTERMWIDGET_DEPRECATED
+ #endif
+ 
+-#ifndef QTERMWIDGET5_DEPRECATED_NO_EXPORT
+-#  define QTERMWIDGET5_DEPRECATED_NO_EXPORT QTERMWIDGET5_NO_EXPORT QTERMWIDGET5_DEPRECATED
++#ifndef QTERMWIDGET_DEPRECATED_NO_EXPORT
++#  define QTERMWIDGET_DEPRECATED_NO_EXPORT QTERMWIDGET_NO_EXPORT QTERMWIDGET_DEPRECATED
+ #endif
+ 
+ #if 0 /* DEFINE_NO_DEPRECATED */
+-#  ifndef QTERMWIDGET5_NO_DEPRECATED
+-#    define QTERMWIDGET5_NO_DEPRECATED
++#  ifndef QTERMWIDGET_NO_DEPRECATED
++#    define QTERMWIDGET_NO_DEPRECATED
+ #  endif
+ #endif
+ 
+diff -Nuar a/lib/qtermwidget.h b/lib/qtermwidget.h
+--- a/lib/qtermwidget.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/qtermwidget.h	2021-11-05 13:18:23.000000000 +0300
+@@ -25,9 +25,10 @@
+ #include "Emulation.h"
+ #include "Filter.h"
+ #include "qtermwidget_export.h"
++#include "qtermwidget_version.h"
+ 
+ class QVBoxLayout;
+-struct TermWidgetImpl;
++class TermWidgetImpl;
+ class SearchBar;
+ class QUrl;
+ 
+@@ -51,14 +52,14 @@
+ 
+     //Creation of widget
+     QTermWidget(int startnow, // 1 = start shell programm immediatelly
+-                QWidget * parent = 0);
++                QWidget * parent = nullptr);
+     // A dummy constructor for Qt Designer. startnow is 1 by default
+-    QTermWidget(QWidget *parent = 0);
++    QTermWidget(QWidget *parent = nullptr);
+ 
+-    virtual ~QTermWidget();
++    ~QTermWidget() override;
+ 
+     //Initial size
+-    QSize sizeHint() const;
++    QSize sizeHint() const override;
+ 
+     // expose TerminalDisplay::TerminalSizeHint, setTerminalSizeHint
+     void setTerminalSizeHint(bool on);
+@@ -86,7 +87,8 @@
+     void setTerminalFont(const QFont & font);
+     QFont getTerminalFont();
+     void setTerminalOpacity(qreal level);
+-    void setTerminalBackgroundImage(QString backgroundImage);
++    void setTerminalBackgroundImage(const QString& backgroundImage);
++    void setTerminalBackgroundMode(int mode);
+ 
+     //environment
+     void setEnvironment(const QStringList & environment);
+@@ -125,6 +127,9 @@
+     // Send some text to terminal
+     void sendText(const QString & text);
+ 
++    // Send key event to terminal
++    void sendKeyEvent(QKeyEvent* e);
++
+     // Sets whether flow control is enabled
+     void setFlowControlEnabled(bool enabled);
+ 
+@@ -222,11 +227,22 @@
+     /** change and wrap text corresponding to paste mode **/
+     void bracketText(QString& text);
+ 
++    /** forcefully disable bracketed paste mode **/
++    void disableBracketedPasteMode(bool disable);
++    bool bracketedPasteModeIsDisabled() const;
++
+     /** Set the empty space outside the terminal */
+     void setMargin(int);
+ 
+     /** Get the empty space outside the terminal */
+     int getMargin() const;
++
++    void setDrawLineChars(bool drawLineChars);
++
++    void setBoldIntense(bool boldIntense);
++
++    void setConfirmMultilinePaste(bool confirmMultilinePaste);
++    void setTrimPastedTrailingNewlines(bool trimPastedTrailingNewlines);
+ signals:
+     void finished();
+     void copyAvailable(bool);
+@@ -287,8 +303,9 @@
+ 
+     void toggleShowSearchBar();
+ 
++    void saveHistory(QIODevice *device);
+ protected:
+-    virtual void resizeEvent(QResizeEvent *);
++    void resizeEvent(QResizeEvent *) override;
+ 
+ protected slots:
+     void sessionFinished();
+diff -Nuar a/lib/qtermwidget_version.h b/lib/qtermwidget_version.h
+--- a/lib/qtermwidget_version.h	1970-01-01 02:00:00.000000000 +0200
++++ b/lib/qtermwidget_version.h	2021-11-14 11:40:30.000000000 +0300
+@@ -0,0 +1,33 @@
++/*  Copyright (C) 2020 Axel Kittenberger (axel.kittenberger@univie.ac.at)
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License as published by the Free Software Foundation; either
++    version 2 of the License, or (at your option) any later version.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++*/
++
++
++#ifndef _Q_TERM_WIDGET_VERSION
++#define _Q_TERM_WIDGET_VERSION
++
++#include <QtGlobal>
++#define QTERMWIDGET_VERSION_MAJOR 1
++#define QTERMWIDGET_VERSION_MINOR 0
++#define QTERMWIDGET_VERSION_PATCH 0
++#define QTERMWIDGET_VERSION QT_VERSION_CHECK(\
++	QTERMWIDGET_VERSION_MAJOR,\
++	QTERMWIDGET_VERSION_MINOR,\
++	QTERMWIDGET_VERSION_PATCH)
++
++#endif
++
+diff -Nuar a/lib/Screen.cpp b/lib/Screen.cpp
+--- a/lib/Screen.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Screen.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -24,11 +24,11 @@
+ #include "Screen.h"
+ 
+ // Standard
+-#include <stdio.h>
+-#include <stdlib.h>
++#include <cstdio>
++#include <cstdlib>
+ #include <unistd.h>
+-#include <string.h>
+-#include <ctype.h>
++#include <cstring>
++#include <cctype>
+ 
+ // Qt
+ #include <QTextStream>
+@@ -127,6 +127,37 @@
+     cuX = qMax(0,cuX-n);
+ }
+ 
++void Screen::cursorNextLine(int n)
++    //=CNL
++{
++    if (n == 0) {
++        n = 1; // Default
++    }
++    cuX = 0;
++    while (n > 0) {
++        if (cuY < lines - 1) {
++            cuY += 1;
++        }
++        n--;
++    }
++
++}
++
++void Screen::cursorPreviousLine(int n)
++    //=CPL
++{
++    if (n == 0) {
++        n = 1; // Default
++    }
++    cuX = 0;
++    while (n > 0) {
++        if (cuY  > 0) {
++            cuY -= 1;
++        }
++        n--;
++    }
++}
++
+ void Screen::cursorRight(int n)
+     //=CUF
+ {
+@@ -1359,7 +1390,7 @@
+     else
+     {
+         HistoryScroll* oldScroll = history;
+-        history = t.scroll(0);
++        history = t.scroll(nullptr);
+         delete oldScroll;
+     }
+ }
+diff -Nuar a/lib/Screen.h b/lib/Screen.h
+--- a/lib/Screen.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Screen.h	2021-11-05 13:18:23.000000000 +0300
+@@ -94,6 +94,16 @@
+      */
+     void cursorLeft(int n);
+     /**
++     * Moves cursor to beginning of the line by @p n lines down.
++     * The cursor will stop at the beginning of the line.
++     */
++    void cursorNextLine(int n);
++    /**
++     * Moves cursor to beginning of the line by @p n lines up.
++     * The cursor will stop at the beginning of the line.
++     */
++    void cursorPreviousLine(int n);
++    /**
+      * Move the cursor to the right by @p n columns.
+      * The cursor will stop at the right-most column.
+      */
+@@ -551,6 +561,8 @@
+     static void fillWithDefaultChar(Character* dest, int count);
+ 
+ private:
++    Screen(const Screen &) = delete;
++    Screen &operator=(const Screen &) = delete;
+ 
+     //copies a line of text from the screen or history into a stream using a
+     //specified character decoder.  Returns the number of lines actually copied,
+@@ -637,8 +649,8 @@
+     int _bottomMargin;
+ 
+     // states ----------------
+-    int currentModes[MODES_SCREEN];
+-    int savedModes[MODES_SCREEN];
++    bool currentModes[MODES_SCREEN];
++    bool savedModes[MODES_SCREEN];
+ 
+     // ----------------------------
+ 
+diff -Nuar a/lib/ScreenWindow.cpp b/lib/ScreenWindow.cpp
+--- a/lib/ScreenWindow.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/ScreenWindow.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -30,7 +30,8 @@
+ 
+ ScreenWindow::ScreenWindow(QObject* parent)
+     : QObject(parent)
+-    , _windowBuffer(0)
++    , _screen(nullptr)
++    , _windowBuffer(nullptr)
+     , _windowBufferSize(0)
+     , _bufferNeedsUpdate(true)
+     , _windowLines(1)
+@@ -59,7 +60,7 @@
+ {
+     // reallocate internal buffer if the window size has changed
+     int size = windowLines() * windowColumns();
+-    if (_windowBuffer == 0 || _windowBufferSize != size)
++    if (_windowBuffer == nullptr || _windowBufferSize != size)
+     {
+         delete[] _windowBuffer;
+         _windowBufferSize = size;
+@@ -259,7 +260,7 @@
+     if ( atEndOfOutput() && equalToScreenSize )
+         return _screen->lastScrolledRegion();
+     else
+-        return QRect(0,0,windowColumns(),windowLines());
++        return {0,0,windowColumns(),windowLines()};
+ }
+ 
+ void ScreenWindow::notifyOutputChanged()
+@@ -291,4 +292,51 @@
+     emit outputChanged();
+ }
+ 
++void ScreenWindow::handleCommandFromKeyboard(KeyboardTranslator::Command command)
++{
++    // Keyboard-based navigation
++    bool update = false;
++
++    // EraseCommand is handled in Vt102Emulation
++    if ( command & KeyboardTranslator::ScrollPageUpCommand )
++    {
++        scrollBy( ScreenWindow::ScrollPages , -1 );
++        update = true;
++    }
++    if ( command & KeyboardTranslator::ScrollPageDownCommand )
++    {
++        scrollBy( ScreenWindow::ScrollPages , 1 );
++        update = true;
++    }
++    if ( command & KeyboardTranslator::ScrollLineUpCommand )
++    {
++        scrollBy( ScreenWindow::ScrollLines , -1 );
++        update = true;
++    }
++    if ( command & KeyboardTranslator::ScrollLineDownCommand )
++    {
++        scrollBy( ScreenWindow::ScrollLines , 1 );
++        update = true;
++    }
++    if ( command & KeyboardTranslator::ScrollDownToBottomCommand )
++    {
++        Q_EMIT scrollToEnd();
++        update = true;
++    }
++    if ( command & KeyboardTranslator::ScrollUpToTopCommand)
++    {
++        scrollTo(0);
++        update = true;
++    }
++    // TODO: KeyboardTranslator::ScrollLockCommand
++    // TODO: KeyboardTranslator::SendCommand
++
++    if ( update )
++    {
++        setTrackOutput( atEndOfOutput() );
++
++        Q_EMIT outputChanged();
++    }
++}
++
+ //#include "ScreenWindow.moc"
+diff -Nuar a/lib/ScreenWindow.h b/lib/ScreenWindow.h
+--- a/lib/ScreenWindow.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/ScreenWindow.h	2021-11-05 13:18:23.000000000 +0300
+@@ -27,6 +27,7 @@
+ 
+ // Konsole
+ #include "Character.h"
++#include "KeyboardTranslator.h"
+ 
+ namespace Konsole
+ {
+@@ -64,8 +65,8 @@
+      * to notify the window when the associated screen has changed and synchronize selection updates
+      * between all views on a session.
+      */
+-    ScreenWindow(QObject* parent = 0);
+-    virtual ~ScreenWindow();
++    ScreenWindow(QObject* parent = nullptr);
++    ~ScreenWindow() override;
+ 
+     /** Sets the screen which this window looks onto */
+     void setScreen(Screen* screen);
+@@ -223,6 +224,8 @@
+      */
+     void notifyOutputChanged();
+ 
++    void handleCommandFromKeyboard(KeyboardTranslator::Command command);
++
+ signals:
+     /**
+      * Emitted when the contents of the associated terminal screen (see screen()) changes.
+@@ -239,6 +242,8 @@
+     /** Emitted when the selection is changed. */
+     void selectionChanged();
+ 
++    void scrollToEnd();
++
+ private:
+     int endWindowLine() const;
+     void fillUnusedArea();
+diff -Nuar a/lib/SearchBar.cpp b/lib/SearchBar.cpp
+--- a/lib/SearchBar.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/SearchBar.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -81,6 +81,7 @@
+ {
+     QWidget::show();
+     widget.searchTextEdit->setFocus();
++    widget.searchTextEdit->selectAll();
+ }
+ 
+ void SearchBar::noMatchFound()
+@@ -97,11 +98,11 @@
+     {
+         if (keyEvent->modifiers() == Qt::ShiftModifier)
+         {
+-            findPrevious();
++            Q_EMIT findPrevious();
+         }
+         else
+         {
+-            findNext();
++            Q_EMIT findNext();
+         }
+     }
+     else if (keyEvent->key() == Qt::Key_Escape)
+@@ -112,8 +113,6 @@
+ 
+ void SearchBar::clearBackgroundColor()
+ {
+-    QPalette p;
+-    p.setColor(QPalette::Base, Qt::white);
+-    widget.searchTextEdit->setPalette(p);
++    widget.searchTextEdit->setPalette(QWidget::window()->palette());
+ 
+ }
+diff -Nuar a/lib/SearchBar.h b/lib/SearchBar.h
+--- a/lib/SearchBar.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/SearchBar.h	2021-11-05 13:18:23.000000000 +0300
+@@ -27,8 +27,8 @@
+ class SearchBar : public QWidget {
+     Q_OBJECT
+ public:
+-    SearchBar(QWidget* parent = 0);
+-    virtual ~SearchBar();
++    SearchBar(QWidget* parent = nullptr);
++    ~SearchBar() override;
+     virtual void show();
+     QString searchText();
+     bool useRegularExpression();
+@@ -45,7 +45,7 @@
+     void findPrevious();
+ 
+ protected:
+-    virtual void keyReleaseEvent(QKeyEvent* keyEvent);
++    void keyReleaseEvent(QKeyEvent* keyEvent) override;
+ 
+ private slots:
+     void clearBackgroundColor();
+diff -Nuar a/lib/Session.cpp b/lib/Session.cpp
+--- a/lib/Session.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Session.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -26,7 +26,7 @@
+ #include "Session.h"
+ 
+ // Standard
+-#include <stdlib.h>
++#include <cstdlib>
+ 
+ // Qt
+ #include <QApplication>
+@@ -50,8 +50,8 @@
+ 
+ Session::Session(QObject* parent) :
+     QObject(parent),
+-        _shellProcess(0)
+-        , _emulation(0)
++        _shellProcess(nullptr)
++        , _emulation(nullptr)
+         , _monitorActivity(false)
+         , _monitorSilence(false)
+         , _notifiedActivity(false)
+@@ -143,7 +143,7 @@
+     return _shellProcess->state() == QProcess::Running;
+ }
+ 
+-void Session::setCodec(QTextCodec * codec)
++void Session::setCodec(QTextCodec * codec) const
+ {
+     emulation()->setCodec(codec);
+ }
+@@ -172,10 +172,10 @@
+ 
+     _views.append(widget);
+ 
+-    if ( _emulation != 0 ) {
++    if ( _emulation != nullptr ) {
+         // connect emulation - view signals and slots
+-        connect( widget , SIGNAL(keyPressedSignal(QKeyEvent *)) , _emulation ,
+-                 SLOT(sendKeyEvent(QKeyEvent *)) );
++        connect( widget , &TerminalDisplay::keyPressedSignal, _emulation ,
++                 &Emulation::sendKeyEvent);
+         connect( widget , SIGNAL(mouseSignal(int,int,int,int)) , _emulation ,
+                  SLOT(sendMouseEvent(int,int,int,int)) );
+         connect( widget , SIGNAL(sendStringToEmu(const char *)) , _emulation ,
+@@ -220,19 +220,19 @@
+ {
+     _views.removeAll(widget);
+ 
+-    disconnect(widget,0,this,0);
++    disconnect(widget,nullptr,this,nullptr);
+ 
+-    if ( _emulation != 0 ) {
++    if ( _emulation != nullptr ) {
+         // disconnect
+         //  - key presses signals from widget
+         //  - mouse activity signals from widget
+         //  - string sending signals from widget
+         //
+         //  ... and any other signals connected in addView()
+-        disconnect( widget, 0, _emulation, 0);
++        disconnect( widget, nullptr, _emulation, nullptr);
+ 
+         // disconnect state change signals emitted by emulation
+-        disconnect( _emulation , 0 , widget , 0);
++        disconnect( _emulation , nullptr , widget , nullptr);
+     }
+ 
+     // close the session automatically when the last view is removed
+@@ -451,10 +451,7 @@
+ void Session::activityStateSet(int state)
+ {
+     if (state==NOTIFYBELL) {
+-        QString s;
+-        s.sprintf("Bell in session '%s'",_nameTitle.toUtf8().data());
+-
+-        emit bellRequest( s );
++        emit bellRequest(tr("Bell in session '%1'").arg(_nameTitle));
+     } else if (state==NOTIFYACTIVITY) {
+         if (_monitorSilence) {
+             _monitorTimer->start(_silenceSeconds*1000);
+@@ -542,7 +539,7 @@
+ 
+ bool Session::sendSignal(int signal)
+ {
+-    int result = ::kill(_shellProcess->pid(),signal);
++    int result = ::kill(static_cast<pid_t>(_shellProcess->processId()),signal);
+ 
+      if ( result == 0 )
+      {
+@@ -568,6 +565,11 @@
+     _emulation->sendText(text);
+ }
+ 
++void Session::sendKeyEvent(QKeyEvent* e) const
++{
++    _emulation->sendKeyEvent(e, false);
++}
++
+ Session::~Session()
+ {
+     delete _emulation;
+@@ -593,21 +595,22 @@
+         return;
+     }
+ 
++    // message is not being used. But in the original kpty.cpp file
++    // (https://cgit.kde.org/kpty.git/) it's part of a notification.
++    // So, we make it translatable, hoping that in the future it will
++    // be used in some kind of notification.
+     QString message;
+     if (!_wantedClose || exitStatus != 0) {
+ 
+         if (_shellProcess->exitStatus() == QProcess::NormalExit) {
+-            message.sprintf("Session '%s' exited with status %d.",
+-                          _nameTitle.toUtf8().data(), exitStatus);
++            message = tr("Session '%1' exited with status %2.").arg(_nameTitle).arg(exitStatus);
+         } else {
+-            message.sprintf("Session '%s' crashed.",
+-                          _nameTitle.toUtf8().data());
++            message = tr("Session '%1' crashed.").arg(_nameTitle);
+         }
+     }
+ 
+     if ( !_wantedClose && _shellProcess->exitStatus() != QProcess::NormalExit )
+-        message.sprintf("Session '%s' exited unexpectedly.",
+-                        _nameTitle.toUtf8().data());
++        message = tr("Session '%1' exited unexpectedly.").arg(_nameTitle);
+     else
+         emit finished();
+ 
+@@ -925,7 +928,7 @@
+ }
+ int Session::processId() const
+ {
+-    return _shellProcess->pid();
++    return static_cast<int>(_shellProcess->processId());
+ }
+ int Session::getPtySlaveFd() const
+ {
+@@ -1013,8 +1016,7 @@
+     bool wasMaster = _sessions[session];
+     _sessions[session] = master;
+ 
+-    if ((!wasMaster && !master)
+-            || (wasMaster && master)) {
++    if (wasMaster == master) {
+         return;
+     }
+ 
+@@ -1032,7 +1034,7 @@
+     }
+ }
+ 
+-void SessionGroup::connectPair(Session * master , Session * other)
++void SessionGroup::connectPair(Session * master , Session * other) const
+ {
+ //    qDebug() << k_funcinfo;
+ 
+@@ -1043,7 +1045,7 @@
+                  SLOT(sendString(const char *,int)) );
+     }
+ }
+-void SessionGroup::disconnectPair(Session * master , Session * other)
++void SessionGroup::disconnectPair(Session * master , Session * other) const
+ {
+ //    qDebug() << k_funcinfo;
+ 
+diff -Nuar a/lib/Session.h b/lib/Session.h
+--- a/lib/Session.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Session.h	2021-11-05 13:18:23.000000000 +0300
+@@ -71,8 +71,8 @@
+      * falls back to using the program specified in the SHELL environment
+      * variable.
+      */
+-    Session(QObject* parent = 0);
+-    virtual ~Session();
++    Session(QObject* parent = nullptr);
++    ~Session() override;
+ 
+     /**
+      * Returns true if the session is currently running.  This will be true
+@@ -314,6 +314,8 @@
+      */
+     void sendText(const QString & text) const;
+ 
++    void sendKeyEvent(QKeyEvent* e) const;
++
+     /**
+      * Returns the process id of the terminal process.
+      * This is the id used by the system API to refer to the process.
+@@ -338,7 +340,7 @@
+     void setSize(const QSize & size);
+ 
+     /** Sets the text codec used by this session's terminal emulation. */
+-    void setCodec(QTextCodec * codec);
++    void setCodec(QTextCodec * codec) const;
+ 
+     /**
+      * Sets whether the session has a dark background or not.  The session
+@@ -583,7 +585,7 @@
+     /** Constructs an empty session group. */
+     SessionGroup();
+     /** Destroys the session group and removes all connections between master and slave sessions. */
+-    ~SessionGroup();
++    ~SessionGroup() override;
+ 
+     /** Adds a session to the group. */
+     void addSession( Session * session );
+@@ -631,8 +633,8 @@
+     int masterMode() const;
+ 
+ private:
+-    void connectPair(Session * master , Session * other);
+-    void disconnectPair(Session * master , Session * other);
++    void connectPair(Session * master , Session * other) const;
++    void disconnectPair(Session * master , Session * other) const;
+     void connectAll(bool connect);
+     QList<Session *> masters() const;
+ 
+diff -Nuar a/lib/ShellCommand.cpp b/lib/ShellCommand.cpp
+--- a/lib/ShellCommand.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/ShellCommand.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -59,9 +59,8 @@
+     }
+ }
+ ShellCommand::ShellCommand(const QString & command , const QStringList & arguments)
++    : _arguments(arguments)
+ {
+-    _arguments = arguments;
+-
+     if ( !_arguments.isEmpty() ) {
+         _arguments[0] = command;
+     }
+diff -Nuar a/lib/TerminalCharacterDecoder.cpp b/lib/TerminalCharacterDecoder.cpp
+--- a/lib/TerminalCharacterDecoder.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/TerminalCharacterDecoder.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -31,9 +31,11 @@
+ // Konsole
+ #include "konsole_wcwidth.h"
+ 
++#include <cwctype>
++
+ using namespace Konsole;
+ PlainTextDecoder::PlainTextDecoder()
+- : _output(0)
++ : _output(nullptr)
+  , _includeTrailingWhitespace(true)
+  , _recordLinePositions(false)
+ {
+@@ -55,7 +57,7 @@
+ }
+ void PlainTextDecoder::end()
+ {
+-    _output = 0;
++    _output = nullptr;
+ }
+ 
+ void PlainTextDecoder::setRecordLinePositions(bool record)
+@@ -77,6 +79,16 @@
+         _linePositions << pos;
+     }
+ 
++    // check the real length
++    for (int i = 0 ; i < count ; i++)
++    {
++        if (characters + i == nullptr)
++        {
++            count = i;
++            break;
++        }
++    }
++
+     //TODO should we ignore or respect the LINE_WRAPPED line property?
+ 
+     //note:  we build up a QString and send it to the text stream rather writing into the text
+@@ -109,7 +121,7 @@
+ }
+ 
+ HTMLDecoder::HTMLDecoder() :
+-        _output(0)
++        _output(nullptr)
+     ,_colorTable(base_color_table)
+        ,_innerSpanOpen(false)
+        ,_lastRendition(DEFAULT_RENDITION)
+@@ -139,7 +151,7 @@
+ 
+     *_output << QString::fromStdWString(text);
+ 
+-    _output = 0;
++    _output = nullptr;
+ 
+ }
+ 
+diff -Nuar a/lib/TerminalCharacterDecoder.h b/lib/TerminalCharacterDecoder.h
+--- a/lib/TerminalCharacterDecoder.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/TerminalCharacterDecoder.h	2021-11-05 13:18:23.000000000 +0300
+@@ -92,12 +92,12 @@
+     /** Enables recording of character positions at which new lines are added.  See linePositions() */
+     void setRecordLinePositions(bool record);
+ 
+-    virtual void begin(QTextStream* output);
+-    virtual void end();
++    void begin(QTextStream* output) override;
++    void end() override;
+ 
+-    virtual void decodeLine(const Character* const characters,
++    void decodeLine(const Character* const characters,
+                             int count,
+-                            LineProperty properties);
++                            LineProperty properties) override;
+ 
+ 
+ private:
+@@ -125,12 +125,12 @@
+      */
+     void setColorTable( const ColorEntry* table );
+ 
+-    virtual void decodeLine(const Character* const characters,
++    void decodeLine(const Character* const characters,
+                             int count,
+-                            LineProperty properties);
++                            LineProperty properties) override;
+ 
+-    virtual void begin(QTextStream* output);
+-    virtual void end();
++    void begin(QTextStream* output) override;
++    void end() override;
+ 
+ private:
+     void openSpan(std::wstring& text , const QString& style);
+diff -Nuar a/lib/TerminalDisplay.cpp b/lib/TerminalDisplay.cpp
+--- a/lib/TerminalDisplay.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/TerminalDisplay.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -24,6 +24,7 @@
+ #include "TerminalDisplay.h"
+ 
+ // Qt
++#include <QAbstractButton>
+ #include <QApplication>
+ #include <QBoxLayout>
+ #include <QClipboard>
+@@ -34,8 +35,10 @@
+ #include <QGridLayout>
+ #include <QLabel>
+ #include <QLayout>
++#include <QMessageBox>
+ #include <QPainter>
+ #include <QPixmap>
++#include <QRegularExpression>
+ #include <QScrollBar>
+ #include <QStyle>
+ #include <QTimer>
+@@ -82,17 +85,17 @@
+ {
+   // Fixme: could add faint colors here, also.
+   // normal
+-  ColorEntry(QColor(0x00,0x00,0x00), 0), ColorEntry( QColor(0xB2,0xB2,0xB2), 1), // Dfore, Dback
+-  ColorEntry(QColor(0x00,0x00,0x00), 0), ColorEntry( QColor(0xB2,0x18,0x18), 0), // Black, Red
+-  ColorEntry(QColor(0x18,0xB2,0x18), 0), ColorEntry( QColor(0xB2,0x68,0x18), 0), // Green, Yellow
+-  ColorEntry(QColor(0x18,0x18,0xB2), 0), ColorEntry( QColor(0xB2,0x18,0xB2), 0), // Blue, Magenta
+-  ColorEntry(QColor(0x18,0xB2,0xB2), 0), ColorEntry( QColor(0xB2,0xB2,0xB2), 0), // Cyan, White
++  ColorEntry(QColor(0x00,0x00,0x00), false), ColorEntry( QColor(0xB2,0xB2,0xB2), true), // Dfore, Dback
++  ColorEntry(QColor(0x00,0x00,0x00), false), ColorEntry( QColor(0xB2,0x18,0x18), false), // Black, Red
++  ColorEntry(QColor(0x18,0xB2,0x18), false), ColorEntry( QColor(0xB2,0x68,0x18), false), // Green, Yellow
++  ColorEntry(QColor(0x18,0x18,0xB2), false), ColorEntry( QColor(0xB2,0x18,0xB2), false), // Blue, Magenta
++  ColorEntry(QColor(0x18,0xB2,0xB2), false), ColorEntry( QColor(0xB2,0xB2,0xB2), false), // Cyan, White
+   // intensiv
+-  ColorEntry(QColor(0x00,0x00,0x00), 0), ColorEntry( QColor(0xFF,0xFF,0xFF), 1),
+-  ColorEntry(QColor(0x68,0x68,0x68), 0), ColorEntry( QColor(0xFF,0x54,0x54), 0),
+-  ColorEntry(QColor(0x54,0xFF,0x54), 0), ColorEntry( QColor(0xFF,0xFF,0x54), 0),
+-  ColorEntry(QColor(0x54,0x54,0xFF), 0), ColorEntry( QColor(0xFF,0x54,0xFF), 0),
+-  ColorEntry(QColor(0x54,0xFF,0xFF), 0), ColorEntry( QColor(0xFF,0xFF,0xFF), 0)
++  ColorEntry(QColor(0x00,0x00,0x00), false), ColorEntry( QColor(0xFF,0xFF,0xFF), true),
++  ColorEntry(QColor(0x68,0x68,0x68), false), ColorEntry( QColor(0xFF,0x54,0x54), false),
++  ColorEntry(QColor(0x54,0xFF,0x54), false), ColorEntry( QColor(0xFF,0xFF,0x54), false),
++  ColorEntry(QColor(0x54,0x54,0xFF), false), ColorEntry( QColor(0xFF,0x54,0xFF), false),
++  ColorEntry(QColor(0x54,0xFF,0xFF), false), ColorEntry( QColor(0xFF,0xFF,0xFF), false)
+ };
+ 
+ // scroll increment used when dragging selection at top/bottom of window.
+@@ -128,7 +131,7 @@
+     // disconnect existing screen window if any
+     if ( _screenWindow )
+     {
+-        disconnect( _screenWindow , 0 , this , 0 );
++        disconnect( _screenWindow , nullptr , this , nullptr );
+     }
+ 
+     _screenWindow = window;
+@@ -142,6 +145,7 @@
+         connect( _screenWindow , SIGNAL(outputChanged()) , this , SLOT(updateImage()) );
+         connect( _screenWindow , SIGNAL(outputChanged()) , this , SLOT(updateFilters()) );
+         connect( _screenWindow , SIGNAL(scrolled(int)) , this , SLOT(updateFilters()) );
++        connect( _screenWindow , &ScreenWindow::scrollToEnd , this , &TerminalDisplay::scrollToEnd );
+         window->setWindowLines(_lines);
+     }
+ }
+@@ -194,10 +198,12 @@
+    QCodec.
+ */
+ 
+-static inline bool isLineChar(wchar_t c) { return ((c & 0xFF80) == 0x2500);}
+-static inline bool isLineCharString(const std::wstring& string)
+-{
+-        return (string.length() > 0) && (isLineChar(string[0]));
++bool TerminalDisplay::isLineChar(wchar_t c) const {
++    return _drawLineChars && ((c & 0xFF80) == 0x2500);
++}
++
++bool TerminalDisplay::isLineCharString(const std::wstring& string) const {
++    return (string.length() > 0) && (isLineChar(string[0]));
+ }
+ 
+ 
+@@ -220,14 +226,14 @@
+   // "Base character width on widest ASCII character. This prevents too wide
+   //  characters in the presence of double wide (e.g. Japanese) characters."
+   // Get the width from representative normal width characters
+-  _fontWidth = qRound((double)fm.width(QLatin1String(REPCHAR))/(double)qstrlen(REPCHAR));
++  _fontWidth = qRound((double)fm.horizontalAdvance(QLatin1String(REPCHAR))/(double)qstrlen(REPCHAR));
+ 
+   _fixedFont = true;
+ 
+-  int fw = fm.width(QLatin1Char(REPCHAR[0]));
++  int fw = fm.horizontalAdvance(QLatin1Char(REPCHAR[0]));
+   for(unsigned int i=1; i< qstrlen(REPCHAR); i++)
+   {
+-    if (fw != fm.width(QLatin1Char(REPCHAR[i])))
++    if (fw != fm.horizontalAdvance(QLatin1Char(REPCHAR[i])))
+     {
+       _fixedFont = false;
+       break;
+@@ -262,9 +268,7 @@
+ 	  _drawTextAdditionHeight = 0;
+ 	}
+ 
+-	// update the original content
+-    _drawTextTestFlag = false;
+-	update();
++  _drawTextTestFlag = false;
+ }
+ 
+ void TerminalDisplay::setVTFont(const QFont& f)
+@@ -312,9 +316,9 @@
+ 
+ TerminalDisplay::TerminalDisplay(QWidget *parent)
+ :QWidget(parent)
+-,_screenWindow(0)
++,_screenWindow(nullptr)
+ ,_allowBell(true)
+-,_gridLayout(0)
++,_gridLayout(nullptr)
+ ,_fontHeight(1)
+ ,_fontWidth(1)
+ ,_fontAscent(1)
+@@ -325,13 +329,14 @@
+ ,_usedColumns(1)
+ ,_contentHeight(1)
+ ,_contentWidth(1)
+-,_image(0)
++,_image(nullptr)
+ ,_randomSeed(0)
+ ,_resizing(false)
+ ,_terminalSizeHint(false)
+ ,_terminalSizeStartup(true)
+ ,_bidiEnabled(false)
+ ,_mouseMarks(false)
++,_disabledBracketedPasteMode(false)
+ ,_actSel(0)
+ ,_wordSelectionMode(false)
+ ,_lineSelectionMode(false)
+@@ -349,18 +354,20 @@
+ ,_tripleClickMode(SelectWholeLine)
+ ,_isFixedSize(false)
+ ,_possibleTripleClick(false)
+-,_resizeWidget(0)
+-,_resizeTimer(0)
++,_resizeWidget(nullptr)
++,_resizeTimer(nullptr)
+ ,_flowControlWarningEnabled(false)
+-,_outputSuspendedLabel(0)
++,_outputSuspendedLabel(nullptr)
+ ,_lineSpacing(0)
+ ,_colorsInverted(false)
+-,_blendColor(qRgba(0,0,0,0xff))
++,_opacity(static_cast<qreal>(1))
++,_backgroundMode(None)
+ ,_filterChain(new TerminalImageFilterChain())
+ ,_cursorShape(Emulation::KeyboardCursorShape::BlockCursor)
+ ,mMotionAfterPasting(NoMoveScreenWindow)
+ ,_leftBaseMargin(1)
+ ,_topBaseMargin(1)
++,_drawLineChars(true)
+ {
+   // variables for draw text
+   _drawTextAdditionHeight = 0;
+@@ -642,7 +649,7 @@
+ }
+ 
+ void TerminalDisplay::drawLineCharString(    QPainter& painter, int x, int y, const std::wstring& str,
+-                                    const Character* attributes)
++                                    const Character* attributes) const
+ {
+         const QPen& currentPen = painter.pen();
+ 
+@@ -693,24 +700,10 @@
+ 
+ void TerminalDisplay::setOpacity(qreal opacity)
+ {
+-    QColor color(_blendColor);
+-    color.setAlphaF(opacity);
+-
+-    // enable automatic background filling to prevent the display
+-    // flickering if there is no transparency
+-    /*if ( color.alpha() == 255 )
+-    {
+-        setAutoFillBackground(true);
+-    }
+-    else
+-    {
+-        setAutoFillBackground(false);
+-    }*/
+-
+-    _blendColor = color.rgba();
++    _opacity = qBound(static_cast<qreal>(0), opacity, static_cast<qreal>(1));
+ }
+ 
+-void TerminalDisplay::setBackgroundImage(QString backgroundImage)
++void TerminalDisplay::setBackgroundImage(const QString& backgroundImage)
+ {
+     if (!backgroundImage.isEmpty())
+     {
+@@ -724,16 +717,21 @@
+     }
+ }
+ 
++void TerminalDisplay::setBackgroundMode(BackgroundMode mode)
++{
++    _backgroundMode = mode;
++}
++
+ void TerminalDisplay::drawBackground(QPainter& painter, const QRect& rect, const QColor& backgroundColor, bool useOpacitySetting )
+ {
+         // The whole widget rectangle is filled by the background color from
+         // the color scheme set in setColorTable(), while the scrollbar is
+         // left to the widget style for a consistent look.
+-        if ( HAVE_TRANSPARENCY && qAlpha(_blendColor) < 0xff && useOpacitySetting )
++        if ( useOpacitySetting )
+         {
+             if (_backgroundImage.isNull()) {
+                 QColor color(backgroundColor);
+-                color.setAlpha(qAlpha(_blendColor));
++                color.setAlphaF(_opacity);
+ 
+                 painter.save();
+                 painter.setCompositionMode(QPainter::CompositionMode_Source);
+@@ -751,7 +749,7 @@
+                                  const QColor& /*backgroundColor*/,
+                                  bool& invertCharacterColor)
+ {
+-    QRect cursorRect = rect;
++    QRectF cursorRect = rect;
+     cursorRect.setHeight(_fontHeight - _lineSpacing - 1);
+ 
+     if (!_cursorBlinking)
+@@ -765,12 +763,12 @@
+        {
+             // draw the cursor outline, adjusting the area so that
+             // it is draw entirely inside 'rect'
+-            int penWidth = qMax(1,painter.pen().width());
++            float penWidth = qMax(1,painter.pen().width());
+ 
+             painter.drawRect(cursorRect.adjusted(penWidth/2,
+                                                  penWidth/2,
+-                                                 - penWidth/2 - penWidth%2,
+-                                                 - penWidth/2 - penWidth%2));
++                                                 - penWidth/2,
++                                                 - penWidth/2));
+             if ( hasFocus() )
+             {
+                 painter.fillRect(cursorRect, _cursorColor.isValid() ? _cursorColor : foregroundColor);
+@@ -877,7 +875,7 @@
+     const QColor backgroundColor = style->backgroundColor.color(_colorTable);
+ 
+     // draw background if different from the display's background color
+-    if ( backgroundColor != palette().background().color() )
++    if ( backgroundColor != palette().window().color() )
+         drawBackground(painter,rect,backgroundColor,
+                        false /* do not use transparency */);
+ 
+@@ -941,7 +939,7 @@
+ 
+     // return if there is nothing to do
+     if (    lines == 0
+-         || _image == 0
++         || _image == nullptr
+          || !region.isValid()
+          || (region.top() + abs(lines)) >= region.bottom()
+          || this->_lines <= region.height() ) return;
+@@ -960,8 +958,10 @@
+     // Set the QT_FLUSH_PAINT environment variable to '1' before starting the
+     // application to monitor repainting.
+     //
+-    int scrollBarWidth = _scrollBar->isHidden() ? 0 : _scrollBar->width();
+-    const int SCROLLBAR_CONTENT_GAP = 1;
++    int scrollBarWidth = _scrollBar->isHidden() ? 0 :
++                         _scrollBar->style()->styleHint(QStyle::SH_ScrollBar_Transient, nullptr, _scrollBar) ?
++                         0 : _scrollBar->width();
++    const int SCROLLBAR_CONTENT_GAP = scrollBarWidth == 0 ? 0 : 1;
+     QRect scrollRect;
+     if ( _scrollbarLocation == QTermWidget::ScrollBarLeft )
+     {
+@@ -1278,7 +1278,7 @@
+      {
+          const QString label = tr("Size: XXX x XXX");
+         _resizeWidget = new QLabel(label, this);
+-        _resizeWidget->setMinimumWidth(_resizeWidget->fontMetrics().width(label));
++        _resizeWidget->setMinimumWidth(_resizeWidget->fontMetrics().horizontalAdvance(label));
+         _resizeWidget->setMinimumHeight(_resizeWidget->sizeHint().height());
+         _resizeWidget->setAlignment(Qt::AlignCenter);
+ 
+@@ -1358,31 +1358,103 @@
+ void TerminalDisplay::paintEvent( QPaintEvent* pe )
+ {
+   QPainter paint(this);
++  QRect cr = contentsRect();
+ 
+-  if ( !_backgroundImage.isNull() && qAlpha(_blendColor) < 0xff )
++  if ( !_backgroundImage.isNull() )
+   {
+-    paint.drawPixmap(0, 0, _backgroundImage);
+     QColor background = _colorTable[DEFAULT_BACK_COLOR].color;
+-    background.setAlpha(qAlpha(_blendColor));
+-    paint.fillRect(contentsRect(), background);
++    if (_opacity < static_cast<qreal>(1))
++    {
++        background.setAlphaF(_opacity);
++        paint.save();
++        paint.setCompositionMode(QPainter::CompositionMode_Source);
++        paint.fillRect(cr, background);
++        paint.restore();
++    }
++    else
++    {
++        paint.fillRect(cr, background);
++    }
++
++    paint.save();
++    paint.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
++
++    if (_backgroundMode == Stretch)
++    { // scale the image without keeping its proportions to fill the screen
++        paint.drawPixmap(cr, _backgroundImage, _backgroundImage.rect());
++    }
++    else if (_backgroundMode == Zoom)
++    { // zoom in/out the image to fit it
++        QRect r = _backgroundImage.rect();
++        qreal wRatio = static_cast<qreal>(cr.width()) / r.width();
++        qreal hRatio = static_cast<qreal>(cr.height()) / r.height();
++        if (wRatio > hRatio)
++        {
++            r.setWidth(qRound(r.width() * hRatio));
++            r.setHeight(cr.height());
++        }
++        else
++        {
++            r.setHeight(qRound(r.height() * wRatio));
++            r.setWidth(cr.width());
++        }
++        r.moveCenter(cr.center());
++        paint.drawPixmap(r, _backgroundImage, _backgroundImage.rect());
++    }
++    else if (_backgroundMode == Fit)
++    { // if the image is bigger than the terminal, zoom it out to fit it
++        QRect r = _backgroundImage.rect();
++        qreal wRatio = static_cast<qreal>(cr.width()) / r.width();
++        qreal hRatio = static_cast<qreal>(cr.height()) / r.height();
++        if (r.width() > cr.width())
++        {
++            if (wRatio <= hRatio)
++            {
++                r.setHeight(qRound(r.height() * wRatio));
++                r.setWidth(cr.width());
++            }
++            else
++            {
++                r.setWidth(qRound(r.width() * hRatio));
++                r.setHeight(cr.height());
++            }
++        }
++        else if (r.height() > cr.height())
++        {
++            r.setWidth(qRound(r.width() * hRatio));
++            r.setHeight(cr.height());
++        }
++        r.moveCenter(cr.center());
++        paint.drawPixmap(r, _backgroundImage, _backgroundImage.rect());
++    }
++    else if (_backgroundMode == Center)
++    { // center the image without scaling/zooming
++        QRect r = _backgroundImage.rect();
++        r.moveCenter(cr.center());
++        paint.drawPixmap(r.topLeft(), _backgroundImage);
++    }
++    else //if (_backgroundMode == None)
++    {
++        paint.drawPixmap(0, 0, _backgroundImage);
++    }
++
++    paint.restore();
+   }
+ 
+   if(_drawTextTestFlag)
+   {
+     calDrawTextAdditionHeight(paint);
+   }
+-  else
++
++  const QRegion regToDraw = pe->region() & cr;
++  for (auto rect = regToDraw.begin(); rect != regToDraw.end(); rect++)
+   {
+-      const auto rects = (pe->region() & contentsRect()).rects();
+-      for (const QRect &rect : rects)
+-      {
+-        drawBackground(paint,rect,palette().background().color(),
+-                       true /* use opacity setting */);
+-        drawContents(paint, rect);
+-      }
+-      drawInputMethodPreeditString(paint,preeditRect());
+-      paintFilters(paint);
++    drawBackground(paint,*rect,palette().window().color(),
++                   true /* use opacity setting */);
++    drawContents(paint, *rect);
+   }
++  drawInputMethodPreeditString(paint,preeditRect());
++  paintFilters(paint);
+ }
+ 
+ QPoint TerminalDisplay::cursorPosition() const
+@@ -1390,7 +1462,7 @@
+     if (_screenWindow)
+         return _screenWindow->cursorPosition();
+     else
+-        return QPoint(0,0);
++        return {0,0};
+ }
+ 
+ QRect TerminalDisplay::preeditRect() const
+@@ -1398,7 +1470,7 @@
+     const int preeditLength = string_width(_inputMethodData.preeditString);
+ 
+     if ( preeditLength == 0 )
+-        return QRect();
++        return {};
+ 
+     return QRect(_leftMargin + _fontWidth*cursorPosition().x(),
+                  _topMargin + _fontHeight*cursorPosition().y(),
+@@ -1551,7 +1623,7 @@
+   QFontMetrics fm(font());
+   int result = 0;
+   for (int column = 0; column < length; column++) {
+-    result += fm.width(_image[loc(startColumn + column, line)].character);
++    result += fm.horizontalAdvance(_image[loc(startColumn + column, line)].character);
+   }
+   return result;
+ }
+@@ -1560,10 +1632,10 @@
+   int left = _fixedFont ? _fontWidth * startColumn : textWidth(0, startColumn, line);
+   int top = _fontHeight * line;
+   int width = _fixedFont ? _fontWidth * length : textWidth(startColumn, length, line);
+-  return QRect(_leftMargin + topLeftX + left,
++  return {_leftMargin + topLeftX + left,
+                _topMargin + topLeftY + top,
+                width,
+-               _fontHeight);
++               _fontHeight};
+ }
+ 
+ void TerminalDisplay::drawContents(QPainter &paint, const QRect &rect)
+@@ -2343,29 +2415,27 @@
+   }
+ }
+ 
+-void TerminalDisplay::getCharacterPosition(const QPoint& widgetPoint,int& line,int& column) const
++void TerminalDisplay::getCharacterPosition(const QPointF& widgetPoint,int& line,int& column) const
+ {
+     line = (widgetPoint.y()-contentsRect().top()-_topMargin) / _fontHeight;
++    if (line < 0)
++        line = 0;
++    if (line >= _usedLines)
++        line = _usedLines - 1;
+ 
++    int x = widgetPoint.x() + _fontWidth / 2 - contentsRect().left() - _leftMargin;
+     if ( _fixedFont )
+-        column = (widgetPoint.x() + _fontWidth/2 -contentsRect().left()-_leftMargin) / _fontWidth;
++        column = x / _fontWidth;
+     else
+     {
+-        int x = contentsRect().left() + widgetPoint.x() - _fontWidth/2;
+         column = 0;
+-
+-        while(x > textWidth(0, column, line))
++        while(column + 1 < _usedColumns && x > textWidth(0, column + 1, line))
+             column++;
+     }
+ 
+-    if ( line < 0 )
+-        line = 0;
+     if ( column < 0 )
+         column = 0;
+ 
+-    if ( line >= _usedLines )
+-        line = _usedLines-1;
+-
+     // the column value returned can be equal to _usedColumns, which
+     // is the position just after the last character displayed in a line.
+     //
+@@ -2483,7 +2553,7 @@
+ 
+ void TerminalDisplay::wheelEvent( QWheelEvent* ev )
+ {
+-  if (ev->orientation() != Qt::Vertical)
++  if (ev->angleDelta().y() == 0)
+     return;
+ 
+   // if the terminal program is not interested mouse events
+@@ -2503,16 +2573,16 @@
+         // to get a reasonable scrolling speed, scroll by one line for every 5 degrees
+         // of mouse wheel rotation.  Mouse wheels typically move in steps of 15 degrees,
+         // giving a scroll of 3 lines
+-        int key = ev->delta() > 0 ? Qt::Key_Up : Qt::Key_Down;
++        int key = ev->angleDelta().y() > 0 ? Qt::Key_Up : Qt::Key_Down;
+ 
+-        // QWheelEvent::delta() gives rotation in eighths of a degree
+-        int wheelDegrees = ev->delta() / 8;
++        // QWheelEvent::angleDelta().y() gives rotation in eighths of a degree
++        int wheelDegrees = ev->angleDelta().y() / 8;
+         int linesToScroll = abs(wheelDegrees) / 5;
+ 
+         QKeyEvent keyScrollEvent(QEvent::KeyPress,key,Qt::NoModifier);
+ 
+         for (int i=0;i<linesToScroll;i++)
+-            emit keyPressedSignal(&keyScrollEvent);
++            emit keyPressedSignal(&keyScrollEvent, false);
+     }
+   }
+   else
+@@ -2521,9 +2591,9 @@
+ 
+     int charLine;
+     int charColumn;
+-    getCharacterPosition( ev->pos() , charLine , charColumn );
++    getCharacterPosition( ev->position() , charLine , charColumn );
+ 
+-    emit mouseSignal( ev->delta() > 0 ? 4 : 5,
++    emit mouseSignal( ev->angleDelta().y() > 0 ? 4 : 5,
+                       charColumn + 1,
+                       charLine + 1 +_scrollBar->value() -_scrollBar->maximum() ,
+                       0);
+@@ -2657,22 +2727,73 @@
+   // Paste Clipboard by simulating keypress events
+   QString text = QApplication::clipboard()->text(useXselection ? QClipboard::Selection :
+                                                                  QClipboard::Clipboard);
+-  if(appendReturn)
+-    text.append(QLatin1Char('\r'));
+   if ( ! text.isEmpty() )
+   {
++    text.replace(QLatin1String("\r\n"), QLatin1String("\n"));
+     text.replace(QLatin1Char('\n'), QLatin1Char('\r'));
++
++    if (_trimPastedTrailingNewlines) {
++        text.replace(QRegularExpression(QStringLiteral("\\r+$")), QString());
++    }
++
++    if (_confirmMultilinePaste && text.contains(QLatin1Char('\r'))) {
++        QMessageBox confirmation(this);
++        confirmation.setWindowTitle(tr("Paste multiline text"));
++        confirmation.setText(tr("Are you sure you want to paste this text?"));
++        confirmation.setDetailedText(text);
++        confirmation.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
++        // Click "Show details..." to show those by default
++        const auto buttons = confirmation.buttons();
++        for( QAbstractButton * btn : buttons ) {
++            if (confirmation.buttonRole(btn) == QMessageBox::ActionRole && btn->text() == QMessageBox::tr("Show Details...")) {
++                Q_EMIT btn->clicked();
++                break;
++            }
++        }
++        confirmation.setDefaultButton(QMessageBox::Yes);
++        confirmation.exec();
++        if (confirmation.standardButton(confirmation.clickedButton()) != QMessageBox::Yes) {
++            return;
++        }
++    }
++
+     bracketText(text);
++
++    // appendReturn is intentionally handled _after_ enclosing texts with brackets as
++    // that feature is used to allow execution of commands immediately after paste.
++    // Ref: https://bugs.kde.org/show_bug.cgi?id=16179
++    // Ref: https://github.com/KDE/konsole/commit/83d365f2ebfe2e659c1e857a2f5f247c556ab571
++    if(appendReturn) {
++        text.append(QLatin1Char('\r'));
++    }
++
+     QKeyEvent e(QEvent::KeyPress, 0, Qt::NoModifier, text);
+-    emit keyPressedSignal(&e); // expose as a big fat keypress event
++    emit keyPressedSignal(&e, true); // expose as a big fat keypress event
+ 
+     _screenWindow->clearSelection();
++
++    switch(mMotionAfterPasting)
++    {
++    case MoveStartScreenWindow:
++        // Temporarily stop tracking output, or pasting contents triggers
++        // ScreenWindow::notifyOutputChanged() and the latter scrolls the
++        // terminal to the last line. It will be re-enabled when needed
++        // (e.g., scrolling to the last line).
++        _screenWindow->setTrackOutput(false);
++        _screenWindow->scrollTo(0);
++        break;
++    case MoveEndScreenWindow:
++        scrollToEnd();
++        break;
++    case NoMoveScreenWindow:
++        break;
++    }
+   }
+ }
+ 
+-void TerminalDisplay::bracketText(QString& text)
++void TerminalDisplay::bracketText(QString& text) const
+ {
+-    if (bracketedPasteMode())
++    if (bracketedPasteMode() && !_disabledBracketedPasteMode)
+     {
+         text.prepend(QLatin1String("\033[200~"));
+         text.append(QLatin1String("\033[201~"));
+@@ -2681,7 +2802,10 @@
+ 
+ void TerminalDisplay::setSelection(const QString& t)
+ {
+-  QApplication::clipboard()->setText(t, QClipboard::Selection);
++    if (QApplication::clipboard()->supportsSelection())
++    {
++        QApplication::clipboard()->setText(t, QClipboard::Selection);
++    }
+ }
+ 
+ void TerminalDisplay::copyClipboard()
+@@ -2704,6 +2828,15 @@
+   emitSelection(true,false);
+ }
+ 
++
++void TerminalDisplay::setConfirmMultilinePaste(bool confirmMultilinePaste) {
++    _confirmMultilinePaste = confirmMultilinePaste;
++}
++
++void TerminalDisplay::setTrimPastedTrailingNewlines(bool trimPastedTrailingNewlines) {
++    _trimPastedTrailingNewlines = trimPastedTrailingNewlines;
++}
++
+ /* ------------------------------------------------------------------------- */
+ /*                                                                           */
+ /*                                Keyboard                                   */
+@@ -2732,52 +2865,6 @@
+ 
+ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
+ {
+-    bool emitKeyPressSignal = true;
+-
+-    // Keyboard-based navigation
+-    if ( event->modifiers() == Qt::ShiftModifier )
+-    {
+-        bool update = true;
+-
+-        if ( event->key() == Qt::Key_PageUp )
+-        {
+-            _screenWindow->scrollBy( ScreenWindow::ScrollPages , -1 );
+-        }
+-        else if ( event->key() == Qt::Key_PageDown )
+-        {
+-            _screenWindow->scrollBy( ScreenWindow::ScrollPages , 1 );
+-        }
+-        else if ( event->key() == Qt::Key_Up )
+-        {
+-            _screenWindow->scrollBy( ScreenWindow::ScrollLines , -1 );
+-        }
+-        else if ( event->key() == Qt::Key_Down )
+-        {
+-            _screenWindow->scrollBy( ScreenWindow::ScrollLines , 1 );
+-        }
+-        else if ( event->key() == Qt::Key_End)
+-        {
+-            scrollToEnd();
+-        }
+-        else if ( event->key() == Qt::Key_Home)
+-        {
+-            _screenWindow->scrollTo(0);
+-        }
+-        else
+-            update = false;
+-
+-        if ( update )
+-        {
+-            _screenWindow->setTrackOutput( _screenWindow->atEndOfOutput() );
+-
+-            updateLineProperties();
+-            updateImage();
+-
+-            // do not send key press to terminal
+-            emitKeyPressSignal = false;
+-        }
+-    }
+-
+     _actSel=0; // Key stroke implies a screen update, so TerminalDisplay won't
+               // know where the current selection is.
+ 
+@@ -2790,31 +2877,7 @@
+         _cursorBlinking = false;
+     }
+ 
+-    if ( emitKeyPressSignal )
+-    {
+-        emit keyPressedSignal(event);
+-
+-        if(event->modifiers().testFlag(Qt::ShiftModifier)
+-             || event->modifiers().testFlag(Qt::ControlModifier)
+-             || event->modifiers().testFlag(Qt::AltModifier))
+-        {
+-            switch(mMotionAfterPasting)
+-            {
+-            case MoveStartScreenWindow:
+-                _screenWindow->scrollTo(0);
+-                break;
+-            case MoveEndScreenWindow:
+-                scrollToEnd();
+-                break;
+-            case NoMoveScreenWindow:
+-                break;
+-            }
+-        }
+-        else
+-        {
+-            scrollToEnd();
+-        }
+-    }
++    emit keyPressedSignal(event, false);
+ 
+     event->accept();
+ }
+@@ -2822,7 +2885,7 @@
+ void TerminalDisplay::inputMethodEvent( QInputMethodEvent* event )
+ {
+     QKeyEvent keyEvent(QEvent::KeyPress,0,Qt::NoModifier,event->commitString());
+-    emit keyPressedSignal(&keyEvent);
++    emit keyPressedSignal(&keyEvent, false);
+ 
+     _inputMethodData.preeditString = event->preeditString().toStdWString();
+     update(preeditRect() | _inputMethodData.previousPreeditRect);
+@@ -3140,10 +3203,9 @@
+         // without quoting them (this only affects paths with spaces in)
+         //urlText = KShell::quoteArg(urlText);
+ 
+-        dropText += urlText;
+-
+-        if ( i != urls.count()-1 )
+-            dropText += QLatin1Char(' ');
++        QChar q(QLatin1Char('\''));
++        dropText += q + QString(urlText).replace(q, QLatin1String("'\\''")) + q;
++        dropText += QLatin1Char(' ');
+     }
+   }
+   else
+@@ -3161,7 +3223,7 @@
+   QMimeData *mimeData = new QMimeData;
+   mimeData->setText(QApplication::clipboard()->text(QClipboard::Selection));
+   dragInfo.dragObject->setMimeData(mimeData);
+-  dragInfo.dragObject->start(Qt::CopyAction);
++  dragInfo.dragObject->exec(Qt::CopyAction);
+   // Don't delete the QTextDrag object.  Qt will delete it when it's done with it.
+ }
+ 
+diff -Nuar a/lib/TerminalDisplay.h b/lib/TerminalDisplay.h
+--- a/lib/TerminalDisplay.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/TerminalDisplay.h	2021-11-05 13:18:23.000000000 +0300
+@@ -62,6 +62,13 @@
+         MoveEndScreenWindow = 2
+     };
+ 
++    enum BackgroundMode {
++        None,
++        Stretch,
++        Zoom,
++        Fit,
++        Center
++    };
+ 
+ extern unsigned short vt100_graphics[32];
+ 
+@@ -82,8 +89,8 @@
+ 
+ public:
+     /** Constructs a new terminal display widget with the specified parent. */
+-    TerminalDisplay(QWidget *parent=0);
+-    virtual ~TerminalDisplay();
++    TerminalDisplay(QWidget *parent=nullptr);
++    ~TerminalDisplay() override;
+ 
+     /** Returns the terminal color palette used by the display. */
+     const ColorEntry* colorTable() const;
+@@ -104,7 +111,10 @@
+     void setOpacity(qreal opacity);
+ 
+     /** Sets the background image of the terminal display. */
+-    void setBackgroundImage(QString backgroundImage);
++    void setBackgroundImage(const QString& backgroundImage);
++
++    /** Sets the background image mode of the terminal display. */
++    void setBackgroundMode(BackgroundMode mode);
+ 
+     /**
+      * Specifies whether the terminal display has a vertical scroll bar, and if so whether it
+@@ -196,7 +206,7 @@
+     void emitSelection(bool useXselection,bool appendReturn);
+ 
+     /** change and wrap text corresponding to paste mode **/
+-    void bracketText(QString& text);
++    void bracketText(QString& text) const;
+ 
+     /**
+      * Sets the shape of the keyboard cursor.  This is the cursor drawn
+@@ -266,7 +276,7 @@
+     void setFixedSize(int cols, int lins);
+ 
+     // reimplemented
+-    QSize sizeHint() const;
++    QSize sizeHint() const override;
+ 
+     /**
+      * Sets which characters, in addition to letters and numbers,
+@@ -352,6 +362,12 @@
+     static bool antialias()                 { return _antialiasText;   }
+ 
+     /**
++     * Specify whether line chars should be drawn by ourselves or left to
++     * underlying font rendering libraries.
++     */
++    void setDrawLineChars(bool drawLineChars) { _drawLineChars = drawLineChars; }
++
++    /**
+      * Specifies whether characters with intense colors should be rendered
+      * as bold. Defaults to true.
+      */
+@@ -407,10 +423,15 @@
+ 
+     void setMotionAfterPasting(MotionAfterPasting action);
+     int motionAfterPasting();
++    void setConfirmMultilinePaste(bool confirmMultilinePaste);
++    void setTrimPastedTrailingNewlines(bool trimPastedTrailingNewlines);
+ 
+     // maps a point on the widget to the position ( ie. line and column )
+     // of the character at that point.
+-    void getCharacterPosition(const QPoint& widgetPoint,int& line,int& column) const;
++    void getCharacterPosition(const QPointF& widgetPoint,int& line,int& column) const;
++
++    void disableBracketedPasteMode(bool disable) { _disabledBracketedPasteMode = disable; }
++    bool bracketedPasteModeIsDisabled() const { return _disabledBracketedPasteMode; }
+ 
+ public slots:
+ 
+@@ -512,7 +533,7 @@
+     /**
+      * Emitted when the user presses a key whilst the terminal widget has focus.
+      */
+-    void keyPressedSignal(QKeyEvent *e);
++    void keyPressedSignal(QKeyEvent *e, bool fromPaste);
+ 
+     /**
+      * A mouse event occurred.
+@@ -556,30 +577,30 @@
+     void usesMouseChanged();
+ 
+ protected:
+-    virtual bool event( QEvent * );
++    bool event( QEvent * ) override;
+ 
+-    virtual void paintEvent( QPaintEvent * );
++    void paintEvent( QPaintEvent * ) override;
+ 
+-    virtual void showEvent(QShowEvent*);
+-    virtual void hideEvent(QHideEvent*);
+-    virtual void resizeEvent(QResizeEvent*);
++    void showEvent(QShowEvent*) override;
++    void hideEvent(QHideEvent*) override;
++    void resizeEvent(QResizeEvent*) override;
+ 
+     virtual void fontChange(const QFont &font);
+-    virtual void focusInEvent(QFocusEvent* event);
+-    virtual void focusOutEvent(QFocusEvent* event);
+-    virtual void keyPressEvent(QKeyEvent* event);
+-    virtual void mouseDoubleClickEvent(QMouseEvent* ev);
+-    virtual void mousePressEvent( QMouseEvent* );
+-    virtual void mouseReleaseEvent( QMouseEvent* );
+-    virtual void mouseMoveEvent( QMouseEvent* );
++    void focusInEvent(QFocusEvent* event) override;
++    void focusOutEvent(QFocusEvent* event) override;
++    void keyPressEvent(QKeyEvent* event) override;
++    void mouseDoubleClickEvent(QMouseEvent* ev) override;
++    void mousePressEvent( QMouseEvent* ) override;
++    void mouseReleaseEvent( QMouseEvent* ) override;
++    void mouseMoveEvent( QMouseEvent* ) override;
+     virtual void extendSelection( const QPoint& pos );
+-    virtual void wheelEvent( QWheelEvent* );
++    void wheelEvent( QWheelEvent* ) override;
+ 
+-    virtual bool focusNextPrevChild( bool next );
++    bool focusNextPrevChild( bool next ) override;
+ 
+     // drag and drop
+-    virtual void dragEnterEvent(QDragEnterEvent* event);
+-    virtual void dropEvent(QDropEvent* event);
++    void dragEnterEvent(QDragEnterEvent* event) override;
++    void dropEvent(QDropEvent* event) override;
+     void doDrag();
+     enum DragState { diNone, diPending, diDragging };
+ 
+@@ -602,8 +623,8 @@
+     void mouseTripleClickEvent(QMouseEvent* ev);
+ 
+     // reimplemented
+-    virtual void inputMethodEvent ( QInputMethodEvent* event );
+-    virtual QVariant inputMethodQuery( Qt::InputMethodQuery query ) const;
++    void inputMethodEvent ( QInputMethodEvent* event ) override;
++    QVariant inputMethodQuery( Qt::InputMethodQuery query ) const override;
+ 
+ protected slots:
+ 
+@@ -651,7 +672,7 @@
+                                            const Character* style, bool invertCharacterColor);
+     // draws a string of line graphics
+     void drawLineCharString(QPainter& painter, int x, int y,
+-                            const std::wstring& str, const Character* attributes);
++                            const std::wstring& str, const Character* attributes) const;
+ 
+     // draws the preedit string for input methods
+     void drawInputMethodPreeditString(QPainter& painter , const QRect& rect);
+@@ -697,6 +718,9 @@
+ 
+     bool handleShortcutOverrideEvent(QKeyEvent* event);
+ 
++    bool isLineChar(wchar_t c) const;
++    bool isLineCharString(const std::wstring& string) const;
++
+     // the window onto the terminal screen which this display
+     // is currently showing.
+     QPointer<ScreenWindow> _screenWindow;
+@@ -744,6 +768,7 @@
+     bool _bidiEnabled;
+     bool _mouseMarks;
+     bool _bracketedPasteMode;
++    bool _disabledBracketedPasteMode;
+ 
+     QPoint  _iPntSel; // initial selection point
+     QPoint  _pntSel; // current selection point
+@@ -794,9 +819,10 @@
+ 
+     QSize _size;
+ 
+-    QRgb _blendColor;
++    qreal _opacity;
+ 
+     QPixmap _backgroundImage;
++    BackgroundMode _backgroundMode;
+ 
+     // list of filters currently applied to the display.  used for links and
+     // search highlight
+@@ -811,6 +837,8 @@
+ 
+ 
+     MotionAfterPasting mMotionAfterPasting;
++    bool _confirmMultilinePaste;
++    bool _trimPastedTrailingNewlines;
+ 
+     struct InputMethodData
+     {
+@@ -827,6 +855,8 @@
+     int _leftBaseMargin;
+     int _topBaseMargin;
+ 
++    bool _drawLineChars;
++
+ public:
+     static void setTransparencyEnabled(bool enable)
+     {
+@@ -841,8 +871,8 @@
+ public:
+     AutoScrollHandler(QWidget* parent);
+ protected:
+-    virtual void timerEvent(QTimerEvent* event);
+-    virtual bool eventFilter(QObject* watched,QEvent* event);
++    void timerEvent(QTimerEvent* event) override;
++    bool eventFilter(QObject* watched,QEvent* event) override;
+ private:
+     QWidget* widget() const { return static_cast<QWidget*>(parent()); }
+     int _timerId;
+diff -Nuar a/lib/tools.cpp b/lib/tools.cpp
+--- a/lib/tools.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/tools.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -5,6 +5,8 @@
+ #include <QtDebug>
+ 
+ 
++Q_LOGGING_CATEGORY(qtermwidgetLogger, "qtermwidget", QtWarningMsg)
++
+ /*! Helper function to get possible location of layout files.
+ By default the KB_LAYOUT_DIR is used (linux/BSD/macports).
+ But in some cases (apple bundle) there can be more locations).
+@@ -17,7 +19,7 @@
+     QString k(QLatin1String(KB_LAYOUT_DIR));
+     QDir d(k);
+ 
+-    qDebug() << "default KB_LAYOUT_DIR: " << k;
++    //qDebug() << "default KB_LAYOUT_DIR: " << k;
+ 
+     if (d.exists())
+     {
+@@ -25,17 +27,18 @@
+         return rval;
+     }
+ 
++#ifdef Q_OS_MAC
+     // subdir in the app location
+     d.setPath(QCoreApplication::applicationDirPath() + QLatin1String("/kb-layouts/"));
+     //qDebug() << d.path();
+     if (d.exists())
+         return QCoreApplication::applicationDirPath() + QLatin1String("/kb-layouts/");
+-#ifdef Q_WS_MAC
+-    d.setPath(QCoreApplication::applicationDirPath() + "/../Resources/kb-layouts/");
++
++    d.setPath(QCoreApplication::applicationDirPath() + QLatin1String("/../Resources/kb-layouts/"));
+     if (d.exists())
+-        return QCoreApplication::applicationDirPath() + "/../Resources/kb-layouts/";
++        return QCoreApplication::applicationDirPath() + QLatin1String("/../Resources/kb-layouts/");
+ #endif
+-    qDebug() << "Cannot find KB_LAYOUT_DIR. Default:" << k;
++    //qDebug() << "Cannot find KB_LAYOUT_DIR. Default:" << k;
+     return QString();
+ }
+ 
+@@ -67,6 +70,7 @@
+     if (d.exists())
+         rval << k.append(QLatin1Char('/'));
+ 
++#ifdef Q_OS_MAC
+     // subdir in the app location
+     d.setPath(QCoreApplication::applicationDirPath() + QLatin1String("/color-schemes/"));
+     //qDebug() << d.path();
+@@ -76,16 +80,16 @@
+             rval.clear();
+         rval << (QCoreApplication::applicationDirPath() + QLatin1String("/color-schemes/"));
+     }
+-#ifdef Q_WS_MAC
+-    d.setPath(QCoreApplication::applicationDirPath() + "/../Resources/color-schemes/");
++    d.setPath(QCoreApplication::applicationDirPath() + QLatin1String("/../Resources/color-schemes/"));
+     if (d.exists())
+     {
+         if (!rval.isEmpty())
+             rval.clear();
+-        rval << (QCoreApplication::applicationDirPath() + "/../Resources/color-schemes/");
++        rval << (QCoreApplication::applicationDirPath() + QLatin1String("/../Resources/color-schemes/"));
+     }
+ #endif
+-    for (const QString& custom_dir : const_cast<const QStringList&>(custom_color_schemes_dirs))
++
++    for (const QString& custom_dir : qAsConst(custom_color_schemes_dirs))
+     {
+         d.setPath(custom_dir);
+         if (d.exists())
+diff -Nuar a/lib/tools.h b/lib/tools.h
+--- a/lib/tools.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/tools.h	2021-11-05 13:18:23.000000000 +0300
+@@ -3,9 +3,12 @@
+ 
+ #include <QString>
+ #include <QStringList>
++#include <QLoggingCategory>
+ 
+ QString get_kb_layout_dir();
+ void add_custom_color_scheme_dir(const QString& custom_dir);
+ const QStringList get_color_schemes_dirs();
+ 
++Q_DECLARE_LOGGING_CATEGORY(qtermwidgetLogger)
++
+ #endif
+diff -Nuar a/lib/Vt102Emulation.cpp b/lib/Vt102Emulation.cpp
+--- a/lib/Vt102Emulation.cpp	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Vt102Emulation.cpp	2021-11-05 13:18:23.000000000 +0300
+@@ -22,6 +22,7 @@
+ 
+ // Own
+ #include "Vt102Emulation.h"
++#include "tools.h"
+ 
+ // XKB
+ //#include <config-konsole.h>
+@@ -38,13 +39,14 @@
+ #endif
+ 
+ // Standard
+-#include <stdio.h>
++#include <cstdio>
+ #include <unistd.h>
+ 
+ // Qt
+ #include <QEvent>
+ #include <QKeyEvent>
+ #include <QByteRef>
++#include <QDebug>
+ 
+ // KDE
+ //#include <kdebug.h>
+@@ -226,7 +228,7 @@
+     charClass[i] |= CTL;
+   for(i = 32;i < 256; ++i)
+     charClass[i] |= CHR;
+-  for(s = (quint8*)"@ABCDGHILMPSTXZbcdfry"; *s; ++s)
++  for(s = (quint8*)"@ABCDEFGHILMPSTXZbcdfry"; *s; ++s)
+     charClass[*s] |= CPN;
+   // resize = \e[8;<row>;<col>t
+   for(s = (quint8*)"t"; *s; ++s)
+@@ -343,7 +345,7 @@
+ 
+     if (epe(   )) { processToken( TY_CSI_PE(cc), 0, 0); resetTokenizer(); return; }
+     if (ees(DIG)) { addDigit(cc-'0'); return; }
+-    if (eec(';')) { addArgument();    return; }
++    if (eec(';') || eec(':')) { addArgument(); return; }
+     for (int i=0;i<=argc;i++)
+     {
+         if (epp())
+@@ -413,10 +415,10 @@
+     return;
+   }
+ 
+-  QString newValue;
+-  newValue.reserve(tokenBufferPos-i-2);
+-  for (int j = 0; j < tokenBufferPos-i-2; j++)
+-    newValue[j] = tokenBuffer[i+1+j];
++  // copy from the first char after ';', and skipping the ending delimiter
++  // 0x07 or 0x92. Note that as control characters in OSC text parts are
++  // ignored, only the second char in ST ("\e\\") is appended to tokenBuffer.
++  QString newValue = QString::fromWCharArray(tokenBuffer + i + 1, tokenBufferPos-i-2);
+ 
+   _pendingTitleUpdates[attributeToChange] = newValue;
+   _titleUpdateTimer->start(20);
+@@ -664,8 +666,8 @@
+     case TY_CSI_PN('B'      ) : _currentScreen->cursorDown           (p         ); break; //VT100
+     case TY_CSI_PN('C'      ) : _currentScreen->cursorRight          (p         ); break; //VT100
+     case TY_CSI_PN('D'      ) : _currentScreen->cursorLeft           (p         ); break; //VT100
+-    case TY_CSI_PN('E'      ) : /* Not implemented: cursor next p lines */         break; //VT100
+-    case TY_CSI_PN('F'      ) : /* Not implemented: cursor preceding p lines */    break; //VT100
++    case TY_CSI_PN('E'      ) : _currentScreen->cursorNextLine       (p         ); break; //VT100
++    case TY_CSI_PN('F'      ) : _currentScreen->cursorPreviousLine   (p         ); break; //VT100
+     case TY_CSI_PN('G'      ) : _currentScreen->setCursorX           (p         ); break; //LINUX
+     case TY_CSI_PN('H'      ) : _currentScreen->setCursorYX          (p,      q); break; //VT100
+     case TY_CSI_PN('I'      ) : _currentScreen->tab                  (p         ); break;
+@@ -870,8 +872,12 @@
+ 
+ void Vt102Emulation::reportCursorPosition()
+ {
+-  char tmp[20];
+-  sprintf(tmp,"\033[%d;%dR",_currentScreen->getCursorY()+1,_currentScreen->getCursorX()+1);
++  const size_t sz = 20;
++  char tmp[sz];
++  const size_t r = snprintf(tmp, sz, "\033[%d;%dR",_currentScreen->getCursorY()+1,_currentScreen->getCursorX()+1);
++  if (sz <= r) {
++    qWarning("Vt102Emulation::reportCursorPosition: Buffer too small\n");
++  }
+   sendString(tmp);
+ }
+ 
+@@ -901,8 +907,12 @@
+ void Vt102Emulation::reportTerminalParms(int p)
+ // DECREPTPARM
+ {
+-  char tmp[100];
+-  sprintf(tmp,"\033[%d;1;1;112;112;1;0x",p); // not really true.
++  const size_t sz = 100;
++  char tmp[sz];
++  const size_t r = snprintf(tmp, sz, "\033[%d;1;1;112;112;1;0x",p); // not really true.
++  if (sz <= r) {
++    qWarning("Vt102Emulation::reportTerminalParms: Buffer too small\n");
++  }
+   sendString(tmp);
+ }
+ 
+@@ -1008,10 +1018,10 @@
+                     0,
+                     Qt::NoModifier,
+                     text);
+-    sendKeyEvent(&event); // expose as a big fat keypress event
++    sendKeyEvent(&event, false); // expose as a big fat keypress event
+   }
+ }
+-void Vt102Emulation::sendKeyEvent( QKeyEvent* event )
++void Vt102Emulation::sendKeyEvent(QKeyEvent* event, bool fromPaste)
+ {
+     Qt::KeyboardModifiers modifiers = event->modifiers();
+     KeyboardTranslator::States states = KeyboardTranslator::NoState;
+@@ -1025,7 +1035,7 @@
+         states |= KeyboardTranslator::ApplicationKeypadState;
+ 
+     // check flow control state
+-    if (modifiers & Qt::ControlModifier)
++    if (modifiers & KeyboardTranslator::CTRL_MOD)
+     {
+         switch (event->key()) {
+         case Qt::Key_S:
+@@ -1071,8 +1081,11 @@
+ 
+         if ( entry.command() != KeyboardTranslator::NoCommand )
+         {
+-            if (entry.command() & KeyboardTranslator::EraseCommand)
++            if (entry.command() & KeyboardTranslator::EraseCommand) {
+                 textToSend += eraseChar();
++            } else {
++                Q_EMIT handleCommandFromKeyboard(entry.command());
++            }
+ 
+             // TODO command handling
+         }
+@@ -1080,7 +1093,7 @@
+         {
+             textToSend += _codec->fromUnicode(QString::fromUtf8(entry.text(true,modifiers)));
+         }
+-        else if((modifiers & Qt::ControlModifier) && event->key() >= 0x40 && event->key() < 0x5f) {
++        else if((modifiers & KeyboardTranslator::CTRL_MOD) && event->key() >= 0x40 && event->key() < 0x5f) {
+             textToSend += (event->key() & 0x1f);
+         }
+         else if(event->key() == Qt::Key_Tab) {
+@@ -1096,7 +1109,10 @@
+             textToSend += _codec->fromUnicode(event->text());
+         }
+ 
+-        sendData( textToSend.constData() , textToSend.length() );
++        if (!fromPaste && textToSend.length()) {
++            Q_EMIT outputFromKeypressEvent();
++        }
++        Q_EMIT sendData( textToSend.constData() , textToSend.length() );
+     }
+     else
+     {
+@@ -1341,36 +1357,19 @@
+ {
+   KeyboardTranslator::Entry entry = _keyTranslator->findEntry(
+                                             Qt::Key_Backspace,
+-                                            0,
+-                                            0);
++                                            Qt::NoModifier,
++                                            KeyboardTranslator::NoState);
+   if ( entry.text().count() > 0 )
+       return entry.text().at(0);
+   else
+       return '\b';
+ }
+ 
+-// print contents of the scan buffer
+-static void hexdump(wchar_t* s, int len)
+-{ int i;
+-  for (i = 0; i < len; i++)
+-  {
+-    if (s[i] == '\\')
+-      printf("\\\\");
+-    else
+-    if ((s[i]) > 32 && s[i] < 127)
+-      printf("%c",s[i]);
+-    else
+-      printf("\\%04x(hex)",s[i]);
+-  }
+-}
+-
+ void Vt102Emulation::reportDecodingError()
+ {
+   if (tokenBufferPos == 0 || ( tokenBufferPos == 1 && (tokenBuffer[0] & 0xff) >= 32) )
+     return;
+-  printf("Undecodable sequence: ");
+-  hexdump(tokenBuffer,tokenBufferPos);
+-  printf("\n");
++  qCDebug(qtermwidgetLogger) << "Undecodable sequence:" << QString::fromWCharArray(tokenBuffer, tokenBufferPos);
+ }
+ 
+ //#include "Vt102Emulation.moc"
+diff -Nuar a/lib/Vt102Emulation.h b/lib/Vt102Emulation.h
+--- a/lib/Vt102Emulation.h	2019-10-16 21:41:16.000000000 +0300
++++ b/lib/Vt102Emulation.h	2021-11-05 13:18:23.000000000 +0300
+@@ -24,7 +24,7 @@
+ #define VT102EMULATION_H
+ 
+ // Standard Library
+-#include <stdio.h>
++#include <cstdio>
+ 
+ // Qt
+ #include <QKeyEvent>
+@@ -82,27 +82,27 @@
+ public:
+   /** Constructs a new emulation */
+   Vt102Emulation();
+-  ~Vt102Emulation();
++  ~Vt102Emulation() override;
+ 
+   // reimplemented from Emulation
+-  virtual void clearEntireScreen();
+-  virtual void reset();
+-  virtual char eraseChar() const;
++  void clearEntireScreen() override;
++  void reset() override;
++  char eraseChar() const override;
+ 
+ public slots:
+   // reimplemented from Emulation
+-  virtual void sendString(const char*,int length = -1);
+-  virtual void sendText(const QString& text);
+-  virtual void sendKeyEvent(QKeyEvent*);
+-  virtual void sendMouseEvent(int buttons, int column, int line, int eventType);
++  void sendString(const char*,int length = -1) override;
++  void sendText(const QString& text) override;
++  void sendKeyEvent(QKeyEvent*, bool fromPaste) override;
++  void sendMouseEvent(int buttons, int column, int line, int eventType) override;
+   virtual void focusLost();
+   virtual void focusGained();
+ 
+ protected:
+   // reimplemented from Emulation
+-  virtual void setMode(int mode);
+-  virtual void resetMode(int mode);
+-  virtual void receiveChar(wchar_t cc);
++  void setMode(int mode) override;
++  void resetMode(int mode) override;
++  void receiveChar(wchar_t cc) override;
+ 
+ private slots:
+   //causes changeTitle() to be emitted for each (int,QString) pair in pendingTitleUpdates
