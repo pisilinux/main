@@ -11,6 +11,8 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("mkdir .git")
+    pisitools.dosed(".qmake.conf", "5.15.7", "5.15.2")
     qt5.configure()
 
 def build():
