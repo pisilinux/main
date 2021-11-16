@@ -1,8 +1,7 @@
-diff --git a/examples/qml/doc/src/qml-extending.qdoc b/examples/qml/doc/src/qml-extending.qdoc
-index 723e470d45..c9922ebd45 100644
---- a/examples/qml/doc/src/qml-extending.qdoc
-+++ b/examples/qml/doc/src/qml-extending.qdoc
-@@ -79,6 +79,10 @@ Qt's internal QLineEdit class.
+diff -Nuar a/examples/qml/doc/src/qml-extending.qdoc b/examples/qml/doc/src/qml-extending.qdoc
+--- a/examples/qml/doc/src/qml-extending.qdoc	2020-10-27 11:02:12.000000000 +0300
++++ b/examples/qml/doc/src/qml-extending.qdoc	2021-11-16 15:55:38.968626527 +0300
+@@ -79,6 +79,10 @@
  
  \snippet referenceexamples/extended/lineedit.h 0
  
@@ -13,11 +12,10 @@ index 723e470d45..c9922ebd45 100644
  The QML engine then instantiates a \l QLineEdit:
  
  \snippet referenceexamples/extended/main.cpp 1
-diff --git a/src/3rdparty/masm/assembler/AssemblerBuffer.h b/src/3rdparty/masm/assembler/AssemblerBuffer.h
-index 45874235b6..2292a4c244 100644
---- a/src/3rdparty/masm/assembler/AssemblerBuffer.h
-+++ b/src/3rdparty/masm/assembler/AssemblerBuffer.h
-@@ -140,9 +140,9 @@ namespace JSC {
+diff -Nuar a/src/3rdparty/masm/assembler/AssemblerBuffer.h b/src/3rdparty/masm/assembler/AssemblerBuffer.h
+--- a/src/3rdparty/masm/assembler/AssemblerBuffer.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/3rdparty/masm/assembler/AssemblerBuffer.h	2021-11-16 15:55:38.968626527 +0300
+@@ -140,9 +140,9 @@
              if (!result)
                  return 0;
  
@@ -29,11 +27,10 @@ index 45874235b6..2292a4c244 100644
              
              return result.release();
          }
-diff --git a/src/3rdparty/masm/assembler/LinkBuffer.h b/src/3rdparty/masm/assembler/LinkBuffer.h
-index ba57564a1d..fa669deaf9 100644
---- a/src/3rdparty/masm/assembler/LinkBuffer.h
-+++ b/src/3rdparty/masm/assembler/LinkBuffer.h
-@@ -333,7 +333,7 @@ inline void LinkBufferBase<MacroAssembler, ExecutableOffsetCalculator>::linkCode
+diff -Nuar a/src/3rdparty/masm/assembler/LinkBuffer.h b/src/3rdparty/masm/assembler/LinkBuffer.h
+--- a/src/3rdparty/masm/assembler/LinkBuffer.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/3rdparty/masm/assembler/LinkBuffer.h	2021-11-16 15:55:38.969626527 +0300
+@@ -333,7 +333,7 @@
      m_executableMemory = m_assembler->m_assembler.executableCopy(*m_globalData, ownerUID, effort);
      if (!m_executableMemory)
          return;
@@ -42,7 +39,7 @@ index ba57564a1d..fa669deaf9 100644
      m_size = m_assembler->m_assembler.codeSize();
      ASSERT(m_code);
  }
-@@ -355,7 +355,8 @@ void LinkBufferBase<MacroAssembler, ExecutableOffsetCalculator>::performFinaliza
+@@ -355,7 +355,8 @@
  template <typename MacroAssembler, template <typename T> class ExecutableOffsetCalculator>
  inline void LinkBufferBase<MacroAssembler, ExecutableOffsetCalculator>::makeExecutable()
  {
@@ -52,7 +49,7 @@ index ba57564a1d..fa669deaf9 100644
  }
  
  template <typename MacroAssembler>
-@@ -442,9 +443,9 @@ inline void BranchCompactingLinkBuffer<MacroAssembler>::linkCode(void* ownerUID,
+@@ -442,9 +443,9 @@
      m_executableMemory = m_globalData->executableAllocator.allocate(*m_globalData, m_initialSize, ownerUID, effort);
      if (!m_executableMemory)
          return;
@@ -64,11 +61,10 @@ index ba57564a1d..fa669deaf9 100644
      uint8_t* inData = (uint8_t*)m_assembler->unlinkedCode();
      uint8_t* outData = reinterpret_cast<uint8_t*>(m_code);
      int readPtr = 0;
-diff --git a/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h b/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h
-index a7e78ad78f..cde9751108 100644
---- a/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h
-+++ b/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h
-@@ -357,11 +357,11 @@ public:
+diff -Nuar a/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h b/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h
+--- a/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/3rdparty/masm/assembler/MacroAssemblerCodeRef.h	2021-11-16 15:55:38.969626527 +0300
+@@ -357,11 +357,11 @@
      }
  
      MacroAssemblerCodeRef(PassRefPtr<ExecutableMemoryHandle> executableMemory)
@@ -82,7 +78,7 @@ index a7e78ad78f..cde9751108 100644
          ASSERT(m_codePtr);
      }
      
-@@ -395,7 +395,7 @@ public:
+@@ -395,7 +395,7 @@
      {
          if (!m_executableMemory)
              return 0;
@@ -91,11 +87,10 @@ index a7e78ad78f..cde9751108 100644
      }
      
      bool tryToDisassemble(const char* prefix) const
-diff --git a/src/3rdparty/masm/stubs/ExecutableAllocator.h b/src/3rdparty/masm/stubs/ExecutableAllocator.h
-index a439c53827..f984704023 100644
---- a/src/3rdparty/masm/stubs/ExecutableAllocator.h
-+++ b/src/3rdparty/masm/stubs/ExecutableAllocator.h
-@@ -82,9 +82,14 @@ struct ExecutableMemoryHandle : public RefCounted<ExecutableMemoryHandle> {
+diff -Nuar a/src/3rdparty/masm/stubs/ExecutableAllocator.h b/src/3rdparty/masm/stubs/ExecutableAllocator.h
+--- a/src/3rdparty/masm/stubs/ExecutableAllocator.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/3rdparty/masm/stubs/ExecutableAllocator.h	2021-11-16 15:55:38.969626527 +0300
+@@ -82,9 +82,14 @@
  
      inline bool isManaged() const { return true; }
  
@@ -113,10 +108,9 @@ index a439c53827..f984704023 100644
  
      QV4::ExecutableAllocator::ChunkOfPages *chunk() const
      { return m_allocator->chunkForAllocation(m_allocation); }
-diff --git a/src/3rdparty/masm/yarr/Yarr.h b/src/3rdparty/masm/yarr/Yarr.h
-index ccf78f9880..2955ea7e72 100644
---- a/src/3rdparty/masm/yarr/Yarr.h
-+++ b/src/3rdparty/masm/yarr/Yarr.h
+diff -Nuar a/src/3rdparty/masm/yarr/Yarr.h b/src/3rdparty/masm/yarr/Yarr.h
+--- a/src/3rdparty/masm/yarr/Yarr.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/3rdparty/masm/yarr/Yarr.h	2021-11-16 15:55:38.969626527 +0300
 @@ -28,6 +28,7 @@
  #pragma once
  
@@ -125,10 +119,9 @@ index ccf78f9880..2955ea7e72 100644
  #include "YarrErrorCode.h"
  
  namespace JSC { namespace Yarr {
-diff --git a/src/imports/folderlistmodel/plugin.cpp b/src/imports/folderlistmodel/plugin.cpp
-index 7a38769b77..7206df6664 100644
---- a/src/imports/folderlistmodel/plugin.cpp
-+++ b/src/imports/folderlistmodel/plugin.cpp
+diff -Nuar a/src/imports/folderlistmodel/plugin.cpp b/src/imports/folderlistmodel/plugin.cpp
+--- a/src/imports/folderlistmodel/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/folderlistmodel/plugin.cpp	2021-11-16 15:55:38.969626527 +0300
 @@ -43,6 +43,7 @@
  #include "qquickfolderlistmodel.h"
  
@@ -137,10 +130,9 @@ index 7a38769b77..7206df6664 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/labsanimation/plugin.cpp b/src/imports/labsanimation/plugin.cpp
-index 9c985f0dcf..c35be764f9 100644
---- a/src/imports/labsanimation/plugin.cpp
-+++ b/src/imports/labsanimation/plugin.cpp
+diff -Nuar a/src/imports/labsanimation/plugin.cpp b/src/imports/labsanimation/plugin.cpp
+--- a/src/imports/labsanimation/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/labsanimation/plugin.cpp	2021-11-16 15:55:38.969626527 +0300
 @@ -43,6 +43,7 @@
  #include "qquickboundaryrule_p.h"
  
@@ -149,10 +141,9 @@ index 9c985f0dcf..c35be764f9 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/labsmodels/plugin.cpp b/src/imports/labsmodels/plugin.cpp
-index ab5e0023a6..b06491e663 100644
---- a/src/imports/labsmodels/plugin.cpp
-+++ b/src/imports/labsmodels/plugin.cpp
+diff -Nuar a/src/imports/labsmodels/plugin.cpp b/src/imports/labsmodels/plugin.cpp
+--- a/src/imports/labsmodels/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/labsmodels/plugin.cpp	2021-11-16 15:55:38.969626527 +0300
 @@ -51,6 +51,7 @@
  #endif
  
@@ -161,10 +152,9 @@ index ab5e0023a6..b06491e663 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/layouts/plugin.cpp b/src/imports/layouts/plugin.cpp
-index af270c1732..b6ae516eee 100644
---- a/src/imports/layouts/plugin.cpp
-+++ b/src/imports/layouts/plugin.cpp
+diff -Nuar a/src/imports/layouts/plugin.cpp b/src/imports/layouts/plugin.cpp
+--- a/src/imports/layouts/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/layouts/plugin.cpp	2021-11-16 15:55:38.970626527 +0300
 @@ -43,6 +43,7 @@
  #include "qquickstacklayout_p.h"
  
@@ -173,10 +163,9 @@ index af270c1732..b6ae516eee 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/localstorage/plugin.cpp b/src/imports/localstorage/plugin.cpp
-index e488b3d43c..0291ed4715 100644
---- a/src/imports/localstorage/plugin.cpp
-+++ b/src/imports/localstorage/plugin.cpp
+diff -Nuar a/src/imports/localstorage/plugin.cpp b/src/imports/localstorage/plugin.cpp
+--- a/src/imports/localstorage/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/localstorage/plugin.cpp	2021-11-16 15:55:38.970626527 +0300
 @@ -43,6 +43,7 @@
  #include <QtQml/qqml.h>
  
@@ -185,10 +174,9 @@ index e488b3d43c..0291ed4715 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/settings/plugin.cpp b/src/imports/settings/plugin.cpp
-index e8e640412b..e83147f612 100644
---- a/src/imports/settings/plugin.cpp
-+++ b/src/imports/settings/plugin.cpp
+diff -Nuar a/src/imports/settings/plugin.cpp b/src/imports/settings/plugin.cpp
+--- a/src/imports/settings/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/settings/plugin.cpp	2021-11-16 15:55:38.970626527 +0300
 @@ -43,6 +43,7 @@
  #include "qqmlsettings_p.h"
  
@@ -197,10 +185,9 @@ index e8e640412b..e83147f612 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/sharedimage/plugin.cpp b/src/imports/sharedimage/plugin.cpp
-index d7c2ef8d17..79168d933b 100644
---- a/src/imports/sharedimage/plugin.cpp
-+++ b/src/imports/sharedimage/plugin.cpp
+diff -Nuar a/src/imports/sharedimage/plugin.cpp b/src/imports/sharedimage/plugin.cpp
+--- a/src/imports/sharedimage/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/sharedimage/plugin.cpp	2021-11-16 15:55:38.970626527 +0300
 @@ -100,6 +100,7 @@
  */
  
@@ -209,10 +196,9 @@ index d7c2ef8d17..79168d933b 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/statemachine/plugin.cpp b/src/imports/statemachine/plugin.cpp
-index c370504029..abb238965e 100644
---- a/src/imports/statemachine/plugin.cpp
-+++ b/src/imports/statemachine/plugin.cpp
+diff -Nuar a/src/imports/statemachine/plugin.cpp b/src/imports/statemachine/plugin.cpp
+--- a/src/imports/statemachine/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/statemachine/plugin.cpp	2021-11-16 15:55:38.970626527 +0300
 @@ -49,6 +49,7 @@
  #include <qqml.h>
  
@@ -221,11 +207,10 @@ index c370504029..abb238965e 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/testlib/main.cpp b/src/imports/testlib/main.cpp
-index 83fc150e6c..1da251c49b 100644
---- a/src/imports/testlib/main.cpp
-+++ b/src/imports/testlib/main.cpp
-@@ -51,6 +51,7 @@ QML_DECLARE_TYPE(QuickTestEvent)
+diff -Nuar a/src/imports/testlib/main.cpp b/src/imports/testlib/main.cpp
+--- a/src/imports/testlib/main.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/testlib/main.cpp	2021-11-16 15:55:38.970626527 +0300
+@@ -51,6 +51,7 @@
  QML_DECLARE_TYPE(QuickTestUtil)
  
  extern void qml_register_types_QtTest();
@@ -233,10 +218,9 @@ index 83fc150e6c..1da251c49b 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/wavefrontmesh/plugin.cpp b/src/imports/wavefrontmesh/plugin.cpp
-index eea0db19db..edd4d1dba5 100644
---- a/src/imports/wavefrontmesh/plugin.cpp
-+++ b/src/imports/wavefrontmesh/plugin.cpp
+diff -Nuar a/src/imports/wavefrontmesh/plugin.cpp b/src/imports/wavefrontmesh/plugin.cpp
+--- a/src/imports/wavefrontmesh/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/wavefrontmesh/plugin.cpp	2021-11-16 15:55:38.970626527 +0300
 @@ -43,6 +43,7 @@
  #include "qwavefrontmesh.h"
  
@@ -245,10 +229,9 @@ index eea0db19db..edd4d1dba5 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/imports/window/plugin.cpp b/src/imports/window/plugin.cpp
-index 5152fa02ec..ff2f10fde3 100644
---- a/src/imports/window/plugin.cpp
-+++ b/src/imports/window/plugin.cpp
+diff -Nuar a/src/imports/window/plugin.cpp b/src/imports/window/plugin.cpp
+--- a/src/imports/window/plugin.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/imports/window/plugin.cpp	2021-11-16 15:55:38.971626527 +0300
 @@ -42,6 +42,7 @@
  #include "plugin.h"
  
@@ -257,10 +240,9 @@ index 5152fa02ec..ff2f10fde3 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/particles/qtquickparticlesglobal_p.h b/src/particles/qtquickparticlesglobal_p.h
-index 927bc29050..91c2764060 100644
---- a/src/particles/qtquickparticlesglobal_p.h
-+++ b/src/particles/qtquickparticlesglobal_p.h
+diff -Nuar a/src/particles/qtquickparticlesglobal_p.h b/src/particles/qtquickparticlesglobal_p.h
+--- a/src/particles/qtquickparticlesglobal_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/particles/qtquickparticlesglobal_p.h	2021-11-16 15:55:38.971626527 +0300
 @@ -66,5 +66,6 @@
  #endif
  
@@ -268,11 +250,10 @@ index 927bc29050..91c2764060 100644
 +GHS_KEEP_REFERENCE(qml_register_types_QtQuick_Particles);
  
  #endif // QTQUICKPARTICLESGLOBAL_P_H
-diff --git a/src/qml/doc/src/cppintegration/definetypes.qdoc b/src/qml/doc/src/cppintegration/definetypes.qdoc
-index cbbbd9ba58..ece2fd5fd7 100644
---- a/src/qml/doc/src/cppintegration/definetypes.qdoc
-+++ b/src/qml/doc/src/cppintegration/definetypes.qdoc
-@@ -117,6 +117,14 @@ QML_IMPORT_NAME = com.mycompany.messaging
+diff -Nuar a/src/qml/doc/src/cppintegration/definetypes.qdoc b/src/qml/doc/src/cppintegration/definetypes.qdoc
+--- a/src/qml/doc/src/cppintegration/definetypes.qdoc	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/doc/src/cppintegration/definetypes.qdoc	2021-11-16 15:55:38.971626527 +0300
+@@ -117,6 +117,14 @@
  QML_IMPORT_MAJOR_VERSION = 1
  \endcode
  
@@ -287,10 +268,9 @@ index cbbbd9ba58..ece2fd5fd7 100644
  The type can be used in an \l{qtqml-syntax-basics.html#object-declarations}
  {object declaration} from QML, and its properties can be read and written to,
  as per the example below:
-diff --git a/src/qml/doc/src/qmlfunctions.qdoc b/src/qml/doc/src/qmlfunctions.qdoc
-index 12b7efb159..4e531ceb61 100644
---- a/src/qml/doc/src/qmlfunctions.qdoc
-+++ b/src/qml/doc/src/qmlfunctions.qdoc
+diff -Nuar a/src/qml/doc/src/qmlfunctions.qdoc b/src/qml/doc/src/qmlfunctions.qdoc
+--- a/src/qml/doc/src/qmlfunctions.qdoc	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/doc/src/qmlfunctions.qdoc	2021-11-16 15:55:38.971626527 +0300
 @@ -250,6 +250,10 @@
    This is useful for registering types that cannot be amended to add the macros,
    for example because they belong to 3rdparty libraries.
@@ -302,10 +282,9 @@ index 12b7efb159..4e531ceb61 100644
    \sa QML_ELEMENT, QML_NAMED_ELEMENT()
  */
  
-diff --git a/src/qml/jsruntime/qv4executableallocator.cpp b/src/qml/jsruntime/qv4executableallocator.cpp
-index 7ee6f39aa2..c06773d3c5 100644
---- a/src/qml/jsruntime/qv4executableallocator.cpp
-+++ b/src/qml/jsruntime/qv4executableallocator.cpp
+diff -Nuar a/src/qml/jsruntime/qv4executableallocator.cpp b/src/qml/jsruntime/qv4executableallocator.cpp
+--- a/src/qml/jsruntime/qv4executableallocator.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/jsruntime/qv4executableallocator.cpp	2021-11-16 15:55:38.972626527 +0300
 @@ -45,12 +45,22 @@
  
  using namespace QV4;
@@ -331,11 +310,10 @@ index 7ee6f39aa2..c06773d3c5 100644
  {
      return reinterpret_cast<void*>(addr + exceptionHandlerSize());
  }
-diff --git a/src/qml/jsruntime/qv4executableallocator_p.h b/src/qml/jsruntime/qv4executableallocator_p.h
-index f98f2c7d33..4735fb151f 100644
---- a/src/qml/jsruntime/qv4executableallocator_p.h
-+++ b/src/qml/jsruntime/qv4executableallocator_p.h
-@@ -86,8 +86,14 @@ public:
+diff -Nuar a/src/qml/jsruntime/qv4executableallocator_p.h b/src/qml/jsruntime/qv4executableallocator_p.h
+--- a/src/qml/jsruntime/qv4executableallocator_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/jsruntime/qv4executableallocator_p.h	2021-11-16 15:55:38.972626527 +0300
+@@ -86,8 +86,14 @@
              , free(true)
          {}
  
@@ -352,11 +330,10 @@ index f98f2c7d33..4735fb151f 100644
          void invalidate() { addr = 0; }
          bool isValid() const { return addr != 0; }
          void deallocate(ExecutableAllocator *allocator);
-diff --git a/src/qml/jsruntime/qv4functiontable_win64.cpp b/src/qml/jsruntime/qv4functiontable_win64.cpp
-index fc13dc2602..0cb98641cd 100644
---- a/src/qml/jsruntime/qv4functiontable_win64.cpp
-+++ b/src/qml/jsruntime/qv4functiontable_win64.cpp
-@@ -106,7 +106,7 @@ struct ExceptionHandlerRecord
+diff -Nuar a/src/qml/jsruntime/qv4functiontable_win64.cpp b/src/qml/jsruntime/qv4functiontable_win64.cpp
+--- a/src/qml/jsruntime/qv4functiontable_win64.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/jsruntime/qv4functiontable_win64.cpp	2021-11-16 15:55:38.972626527 +0300
+@@ -106,7 +106,7 @@
  void generateFunctionTable(Function *, JSC::MacroAssemblerCodeRef *codeRef)
  {
      ExceptionHandlerRecord *record = reinterpret_cast<ExceptionHandlerRecord *>(
@@ -365,7 +342,7 @@ index fc13dc2602..0cb98641cd 100644
  
      record->info.Version             = 1;
      record->info.Flags               = 0;
-@@ -136,7 +136,7 @@ void generateFunctionTable(Function *, JSC::MacroAssemblerCodeRef *codeRef)
+@@ -136,7 +136,7 @@
  void destroyFunctionTable(Function *, JSC::MacroAssemblerCodeRef *codeRef)
  {
      ExceptionHandlerRecord *record = reinterpret_cast<ExceptionHandlerRecord *>(
@@ -374,11 +351,10 @@ index fc13dc2602..0cb98641cd 100644
      if (!RtlDeleteFunctionTable(&record->handler)) {
          const unsigned int errorCode = GetLastError();
          qWarning() << "Failed to remove win64 unwind hook. Error code:" << errorCode;
-diff --git a/src/qml/jsruntime/qv4proxy.cpp b/src/qml/jsruntime/qv4proxy.cpp
-index 24676ffd00..8bfc9fc3ba 100644
---- a/src/qml/jsruntime/qv4proxy.cpp
-+++ b/src/qml/jsruntime/qv4proxy.cpp
-@@ -265,9 +265,9 @@ PropertyAttributes ProxyObject::virtualGetOwnProperty(const Managed *m, Property
+diff -Nuar a/src/qml/jsruntime/qv4proxy.cpp b/src/qml/jsruntime/qv4proxy.cpp
+--- a/src/qml/jsruntime/qv4proxy.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/jsruntime/qv4proxy.cpp	2021-11-16 15:55:38.972626527 +0300
+@@ -265,9 +265,9 @@
      ScopedProperty targetDesc(scope);
      PropertyAttributes targetAttributes = target->getOwnProperty(id, targetDesc);
      if (trapResult->isUndefined()) {
@@ -390,7 +366,7 @@ index 24676ffd00..8bfc9fc3ba 100644
              return Attr_Invalid;
          }
          if (!targetAttributes.isConfigurable() || !target->isExtensible()) {
-@@ -295,8 +295,10 @@ PropertyAttributes ProxyObject::virtualGetOwnProperty(const Managed *m, Property
+@@ -295,8 +295,10 @@
          }
      }
  
@@ -403,7 +379,7 @@ index 24676ffd00..8bfc9fc3ba 100644
      return resultAttributes;
  }
  
-@@ -622,8 +624,10 @@ OwnPropertyKeyIterator *ProxyObject::virtualOwnPropertyKeys(const Object *m, Val
+@@ -622,8 +624,10 @@
          else
              targetNonConfigurableKeys->push_back(keyAsValue);
      }
@@ -415,7 +391,7 @@ index 24676ffd00..8bfc9fc3ba 100644
  
      ScopedArrayObject uncheckedResultKeys(scope, scope.engine->newArrayObject());
      uncheckedResultKeys->copyArrayData(trapKeys);
-@@ -637,8 +641,10 @@ OwnPropertyKeyIterator *ProxyObject::virtualOwnPropertyKeys(const Object *m, Val
+@@ -637,8 +641,10 @@
          }
      }
  
@@ -427,11 +403,10 @@ index 24676ffd00..8bfc9fc3ba 100644
  
      len = targetConfigurableKeys->getLength();
      for (uint i = 0; i < len; ++i) {
-diff --git a/src/qml/jsruntime/qv4qmlcontext.cpp b/src/qml/jsruntime/qv4qmlcontext.cpp
-index e2d3b98ff6..6eece147a6 100644
---- a/src/qml/jsruntime/qv4qmlcontext.cpp
-+++ b/src/qml/jsruntime/qv4qmlcontext.cpp
-@@ -466,9 +466,9 @@ ReturnedValue QQmlContextWrapper::resolveQmlContextPropertyLookupGetter(Lookup *
+diff -Nuar a/src/qml/jsruntime/qv4qmlcontext.cpp b/src/qml/jsruntime/qv4qmlcontext.cpp
+--- a/src/qml/jsruntime/qv4qmlcontext.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/jsruntime/qv4qmlcontext.cpp	2021-11-16 15:55:38.973626527 +0300
+@@ -466,9 +466,9 @@
                  return static_cast<Heap::CallContext *>(ctx)->locals[index].asReturnedValue();
          }
  
@@ -443,11 +418,10 @@ index e2d3b98ff6..6eece147a6 100644
              break;
      }
  
-diff --git a/src/qml/memory/qv4mm.cpp b/src/qml/memory/qv4mm.cpp
-index 06caf04e5a..da149a67c4 100644
---- a/src/qml/memory/qv4mm.cpp
-+++ b/src/qml/memory/qv4mm.cpp
-@@ -981,7 +981,7 @@ void MemoryManager::sweep(bool lastSweep, ClassDestroyStatsCallback classCountPt
+diff -Nuar a/src/qml/memory/qv4mm.cpp b/src/qml/memory/qv4mm.cpp
+--- a/src/qml/memory/qv4mm.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/memory/qv4mm.cpp	2021-11-16 15:55:38.973626527 +0300
+@@ -981,7 +981,7 @@
  
      if (MultiplyWrappedQObjectMap *multiplyWrappedQObjects = engine->m_multiplyWrappedQObjects) {
          for (MultiplyWrappedQObjectMap::Iterator it = multiplyWrappedQObjects->begin(); it != multiplyWrappedQObjects->end();) {
@@ -456,10 +430,9 @@ index 06caf04e5a..da149a67c4 100644
                  it = multiplyWrappedQObjects->erase(it);
              else
                  ++it;
-diff --git a/src/qml/qml/qqmlextensionplugin.h b/src/qml/qml/qqmlextensionplugin.h
-index ef7ff422cd..afb3f99c4a 100644
---- a/src/qml/qml/qqmlextensionplugin.h
-+++ b/src/qml/qml/qqmlextensionplugin.h
+diff -Nuar a/src/qml/qml/qqmlextensionplugin.h b/src/qml/qml/qqmlextensionplugin.h
+--- a/src/qml/qml/qqmlextensionplugin.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/qml/qqmlextensionplugin.h	2021-11-16 15:55:38.973626527 +0300
 @@ -44,6 +44,13 @@
  #include <QtCore/QUrl>
  #include <QtQml/qqmlextensioninterface.h>
@@ -474,11 +447,10 @@ index ef7ff422cd..afb3f99c4a 100644
  QT_BEGIN_NAMESPACE
  
  class QQmlEngine;
-diff --git a/src/qml/qml/qqmlpropertycachecreator.cpp b/src/qml/qml/qqmlpropertycachecreator.cpp
-index 36581bda4e..88d80d88ab 100644
---- a/src/qml/qml/qqmlpropertycachecreator.cpp
-+++ b/src/qml/qml/qqmlpropertycachecreator.cpp
-@@ -90,6 +90,15 @@ QByteArray QQmlPropertyCacheCreatorBase::createClassNameTypeByUrl(const QUrl &ur
+diff -Nuar a/src/qml/qml/qqmlpropertycachecreator.cpp b/src/qml/qml/qqmlpropertycachecreator.cpp
+--- a/src/qml/qml/qqmlpropertycachecreator.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/qml/qqmlpropertycachecreator.cpp	2021-11-16 15:55:38.973626527 +0300
+@@ -90,6 +90,15 @@
              QByteArray::number(classIndexCounter.fetchAndAddRelaxed(1));
  }
  
@@ -494,11 +466,10 @@ index 36581bda4e..88d80d88ab 100644
  QQmlBindingInstantiationContext::QQmlBindingInstantiationContext(int referencingObjectIndex, const QV4::CompiledData::Binding *instantiatingBinding,
                                                                   const QString &instantiatingPropertyName, QQmlPropertyCache *referencingObjectPropertyCache)
      : referencingObjectIndex(referencingObjectIndex)
-diff --git a/src/qml/qml/qqmlpropertycachecreator_p.h b/src/qml/qml/qqmlpropertycachecreator_p.h
-index 6b02d6fb98..77e3763a49 100644
---- a/src/qml/qml/qqmlpropertycachecreator_p.h
-+++ b/src/qml/qml/qqmlpropertycachecreator_p.h
-@@ -104,6 +104,8 @@ public:
+diff -Nuar a/src/qml/qml/qqmlpropertycachecreator_p.h b/src/qml/qml/qqmlpropertycachecreator_p.h
+--- a/src/qml/qml/qqmlpropertycachecreator_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/qml/qqmlpropertycachecreator_p.h	2021-11-16 15:55:38.974626527 +0300
+@@ -104,6 +104,8 @@
      static int metaTypeForPropertyType(QV4::CompiledData::BuiltinType type);
  
      static QByteArray createClassNameTypeByUrl(const QUrl &url);
@@ -507,11 +478,10 @@ index 6b02d6fb98..77e3763a49 100644
  };
  
  template <typename ObjectContainer>
-diff --git a/src/qml/qml/qqmlpropertyvalidator.cpp b/src/qml/qml/qqmlpropertyvalidator.cpp
-index 3587609301..3a1f33113f 100644
---- a/src/qml/qml/qqmlpropertyvalidator.cpp
-+++ b/src/qml/qml/qqmlpropertyvalidator.cpp
-@@ -651,6 +651,19 @@ bool QQmlPropertyValidator::canCoerce(int to, QQmlPropertyCache *fromMo) const
+diff -Nuar a/src/qml/qml/qqmlpropertyvalidator.cpp b/src/qml/qml/qqmlpropertyvalidator.cpp
+--- a/src/qml/qml/qqmlpropertyvalidator.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/qml/qqmlpropertyvalidator.cpp	2021-11-16 15:55:38.974626527 +0300
+@@ -651,6 +651,19 @@
  {
      QQmlPropertyCache *toMo = enginePrivate->rawPropertyCacheForType(to);
  
@@ -531,7 +501,7 @@ index 3587609301..3a1f33113f 100644
      while (fromMo) {
          if (fromMo == toMo)
              return true;
-@@ -746,6 +759,18 @@ QQmlError QQmlPropertyValidator::validateObjectBinding(QQmlPropertyData *propert
+@@ -746,6 +759,18 @@
          // effect the properties on the type, but don't effect assignability
          // Using -1 for the minor version ensures that we get the raw metaObject.
          QQmlPropertyCache *propertyMetaObject = enginePrivate->rawPropertyCacheForType(propType, -1);
@@ -550,11 +520,10 @@ index 3587609301..3a1f33113f 100644
  
          if (propertyMetaObject) {
              // Will be true if the assigned type inherits propertyMetaObject
-diff --git a/src/qml/qml/qqmltypedata.cpp b/src/qml/qml/qqmltypedata.cpp
-index fc1d0cfbcf..92a90ea677 100644
---- a/src/qml/qml/qqmltypedata.cpp
-+++ b/src/qml/qml/qqmltypedata.cpp
-@@ -283,9 +283,7 @@ void setupICs(const ObjectContainer &container, QHash<int, InlineComponentData>
+diff -Nuar a/src/qml/qml/qqmltypedata.cpp b/src/qml/qml/qqmltypedata.cpp
+--- a/src/qml/qml/qqmltypedata.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/qml/qqmltypedata.cpp	2021-11-16 15:55:38.974626527 +0300
+@@ -283,9 +283,7 @@
      for (int i = 0; i != container->objectCount(); ++i) {
          auto root = container->objectAt(i);
          for (auto it = root->inlineComponentsBegin(); it != root->inlineComponentsEnd(); ++it) {
@@ -565,10 +534,9 @@ index fc1d0cfbcf..92a90ea677 100644
              InlineComponentData icDatum(QQmlMetaType::registerInternalCompositeType(className), int(it->objectIndex), int(it->nameIndex), 0, 0, 0);
              icData->insert(it->objectIndex, icDatum);
          }
-diff --git a/src/qml/qtqmlglobal_p.h b/src/qml/qtqmlglobal_p.h
-index a729729b67..7b0910fa13 100644
---- a/src/qml/qtqmlglobal_p.h
-+++ b/src/qml/qtqmlglobal_p.h
+diff -Nuar a/src/qml/qtqmlglobal_p.h b/src/qml/qtqmlglobal_p.h
+--- a/src/qml/qtqmlglobal_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qml/qtqmlglobal_p.h	2021-11-16 15:55:38.975626527 +0300
 @@ -53,6 +53,7 @@
  
  #include <QtCore/private/qglobal_p.h>
@@ -585,10 +553,9 @@ index a729729b67..7b0910fa13 100644
  
  #if !defined(QT_QMLDEVTOOLS_LIB) && !defined(QT_BUILD_QMLDEVTOOLS_LIB)
  #  define Q_QML_AUTOTEST_EXPORT Q_AUTOTEST_EXPORT
-diff --git a/src/qmldebug/qqmlprofilerevent_p.h b/src/qmldebug/qqmlprofilerevent_p.h
-index a7e37d1964..01b2f58f16 100644
---- a/src/qmldebug/qqmlprofilerevent_p.h
-+++ b/src/qmldebug/qqmlprofilerevent_p.h
+diff -Nuar a/src/qmldebug/qqmlprofilerevent_p.h b/src/qmldebug/qqmlprofilerevent_p.h
+--- a/src/qmldebug/qqmlprofilerevent_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmldebug/qqmlprofilerevent_p.h	2021-11-16 15:55:38.975626527 +0300
 @@ -48,6 +48,7 @@
  #include <QtCore/qmetatype.h>
  
@@ -597,10 +564,9 @@ index a7e37d1964..01b2f58f16 100644
  #include <type_traits>
  
  //
-diff --git a/src/qmlmodels/qqmldelegatemodel.cpp b/src/qmlmodels/qqmldelegatemodel.cpp
-index 725b9e8bc3..8a74a854f4 100644
---- a/src/qmlmodels/qqmldelegatemodel.cpp
-+++ b/src/qmlmodels/qqmldelegatemodel.cpp
+diff -Nuar a/src/qmlmodels/qqmldelegatemodel.cpp b/src/qmlmodels/qqmldelegatemodel.cpp
+--- a/src/qmlmodels/qqmldelegatemodel.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmlmodels/qqmldelegatemodel.cpp	2021-11-16 15:55:38.976626527 +0300
 @@ -1,6 +1,6 @@
  /****************************************************************************
  **
@@ -609,7 +575,7 @@ index 725b9e8bc3..8a74a854f4 100644
  ** Contact: https://www.qt.io/licensing/
  **
  ** This file is part of the QtQml module of the Qt Toolkit.
-@@ -389,6 +389,12 @@ void QQmlDelegateModelPrivate::connectToAbstractItemModel()
+@@ -389,6 +389,12 @@
                        q,  QQmlDelegateModel, SLOT(_q_rowsRemoved(QModelIndex,int,int)));
      qmlobject_connect(aim, QAbstractItemModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
                        q,  QQmlDelegateModel, SLOT(_q_rowsAboutToBeRemoved(QModelIndex,int,int)));
@@ -622,7 +588,7 @@ index 725b9e8bc3..8a74a854f4 100644
      qmlobject_connect(aim, QAbstractItemModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
                        q, QQmlDelegateModel, SLOT(_q_dataChanged(QModelIndex,QModelIndex,QVector<int>)));
      qmlobject_connect(aim, QAbstractItemModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-@@ -413,6 +419,12 @@ void QQmlDelegateModelPrivate::disconnectFromAbstractItemModel()
+@@ -413,6 +419,12 @@
                          q, SLOT(_q_rowsAboutToBeRemoved(QModelIndex,int,int)));
      QObject::disconnect(aim, SIGNAL(rowsRemoved(QModelIndex,int,int)),
                          q, SLOT(_q_rowsRemoved(QModelIndex,int,int)));
@@ -635,7 +601,7 @@ index 725b9e8bc3..8a74a854f4 100644
      QObject::disconnect(aim, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
                          q, SLOT(_q_dataChanged(QModelIndex,QModelIndex,QVector<int>)));
      QObject::disconnect(aim, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-@@ -1609,7 +1621,7 @@ void QQmlDelegateModelPrivate::itemsRemoved(
+@@ -1609,7 +1621,7 @@
          removed[i] = 0;
  
      for (const Compositor::Remove &remove : removes) {
@@ -644,7 +610,7 @@ index 725b9e8bc3..8a74a854f4 100644
              incrementIndexes(m_cache.at(cacheIndex), m_groupCount, removed);
  
          for (int i = 1; i < m_groupCount; ++i) {
-@@ -1953,6 +1965,38 @@ void QQmlDelegateModel::_q_rowsMoved(
+@@ -1953,6 +1965,38 @@
      }
  }
  
@@ -683,7 +649,7 @@ index 725b9e8bc3..8a74a854f4 100644
  void QQmlDelegateModel::_q_dataChanged(const QModelIndex &begin, const QModelIndex &end, const QVector<int> &roles)
  {
      Q_D(QQmlDelegateModel);
-@@ -2379,6 +2423,15 @@ void QQmlDelegateModelItem::destroyObject()
+@@ -2379,6 +2423,15 @@
          data->ownContext = nullptr;
          data->context = nullptr;
      }
@@ -699,11 +665,10 @@ index 725b9e8bc3..8a74a854f4 100644
      object->deleteLater();
  
      if (attached) {
-diff --git a/src/qmlmodels/qqmldelegatemodel_p.h b/src/qmlmodels/qqmldelegatemodel_p.h
-index 8aab4badca..d140bfbaaf 100644
---- a/src/qmlmodels/qqmldelegatemodel_p.h
-+++ b/src/qmlmodels/qqmldelegatemodel_p.h
-@@ -152,6 +152,9 @@ private Q_SLOTS:
+diff -Nuar a/src/qmlmodels/qqmldelegatemodel_p.h b/src/qmlmodels/qqmldelegatemodel_p.h
+--- a/src/qmlmodels/qqmldelegatemodel_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmlmodels/qqmldelegatemodel_p.h	2021-11-16 15:55:38.976626527 +0300
+@@ -152,6 +152,9 @@
      void _q_itemsMoved(int from, int to, int count);
      void _q_modelReset();
      void _q_rowsInserted(const QModelIndex &,int,int);
@@ -713,11 +678,10 @@ index 8aab4badca..d140bfbaaf 100644
      void _q_rowsAboutToBeRemoved(const QModelIndex &parent, int begin, int end);
      void _q_rowsRemoved(const QModelIndex &,int,int);
      void _q_rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
-diff --git a/src/qmlmodels/qqmllistmodel.cpp b/src/qmlmodels/qqmllistmodel.cpp
-index e07951cab3..8830e08097 100644
---- a/src/qmlmodels/qqmllistmodel.cpp
-+++ b/src/qmlmodels/qqmllistmodel.cpp
-@@ -703,7 +703,7 @@ void ListModel::set(int elementIndex, QV4::Object *object, ListModel::SetElement
+diff -Nuar a/src/qmlmodels/qqmllistmodel.cpp b/src/qmlmodels/qqmllistmodel.cpp
+--- a/src/qmlmodels/qqmllistmodel.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmlmodels/qqmllistmodel.cpp	2021-11-16 15:55:38.977626527 +0300
+@@ -703,7 +703,7 @@
          } else if (propertyValue->isNullOrUndefined()) {
              if (reason == SetElement::WasJustInserted) {
                  QQmlError err;
@@ -726,10 +690,9 @@ index e07951cab3..8830e08097 100644
                  err.setDescription(QString::fromLatin1("%1 is %2. Adding an object with a %2 member does not create a role for it.").arg(memberName, propertyValue->isNull() ? QLatin1String("null") : QLatin1String("undefined")));
                  qmlWarning(nullptr, err);
              } else {
-diff --git a/src/qmlmodels/qtqmlmodelsglobal_p.h b/src/qmlmodels/qtqmlmodelsglobal_p.h
-index 1a1157138d..24df6ef7b3 100644
---- a/src/qmlmodels/qtqmlmodelsglobal_p.h
-+++ b/src/qmlmodels/qtqmlmodelsglobal_p.h
+diff -Nuar a/src/qmlmodels/qtqmlmodelsglobal_p.h b/src/qmlmodels/qtqmlmodelsglobal_p.h
+--- a/src/qmlmodels/qtqmlmodelsglobal_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmlmodels/qtqmlmodelsglobal_p.h	2021-11-16 15:55:38.977626527 +0300
 @@ -59,5 +59,6 @@
  #define Q_QMLMODELS_AUTOTEST_EXPORT Q_AUTOTEST_EXPORT
  
@@ -737,11 +700,10 @@ index 1a1157138d..24df6ef7b3 100644
 +GHS_KEEP_REFERENCE(qml_register_types_QtQml_Models);
  
  #endif // QTQMLMODELSGLOBAL_P_H
-diff --git a/src/qmltyperegistrar/qmltypes.prf b/src/qmltyperegistrar/qmltypes.prf
-index 354fa1736f..2cc0027b7e 100644
---- a/src/qmltyperegistrar/qmltypes.prf
-+++ b/src/qmltyperegistrar/qmltypes.prf
-@@ -44,7 +44,8 @@ qt_module_deps = $$replace(qt_module_deps, _private$, '')
+diff -Nuar a/src/qmltyperegistrar/qmltypes.prf b/src/qmltyperegistrar/qmltypes.prf
+--- a/src/qmltyperegistrar/qmltypes.prf	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmltyperegistrar/qmltypes.prf	2021-11-16 15:55:38.977626527 +0300
+@@ -44,7 +44,8 @@
  qt_module_deps = $$unique(qt_module_deps)
  
  for(dep, qt_module_deps) {
@@ -751,10 +713,9 @@ index 354fa1736f..2cc0027b7e 100644
      INSTALLED_METATYPES = $$[QT_INSTALL_LIBS]/metatypes/$$METATYPES_FILENAME
      isEmpty(MODULE_BASE_OUTDIR) {
          QML_FOREIGN_METATYPES += $$INSTALLED_METATYPES
-diff --git a/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h b/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h
-index c75d5f3129..6452567f6b 100644
---- a/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h
-+++ b/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h
+diff -Nuar a/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h b/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h
+--- a/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/qmlworkerscript/qtqmlworkerscriptglobal_p.h	2021-11-16 15:55:38.977626527 +0300
 @@ -58,5 +58,6 @@
  #define Q_QMLWORKERSCRIPT_AUTOTEST_EXPORT Q_AUTOTEST_EXPORT
  
@@ -762,11 +723,10 @@ index c75d5f3129..6452567f6b 100644
 +GHS_KEEP_REFERENCE(qml_register_types_QtQml_WorkerScript);
  
  #endif // QTQMLWORKERSCRIPTGLOBAL_P_H
-diff --git a/src/quick/designer/qquickdesignersupportproperties.cpp b/src/quick/designer/qquickdesignersupportproperties.cpp
-index 335795acf1..fb6a5fb324 100644
---- a/src/quick/designer/qquickdesignersupportproperties.cpp
-+++ b/src/quick/designer/qquickdesignersupportproperties.cpp
-@@ -137,11 +137,8 @@ QQuickDesignerSupport::PropertyNameList QQuickDesignerSupportProperties::propert
+diff -Nuar a/src/quick/designer/qquickdesignersupportproperties.cpp b/src/quick/designer/qquickdesignersupportproperties.cpp
+--- a/src/quick/designer/qquickdesignersupportproperties.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/designer/qquickdesignersupportproperties.cpp	2021-11-16 15:55:38.978626527 +0300
+@@ -137,11 +137,8 @@
      if (inspectedObjects == nullptr)
          inspectedObjects = &localObjectList;
  
@@ -780,7 +740,7 @@ index 335795acf1..fb6a5fb324 100644
  
      const QMetaObject *metaObject = object->metaObject();
      for (int index = 0; index < metaObject->propertyCount(); ++index) {
-@@ -194,12 +191,8 @@ QQuickDesignerSupport::PropertyNameList QQuickDesignerSupportProperties::allProp
+@@ -194,12 +191,8 @@
      if (inspectedObjects == nullptr)
          inspectedObjects = &localObjectList;
  
@@ -795,11 +755,10 @@ index 335795acf1..fb6a5fb324 100644
  
      const QMetaObject *metaObject = object->metaObject();
  
-diff --git a/src/quick/doc/snippets/qquickview-ex.cpp b/src/quick/doc/snippets/qquickview-ex.cpp
-index 32406f8f2f..5f93dfdbe8 100644
---- a/src/quick/doc/snippets/qquickview-ex.cpp
-+++ b/src/quick/doc/snippets/qquickview-ex.cpp
-@@ -59,3 +59,12 @@ int main(int argc, char *argv[])
+diff -Nuar a/src/quick/doc/snippets/qquickview-ex.cpp b/src/quick/doc/snippets/qquickview-ex.cpp
+--- a/src/quick/doc/snippets/qquickview-ex.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/doc/snippets/qquickview-ex.cpp	2021-11-16 15:55:38.978626527 +0300
+@@ -59,3 +59,12 @@
      return app.exec();
  }
  //![0]
@@ -812,10 +771,86 @@ index 32406f8f2f..5f93dfdbe8 100644
 +    view->show();
 +//![1]
 +}
-diff --git a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
-index 67c4611d9e..e02df00595 100644
---- a/src/quick/items/qquickitem.cpp
-+++ b/src/quick/items/qquickitem.cpp
+diff -Nuar a/src/quick/handlers/qquickhandlerpoint.cpp b/src/quick/handlers/qquickhandlerpoint.cpp
+--- a/src/quick/handlers/qquickhandlerpoint.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/handlers/qquickhandlerpoint.cpp	2021-11-16 15:58:06.198615000 +0300
+@@ -82,7 +82,7 @@
+ 
+ void QQuickHandlerPoint::reset()
+ {
+-    m_id = 0;
++    m_id = -1;
+     m_uniqueId = QPointingDeviceUniqueId();
+     m_position = QPointF();
+     m_scenePosition = QPointF();
+@@ -165,7 +165,7 @@
+         pressureSum += point.pressure();
+         ellipseDiameterSum += point.ellipseDiameters();
+     }
+-    m_id = 0;
++    m_id = -1;
+     m_uniqueId = QPointingDeviceUniqueId();
+     // all points are required to be from the same event, so pressed buttons and modifiers should be the same
+     m_pressedButtons = points.first().pressedButtons();
+diff -Nuar a/src/quick/handlers/qquicksinglepointhandler.cpp b/src/quick/handlers/qquicksinglepointhandler.cpp
+--- a/src/quick/handlers/qquicksinglepointhandler.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/handlers/qquicksinglepointhandler.cpp	2021-11-16 15:58:25.358614000 +0300
+@@ -75,7 +75,7 @@
+     if (!QQuickPointerDeviceHandler::wantsPointerEvent(event))
+         return false;
+ 
+-    if (d->pointInfo.id()) {
++    if (d->pointInfo.id() != -1) {
+         // We already know which one we want, so check whether it's there.
+         // It's expected to be an update or a release.
+         // If we no longer want it, cancel the grab.
+@@ -125,7 +125,7 @@
+             chosen->setAccepted();
+         }
+     }
+-    return d->pointInfo.id();
++    return d->pointInfo.id() != -1;
+ }
+ 
+ void QQuickSinglePointHandler::handlePointerEventImpl(QQuickPointerEvent *event)
+diff -Nuar a/src/quick/items/qquickitemanimation.cpp b/src/quick/items/qquickitemanimation.cpp
+--- a/src/quick/items/qquickitemanimation.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickitemanimation.cpp	2021-11-16 15:55:38.983626526 +0300
+@@ -230,8 +230,8 @@
+ {
+     Q_D(QQuickParentAnimation);
+ 
+-    QQuickParentAnimationData *data = new QQuickParentAnimationData;
+-    QQuickParentAnimationData *viaData = new QQuickParentAnimationData;
++    std::unique_ptr<QQuickParentAnimationData> data(new QQuickParentAnimationData);
++    std::unique_ptr<QQuickParentAnimationData> viaData(new QQuickParentAnimationData);
+ 
+     bool hasExplicit = false;
+     if (d->target && d->newParent) {
+@@ -377,8 +377,8 @@
+         QParallelAnimationGroupJob *ag = new QParallelAnimationGroupJob;
+ 
+         if (d->via)
+-            viaAction->setAnimAction(viaData);
+-        targetAction->setAnimAction(data);
++            viaAction->setAnimAction(viaData.release());
++        targetAction->setAnimAction(data.release());
+ 
+         //take care of any child animations
+         bool valid = d->defaultProperty.isValid();
+@@ -405,9 +405,6 @@
+             topLevelGroup->appendAnimation(d->via ? viaAction : targetAction);
+         }
+         return initInstance(topLevelGroup);
+-    } else {
+-        delete data;
+-        delete viaData;
+     }
+     return nullptr;
+ }
+diff -Nuar a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
+--- a/src/quick/items/qquickitem.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickitem.cpp	2021-11-16 15:55:38.982626526 +0300
 @@ -1,9 +1,9 @@
  /****************************************************************************
  **
@@ -828,7 +863,7 @@ index 67c4611d9e..e02df00595 100644
  **
  ** $QT_BEGIN_LICENSE:LGPL$
  ** Commercial License Usage
-@@ -1883,7 +1883,23 @@ void QQuickItemPrivate::updateSubFocusItem(QQuickItem *scope, bool focus)
+@@ -1883,7 +1883,23 @@
      \endqml
  
  
@@ -853,7 +888,7 @@ index 67c4611d9e..e02df00595 100644
  
      Key handling is available to all Item-based visual types via the \l Keys
      attached property.  The \e Keys attached property provides basic signals
-@@ -3753,6 +3769,14 @@ void QQuickItem::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeo
+@@ -3753,6 +3769,14 @@
          emit widthChanged();
      if (change.heightChange())
          emit heightChanged();
@@ -868,7 +903,7 @@ index 67c4611d9e..e02df00595 100644
  }
  
  /*!
-@@ -7293,7 +7317,9 @@ bool QQuickItem::isAncestorOf(const QQuickItem *child) const
+@@ -7293,7 +7317,9 @@
      If an item does not accept the mouse button for a particular mouse event,
      the mouse event will not be delivered to the item and will be delivered
      to the next item in the item hierarchy instead.
@@ -879,7 +914,7 @@ index 67c4611d9e..e02df00595 100644
  Qt::MouseButtons QQuickItem::acceptedMouseButtons() const
  {
      Q_D(const QQuickItem);
-@@ -7302,7 +7328,13 @@ Qt::MouseButtons QQuickItem::acceptedMouseButtons() const
+@@ -7302,7 +7328,13 @@
  
  /*!
      Sets the mouse buttons accepted by this item to \a buttons.
@@ -894,47 +929,10 @@ index 67c4611d9e..e02df00595 100644
  void QQuickItem::setAcceptedMouseButtons(Qt::MouseButtons buttons)
  {
      Q_D(QQuickItem);
-diff --git a/src/quick/items/qquickitemanimation.cpp b/src/quick/items/qquickitemanimation.cpp
-index 23694e2de3..dfb56ccc00 100644
---- a/src/quick/items/qquickitemanimation.cpp
-+++ b/src/quick/items/qquickitemanimation.cpp
-@@ -230,8 +230,8 @@ QAbstractAnimationJob* QQuickParentAnimation::transition(QQuickStateActions &act
- {
-     Q_D(QQuickParentAnimation);
- 
--    QQuickParentAnimationData *data = new QQuickParentAnimationData;
--    QQuickParentAnimationData *viaData = new QQuickParentAnimationData;
-+    std::unique_ptr<QQuickParentAnimationData> data(new QQuickParentAnimationData);
-+    std::unique_ptr<QQuickParentAnimationData> viaData(new QQuickParentAnimationData);
- 
-     bool hasExplicit = false;
-     if (d->target && d->newParent) {
-@@ -377,8 +377,8 @@ QAbstractAnimationJob* QQuickParentAnimation::transition(QQuickStateActions &act
-         QParallelAnimationGroupJob *ag = new QParallelAnimationGroupJob;
- 
-         if (d->via)
--            viaAction->setAnimAction(viaData);
--        targetAction->setAnimAction(data);
-+            viaAction->setAnimAction(viaData.release());
-+        targetAction->setAnimAction(data.release());
- 
-         //take care of any child animations
-         bool valid = d->defaultProperty.isValid();
-@@ -405,9 +405,6 @@ QAbstractAnimationJob* QQuickParentAnimation::transition(QQuickStateActions &act
-             topLevelGroup->appendAnimation(d->via ? viaAction : targetAction);
-         }
-         return initInstance(topLevelGroup);
--    } else {
--        delete data;
--        delete viaData;
-     }
-     return nullptr;
- }
-diff --git a/src/quick/items/qquickloader.cpp b/src/quick/items/qquickloader.cpp
-index 8cd63a4236..a6f7009946 100644
---- a/src/quick/items/qquickloader.cpp
-+++ b/src/quick/items/qquickloader.cpp
-@@ -738,6 +738,9 @@ void QQuickLoaderPrivate::_q_sourceLoaded()
+diff -Nuar a/src/quick/items/qquickloader.cpp b/src/quick/items/qquickloader.cpp
+--- a/src/quick/items/qquickloader.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickloader.cpp	2021-11-16 15:55:38.983626526 +0300
+@@ -738,6 +738,9 @@
          return;
      }
  
@@ -944,11 +942,10 @@ index 8cd63a4236..a6f7009946 100644
      QQmlContext *creationContext = component->creationContext();
      if (!creationContext) creationContext = qmlContext(q);
      itemContext = new QQmlContext(creationContext);
-diff --git a/src/quick/items/qquickmousearea_p_p.h b/src/quick/items/qquickmousearea_p_p.h
-index fba383e268..0d63618622 100644
---- a/src/quick/items/qquickmousearea_p_p.h
-+++ b/src/quick/items/qquickmousearea_p_p.h
-@@ -61,7 +61,6 @@ QT_BEGIN_NAMESPACE
+diff -Nuar a/src/quick/items/qquickmousearea_p_p.h b/src/quick/items/qquickmousearea_p_p.h
+--- a/src/quick/items/qquickmousearea_p_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickmousearea_p_p.h	2021-11-16 15:55:38.983626526 +0300
+@@ -61,7 +61,6 @@
  
  class QQuickMouseEvent;
  class QQuickMouseArea;
@@ -956,7 +953,7 @@ index fba383e268..0d63618622 100644
  class QQuickMouseAreaPrivate : public QQuickItemPrivate
  {
      Q_DECLARE_PUBLIC(QQuickMouseArea)
-@@ -100,7 +99,6 @@ public:
+@@ -100,7 +99,6 @@
  #if QT_CONFIG(quick_draganddrop)
      QQuickDrag *drag;
  #endif
@@ -964,11 +961,10 @@ index fba383e268..0d63618622 100644
      QPointF startScene;
      QPointF targetStartPos;
      QPointF lastPos;
-diff --git a/src/quick/items/qquickshadereffectsource.cpp b/src/quick/items/qquickshadereffectsource.cpp
-index 4f61d61309..b298ed74da 100644
---- a/src/quick/items/qquickshadereffectsource.cpp
-+++ b/src/quick/items/qquickshadereffectsource.cpp
-@@ -344,7 +344,6 @@ void QQuickShaderEffectSource::setSourceItem(QQuickItem *item)
+diff -Nuar a/src/quick/items/qquickshadereffectsource.cpp b/src/quick/items/qquickshadereffectsource.cpp
+--- a/src/quick/items/qquickshadereffectsource.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickshadereffectsource.cpp	2021-11-16 15:55:38.983626526 +0300
+@@ -344,7 +344,6 @@
              d->refFromEffectItem(m_hideSource);
              d->addItemChangeListener(this, QQuickItemPrivate::Geometry);
              connect(m_sourceItem, SIGNAL(destroyed(QObject*)), this, SLOT(sourceItemDestroyed(QObject*)));
@@ -976,7 +972,7 @@ index 4f61d61309..b298ed74da 100644
          } else {
              qWarning("ShaderEffectSource: sourceItem and ShaderEffectSource must both be children of the same window.");
              m_sourceItem = nullptr;
-@@ -364,13 +363,6 @@ void QQuickShaderEffectSource::sourceItemDestroyed(QObject *item)
+@@ -364,13 +363,6 @@
  }
  
  
@@ -990,11 +986,10 @@ index 4f61d61309..b298ed74da 100644
  /*!
      \qmlproperty rect QtQuick::ShaderEffectSource::sourceRect
  
-diff --git a/src/quick/items/qquickshadereffectsource_p.h b/src/quick/items/qquickshadereffectsource_p.h
-index 4deb6c70a3..c0a1ccab78 100644
---- a/src/quick/items/qquickshadereffectsource_p.h
-+++ b/src/quick/items/qquickshadereffectsource_p.h
-@@ -173,7 +173,6 @@ Q_SIGNALS:
+diff -Nuar a/src/quick/items/qquickshadereffectsource_p.h b/src/quick/items/qquickshadereffectsource_p.h
+--- a/src/quick/items/qquickshadereffectsource_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickshadereffectsource_p.h	2021-11-16 15:55:38.984626526 +0300
+@@ -173,7 +173,6 @@
  private Q_SLOTS:
      void sourceItemDestroyed(QObject *item);
      void invalidateSceneGraph();
@@ -1002,11 +997,10 @@ index 4deb6c70a3..c0a1ccab78 100644
  
  protected:
      void releaseResources() override;
-diff --git a/src/quick/items/qquicktableview.cpp b/src/quick/items/qquicktableview.cpp
-index 7b73fcb393..1349d308d7 100644
---- a/src/quick/items/qquicktableview.cpp
-+++ b/src/quick/items/qquicktableview.cpp
-@@ -1760,11 +1760,8 @@ void QQuickTableViewPrivate::calculateTopLeft(QPoint &topLeftCell, QPointF &topL
+diff -Nuar a/src/quick/items/qquicktableview.cpp b/src/quick/items/qquicktableview.cpp
+--- a/src/quick/items/qquicktableview.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquicktableview.cpp	2021-11-16 15:55:38.984626526 +0300
+@@ -1760,11 +1760,8 @@
          const auto syncView_d = syncView->d_func();
  
          if (syncView_d->loadedItems.isEmpty()) {
@@ -1020,11 +1014,10 @@ index 7b73fcb393..1349d308d7 100644
              return;
          }
  
-diff --git a/src/quick/items/qquicktext.cpp b/src/quick/items/qquicktext.cpp
-index 90469ee82b..4ddd2a41bc 100644
---- a/src/quick/items/qquicktext.cpp
-+++ b/src/quick/items/qquicktext.cpp
-@@ -398,6 +398,8 @@ void QQuickTextPrivate::updateSize()
+diff -Nuar a/src/quick/items/qquicktext.cpp b/src/quick/items/qquicktext.cpp
+--- a/src/quick/items/qquicktext.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquicktext.cpp	2021-11-16 15:55:38.985626526 +0300
+@@ -398,6 +398,8 @@
          layedOutTextRect = QRectF(0, 0, 0, fontHeight);
          advance = QSizeF();
          signalSizeChange(previousSize);
@@ -1033,7 +1026,7 @@ index 90469ee82b..4ddd2a41bc 100644
          updateType = UpdatePaintNode;
          q->update();
          return;
-@@ -2166,7 +2168,7 @@ void QQuickText::resetMaximumLineCount()
+@@ -2166,7 +2168,7 @@
      <img src="" align="top,middle,bottom" width="" height=""> - inline images
      <ol type="">, <ul type=""> and <li> - ordered and unordered lists
      <pre></pre> - preformatted
@@ -1042,11 +1035,10 @@ index 90469ee82b..4ddd2a41bc 100644
      \endcode
  
      \c Text.StyledText parser is strict, requiring tags to be correctly nested.
-diff --git a/src/quick/items/qquicktextinput.cpp b/src/quick/items/qquicktextinput.cpp
-index 6275b298ed..bb78ead0e8 100644
---- a/src/quick/items/qquicktextinput.cpp
-+++ b/src/quick/items/qquicktextinput.cpp
-@@ -3831,8 +3831,7 @@ void QQuickTextInputPrivate::parseInputMask(const QString &maskFields)
+diff -Nuar a/src/quick/items/qquicktextinput.cpp b/src/quick/items/qquicktextinput.cpp
+--- a/src/quick/items/qquicktextinput.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquicktextinput.cpp	2021-11-16 15:55:38.986626526 +0300
+@@ -3831,8 +3831,7 @@
      int delimiter = maskFields.indexOf(QLatin1Char(';'));
      if (maskFields.isEmpty() || delimiter == 0) {
          if (m_maskData) {
@@ -1056,7 +1048,7 @@ index 6275b298ed..bb78ead0e8 100644
              m_maxLength = 32767;
              internalSetText(QString());
          }
-@@ -3863,8 +3862,7 @@ void QQuickTextInputPrivate::parseInputMask(const QString &maskFields)
+@@ -3863,8 +3862,7 @@
              m_maxLength++;
      }
  
@@ -1066,10 +1058,9 @@ index 6275b298ed..bb78ead0e8 100644
  
      MaskInputData::Casemode m = MaskInputData::NoCaseMode;
      c = 0;
-diff --git a/src/quick/items/qquicktextinput_p_p.h b/src/quick/items/qquicktextinput_p_p.h
-index 7965f3d3f4..7fbba49405 100644
---- a/src/quick/items/qquicktextinput_p_p.h
-+++ b/src/quick/items/qquicktextinput_p_p.h
+diff -Nuar a/src/quick/items/qquicktextinput_p_p.h b/src/quick/items/qquicktextinput_p_p.h
+--- a/src/quick/items/qquicktextinput_p_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquicktextinput_p_p.h	2021-11-16 15:55:38.986626526 +0300
 @@ -58,6 +58,8 @@
  
  #include "qplatformdefs.h"
@@ -1079,7 +1070,7 @@ index 7965f3d3f4..7fbba49405 100644
  //
  //  W A R N I N G
  //  -------------
-@@ -230,7 +232,7 @@ public:
+@@ -230,7 +232,7 @@
  
      QQuickItem *cursorItem;
      QQuickTextNode *textNode;
@@ -1088,11 +1079,10 @@ index 7965f3d3f4..7fbba49405 100644
      QInputControl *m_inputControl;
  
      QList<int> m_transactions;
-diff --git a/src/quick/items/qquickview.cpp b/src/quick/items/qquickview.cpp
-index 97f6689d8a..b3a5270e9b 100644
---- a/src/quick/items/qquickview.cpp
-+++ b/src/quick/items/qquickview.cpp
-@@ -240,7 +240,11 @@ void QQuickView::setSource(const QUrl& url)
+diff -Nuar a/src/quick/items/qquickview.cpp b/src/quick/items/qquickview.cpp
+--- a/src/quick/items/qquickview.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickview.cpp	2021-11-16 15:55:38.987626526 +0300
+@@ -240,7 +240,11 @@
     Sets the initial properties \a initialProperties with which the QML
     component gets initialized after calling \l QQuickView::setSource().
  
@@ -1104,11 +1094,10 @@ index 97f6689d8a..b3a5270e9b 100644
  
     \sa QQmlComponent::createWithInitialProperties()
     \since 5.14
-diff --git a/src/quick/items/qquickwindow.cpp b/src/quick/items/qquickwindow.cpp
-index d0c9ad5454..fbb807ca96 100644
---- a/src/quick/items/qquickwindow.cpp
-+++ b/src/quick/items/qquickwindow.cpp
-@@ -450,15 +450,14 @@ void QQuickWindow::physicalDpiChanged()
+diff -Nuar a/src/quick/items/qquickwindow.cpp b/src/quick/items/qquickwindow.cpp
+--- a/src/quick/items/qquickwindow.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/items/qquickwindow.cpp	2021-11-16 15:55:38.988626526 +0300
+@@ -450,15 +450,14 @@
  void QQuickWindow::handleScreenChanged(QScreen *screen)
  {
      Q_D(QQuickWindow);
@@ -1127,7 +1116,7 @@ index d0c9ad5454..fbb807ca96 100644
      }
  
      d->forcePolish();
-@@ -2864,6 +2863,14 @@ void QQuickWindowPrivate::deliverMatchingPointsToItem(QQuickItem *item, QQuickPo
+@@ -2864,6 +2863,14 @@
  {
      Q_Q(QQuickWindow);
      QQuickItemPrivate *itemPrivate = QQuickItemPrivate::get(item);
@@ -1142,10 +1131,9 @@ index d0c9ad5454..fbb807ca96 100644
      pointerEvent->localize(item);
  
      // Let the Item's handlers (if any) have the event first.
-diff --git a/src/quick/qtquickglobal_p.h b/src/quick/qtquickglobal_p.h
-index 80e59563c7..97680569e7 100644
---- a/src/quick/qtquickglobal_p.h
-+++ b/src/quick/qtquickglobal_p.h
+diff -Nuar a/src/quick/qtquickglobal_p.h b/src/quick/qtquickglobal_p.h
+--- a/src/quick/qtquickglobal_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/qtquickglobal_p.h	2021-11-16 15:55:38.988626526 +0300
 @@ -62,6 +62,7 @@
  #define Q_QUICK_PRIVATE_EXPORT Q_QUICK_EXPORT
  
@@ -1154,11 +1142,10 @@ index 80e59563c7..97680569e7 100644
  
  QT_BEGIN_NAMESPACE
  
-diff --git a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
-index 3c60f830de..0fd6581dc4 100644
---- a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
-+++ b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
-@@ -428,6 +428,18 @@ QSGTextMaskRhiShader::QSGTextMaskRhiShader(QFontEngine::GlyphFormat glyphFormat)
+diff -Nuar a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
+--- a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp	2021-11-16 15:55:38.989626526 +0300
+@@ -428,6 +428,18 @@
                        QStringLiteral(":/qt-project.org/scenegraph/shaders_ng/textmask.frag.qsb"));
  }
  
@@ -1177,7 +1164,7 @@ index 3c60f830de..0fd6581dc4 100644
  bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
                                               QSGMaterial *newMaterial, QSGMaterial *oldMaterial)
  {
-@@ -443,11 +455,14 @@ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
+@@ -443,11 +455,14 @@
  
      bool changed = false;
      QByteArray *buf = state.uniformData();
@@ -1195,7 +1182,7 @@ index 3c60f830de..0fd6581dc4 100644
          changed = true;
      }
  
-@@ -456,13 +471,13 @@ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
+@@ -456,13 +471,13 @@
      if (updated || !oldMat || oldRtex != newRtex) {
          const QVector2D textureScale = QVector2D(1.0f / mat->rhiGlyphCache()->width(),
                                                   1.0f / mat->rhiGlyphCache()->height());
@@ -1211,7 +1198,7 @@ index 3c60f830de..0fd6581dc4 100644
      }
  
      // move texture uploads/copies onto the renderer's soon-to-be-committed list
-@@ -510,11 +525,11 @@ bool QSG8BitTextMaskRhiShader::updateUniformData(RenderState &state,
+@@ -510,11 +525,11 @@
      QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
  
      QByteArray *buf = state.uniformData();
@@ -1225,7 +1212,7 @@ index 3c60f830de..0fd6581dc4 100644
          changed = true;
      }
  
-@@ -553,12 +568,12 @@ bool QSG24BitTextMaskRhiShader::updateUniformData(RenderState &state,
+@@ -553,12 +568,12 @@
      QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
  
      QByteArray *buf = state.uniformData();
@@ -1240,7 +1227,7 @@ index 3c60f830de..0fd6581dc4 100644
          changed = true;
      }
  
-@@ -608,12 +623,12 @@ bool QSG32BitColorTextRhiShader::updateUniformData(RenderState &state,
+@@ -608,12 +623,12 @@
      QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
  
      QByteArray *buf = state.uniformData();
@@ -1255,7 +1242,7 @@ index 3c60f830de..0fd6581dc4 100644
          changed = true;
      }
  
-@@ -649,20 +664,17 @@ bool QSGStyledTextRhiShader::updateUniformData(RenderState &state,
+@@ -649,20 +664,17 @@
      QSGStyledTextMaterial *oldMat = static_cast<QSGStyledTextMaterial *>(oldMaterial);
  
      QByteArray *buf = state.uniformData();
@@ -1279,11 +1266,10 @@ index 3c60f830de..0fd6581dc4 100644
          changed = true;
      }
  
-diff --git a/src/quick/scenegraph/shaders_ng/24bittextmask.frag b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
-index bc3826a924..ed8da4cd30 100644
---- a/src/quick/scenegraph/shaders_ng/24bittextmask.frag
-+++ b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
-@@ -6,8 +6,9 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/24bittextmask.frag b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
+--- a/src/quick/scenegraph/shaders_ng/24bittextmask.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/24bittextmask.frag	2021-11-16 15:55:38.989626526 +0300
+@@ -6,8 +6,9 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1295,11 +1281,10 @@ index bc3826a924..ed8da4cd30 100644
      vec2 textureScale;
      float dpr;
  } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
-index 63e445f90b..4198a4d339 100644
---- a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
-+++ b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
-@@ -6,8 +6,9 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
+--- a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag	2021-11-16 15:55:38.989626526 +0300
+@@ -6,8 +6,9 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1311,11 +1296,10 @@ index 63e445f90b..4198a4d339 100644
      vec2 textureScale;
      float dpr;
  } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/8bittextmask.frag b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
-index 6304e821ff..a06743876d 100644
---- a/src/quick/scenegraph/shaders_ng/8bittextmask.frag
-+++ b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
-@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
+--- a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag	2021-11-16 15:55:38.989626526 +0300
+@@ -6,7 +6,8 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1325,11 +1309,10 @@ index 6304e821ff..a06743876d 100644
      vec4 color;
      vec2 textureScale;
      float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
-index 0d0fa1cd3a..f725cbc5e7 100644
---- a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
-+++ b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
-@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/8bittextmask.frag b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
+--- a/src/quick/scenegraph/shaders_ng/8bittextmask.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/8bittextmask.frag	2021-11-16 15:55:38.989626526 +0300
+@@ -6,7 +6,8 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1339,11 +1322,10 @@ index 0d0fa1cd3a..f725cbc5e7 100644
      vec4 color;
      vec2 textureScale;
      float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext.frag b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
-index 947d161a50..e2f82d3845 100644
---- a/src/quick/scenegraph/shaders_ng/outlinedtext.frag
-+++ b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
-@@ -11,11 +11,12 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
+--- a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag	2021-11-16 15:55:38.990626526 +0300
+@@ -11,11 +11,12 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1358,11 +1340,28 @@ index 947d161a50..e2f82d3845 100644
      vec4 styleColor;
      vec2 shift;
  } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext.vert b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
-index 023f9dfdc2..4068e42f28 100644
---- a/src/quick/scenegraph/shaders_ng/outlinedtext.vert
-+++ b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
-@@ -10,11 +10,12 @@ layout(location = 3) out vec2 sCoordLeft;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/outlinedtext.frag b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
+--- a/src/quick/scenegraph/shaders_ng/outlinedtext.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/outlinedtext.frag	2021-11-16 15:55:38.989626526 +0300
+@@ -11,11 +11,12 @@
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    // must match styledtext
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
++    // the above must stay compatible with textmask/8bittextmask
+     vec4 styleColor;
+     vec2 shift;
+ } ubuf;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/outlinedtext.vert b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
+--- a/src/quick/scenegraph/shaders_ng/outlinedtext.vert	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/outlinedtext.vert	2021-11-16 15:55:38.990626526 +0300
+@@ -10,11 +10,12 @@
  layout(location = 4) out vec2 sCoordRight;
  
  layout(std140, binding = 0) uniform buf {
@@ -1377,7 +1376,7 @@ index 023f9dfdc2..4068e42f28 100644
      vec4 styleColor;
      vec2 shift;
  } ubuf;
-@@ -28,6 +29,6 @@ void main()
+@@ -28,6 +29,6 @@
       sCoordDown = (tCoord - vec2(0.0, 1.0)) * ubuf.textureScale;
       sCoordLeft = (tCoord - vec2(-1.0, 0.0)) * ubuf.textureScale;
       sCoordRight = (tCoord - vec2(1.0, 0.0)) * ubuf.textureScale;
@@ -1386,30 +1385,10 @@ index 023f9dfdc2..4068e42f28 100644
 +     vec4 xformed = ubuf.modelViewMatrix * vCoord;
 +     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
  }
-diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
-index 5b7bd9ca82..274d891a3c 100644
---- a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
-+++ b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
-@@ -11,11 +11,12 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    // must match styledtext
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-+    // the above must stay compatible with textmask/8bittextmask
-     vec4 styleColor;
-     vec2 shift;
- } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/styledtext.frag b/src/quick/scenegraph/shaders_ng/styledtext.frag
-index 0b16396037..2e380dfeae 100644
---- a/src/quick/scenegraph/shaders_ng/styledtext.frag
-+++ b/src/quick/scenegraph/shaders_ng/styledtext.frag
-@@ -8,7 +8,8 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/styledtext_a.frag b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
+--- a/src/quick/scenegraph/shaders_ng/styledtext_a.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/styledtext_a.frag	2021-11-16 15:55:38.990626526 +0300
+@@ -8,7 +8,8 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1419,11 +1398,23 @@ index 0b16396037..2e380dfeae 100644
      vec4 color;
      vec2 textureScale;
      float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/styledtext.vert b/src/quick/scenegraph/shaders_ng/styledtext.vert
-index beadf07c79..271dae8d8a 100644
---- a/src/quick/scenegraph/shaders_ng/styledtext.vert
-+++ b/src/quick/scenegraph/shaders_ng/styledtext.vert
-@@ -7,7 +7,8 @@ layout(location = 0) out vec2 sampleCoord;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/styledtext.frag b/src/quick/scenegraph/shaders_ng/styledtext.frag
+--- a/src/quick/scenegraph/shaders_ng/styledtext.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/styledtext.frag	2021-11-16 15:55:38.990626526 +0300
+@@ -8,7 +8,8 @@
+ layout(binding = 1) uniform sampler2D _qt_texture;
+ 
+ layout(std140, binding = 0) uniform buf {
+-    mat4 matrix;
++    mat4 modelViewMatrix;
++    mat4 projectionMatrix;
+     vec4 color;
+     vec2 textureScale;
+     float dpr;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/styledtext.vert b/src/quick/scenegraph/shaders_ng/styledtext.vert
+--- a/src/quick/scenegraph/shaders_ng/styledtext.vert	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/styledtext.vert	2021-11-16 15:55:38.990626526 +0300
+@@ -7,7 +7,8 @@
  layout(location = 1) out vec2 shiftedSampleCoord;
  
  layout(std140, binding = 0) uniform buf {
@@ -1433,7 +1424,7 @@ index beadf07c79..271dae8d8a 100644
      vec4 color;
      vec2 textureScale;
      float dpr;
-@@ -22,6 +23,6 @@ void main()
+@@ -22,6 +23,6 @@
  {
       sampleCoord = tCoord * ubuf.textureScale;
       shiftedSampleCoord = (tCoord - ubuf.shift) * ubuf.textureScale;
@@ -1442,11 +1433,10 @@ index beadf07c79..271dae8d8a 100644
 +     vec4 xformed = ubuf.modelViewMatrix * vCoord;
 +     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
  }
-diff --git a/src/quick/scenegraph/shaders_ng/styledtext_a.frag b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
-index b673137895..62e162c851 100644
---- a/src/quick/scenegraph/shaders_ng/styledtext_a.frag
-+++ b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
-@@ -8,7 +8,8 @@ layout(location = 0) out vec4 fragColor;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/textmask.frag b/src/quick/scenegraph/shaders_ng/textmask.frag
+--- a/src/quick/scenegraph/shaders_ng/textmask.frag	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/textmask.frag	2021-11-16 15:55:38.990626526 +0300
+@@ -6,7 +6,8 @@
  layout(binding = 1) uniform sampler2D _qt_texture;
  
  layout(std140, binding = 0) uniform buf {
@@ -1456,25 +1446,10 @@ index b673137895..62e162c851 100644
      vec4 color;
      vec2 textureScale;
      float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/textmask.frag b/src/quick/scenegraph/shaders_ng/textmask.frag
-index 518d5c965f..ed8da4cd30 100644
---- a/src/quick/scenegraph/shaders_ng/textmask.frag
-+++ b/src/quick/scenegraph/shaders_ng/textmask.frag
-@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/textmask.vert b/src/quick/scenegraph/shaders_ng/textmask.vert
-index 9d80d5dadb..e0b3c01bce 100644
---- a/src/quick/scenegraph/shaders_ng/textmask.vert
-+++ b/src/quick/scenegraph/shaders_ng/textmask.vert
-@@ -6,7 +6,8 @@ layout(location = 1) in vec2 tCoord;
+diff -Nuar a/src/quick/scenegraph/shaders_ng/textmask.vert b/src/quick/scenegraph/shaders_ng/textmask.vert
+--- a/src/quick/scenegraph/shaders_ng/textmask.vert	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/scenegraph/shaders_ng/textmask.vert	2021-11-16 15:55:38.990626526 +0300
+@@ -6,7 +6,8 @@
  layout(location = 0) out vec2 sampleCoord;
  
  layout(std140, binding = 0) uniform buf {
@@ -1484,7 +1459,7 @@ index 9d80d5dadb..e0b3c01bce 100644
      vec4 color;
      vec2 textureScale;
      float dpr;
-@@ -17,6 +18,6 @@ out gl_PerVertex { vec4 gl_Position; };
+@@ -17,6 +18,6 @@
  void main()
  {
       sampleCoord = tCoord * ubuf.textureScale;
@@ -1493,11 +1468,10 @@ index 9d80d5dadb..e0b3c01bce 100644
 +     vec4 xformed = ubuf.modelViewMatrix * vCoord;
 +     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
  }
-diff --git a/src/quick/util/qquickstate.cpp b/src/quick/util/qquickstate.cpp
-index 71ab1f4d62..6a72754bde 100644
---- a/src/quick/util/qquickstate.cpp
-+++ b/src/quick/util/qquickstate.cpp
-@@ -635,6 +635,11 @@ void QQuickState::apply(QQuickTransition *trans, QQuickState *revert)
+diff -Nuar a/src/quick/util/qquickstate.cpp b/src/quick/util/qquickstate.cpp
+--- a/src/quick/util/qquickstate.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/util/qquickstate.cpp	2021-11-16 15:55:38.991626526 +0300
+@@ -635,6 +635,11 @@
              }
          }
          if (!found) {
@@ -1509,10 +1483,9 @@ index 71ab1f4d62..6a72754bde 100644
              QVariant cur = d->revertList.at(ii).property().read();
              QQmlPropertyPrivate::removeBinding(d->revertList.at(ii).property());
  
-diff --git a/src/quick/util/qquickstyledtext.cpp b/src/quick/util/qquickstyledtext.cpp
-index 660852ba83..a25af90414 100644
---- a/src/quick/util/qquickstyledtext.cpp
-+++ b/src/quick/util/qquickstyledtext.cpp
+diff -Nuar a/src/quick/util/qquickstyledtext.cpp b/src/quick/util/qquickstyledtext.cpp
+--- a/src/quick/util/qquickstyledtext.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quick/util/qquickstyledtext.cpp	2021-11-16 15:55:38.991626526 +0300
 @@ -46,6 +46,8 @@
  #include "qquickstyledtext_p.h"
  #include <QQmlContext>
@@ -1522,7 +1495,7 @@ index 660852ba83..a25af90414 100644
  /*
      QQuickStyledText supports few tags:
  
-@@ -562,10 +564,14 @@ void QQuickStyledTextPrivate::parseEntity(const QChar *&ch, const QString &textI
+@@ -562,10 +564,14 @@
                  textOut += QChar(60);
              else if (entity == QLatin1String("amp"))
                  textOut += QChar(38);
@@ -1537,10 +1510,9 @@ index 660852ba83..a25af90414 100644
              return;
          } else if (*ch == QLatin1Char(' ')) {
              QStringRef entity(&textIn, entityStart - 1, entityLength + 1);
-diff --git a/src/quickshapes/qquickshapesglobal_p.h b/src/quickshapes/qquickshapesglobal_p.h
-index 40f6cfbdcf..37386c23b2 100644
---- a/src/quickshapes/qquickshapesglobal_p.h
-+++ b/src/quickshapes/qquickshapesglobal_p.h
+diff -Nuar a/src/quickshapes/qquickshapesglobal_p.h b/src/quickshapes/qquickshapesglobal_p.h
+--- a/src/quickshapes/qquickshapesglobal_p.h	2020-10-27 11:02:12.000000000 +0300
++++ b/src/quickshapes/qquickshapesglobal_p.h	2021-11-16 15:55:38.991626526 +0300
 @@ -51,6 +51,7 @@
  // We mean it.
  //
@@ -1549,18 +1521,17 @@ index 40f6cfbdcf..37386c23b2 100644
  #include "qquickshapesglobal.h"
  
  QT_BEGIN_NAMESPACE
-@@ -60,5 +61,6 @@ QT_BEGIN_NAMESPACE
+@@ -60,5 +61,6 @@
  QT_END_NAMESPACE
  
  void Q_QUICKSHAPES_PRIVATE_EXPORT qml_register_types_QtQuick_Shapes();
 +GHS_KEEP_REFERENCE(qml_register_types_QtQuick_Shapes);
  
  #endif // QQUICKSHAPESGLOBAL_P_H
-diff --git a/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp b/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp
-index 84f5eebd10..e3cbeb9891 100644
---- a/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp
-+++ b/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp
-@@ -910,19 +910,25 @@ void tst_qv4debugger::signalParameters()
+diff -Nuar a/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp b/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp
+--- a/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp	2021-11-16 15:55:38.992626526 +0300
+@@ -910,19 +910,25 @@
      component.setData("import QtQml 2.12\n"
                        "QtObject {\n"
                        "    id: root\n"
@@ -1589,11 +1560,10 @@ index 84f5eebd10..e3cbeb9891 100644
  }
  
  QTEST_MAIN(tst_qv4debugger)
-diff --git a/tests/auto/qml/qjsengine/tst_qjsengine.cpp b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
-index 3b7d74df63..b75bf820d5 100644
---- a/tests/auto/qml/qjsengine/tst_qjsengine.cpp
-+++ b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
-@@ -102,6 +102,7 @@ private slots:
+diff -Nuar a/tests/auto/qml/qjsengine/tst_qjsengine.cpp b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
+--- a/tests/auto/qml/qjsengine/tst_qjsengine.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qjsengine/tst_qjsengine.cpp	2021-11-16 15:55:38.993626526 +0300
+@@ -102,6 +102,7 @@
      void valueConversion_RegularExpression();
      void castWithMultipleInheritance();
      void collectGarbage();
@@ -1601,7 +1571,7 @@ index 3b7d74df63..b75bf820d5 100644
      void gcWithNestedDataStructure();
      void stacktrace();
      void numberParsing_data();
-@@ -1809,6 +1810,44 @@ void tst_QJSEngine::collectGarbage()
+@@ -1809,6 +1810,44 @@
      QVERIFY(ptr.isNull());
  }
  
@@ -1646,11 +1616,9 @@ index 3b7d74df63..b75bf820d5 100644
  void tst_QJSEngine::gcWithNestedDataStructure()
  {
      // The GC must be able to traverse deeply nested objects, otherwise this
-diff --git a/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml b/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml
-new file mode 100644
-index 0000000000..206133bb39
---- /dev/null
-+++ b/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml
+diff -Nuar a/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml b/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml
+--- a/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/qml/qqmldelegatemodel/data/redrawUponColumnChange.qml	2021-11-16 15:55:38.993626526 +0300
 @@ -0,0 +1,11 @@
 +import QtQuick 2.8
 +
@@ -1663,11 +1631,10 @@ index 0000000000..206133bb39
 +        text: display
 +    }
 +}
-diff --git a/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro b/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
-index 7fdd3ab5f1..fbd72f6a44 100644
---- a/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
-+++ b/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
-@@ -2,7 +2,7 @@ CONFIG += testcase
+diff -Nuar a/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro b/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro
+--- a/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qqmldelegatemodel/qqmldelegatemodel.pro	2021-11-16 15:55:38.993626526 +0300
+@@ -2,7 +2,7 @@
  TARGET = tst_qqmldelegatemodel
  macos:CONFIG -= app_bundle
  
@@ -1676,10 +1643,9 @@ index 7fdd3ab5f1..fbd72f6a44 100644
  
  SOURCES += tst_qqmldelegatemodel.cpp
  
-diff --git a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
-index 87f42c0c8a..1d338ac330 100644
---- a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
-+++ b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
+diff -Nuar a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
+--- a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp	2021-11-16 15:55:38.993626526 +0300
 @@ -27,8 +27,12 @@
  ****************************************************************************/
  
@@ -1693,7 +1659,7 @@ index 87f42c0c8a..1d338ac330 100644
  
  #include "../../shared/util.h"
  
-@@ -42,6 +46,7 @@ public:
+@@ -42,6 +46,7 @@
  private slots:
      void valueWithoutCallingObjectFirst_data();
      void valueWithoutCallingObjectFirst();
@@ -1701,7 +1667,7 @@ index 87f42c0c8a..1d338ac330 100644
  };
  
  class AbstractItemModel : public QAbstractItemModel
-@@ -134,6 +139,30 @@ void tst_QQmlDelegateModel::valueWithoutCallingObjectFirst()
+@@ -134,6 +139,30 @@
      QCOMPARE(model->variantValue(index, role), expectedValue);
  }
  
@@ -1732,11 +1698,9 @@ index 87f42c0c8a..1d338ac330 100644
  QTEST_MAIN(tst_QQmlDelegateModel)
  
  #include "tst_qqmldelegatemodel.moc"
-diff --git a/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml b/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml
-new file mode 100644
-index 0000000000..affba7d9f1
---- /dev/null
-+++ b/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml
+diff -Nuar a/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml b/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml
+--- a/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/qml/qqmlecmascript/data/proxyIteration.qml	2021-11-16 15:55:38.993626526 +0300
 @@ -0,0 +1,29 @@
 +import QtQml 2
 +
@@ -1767,11 +1731,10 @@ index 0000000000..affba7d9f1
 +    // so root.sum should be 6 now
 +  }
 +}
-diff --git a/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp b/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp
-index 1e10841430..9198d3bebf 100644
---- a/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp
-+++ b/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp
-@@ -382,7 +382,8 @@ private slots:
+diff -Nuar a/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp b/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp
+--- a/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qqmlecmascript/tst_qqmlecmascript.cpp	2021-11-16 15:55:38.996626525 +0300
+@@ -382,7 +382,8 @@
      void semicolonAfterProperty();
      void hugeStack();
      void variantConversionMethod();
@@ -1781,7 +1744,7 @@ index 1e10841430..9198d3bebf 100644
      void gcCrashRegressionTest();
  
  private:
-@@ -9306,6 +9307,44 @@ void tst_qqmlecmascript::variantConversionMethod()
+@@ -9306,6 +9307,44 @@
      QCOMPARE(obj.funcCalled, QLatin1String("QModelIndex"));
  }
  
@@ -1826,11 +1789,9 @@ index 1e10841430..9198d3bebf 100644
  QTEST_MAIN(tst_qqmlecmascript)
  
  #include "tst_qqmlecmascript.moc"
-diff --git a/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml b/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml
-new file mode 100644
-index 0000000000..87cac10200
---- /dev/null
-+++ b/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml
+diff -Nuar a/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml b/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml
+--- a/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/qml/qqmllanguage/data/inlineComponentsSameFile.qml	2021-11-16 15:55:38.996626525 +0300
 @@ -0,0 +1,11 @@
 +import QtQml 2.15
 +
@@ -1843,11 +1804,10 @@ index 0000000000..87cac10200
 +    property IC other: IC { name: "Toby"; age: 30 }
 +    property list<IC> listProp: [IC { name: "Alfred Ill"; age: 65 }, IC { name: "Claire Zachanassian"; age: 62}]
 +}
-diff --git a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
-index 8adcbc1837..e247a139ec 100644
---- a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
-+++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
-@@ -5604,6 +5604,7 @@ void tst_qqmllanguage::inlineComponent_data()
+diff -Nuar a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
+--- a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp	2021-11-16 15:55:38.997626525 +0300
+@@ -5604,6 +5604,7 @@
      QTest::newRow("Alias resolves correctly") << testFileUrl("inlineComponentWithAlias.qml") << QColorConstants::Svg::lime << 42 << true;
  
      QTest::newRow("Two inline components in same do not crash (QTBUG-86989)") << testFileUrl("twoInlineComponents.qml") << QColor() << 0 << false;
@@ -1855,11 +1815,10 @@ index 8adcbc1837..e247a139ec 100644
  }
  
  void tst_qqmllanguage::inlineComponentReferenceCycle_data()
-diff --git a/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp b/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp
-index d54e3467b7..1953798a15 100644
---- a/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp
-+++ b/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp
-@@ -130,6 +130,7 @@ private slots:
+diff -Nuar a/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp b/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp
+--- a/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qqmllistmodel/tst_qqmllistmodel.cpp	2021-11-16 15:55:38.998626525 +0300
+@@ -130,6 +130,7 @@
      void dynamic_roles_crash_QTBUG_38907();
      void nestedListModelIteration();
      void undefinedAppendShouldCauseError();
@@ -1867,7 +1826,7 @@ index d54e3467b7..1953798a15 100644
  };
  
  bool tst_qqmllistmodel::compareVariantList(const QVariantList &testList, QVariant object)
-@@ -1723,6 +1724,27 @@ void tst_qqmllistmodel::undefinedAppendShouldCauseError()
+@@ -1723,6 +1724,27 @@
      QScopedPointer<QObject>(component.create());
  }
  
@@ -1895,11 +1854,10 @@ index d54e3467b7..1953798a15 100644
  
  QTEST_MAIN(tst_qqmllistmodel)
  
-diff --git a/tests/auto/qml/qv4mm/tst_qv4mm.cpp b/tests/auto/qml/qv4mm/tst_qv4mm.cpp
-index 5d635aa63b..824fd89e5b 100644
---- a/tests/auto/qml/qv4mm/tst_qv4mm.cpp
-+++ b/tests/auto/qml/qv4mm/tst_qv4mm.cpp
-@@ -76,10 +76,10 @@ void tst_qv4mm::multiWrappedQObjects()
+diff -Nuar a/tests/auto/qml/qv4mm/tst_qv4mm.cpp b/tests/auto/qml/qv4mm/tst_qv4mm.cpp
+--- a/tests/auto/qml/qv4mm/tst_qv4mm.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/qml/qv4mm/tst_qv4mm.cpp	2021-11-16 15:55:38.998626525 +0300
+@@ -76,10 +76,10 @@
          QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 1);
          QCOMPARE(engine2.memoryManager->m_pendingFreedObjectWrapperValue.size(), 0);
  
@@ -1913,27 +1871,9 @@ index 5d635aa63b..824fd89e5b 100644
  
          // engine2 doesn't own the object as engine1 was the first to wrap it above.
          // Therefore, no effect here.
-diff --git a/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
-new file mode 100644
-index 0000000000..a56dcea5ad
---- /dev/null
-+++ b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
-@@ -0,0 +1,10 @@
-+import QtQuick 2.15
-+
-+Rectangle {
-+    anchors.fill: parent
-+    color: "blue"
-+    Item {
-+        Item {
-+        }
-+    }
-+}
-diff --git a/tests/auto/quick/qquickloader/data/loader-async-race.qml b/tests/auto/quick/qquickloader/data/loader-async-race.qml
-new file mode 100644
-index 0000000000..8ba625c5c1
---- /dev/null
-+++ b/tests/auto/quick/qquickloader/data/loader-async-race.qml
+diff -Nuar a/tests/auto/quick/qquickloader/data/loader-async-race.qml b/tests/auto/quick/qquickloader/data/loader-async-race.qml
+--- a/tests/auto/quick/qquickloader/data/loader-async-race.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/quick/qquickloader/data/loader-async-race.qml	2021-11-16 15:55:38.998626525 +0300
 @@ -0,0 +1,14 @@
 +import QtQuick 2.15
 +
@@ -1949,11 +1889,24 @@ index 0000000000..8ba625c5c1
 +        source: "loader-async-race-rect.qml"
 +    }
 +}
-diff --git a/tests/auto/quick/qquickloader/tst_qquickloader.cpp b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
-index f4b682f3f4..fe2d71b037 100644
---- a/tests/auto/quick/qquickloader/tst_qquickloader.cpp
-+++ b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
-@@ -132,6 +132,7 @@ private slots:
+diff -Nuar a/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
+--- a/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml	2021-11-16 15:55:38.998626525 +0300
+@@ -0,0 +1,10 @@
++import QtQuick 2.15
++
++Rectangle {
++    anchors.fill: parent
++    color: "blue"
++    Item {
++        Item {
++        }
++    }
++}
+diff -Nuar a/tests/auto/quick/qquickloader/tst_qquickloader.cpp b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
+--- a/tests/auto/quick/qquickloader/tst_qquickloader.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/quick/qquickloader/tst_qquickloader.cpp	2021-11-16 15:55:38.999626525 +0300
+@@ -132,6 +132,7 @@
      void statusChangeOnlyEmittedOnce();
  
      void setSourceAndCheckStatus();
@@ -1961,7 +1914,7 @@ index f4b682f3f4..fe2d71b037 100644
  };
  
  Q_DECLARE_METATYPE(QList<QQmlError>)
-@@ -1491,6 +1492,24 @@ void tst_QQuickLoader::setSourceAndCheckStatus()
+@@ -1491,6 +1492,24 @@
      QCOMPARE(loader->status(), QQuickLoader::Null);
  }
  
@@ -1986,11 +1939,9 @@ index f4b682f3f4..fe2d71b037 100644
  QTEST_MAIN(tst_QQuickLoader)
  
  #include "tst_qquickloader.moc"
-diff --git a/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml b/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml
-new file mode 100644
-index 0000000000..dee82f52ed
---- /dev/null
-+++ b/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml
+diff -Nuar a/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml b/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml
+--- a/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/quick/qquickstates/data/revertNullObjectBinding.qml	2021-11-16 15:55:38.999626525 +0300
 @@ -0,0 +1,48 @@
 +import QtQuick 2.12
 +import Qt.test 1.0
@@ -2040,11 +1991,10 @@ index 0000000000..dee82f52ed
 +        ContainingObj.reset()
 +    }
 +}
-diff --git a/tests/auto/quick/qquickstates/tst_qquickstates.cpp b/tests/auto/quick/qquickstates/tst_qquickstates.cpp
-index d5fea3cb28..849522454f 100644
---- a/tests/auto/quick/qquickstates/tst_qquickstates.cpp
-+++ b/tests/auto/quick/qquickstates/tst_qquickstates.cpp
-@@ -79,6 +79,55 @@ private:
+diff -Nuar a/tests/auto/quick/qquickstates/tst_qquickstates.cpp b/tests/auto/quick/qquickstates/tst_qquickstates.cpp
+--- a/tests/auto/quick/qquickstates/tst_qquickstates.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/quick/qquickstates/tst_qquickstates.cpp	2021-11-16 15:55:39.000626525 +0300
+@@ -79,6 +79,55 @@
  QML_DECLARE_TYPE(MyRect)
  QML_DECLARE_TYPEINFO(MyRect, QML_HAS_ATTACHED_PROPERTIES)
  
@@ -2100,7 +2050,7 @@ index d5fea3cb28..849522454f 100644
  class tst_qquickstates : public QQmlDataTest
  {
      Q_OBJECT
-@@ -140,12 +189,20 @@ private slots:
+@@ -140,12 +189,20 @@
      void duplicateStateName();
      void trivialWhen();
      void parentChangeCorrectReversal();
@@ -2121,7 +2071,7 @@ index d5fea3cb28..849522454f 100644
  }
  
  QByteArray tst_qquickstates::fullDataPath(const QString &path) const
-@@ -1692,6 +1749,17 @@ void tst_qquickstates::parentChangeCorrectReversal()
+@@ -1692,6 +1749,17 @@
      QCOMPARE(oldX, stayingRectX.read().toDouble());
  }
  
@@ -2139,11 +2089,10 @@ index d5fea3cb28..849522454f 100644
  
  QTEST_MAIN(tst_qquickstates)
  
-diff --git a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp b/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
-index 54f73c6e0c..d489a873e4 100644
---- a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
-+++ b/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
-@@ -176,6 +176,7 @@ private slots:
+diff -Nuar a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp b/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp
+--- a/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/quick/qquicktableview/tst_qquicktableview.cpp	2021-11-16 15:55:39.001626525 +0300
+@@ -176,6 +176,7 @@
      void checkSyncView_connect_late_data();
      void checkSyncView_connect_late();
      void checkSyncView_pageFlicking();
@@ -2151,7 +2100,7 @@ index 54f73c6e0c..d489a873e4 100644
      void delegateWithRequiredProperties();
      void checkThatFetchMoreIsCalledWhenScrolledToTheEndOfTable();
      void replaceModel();
-@@ -2731,6 +2732,48 @@ void tst_QQuickTableView::checkSyncView_pageFlicking()
+@@ -2731,6 +2732,48 @@
      QVERIFY(tableViewPrivate->scheduledRebuildOptions & QQuickTableViewPrivate::RebuildOption::CalculateNewTopLeftRow);
  }
  
@@ -2200,11 +2149,10 @@ index 54f73c6e0c..d489a873e4 100644
  void tst_QQuickTableView::checkThatFetchMoreIsCalledWhenScrolledToTheEndOfTable()
  {
      LOAD_TABLEVIEW("plaintableview.qml");
-diff --git a/tests/auto/quick/qquicktext/tst_qquicktext.cpp b/tests/auto/quick/qquicktext/tst_qquicktext.cpp
-index 42fdbea58d..308c6b5091 100644
---- a/tests/auto/quick/qquicktext/tst_qquicktext.cpp
-+++ b/tests/auto/quick/qquicktext/tst_qquicktext.cpp
-@@ -2243,6 +2243,43 @@ void tst_qquicktext::lineCount()
+diff -Nuar a/tests/auto/quick/qquicktext/tst_qquicktext.cpp b/tests/auto/quick/qquicktext/tst_qquicktext.cpp
+--- a/tests/auto/quick/qquicktext/tst_qquicktext.cpp	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/quick/qquicktext/tst_qquicktext.cpp	2021-11-16 15:55:39.002626525 +0300
+@@ -2243,6 +2243,43 @@
      QCOMPARE(myText->lineCount(), 2);
      QCOMPARE(myText->truncated(), true);
      QCOMPARE(myText->maximumLineCount(), 2);
@@ -2248,11 +2196,9 @@ index 42fdbea58d..308c6b5091 100644
  }
  
  void tst_qquicktext::lineHeight()
-diff --git a/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml b/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml
-new file mode 100644
-index 0000000000..ff10eba23d
---- /dev/null
-+++ b/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml
+diff -Nuar a/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml b/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml
+--- a/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml	2021-11-16 15:55:39.002626525 +0300
 @@ -0,0 +1,30 @@
 +import QtQml 2.12
 +import QtQml.Models 2.12
@@ -2284,11 +2230,9 @@ index 0000000000..ff10eba23d
 +        }
 +    }
 +}
-diff --git a/tests/auto/quick/qquickview_extra/qquickview_extra.pro b/tests/auto/quick/qquickview_extra/qquickview_extra.pro
-new file mode 100644
-index 0000000000..b40af0ce19
---- /dev/null
-+++ b/tests/auto/quick/qquickview_extra/qquickview_extra.pro
+diff -Nuar a/tests/auto/quick/qquickview_extra/qquickview_extra.pro b/tests/auto/quick/qquickview_extra/qquickview_extra.pro
+--- a/tests/auto/quick/qquickview_extra/qquickview_extra.pro	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/quick/qquickview_extra/qquickview_extra.pro	2021-11-16 15:55:39.002626525 +0300
 @@ -0,0 +1,12 @@
 +CONFIG += testcase
 +TARGET = tst_qquickview_extra
@@ -2302,11 +2246,9 @@ index 0000000000..b40af0ce19
 +TESTDATA = data/*
 +
 +QT += core-private gui-private qml-private quick-private testlib
-diff --git a/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp b/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp
-new file mode 100644
-index 0000000000..f697a438bd
---- /dev/null
-+++ b/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp
+diff -Nuar a/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp b/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp
+--- a/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/auto/quick/qquickview_extra/tst_qquickview_extra.cpp	2021-11-16 15:55:39.002626525 +0300
 @@ -0,0 +1,77 @@
 +/****************************************************************************
 +**
@@ -2385,11 +2327,10 @@ index 0000000000..f697a438bd
 +QTEST_APPLESS_MAIN(tst_QQuickViewExtra)
 +
 +#include "tst_qquickview_extra.moc"
-diff --git a/tests/auto/quick/quick.pro b/tests/auto/quick/quick.pro
-index 541bfdd527..45bcf8a9ce 100644
---- a/tests/auto/quick/quick.pro
-+++ b/tests/auto/quick/quick.pro
-@@ -85,6 +85,7 @@ QUICKTESTS += \
+diff -Nuar a/tests/auto/quick/quick.pro b/tests/auto/quick/quick.pro
+--- a/tests/auto/quick/quick.pro	2020-10-27 11:02:12.000000000 +0300
++++ b/tests/auto/quick/quick.pro	2021-11-16 15:55:39.002626525 +0300
+@@ -85,6 +85,7 @@
      qquicktextinput \
      qquickvisualdatamodel \
      qquickview \
@@ -2397,11 +2338,9 @@ index 541bfdd527..45bcf8a9ce 100644
      qquickcanvasitem \
      qquickdesignersupport \
      qquickscreen \
-diff --git a/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
-new file mode 100644
-index 0000000000..c60fc4d8b0
---- /dev/null
-+++ b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
+diff -Nuar a/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
+--- a/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml	1970-01-01 02:00:00.000000000 +0200
++++ b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml	2021-11-16 15:55:39.003626525 +0300
 @@ -0,0 +1,91 @@
 +import QtQuick 2.0
 +
@@ -2494,16 +2433,15 @@ index 0000000000..c60fc4d8b0
 +        }
 +    }
 +}
-diff --git a/tools/qmltime/qmltime.pro b/tools/qmltime/qmltime.pro
-index c915f6e8c1..366d90f75b 100644
---- a/tools/qmltime/qmltime.pro
-+++ b/tools/qmltime/qmltime.pro
+diff -Nuar a/tools/qmltime/qmltime.pro b/tools/qmltime/qmltime.pro
+--- a/tools/qmltime/qmltime.pro	2020-10-27 11:02:12.000000000 +0300
++++ b/tools/qmltime/qmltime.pro	2021-11-16 15:55:39.003626525 +0300
 @@ -1,4 +1,3 @@
 -TEMPLATE = app
  TARGET = qmltime
  QT += qml quick
  QT += quick-private
-@@ -12,3 +11,5 @@ QMAKE_TARGET_DESCRIPTION = QML Time
+@@ -12,3 +11,5 @@
  
  SOURCES += qmltime.cpp
  HEADERS += qmltime.h
