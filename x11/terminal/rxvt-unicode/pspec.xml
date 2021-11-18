@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>rxvt-unicode</Name>
@@ -13,30 +13,32 @@
         <IsA>app:gui</IsA>
         <Summary>Rxvt clone with XFT and Unicode support</Summary>
         <Description>Rxvt-unicode is a terminal application with graphical user interface having XVT and Unicode support.</Description>
-        <Archive sha1sum="e575b869782fbfed955f84f48b204ec888d91ba1" type="tarbz2">http://dist.schmorp.de/rxvt-unicode/rxvt-unicode-9.22.tar.bz2</Archive>
+        <Archive sha1sum="d325d8cdea6bcb8e0b8b219b8451bf5c690b6c62" type="tarbz2">http://dist.schmorp.de/rxvt-unicode/rxvt-unicode-9.26.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
             <Dependency>libXft-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
             <Dependency>libXrender-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
             <Dependency>startup-notification-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">rxvt-unicode-9.05_no-MOTIF-WM-INFO.patch</Patch>
+            <!-- <Patch level="1">rxvt-unicode-9.05_no-MOTIF-WM-INFO.patch</Patch> -->
             <Patch level="1">rxvt-unicode-9.06-font-width.patch</Patch>
-            <Patch level="1">rxvt-unicode-9.06-no-urgency-if-focused.diff</Patch>
+            <!-- <Patch level="1">rxvt-unicode-9.06-no-urgency-if-focused.diff</Patch>
             <Patch level="1">rxvt-unicode-9.06-popups-hangs.patch</Patch>
             <Patch level="1">rxvt-unicode-9.09-sattvik-colours.patch</Patch>
-            <Patch level="1">rxvt-unicode-9.14-clear.patch</Patch>
+            <Patch level="1">rxvt-unicode-9.14-clear.patch</Patch> -->
+            <Patch level="1">gentables.patch</Patch>
         </Patches>
     </Source>
 
     <Package>
         <Name>rxvt-unicode</Name>
         <RuntimeDependencies>
-            <Dependency>fontconfig</Dependency>
-            <Dependency>libXft</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>libXft</Dependency>
+            <Dependency>fontconfig</Dependency>
             <Dependency>libXrender</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
             <Dependency>startup-notification</Dependency>
@@ -53,7 +55,7 @@
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/rxvt.desktop">rxvt.desktop</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/urxvtc.desktop">urxvtc.desktop</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/urxvt-tabbed.desktop">urxvt-tabbed.desktop</AdditionalFile>
+            <!-- <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/urxvt-tabbed.desktop">urxvt-tabbed.desktop</AdditionalFile> -->
         </AdditionalFiles>
         <Provides>
             <COMAR script="package.py">System.Package</COMAR>
@@ -61,6 +63,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2021-11-19</Date>
+            <Version>9.26</Version>
+            <Comment>Version bump.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2020-01-25</Date>
             <Version>0.9.22</Version>
