@@ -15,23 +15,28 @@ pisitools.cxxflags.add("-std=gnu++11")
 ver = get.srcVERSION()
 
 def setup():
-	cmaketools.configure("-DCMAKE_INSTALL_SYSCONFDIR=/etc \
-		                  -DCMAKE_SKIP_RPATH=True \
-		                  -DBUILD_WSI_XCB_SUPPORT=On \
-						  -DBUILD_WSI_XLIB_SUPPORT=On \
-						  -DBUILD_WSI_WAYLAND_SUPPORT=On \
-						  -DBUILD_CUBE=ON \
-						  -DBUILD_VULKANINFO=ON \
-						  -DBUILD_ICD=OFF \
-						  ")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    cmaketools.configure("-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+                          -DCMAKE_SKIP_RPATH=True \
+                          -DBUILD_WSI_XCB_SUPPORT=On \
+                          -DBUILD_WSI_XLIB_SUPPORT=On \
+                          -DBUILD_WSI_WAYLAND_SUPPORT=On \
+                          -DBUILD_CUBE=ON \
+                          -DBUILD_VULKANINFO=ON \
+                          -DGLSLANG_INSTALL_DIR=/usr \
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DBUILD_ICD=OFF \
+                         ", sourceDir="..")
     
 
 def build():
-	cmaketools.make()
+    shelltools.cd("build")
+    cmaketools.make()
     
-
 def install():
-	autotools.rawInstall("DESTDIR=%s" %get.installDIR())  
+    shelltools.cd("build")
+    autotools.rawInstall("DESTDIR=%s" %get.installDIR())
 
-    
-	pisitools.dodoc("README.md", "CONTRIBUTING.md", "LICENSE.txt", "CODE_OF_CONDUCT.md", "GOVERNANCE.md")
+    shelltools.cd("..")
+    pisitools.dodoc("README.md", "CONTRIBUTING.md", "LICENSE.txt", "CODE_OF_CONDUCT.md", "GOVERNANCE.md")
