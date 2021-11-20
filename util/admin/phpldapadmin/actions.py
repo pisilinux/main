@@ -11,4 +11,4 @@ def install():
     pisitools.insinto("/usr/share/phpldapadmin","*")
 
     pisitools.dohtml("*")
-    pisitools.dodoc("INSTALL","VERSION","LICENSE")
+    pisitools.dodoc("INSTALL*","VERSION","LICENSE","README*")
