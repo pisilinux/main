@@ -1,0 +1,169 @@
+From bd1594deb1ab99378e8a488a5ecbb515ba215ab9 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Wed, 22 Sep 2021 13:24:48 -0400
+Subject: [PATCH 5/8] pam: Drop gdm-pin service
+
+gdm-pin was an experimental feature that was going to get added to
+gnome-shell many years ago. It never happened and these days it
+would probably be implemented a little different anyway.
+
+(It would probably use a gdm pam extension)
+
+There's no point keeping this service file around that we aren't
+using, so this commit drops it.
+
+Closes: https://gitlab.gnome.org/GNOME/gdm/-/issues/731
+---
+ daemon/gdm-session-worker.c       |  6 ------
+ data/meson.build                  |  4 ----
+ data/pam-exherbo/gdm-pin.pam      | 10 ----------
+ data/pam-lfs/gdm-pin.pam          | 17 -----------------
+ data/pam-openembedded/gdm-pin.pam |  7 -------
+ data/pam-redhat/gdm-pin.pam       | 21 ---------------------
+ 6 files changed, 65 deletions(-)
+ delete mode 100644 data/pam-exherbo/gdm-pin.pam
+ delete mode 100644 data/pam-lfs/gdm-pin.pam
+ delete mode 100644 data/pam-openembedded/gdm-pin.pam
+ delete mode 100644 data/pam-redhat/gdm-pin.pam
+
+diff --git a/daemon/gdm-session-worker.c b/daemon/gdm-session-worker.c
+index 3ad94e2a..a264ea1d 100644
+--- a/daemon/gdm-session-worker.c
++++ b/daemon/gdm-session-worker.c
+@@ -754,9 +754,6 @@ get_max_retries_error_message (GdmSessionWorker *worker)
+         if (g_strcmp0 (worker->priv->service, "gdm-password") == 0)
+                 return _("You reached the maximum password authentication attempts, please try another method");
+ 
+-        if (g_strcmp0 (worker->priv->service, "gdm-pin") == 0)
+-                return _("You reached the maximum PIN authentication attempts, please try another method");
+-
+         if (g_strcmp0 (worker->priv->service, "gdm-autologin") == 0)
+                 return _("You reached the maximum auto login attempts, please try another authentication method");
+ 
+@@ -775,9 +772,6 @@ get_generic_error_message (GdmSessionWorker *worker)
+         if (g_strcmp0 (worker->priv->service, "gdm-password") == 0)
+                 return _("Sorry, password authentication didn’t work. Please try again.");
+ 
+-        if (g_strcmp0 (worker->priv->service, "gdm-pin") == 0)
+-                return _("Sorry, PIN authentication didn’t work. Please try again.");
+-
+         if (g_strcmp0 (worker->priv->service, "gdm-autologin") == 0)
+                 return _("Sorry, auto login didn’t work. Please try again.");
+ 
+diff --git a/data/meson.build b/data/meson.build
+index 7c5222ea..2dec4c23 100644
+--- a/data/meson.build
++++ b/data/meson.build
+@@ -104,13 +104,11 @@ pam_data_files_map = {
+     'gdm-fingerprint',
+     'gdm-smartcard',
+     'gdm-password',
+-    'gdm-pin',
+   ],
+   'openembedded': [
+     'gdm-autologin',
+     'gdm-launch-environment',
+     'gdm-password',
+-    'gdm-pin',
+   ],
+   'exherbo': [
+     'gdm-autologin',
+@@ -118,7 +116,6 @@ pam_data_files_map = {
+     'gdm-fingerprint',
+     'gdm-smartcard',
+     'gdm-password',
+-    'gdm-pin',
+   ],
+   'lfs': [
+     'gdm-autologin',
+@@ -126,7 +123,6 @@ pam_data_files_map = {
+     'gdm-fingerprint',
+     'gdm-smartcard',
+     'gdm-password',
+-    'gdm-pin',
+   ],
+   'arch': [
+     'gdm-autologin',
+diff --git a/data/pam-exherbo/gdm-pin.pam b/data/pam-exherbo/gdm-pin.pam
+deleted file mode 100644
+index d62c7735..00000000
+--- a/data/pam-exherbo/gdm-pin.pam
++++ /dev/null
+@@ -1,10 +0,0 @@
+-account  include  system-login
+-
+-auth     requisite pam_pin.so
+-auth     substack system-login
+-auth     optional pam_gnome_keyring.so
+-
+-password required pam_deny.so
+-
+-session  substack system-login
+-session  optional pam_gnome_keyring.so auto_start
+\ No newline at end of file
+diff --git a/data/pam-lfs/gdm-pin.pam b/data/pam-lfs/gdm-pin.pam
+deleted file mode 100644
+index 4c955c98..00000000
+--- a/data/pam-lfs/gdm-pin.pam
++++ /dev/null
+@@ -1,17 +0,0 @@
+-# Begin /etc/pam.d/gdm-pin
+-
+-auth     requisite      pam_nologin.so
+-auth     required       pam_env.so
+-
+-auth     required       pam_succeed_if.so uid >= 1000 quiet
+-auth     required       pam_pin.so
+-auth     optional       pam_gnome_keyring.so
+-
+-account  include        system-account
+-password required       pam_pin.so
+-
+-session  required       pam_limits.so
+-session  include        system-session
+-session  optional       pam_gnome_keyring.so auto_start
+-
+-# End /etc/pam.d/gdm-pin
+diff --git a/data/pam-openembedded/gdm-pin.pam b/data/pam-openembedded/gdm-pin.pam
+deleted file mode 100644
+index c56842be..00000000
+--- a/data/pam-openembedded/gdm-pin.pam
++++ /dev/null
+@@ -1,7 +0,0 @@
+-#%PAM-1.0
+-auth       requisite   pam_pin.so
+-auth       include     common-auth
+-account    include     common-account
+-password   include     common-password
+-password   optional    pam_pin.so
+-session    include     common-session
+diff --git a/data/pam-redhat/gdm-pin.pam b/data/pam-redhat/gdm-pin.pam
+deleted file mode 100644
+index 6ec77070..00000000
+--- a/data/pam-redhat/gdm-pin.pam
++++ /dev/null
+@@ -1,21 +0,0 @@
+-auth     [success=done ignore=ignore default=bad] pam_selinux_permit.so
+-auth        requisite     pam_pin.so
+-auth        substack      password-auth
+-auth        optional      pam_gnome_keyring.so
+-auth        include       postlogin
+-
+-account     required      pam_nologin.so
+-account     include       password-auth
+-
+-password    include       password-auth
+-password    optional      pam_pin.so
+-
+-session     required      pam_selinux.so close
+-session     required      pam_loginuid.so
+-session     optional      pam_console.so
+-session     required      pam_selinux.so open
+-session     optional      pam_keyinit.so force revoke
+-session     required      pam_namespace.so
+-session     include       password-auth
+-session     optional      pam_gnome_keyring.so auto_start
+-session     include       postlogin
+-- 
+2.32.0
+

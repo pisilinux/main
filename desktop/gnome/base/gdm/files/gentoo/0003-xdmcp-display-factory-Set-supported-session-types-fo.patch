@@ -1,0 +1,41 @@
+From 5be71031bd3fb0a9681134af7a9e0eb35a057797 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Tue, 14 Sep 2021 11:00:33 -0400
+Subject: [PATCH 3/8] xdmcp-display-factory: Set supported session types for
+ XDMCP displays
+
+The lower levels of GDM now expect the session types supported by a
+display to be specified up front.
+
+This commit makes sure XDMCP displays do that.
+---
+ daemon/gdm-xdmcp-display-factory.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/daemon/gdm-xdmcp-display-factory.c b/daemon/gdm-xdmcp-display-factory.c
+index ce8f026e..abb58fae 100644
+--- a/daemon/gdm-xdmcp-display-factory.c
++++ b/daemon/gdm-xdmcp-display-factory.c
+@@ -2131,6 +2131,7 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
+         GdmDisplay      *display;
+         GdmDisplayStore *store;
+         gboolean         use_chooser;
++        const char      *session_types[] = { "x11", NULL };
+ 
+         g_debug ("GdmXdmcpDisplayFactory: Creating xdmcp display for %s:%d",
+                 hostname ? hostname : "(null)", displaynum);
+@@ -2165,6 +2166,11 @@ gdm_xdmcp_display_create (GdmXdmcpDisplayFactory *factory,
+                 goto out;
+         }
+ 
++        g_object_set (G_OBJECT (display),
++                      "session-type", session_types[0],
++                      "supported-session-types", session_types,
++                      NULL);
++
+         if (! gdm_display_prepare (display)) {
+                 gdm_display_unmanage (display);
+                 g_object_unref (display);
+-- 
+2.32.0
+

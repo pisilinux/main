@@ -1,0 +1,80 @@
+From 2e22ac85d52b2fe68949f7af4e27331e6714309c Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Wed, 15 Sep 2021 11:23:17 -0400
+Subject: [PATCH 2/8] local-display-factory: Don't try to respawn displays on
+ shutdown
+
+At the moment in the shutdown path we may try to respawn displays
+that just got killed.
+
+The respawning happens when things are half torn down leading to
+crashes.
+
+This commit makes sure we turn off the respawn logic in the shutdown
+path.
+---
+ daemon/gdm-local-display-factory.c | 11 ++++++++++-
+ daemon/gdm-manager.c               |  2 ++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/daemon/gdm-local-display-factory.c b/daemon/gdm-local-display-factory.c
+index eba38671..5fbbad68 100644
+--- a/daemon/gdm-local-display-factory.c
++++ b/daemon/gdm-local-display-factory.c
+@@ -73,6 +73,8 @@ struct _GdmLocalDisplayFactory
+         guint            active_vt_watch_id;
+         guint            wait_to_finish_timeout_id;
+ #endif
++
++        gboolean         is_started;
+ };
+ 
+ enum {
+@@ -505,6 +507,10 @@ on_display_status_changed (GdmDisplay             *display,
+         gboolean         is_initial = TRUE;
+         gboolean         is_local = TRUE;
+ 
++
++        if (!factory->is_started)
++                return;
++
+         num = -1;
+         gdm_display_get_x11_display_number (display, &num, NULL);
+ 
+@@ -1270,6 +1276,8 @@ gdm_local_display_factory_start (GdmDisplayFactory *base_factory)
+ 
+         g_return_val_if_fail (GDM_IS_LOCAL_DISPLAY_FACTORY (factory), FALSE);
+ 
++        factory->is_started = TRUE;
++
+         store = gdm_display_factory_get_display_store (GDM_DISPLAY_FACTORY (factory));
+ 
+         g_signal_connect_object (G_OBJECT (store),
+@@ -1306,9 +1314,10 @@ gdm_local_display_factory_stop (GdmDisplayFactory *base_factory)
+         g_signal_handlers_disconnect_by_func (G_OBJECT (store),
+                                               G_CALLBACK (on_display_removed),
+                                               factory);
+-
+         g_clear_handle_id (&factory->seat0_graphics_check_timeout_id, g_source_remove);
+ 
++        factory->is_started = FALSE;
++
+         return TRUE;
+ }
+ 
+diff --git a/daemon/gdm-manager.c b/daemon/gdm-manager.c
+index 4c2752fe..cc61efc9 100644
+--- a/daemon/gdm-manager.c
++++ b/daemon/gdm-manager.c
+@@ -2768,6 +2768,8 @@ gdm_manager_dispose (GObject *object)
+ 
+         g_return_if_fail (manager->priv != NULL);
+ 
++        gdm_manager_stop (manager);
++
+         g_clear_weak_pointer (&manager->priv->automatic_login_display);
+ 
+ #ifdef HAVE_LIBXDMCP
+-- 
+2.32.0
+
