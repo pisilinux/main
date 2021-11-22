@@ -18,7 +18,7 @@ def setup():
                                 -Dsystemd=false \
                                 -Dconsolekit=false \
                                 -Dplugin_thunderbolt=false \
-                                -Dgtkdoc=false \
+                                -Ddocs=none \
                                 -Dman=false")
 
 def build():
