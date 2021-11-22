@@ -16,6 +16,7 @@ def setup():
               --sbindir=/usr/bin \
               --sysconfdir=/etc \
               --with-drivedbdir \
+              --with-libsystemd=no \
               --with-libcap-ng=yes \
               --with-smartdscriptdir=/usr/share/smartmontools \
               --with-smartdplugindir=/usr/share/smartmontools/smartd_warning.d \
