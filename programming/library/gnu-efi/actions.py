@@ -6,9 +6,12 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def build():
+    shelltools.system("sed -e 's/-Werror//g' -i Make.defaults")
+
     options="lib gnuefi inc"
     autotools.make(options)
 
