@@ -1,29 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2018 TUBITAK/UEKAE
-# Licensed under the GNU General Public License, version 2.
-# See the file http://www.gnu.org/copyleft/gpl.txt.
+# Licensed under the GNU General Public License, version 3.
+# See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
-
-# WorkDir = ""
-# NoStrip = "/"
 
 def setup():
-    autotools.configure()
+    mesontools.configure()
 
 def build():
-    shelltools.cd("x86_64-pc-linux-gnu")
-    
-    autotools.make()
+    mesontools.build()
+
+#def check():
+    #mesontools.build("test")
 
 def install():
-    shelltools.cd("x86_64-pc-linux-gnu")
-    
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+
+    pisitools.dodoc("LICENSE")
 
     #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
