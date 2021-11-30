@@ -41,7 +41,7 @@ def install():
     for libdel in ["libbfd.a", "libopcodes.a", "libctf.a", "libctf-nobfd.a"]:
         pisitools.remove("/usr/lib/%s" % libdel)
 
-    for hea in ["ansidecl", "bfd", "bfdlink", "bfd_stdint", "diagnostics", "dis-asm", "plugin-api", "symcat", "ctf", "ctf-api"]:
+    for hea in ["ansidecl", "bfd", "bfdlink", "diagnostics", "dis-asm", "plugin-api", "symcat", "ctf", "ctf-api"]:
         pisitools.remove("/usr/include/%s.h" % hea)
 
     pisitools.remove("/usr/share/info/bfd.info")
