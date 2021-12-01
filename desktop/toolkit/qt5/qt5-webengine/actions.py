@@ -11,7 +11,13 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.dosed(".qmake.conf", "5.15.5", "5.15.2")
+    shelltools.system("mkdir .git")
+    pisitools.dosed(".qmake.conf", "5.15.7", "5.15.2")
+
+    shelltools.unlinkDir("src/3rdparty")
+    shelltools.move("../qtwebengine-chromium-*", "src/3rdparty")
+    shelltools.system("mkdir src/3rdparty/chromium/.git")
+
     #shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
     #shelltools.cd("%s" % get.workDIR())
 
