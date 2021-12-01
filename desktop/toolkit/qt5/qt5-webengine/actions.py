@@ -11,6 +11,7 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.dosed(".qmake.conf", "5.15.5", "5.15.2")
     #shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
     #shelltools.cd("%s" % get.workDIR())
 
