@@ -34,12 +34,10 @@ def setup():
                --enable-dbus \
                --enable-pam=yes \
                --enable-relro \
-               --enable-dnssd \
                --enable-browsing \
                --enable-threads \
                --enable-raw-printing \
-               --enable-avahi \
-               --disable-gnutls \
+               --with-tls=no \
                --disable-launchd \
                --disable-libusb \
                --with-rcdir=no \
@@ -55,13 +53,15 @@ def setup():
         options += '  \
                      --prefix=/usr \
                      --enable-libusb=no \
-                     --disable-avahi \
-                     --disable-dnssd \
+                     --with-dnssd=no \
                      --disable-gssapi \
                      --disable-dbus \
                      --bindir=/usr/bin32 \
                      --sbindir=/usr/sbin32 \
                      --libdir=/usr/lib32'
+
+    else:
+        options += " --with-dnssd=yes"
 
     autotools.configure(options)
 
