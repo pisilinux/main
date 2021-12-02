@@ -12,7 +12,6 @@ libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 
 def setup():
     options = "--buildtype=release \
-               -Dclang-libdir-path=%s \
                -Ddri-drivers-path=%s/xorg/modules/dri \
                -Db_ndebug=true \
                -Dplatforms=x11,wayland \
@@ -35,7 +34,6 @@ def setup():
                -Dglx=dri \
                -Degl=enabled \
                -Dglvnd=true \
-               -Dasm=true \
                -Dllvm=enabled \
                -Dvalgrind=enabled \
                -Dlibunwind=enabled \
@@ -43,10 +41,10 @@ def setup():
                -Dosmesa=true \
                -Dswr-arches=avx,avx2 \
                -Dgallium-opencl=icd \
-              " % ((libdir, ) * 2)
+              " % (libdir)
 
     if get.buildTYPE() == "emul32":
-        options += " -Dlmsensors=disabled --native-file crossfile.ini -Dllvm_libdir=/usr/lib32 -Dzstd=disabled"
+        options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled"
         #shelltools.export("CC", "clang -m32")
         #shelltools.export("CXX", "clang++ -m32")
         pisitools.cflags.add("-m32 ")
