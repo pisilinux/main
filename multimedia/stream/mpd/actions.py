@@ -8,7 +8,6 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-#	pisitools.dosed("doc/meson.build", "sphinx-build", "sphinx-build3")
 	pisitools.ldflags.add("-lbsd")
 	pisitools.cxxflags.add("-lbsd")
 	mesontools.configure("-Ddocumentation=enabled -Dfifo=false \
