@@ -17,6 +17,8 @@ def setup():
     shelltools.unlinkDir("src/3rdparty")
     shelltools.move("../qtwebengine-chromium-*", "src/3rdparty")
     shelltools.system("mkdir src/3rdparty/chromium/.git")
+    
+    shelltools.system("sed -i 's/NINJAJOBS/NINJA_JOBS/' src/core/gn_run.pro")
 
     #shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
     #shelltools.cd("%s" % get.workDIR())
