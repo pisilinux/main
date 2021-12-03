@@ -38,7 +38,7 @@ def setup():
                          --with-plugindir=/usr/lib/sasl2 \
                          --with-dbpath=/etc/sasl2/sasldb2 \
                          --with-pam \
-                         --without-ldap \
+                         --with-ldap \
                          --with-openssl \
                          --with-dblib=gdbm \
                          --with-gss_impl=mit \
@@ -52,7 +52,7 @@ def setup():
                          --enable-login \
                          --enable-ntlm \
                          --enable-plain \
-                         --disable-ldapdb \
+                         --enable-ldapdb \
                          --enable-checkapop \
                          --enable-alwaystrue \
                          --disable-java \
