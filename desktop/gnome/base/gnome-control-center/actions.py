@@ -10,8 +10,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dsnap=false \
-                          -Dgrilo=disabled")
+    mesontools.configure("-Dsnap=false")
 
 def build():
     mesontools.build()
