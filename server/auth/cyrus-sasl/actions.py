@@ -11,24 +11,31 @@ from pisi.actionsapi import shelltools
 
 def setup():
     pisitools.dosed("libsasl2.pc.in", "libdir = @libdir@", "prefix=/usr\nexec_prefix=${prefix}\nlibdir = @libdir@")
-    def cleanup():
-        for p in ("config.*", "ltconfig", "ltmain.sh", "libtool.m4"):
-            shelltools.unlink("config/%s" % p)
+    #def cleanup():
+        #for p in ("config.*", "ltconfig", "ltmain.sh", "libtool.m4"):
+            #shelltools.unlink("config/%s" % p)
 
-    cleanup()
+    #cleanup()
     #autotools.autoreconf("-vfi --no-recursive -I config -I cmulocal")
     #shelltools.cd("saslauthd")
     #cleanup()
     #autotools.autoreconf("-vi --no-recursive -I config -I ../cmulocal -I ../config")
     #shelltools.cd("..")
-    
+
+    shelltools.system("""sed -i -e '/LIB_SQLITE.*-R/s/ -R[^"]*//' \
+                                configure.ac || die""")
+
+    shelltools.system("sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:g' \
+                           -e 's:AC_CONFIG_MACRO_DIR:AC_CONFIG_MACRO_DIRS:g' \
+                           configure.ac || die")
+
     shelltools.system("libtoolize -c")
     shelltools.system("aclocal -I config")
     shelltools.system("automake -a -c")
     shelltools.system("autoheader")
     autotools.autoconf()
 
-    pisitools.cflags.add("-fPIC")
+    pisitools.cflags.add("-fno-strict-aliasing")
 
     # Don't disable ldap support to break circular dep. with openldap
     # As workaround, we remove openldap-client runtime dep. in pspec
