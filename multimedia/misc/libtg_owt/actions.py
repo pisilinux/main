@@ -10,19 +10,22 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
+
 def setup():
     shelltools.cd("%s" % get.workDIR())
     shelltools.move("tg_owt-*", "tg-owt-%s" % get.srcVERSION())
-    #shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
-    #shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv")
     shelltools.cd("tg-owt-%s" % get.srcVERSION())
+
+    shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
+    shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv")
+    shelltools.system("git clone https://github.com/PipeWire/pipewire")
     
-    shelltools.move("../libvpx-20210924/*", "src/third_party/libvpx/source/libvpx")
-    shelltools.move("../libyuv-20210924/*", "src/third_party/libyuv")
-    shelltools.move("../pipewire-0.3.37/*", "src/third_party/pipewire")
+    shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
+    shelltools.move("libyuv/*", "src/third_party/libyuv")
+    shelltools.move("pipewire/*", "src/third_party/pipewire")
     
     pisitools.flags.add("-fPIC")
-    cmaketools.configure("-G Ninja -DCMAKE_BUILD_TYPE=Release \
+    cmaketools.configure("-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
                                     -DCMAKE_INSTALL_PREFIX=/usr \
                                     -DTG_OWT_SPECIAL_TARGET=linux \
                                     -DBUILD_SHARED_LIBS=ON \
@@ -32,13 +35,14 @@ def setup():
                                     -DTG_OWT_FFMPEG_INCLUDE_PATH=/usr/include")
 
 def build():
-    #shelltools.cd("%s" % get.workDIR())
-    #shelltools.cd("tg-owt-%s/build" % get.srcVERSION())
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.cd("tg-owt-%s/build" % get.srcVERSION())
     shelltools.system("ninja")
 
 def install():
-    #shelltools.cd("%s" % get.workDIR())
-    #shelltools.cd("tg-owt-%s/build" % get.srcVERSION())
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.cd("tg-owt-%s/build" % get.srcVERSION())
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
 
+    shelltools.cd("..")
     pisitools.dodoc("LICENSE")
