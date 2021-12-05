@@ -24,7 +24,7 @@ def setup():
     shelltools.move("libyuv/*", "src/third_party/libyuv")
     shelltools.move("pipewire/*", "src/third_party/pipewire")
     
-    pisitools.flags.add("-fPIC")
+    pisitools.flags.add("-fPIC -std=c++17")
     cmaketools.configure("-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
                                     -DCMAKE_INSTALL_PREFIX=/usr \
                                     -DTG_OWT_SPECIAL_TARGET=linux \
