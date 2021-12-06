@@ -22,6 +22,7 @@ jobs = jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rst
 
 shelltools.export("SHELL", "/bin/sh")
 shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
+shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 
 def setup():
 	
