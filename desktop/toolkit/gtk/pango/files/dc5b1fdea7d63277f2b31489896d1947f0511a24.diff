@@ -1,0 +1,426 @@
+diff --git a/pango/pango-layout.c b/pango/pango-layout.c
+index ed46d57a6e4c26f34e23044544d0b0ec34cb93f3..a495596ccbb022948a7a3dfcee9e3852046c1b7b 100644
+--- a/pango/pango-layout.c
++++ b/pango/pango-layout.c
+@@ -3662,6 +3662,31 @@ get_decimal_prefix_width (PangoItem        *item,
+   g_free (log_widths);
+ }
+ 
++static int
++line_width (ParaBreakState  *state,
++            PangoLayoutLine *line)
++{
++  GSList *l;
++  int i;
++  int width = 0;
++
++  if (state->remaining_width > -1)
++    return state->line_width - state->remaining_width;
++
++  /* Compute the width of the line currently - inefficient, but easier
++   * than keeping the current width of the line up to date everywhere
++   */
++  for (l = line->runs; l; l = l->next)
++    {
++      PangoLayoutRun *run = l->data;
++
++      for (i = 0; i < run->glyphs->num_glyphs; i++)
++        width += run->glyphs->glyphs[i].geometry.width;
++    }
++
++  return width;
++}
++
+ static PangoGlyphString *
+ shape_run (PangoLayoutLine *line,
+            ParaBreakState  *state,
+@@ -3671,7 +3696,7 @@ shape_run (PangoLayoutLine *line,
+   PangoGlyphString *glyphs = pango_glyph_string_new ();
+ 
+   if (layout->text[item->offset] == '\t')
+-    shape_tab (line, &state->last_tab, &state->properties, state->line_width - state->remaining_width, item, glyphs);
++    shape_tab (line, &state->last_tab, &state->properties, line_width (state, line), item, glyphs);
+   else
+     {
+       PangoShapeFlags shape_flags = PANGO_SHAPE_NONE;
+diff --git a/tests/layouts/tabs-nowrap.layout b/tests/layouts/tabs-nowrap.layout
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a1d40b5202c776079fdf017110a2e8ab3bc5f7f
+--- /dev/null
++++ b/tests/layouts/tabs-nowrap.layout
+@@ -0,0 +1,363 @@
++{
++  "context" : {
++    "font" : "serif 12",
++    "base-gravity" : "south",
++    "gravity-hint" : "natural",
++    "base-dir" : "weak-ltr",
++    "round-glyph-positions" : true,
++    "transform" : [
++      1,
++      0,
++      0,
++      1,
++      0,
++      0
++    ]
++  },
++  "comment" : "A case where tabs were broken if line wrapping is disabled.",
++  "text" : "123\t9\n123456789",
++  "attributes" : [
++    {
++      "type" : "font-features",
++      "value" : "tnum=1"
++    }
++  ],
++  "font" : "DejaVu Sans Mono 32",
++  "output" : {
++    "is-wrapped" : false,
++    "is-ellipsized" : false,
++    "unknown-glyphs" : 0,
++    "width" : 239616,
++    "height" : 239616,
++    "log-attrs" : [
++      {
++        "char-break" : true,
++        "cursor-position" : true,
++        "word-start" : true,
++        "sentence-boundary" : true,
++        "sentence-start" : true,
++        "backspace-deletes-character" : true,
++        "word-boundary" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "white" : true,
++        "cursor-position" : true,
++        "word-end" : true,
++        "word-boundary" : true
++      },
++      {
++        "line-break" : true,
++        "char-break" : true,
++        "cursor-position" : true,
++        "word-start" : true,
++        "backspace-deletes-character" : true,
++        "word-boundary" : true
++      },
++      {
++        "char-break" : true,
++        "white" : true,
++        "cursor-position" : true,
++        "word-end" : true,
++        "sentence-end" : true,
++        "word-boundary" : true
++      },
++      {
++        "line-break" : true,
++        "mandatory-break" : true,
++        "char-break" : true,
++        "cursor-position" : true,
++        "word-start" : true,
++        "sentence-boundary" : true,
++        "sentence-start" : true,
++        "backspace-deletes-character" : true,
++        "word-boundary" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "char-break" : true,
++        "cursor-position" : true
++      },
++      {
++        "line-break" : true,
++        "mandatory-break" : true,
++        "char-break" : true,
++        "white" : true,
++        "cursor-position" : true,
++        "word-end" : true,
++        "sentence-boundary" : true,
++        "sentence-end" : true,
++        "word-boundary" : true
++      }
++    ],
++    "lines" : [
++      {
++        "start-index" : 0,
++        "length" : 5,
++        "paragraph-start" : true,
++        "direction" : "ltr",
++        "runs" : [
++          {
++            "offset" : 0,
++            "length" : 3,
++            "text" : "123",
++            "bidi-level" : 0,
++            "gravity" : "south",
++            "language" : "en-us",
++            "script" : "common",
++            "font" : {
++              "description" : "DejaVu Sans Mono 32",
++              "checksum" : "84c5467cadd1f6f23db0d9fbb6377e0d301334d3b5f36e6d5acebd34d0857d3a",
++              "matrix" : [
++                1,
++                -0,
++                -0,
++                1,
++                0,
++                0
++              ]
++            },
++            "flags" : 0,
++            "extra-attributes" : [
++              {
++                "type" : "font-features",
++                "value" : "tnum=1"
++              }
++            ],
++            "y-offset" : 0,
++            "start-x-offset" : 0,
++            "end-x-offset" : 0,
++            "glyphs" : [
++              {
++                "glyph" : 20,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 0
++              },
++              {
++                "glyph" : 21,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 1
++              },
++              {
++                "glyph" : 22,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 2
++              }
++            ]
++          },
++          {
++            "offset" : 3,
++            "length" : 1,
++            "text" : "\t",
++            "bidi-level" : 0,
++            "gravity" : "south",
++            "language" : "en-us",
++            "script" : "common",
++            "font" : {
++              "description" : "DejaVu Sans Mono 32",
++              "checksum" : "84c5467cadd1f6f23db0d9fbb6377e0d301334d3b5f36e6d5acebd34d0857d3a",
++              "matrix" : [
++                1,
++                -0,
++                -0,
++                1,
++                0,
++                0
++              ]
++            },
++            "flags" : 0,
++            "extra-attributes" : [
++              {
++                "type" : "font-features",
++                "value" : "tnum=1"
++              }
++            ],
++            "y-offset" : 0,
++            "start-x-offset" : 0,
++            "end-x-offset" : 0,
++            "glyphs" : [
++              {
++                "glyph" : 268435455,
++                "width" : 133120,
++                "is-cluster-start" : true,
++                "log-cluster" : 0
++              }
++            ]
++          },
++          {
++            "offset" : 4,
++            "length" : 1,
++            "text" : "9",
++            "bidi-level" : 0,
++            "gravity" : "south",
++            "language" : "en-us",
++            "script" : "common",
++            "font" : {
++              "description" : "DejaVu Sans Mono 32",
++              "checksum" : "84c5467cadd1f6f23db0d9fbb6377e0d301334d3b5f36e6d5acebd34d0857d3a",
++              "matrix" : [
++                1,
++                -0,
++                -0,
++                1,
++                0,
++                0
++              ]
++            },
++            "flags" : 0,
++            "extra-attributes" : [
++              {
++                "type" : "font-features",
++                "value" : "tnum=1"
++              }
++            ],
++            "y-offset" : 0,
++            "start-x-offset" : 0,
++            "end-x-offset" : 0,
++            "glyphs" : [
++              {
++                "glyph" : 28,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 0
++              }
++            ]
++          }
++        ]
++      },
++      {
++        "start-index" : 6,
++        "length" : 9,
++        "paragraph-start" : true,
++        "direction" : "ltr",
++        "runs" : [
++          {
++            "offset" : 6,
++            "length" : 9,
++            "text" : "123456789",
++            "bidi-level" : 0,
++            "gravity" : "south",
++            "language" : "en-us",
++            "script" : "common",
++            "font" : {
++              "description" : "DejaVu Sans Mono 32",
++              "checksum" : "84c5467cadd1f6f23db0d9fbb6377e0d301334d3b5f36e6d5acebd34d0857d3a",
++              "matrix" : [
++                1,
++                -0,
++                -0,
++                1,
++                0,
++                0
++              ]
++            },
++            "flags" : 0,
++            "extra-attributes" : [
++              {
++                "type" : "font-features",
++                "value" : "tnum=1"
++              }
++            ],
++            "y-offset" : 0,
++            "start-x-offset" : 0,
++            "end-x-offset" : 0,
++            "glyphs" : [
++              {
++                "glyph" : 20,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 0
++              },
++              {
++                "glyph" : 21,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 1
++              },
++              {
++                "glyph" : 22,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 2
++              },
++              {
++                "glyph" : 23,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 3
++              },
++              {
++                "glyph" : 24,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 4
++              },
++              {
++                "glyph" : 25,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 5
++              },
++              {
++                "glyph" : 26,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 6
++              },
++              {
++                "glyph" : 27,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 7
++              },
++              {
++                "glyph" : 28,
++                "width" : 26624,
++                "is-cluster-start" : true,
++                "log-cluster" : 8
++              }
++            ]
++          }
++        ]
++      }
++    ]
++  }
++}
+diff --git a/tests/meson.build b/tests/meson.build
+index 2acf0def5f2d016884cc4cab63ab6fc77bde85b6..b15c72914b73db2649caeb7677604de6b1fa675b 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -96,6 +96,7 @@ installed_test_layouts_data = [
+   'layouts/effigy.layout',
+   'layouts/kebab.layout',
+   'layouts/tabs.layout',
++  'layouts/tabs-nowrap.layout',
+   'layouts/valid-1.layout',
+   'layouts/valid-2.layout',
+   'layouts/valid-3.layout',
