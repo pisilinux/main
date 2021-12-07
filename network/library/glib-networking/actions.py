@@ -9,8 +9,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import shelltools
 
 def setup():
-    mesontools.configure("-Dgnutls=enabled \
-                          -Dwith-ca-certificates='/etc/ssl/certs/ca-certificates.crt'")
+    mesontools.configure("-Dgnutls=enabled")
 
 def build():
     mesontools.build()
