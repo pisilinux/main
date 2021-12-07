@@ -8,9 +8,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dwith_webkit=true \
-                          -Dwith_sysprof=true \
-                          -Dhelp=true \
+    mesontools.configure("-Dhelp=true \
                           -Dnetwork_tests=false")
 
 def build():
