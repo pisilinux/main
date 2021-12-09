@@ -1,0 +1,22 @@
+From 2a4348e07cdcf59c134b3a2850ef57f617b6224f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=A9rgio=20M=2E=20Basto?= <sergio@serjux.com>
+Date: Thu, 14 Oct 2021 11:57:41 +0100
+Subject: [PATCH] opencv-4.5.4 enable_cvv fixes #3063
+
+The cvv module is compiled conditionally on HAVE_QT5. But in opencv commit 87d4970e8b4b3251035fdf4a0101335ee5904a58 this variable was renamed to HAVE_QT, so the module is never compiled.
+
+Also check if QT_VERSION_MAJOR >= 5
+---
+ modules/cvv/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/opencv_contrib-4.5.4/modules/cvv/CMakeLists.txt b/opencv_contrib-4.5.4/modules/cvv/CMakeLists.txt
+index 709464ee896..c264ef1eada 100644
+--- a/opencv_contrib-4.5.4/modules/cvv/CMakeLists.txt
++++ b/opencv_contrib-4.5.4/modules/cvv/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-if(NOT HAVE_QT5 OR NOT HAVE_CXX11)
++if(NOT HAVE_QT OR NOT HAVE_CXX11 OR QT_VERSION_MAJOR LESS 5)
+   ocv_module_disable(cvv)
+   return()
+ endif()

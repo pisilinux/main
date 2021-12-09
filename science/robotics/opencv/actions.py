@@ -63,7 +63,7 @@ def setup():
                           -DBUILD_opencv_java_bindings_generator=OFF \
                           -DPYTHON3_EXECUTABLE=/usr/bin/python3 \
                           -DOPENCV_GENERATE_PKGCONFIG=ON \
-                          -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-%s/modules \
+                          -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-%s/modules \
                           " % (get.installDIR(), get.srcVERSION()), sourceDir="..")
                           #  -DUSE_O3=OFF
                           #  -DUSE_OMIT_FRAME_POINTER=OFF
