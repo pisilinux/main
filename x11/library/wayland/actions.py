@@ -8,25 +8,28 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
 bindir = "/usr/bin32" if get.buildTYPE() == "emul32" else "/usr/bin"
 
 def setup():
-    autotools.autoreconf("-vif")
-    autotools.configure("--disable-documentation \
-                         --libdir=%s \
-                         --bindir=%s \
-                         --disable-static" % (Libdir, bindir))
+    options = "-Ddocumentation=false \
+               --libdir=%s \
+               --bindir=%s \
+              " % (Libdir, bindir)
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    if get.buildTYPE() == "emul32":
+        options += " -Ddocumentation=false \
+                   "
+    mesontools.configure(options)
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/usr/bin32")
