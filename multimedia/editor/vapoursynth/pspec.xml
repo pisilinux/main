@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>vapoursynth</Name>
+		<Homepage>https://vapoursynth.com/doc/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>LGPL-2.1</License>
+		<IsA>app:console</IsA>
+		<PartOf>multimedia.editor</PartOf>
+		<Summary>A video processing framework with simplicity in mind.</Summary>
+		<Description>VapourSynth is an application for video manipulation. It has a core library written in C++ and a Python module to allow video scripts to be created.</Description>
+		<Archive sha1sum="5ddc97e22930ca369ed5b93c1898a2fd0dce133c" type="targz">
+			https://github.com/vapoursynth/vapoursynth/archive/refs/tags/R57.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>nasm</Dependency>
+			<Dependency>cython3</Dependency>
+			<Dependency>python3-devel</Dependency>
+			<Dependency>libzimg-devel</Dependency>
+			<Dependency>python3-sphinx</Dependency>
+		</BuildDependencies>
+	</Source>
+
+	<Package>
+		<Name>vapoursynth</Name>
+		<RuntimeDependencies>
+			<Dependency>ffmpeg</Dependency>
+			<Dependency>python3</Dependency>
+			<Dependency>libzimg</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="library">/usr/lib/python3.9/site-packages/</Path>
+			<Path fileType="man">/usr/share/man</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>vapoursynth-doc</Name>
+		<RuntimeDependencies>
+			<!-- <Dependency></Dependency> -->
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="data">/usr/share/vapoursynth/html</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>vapoursynth-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">vapoursynth</Dependency>
+			<Dependency>libzimg-devel</Dependency>
+			<Dependency>python3-devel</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/pkgconfig</Path>
+			<Path fileType="header">/usr/include/vapoursynth</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2021-12-11</Date>
+			<Version>57</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
