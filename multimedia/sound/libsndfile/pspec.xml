@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libsndfile</Name>
-        <Homepage>http://www.mega-nerd.com/libsndfile/</Homepage>
+        <Homepage>https://libsndfile.github.io/libsndfile/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -11,19 +11,20 @@
         <License>LGPLv2.1</License>
         <IsA>library</IsA>
         <IsA>app:console</IsA>
+        <PartOf>multimedia.sound</PartOf>
         <Summary>A C library for reading and writing files containing sampled sound</Summary>
         <Description>Libsndfile is a C library for reading and writing files containing sampled sound (such as MS Windows WAV and the Apple/SGI AIFF format) through one standard library interface.</Description>
-        <Archive sha1sum="85aa967e19f6b9bf975601d79669025e5f8bc77d" type="targz">http://www.mega-nerd.com/libsndfile/files/libsndfile-1.0.28.tar.gz</Archive>
+        <Archive sha1sum="f16a88e7223baef7c4497536dc1b55b56811debc" type="tarbz2">https://github.com/libsndfile/libsndfile/releases/download/1.0.31/libsndfile-1.0.31.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>flac-devel</Dependency>
             <Dependency>libogg-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>libopus-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>libvorbis-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">libsndfile-1.0.18-less_strict_tests.patch</Patch>
-<!--             <Patch level="1">libsndfile-1.0.17-regtests-need-sqlite.patch</Patch> -->
-<!--             <Patch level="1">m4dir.patch</Patch> -->
+            <!-- <Patch level="1">missing.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -32,6 +33,7 @@
         <RuntimeDependencies>
             <Dependency>flac</Dependency>
             <Dependency>libogg</Dependency>
+            <Dependency>libopus</Dependency>
             <Dependency>alsa-lib</Dependency>
             <Dependency>libvorbis</Dependency>
         </RuntimeDependencies>
@@ -66,12 +68,14 @@
             <Dependency>flac-32bit</Dependency>
             <Dependency>alsa-lib-32bit</Dependency>
             <Dependency>libogg-32bit</Dependency>
+            <Dependency>libopus-32bit</Dependency>
             <Dependency>libvorbis-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency>flac-32bit</Dependency>
             <Dependency>alsa-lib-32bit</Dependency>
             <Dependency>libogg-32bit</Dependency>
+            <Dependency>libopus-32bit</Dependency>
             <Dependency>libvorbis-32bit</Dependency>
             <Dependency release="current">libsndfile</Dependency>
         </RuntimeDependencies>
@@ -81,6 +85,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2021-12-04</Date>
+            <Version>1.0.31</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="6">
             <Date>2020-01-12</Date>
             <Version>1.0.28</Version>
