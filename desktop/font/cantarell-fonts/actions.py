@@ -6,9 +6,10 @@
 
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("-D useprebuilt=true")
 
 def build():
     mesontools.build()
