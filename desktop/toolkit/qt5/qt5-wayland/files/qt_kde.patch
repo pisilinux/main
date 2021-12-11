@@ -838,7 +838,7 @@ index 5b1f4d56..0079dfef 100644
  
  }
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
-index ccebf43d..95d1049c 100644
+index ccebf43d..683fe123 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
 @@ -336,6 +336,8 @@ QWaylandGLContext::QWaylandGLContext(EGLDisplay eglDisplay, QWaylandDisplay *dis
@@ -850,18 +850,18 @@ index ccebf43d..95d1049c 100644
      updateGLFormat();
  }
  
-@@ -404,7 +406,9 @@ void QWaylandGLContext::updateGLFormat()
+@@ -404,7 +406,10 @@ void QWaylandGLContext::updateGLFormat()
  QWaylandGLContext::~QWaylandGLContext()
  {
      delete m_blitter;
--    eglDestroyContext(m_eglDisplay, m_context);
 +    m_blitter = nullptr;
+     eglDestroyContext(m_eglDisplay, m_context);
 +    if (m_decorationsContext != EGL_NO_CONTEXT)
 +        eglDestroyContext(m_eglDisplay, m_decorationsContext);
  }
  
  bool QWaylandGLContext::makeCurrent(QPlatformSurface *surface)
-@@ -439,6 +443,10 @@ bool QWaylandGLContext::makeCurrent(QPlatformSurface *surface)
+@@ -439,6 +444,10 @@ bool QWaylandGLContext::makeCurrent(QPlatformSurface *surface)
          eglSurface = window->eglSurface();
      }
  
