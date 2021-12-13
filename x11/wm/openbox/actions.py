@@ -11,6 +11,7 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
+    shelltools.export("PYTHON", "/usr/bin/python3")
     shelltools.export("AUTOPOINT", "true")
     autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
@@ -18,7 +19,7 @@ def setup():
                          --with-x \
                          --enable-nls \
                          --sysconfdir=/etc \
-                         --libexecdir=/usr/libexec/openbox \
+                         --libexecdir=/usr/libexec \
                          --enable-startup-notification \
                          --docdir=/%s/%s" % (get.docDIR(), get.srcNAME()))
 
