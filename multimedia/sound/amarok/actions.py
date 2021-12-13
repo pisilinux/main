@@ -12,7 +12,7 @@ from pisi.actionsapi import shelltools
 shelltools.export("XDG_DATA_DIRS", get.workDIR())
 
 def setup():
-    shelltools.system("sed -i -e 's|PATH_SUFFIXES lastfm5|PATH_SUFFIXES lastfm|' cmake/modules/FindLibLastFm.cmake")
+    #shelltools.system("sed -i -e 's|PATH_SUFFIXES lastfm5|PATH_SUFFIXES lastfm|' cmake/modules/FindLibLastFm.cmake")
     kde5.configure("-DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_INSTALL_PREFIX=/usr \
                     -DLIB_INSTALL_DIR=lib \
@@ -27,4 +27,4 @@ def build():
 def install():
     kde5.install()
 
-    pisitools.dodoc("AUTHORS", "README", "COPYING", "ChangeLog")
+    pisitools.dodoc("AUTHORS", "README", "COPYING*", "ChangeLog")
