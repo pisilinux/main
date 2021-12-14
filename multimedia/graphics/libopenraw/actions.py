@@ -9,7 +9,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.configure("--disable-dependency-tracking --disable-static --enable-gnome")
+	pisitools.dosed("gnome/libopenraw-gnome-0.3.pc.in", "1", "3")
+	autotools.configure("--enable-gnome --disable-static")
 
 def build():
 	autotools.make()
@@ -20,5 +21,5 @@ def check():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README", "TODO")
+	pisitools.dodoc("AUTHORS", "NEWS", "RELEASE_NOTES")
 
