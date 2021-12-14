@@ -14,12 +14,17 @@
         <IsA>app:console</IsA>
         <Summary>Portable Hardware Locality (hwloc)</Summary>
         <Description>The Portable Hardware Locality (hwloc) software package provides a portable abstraction (across OS, versions, architectures, ...) of the hierarchical topology of modern architectures, including NUMA memory nodes, sockets, shared caches, cores and simultaneous multithreading. It also gathers various system attributes such as cache and memory information as well as the locality of I/O devices such as network interfaces, InfiniBand HCAs or GPUs.</Description>
-        <Archive sha1sum="1b87ff3820b28e718dfdca626a1d27521ea613f6" type="tarbz2">https://download.open-mpi.org/release/hwloc/v2.2/hwloc-2.2.0.tar.bz2</Archive>
+        <Archive sha1sum="6e971b7d182ef8dde3c95b1c6afc2c4c7b5a0ce7" type="tarbz2">https://download.open-mpi.org/release/hwloc/v2.7/hwloc-2.7.0.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>cairo-devel</Dependency>
+            <Dependency>pciutils-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
             <Dependency>numactl-devel</Dependency>
+            <Dependency>libpciaccess-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch level="1">hwloc-1.8.1-gl.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
@@ -29,6 +34,8 @@
             <Dependency>cairo</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>numactl</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libpciaccess</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -38,6 +45,7 @@
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="data">/usr/share/hwloc</Path>
             <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/bash-completion/completions/hwloc</Path>
         </Files>
     </Package>
 
@@ -54,6 +62,13 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2021-12-14</Date>
+            <Version>2.7.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="1">
             <Date>2020-05-22</Date>
             <Version>2.2.0</Version>
