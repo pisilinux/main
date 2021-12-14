@@ -18,17 +18,19 @@ def setup():
 
     shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
     shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv")
-    shelltools.system("git clone https://github.com/PipeWire/pipewire")
+    #shelltools.system("git clone https://github.com/PipeWire/pipewire")
     
     shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
     shelltools.move("libyuv/*", "src/third_party/libyuv")
-    shelltools.move("pipewire/*", "src/third_party/pipewire")
-    
-    pisitools.flags.add("-fPIC")
+    #shelltools.move("pipewire/*", "src/third_party/pipewire")
+
+    #shelltools.export("CPPFLAGS", "-DNDEBUG")
+    #pisitools.cxxflags.add("-std=c++11")
+    #pisitools.flags.add("-fPIC")
     cmaketools.configure("-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
                                     -DCMAKE_INSTALL_PREFIX=/usr \
                                     -DTG_OWT_SPECIAL_TARGET=linux \
-                                    -DBUILD_SHARED_LIBS=ON \
+                                    -DBUILD_SHARED_LIBS=OFF \
                                     -DTG_OWT_LIBJPEG_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPENSSL_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPUS_INCLUDE_PATH=/usr/include/opus \
