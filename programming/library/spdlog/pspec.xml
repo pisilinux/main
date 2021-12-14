@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>spdlog</Name>
+		<Homepage>https://spdlog.docsforge.com/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<IsA>library</IsA>
+		<PartOf>programming.library</PartOf>
+		<Summary>Fast C++ logging library.</Summary>
+		<Description>Very fast, header-only/compiled, C++ logging library.</Description>
+		<Archive sha1sum="8029472f22c024291317394d484b30af1565ea79" type="targz">
+			https://github.com/gabime/spdlog/archive/refs/tags/v1.9.2.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>fmt-devel</Dependency>
+		</BuildDependencies>
+	</Source>
+
+	<Package>
+		<Name>spdlog</Name>
+		<RuntimeDependencies>
+			<Dependency>fmt</Dependency>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>spdlog-devel</Name>
+		<RuntimeDependencies>
+			<Dependency>fmt-devel</Dependency>
+			<Dependency release="current">spdlog</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="data">/usr/lib/cmake</Path>
+			<Path fileType="header">/usr/include/spdlog</Path>
+			<Path fileType="library">/usr/lib/pkgconfig</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2021-12-14</Date>
+			<Version>1.9.2</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
