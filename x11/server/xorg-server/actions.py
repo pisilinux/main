@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("patch -Rp1 < 0001-revert-dpi-calculation.patch")
+    #shelltools.system("patch -Rp1 < 0001-revert-dpi-calculation.patch")
     autotools.autoreconf("-fi")
 
     autotools.configure("--enable-install-libxf86config \
