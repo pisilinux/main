@@ -12,8 +12,6 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Dipv6=true \
-                          -Dxvfb=false \
-                          -Dxdmcp=false \
                           -Dxcsecurity=true \
                           -Ddri3=true \
                           -Dxwayland_eglstream=true \
