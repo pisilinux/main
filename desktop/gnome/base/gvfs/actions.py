@@ -19,7 +19,6 @@ def setup():
                                 -Dgoa=false \
                                 -Dman=true \
                                 -Dgoogle=false \
-                                -Dtmpfilesdir=lib/tmpfiles.d \
                                 -Dsystemduserunitdir=no ..")
     
 def build():
