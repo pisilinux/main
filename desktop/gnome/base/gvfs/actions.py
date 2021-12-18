@@ -13,12 +13,12 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     shelltools.system("meson --prefix=/usr \
-                                -Ddbus_service_dir=/usr/share/dbus-1/services \
                                 -Dlogind=false \
                                 -Dnfs=false \
-                                -Dgoa=false \
+                                -Dgoa=true \
                                 -Dman=true \
-                                -Dgoogle=false \
+                                -Dgoogle=true \
+                                -Dtmpfilesdir=no \
                                 -Dsystemduserunitdir=no ..")
     
 def build():
