@@ -20,6 +20,7 @@ def setup():
 	if get.buildTYPE() == "emul32":
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib32 \
 						      -DBUILD_SHARED_LIBS=ON \
+						      -DSPIRV_TOOLS_BUILD_STATIC=OFF \
 						      -DSPIRV_WERROR=Off \
 						      -DSPIRV-Headers_SOURCE_DIR=/usr \
 						      -DSKIP_SPIRV_TOOLS_INSTALL=OFF \
@@ -27,6 +28,7 @@ def setup():
 	else:
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
 						      -DBUILD_SHARED_LIBS=ON \
+						      -DSPIRV_TOOLS_BUILD_STATIC=OFF \
 						      -DSPIRV-Headers_SOURCE_DIR=/usr \
 						      -DSPIRV_WERROR=OFF")
     
