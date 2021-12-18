@@ -26,6 +26,7 @@ def setup():
                           -DBUILD_VULKANINFO=ON \
                           -DGLSLANG_INSTALL_DIR=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
+                          -DCMAKE_INSTALL_INCLUDEDIR=/usr/include \
                           -DBUILD_ICD=OFF \
                          ", sourceDir="..")
     
