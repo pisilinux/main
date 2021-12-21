@@ -15,6 +15,6 @@ def build():
 	autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s man" % get.installDIR())
+	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	pisitools.removeDir("/usr/share")
