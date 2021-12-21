@@ -5,7 +5,6 @@
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import perlmodules
-from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 
 def setup():
