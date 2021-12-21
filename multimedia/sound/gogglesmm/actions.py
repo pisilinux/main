@@ -9,20 +9,21 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-i = ''.join([
-    ' -DCMAKE_BUILD_TYPE=Release',
-    ' -DBUILD_SHARED_LIBS=ON '
+j = ''.join([
+    ' -DWITH_ALSA=ON',
+    ' -DWITH_NATIVE=ON -L '
     ])
 
 def setup():
-    cmaketools.configure("-Bbuild %s" % i)
+	cmaketools.configure("-B_build %s" % j)
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make()
+	shelltools.cd("_build")
+	cmaketools.make()
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+	shelltools.cd("_build")
+	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("../AUTHORS", "../Changelog")
+	pisitools.dodoc("../AUTHORS", "../ChangeLog")
+
