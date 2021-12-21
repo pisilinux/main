@@ -4,12 +4,10 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools, cmaketools, pisitools
+from pisi.actionsapi import shelltools, cmaketools
 
 def setup():
-	shelltools.makedirs("_build")
-	shelltools.cd("_build")
-	cmaketools.configure("-DBUILD_SHARED_LIBS=1", sourceDir = "..")
+	cmaketools.configure("-B_build -DBUILD_SHARED_LIBS=1")
 
 def build():
 	shelltools.cd("_build")
@@ -18,5 +16,3 @@ def build():
 def install():
 	shelltools.cd("_build")
 	cmaketools.install()
-
-	pisitools.insinto("/usr/lib/pkgconfig", "../libutf8proc.pc.in", "libutf8proc.pc")
