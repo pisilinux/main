@@ -6,7 +6,6 @@
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 j = '-DCMAKE_BUILD_TYPE=Release -DGUI=QT5 -L '
