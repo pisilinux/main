@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 j = ''.join([
     ' -DWITH_ALSA=ON',
-    ' -DWITH_NATIVE=ON -L '
+    ' -DWITH_NATIVE=OFF -L '
     ])
 
 def setup():
