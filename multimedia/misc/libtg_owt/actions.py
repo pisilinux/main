@@ -25,8 +25,8 @@ def setup():
     #shelltools.move("pipewire/*", "src/third_party/pipewire")
 
     #shelltools.export("CPPFLAGS", "-DNDEBUG")
-    #pisitools.cxxflags.add("-std=c++11")
-    #pisitools.flags.add("-fPIC")
+    pisitools.cflags.add(" -ffat-lto-objects")
+    pisitools.cxxflags.add(" -ffat-lto-objects")
     cmaketools.configure("-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
                                     -DCMAKE_INSTALL_PREFIX=/usr \
                                     -DTG_OWT_SPECIAL_TARGET=linux \
