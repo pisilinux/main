@@ -37,14 +37,13 @@ def setup():
     opt = 'custom_toolchain="//build/toolchain/linux/unbundle:default" \
            host_toolchain="//build/toolchain/linux/unbundle:default" \
            use_sysroot=false \
-           enable_nacl=true \
+           enable_nacl=false \
            enable_nacl_nonsfi=false \
            rtc_use_pipewire=true \
            use_custom_libcxx=true \
            clang_use_chrome_plugins=true \
            is_official_build=true \
            fieldtrial_testing_like_official_build=true \
-           clang_use_chrome_plugins=false \
            fatal_linker_warnings=false \
            treat_warnings_as_errors=false \
            use_gnome_keyring=false\
@@ -54,9 +53,7 @@ def setup():
            linux_use_bundled_binutils=false \
            is_debug=false \
            ffmpeg_branding="Chrome" \
-           google_default_client_secret="0ZChLK6AxeA3Isu96MkwqDR4" \
            google_api_key="AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM" \
-           google_default_client_id="413772536636.apps.googleusercontent.com" \
            remove_webcore_debug_symbols=true \
            proprietary_codecs=true \
            link_pulseaudio=true \
@@ -93,7 +90,7 @@ def setup():
     pisitools.ldflags.add(" -fuse-ld=lld")
     shelltools.export("CPPFLAGS", "-D__DATE__=  -D__TIME__=  -D__TIMESTAMP__=")
     
-    shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
+    #shelltools.system("/usr/bin/python3 build/download_nacl_toolchains.py --packages nacl_x86_newlib,pnacl_newlib,pnacl_translator sync --extract")
     shelltools.system("/usr/bin/python3 tools/update_pgo_profiles.py --target=linux update --gs-url-base=chromium-optimization-profiles/pgo_profiles")
     shelltools.system("/usr/bin/python3 tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
@@ -111,7 +108,7 @@ def install():
 
     #should be checked should for the missing folder "out/Release"
     for vla in ["*.pak", "*.json", "chrome", "locales", "resources", "icudtl.dat", "mksnapshot", "chromedriver", "snapshot_blob.bin", "character_data_generator", \
-			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "nacl_helper", "nacl_helper_bootstrap", "nacl_irt_x86_64.nexe", "chrome_crashpad_handler"]:
+			    "libEGL.so", "libGLESv2.so", "libVk*.so", "v8_context_snapshot.bin", "MEIPreload", "chrome_crashpad_handler"]:
         pisitools.insinto("/usr/lib/chromium-browser", "%s" % vla)
 	
     pisitools.insinto("/usr/lib/chromium-browser", "chrome_sandbox", "chrome-sandbox")
