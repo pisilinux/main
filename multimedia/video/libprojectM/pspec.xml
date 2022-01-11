@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libprojectM</Name>
+        <Homepage>http://projectm.sourceforge.net</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2</License>
+        <IsA>library</IsA>
+        <Summary>An advanced MilkDrop-compatible music visualization library</Summary>
+        <Description>libprojectM is an iterative music visualization library which uses OpenGL for hardware acceleration. It is a reimplementation of Winamp visualization plug-in MilkDrop which uses 3D graphics hardware, combined with iterative image-based rendering techniques and compatible with MilkDrop presets.</Description>
+        <Archive sha1sum="570a8a49f03a85ad0a8fe12c8c097df80b1f8c85" type="targz">https://github.com/projectM-visualizer/projectm/releases/download/v3.1.12/projectM-3.1.12.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>mesa-devel</Dependency>
+            <Dependency>libsdl2-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>freeglut-devel</Dependency>
+            <Dependency>libvisual-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libprojectM</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libglvnd</Dependency>
+            <Dependency>libsdl2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/projectM-unittest</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/projectM/</Path>
+            <Path fileType="library">/usr/lib/libprojectM.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libprojectM-devel</Name>
+        <Summary>Development files for libprojectM</Summary>
+        <RuntimeDependencies>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency release="current">libprojectM</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libprojectM-sdl</Name>
+        <Summary>ProjectM support for sdl</Summary>
+        <RuntimeDependencies>
+            <Dependency>libsdl2</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>jack-audio-connection-kit</Dependency>
+            <Dependency release="current">libprojectM</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/projectMSDL</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libprojectM-pulseaudio</Name>
+        <Summary>ProjectM support for Pulseaudio</Summary>
+        <RuntimeDependencies>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libglvnd</Dependency>
+            <Dependency>pulseaudio-libs</Dependency>
+            <Dependency release="current">libprojectM</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="man">/usr/share/man/man1/projectM-pulseaudio.1</Path>
+            <Path fileType="executable">/usr/bin/projectM-pulseaudio</Path>
+            <Path fileType="data">/usr/share/applications/projectM-pulseaudio.desktop</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-01-09</Date>
+            <Version>3.1.12</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
