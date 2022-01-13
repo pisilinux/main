@@ -1,51 +1,168 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>libva</Name>
-        <Homepage>http://www.freedesktop.org/wiki/Software/vaapi</Homepage>
+        <Name>mesa</Name>
+        <Homepage>http://www.mesa3d.org</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
         <License>MIT</License>
         <IsA>library</IsA>
-        <Summary>Video Acceleration (VA) API for Linux</Summary>
-        <Description>libva is a library providing the VA API video acceleration API.</Description>
-        <Archive sha1sum="519444a1c96d8f485d8e56d4445eb53168c9c4e1" type="targz">https://github.com/intel/libva/archive/2.13.0.tar.gz</Archive>
+        <IsA>app:console</IsA>
+        <Summary>Mesa graphics libraries and utilities</Summary>
+        <Description>Mesa is an open-source implementation of the OpenGL specification - a system for rendering interactive 3D graphics.</Description>
+        <Archive sha1sum="80187e8dd7701a931676058ce456de008fdcaf8c" type="tarxz">https://archive.mesa3d.org//mesa-21.3.4.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>valgrind</Dependency>
+            <Dependency>libva-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>xorg-proto</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>expat-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
+            <Dependency>libcap-devel</Dependency>
             <Dependency>libdrm-devel</Dependency>
             <Dependency>libXext-devel</Dependency>
-            <Dependency>libXfixes-devel</Dependency>
-            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>elfutils-devel</Dependency>
             <Dependency>wayland-devel</Dependency>
-			<Dependency>wayland-client</Dependency>
+            <Dependency>wayland-server</Dependency>
+            <Dependency>wayland-client</Dependency>
+            <Dependency>libvdpau-devel</Dependency>
+            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>libtalloc-devel</Dependency>
+            <Dependency>libXdamage-devel</Dependency>
+            <Dependency>libomxil-bellagio-devel</Dependency>
+            <Dependency>libXxf86vm-devel</Dependency>
+            <Dependency>libXvMC-devel</Dependency>
+            <Dependency>libXv-devel</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>nettle-devel</Dependency>
+            <Dependency>python3-mako</Dependency>
+            <Dependency versionFrom="12.0.0">llvm</Dependency>
+            <Dependency versionFrom="12.0.0">compiler-rt</Dependency>
+            <Dependency versionFrom="12.0.0">llvm-polly</Dependency>
+            <Dependency versionFrom="12.0.0">llvm-clang-devel</Dependency>
+            <Dependency versionFrom="1.2">libxshmfence-devel</Dependency>
+            <Dependency>automake</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libdrm-intel</Dependency>
+            <Dependency>libdrm-radeon</Dependency>
+            <Dependency>libdrm-amd</Dependency>
+            <Dependency>libdrm-nouveau</Dependency>
+            <Dependency>libunwind-devel</Dependency>
+            <Dependency>wayland-protocols-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>libclc-devel</Dependency>
+            <Dependency>vulkan-devel</Dependency>
+            <Dependency>glslang-devel</Dependency>
+            <Dependency>lm_sensors-devel</Dependency>
         </BuildDependencies>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="crossfile.ini">crossfile.ini</AdditionalFile>
+        </AdditionalFiles>
+        <Patches>
+            <Patch level="1">swr-llvm13-patch1.patch</Patch>
+            <Patch level="1">swr-llvm13-patch2.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
-        <Name>libva</Name>
+        <Name>mesa</Name>
         <RuntimeDependencies>
-            <Dependency>libX11</Dependency>  
+            <Dependency>zstd</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>expat</Dependency>
+            <Dependency>libXv</Dependency>
+            <Dependency>libX11</Dependency>
             <Dependency>libdrm</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libxcb</Dependency>
             <Dependency>libXext</Dependency>
+            <Dependency>libXvMC</Dependency>
+            <Dependency>elfutils</Dependency>
             <Dependency>libXfixes</Dependency>
-            <Dependency>libglvnd</Dependency>
+            <Dependency>libXdamage</Dependency>
+            <Dependency>libXxf86vm</Dependency>
+            <Dependency>libdrm-amd</Dependency>
+            <Dependency>lm_sensors</Dependency>
+            <Dependency>libdrm-intel</Dependency>
+            <Dependency>libxshmfence</Dependency>
+            <Dependency>libdrm-radeon</Dependency>
+            <Dependency>libdrm-nouveau</Dependency>
             <Dependency>wayland-client</Dependency>
+            <Dependency>wayland-server</Dependency>
+            <Dependency>libomxil-bellagio</Dependency>
+            <Dependency>lm_sensors</Dependency>
+<!--             <Dependency>libclc</Dependency> -->
+            <Dependency>vulkan</Dependency>
+<!--             <Dependency>opencl-icd</Dependency> -->
+            <Dependency versionFrom="12.0.0">llvm-libs</Dependency>
+<!--             <Dependency versionFrom="11.0.0">llvm-clang</Dependency> -->
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libGL.so.1.2</Path>
+            <Path fileType="data">/usr/share/vulkan/icd.d</Path>
+            <Path fileType="data">/usr/share/drirc.d/00-mesa-defaults.conf</Path>
+            <Path fileType="data">/usr/share/glvnd/egl_vendor.d/50_mesa.json</Path>
+            <Path fileType="data">/usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json</Path>
             <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/vulkan/explicit_layer.d</Path>
         </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/drirc">drirc</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    
+    <Package>
+        <Name>mesa-opencl</Name>
+        <Summary>OpenCL support for AMD/ATI Radeon mesa drivers</Summary>
+        <RuntimeDependencies>
+            <Dependency>zstd</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>expat</Dependency>
+            <Dependency>libdrm</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>elfutils</Dependency>
+            <Dependency>llvm-libs</Dependency>
+            <Dependency>libdrm-amd</Dependency>
+            <Dependency>llvm-clang</Dependency>
+            <Dependency>libdrm-radeon</Dependency>
+            <Dependency>libdrm-nouveau</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/OpenCL/vendors/mesa.icd</Path>
+            <Path fileType="library">/usr/lib/libMesaOpenCL.so*</Path>
+            <Path fileType="library">/usr/lib/gallium-pipe/pipe*.so</Path>
+        </Files>
+        <AdditionalFiles>
+<!--             <AdditionalFile owner="root" permission="0644" target="/etc/drirc">drirc</AdditionalFile> -->
+        </AdditionalFiles>
     </Package>
 
     <Package>
-        <Name>libva-devel</Name>
-        <Summary>Development files for libva</Summary>
+        <Name>mesa-devel</Name>
+        <Summary>Development files for mesa</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">libva</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+            <Dependency>libdrm-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
             <Dependency>wayland-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>libXfixes-devel</Dependency>
+            <Dependency>libXdamage-devel</Dependency>
+            <Dependency>libXxf86vm-devel</Dependency>
+            <Dependency>libxshmfence-devel</Dependency>
+            <Dependency release="current">mesa</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -55,116 +172,470 @@
     </Package>
 
     <Package>
-        <Name>libva-32bit</Name>
+        <Name>mesa-32bit</Name>
         <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for libva</Summary>
+        <Summary>32-bit shared libraries for mesa</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
-            <Dependency>libdrm-32bit</Dependency>
-            <Dependency>wayland-32bit</Dependency>
-            <Dependency>libXext-32bit</Dependency>
-            <Dependency>libXfixes-32bit</Dependency>
-            <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>libva-32bit</Dependency>
+            <Dependency>elfutils-32bit</Dependency>
+            <Dependency>expat-32bit</Dependency>
+            <Dependency>libXt-32bit</Dependency>
+            <Dependency>libXv-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
+            <Dependency>libcap-32bit</Dependency>
+            <Dependency>libdrm-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libXvMC-32bit</Dependency>
+            <Dependency>eudev-32bit</Dependency>
+            <Dependency>openssl-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>libvdpau-32bit</Dependency>
+            <Dependency>libXfixes-32bit</Dependency>
+            <Dependency>libXdamage-32bit</Dependency>
+            <Dependency>libXxf86vm-32bit</Dependency>
+            <Dependency>libdrm-intel-32bit</Dependency>
+            <Dependency>libdrm-radeon-32bit</Dependency>
+            <Dependency>libdrm-amd-32bit</Dependency>
+            <Dependency>libdrm-nouveau-32bit</Dependency>
+            <Dependency>libxshmfence-32bit</Dependency>
+            <Dependency>nettle-32bit</Dependency>
+            <Dependency>libunwind-32bit</Dependency>
+            <Dependency versionFrom="11.0.0">llvm-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>vulkan-32bit</Dependency>
+            <Dependency>libclc-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
-            <Dependency release="current">libva</Dependency>
+            <Dependency>zlib-32bit</Dependency>
+            <Dependency>elfutils-32bit</Dependency>
+            <Dependency>openssl-32bit</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libxcb-32bit</Dependency>
+            <Dependency>expat-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
             <Dependency>libdrm-32bit</Dependency>
-            <Dependency>wayland-32bit</Dependency>
+            <Dependency>libxcb-32bit</Dependency>
             <Dependency>libXext-32bit</Dependency>
             <Dependency>libXfixes-32bit</Dependency>
-            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXdamage-32bit</Dependency>
+            <Dependency>libXxf86vm-32bit</Dependency>
+            <Dependency>libXv-32bit</Dependency>
+            <Dependency>libXvMC-32bit</Dependency>
+            <Dependency>libdrm-intel-32bit</Dependency>
+            <Dependency>libxshmfence-32bit</Dependency>
+            <Dependency>libdrm-radeon-32bit</Dependency>
+            <Dependency>libdrm-amd-32bit</Dependency>
+            <Dependency>libdrm-nouveau-32bit</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>vulkan-32bit</Dependency>
+            <Dependency>opencl-icd-32bit</Dependency>
             <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>libclc-32bit</Dependency>
+            <Dependency>libunwind-32bit</Dependency>
+            <Dependency release="current">mesa</Dependency>
+            <Dependency versionFrom="11.0.0">llvm-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32</Path>
+            <Path fileType="data">/usr/share/vulkan/icd.d/*.i686.json</Path>
         </Files>
     </Package>
 
     <History>
-        <Update release="12">
+        <Update release="56">
             <Date>2022-01-13</Date>
-            <Version>2.13.0</Version>
+            <Version>21.3.4</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
+        <Update release="55">
+            <Date>2021-12-30</Date>
+            <Version>21.3.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="54">
+            <Date>2021-12-18</Date>
+            <Version>21.3.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="53">
+            <Date>2021-12-02</Date>
+            <Version>21.3.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="52">
+            <Date>2021-11-18</Date>
+            <Version>21.3.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="51">
+            <Date>2021-10-28</Date>
+            <Version>21.2.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="50">
+            <Date>2021-10-24</Date>
+            <Version>21.2.4</Version>
+            <Comment>Rebuild llvm.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="49">
+            <Date>2021-10-16</Date>
+            <Version>21.2.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="48">
+            <Date>2021-09-30</Date>
+            <Version>21.2.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="47">
+            <Date>2021-09-12</Date>
+            <Version>21.1.8</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="46">
+            <Date>2021-08-13</Date>
+            <Version>21.1.7</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="45">
+            <Date>2021-07-29</Date>
+            <Version>21.1.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="44">
+            <Date>2021-07-15</Date>
+            <Version>21.1.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="43">
+            <Date>2021-07-01</Date>
+            <Version>21.1.4</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="42">
+            <Date>2021-06-20</Date>
+            <Version>21.1.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="41">
+            <Date>2021-06-05</Date>
+            <Version>21.1.2</Version>
+            <Comment>Version bump</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+        <Update release="40">
+            <Date>2021-03-25</Date>
+            <Version>20.3.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="39">
+            <Date>2021-02-21</Date>
+            <Version>20.3.4</Version>
+            <Comment>Rebuild llvm.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="38">
+            <Date>2021-02-01</Date>
+            <Version>20.3.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="37">
+            <Date>2020-12-17</Date>
+            <Version>20.2.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="36">
+            <Date>2020-12-10</Date>
+            <Version>20.2.4</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="35">
+            <Date>2020-11-24</Date>
+            <Version>20.2.3</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="34">
+            <Date>2020-11-12</Date>
+            <Version>20.2.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+        <Update release="33">
+            <Date>2020-10-17</Date>
+            <Version>20.2.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="32">
+            <Date>2020-10-09</Date>
+            <Version>20.2.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="31">
+            <Date>2020-09-24</Date>
+            <Version>20.1.8</Version>
+            <Comment>Rebuild llvm-10.0.1.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="30">
+            <Date>2020-09-17</Date>
+            <Version>20.1.8</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="29">
+            <Date>2020-09-03</Date>
+            <Version>20.1.7</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="28">
+            <Date>2020-08-06</Date>
+            <Version>20.1.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="27">
+            <Date>2020-07-10</Date>
+            <Version>20.1.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="26">
+            <Date>2020-06-25</Date>
+            <Version>20.1.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="25">
+            <Date>2020-06-12</Date>
+            <Version>20.1.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="24">
+            <Date>2020-06-03</Date>
+            <Version>20.1.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="23">
+            <Date>2020-05-16</Date>
+            <Version>20.0.7</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="22">
+            <Date>2020-05-09</Date>
+            <Version>20.0.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="21">
+            <Date>2020-04-23</Date>
+            <Version>20.0.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="20">
+            <Date>2020-04-09</Date>
+            <Version>20.0.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="19">
+            <Date>2020-03-27</Date>
+            <Version>20.0.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+        <Update release="18">
+            <Date>2020-01-03</Date>
+            <Version>19.3.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Marcin Bojara</Name>
+            <Email>marcin.bojara|@gmail.com</Email>
+        </Update>
+        <Update release="17">
+            <Date>2019-11-15</Date>
+            <Version>19.2.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="16">
+            <Date>2019-11-07</Date>
+            <Version>19.2.3</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="15">
+            <Date>2019-10-24</Date>
+            <Version>19.2.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="14">
+            <Date>2019-05-29</Date>
+            <Version>18.2.8</Version>
+            <Comment>Rebuild llvm.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="13">
+            <Date>2019-01-22</Date>
+            <Version>18.2.8</Version>
+            <Comment>Rebuild llvm.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="12">
+            <Date>2018-12-18</Date>
+            <Version>18.2.5</Version>
+            <Comment>Rebuild llvm.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="11">
-            <Date>2021-01-28</Date>
-            <Version>2.10.0</Version>
+            <Date>2018-11-17</Date>
+            <Version>18.2.5</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="10">
-            <Date>2020-10-01</Date>
-            <Version>2.9.0</Version>
+            <Date>2018-11-05</Date>
+            <Version>18.1.6</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="9">
-            <Date>2020-01-10</Date>
-            <Version>2.6.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Idris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
+            <Date>2018-10-29</Date>
+            <Version>17.3.4</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Ertuğrul Erata</Name>
+            <Email>ertugrulerata@gmail.com</Email>
         </Update>
         <Update release="8">
-            <Date>2019-10-25</Date>
-            <Version>2.5.0</Version>
-            <Comment>Version bump.</Comment>
+            <Date>2018-09-16</Date>
+            <Version>17.3.4</Version>
+            <Comment>Rebuild</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="7">
-            <Date>2018-07-27</Date>
-            <Version>2.2.0</Version>
-            <Comment>Version bump.</Comment>
+            <Date>2018-04-10</Date>
+            <Version>13.0.4</Version>
+            <Comment>Rebuild</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
-      </Update>
+        </Update>
         <Update release="6">
-            <Date>2018-04-22</Date>
-            <Version>2.1.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-      </Update>
+            <Date>2018-02-06</Date>
+            <Version>13.0.4</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="5">
-            <Date>2017-02-15</Date>
-            <Version>2.0.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-      </Update>
-        <Update release="4">
-            <Date>2017-02-15</Date>
-            <Version>1.7.3</Version>
-            <Comment>Version bump.</Comment>
+            <Date>2017-03-23</Date>
+            <Version>13.0.4</Version>
+            <Comment>llvm rebuild</Comment>
             <Name>Alihan Öztürk</Name>
             <Email>alihan@pisilinux.org</Email>
-      </Update>
+        </Update>
+        <Update release="4">
+            <Date>2017-02-02</Date>
+            <Version>13.0.4</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
         <Update release="3">
-            <Date>2016-11-03</Date>
-            <Version>1.7.2</Version>
-            <Comment>Version bump.</Comment>
+            <Date>2016-11-02</Date>
+            <Version>13.0.0</Version>
+            <Comment>Release Bump</Comment>
             <Name>Stefan Gronewold</Name>
             <Email>groni@pisilinux.org</Email>
-      </Update>
-      <Update release="2">
+        </Update>
+        <Update release="2">
             <Date>2016-04-27</Date>
-            <Version>1.7.0</Version>
-            <Comment>First release</Comment>
+            <Version>11.2.1</Version>
+            <Comment>Version Bump</Comment>
             <Name>Alihan Öztürk</Name>
             <Email>alihan@pisilinux.org</Email>
-      </Update>
-      <Update release="1">
-            <Date>2015-05-10</Date>
-            <Version>1.5.1</Version>
+        </Update>
+        <Update release="1">
+            <Date>2016-03-28</Date>
+            <Version>11.2.0</Version>
             <Comment>First release</Comment>
-            <Name>Burak Ertürk</Name>
-            <Email>burakerturk@pisilinux.org</Email>
-      </Update>
+            <Name>Yusuf Aydemir</Name>
+            <Email>yusuf.aydemir@pisilinux.org</Email>
+        </Update>
     </History>
 </PISI>
