@@ -9,7 +9,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cflags.add("-Wno-stringop-truncation -Wno-discarded-qualifiers -Wno-pointer-sign")
 	autotools.autoreconf("-fi")
 	autotools.configure()
 
@@ -19,5 +18,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README.md")
+	pisitools.dodoc("AUTHORS", "NEWS")
 
