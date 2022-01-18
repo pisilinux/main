@@ -4,22 +4,21 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.autoreconf("-fi")
-	autotools.configure("--libexecdir=/usr/lib")
-
-	# for fix unused dependency
-	pisitools.dosed("libtool"," -shared ", " -Wl,-O1,--as-needed -shared ")
+	cmaketools.configure("-B_build -DCMAKE_BUILD_TYPE=Release -L")
 
 def build():
-	autotools.make()
+	shelltools.cd("_build")
+	cmaketools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+	shelltools.cd("_build")
+	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "NEWS", "ChangeLog", "COPYING", "README")
+	pisitools.dodoc("../AUTHORS", "../ChangeLog", "../NEWS")
 
