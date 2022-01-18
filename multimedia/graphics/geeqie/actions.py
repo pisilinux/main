@@ -22,6 +22,9 @@ def setup():
 	# Fix instalation step
 	pisitools.dosed("Makefile.am", "\ ChangeLog\ ", " ")
 	pisitools.dosed("Makefile.am", "\ ChangeLog.html$", "")
+	# Fix version
+	pisitools.dosed("configure.ac", "\+git", "1.7.1")
+
 
 	autotools.autoreconf("-vif")
 	autotools.configure(j)
@@ -32,4 +35,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-#	pisitools.dodoc("AUTHORS", "NEWS")
+	pisitools.removeDir("/usr/share/doc/")
+	pisitools.dodoc("AUTHORS", "NEWS")
