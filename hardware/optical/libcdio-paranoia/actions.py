@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("configure.ac", "AM_CONFIG_HEADER", "AC_CONFIG_HEADERS")
@@ -25,4 +24,4 @@ def build():
 def install():
     autotools.rawInstall("-j1 DESTDIR=%s" % (get.installDIR()))
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README*", "THANKS")
+    pisitools.dodoc("AUTHORS", "NEWS.md", "THANKS")

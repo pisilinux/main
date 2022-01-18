@@ -4,7 +4,6 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
@@ -23,6 +22,9 @@ def setup():
 	# Fix instalation step
 	pisitools.dosed("Makefile.am", "\ ChangeLog\ ", " ")
 	pisitools.dosed("Makefile.am", "\ ChangeLog.html$", "")
+	# Fix version
+	pisitools.dosed("configure.ac", "\+git", "1.7.1")
+
 
 	autotools.autoreconf("-vif")
 	autotools.configure(j)
@@ -33,5 +35,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-#	pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README*")
-
+	pisitools.removeDir("/usr/share/doc/")
+	pisitools.dodoc("AUTHORS", "NEWS")
