@@ -10,23 +10,22 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 j = ''.join([
-    '--disable-r ',
-    '--disable-io ',
-    '--disable-lua ',
-    '--disable-php ',
-    '--disable-rpath ',
-    '--disable-sharp ',
-    '--disable-ocaml ',
-    '--disable-static ',
-    '--disable-dependency-tracking ',
-    '--with-libgd ',
-    '--with-fontconfig ',
-    '--with-pangocairo ',
-    '--without-devil ',
+    ' --enable-lefty',
+    ' --disable-r',
+    ' --disable-lua',
+    ' --disable-php',
+    ' --disable-rpath',
+    ' --disable-static',
+    ' --disable-dependency-tracking',
+    ' --with-libgd',
+    ' --with-fontconfig',
+    ' --with-pangocairo',
+    ' --without-webp',
+    ' --without-devil '
     ])
 
 def setup():
-    shelltools.system("""sed -i '/LIBPOSTFIX="64"/s/64//' configure.ac""")
+    shelltools.export("LIBPOSTFIX", "/")
     shelltools.export("CONFIG_SHELL", "/bin/bash")
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure(j)
@@ -38,9 +37,3 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dohtml(".")
-    pisitools.dodoc("AUTHORS", "CHANGELOG.md", "DEVELOPERS.md", "INSTALL", "LICENSE", "README.md")
-
-    pisitools.removeDir("/usr/share/graphviz/doc")
-
