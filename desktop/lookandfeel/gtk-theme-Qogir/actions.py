@@ -10,13 +10,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def install():
-    shelltools.cd("src")
-    pisitools.dodir ("/usr/share/themes/Qogir")
-
-    for subtheme in ["gtk-2.0", "gtk-3.0", "metacity-1", "xfwm4", "cinnamon", "gnome-shell", "plank"]:
-        pisitools.insinto ("/usr/share/themes/Qogir", subtheme)
-    
-    shelltools.cd("..")
+    pisitools.dodir ("/usr/share/themes")
+    shelltools.system("./install.sh --theme default --tweaks image square round --dest '%s/usr/share/themes'" % get.installDIR())
     pisitools.dodoc ("AUTHORS", "COPYING")	
 	
 
