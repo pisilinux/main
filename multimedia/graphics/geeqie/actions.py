@@ -6,6 +6,7 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 j = ''.join([
@@ -24,8 +25,9 @@ def setup():
 	pisitools.dosed("Makefile.am", "\ ChangeLog.html$", "")
 	# Fix version
 	pisitools.dosed("configure.ac", "\+git", "1.7.1")
+	
 
-
+	shelltools.system("NOCONFIGURE=1 ./autogen.sh")
 	autotools.autoreconf("-vif")
 	autotools.configure(j)
 
