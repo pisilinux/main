@@ -1,0 +1,23 @@
+From d3d59ed1080795af43b892d7b49f160f358c6be7 Mon Sep 17 00:00:00 2001
+From: Colin Clark <colin.clark@cclark.uk>
+Date: Fri, 28 Jan 2022 10:17:04 +0000
+Subject: [PATCH] Bug fix: Open archive not working
+
+Open archive does not work if a default layout has not been set.
+---
+ src/layout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/layout.c b/src/layout.c
+index 5b08d51b..d72421f0 100644
+--- a/src/layout.c
++++ b/src/layout.c
+@@ -3090,7 +3090,7 @@ LayoutWindow *layout_new_from_default()
+ 		}
+ 	else
+ 		{
+-		layout_new_from_config(NULL, NULL, TRUE);
++		lw = layout_new_from_config(NULL, NULL, TRUE);
+ 		}
+ 	return lw;
+ }
