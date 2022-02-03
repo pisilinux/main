@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>alsa-plugins</Name>
+        <Homepage>http://www.alsa-project.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:console</IsA>
+        <Summary>Additional library plugins Eg.jack, pulse, maemo ...</Summary>
+        <Description>alsa-plugins contains ALSA (Advanced Linux Sound Architecture) </Description>
+        <Archive sha1sum="4958b886ed9b4e1d2596a3e45faaf24590335326" type="tarbz2">https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.6.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>libavtp-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>libsamplerate-devel</Dependency>
+            <Dependency>speexdsp-devel</Dependency>
+            <Dependency>ffmpeg-devel</Dependency>
+            <Dependency versionFrom="1.2.5">alsa-lib-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- Patch level="1">usx2yloader_udev.patch</Patch -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>alsa-plugins</Name>
+        <Summary>ALSA console plugins</Summary>
+        <Description>alsa-plugins contains ALSA (Advanced Linux Sound Architecture)</Description>
+        <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>libavtp</Dependency>
+            <Dependency>pulseaudio-libs</Dependency>
+            <Dependency>libsamplerate</Dependency>
+            <Dependency>speexdsp</Dependency>
+            <Dependency>ffmpeg</Dependency>
+            <Dependency versionFrom="1.2.5">alsa-lib</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/alsa/conf.d</Path>
+            <Path fileType="library">/usr/lib/alsa-lib</Path>
+            <Path fileType="data">/usr/share/alsa</Path>
+        </Files>
+        <AdditionalFiles>
+            <!-- AdditionalFile target="/lib/udev/rules.d/90-alsa-tools-firmware.rules" permission="0644">90-alsa-tools-firmware.rules</AdditionalFile -->
+            </AdditionalFiles>
+    </Package>
+
+    <History>
+         <Update release="1">
+            <Date>2022-01-25</Date>
+            <Version>1.2.6</Version>
+            <Comment>First release</Comment>
+            <Name>Ali Cengiz Kurt</Name>
+            <Email>alicengizkurt@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>

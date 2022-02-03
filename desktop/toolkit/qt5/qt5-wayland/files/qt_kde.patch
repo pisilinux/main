@@ -1116,6 +1116,19 @@ index 1d635f06..e2f87bbd 100644
              printf("                that->m_resource = nullptr;\n");
              printf("        }\n");
              printf("        delete resource;\n");
+diff --git a/src/shared/qwaylandinputmethodeventbuilder.cpp b/src/shared/qwaylandinputmethodeventbuilder.cpp
+index 526d0ef4..25be2509 100644
+--- a/src/shared/qwaylandinputmethodeventbuilder.cpp
++++ b/src/shared/qwaylandinputmethodeventbuilder.cpp
+@@ -151,7 +151,7 @@ QInputMethodEvent QWaylandInputMethodEventBuilder::buildPreedit(const QString &t
+ {
+     QList<QInputMethodEvent::Attribute> attributes;
+ 
+-    if (m_preeditCursor < 0) {
++    if (m_preeditCursor <= 0) {
+         attributes.append(QInputMethodEvent::Attribute(QInputMethodEvent::Cursor, 0, 0, QVariant()));
+     } else if (m_preeditCursor > 0) {
+         attributes.append(QInputMethodEvent::Attribute(QInputMethodEvent::Cursor, indexFromWayland(text, m_preeditCursor), 1, QVariant()));
 diff --git a/src/shared/qwaylandmimehelper.cpp b/src/shared/qwaylandmimehelper.cpp
 index a5fdd34d..051a91dc 100644
 --- a/src/shared/qwaylandmimehelper.cpp

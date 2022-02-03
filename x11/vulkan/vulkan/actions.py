@@ -24,7 +24,6 @@ def setup():
                    -DBUILD_WSI_XLIB_SUPPORT=On \
                    -DBUILD_WSI_WAYLAND_SUPPORT=On \
                    -DBUILD_SHARED_LIBS=ON \
-                   -DCMAKE_INSTALL_INCLUDEDIR='/usr/include' \
                    -DVULKAN_HEADERS_INSTALL_DIR='/usr' \
                  "
     validation_opts = " -DCMAKE_INSTALL_SYSCONFDIR=/etc \

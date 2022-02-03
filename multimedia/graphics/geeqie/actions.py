@@ -8,16 +8,18 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-j = "--disable-map \
-     --disable-pdf \
-     --disable-djvu \
-     --disable-heif \
-     --disable-gtk3 \
-     --disable-gpu-accel \
-     --disable-debug-log \
-    "
+j = ''.join([
+    ' --disable-map',
+    ' --disable-pdf',
+    ' --disable-djvu',
+    ' --disable-gtk3',
+    ' --disable-gpu-accel',
+    ' --disable-debug-log '
+    ])
 
 def setup():
+	pisitools.cflags.add("-Wno-deprecated-declarations")
+
 	autotools.autoreconf("-vif")
 	autotools.configure(j)
 
@@ -27,5 +29,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-#	pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README*")
-
+	pisitools.dodoc("AUTHORS", "NEWS")
+	pisitools.removeDir("/usr/share/doc/geeqie-%s" % get.srcVERSION())

@@ -1,0 +1,50 @@
+commit aef348d8629411063c3a290078aea80cca8b1493
+Author: 4fury-c3440d8 <uglyside@yandex.ru>
+Date:   Sun Nov 28 06:42:35 2021 +0300
+
+    Icons_display_fix
+
+diff --git a/src/service-manager.py b/src/service-manager.py
+index f1b4ba0..ec89402 100755
+--- a/src/service-manager.py
++++ b/src/service-manager.py
+@@ -15,6 +15,8 @@
+ import sys
+ import dbus
+ 
++from PyQt5.QtGui import QIcon
++
+ # Application Stuff
+ import servicemanager.about as about
+ # Application Stuff
+@@ -22,7 +24,7 @@ from servicemanager.base import MainManager
+ 
+     # Pds Stuff
+ from pds.quniqueapp import QUniqueApplication
+-from servicemanager.context import KIcon, i18n
++from servicemanager.context import i18n
+ 
+ # Create a QUniqueApllication instance
+ app = QUniqueApplication(sys.argv, catalog=about.appName)
+@@ -40,7 +42,7 @@ if __name__ == '__main__':
+     mainWindow.show()
+     mainWindow.resize(640, 480)
+     mainWindow.setWindowTitle(i18n(about.PACKAGE))
+-    mainWindow.setWindowIcon(KIcon(about.icon))
++    mainWindow.setWindowIcon(QIcon(about.icon))
+ 
+     # Create connection for lastWindowClosed signal to quit app
+     app.lastWindowClosed.connect(app.quit)
+diff --git a/src/servicemanager/widgets.py b/src/servicemanager/widgets.py
+index 4aec556..496c82f 100755
+--- a/src/servicemanager/widgets.py
++++ b/src/servicemanager/widgets.py
+@@ -95,7 +95,7 @@ class ServiceItemWidget(QtWidgets.QWidget):
+         self.ui.buttonStop.setEnabled(self.running)
+         self.ui.buttonReload.setEnabled(self.running)
+ 
+-        self.ui.labelStatus.setPixmap(KIcon(icon).pixmap(32, 32))
++        self.ui.labelStatus.setPixmap(QIcon(icon).pixmap(32, 32))
+         self.showStatus()
+         self.runningAtStart = False
+         if state in ('on', 'stopped'):

@@ -2,21 +2,24 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import libtools
 from pisi.actionsapi import get
+
+j = ''.join([
+    ' --enable-shared',
+    ' --enable-sndfile',
+    ' --disable-fftw',
+    ' --disable-static',
+    ' --disable-dependency-tracking',
+    ' --with-pic '
+    ])
 
 def setup():
     autotools.autoreconf("-fiv")
-    autotools.configure("--with-pic \
-                         --enable-sndfile \
-                         --disable-static \
-                         --enable-shared \
-                         --disable-fftw \
-                         --disable-dependency-tracking")
+    autotools.configure(j)
 
     # Remove RPATH
     pisitools.dosed("libtool", "^hardcode_libdir_flag_spec=.*", "hardcode_libdir_flag_spec=\"\"")
@@ -28,4 +31,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "NEWS")

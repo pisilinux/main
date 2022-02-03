@@ -25,7 +25,7 @@ j = ''.join([
     ])
 
 def setup():
-    pisitools.dosed("configure", "libopenraw-gnome-0\.1", "libopenraw-gnome-0.3")
+#    pisitools.dosed("configure", "libopenraw-gnome-0\.1", "libopenraw-gnome-0.3")
     autotools.configure(j)
 
     pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
@@ -35,6 +35,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # unneeded systemd service file
+    pisitools.removeDir("/usr/lib/systemd")
 
-    pisitools.dodoc("README*", "NEWS", "COPYING", "ChangeLog", "AUTHORS")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS")
 

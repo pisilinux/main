@@ -37,7 +37,8 @@ def setup():
                          --enable-kdrive-kbd \
                          --enable-kdrive-mouse \
                          --enable-xephyr \
-                         --disable-xfake \
+                         --enable-xfake \
+                         --enable-suid-wrapper \
                          --disable-xfbdev \
                          --disable-devel-docs \
                          --disable-static \
