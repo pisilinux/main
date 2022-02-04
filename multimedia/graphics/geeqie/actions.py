@@ -6,6 +6,7 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 j = ''.join([
@@ -19,6 +20,7 @@ j = ''.join([
 
 def setup():
 	pisitools.cflags.add("-Wno-deprecated-declarations")
+	shelltools.system("NOCONFIGURE=1 ./autogen.sh")
 
 	autotools.autoreconf("-vif")
 	autotools.configure(j)
