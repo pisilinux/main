@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>glusterfs</Name>
+        <Homepage>https://www.gluster.org/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Summary>a cluster file-system capable of scaling to several peta-bytes.</Summary>
+        <Description>Gluster is a scalable network filesystem. Using common off-the-shelf hardware, you can create large, distributed storage solutions for media streaming, data analysis, and other data- and bandwidth-intensive tasks. Gluster is free.</Description>
+        <Archive sha1sum="c347fcbff893dc789da21013a1a0b0be4f6e9a69" type="targz">https://github.com/gluster/glusterfs/archive/refs/tags/v10.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>acl-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>fuse-devel</Dependency>
+            <Dependency>attr-devel</Dependency>
+            <Dependency>gperftools</Dependency>
+            <Dependency>spice-devel</Dependency>
+            <Dependency>libaio-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>liburcu-devel</Dependency>
+            <Dependency>libtirpc-devel</Dependency>
+            <Dependency>liburing-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>spice-protocol</Dependency>
+            <Dependency>rpcsvc-proto-devel</Dependency>
+            <Dependency>libutil-linux-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>glusterfs</Name>
+        <RuntimeDependencies>
+            <Dependency>acl</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>attr</Dependency>
+            <Dependency>libaio</Dependency>
+            <Dependency>liburcu</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>libtirpc</Dependency>
+            <Dependency>liburing</Dependency>
+            <Dependency>gperftools</Dependency>
+            <Dependency>libutil-linux</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/var/lib/glusterd</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/glusterfs</Path>
+            <Path fileType="config">/etc/glusterfs</Path>
+            <Path fileType="data">/var/log</Path>
+            <Path fileType="data">/etc/ganesha/ganesha-ha.conf.sample</Path>
+            <Path fileType="data">/var/run/gluster</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>glusterfs-devel</Name>
+        <Summary>Development files for glusterfs</Summary>
+        <RuntimeDependencies>
+            <Dependency>libutil-linux-devel</Dependency>
+            <Dependency release="current">glusterfs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+     </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-02-05</Date>
+            <Version>10.1</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

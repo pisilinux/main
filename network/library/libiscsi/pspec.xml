@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libiscsi</Name>
+        <Homepage>https://github.com/sahlberg/libiscsi</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>custom</License>
+        <IsA>library</IsA>
+        <Summary>Clientside library to implement the iSCSI protocol</Summary>
+        <Description>Libiscsi is a client-side library to implement the iSCSI protocol that can be used to access the resources of an iSCSI target.</Description>
+        <Archive sha1sum="0c1aca9a473a915e6d221de4593b404f7078b22f" type="targz">https://github.com/sahlberg/libiscsi/archive/refs/tags/1.19.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>popt-devel</Dependency>
+            <Dependency>glibc-devel</Dependency>
+            <Dependency>libgcrypt-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>libiscsi</Name>
+        <RuntimeDependencies>
+            <Dependency>popt</Dependency>
+            <Dependency>libgcrypt</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libiscsi.so*</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="man">/usr/share/man/man1</Path>
+            <Path fileType="doc">/usr/share/doc/libiscsi</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>libiscsi-devel</Name>
+        <Summary>Development files for libiscsi</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libiscsi</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2022-02-05</Date>
+            <Version>1.19.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
