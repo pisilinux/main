@@ -10,9 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	shelltools.makedirs("build")
-	shelltools.cd("build")
-	cmaketools.configure("-DCMAKE_INSTALL_SYSCONFDIR=/etc -L", sourceDir = '..')
+	cmaketools.configure("-Bbuild -DCMAKE_INSTALL_SYSCONFDIR=/etc -L")
 
 def build():
 	shelltools.cd("build")
