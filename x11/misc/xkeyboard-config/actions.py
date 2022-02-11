@@ -5,16 +5,18 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--enable-compat-rules \
-                         --with-xkb-rules-symlink=xorg")
+    mesontools.configure("-Dcompat-rules=true \
+                          -Dxorg-rules-symlinks=true")
+
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README*", "NEWS")
