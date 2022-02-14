@@ -1,0 +1,91 @@
+Workaround GCC ICE with MiraclePtr, see https://gcc.gnu.org/PR103455
+
+--- a/gpu/command_buffer/client/gl_helper.h
++++ b/gpu/command_buffer/client/gl_helper.h
+@@ -34,7 +34,7 @@ class ScopedGLuint {
+                GenFunc gen_func,
+                DeleteFunc delete_func)
+       : gl_(gl), id_(0u), delete_func_(delete_func) {
+-    (gl_->*gen_func)(1, &id_);
++    (gl_.get()->*gen_func)(1, &id_);
+   }
+ 
+   operator GLuint() const { return id_; }
+@@ -46,7 +46,7 @@ class ScopedGLuint {
+ 
+   ~ScopedGLuint() {
+     if (id_ != 0) {
+-      (gl_->*delete_func_)(1, &id_);
++      (gl_.get()->*delete_func_)(1, &id_);
+     }
+   }
+ 
+@@ -86,13 +86,13 @@ class ScopedBinder {
+   typedef void (gles2::GLES2Interface::*BindFunc)(GLenum target, GLuint id);
+   ScopedBinder(gles2::GLES2Interface* gl, GLuint id, BindFunc bind_func)
+       : gl_(gl), bind_func_(bind_func) {
+-    (gl_->*bind_func_)(Target, id);
++    (gl_.get()->*bind_func_)(Target, id);
+   }
+ 
+   ScopedBinder(const ScopedBinder&) = delete;
+   ScopedBinder& operator=(const ScopedBinder&) = delete;
+ 
+-  virtual ~ScopedBinder() { (gl_->*bind_func_)(Target, 0); }
++  virtual ~ScopedBinder() { (gl_.get()->*bind_func_)(Target, 0); }
+ 
+  private:
+   raw_ptr<gles2::GLES2Interface> gl_;
+--- a/ui/accessibility/ax_node.h
++++ b/ui/accessibility/ax_node.h
+@@ -822,10 +822,10 @@ AXNode::ChildIteratorBase<NodeType,
+   // increment the iterator past the end, we remain at the past-the-end iterator
+   // condition.
+   if (child_ && parent_) {
+-    if (child_ == (parent_->*LastChild)())
++    if (child_ == (parent_.get()->*LastChild)())
+       child_ = nullptr;
+     else
+-      child_ = (child_->*NextSibling)();
++      child_ = (child_.get()->*NextSibling)();
+   }
+ 
+   return *this;
+@@ -850,12 +850,12 @@ AXNode::ChildIteratorBase<NodeType,
+     // If the iterator is past the end, |child_=nullptr|, decrement the iterator
+     // gives us the last iterator element.
+     if (!child_)
+-      child_ = (parent_->*LastChild)();
++      child_ = (parent_.get()->*LastChild)();
+     // Decrement the iterator gives us the previous element, except when the
+     // iterator is at the beginning; in which case, decrementing the iterator
+     // remains at the beginning.
+-    else if (child_ != (parent_->*FirstChild)())
+-      child_ = (child_->*PreviousSibling)();
++    else if (child_ != (parent_.get()->*FirstChild)())
++      child_ = (child_.get()->*PreviousSibling)();
+   }
+ 
+   return *this;
+--- a/ui/views/layout/flex_layout_types.cc
++++ b/ui/views/layout/flex_layout_types.cc
+@@ -59,7 +59,7 @@ class LazySize {
+   const gfx::Size& operator*() const { return *get(); }
+   const gfx::Size* get() const {
+     if (!size_)
+-      size_ = (view_->*size_func_)();
++      size_ = (view_.get()->*size_func_)();
+     return &size_.value();
+   }
+   LazyDimension width() const {
+--- a/chrome/browser/ui/views/passwords/auto_signin_first_run_dialog_view.cc
++++ b/chrome/browser/ui/views/passwords/auto_signin_first_run_dialog_view.cc
+@@ -37,7 +37,7 @@ AutoSigninFirstRunDialogView::AutoSigninFirstRunDialogView(
+   auto call_controller = [](AutoSigninFirstRunDialogView* dialog,
+                             ControllerCallbackFn func) {
+     if (dialog->controller_) {
+-      (dialog->controller_->*func)();
++      (dialog->controller_.get()->*func)();
+     }
+   };
+   SetAcceptCallback(
