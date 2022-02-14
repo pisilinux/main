@@ -21,6 +21,7 @@ def setup():
                           -DENABLE_MYSQLSUPPORT=ON \
                           -DENABLE_APPSTYLES=ON \
                           -DENABLE_QWEBENGINE=ON \
+                          -DKDE_INSTALL_LIBDIR=lib \
                           -DOpenGL_GL_PREFERENCE=GLVND", sourceDir = '..')
 
 def build():
