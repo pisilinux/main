@@ -1,0 +1,27 @@
+From 8e2458ffc6727943518a622753b074b42e713403 Mon Sep 17 00:00:00 2001
+From: Stephan Hartmann <stha09@googlemail.com>
+Date: Sat, 18 Dec 2021 08:38:57 +0000
+Subject: [PATCH] libstdc++: fix DCHECK_NE in ui::WaylandFrameManager
+
+There is no CheckOpValueStr() for std::unique_ptr. Use get() to
+compare pointer values.
+---
+ ui/ozone/platform/wayland/host/wayland_frame_manager.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ui/ozone/platform/wayland/host/wayland_frame_manager.cc b/ui/ozone/platform/wayland/host/wayland_frame_manager.cc
+index 569526c..58fae14 100644
+--- a/ui/ozone/platform/wayland/host/wayland_frame_manager.cc
++++ b/ui/ozone/platform/wayland/host/wayland_frame_manager.cc
+@@ -379,7 +379,7 @@ void WaylandFrameManager::OnPresentation(
+       // Investigate the issue with surface sync.
+       frame->feedback = gfx::PresentationFeedback::Failure();
+     }
+-    CHECK_NE(frame, submitted_frames_.back());
++    CHECK_NE(frame.get(), submitted_frames_.back().get());
+   }
+   MaybeProcessSubmittedFrames();
+ }
+-- 
+2.32.0
+
