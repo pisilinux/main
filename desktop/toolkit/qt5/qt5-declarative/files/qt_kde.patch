@@ -268,6 +268,19 @@ index 927bc29050..91c2764060 100644
 +GHS_KEEP_REFERENCE(qml_register_types_QtQuick_Particles);
  
  #endif // QTQUICKPARTICLESGLOBAL_P_H
+diff --git a/src/qml/common/qqmljsfixedpoolarray_p.h b/src/qml/common/qqmljsfixedpoolarray_p.h
+index b65b994d6c..15a8cd6878 100644
+--- a/src/qml/common/qqmljsfixedpoolarray_p.h
++++ b/src/qml/common/qqmljsfixedpoolarray_p.h
+@@ -86,7 +86,7 @@ public:
+         if (QTypeInfo<T>::isComplex) {
+             for (int i = 0; i < count; ++i)
+                 new (data + i) T(vector.at(i));
+-        } else {
++        } else if (count) {
+             memcpy(data, static_cast<const void*>(vector.constData()), count * sizeof(T));
+         }
+     }
 diff --git a/src/qml/doc/src/cppintegration/definetypes.qdoc b/src/qml/doc/src/cppintegration/definetypes.qdoc
 index cbbbd9ba58..ece2fd5fd7 100644
 --- a/src/qml/doc/src/cppintegration/definetypes.qdoc
@@ -442,6 +455,29 @@ index e2d3b98ff6..6eece147a6 100644
 +        if (ctx->type != Heap::ExecutionContext::Type_BlockContext && ctx->type != Heap::ExecutionContext::Type_CallContext)
              break;
      }
+ 
+diff --git a/src/qml/jsruntime/qv4qobjectwrapper.cpp b/src/qml/jsruntime/qv4qobjectwrapper.cpp
+index 9899c9274e..272b85069f 100644
+--- a/src/qml/jsruntime/qv4qobjectwrapper.cpp
++++ b/src/qml/jsruntime/qv4qobjectwrapper.cpp
+@@ -1160,8 +1160,7 @@ void Heap::QObjectWrapper::markObjects(Heap::Base *that, QV4::MarkStack *markSta
+ void QObjectWrapper::destroyObject(bool lastCall)
+ {
+     Heap::QObjectWrapper *h = d();
+-    if (!h->internalClass)
+-        return; // destroyObject already got called
++    Q_ASSERT(h->internalClass);
+ 
+     if (h->object()) {
+         QQmlData *ddata = QQmlData::get(h->object(), false);
+@@ -1191,7 +1190,7 @@ void QObjectWrapper::destroyObject(bool lastCall)
+         }
+     }
+ 
+-    h->~Data();
++    h->destroy();
+ }
+ 
  
 diff --git a/src/qml/memory/qv4mm.cpp b/src/qml/memory/qv4mm.cpp
 index 06caf04e5a..da149a67c4 100644
@@ -1062,10 +1098,42 @@ index 90469ee82b..4ddd2a41bc 100644
  
      \c Text.StyledText parser is strict, requiring tags to be correctly nested.
 diff --git a/src/quick/items/qquicktextinput.cpp b/src/quick/items/qquicktextinput.cpp
-index 6275b298ed..bb78ead0e8 100644
+index 6275b298ed..2b35b231eb 100644
 --- a/src/quick/items/qquicktextinput.cpp
 +++ b/src/quick/items/qquicktextinput.cpp
-@@ -3831,8 +3831,7 @@ void QQuickTextInputPrivate::parseInputMask(const QString &maskFields)
+@@ -2952,6 +2952,7 @@ void QQuickTextInputPrivate::setTopPadding(qreal value, bool reset)
+     }
+     if ((!reset && !qFuzzyCompare(oldPadding, value)) || (reset && !qFuzzyCompare(oldPadding, padding()))) {
+         updateLayout();
++        q->updateCursorRectangle();
+         emit q->topPaddingChanged();
+     }
+ }
+@@ -2966,6 +2967,7 @@ void QQuickTextInputPrivate::setLeftPadding(qreal value, bool reset)
+     }
+     if ((!reset && !qFuzzyCompare(oldPadding, value)) || (reset && !qFuzzyCompare(oldPadding, padding()))) {
+         updateLayout();
++        q->updateCursorRectangle();
+         emit q->leftPaddingChanged();
+     }
+ }
+@@ -2980,6 +2982,7 @@ void QQuickTextInputPrivate::setRightPadding(qreal value, bool reset)
+     }
+     if ((!reset && !qFuzzyCompare(oldPadding, value)) || (reset && !qFuzzyCompare(oldPadding, padding()))) {
+         updateLayout();
++        q->updateCursorRectangle();
+         emit q->rightPaddingChanged();
+     }
+ }
+@@ -2994,6 +2997,7 @@ void QQuickTextInputPrivate::setBottomPadding(qreal value, bool reset)
+     }
+     if ((!reset && !qFuzzyCompare(oldPadding, value)) || (reset && !qFuzzyCompare(oldPadding, padding()))) {
+         updateLayout();
++        q->updateCursorRectangle();
+         emit q->bottomPaddingChanged();
+     }
+ }
+@@ -3831,8 +3835,7 @@ void QQuickTextInputPrivate::parseInputMask(const QString &maskFields)
      int delimiter = maskFields.indexOf(QLatin1Char(';'));
      if (maskFields.isEmpty() || delimiter == 0) {
          if (m_maskData) {
@@ -1075,7 +1143,7 @@ index 6275b298ed..bb78ead0e8 100644
              m_maxLength = 32767;
              internalSetText(QString());
          }
-@@ -3863,8 +3862,7 @@ void QQuickTextInputPrivate::parseInputMask(const QString &maskFields)
+@@ -3863,8 +3866,7 @@ void QQuickTextInputPrivate::parseInputMask(const QString &maskFields)
              m_maxLength++;
      }
  
@@ -1085,6 +1153,14 @@ index 6275b298ed..bb78ead0e8 100644
  
      MaskInputData::Casemode m = MaskInputData::NoCaseMode;
      c = 0;
+@@ -4715,6 +4717,7 @@ void QQuickTextInput::setPadding(qreal padding)
+ 
+     d->extra.value().padding = padding;
+     d->updateLayout();
++    updateCursorRectangle();
+     emit paddingChanged();
+     if (!d->extra.isAllocated() || !d->extra->explicitTopPadding)
+         emit topPaddingChanged();
 diff --git a/src/quick/items/qquicktextinput_p_p.h b/src/quick/items/qquicktextinput_p_p.h
 index 7965f3d3f4..7fbba49405 100644
 --- a/src/quick/items/qquicktextinput_p_p.h
@@ -1575,6 +1651,66 @@ index 40f6cfbdcf..37386c23b2 100644
 +GHS_KEEP_REFERENCE(qml_register_types_QtQuick_Shapes);
  
  #endif // QQUICKSHAPESGLOBAL_P_H
+diff --git a/src/quickwidgets/qquickwidget.cpp b/src/quickwidgets/qquickwidget.cpp
+index 39780f8de3..223d91f579 100644
+--- a/src/quickwidgets/qquickwidget.cpp
++++ b/src/quickwidgets/qquickwidget.cpp
+@@ -106,6 +106,7 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
+ 
+     renderControl = new QQuickWidgetRenderControl(q);
+     offscreenWindow = new QQuickWindow(*new QQuickOffcreenWindowPrivate(),renderControl);
++    offscreenWindow->setScreen(q->screen());
+     offscreenWindow->setTitle(QString::fromLatin1("Offscreen"));
+     offscreenWindow->setObjectName(QString::fromLatin1("QQuickOffScreenWindow"));
+     // Do not call create() on offscreenWindow.
+@@ -901,9 +902,7 @@ void QQuickWidgetPrivate::createContext()
+ 
+         context = new QOpenGLContext;
+         context->setFormat(offscreenWindow->requestedFormat());
+-        const QWindow *win = q->window()->windowHandle();
+-        if (win && win->screen())
+-            context->setScreen(win->screen());
++        context->setScreen(q->screen());
+         QOpenGLContext *shareContext = qt_gl_global_share_context();
+         if (!shareContext)
+             shareContext = QWidgetPrivate::get(q->window())->shareContext();
+@@ -1520,19 +1519,16 @@ bool QQuickWidget::event(QEvent *e)
+         d->handleWindowChange();
+         break;
+ 
+-    case QEvent::ScreenChangeInternal:
+-        if (QWindow *window = this->window()->windowHandle()) {
+-            QScreen *newScreen = window->screen();
+-
+-            if (d->offscreenWindow)
+-                d->offscreenWindow->setScreen(newScreen);
+-            if (d->offscreenSurface)
+-                d->offscreenSurface->setScreen(newScreen);
++    case QEvent::ScreenChangeInternal: {
++        QScreen *newScreen = screen();
++        if (d->offscreenWindow)
++            d->offscreenWindow->setScreen(newScreen);
++        if (d->offscreenSurface)
++            d->offscreenSurface->setScreen(newScreen);
+ #if QT_CONFIG(opengl)
+-            if (d->context)
+-                d->context->setScreen(newScreen);
++        if (d->context)
++            d->context->setScreen(newScreen);
+ #endif
+-        }
+ 
+         if (d->useSoftwareRenderer
+ #if QT_CONFIG(opengl)
+@@ -1545,7 +1541,7 @@ bool QQuickWidget::event(QEvent *e)
+             d->render(true);
+         }
+         break;
+-
++    }
+     case QEvent::Show:
+     case QEvent::Move:
+         d->updatePosition();
 diff --git a/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp b/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp
 index 84f5eebd10..e3cbeb9891 100644
 --- a/tests/auto/qml/debugger/qv4debugger/tst_qv4debugger.cpp
@@ -2267,6 +2403,76 @@ index 42fdbea58d..308c6b5091 100644
  }
  
  void tst_qquicktext::lineHeight()
+diff --git a/tests/auto/quick/qquicktextinput/data/checkCursorDelegateWhenPaddingChanged.qml b/tests/auto/quick/qquicktextinput/data/checkCursorDelegateWhenPaddingChanged.qml
+new file mode 100644
+index 0000000000..e6f07b4687
+--- /dev/null
++++ b/tests/auto/quick/qquicktextinput/data/checkCursorDelegateWhenPaddingChanged.qml
+@@ -0,0 +1,16 @@
++import QtQuick 2.12
++
++Rectangle {
++    width: 200
++    height: 200
++    TextInput {
++        objectName: "textInput"
++        leftPadding: 10
++        focus: true
++        cursorDelegate: Rectangle {
++            objectName: "cursorDelegate"
++            width: 5
++            color: "red"
++        }
++    }
++}
+diff --git a/tests/auto/quick/qquicktextinput/tst_qquicktextinput.cpp b/tests/auto/quick/qquicktextinput/tst_qquicktextinput.cpp
+index 2e64c80b85..ac502bcb28 100644
+--- a/tests/auto/quick/qquicktextinput/tst_qquicktextinput.cpp
++++ b/tests/auto/quick/qquicktextinput/tst_qquicktextinput.cpp
+@@ -236,6 +236,7 @@ private slots:
+     void QTBUG_51115_readOnlyResetsSelection();
+     void QTBUG_77814_InsertRemoveNoSelection();
+ 
++    void checkCursorDelegateWhenPaddingChanged();
+ private:
+     void simulateKey(QWindow *, int key);
+ 
+@@ -7054,6 +7055,35 @@ void tst_qquicktextinput::QTBUG_77814_InsertRemoveNoSelection()
+     QCOMPARE(textInput->selectedText(), QString());
+ }
+ 
++void tst_qquicktextinput::checkCursorDelegateWhenPaddingChanged()
++{
++    QQuickView view;
++    view.setSource(testFileUrl("checkCursorDelegateWhenPaddingChanged.qml"));
++    view.show();
++    QVERIFY(QTest::qWaitForWindowExposed(&view));
++
++    QQuickTextInput *textInput = view.rootObject()->findChild<QQuickTextInput *>("textInput");
++    QVERIFY(textInput);
++
++    QQuickItem *cursorDelegate = textInput->findChild<QQuickItem *>("cursorDelegate");
++    QVERIFY(cursorDelegate);
++
++    QCOMPARE(cursorDelegate->x(), textInput->leftPadding());
++    QCOMPARE(cursorDelegate->y(), textInput->topPadding());
++
++    textInput->setPadding(5);
++    QCOMPARE(cursorDelegate->x(), textInput->leftPadding());
++    QCOMPARE(cursorDelegate->y(), textInput->topPadding());
++
++    textInput->setTopPadding(10);
++    QCOMPARE(cursorDelegate->x(), textInput->leftPadding());
++    QCOMPARE(cursorDelegate->y(), textInput->topPadding());
++
++    textInput->setLeftPadding(10);
++    QCOMPARE(cursorDelegate->x(), textInput->leftPadding());
++    QCOMPARE(cursorDelegate->y(), textInput->topPadding());
++}
++
+ QTEST_MAIN(tst_qquicktextinput)
+ 
+ #include "tst_qquicktextinput.moc"
 diff --git a/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml b/tests/auto/quick/qquickview_extra/data/qtbug_87228.qml
 new file mode 100644
 index 0000000000..ff10eba23d
