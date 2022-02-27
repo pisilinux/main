@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libfprint</Name>
+        <Homepage>https://fprint.freedesktop.org/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>A library for accessing to various fingerprint readers</Summary>
+        <Description>libfprint is an open source software library designed to make it easy for application developers to add support for consumer fingerprint readers to their software.</Description>
+        <Archive sha1sum="1b36cbfa8e7606cc944cc89321e7dcde756269ad" type="targz">https://gitlab.freedesktop.org/libfprint/libfprint/-/archive/v1.94.3/libfprint-v1.94.3.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>nss-devel</Dependency>
+            <Dependency>gdb-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pixman-devel</Dependency>
+            <Dependency>libgusb-devel</Dependency>
+            <Dependency>libgudev-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch></Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libfprint</Name>
+        <RuntimeDependencies>
+            <Dependency>nss</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>pixman</Dependency>
+            <Dependency>libusb</Dependency>
+            <Dependency>libgusb</Dependency>
+            <Dependency>libgudev</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/lib/udev</Path>
+            <Path fileType="library">/usr/lib/girepository-1.0</Path>
+            <Path fileType="library">/usr/lib/libfprint-2.so*</Path>
+            <Path fileType="doc">/usr/share/gtk-doc</Path>
+            <Path fileType="doc">/usr/share/doc/libfprint</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libfprint-devel</Name>
+        <Summary>Development files for libfprint</Summary>
+        <RuntimeDependencies>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency release="current">libfprint</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-02-27</Date>
+            <Version>1.94.3</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
