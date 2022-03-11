@@ -40,7 +40,6 @@ def setup():
                          --with-docdir=/usr/share/doc/hplip \
                          --with-mimedir=/usr/share/cups/mime \
                          --enable-qt5 \
-                         --enable-hpijs-install \
                          --enable-udev-acl-rules \
                          --enable-pp-build \
                          --enable-fax-build \
@@ -55,6 +54,7 @@ def setup():
                          --disable-qt3 \
                          --disable-policykit \
                          --disable-doc-build \
+                         --disable-imageProcessor-build \
                          --disable-foomatic-ppd-install \
                          ")
 
