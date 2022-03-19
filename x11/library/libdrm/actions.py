@@ -12,7 +12,6 @@ from pisi.actionsapi import shelltools
 def setup():
     if not get.buildTYPE() == "emul32":
         options = "-Dudev=true \
-                   -Dvalgrind=true \
                   "
     
     if get.buildTYPE() == "emul32":
