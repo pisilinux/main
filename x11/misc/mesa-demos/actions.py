@@ -30,6 +30,6 @@ def install():
             pisitools.domove("%s/%s" % (demos_dir_emul32, util), "/usr/bin/", "%s32" % util)
         return
 
-    for util in ("glxgears", "glxinfo"):
+    for util in ("glxgears", "glxinfo", "eglinfo"):
         pisitools.domove("%s/%s" % (demos_dir, util), "/usr/bin/")
         pisitools.dobin("src/egl/opengl/xeglgears")
