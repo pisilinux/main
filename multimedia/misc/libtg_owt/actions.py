@@ -16,24 +16,24 @@ def setup():
     shelltools.move("tg_owt-*", "tg-owt-%s" % get.srcVERSION())
     shelltools.cd("tg-owt-%s" % get.srcVERSION())
 
-    shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
+    #shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
     shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv")
     #shelltools.system("git clone https://github.com/PipeWire/pipewire")
-    
-    shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
+
+    #shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
     shelltools.move("libyuv/*", "src/third_party/libyuv")
     #shelltools.move("pipewire/*", "src/third_party/pipewire")
 
     #shelltools.export("CPPFLAGS", "-DNDEBUG")
     pisitools.cflags.add(" -ffat-lto-objects")
-    pisitools.cxxflags.add(" -ffat-lto-objects")
+    pisitools.cxxflags.add(" -ffat-lto-objects -I/usr/include/libdrm")
     cmaketools.configure("-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
                                     -DCMAKE_INSTALL_PREFIX=/usr \
-                                    -DTG_OWT_SPECIAL_TARGET=linux \
                                     -DBUILD_SHARED_LIBS=OFF \
                                     -DTG_OWT_LIBJPEG_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPENSSL_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_OPUS_INCLUDE_PATH=/usr/include/opus \
+                                    -DTG_OWT_LIBVPX_INCLUDE_PATH=/usr/include \
                                     -DTG_OWT_FFMPEG_INCLUDE_PATH=/usr/include")
 
 def build():

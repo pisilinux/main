@@ -122,7 +122,7 @@ index bd39b2a..fd3529a 100644
  
  QT_END_NAMESPACE
 diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
-index c937254..2ea80ed 100644
+index c937254..f2653af 100644
 --- a/src/svg/qsvghandler.cpp
 +++ b/src/svg/qsvghandler.cpp
 @@ -65,6 +65,7 @@
@@ -516,6 +516,17 @@ index c937254..2ea80ed 100644
  
      QSvgNode *text = new QSvgText(parent, QPointF(nx, ny));
      return text;
+@@ -3679,9 +3696,7 @@ void QSvgHandler::parse()
+         case QXmlStreamReader::EndElement:
+             endElement(xml->name());
+             ++remainingUnfinishedElements;
+-            // if we are using somebody else's qxmlstreamreader
+-            // we should not read until the end of the stream
+-            done = !m_ownsReader && (xml->name() == QLatin1String("svg"));
++            done = (xml->name() == QLatin1String("svg"));
+             break;
+         case QXmlStreamReader::Characters:
+             characters(xml->text());
 diff --git a/src/svg/qsvgstructure.cpp b/src/svg/qsvgstructure.cpp
 index b89608b..89c9e4e 100644
 --- a/src/svg/qsvgstructure.cpp

@@ -1,0 +1,25 @@
+From 84648e8d06fd2676f28dc671d5748d4032094ddf Mon Sep 17 00:00:00 2001
+From: Anton Bolshakov <blshkv@users.noreply.github.com>
+Date: Sat, 20 Jun 2020 11:47:04 +0800
+Subject: [PATCH] respect global cmake FLAGS (#141)
+
+https://github.com/ebruck/radiotray-ng/issues/140
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1acdc7a..f9b3338 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,8 +57,8 @@ set(CMAKE_CXX_STANDARD 14)
+ add_definitions("-DBOOST_LOG_DYN_LINK")
+ add_compile_options("-fdiagnostics-color=auto")
+ set(warnings "-Wall -Wextra -Werror -Wpedantic")
+-set(CMAKE_CXX_FLAGS ${warnings})
+-set(CMAKE_C_FLAGS   ${warnings})
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
++set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${warnings}")
+ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+ 

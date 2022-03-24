@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>mesa-demos</Name>
@@ -11,7 +11,7 @@
         <License>MIT</License>
         <IsA>app:console</IsA>
         <Summary>Mesa demos</Summary>
-        <Description>Mesa is an open-source implementation of the OpenGL specification - a system for rendering interactive 3D graphics.</Description>
+        <Description>The Mesa Demos package contains a large number of OpenGL demonstration and test programs.</Description>
         <Archive sha1sum="57ba892e919fa22ce3db9f25e7331a6fa33c652c" type="tarbz2">ftp://ftp.freedesktop.org/pub/mesa/demos/mesa-demos-8.4.0.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>glew-devel</Dependency>
@@ -22,6 +22,7 @@
             <Dependency>libX11-devel</Dependency>
             <Dependency>libglvnd-devel</Dependency>
             <Dependency>glibc-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -35,10 +36,13 @@
             <Dependency>libglvnd</Dependency>
             <Dependency>mesa-glu</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>wayland</Dependency>
+            <Dependency>wayland-client</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/share/mesa-demos</Path>
             <Path fileType="executable">/usr/lib/mesa/demos</Path>
+            <Path fileType="executable">/usr/bin/eglinfo</Path>
         </Files>
     </Package>
 
@@ -51,7 +55,9 @@
             <Dependency>libX11</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/bin/glxgears</Path>
+            <Path fileType="executable">/usr/bin/xeglgears</Path>
+            <Path fileType="executable">/usr/bin/glxinfo</Path>
         </Files>
     </Package>
 
@@ -68,16 +74,17 @@
             <Dependency>mesa-glu-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
             <Dependency>glew-32bit</Dependency>
             <Dependency>mesa-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
             <Dependency>libXext-32bit</Dependency>
             <Dependency>freeglut-32bit</Dependency>
             <Dependency>mesa-glu-32bit</Dependency>
-            <Dependency>libgcc</Dependency>
+            <Dependency>wayland-32bit</Dependency>
+            <Dependency>libglvnd-32bit</Dependency>
             <Dependency release="current">mesa-demos</Dependency>
         </RuntimeDependencies>
-
         <Files>
             <Path fileType="library">/usr/lib32</Path>
             <Path fileType="executable">/usr/bin/glxinfo32</Path>
@@ -86,6 +93,13 @@
     </Package>
     
     <History>
+        <Update release="14">
+            <Date>2022-03-19</Date>
+            <Version>8.4.0</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="13">
             <Date>2020-01-25</Date>
             <Version>8.4.0</Version>
