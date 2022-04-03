@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libtorrent-rasterbar</Name>
@@ -12,32 +12,32 @@
         <IsA>library</IsA>
         <Summary>Full featured torrent client library</Summary>
         <Description>Rasterbar's C++ library that aims to be a good alternative to all the other bittorrent implementations around. It is a library and not a full featured client, although it comes with a working example client.</Description>
-        <Archive sha1sum="6833baab3d0d1852c72f5ddd4869956e3f5f3788" type="targz">https://github.com/arvidn/libtorrent/releases/download/v2.0.4/libtorrent-rasterbar-2.0.4.tar.gz</Archive>
+        <Archive sha1sum="fa82041b1697e77cf35b413e391af558767bda06" type="targz">https://github.com/arvidn/libtorrent/releases/download/v2.0.5/libtorrent-rasterbar-2.0.5.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
             <Dependency>ninja</Dependency>
+            <Dependency>libtool</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>geoip-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>python3-devel</Dependency>
-            <Dependency>boost-devel</Dependency>
             <Dependency>boost-python3</Dependency>
-            <Dependency>geoip-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
-            <Dependency>libtool</Dependency>
             <Dependency>python3-setuptools</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">libtorrent-rasterbar-2.0.4-boost-1.77.patch</Patch>
+<!--             <Patch level="1">libtorrent-rasterbar-2.0.4-boost-1.77.patch</Patch> -->
         </Patches>
     </Source>
 
     <Package>
         <Name>libtorrent-rasterbar</Name>
         <RuntimeDependencies>
-            <Dependency>openssl</Dependency>
-            <Dependency>python</Dependency>
-            <Dependency>libgcc</Dependency>
             <Dependency>boost</Dependency>
             <Dependency>geoip</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>python3</Dependency>
             <Dependency>boost-python3</Dependency><!--revdep-rebuild eksik olarak buldu -->
         </RuntimeDependencies>
         <Files>
@@ -55,14 +55,21 @@
         <Files>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
-	     <Path fileType="data">/usr/share/cmake/Modules/FindLibtorrentRasterbar.cmake</Path>
+	        <Path fileType="data">/usr/share/cmake/Modules/FindLibtorrentRasterbar.cmake</Path>
             <Path fileType="license">/usr/share/licenses</Path>
             <Path fileType="doc">/usr/share/doc/libtorrent/html</Path>
         </Files>
     </Package>
 
     <History>
-	<Update release="15">
+        <Update release="16">
+            <Date>2022-03-27</Date>
+            <Version>2.0.5</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+	    <Update release="15">
             <Date>2021-10-23</Date>
             <Version>2.0.4</Version>
             <Comment>Rebuild boost</Comment>

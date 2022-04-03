@@ -12,10 +12,10 @@
         <IsA>app:console</IsA>
         <Summary>WINE Is Not An Emulator, which lets you run Microsoft Windows applications - staging version.</Summary>
         <Description>Wine allows running Windows 3.*, Windows 95/98 and Windows NT programs on a i386 (or compatible) machine running X11. It is still alpha level code; don't expect everything to work.</Description>
-        <Archive sha1sum="ea8bd4d9fd5d339de46bfdc1d55ef5c432c2d83b" type="tarxz">https://dl.winehq.org/wine/source/5.x/wine-5.9.tar.xz</Archive>
-		<Archive sha1sum="21d6f8865b467a7eeff308f36cf49d1ead5a147f" type="targz" target="wine-5.9">https://github.com/wine-staging/wine-staging/archive/v5.9.tar.gz</Archive>
+        <Archive sha1sum="9259bb87a53436b00660d38f773053a1c5a4f682" type="tarxz">https://dl.winehq.org/wine/source/7.x/wine-7.5.tar.xz</Archive>
+		<Archive sha1sum="1931c3cbd9b9893e56985148c0bcb0bc04d9f26e" type="targz" target="wine-7.5">https://github.com/wine-staging/wine-staging/archive/refs/tags/v7.5.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>mit-kerberos</Dependency>
+            <Dependency>mit-kerberos-devel</Dependency>
             <Dependency>lcms2-devel</Dependency>
             <Dependency>libao-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
@@ -66,7 +66,7 @@
             <Dependency>jack-audio-connection-kit-devel</Dependency>
 
             <!-- fontforge is needed to build fonts -->
-            <Dependency>fontforge-devel</Dependency>
+            <Dependency>fontforge</Dependency>
             <Dependency>freetype-devel</Dependency>
             <Dependency>freetype-32bit</Dependency>
             <Dependency>libpcap-devel</Dependency>
@@ -76,8 +76,8 @@
         
         <Patches>
             <!--  patches -->
-            <Patch level="1">wine-1.9.3-gcc-5_3_0-disable-force-alignment.patch</Patch>
-            <Patch level="1">gcc_erorr.patch</Patch>
+<!--             <Patch level="1">wine-1.9.3-gcc-5_3_0-disable-force-alignment.patch</Patch> -->
+<!--             <Patch level="1">gcc_erorr.patch</Patch> -->
             <Patch level="1">0001-programs-winhlp32-Use-noyywrap-for-macro.lex.l-and-p.patch</Patch>
 <!-- 			<Patch level="1">blit-ddraw-surface-hack.patch</Patch> -->
             <!-- Use XDG_DOCUMENTS_DIR for "My Documents" -->
@@ -125,6 +125,7 @@
             <!-- required by winetricks -->
             <Dependency>cabextract</Dependency>
             <Dependency>libpcap</Dependency>
+            <Dependency>libunwind</Dependency>
         </RuntimeDependencies>
 		<Replaces>
             <Package>wine</Package>
@@ -233,6 +234,7 @@
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency>zlib-32bit</Dependency>
+            <Dependency>eudev-32bit</Dependency>
             <Dependency>lcms2-32bit</Dependency>
             <Dependency>libSM-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
@@ -279,6 +281,13 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2022-04-02</Date>
+            <Version>7.5</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2020-06-04</Date>
             <Version>5.9</Version>
