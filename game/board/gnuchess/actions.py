@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("CC", get.CC())
-    autotools.configure("--disable-dependency-tracking --enable-readline")
+    autotools.configure("--disable-dependency-tracking")
 
 def build():
     autotools.make()
