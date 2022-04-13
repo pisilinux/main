@@ -16,15 +16,14 @@ def setup():
                -Db_ndebug=true \
                -Dplatforms=x11,wayland \
                -Ddri3=enabled \
-               -Ddri-drivers=i915,i965,r100,r200,nouveau \
-               -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,swr,iris,swrast,virgl,crocus,zink \
+               -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
                -Dgallium-xvmc=enabled \
                -Dgallium-va=enabled \
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
-               -Dvulkan-drivers=amd,intel \
+               -Dvulkan-drivers=amd,intel,swrast \
                -D vulkan-layers=device-select,intel-nullhw,overlay \
                -Dshared-glapi=enabled \
                -Dgles1=enabled \
@@ -39,7 +38,6 @@ def setup():
                -Dlibunwind=enabled \
                -Dbuild-tests=false \
                -Dosmesa=true \
-               -Dswr-arches=avx,avx2 \
                -Dgallium-opencl=icd \
               " % (libdir)
 
