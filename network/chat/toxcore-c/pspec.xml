@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>toxcore-c</Name>
+		<Homepage>https://tox.chat/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>GPL-3</License>
+		<IsA>app</IsA>
+		<PartOf>network.chat</PartOf>
+		<Summary>This is an experimental cryptographic network library.</Summary>
+		<Description>Tox is a peer to peer (serverless) instant messenger aimed at making security and privacy easy to obtain for regular users. It uses NaCl for its encryption and authentication.</Description>
+		<Archive sha1sum="eb38b4a37a1a31b2d0d862799522ba5b0a1aa2fc" type="targz">
+			https://github.com/TokTok/c-toxcore/archive/refs/tags/v0.2.17.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>libvpx-devel</Dependency>
+			<Dependency>libopus-devel</Dependency>
+			<Dependency>libsocket-devel</Dependency>
+			<Dependency>libconfig-devel</Dependency>
+			<Dependency>libsodium-devel</Dependency>
+			<Dependency>msgpack-c-devel</Dependency>
+		</BuildDependencies>
+	</Source>
+
+	<Package>
+		<Name>toxcore-c</Name>
+		<RuntimeDependencies>
+			<Dependency>libvpx</Dependency>
+			<Dependency>libopus</Dependency>
+			<Dependency>libconfig</Dependency>
+			<Dependency>libsodium</Dependency>
+			<Dependency>msgpack-c</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="data">/usr/share/bash-completion/completions</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>toxcore-c-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">toxcore-c</Dependency>
+			<Dependency>libvpx-devel</Dependency>
+			<Dependency>libopus-devel</Dependency>
+			<Dependency>libsocket-devel</Dependency>
+			<Dependency>libsodium-devel</Dependency>
+			<Dependency>msgpack-c-devel</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+			<Path fileType="header">/usr/include/tox</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2022-04-14</Date>
+			<Version>0.2.17</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
