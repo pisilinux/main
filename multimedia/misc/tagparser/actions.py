@@ -10,16 +10,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	shelltools.makedirs("build")
-	shelltools.cd("build")
-	cmaketools.configure("-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -L", sourceDir = '..')
+	cmaketools.configure("-B_build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -L")
 
 def build():
-	shelltools.cd("build")
+	shelltools.cd("_build")
 	cmaketools.make()
 
 def install():
-	shelltools.cd("build")
+	shelltools.cd("_build")
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	pisitools.dodoc("../LICENSE", "../README.md")
