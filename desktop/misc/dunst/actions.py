@@ -7,10 +7,10 @@
 from pisi.actionsapi import autotools, pisitools, get
 
 j = ''.join([
-    ' PREFIX=/usr ',
-    ' SYSCONFDIR=/etc ',
-    ' SYSTEMD=0 ',
-    ' WAYLAND=0 ',
+    ' PREFIX=/usr',
+    ' SYSCONFDIR=/etc',
+    ' SYSTEMD=0',
+    ' WAYLAND=0',
     ' SERVICEDIR_DBUS=/usr/share/dbus-1/services '
     ])
 
