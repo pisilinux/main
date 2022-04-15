@@ -15,6 +15,7 @@ j = ''.join([
     ])
 
 def setup():
+	pisitools.dosed("lib/FXRex.cpp", "#define\ TOPIC_REXDUMP", "// #define TOPIC_REXDUMP")
 	autotools.configure(j)
 
 def build():
