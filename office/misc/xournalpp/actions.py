@@ -13,17 +13,15 @@ def setup():
 #	shelltools.export("CFLAGS", "-lpthread")
 	pisitools.cxxflags.add("-Wno-unused-result -Wno-deprecated-declarations")
 
-	shelltools.makedirs("build")
-	shelltools.cd("build")
-	cmaketools.configure("-DCMAKE_BUILD_TYPE=Release", sourceDir = '..')
+	cmaketools.configure("-B_build -DCMAKE_BUILD_TYPE=Release")
 
 def build():
-	shelltools.cd("build")
+	shelltools.cd("_build")
 	cmaketools.make()
 	cmaketools.make("translations")
 
 def install():
-	shelltools.cd("build")
+	shelltools.cd("_build")
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	pisitools.dodoc("../AUTHORS", "../CHANGELOG.md", "../LICENSE", "../README.md")
