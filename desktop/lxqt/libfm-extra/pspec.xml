@@ -1,63 +1,131 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-    <Source>
-        <Name>libfm-extra</Name>
-        <Homepage>https://www.lxde.org/</Homepage>
-        <Packager>
-            <Name>Ayhan Yalçınsoy</Name>
-            <Email>ayhanyalcinsoy@pisilinux.org</Email>
-        </Packager>
-        <License>GPL2</License>
-        <Icon>lxqt</Icon>
-        <IsA>library</IsA>
-        <Summary>Core library of PCManFM file manager</Summary>
-        <Description>libfm is a Core library of PCManFM file manager</Description>
-        <Archive sha1sum="f3e3121cd2de317f84e21942f6c310b288959433" type="targz">https://github.com/lxde/libfm/archive/1.3.2.tar.gz</Archive>
-        <BuildDependencies>
-            <Dependency>gettext-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency>gtk-doc</Dependency>
-            <Dependency>intltool</Dependency>
-        </BuildDependencies>
-    </Source>
-    <Package>
-        <Name>libfm-extra</Name>
-        <Summary>Development headers for libfm-qt</Summary>
-        <RuntimeDependencies>
-            <Dependency>glib2</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib/libfm-extra*</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-        </Files>
-    </Package>
-    <Package>
-        <Name>libfm-extra-devel</Name>
-        <Summary>Development headers for libfm-qt</Summary>
-        <RuntimeDependencies>
-            <Dependency release="current">libfm-extra</Dependency>
-            <Dependency>glib2-devel</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
-        </Files>
-    </Package>
-    <History>
-        <Update release="2">
-            <Date>2021-04-26</Date>
-            <Version>1.3.2</Version>
-            <Comment>version bump.</Comment>
-            <Name>Ayhan Yalçınsoy</Name>
-            <Email>ayhanyalcinsoy@pisilinux.org</Email>
-        </Update>
-        <Update release="1">
-            <Date>2020-04-06</Date>
-            <Version>1.3.1</Version>
-            <Comment>First release</Comment>
-            <Name>Ayhan Yalçınsoy</Name>
-            <Email>ayhanyalcinsoy@pisilinux.org</Email>
-        </Update>
-    </History>
+	<Source>
+		<Name>libfilemanager-lxde</Name>
+		<Homepage>https://github.com/lxde/libfm</Homepage>
+		<Packager>
+			<Name>Ayhan Yalçınsoy</Name>
+			<Email>ayhanyalcinsoy@pisilinux.org</Email>
+		</Packager>
+		<License>GPL-2</License>
+		<IsA>library</IsA>
+		<PartOf>desktop.lxde</PartOf>
+		<Summary>Library for file management.</Summary>
+		<Description>libfm is a LXDE library for file management.</Description>
+		<Archive sha1sum="7c5c14dd0615b457687966ce4e55c2d054bf93e1" type="tarxz">
+			mirrors://sourceforge/pcmanfm/libfm-1.3.2.tar.xz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>intltool</Dependency>
+			<Dependency>atk-devel</Dependency>
+			<Dependency>gtk3-devel</Dependency>
+			<Dependency>glib2-devel</Dependency>
+			<Dependency>cairo-devel</Dependency>
+			<Dependency>pango-devel</Dependency>
+			<Dependency>udisks2-devel</Dependency>
+			<Dependency>libexif-devel</Dependency>
+			<Dependency>gettext-devel</Dependency>
+			<Dependency>dbus-glib-devel</Dependency>
+			<Dependency>gdk-pixbuf-devel</Dependency>
+			<Dependency>fontconfig-devel</Dependency>
+			<Dependency>menu-cache-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level="1">missing.patch</Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>libfilemanager-lxde</Name>
+		<RuntimeDependencies>
+			<Dependency>atk</Dependency>
+			<Dependency>gtk3</Dependency>
+			<Dependency>glib2</Dependency>
+			<Dependency>cairo</Dependency>
+			<Dependency>pango</Dependency>
+			<Dependency>udisks2</Dependency>
+			<Dependency>libexif</Dependency>
+			<Dependency>dbus-glib</Dependency>
+			<Dependency>gdk-pixbuf</Dependency>
+			<Dependency>fontconfig</Dependency>
+			<Dependency>menu-cache</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="config">/etc/xdg</Path>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="data">/usr/share</Path>
+			<Path fileType="localedata">/usr/share/locale</Path>
+			<Path fileType="man">/usr/share/man</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libfilemanager-lxde-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">libfilemanager-lxde</Dependency>
+			<Dependency>gtk3-devel</Dependency>
+			<Dependency>glib2-devel</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include</Path>
+			<Path fileType="library">/usr/lib/pkgconfig</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libfm-extra</Name>
+		<Summary>Core library of PCManFM file manager.</Summary>
+		<RuntimeDependencies>
+			<Dependency>glib2</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/libfm-extra.so</Path>
+			<Path fileType="library">/usr/lib/libfm-extra.so.4</Path>
+			<Path fileType="library">/usr/lib/libfm-extra.so.4.1.3</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libfm-extra-devel</Name>
+		<RuntimeDependencies>
+			<Dependency>glib2-devel</Dependency>
+			<Dependency release="current">libfm-extra</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include/libfm/fm-extra.h</Path>
+			<Path fileType="header">/usr/include/libfm/fm-version.h</Path>
+			<Path fileType="header">/usr/include/libfm/fm-xml-file.h</Path>
+			<Path fileType="header">/usr/include/libfm-1.0/fm-extra.h</Path>
+			<Path fileType="header">/usr/include/libfm-1.0/fm-version.h</Path>
+			<Path fileType="header">/usr/include/libfm-1.0/fm-xml-file.h</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/libfm-extra.pc</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="3">
+			<Date>2022-04-14</Date>
+			<Version>1.3.2</Version>
+			<Comment>Rebuild with gtk+3.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="2">
+			<Date>2021-04-26</Date>
+			<Version>1.3.2</Version>
+			<Comment>version bump.</Comment>
+			<Name>Ayhan Yalçınsoy</Name>
+			<Email>ayhanyalcinsoy@pisilinux.org</Email>
+		</Update>
+		<Update release="1">
+			<Date>2020-04-06</Date>
+			<Version>1.3.1</Version>
+			<Comment>First release</Comment>
+			<Name>Ayhan Yalçınsoy</Name>
+			<Email>ayhanyalcinsoy@pisilinux.org</Email>
+		</Update>
+	</History>
 </PISI>

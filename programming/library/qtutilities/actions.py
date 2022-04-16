@@ -16,16 +16,14 @@ j = ''.join([
     ])
 
 def setup():
-	shelltools.makedirs("build")
-	shelltools.cd("build")
-	cmaketools.configure(j, sourceDir = '..')
+	cmaketools.configure("-B_build %s" % j)
 
 def build():
-	shelltools.cd("build")
+	shelltools.cd("_build")
 	cmaketools.make()
 
 def install():
-	shelltools.cd("build")
+	shelltools.cd("_build")
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	pisitools.dodoc("../LICENSE", "../README.md")

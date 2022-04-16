@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>picom</Name>
+		<Homepage>https://github.com/yshui/picom/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<License>MPL-2</License>
+		<IsA>app</IsA>
+		<PartOf>desktop.misc</PartOf>
+		<Summary>A compositor for X11.</Summary>
+		<Description>This is forked from the original Compton because it seems to have become unmaintained.</Description>
+		<Archive sha1sum="e73f02753e98d1fd2776d6261e4a929dcafbbd9d" type="targz">
+			https://github.com/yshui/picom/archive/refs/tags/v9.1.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<!-- <Dependency>git</Dependency> -->
+			<Dependency>cmake</Dependency>
+			<Dependency>meson</Dependency>
+			<Dependency>uthash</Dependency>
+			<Dependency>asciidoc</Dependency>
+			<Dependency>dbus-devel</Dependency>
+			<Dependency>mesa-devel</Dependency>
+			<Dependency>libev-devel</Dependency>
+			<Dependency>pixman-devel</Dependency>
+			<Dependency>libxcb-devel</Dependency>
+			<Dependency>libX11-devel</Dependency>
+			<Dependency>libpcre-devel</Dependency>
+			<Dependency>libxslt-devel</Dependency>
+			<Dependency>libglvnd-devel</Dependency>
+			<Dependency>libXext-devel</Dependency>
+			<Dependency>libconfig-devel</Dependency>
+			<Dependency>xcb-util-image-devel</Dependency>
+			<Dependency>xcb-util-renderutil-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<Patch level="1">config.patch</Patch>
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>picom</Name>
+		<Conflicts>
+			<!-- <Package>compton</Package> -->
+			<!-- <Package>xcompmgr</Package> -->
+		</Conflicts>
+		<RuntimeDependencies>
+			<Dependency>dbus</Dependency>
+			<Dependency>mesa</Dependency>
+			<Dependency>libev</Dependency>
+			<Dependency>libX11</Dependency>
+			<Dependency>libxcb</Dependency>
+			<Dependency>pixman</Dependency>
+			<Dependency>libpcre</Dependency>
+			<Dependency>libglvnd</Dependency>
+			<Dependency>libconfig</Dependency>
+			<Dependency>xcb-util-image</Dependency>
+			<Dependency>xcb-util-renderutil</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="config">/etc/xdg</Path>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="data">/usr/share</Path>
+			<Path fileType="man">/usr/share/man</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+		</Files>
+		<Provides>
+			<!-- <COMAR script="service.py">System.Service</COMAR> -->
+		</Provides>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2021-04-14</Date>
+			<Version>9.1</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

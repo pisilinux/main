@@ -12,7 +12,7 @@ WorkDir = "lf-r%s" % get.srcVERSION()
 
 def build():
 	shelltools.export("version", "%s" % get.srcVERSION())
-	shelltools.system("GOPATH=%s gen/build.sh" % get.workDIR())
+	shelltools.system("GO111MODULE=on GOPATH=%s gen/build.sh" % get.workDIR())
 
 def install():
 	pisitools.dobin("lf")
