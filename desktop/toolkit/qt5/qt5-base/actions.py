@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 import os
 
 WorkDir = "qtbase-kde-5.15"
-#WorkDir = "qtbase-everywhere-src-%s" % get.srcVERSION().replace('_','-').replace('pre1', 'tp')
+#WorkDir = "qtbase-everywhere-opensource-src-%s" % get.srcVERSION().replace('_','-').replace('pre1', 'tp')
 
 qtbase = qt5.prefix
 absoluteWorkDir = "%s/%s" % (get.workDIR(), WorkDir)
@@ -24,7 +24,7 @@ bindirQt5="/usr/bin"
 
 def setup():
     shelltools.system("mkdir .git")
-    pisitools.dosed(".qmake.conf", "5.15.3", "5.15.2")
+    #pisitools.dosed(".qmake.conf", "5.15.3", "5.15.2")
 
     #shelltools.system("patch -Rp1 < qt5-base-nouveau-freeze.patch")
     
