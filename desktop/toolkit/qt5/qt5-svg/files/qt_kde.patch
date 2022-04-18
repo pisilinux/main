@@ -1,55 +1,3 @@
-diff --git a/dist/changes-5.12.10 b/dist/changes-5.12.10
-new file mode 100644
-index 0000000..b8f8f69
---- /dev/null
-+++ b/dist/changes-5.12.10
-@@ -0,0 +1,46 @@
-+Qt 5.12.10 is a bug-fix release. It maintains both forward and backward
-+compatibility (source and binary) with Qt 5.12.9.
-+
-+For more details, refer to the online documentation included in this
-+distribution. The documentation is also available online:
-+
-+  https://doc.qt.io/qt-5.12/index.html
-+
-+The Qt version 5.12 series is binary compatible with the 5.11.x series.
-+Applications compiled for 5.11 will continue to run with 5.12.
-+
-+Some of the changes listed in this file include issue tracking numbers
-+corresponding to tasks in the Qt Bug Tracker:
-+
-+  https://bugreports.qt.io/
-+
-+Each of these identifiers can be entered in the bug tracker to obtain more
-+information about a particular change.
-+
-+****************************************************************************
-+*                          Library                                         *
-+****************************************************************************
-+
-+ - This release fixes a number of cases where input fuzzing has
-+   revealed that corrupt or pathological input could result in crashes
-+   or undefined behavior:
-+     oss-fuzz-23588
-+     oss-fuzz-23606
-+     oss-fuzz-23633
-+     oss-fuzz-23643
-+     oss-fuzz-23644
-+     oss-fuzz-23731
-+     oss-fuzz-24000
-+     oss-fuzz-24028
-+     oss-fuzz-24131
-+     oss-fuzz-24146
-+     oss-fuzz-24308
-+     oss-fuzz-24611
-+     oss-fuzz-24738
-+
-+Third-Party Code
-+----------------
-+
-+ - XSVG license was re-classified to HPND-sell-variant, "Historical Permission
-+   Notice and Disclaimer - sell variant"
-+
 diff --git a/src/plugins/imageformats/svg/qsvgiohandler.cpp b/src/plugins/imageformats/svg/qsvgiohandler.cpp
 index bd39b2a..fd3529a 100644
 --- a/src/plugins/imageformats/svg/qsvgiohandler.cpp
@@ -122,28 +70,20 @@ index bd39b2a..fd3529a 100644
  
  QT_END_NAMESPACE
 diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
-index c937254..f2653af 100644
+index b3d9aaf..f2653af 100644
 --- a/src/svg/qsvghandler.cpp
 +++ b/src/svg/qsvghandler.cpp
-@@ -65,6 +65,7 @@
- #include "private/qmath_p.h"
- 
- #include "float.h"
-+#include <cmath>
- 
- QT_BEGIN_NAMESPACE
- 
-@@ -672,6 +673,9 @@ static qreal toDouble(const QChar *&str)
+@@ -673,7 +673,8 @@ static qreal toDouble(const QChar *&str)
              val = -val;
      } else {
          val = QByteArray::fromRawData(temp, pos).toDouble();
+-        if (qFpClassify(val) != FP_NORMAL)
 +        // Do not tolerate values too wild to be represented normally by floats
 +        if (qFpClassify(float(val)) != FP_NORMAL)
-+            val = 0;
+             val = 0;
      }
      return val;
- 
-@@ -724,15 +728,25 @@ static QVector<qreal> parseNumbersList(const QChar *&str)
+@@ -727,15 +728,25 @@ static QVector<qreal> parseNumbersList(const QChar *&str)
      return points;
  }
  
@@ -171,7 +111,7 @@ index c937254..f2653af 100644
  
          while (str->isSpace())
              ++str;
-@@ -1379,8 +1393,10 @@ static void parseFont(QSvgNode *node,
+@@ -1382,8 +1393,10 @@ static void parseFont(QSvgNode *node,
          case FontSizeNone:
              break;
          case FontSizeValue: {
@@ -184,7 +124,7 @@ index c937254..f2653af 100644
          }
              break;
          default:
-@@ -1611,6 +1627,7 @@ static void pathArc(QPainterPath &path,
+@@ -1614,6 +1627,7 @@ static void pathArc(QPainterPath &path,
  
  static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
  {
@@ -192,7 +132,7 @@ index c937254..f2653af 100644
      qreal x0 = 0, y0 = 0;              // starting point
      qreal x = 0, y = 0;                // current point
      char lastMode = 0;
-@@ -1618,28 +1635,31 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1621,28 +1635,31 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
      const QChar *str = dataStr.constData();
      const QChar *end = str + dataStr.size();
  
@@ -229,7 +169,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  x = x0 = num[0] + offsetX;
-@@ -1656,8 +1676,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1659,8 +1676,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'M': {
                  if (count < 2) {
@@ -239,7 +179,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  x = x0 = num[0];
-@@ -1683,8 +1702,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1686,8 +1702,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'l': {
                  if (count < 2) {
@@ -249,7 +189,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  x = num[0] + offsetX;
-@@ -1697,8 +1715,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1700,8 +1715,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'L': {
                  if (count < 2) {
@@ -259,7 +199,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  x = num[0];
-@@ -1738,8 +1755,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1741,8 +1755,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'c': {
                  if (count < 6) {
@@ -269,7 +209,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF c1(num[0] + offsetX, num[1] + offsetY);
-@@ -1755,8 +1771,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1758,8 +1771,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'C': {
                  if (count < 6) {
@@ -279,7 +219,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF c1(num[0], num[1]);
-@@ -1772,8 +1787,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1775,8 +1787,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 's': {
                  if (count < 4) {
@@ -289,7 +229,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF c1;
-@@ -1794,8 +1808,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1797,8 +1808,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'S': {
                  if (count < 4) {
@@ -299,7 +239,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF c1;
-@@ -1816,8 +1829,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1819,8 +1829,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'q': {
                  if (count < 4) {
@@ -309,7 +249,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF c(num[0] + offsetX, num[1] + offsetY);
-@@ -1832,8 +1844,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1835,8 +1844,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'Q': {
                  if (count < 4) {
@@ -319,7 +259,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF c(num[0], num[1]);
-@@ -1848,8 +1859,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1851,8 +1859,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 't': {
                  if (count < 2) {
@@ -329,7 +269,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF e(num[0] + offsetX, num[1] + offsetY);
-@@ -1869,8 +1879,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1872,8 +1879,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'T': {
                  if (count < 2) {
@@ -339,7 +279,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  QPointF e(num[0], num[1]);
-@@ -1890,8 +1899,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1893,8 +1899,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'a': {
                  if (count < 7) {
@@ -349,7 +289,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  qreal rx = (*num++);
-@@ -1913,8 +1921,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1916,8 +1921,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'A': {
                  if (count < 7) {
@@ -359,7 +299,7 @@ index c937254..f2653af 100644
                      break;
                  }
                  qreal rx = (*num++);
-@@ -1935,12 +1942,15 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1938,12 +1942,15 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
                  break;
              default:
@@ -377,7 +317,7 @@ index c937254..f2653af 100644
  }
  
  static bool parseStyle(QSvgNode *node,
-@@ -2354,6 +2364,27 @@ static bool parseAnimateNode(QSvgNode *parent,
+@@ -2357,6 +2364,27 @@ static bool parseAnimateNode(QSvgNode *parent,
      return true;
  }
  
@@ -405,7 +345,7 @@ index c937254..f2653af 100644
  static bool parseAnimateColorNode(QSvgNode *parent,
                                    const QXmlStreamAttributes &attributes,
                                    QSvgHandler *handler)
-@@ -2387,23 +2418,13 @@ static bool parseAnimateColorNode(QSvgNode *parent,
+@@ -2390,23 +2418,13 @@ static bool parseAnimateColorNode(QSvgNode *parent,
          }
      }
  
@@ -436,7 +376,7 @@ index c937254..f2653af 100644
  
      QSvgAnimateColor *anim = new QSvgAnimateColor(begin, end, 0);
      anim->setArgs((targetStr == QLatin1String("fill")), colors);
-@@ -2493,24 +2514,13 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
+@@ -2496,24 +2514,13 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
          }
      }
  
@@ -468,7 +408,7 @@ index c937254..f2653af 100644
  
      QSvgAnimateTransform::TransformType type = QSvgAnimateTransform::Empty;
      if (typeStr == QLatin1String("translate")) {
-@@ -2566,6 +2576,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
+@@ -2569,6 +2576,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
      qreal ncx = toDouble(cx);
      qreal ncy = toDouble(cy);
      qreal nr  = toDouble(r);
@@ -477,7 +417,7 @@ index c937254..f2653af 100644
  
      QRectF rect(ncx-nr, ncy-nr, nr*2, nr*2);
      QSvgNode *circle = new QSvgCircle(parent, rect);
-@@ -2976,8 +2988,8 @@ static QSvgNode *createPathNode(QSvgNode *parent,
+@@ -2979,8 +2988,8 @@ static QSvgNode *createPathNode(QSvgNode *parent,
  
      QPainterPath qpath;
      qpath.setFillRule(Qt::WindingFill);
@@ -488,7 +428,7 @@ index c937254..f2653af 100644
  
      QSvgNode *path = new QSvgPath(parent, qpath);
      return path;
-@@ -3036,13 +3048,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
+@@ -3039,13 +3048,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
  
      qreal ncx = 0.5;
      qreal ncy = 0.5;
@@ -506,7 +446,7 @@ index c937254..f2653af 100644
  
      qreal nfx = ncx;
      if (!fx.isEmpty())
-@@ -3338,7 +3353,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
+@@ -3341,7 +3353,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
      //### editable and rotate not handled
      QSvgHandler::LengthType type;
      qreal nx = parseLength(x, type, handler);
@@ -516,7 +456,7 @@ index c937254..f2653af 100644
  
      QSvgNode *text = new QSvgText(parent, QPointF(nx, ny));
      return text;
-@@ -3679,9 +3696,7 @@ void QSvgHandler::parse()
+@@ -3682,9 +3696,7 @@ void QSvgHandler::parse()
          case QXmlStreamReader::EndElement:
              endElement(xml->name());
              ++remainingUnfinishedElements;
