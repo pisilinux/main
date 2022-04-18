@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("mkdir .git")
-    pisitools.dosed(".qmake.conf", "5.15.3", "5.15.2")
+    #pisitools.dosed(".qmake.conf", "5.15.3", "5.15.2")
     qt5.configure()
 
 def build():
