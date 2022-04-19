@@ -20,23 +20,14 @@ def build():
 def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    #removed lxqt default wallpaper
-    pisitools.removeDir("/usr/share/lxqt/themes/system")
-    pisitools.remove("/usr/share/lxqt/themes/ambiance/Butterfly-Kenneth-Wimer.jpg")
-    pisitools.remove("/usr/share/lxqt/themes/dark/wallpaper.png")
-    pisitools.remove("/usr/share/lxqt/themes/frost/lxqt-origami-light.png")
-    pisitools.remove("/usr/share/lxqt/themes/kde-plasma/kde-plasma.png")
-    pisitools.remove("/usr/share/lxqt/themes/light/96640-simple_blue_widescreen.svg")
-    pisitools.remove("/usr/share/lxqt/themes/light/simple_blue_widescreen.png")
-
+   
    #fixed menu icon for Pisi
-    light_themes=("Clearlooks","kde-plasma", "light")
+    light_themes=("Clearlooks","KDE-Plasma", "light", "system")
     for i in light_themes:
         pisitools.remove("/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
         pisitools.dosym("/usr/share/icons/hicolor/scalable/places/start-here-light.svg", "/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
 
-    dark_themes=("ambiance", "dark", "frost", "Leech")
+    dark_themes=("ambiance", "Arch-Colors", "dark", "frost", "Leech", "silver", "Valendas")
     for i in dark_themes:
         pisitools.remove("/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
         pisitools.dosym("/usr/share/icons/hicolor/scalable/places/start-here-dark.svg", "/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
