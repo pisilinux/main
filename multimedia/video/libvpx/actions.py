@@ -14,6 +14,8 @@ libdir = "lib"
 def setup():
     shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.export("CFLAGS", get.CFLAGS().replace("-ggdb3", ""))
+    pisitools.cflags.add(" -ffat-lto-objects")
+    pisitools.cxxflags.add(" -ffat-lto-objects")
     autotools.rawConfigure("--prefix=/usr \
                             --libdir=/usr/%s \
                             --enable-pic \
