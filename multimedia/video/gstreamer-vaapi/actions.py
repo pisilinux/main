@@ -10,7 +10,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dpackage-name='GStreamer VAAPI Plugins (Pisi Linux)' \
+    mesontools.configure("-D gst-plugins-base:package-name='GStreamer VAAPI Plugins (Pisi Linux)' \
                           -Dpackage-origin='https://www.pisilinux.org'")
 
 def build():
