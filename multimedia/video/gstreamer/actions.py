@@ -15,7 +15,6 @@ def setup():
                -Dpackage-origin='https://www.pisilinux.org' \
                -Dptp-helper-permissions=capabilities \
                -Ddbghelp=disabled \
-               -Dgtk_doc=disabled \
               "
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "%s -m32" % get.CC())
@@ -41,4 +40,4 @@ def install():
         pisitools.removeDir("/usr/libexec32")
         return
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README*")
