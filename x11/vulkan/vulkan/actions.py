@@ -75,6 +75,7 @@ def setup():
         shelltools.cd("build")
         
         loader_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
+                        -DSPIRV_HEADERS_INSTALL_DIR='/usr/include/spirv' \
                        "
                        
         cmaketools.configure(loader_opts, sourceDir="..")
