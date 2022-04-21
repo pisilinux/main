@@ -37,7 +37,6 @@ def setup():
                         -DBUILD_SHARED_LIBS=ON \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
                         -DSPIRV_TOOLS_INSTALL_DIR='/usr' \
-                        -DSPIRV_HEADERS_INSTALL_DIR='/usr/include/spirv' \
                         -DUSE_ROBIN_HOOD_HASHING=OFF \
                         -DGLSLANG_INSTALL_DIR=/usr \
                       "
@@ -48,7 +47,7 @@ def setup():
         shelltools.export("CXXFLAGS", "-m32")
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
         
-        shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+        shelltools.cd("%s/Vulkan-Loader-sdk-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
         
@@ -58,7 +57,7 @@ def setup():
                        
         cmaketools.configure(loader_opts, sourceDir="..")
         
-        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        shelltools.cd("%s/Vulkan-ValidationLayers-sdk-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
@@ -71,7 +70,7 @@ def setup():
         cmaketools.configure(validation_opts, sourceDir="..")
         
     else:
-        shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+        shelltools.cd("%s/Vulkan-Loader-sdk-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
         
@@ -80,34 +79,35 @@ def setup():
                        
         cmaketools.configure(loader_opts, sourceDir="..")
         
-        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        shelltools.cd("%s/Vulkan-ValidationLayers-sdk-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
         
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
                             -DSPIRV_TOOLS_LIB='/usr/lib' \
+                            -DSPIRV_HEADERS_INSTALL_DIR='/usr/include/spirv' \
                             -DSPIRV_TOOLS_OPT_LIB='/usr/lib' \
                            "
                            
         cmaketools.configure(validation_opts, sourceDir="..")
         
 def build():
-    shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+    shelltools.cd("%s/Vulkan-Loader-sdk-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
     cmaketools.make("-j1")
     
-    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    shelltools.cd("%s/Vulkan-ValidationLayers-sdk-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
     cmaketools.make("-j1")
     
 def install():
     
-    shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
+    shelltools.cd("%s/Vulkan-Loader-sdk-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())
     
-    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    shelltools.cd("%s/Vulkan-ValidationLayers-sdk-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())  
     
