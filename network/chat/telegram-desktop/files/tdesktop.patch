@@ -1,0 +1,62 @@
+diff -Nuar a/Telegram/lib_ui/ui/widgets/popup_menu.cpp b/Telegram/lib_ui/ui/widgets/popup_menu.cpp
+--- a/Telegram/lib_ui/ui/widgets/popup_menu.cpp	2022-04-20 10:41:10.000000000 +0300
++++ b/Telegram/lib_ui/ui/widgets/popup_menu.cpp	2022-04-23 20:35:16.524988000 +0300
+@@ -760,11 +760,6 @@
+ 	}
+ 	_parent = parent;
+ 
+-	if (_parent) {
+-		setScreen(_parent->screen());
+-	} else if (screen) {
+-		setScreen(screen);
+-	}
+ 
+ 	using Origin = PanelAnimation::Origin;
+ 	auto origin = Origin::TopLeft;
+diff -Nuar a/Telegram/lib_ui/ui/widgets/tooltip.cpp b/Telegram/lib_ui/ui/widgets/tooltip.cpp
+--- a/Telegram/lib_ui/ui/widgets/tooltip.cpp	2022-04-20 10:41:10.000000000 +0300
++++ b/Telegram/lib_ui/ui/widgets/tooltip.cpp	2022-04-23 20:36:33.692982000 +0300
+@@ -117,7 +117,6 @@
+ 
+ 	// adjust tooltip position
+ 	if (screen) {
+-		setScreen(screen);
+ 		const auto r = screen->availableGeometry();
+ 		if (r.x() + r.width() - _st->skip < p.x() + s.width() && p.x() + s.width() > m.x()) {
+ 			p.setX(qMax(r.x() + r.width() - int32(_st->skip) - s.width(), m.x() - s.width()));
+diff -Nuar a/Telegram/SourceFiles/calls/group/ui/desktop_capture_choose_source.cpp b/Telegram/SourceFiles/calls/group/ui/desktop_capture_choose_source.cpp
+--- a/Telegram/SourceFiles/calls/group/ui/desktop_capture_choose_source.cpp	2022-04-20 12:56:09.000000000 +0300
++++ b/Telegram/SourceFiles/calls/group/ui/desktop_capture_choose_source.cpp	2022-04-23 21:30:13.256750000 +0300
+@@ -585,7 +585,7 @@
+ 	}();
+ 	const auto myScreen = _window->screen();
+ 	if (parentScreen && myScreen != parentScreen) {
+-		_window->setScreen(parentScreen);
++	//	_window->setScreen(parentScreen);
+ 	}
+ 	_window->move(
+ 		parent->x() + (parent->width() - _window->width()) / 2,
+diff -Nuar a/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp b/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp
+--- a/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp	2022-04-20 12:56:09.000000000 +0300
++++ b/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp	2022-04-23 21:31:50.214743000 +0300
+@@ -499,7 +499,7 @@
+ 		DEBUG_LOG(("Viewer Pos: Currently on screen %1, moving to screen %2")
+ 			.arg(screenList.indexOf(myScreen))
+ 			.arg(screenList.indexOf(activeWindowScreen)));
+-		_widget->setScreen(activeWindowScreen);
++		//_widget->setScreen(activeWindowScreen);
+ 		DEBUG_LOG(("Viewer Pos: New actual screen: %1")
+ 			.arg(screenList.indexOf(_widget->screen())));
+ 	}
+diff -Nuar a/Telegram/SourceFiles/media/view/media_view_pip.cpp b/Telegram/SourceFiles/media/view/media_view_pip.cpp
+--- a/Telegram/SourceFiles/media/view/media_view_pip.cpp	2022-04-20 12:56:09.000000000 +0300
++++ b/Telegram/SourceFiles/media/view/media_view_pip.cpp	2022-04-23 21:33:13.915737000 +0300
+@@ -475,7 +475,7 @@
+ 	const auto parentScreen = widgetScreen(_parent);
+ 	const auto myScreen = widgetScreen(widget());
+ 	if (parentScreen && myScreen && myScreen != parentScreen) {
+-		widget()->setScreen(parentScreen);
++		//widget()->setScreen(parentScreen);
+ 	}
+ 	auto position = Position();
+ 	position.snapped = RectPart::Top | RectPart::Left;
