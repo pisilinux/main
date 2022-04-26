@@ -13,12 +13,12 @@ from pisi.actionsapi import get
 def setup():
     #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.autoreconf("-fi")
-    autotools.configure("--with-systemduserunitdir=none \
+    autotools.configure("--with-systemd=no \
                          --disable-geoclue \
                          --disable-docbook-docs \
                          --disable-libportal \
                          --enable-pipewire")
-
+#--with-systemduserunitdir=none \
 def build():
     autotools.make()
 
