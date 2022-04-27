@@ -19,7 +19,7 @@ def setup():
                          --with-x \
                          --enable-nls \
                          --sysconfdir=/etc \
-                         --libexecdir=/usr/libexec \
+                         --libexecdir=/usr/lib/openbox \
                          --enable-startup-notification \
                          --docdir=/%s/%s" % (get.docDIR(), get.srcNAME()))
 

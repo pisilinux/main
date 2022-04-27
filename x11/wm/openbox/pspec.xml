@@ -36,6 +36,8 @@
 
             <Patch>openbox-3.5.2-gnome-session.patch</Patch>
             <Patch>openbox-3.6.1-py3-xdg.patch</Patch>
+            <Patch>openbox-kde-paths.patch</Patch>
+            <Patch>debian-887908.patch</Patch>
 <!--             <Patch>openbox-python3.patch</Patch> -->
         </Patches>
     </Source>
@@ -60,20 +62,24 @@
             <Dependency>startup-notification</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="executable">/usr/libexec</Path>
+            <Path fileType="executable">/usr/bin/obmenu-generator</Path>
+            <Path fileType="executable">/usr/bin/obxprop</Path>
+            <Path fileType="executable">/usr/bin/openbox</Path>
+            <Path fileType="executable">/usr/bin/openbox-session</Path>
+            <Path fileType="executable">/usr/lib/openbox</Path>
             <Path fileType="config">/etc/xdg/openbox</Path>
             <Path fileType="config">/etc/xdg/obmenu-generator</Path>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libobrender*</Path>
+            <Path fileType="library">/usr/lib/libobt*</Path>
             <Path fileType="data">/usr/share/openbox</Path>
             <Path fileType="data">/usr/share/themes</Path>
-            <Path fileType="data">/usr/share/xsessions</Path>
-            <Path fileType="data">/usr/share/gnome</Path>
-            <Path fileType="data">/usr/share/gnome-session</Path>
+            <Path fileType="data">/usr/share/xsessions/openbox.desktop</Path>
             <Path fileType="data">/usr/share/applications</Path>
             <Path fileType="data">/usr/share/pixmaps</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="man">/usr/share/man/man1/obxprop.1</Path>
+            <Path fileType="man">/usr/share/man/man1/openbox.1</Path>
+            <Path fileType="man">/usr/share/man/man1/openbox-session.1</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
         <AdditionalFiles>
@@ -83,9 +89,35 @@
 <!--             <AdditionalFile owner="root" permission="0644" target="/etc/xdg/openbox/autostart">autostart</AdditionalFile> -->
             <AdditionalFile owner="root" permission="0644" target="/usr/share/openbox/kedicik.png">kedicik.png</AdditionalFile>
 
-            <AdditionalFile owner="root" permission="0755" target="/usr/libexec/openbox-xdg-menu">xdg-menu</AdditionalFile>
+            <AdditionalFile owner="root" permission="0755" target="/usr/lib/openbox/openbox-xdg-menu">xdg-menu</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="/etc/xdg/openbox/terminals.menu">terminals.menu</AdditionalFile>
         </AdditionalFiles>
+    </Package>
+    
+    <Package>
+        <Name>openbox-kde</Name>
+        <Summary>The openbox-kde package contains the files needed for using openbox inside a
+KDE session.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">openbox</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/openbox-kde-session</Path>
+            <Path fileType="data">/usr/share/xsessions/openbox-kde.desktop</Path>
+            <Path fileType="man">/usr/share/man/man1/openbox-kde-session.1</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>openbox-gnome</Name>
+        <Summary>The openbox-gnome package contains the files needed for using openbox inside a
+Gnome session.</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">openbox</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/gnome/wm-properties</Path>
+        </Files>
     </Package>
 
     <Package>
@@ -107,6 +139,13 @@
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2022-04-27</Date>
+            <Version>3.6.1</Version>
+            <Comment>splited kde/gnome packages and added some patch</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
         <Update release="4">
             <Date>2021-12-13</Date>
             <Version>3.6.1</Version>
