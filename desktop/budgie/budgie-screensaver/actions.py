@@ -7,14 +7,15 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
+from pisi.actionsapi import mesontools
 
 def setup():
-    autotools.configure()
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("COPYING*", "NEWS", "README*", "AUTHORS", "ChangeLog")
+    pisitools.dodoc("README.md", "LICENSE*")
