@@ -8,8 +8,9 @@ from pisi.actionsapi import shelltools, cmaketools, pisitools, get
 
 j = ''.join([
     ' -DSTRICT_OPTIONS=ON',
+    ' -DPLATFORM_EXTENSIONS=ON',
     ' -DCMAKE_BUILD_TYPE=Release',
-    ' -DUPDATE_CHECK=OFF '
+    ' -DUPDATE_CHECK=ON '
     ])
 
 def setup():
