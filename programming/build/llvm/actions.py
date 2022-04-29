@@ -113,8 +113,8 @@ def install():
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
         pisitools.removeDir("/emul32")
         #pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
-	else:		
-	    shelltools.makedirs("%s/usr/lib/llvm-libunwind" % get.installDIR())
+    else:
+        shelltools.makedirs("%s/usr/lib/llvm-libunwind" % get.installDIR())
         pisitools.domove("/usr/lib/libunwind*", "/usr/lib/llvm-libunwind")
         pisitools.dosym("/usr/lib/llvm-libunwind/libunwind.so", "/usr/lib/libllvm-unwind.so")
         pisitools.dosym("/usr/lib/llvm-libunwind/libunwind.a", "/usr/lib/libllvm-unwind.a")
