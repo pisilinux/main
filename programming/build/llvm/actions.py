@@ -26,8 +26,8 @@ def setup():
     pisitools.ldflags.add("-fuse-ld=lld")
     pisitools.cflags.remove("-D_FORTIFY_SOURCE=2")
     pisitools.cxxflags.remove("-D_FORTIFY_SOURCE=2")
-    pisitools.cflags.add("-mllvm -polly -Wno-unused-command-line-argument")
-    pisitools.cxxflags.add("-mllvm -polly -Wno-unused-command-line-argument")
+    pisitools.cflags.add("-rtlib=compiler-rt -Wno-unused-command-line-argument")
+    pisitools.cxxflags.add("-rtlib=compiler-rt -Wno-unused-command-line-argument")
     shelltools.export("CC", "clang")
     shelltools.export("CXX", "clang++")
     shelltools.export("AR", "llvm-ar")
@@ -67,8 +67,8 @@ def setup():
     if get.buildTYPE() == "emul32":
         #shelltools.export("CC", "gcc -m32")
         #shelltools.export("CXX", "g++ -m32")
-        pisitools.cflags.add("-m32 ")
-        pisitools.cxxflags.add("-m32")
+        pisitools.cflags.add("-m32 -rtlib=compiler-rt")
+        pisitools.cxxflags.add("-m32 -rtlib=compiler-rt")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
