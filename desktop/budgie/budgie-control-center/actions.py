@@ -4,10 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
-from pisi.actionsapi import mesontools
+from pisi.actionsapi import mesontools, pisitools
 
 def setup():
     mesontools.configure()
@@ -17,5 +14,9 @@ def build():
 
 def install():
     mesontools.install()
+    #these file comes from libhandy
+    pisitools.removeDir("/usr/share/locale")
+    pisitools.remove("/usr/lib/libhandy-1.so*")
+    
 
     pisitools.dodoc("README.md", "LICENSE*")
