@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 import subprocess
 
-projects = "clang;mlir" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir"
+projects = "clang;mlir;libunwind" if get.buildTYPE() == "emul32" else "clang;clang-tools-extra;lld;lldb;polly;compiler-rt;mlir;libunwind"
 libdir = "/usr/lib32/llvm" if get.buildTYPE() == "emul32" else "/usr/lib/llvm"
 lib = "lib32" if get.buildTYPE() == "emul32" else "lib"
 libsuffix = "32" if get.buildTYPE() == "emul32" else " "
@@ -100,14 +100,25 @@ def build():
 def install():
     shelltools.cd("build")
     #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())    
+    
         
     if get.buildTYPE() == "emul32":        
         pisitools.domove("/emul32/lib32/", "/usr/")
+        shelltools.makedirs("%s/usr/lib32/llvm-libunwind" % get.installDIR())
+        pisitools.domove("/usr/lib32/libunwind*", "/usr/lib32/llvm-libunwind")
+        pisitools.dosym("/usr/lib32/llvm-libunwind/libunwind.so", "/usr/lib32/libllvm-unwind.so")
+        pisitools.dosym("/usr/lib32/llvm-libunwind/libunwind.a", "/usr/lib32/libllvm-unwind.a")
         pisitools.insinto("/usr/include/llvm/Config/","%s/emul32/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
         pisitools.removeDir("/emul32")
         #pisitools.remove("/usr/lib/python3.8/site-packages/six.py")
+	else:		
+	    shelltools.makedirs("%s/usr/lib/llvm-libunwind" % get.installDIR())
+        pisitools.domove("/usr/lib/libunwind*", "/usr/lib/llvm-libunwind")
+        pisitools.dosym("/usr/lib/llvm-libunwind/libunwind.so", "/usr/lib/libllvm-unwind.so")
+        pisitools.dosym("/usr/lib/llvm-libunwind/libunwind.a", "/usr/lib/libllvm-unwind.a")
+		
    
     shelltools.cd ("..")
     
