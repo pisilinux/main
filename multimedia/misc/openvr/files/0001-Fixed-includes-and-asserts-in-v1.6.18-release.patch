@@ -1,0 +1,161 @@
+From ccdcd5a741bead75f60325f97d59ccdc4f082bac Mon Sep 17 00:00:00 2001
+From: Richard Musil <risa2000x@gmail.com>
+Date: Thu, 25 Feb 2021 08:52:44 +0100
+Subject: [PATCH] Fixed includes and asserts in v1.6.18 release.
+
+---
+ src/openvr_api_public.cpp              | 10 +++++-----
+ src/vrcommon/dirtools_public.cpp       |  6 +++---
+ src/vrcommon/envvartools_public.cpp    |  4 ++--
+ src/vrcommon/pathtools_public.cpp      |  6 +++---
+ src/vrcommon/sharedlibtools_public.cpp |  2 +-
+ src/vrcommon/strtools_public.cpp       |  8 ++++----
+ src/vrcommon/vrpathregistry_public.cpp | 12 ++++++------
+ 7 files changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/src/openvr_api_public.cpp b/src/openvr_api_public.cpp
+index 98ba762..efe6c16 100644
+--- a/src/openvr_api_public.cpp
++++ b/src/openvr_api_public.cpp
+@@ -2,12 +2,12 @@
+ #define VR_API_EXPORT 1
+ #include "openvr.h"
+ #include "ivrclientcore.h"
+-#include <vrcore/pathtools_public.h>
+-#include <vrcore/sharedlibtools_public.h>
+-#include <vrcore/envvartools_public.h>
++#include "vrcommon/pathtools_public.h"
++#include "vrcommon/sharedlibtools_public.h"
++#include "vrcommon/envvartools_public.h"
+ #include "hmderrors_public.h"
+-#include <vrcore/strtools_public.h>
+-#include <vrcore/vrpathregistry_public.h>
++#include "vrcommon/strtools_public.h"
++#include "vrcommon/vrpathregistry_public.h"
+ #include <mutex>
+ 
+ using vr::EVRInitError;
+diff --git a/src/vrcommon/dirtools_public.cpp b/src/vrcommon/dirtools_public.cpp
+index e5fccc1..37828b6 100644
+--- a/src/vrcommon/dirtools_public.cpp
++++ b/src/vrcommon/dirtools_public.cpp
+@@ -1,7 +1,7 @@
+ //========= Copyright Valve Corporation ============//
+-#include <vrcore/dirtools_public.h>
+-#include <vrcore/strtools_public.h>
+-#include <vrcore/pathtools_public.h>
++#include "vrcommon/dirtools_public.h"
++#include "vrcommon/strtools_public.h"
++#include "vrcommon/pathtools_public.h"
+ 
+ #include <errno.h>
+ #include <string.h>
+diff --git a/src/vrcommon/envvartools_public.cpp b/src/vrcommon/envvartools_public.cpp
+index b6de2a8..77f43ff 100644
+--- a/src/vrcommon/envvartools_public.cpp
++++ b/src/vrcommon/envvartools_public.cpp
+@@ -1,6 +1,6 @@
+ //========= Copyright Valve Corporation ============//
+-#include <vrcore/envvartools_public.h>
+-#include <vrcore/strtools_public.h>
++#include "vrcommon/envvartools_public.h"
++#include "vrcommon/strtools_public.h"
+ #include <stdlib.h>
+ #include <string>
+ #include <cctype>
+diff --git a/src/vrcommon/pathtools_public.cpp b/src/vrcommon/pathtools_public.cpp
+index 2503ec6..fe932f4 100644
+--- a/src/vrcommon/pathtools_public.cpp
++++ b/src/vrcommon/pathtools_public.cpp
+@@ -1,6 +1,6 @@
+ //========= Copyright Valve Corporation ============//
+-#include <vrcore/strtools_public.h>
+-#include <vrcore/pathtools_public.h>
++#include "vrcommon/strtools_public.h"
++#include "vrcommon/pathtools_public.h"
+ 
+ #if defined( _WIN32)
+ #include <windows.h>
+@@ -66,7 +66,7 @@ std::string Path_GetExecutablePath()
+ 		return "";
+ 	}
+ #else
+-	AssertMsg( false, "Implement Plat_GetExecutablePath" );
++	//AssertMsg( false, "Implement Plat_GetExecutablePath" );
+ 	return "";
+ #endif
+ 
+diff --git a/src/vrcommon/sharedlibtools_public.cpp b/src/vrcommon/sharedlibtools_public.cpp
+index cce1528..d80d6fb 100644
+--- a/src/vrcommon/sharedlibtools_public.cpp
++++ b/src/vrcommon/sharedlibtools_public.cpp
+@@ -1,5 +1,5 @@
+ //========= Copyright Valve Corporation ============//
+-#include <vrcore/sharedlibtools_public.h>
++#include "vrcommon/sharedlibtools_public.h"
+ #include <string.h>
+ 
+ #if defined(_WIN32)
+diff --git a/src/vrcommon/strtools_public.cpp b/src/vrcommon/strtools_public.cpp
+index 343ec42..3193f7e 100644
+--- a/src/vrcommon/strtools_public.cpp
++++ b/src/vrcommon/strtools_public.cpp
+@@ -1,5 +1,6 @@
+ //========= Copyright Valve Corporation ============//
+-#include <vrcore/strtools_public.h>
++#include "vrcommon/strtools_public.h"
++//#include "vrcommon/assert.h"
+ #include <string.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -9,7 +10,6 @@
+ #include <functional>
+ #include <locale>
+ #include <codecvt>
+-#include <vrcore/assert.h>
+ 
+ #if defined( _WIN32 )
+ #include <windows.h>
+@@ -128,7 +128,7 @@ std::string Format( const char *pchFormat, ... )
+ 	// Something went fairly wrong
+ 	if ( unSize < 0 )
+ 	{
+-		AssertMsg( false, "Format string parse failure" );
++		//AssertMsg( false, "Format string parse failure" );
+ 		return "";
+ 	}
+ 
+@@ -149,7 +149,7 @@ std::string Format( const char *pchFormat, ... )
+ 	// Double check, just in case
+ 	if ( unSize < 0 )
+ 	{
+-		AssertMsg( false, "Format string parse failure" );
++		//AssertMsg( false, "Format string parse failure" );
+ 		return "";
+ 	}
+ 
+diff --git a/src/vrcommon/vrpathregistry_public.cpp b/src/vrcommon/vrpathregistry_public.cpp
+index 2746bdb..b8a545f 100644
+--- a/src/vrcommon/vrpathregistry_public.cpp
++++ b/src/vrcommon/vrpathregistry_public.cpp
+@@ -1,11 +1,11 @@
+ //========= Copyright Valve Corporation ============//
+ 
+-#include <vrcore/vrpathregistry_public.h>
+-#include <json/json.h>
+-#include <vrcore/pathtools_public.h>
+-#include <vrcore/envvartools_public.h>
+-#include <vrcore/strtools_public.h>
+-#include <vrcore/dirtools_public.h>
++#include "vrcommon/vrpathregistry_public.h"
++#include "json/json.h"
++#include "vrcommon/pathtools_public.h"
++#include "vrcommon/envvartools_public.h"
++#include "vrcommon/strtools_public.h"
++#include "vrcommon/dirtools_public.h"
+ 
+ #if defined( WIN32 )
+ #include <windows.h>
+-- 
+2.30.2
+

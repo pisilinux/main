@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>openvr</Name>
+        <Homepage>https://github.com/ValveSoftware/openvr</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>app</IsA>
+        <Summary>API and runtime that allows access to VR hardware from multiple vendors</Summary>
+        <Description>OpenVR is an API and runtime that allows access to VR hardware from multiple vendors without requiring that applications have specific knowledge of the hardware they are targeting. This repository is an SDK that contains the API and samples. The runtime is under SteamVR in Tools on Steam.</Description>
+        <Archive sha1sum="f46dfd200aad552224ad291624458895c706be3b" type="targz">https://github.com/ValveSoftware/openvr/archive/refs/tags/v1.16.8.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>jsoncpp-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>rapidjson-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>0001-Fixed-includes-and-asserts-in-v1.6.18-release.patch</Patch>
+            <Patch>fix-missing-stdarg-h.patch</Patch>
+            <Patch>install-library.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>openvr</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>jsoncpp</Dependency>
+            <Dependency>libglvnd</Dependency>
+            <Dependency>rapidjson</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libopenvr_api.so*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>openvr-devel</Name>
+        <Summary>Development files for openvr</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">openvr</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/share/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-05-01</Date>
+            <Version>1.16.8</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
