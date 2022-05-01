@@ -1,0 +1,22 @@
+diff -Nur old/src/CMakeLists.txt new/src/CMakeLists.txt
+--- old/src/CMakeLists.txt	2021-03-28 20:16:17.261479252 +0200
++++ new/src/CMakeLists.txt	2021-03-28 20:19:31.379804791 +0200
+@@ -68,6 +68,9 @@
+ # Build the library.
+ if(BUILD_SHARED)
+ 	add_library(${LIBNAME} SHARED ${SOURCE_FILES})
++	set_target_properties(${LIBNAME} PROPERTIES
++							VERSION ${OPENVR_VERSION})
++
+ elseif(BUILD_FRAMEWORK)
+ 	set( LIBNAME "OpenVR" )
+ 	add_library( ${LIBNAME} 
+@@ -101,7 +104,7 @@
+ target_link_libraries(${LIBNAME} ${EXTRA_LIBS} ${CMAKE_DL_LIBS})
+ target_include_directories(${LIBNAME} PUBLIC ${OPENVR_HEADER_DIR})
+ 
+-install(TARGETS ${LIBNAME} DESTINATION lib)
++install(TARGETS ${LIBNAME} DESTINATION lib${LIB_SUFFIX})
+ install(FILES ${PUBLIC_HEADER_FILES} DESTINATION include/openvr)
+ 
+ # Generate a .pc file for linux environments
