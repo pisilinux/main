@@ -1,0 +1,23 @@
+From c212fc932a63fe11289f7fc359e9364c25d27d23 Mon Sep 17 00:00:00 2001
+From: nick87720z <nick87720z@gmail.com>
+Date: Fri, 16 Oct 2020 05:09:40 +0500
+Subject: [PATCH] configure.ac: NOTIFY_CFLAGS is not set
+
+This sort of assignment, +=, works in makefiles, but not in shell scripts.
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 0dbba26..48a3ee5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -86,7 +86,7 @@ fi
+ if test "x${notify}" = xyes; then
+ # Check for libnotify
+ PKG_CHECK_MODULES([NOTIFY], [libnotify >= 0.5.0])
+-NOTIFY_CFLAGS+="-DCOMPILEWITH_NOTIFY"
++NOTIFY_CFLAGS="${NOTIFY_CFLAGS} -DCOMPILEWITH_NOTIFY"
+ AC_SUBST(NOTIFY_CFLAGS)
+ AC_SUBST(NOTIFY_LIBS)
+ fi
