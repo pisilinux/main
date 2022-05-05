@@ -21,5 +21,6 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.dosym("/usr/share/pkgconfig/mdds-2.0.pc", "/usr/share/pkgconfig/mdds-1.5.pc")
     
     pisitools.dodoc("AUTHORS", "LICENSE")
