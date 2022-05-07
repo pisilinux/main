@@ -17,7 +17,7 @@ def setup():
 
     shelltools.copy("../xdgmime-*/*", "xdgmime")
 
-    #autotools.make("-C xdgmime")
+    autotools.make("-C xdgmime")
 
     mesontools.configure("-Dupdate-mimedb=false -D xdgmime-path=%s/xdgmime" % get.srcDIR())
      
