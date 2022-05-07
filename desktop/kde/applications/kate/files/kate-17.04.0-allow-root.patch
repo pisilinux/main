@@ -1,10 +1,10 @@
 diff -Nuar a/kate/main.cpp b/kate/main.cpp
---- a/kate/main.cpp	2021-08-27 23:54:04.000000000 +0300
-+++ b/kate/main.cpp	2021-09-13 17:57:18.358487000 +0300
-@@ -38,31 +38,8 @@
+--- a/kate/main.cpp	2022-04-13 00:16:30.000000000 +0300
++++ b/kate/main.cpp	2022-05-07 17:36:15.287375842 +0300
+@@ -39,31 +39,9 @@
  #include "qtsingleapplication/qtsingleapplication.h"
  #endif
- 
+
 -#ifndef Q_OS_WIN
 -#include <unistd.h>
 -#endif
@@ -16,20 +16,21 @@ diff -Nuar a/kate/main.cpp b/kate/main.cpp
 -    // Prohibit using sudo or kdesu (but allow using the root user directly)
 -    if (getuid() == 0) {
 -        if (!qEnvironmentVariableIsEmpty("SUDO_USER")) {
--            std::cout << "Executing Kate with sudo is not possible due to unfixable security vulnerabilities. "
--                         "It is also not necessary; simply use Kate normally, and you will be prompted for "
--                         "elevated privileges when saving documents if needed."
+-            std::cout << "Running Kate with sudo can cause bugs and expose you to security vulnerabilities. "
+-                         "Instead use Kate normally and you will be prompted for elevated privileges when "
+-                         "saving documents if needed."
 -                      << std::endl;
 -            return EXIT_FAILURE;
 -        } else if (!qEnvironmentVariableIsEmpty("KDESU_USER")) {
--            std::cout << "Executing Kate with kdesu is not possible due to unfixable security vulnerabilities. "
--                         "It is also not necessary; simply use Kate normally, and you will be prompted for "
--                         "elevated privileges when saving documents if needed."
+-            std::cout << "Running Kate with kdesu can cause bugs and expose you to security vulnerabilities. "
+-                         "Instead use Kate normally and you will be prompted for elevated privileges when "
+-                         "saving documents if needed."
 -                      << std::endl;
 -            return EXIT_FAILURE;
 -        }
 -    }
 -#endif
++
      /**
       * init resources from our static lib
       */
