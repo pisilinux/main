@@ -94,8 +94,8 @@ j = ''.join([
     ])
 
 def setup():
-	pisitools.ldflags.add("-lbsd")
-	pisitools.cxxflags.add("-lbsd")
+#	pisitools.ldflags.add("-lbsd")
+#	pisitools.cxxflags.add("-lbsd")
 	mesontools.configure(j)
 
 def build():
