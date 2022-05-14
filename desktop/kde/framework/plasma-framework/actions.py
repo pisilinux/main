@@ -16,6 +16,6 @@ def build():
 def install():
     kde5.install()
     #set pisi-crocus-ancyrensis photos as default wallpapers
-    #pisitools.dosed("%s/usr/share/plasma/desktoptheme/default/metadata.desktop" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
+    pisitools.dosed("%s/usr/share/plasma/desktoptheme/default/plasmarc" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
 
     pisitools.dodoc("README.md")
