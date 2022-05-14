@@ -11,6 +11,7 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -r 's|(CMAKE_SKIP_BUILD_RPATH) FALSE|\1 TRUE|g' -i CMakeLists.txt")
     shelltools.makedirs("build")
     shelltools.cd("build")
     
