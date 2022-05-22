@@ -1,0 +1,30 @@
+
+sparse_keymap_free() is now obsolete.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+--- linux/drivers/platform/x86/shuttle-wmi.c.orig	2017-10-15 00:39:53.041395980 +0300
++++ linux/drivers/platform/x86/shuttle-wmi.c	2017-10-15 01:05:37.008662881 +0300
+@@ -763,14 +763,9 @@ static int shuttle_wmi_input_init(struct
+ 		goto err_free_dev;
+ 
+ 	rc = input_register_device(input);
+-	if (rc)
+-		goto err_free_keymap;
+ 
+ 	priv->inputdev = input;
+ 	return 0;
+-
+-err_free_keymap:
+-	sparse_keymap_free(input);
+ err_free_dev:
+ 	input_free_device(input);
+ 	return rc;
+@@ -780,7 +775,6 @@ static void shuttle_wmi_input_remove(str
+ {
+ 	struct input_dev *input = priv->inputdev;
+ 
+-	sparse_keymap_free(input);
+ 	input_unregister_device(input);
+ }
+ 

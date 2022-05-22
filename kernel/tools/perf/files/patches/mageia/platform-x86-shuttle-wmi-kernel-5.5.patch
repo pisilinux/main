@@ -1,0 +1,35 @@
+
+pr_warning is now pr_warn
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+
+--- ./drivers/platform/x86/shuttle-wmi.c.orig	2020-02-03 17:22:16.374611323 +0200
++++ ./drivers/platform/x86/shuttle-wmi.c	2020-02-03 18:19:03.663898669 +0200
+@@ -379,7 +379,7 @@ static int wmi_setget_mtd(struct shuttle
+ 		kfree(obj);
+ 	} else {
+ 		if (res) {
+-			pr_warning("No result from WMI method (%s)", __func__);
++			pr_warn("No result from WMI method (%s)", __func__);
+ 			res = NULL;
+ 		}
+ 	}
+@@ -628,7 +628,7 @@ static void shuttle_wmi_notify(u32 value
+ 
+ 	status = wmi_get_event_data(value, &res);
+ 	if (status != AE_OK) {
+-		pr_warning("unable to retrieve wmi event status"
++		pr_warn("unable to retrieve wmi event status"
+ 			   " (error=0x%x)\n", status);
+ 		return;
+ 	}
+@@ -678,7 +678,7 @@ static void shuttle_wmi_notify(u32 value
+ 		break;
+ 	case 0xec: /* Lost event */
+ 		if (printk_ratelimit())
+-			pr_warning("lost event because of buggy BIOS");
++			pr_warn("lost event because of buggy BIOS");
+ 		break;
+ 	default:
+ 		pr_info("unknown wmi notification type (0x%02x)\n", type);

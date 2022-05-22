@@ -1,0 +1,36 @@
+From 435664ed44c4a17e6715d007061e2b155d3535c8 Mon Sep 17 00:00:00 2001
+From: Florian Weimer <fweimer@redhat.com>
+Date: Fri, 1 Oct 2021 13:38:15 +1000
+Subject: procfs: do not list TID 0 in /proc/<pid>/task
+
+If a task exits concurrently, task_pid_nr_ns may return 0.
+
+Link: https://lkml.kernel.org/r/8735pn5dx7.fsf@oldenburg.str.redhat.com
+Signed-off-by: Florian Weimer <fweimer@redhat.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/proc/base.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 533d5836eb9a4..54f29399088f0 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -3800,6 +3800,9 @@ static int proc_task_readdir(struct file *file, struct dir_context *ctx)
+ 		char name[10 + 1];
+ 		unsigned int len;
+ 		tid = task_pid_nr_ns(task, ns);
++		if (!tid)
++			/* The task has just exited. */
++			continue;
+ 		len = snprintf(name, sizeof(name), "%u", tid);
+ 		if (!proc_fill_cache(file, ctx, name, len,
+ 				proc_task_instantiate, task, NULL)) {
+-- 
+cgit 1.2.3-1.el7
+
