@@ -1,0 +1,260 @@
+
+ fs/dcache.c              |    2 ++
+ fs/exec.c                |    1 +
+ fs/fcntl.c               |    1 +
+ fs/file_table.c          |    2 ++
+ fs/namespace.c           |    3 +++
+ fs/notify/group.c        |    1 +
+ fs/open.c                |    1 +
+ fs/read_write.c          |    2 ++
+ fs/splice.c              |    2 ++
+ fs/xattr.c               |    1 +
+ kernel/locking/lockdep.c |    1 +
+ kernel/task_work.c       |    1 +
+ security/security.c      |    8 ++++++++
+ 13 files changed, 26 insertions(+)
+
+diff -Nurp linux-5.15.37-aufs/fs/dcache.c linux-5.15.37-aufs-mod/fs/dcache.c
+--- linux-5.15.37-aufs/fs/dcache.c	2022-04-08 20:22:30.617616719 +0300
++++ linux-5.15.37-aufs-mod/fs/dcache.c	2022-04-08 20:24:23.624148779 +0300
+@@ -1450,6 +1450,7 @@ rename_retry:
+ 	seq = 1;
+ 	goto again;
+ }
++EXPORT_SYMBOL_GPL(d_walk);
+ 
+ struct check_mount {
+ 	struct vfsmount *mnt;
+@@ -2995,6 +2996,7 @@ void d_exchange(struct dentry *dentry1,
+ 
+ 	write_sequnlock(&rename_lock);
+ }
++EXPORT_SYMBOL_GPL(d_exchange);
+ 
+ /**
+  * d_ancestor - search for an ancestor
+diff -Nurp linux-5.15.37-aufs/fs/exec.c linux-5.15.37-aufs-mod/fs/exec.c
+--- linux-5.15.37-aufs/fs/exec.c	2022-04-08 20:07:30.690498863 +0300
++++ linux-5.15.37-aufs-mod/fs/exec.c	2022-04-08 20:24:23.624148779 +0300
+@@ -112,6 +112,7 @@ bool path_noexec(const struct path *path
+ 	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
+ 	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
+ }
++EXPORT_SYMBOL_GPL(path_noexec);
+ 
+ #ifdef CONFIG_USELIB
+ /*
+diff -Nurp linux-5.15.37-aufs/fs/fcntl.c linux-5.15.37-aufs-mod/fs/fcntl.c
+--- linux-5.15.37-aufs/fs/fcntl.c	2022-04-08 20:22:30.617616719 +0300
++++ linux-5.15.37-aufs-mod/fs/fcntl.c	2022-04-08 20:24:23.624148779 +0300
+@@ -86,6 +86,7 @@ int setfl(int fd, struct file *filp, uns
+  out:
+ 	return error;
+ }
++EXPORT_SYMBOL_GPL(setfl);
+ 
+ static void f_modown(struct file *filp, struct pid *pid, enum pid_type type,
+                      int force)
+diff -Nurp linux-5.15.37-aufs/fs/file_table.c linux-5.15.37-aufs-mod/fs/file_table.c
+--- linux-5.15.37-aufs/fs/file_table.c	2022-03-20 22:14:17.000000000 +0200
++++ linux-5.15.37-aufs-mod/fs/file_table.c	2022-04-08 20:24:23.624148779 +0300
+@@ -198,6 +198,7 @@ over:
+ 	}
+ 	return ERR_PTR(-ENFILE);
+ }
++EXPORT_SYMBOL_GPL(alloc_empty_file);
+ 
+ /*
+  * Variant of alloc_empty_file() that doesn't check and modify nr_files.
+@@ -412,6 +413,7 @@ void __fput_sync(struct file *file)
+ }
+ 
+ EXPORT_SYMBOL(fput);
++EXPORT_SYMBOL_GPL(__fput_sync);
+ 
+ void __init files_init(void)
+ {
+diff -Nurp linux-5.15.37-aufs/fs/namespace.c linux-5.15.37-aufs-mod/fs/namespace.c
+--- linux-5.15.37-aufs/fs/namespace.c	2022-04-08 20:22:30.617616719 +0300
++++ linux-5.15.37-aufs-mod/fs/namespace.c	2022-04-08 20:24:23.624148779 +0300
+@@ -440,6 +440,7 @@ void __mnt_drop_write(struct vfsmount *m
+ 	mnt_dec_writers(real_mount(mnt));
+ 	preempt_enable();
+ }
++EXPORT_SYMBOL_GPL(__mnt_drop_write);
+ 
+ /**
+  * mnt_drop_write - give up write access to a mount
+@@ -844,6 +845,7 @@ int is_current_mnt_ns(struct vfsmount *m
+ {
+ 	return check_mnt(real_mount(mnt));
+ }
++EXPORT_SYMBOL_GPL(is_current_mnt_ns);
+ 
+ /*
+  * vfsmount lock must be held for write
+@@ -2047,6 +2049,7 @@ int iterate_mounts(int (*f)(struct vfsmo
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(iterate_mounts);
+ 
+ static void lock_mnt_tree(struct mount *mnt)
+ {
+diff -Nurp linux-5.15.37-aufs/fs/notify/group.c linux-5.15.37-aufs-mod/fs/notify/group.c
+--- linux-5.15.37-aufs/fs/notify/group.c	2022-03-20 22:14:17.000000000 +0200
++++ linux-5.15.37-aufs-mod/fs/notify/group.c	2022-04-08 20:24:23.624148779 +0300
+@@ -100,6 +100,7 @@ void fsnotify_get_group(struct fsnotify_
+ {
+ 	refcount_inc(&group->refcnt);
+ }
++EXPORT_SYMBOL_GPL(fsnotify_get_group);
+ 
+ /*
+  * Drop a reference to a group.  Free it if it's through.
+diff -Nurp linux-5.15.37-aufs/fs/open.c linux-5.15.37-aufs-mod/fs/open.c
+--- linux-5.15.37-aufs/fs/open.c	2022-03-20 22:14:17.000000000 +0200
++++ linux-5.15.37-aufs-mod/fs/open.c	2022-04-08 20:24:23.625148828 +0300
+@@ -66,6 +66,7 @@ int do_truncate(struct user_namespace *m
+ 	inode_unlock(dentry->d_inode);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(do_truncate);
+ 
+ long vfs_truncate(const struct path *path, loff_t length)
+ {
+diff -Nurp linux-5.15.37-aufs/fs/read_write.c linux-5.15.37-aufs-mod/fs/read_write.c
+--- linux-5.15.37-aufs/fs/read_write.c	2022-03-20 22:14:17.000000000 +0200
++++ linux-5.15.37-aufs-mod/fs/read_write.c	2022-04-08 20:24:23.625148828 +0300
+@@ -488,6 +488,7 @@ ssize_t vfs_read(struct file *file, char
+ 	inc_syscr(current);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(vfs_read);
+ 
+ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t len, loff_t *ppos)
+ {
+@@ -598,6 +599,7 @@ ssize_t vfs_write(struct file *file, con
+ 	file_end_write(file);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(vfs_write);
+ 
+ /* file_ppos returns &file->f_pos or NULL if file is stream */
+ static inline loff_t *file_ppos(struct file *file)
+diff -Nurp linux-5.15.37-aufs/fs/splice.c linux-5.15.37-aufs-mod/fs/splice.c
+--- linux-5.15.37-aufs/fs/splice.c	2022-04-08 20:22:30.617616719 +0300
++++ linux-5.15.37-aufs-mod/fs/splice.c	2022-04-08 20:24:23.625148828 +0300
+@@ -766,6 +766,7 @@ long do_splice_from(struct pipe_inode_in
+ 		return warn_unsupported(out, "write");
+ 	return out->f_op->splice_write(pipe, out, ppos, len, flags);
+ }
++EXPORT_SYMBOL_GPL(do_splice_from);
+ 
+ /*
+  * Attempt to initiate a splice from a file to a pipe.
+@@ -795,6 +796,7 @@ long do_splice_to(struct file *in, loff_
+ 		return warn_unsupported(in, "read");
+ 	return in->f_op->splice_read(in, ppos, pipe, len, flags);
+ }
++EXPORT_SYMBOL_GPL(do_splice_to);
+ 
+ /**
+  * splice_direct_to_actor - splices data directly between two non-pipes
+diff -Nurp linux-5.15.37-aufs/fs/xattr.c linux-5.15.37-aufs-mod/fs/xattr.c
+--- linux-5.15.37-aufs/fs/xattr.c	2022-03-20 22:14:17.000000000 +0200
++++ linux-5.15.37-aufs-mod/fs/xattr.c	2022-04-08 20:24:23.625148828 +0300
+@@ -384,6 +384,7 @@ vfs_getxattr_alloc(struct user_namespace
+ 	*xattr_value = value;
+ 	return error;
+ }
++EXPORT_SYMBOL_GPL(vfs_getxattr_alloc);
+ 
+ ssize_t
+ __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
+diff -Nurp linux-5.15.37-aufs/kernel/locking/lockdep.c linux-5.15.37-aufs-mod/kernel/locking/lockdep.c
+--- linux-5.15.37-aufs/kernel/locking/lockdep.c	2022-04-08 20:22:30.619616817 +0300
++++ linux-5.15.37-aufs-mod/kernel/locking/lockdep.c	2022-04-08 20:24:23.625148828 +0300
+@@ -208,6 +208,7 @@ inline struct lock_class *lockdep_hlock_
+ 	 */
+ 	return lock_classes + class_idx;
+ }
++EXPORT_SYMBOL_GPL(lockdep_hlock_class);
+ #define hlock_class(hlock) lockdep_hlock_class(hlock)
+ 
+ #ifdef CONFIG_LOCK_STAT
+diff -Nurp linux-5.15.37-aufs/kernel/task_work.c linux-5.15.37-aufs-mod/kernel/task_work.c
+--- linux-5.15.37-aufs/kernel/task_work.c	2022-03-20 22:14:17.000000000 +0200
++++ linux-5.15.37-aufs-mod/kernel/task_work.c	2022-04-08 20:24:23.625148828 +0300
+@@ -167,3 +167,4 @@ void task_work_run(void)
+ 		} while (work);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(task_work_run);
+diff -Nurp linux-5.15.37-aufs/security/security.c linux-5.15.37-aufs-mod/security/security.c
+--- linux-5.15.37-aufs/security/security.c	2022-04-08 20:07:30.718500239 +0300
++++ linux-5.15.37-aufs-mod/security/security.c	2022-04-08 20:24:23.626148877 +0300
+@@ -1164,6 +1164,7 @@ int security_path_rmdir(const struct pat
+ 		return 0;
+ 	return call_int_hook(path_rmdir, 0, dir, dentry);
+ }
++EXPORT_SYMBOL_GPL(security_path_rmdir);
+ 
+ int security_path_unlink(const struct path *dir, struct dentry *dentry)
+ {
+@@ -1180,6 +1181,7 @@ int security_path_symlink(const struct p
+ 		return 0;
+ 	return call_int_hook(path_symlink, 0, dir, dentry, old_name);
+ }
++EXPORT_SYMBOL_GPL(security_path_symlink);
+ 
+ int security_path_link(struct dentry *old_dentry, const struct path *new_dir,
+ 		       struct dentry *new_dentry)
+@@ -1188,6 +1190,7 @@ int security_path_link(struct dentry *ol
+ 		return 0;
+ 	return call_int_hook(path_link, 0, old_dentry, new_dir, new_dentry);
+ }
++EXPORT_SYMBOL_GPL(security_path_link);
+ 
+ int security_path_rename(const struct path *old_dir, struct dentry *old_dentry,
+ 			 const struct path *new_dir, struct dentry *new_dentry,
+@@ -1215,6 +1218,7 @@ int security_path_truncate(const struct
+ 		return 0;
+ 	return call_int_hook(path_truncate, 0, path);
+ }
++EXPORT_SYMBOL_GPL(security_path_truncate);
+ 
+ int security_path_chmod(const struct path *path, umode_t mode)
+ {
+@@ -1222,6 +1226,7 @@ int security_path_chmod(const struct pat
+ 		return 0;
+ 	return call_int_hook(path_chmod, 0, path, mode);
+ }
++EXPORT_SYMBOL_GPL(security_path_chmod);
+ 
+ int security_path_chown(const struct path *path, kuid_t uid, kgid_t gid)
+ {
+@@ -1229,6 +1234,7 @@ int security_path_chown(const struct pat
+ 		return 0;
+ 	return call_int_hook(path_chown, 0, path, uid, gid);
+ }
++EXPORT_SYMBOL_GPL(security_path_chown);
+ 
+ int security_path_chroot(const struct path *path)
+ {
+@@ -1329,6 +1335,7 @@ int security_inode_permission(struct ino
+ 		return 0;
+ 	return call_int_hook(inode_permission, 0, inode, mask);
+ }
++EXPORT_SYMBOL_GPL(security_inode_permission);
+ 
+ int security_inode_setattr(struct dentry *dentry, struct iattr *attr)
+ {
+@@ -1526,6 +1533,7 @@ int security_file_permission(struct file
+ 
+ 	return fsnotify_perm(file, mask);
+ }
++EXPORT_SYMBOL_GPL(security_file_permission);
+ 
+ int security_file_alloc(struct file *file)
+ {

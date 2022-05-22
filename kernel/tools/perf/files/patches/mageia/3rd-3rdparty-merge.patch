@@ -16,38 +16,42 @@ Signed-off-by: Thomas Backlund <tmb@mageia.org>
  arch/x86/Kconfig   |    2 ++
  4 files changed, 7 insertions(+), 1 deletion(-)
 
---- linux-5.8/arch/arm64/Kconfig.orig	2020-08-05 16:08:02.466740952 +0200
-+++ linux-5.8/arch/arm64/Kconfig	2020-08-05 16:08:13.368741815 +0200
-@@ -1910,3 +1910,5 @@ source "arch/arm64/kvm/Kconfig"
- if CRYPTO
- source "arch/arm64/crypto/Kconfig"
- endif
-+
-+source "3rdparty/Kconfig"
---- linux-5.8/Makefile.orig	2020-08-05 16:09:32.265748061 +0200
-+++ linux-5.8/Makefile	2020-08-05 16:10:02.553750458 +0200
-@@ -651,7 +651,7 @@ endif
- ifeq ($(KBUILD_EXTMOD),)
- # Objects we will link into vmlinux / subdirs we need to visit
- core-y		:= init/ usr/
--drivers-y	:= drivers/ sound/
-+drivers-y	:= drivers/ sound/ 3rdparty/
- drivers-$(CONFIG_SAMPLES) += samples/
- drivers-y	+= net/ virt/
- libs-y		:= lib/
---- linux-5.8/arch/x86/Kconfig.orig	2020-08-05 16:10:48.805754119 +0200
-+++ linux-5.8/arch/x86/Kconfig	2020-08-05 16:11:04.602755370 +0200
-@@ -2913,3 +2913,5 @@ source "drivers/firmware/Kconfig"
- source "arch/x86/kvm/Kconfig"
- 
- source "arch/x86/Kconfig.assembler"
-+
-+source "3rdparty/Kconfig"
---- linux-5.8/arch/arm/Kconfig.orig	2020-08-05 16:12:08.314760413 +0200
-+++ linux-5.8/arch/arm/Kconfig	2020-08-05 16:12:22.786761559 +0200
-@@ -2064,3 +2064,5 @@ source "arch/arm/crypto/Kconfig"
+diff -Nurp linux-5.12/arch/arm/Kconfig linux-5.12-3rd/arch/arm/Kconfig
+--- linux-5.12/arch/arm/Kconfig	2021-04-25 23:49:08.000000000 +0300
++++ linux-5.12-3rd/arch/arm/Kconfig	2021-04-26 18:10:06.513775304 +0300
+@@ -2016,3 +2016,5 @@ source "arch/arm/crypto/Kconfig"
  endif
  
  source "arch/arm/Kconfig.assembler"
 +
 +source "3rdparty/Kconfig"
+diff -Nurp linux-5.12/arch/arm64/Kconfig linux-5.12-3rd/arch/arm64/Kconfig
+--- linux-5.12/arch/arm64/Kconfig	2021-04-25 23:49:08.000000000 +0300
++++ linux-5.12-3rd/arch/arm64/Kconfig	2021-04-26 18:10:06.512775257 +0300
+@@ -1959,3 +1959,5 @@ source "arch/arm64/kvm/Kconfig"
+ if CRYPTO
+ source "arch/arm64/crypto/Kconfig"
+ endif
++
++source "3rdparty/Kconfig"
+diff -Nurp linux-5.12/arch/x86/Kconfig linux-5.12-3rd/arch/x86/Kconfig
+--- linux-5.12/arch/x86/Kconfig	2021-04-25 23:49:08.000000000 +0300
++++ linux-5.12-3rd/arch/x86/Kconfig	2021-04-26 18:10:06.512775257 +0300
+@@ -2909,3 +2909,5 @@ source "drivers/firmware/Kconfig"
+ source "arch/x86/kvm/Kconfig"
+ 
+ source "arch/x86/Kconfig.assembler"
++
++source "3rdparty/Kconfig"
+diff -Nurp linux-5.14/Makefile linux-5.14-3rd/Makefile
+--- linux-5.14/Makefile
++++ linux-5.14-3rd/Makefile
+@@ -670,7 +670,7 @@ endif
+ ifeq ($(KBUILD_EXTMOD),)
+ # Objects we will link into vmlinux / subdirs we need to visit
+ core-y		:= init/ usr/ arch/$(SRCARCH)/
+-drivers-y	:= drivers/ sound/
++drivers-y	:= drivers/ sound/ 3rdparty/
+ drivers-$(CONFIG_SAMPLES) += samples/
+ drivers-$(CONFIG_NET) += net/
+ drivers-y	+= virt/

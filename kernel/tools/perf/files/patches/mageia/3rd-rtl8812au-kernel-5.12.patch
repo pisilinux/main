@@ -1,0 +1,12 @@
+diff -urp linux/3rdparty/rtl8812au.orig/os_dep/linux/recv_linux.c linux/3rdparty/rtl8812au/os_dep/linux/recv_linux.c
+--- linux/3rdparty/rtl8812au.orig/os_dep/linux/recv_linux.c	2021-04-26 18:35:37.411027594 +0300
++++ linux/3rdparty/rtl8812au/os_dep/linux/recv_linux.c	2021-04-26 18:53:13.502814526 +0300
+@@ -353,7 +353,7 @@ static int napi_recv(_adapter *padapter,
+ 
+ 		rx_ok = _FALSE;
+ 
+-#ifdef CONFIG_RTW_GRO
++#if defined(CONFIG_RTW_GRO) && LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
+ 		if (pregistrypriv->en_gro) {
+ 			if (rtw_napi_gro_receive(&padapter->napi, pskb) != GRO_DROP)
+ 				rx_ok = _TRUE;
