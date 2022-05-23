@@ -27,7 +27,7 @@ lang="tr"
 def setup():
     shelltools.chmod("%s/bin/unpack-sources" % OurWorkDir)
     shelltools.export("LO_PREFIX", "/usr")
-    shelltools.export("PYTHON", "python3.8")
+    shelltools.export("PYTHON", "python3.9")
 
     # http://site.icu-project.org/download/61#TOC-Migration-Issues
     shelltools.export("CPPFLAGS", "-DU_USING_ICU_NAMESPACE=1")
@@ -93,7 +93,7 @@ def setup():
                         --with-system-odbc                \
                         --with-system-openldap            \
                         --with-system-openssl             \
-                        --with-system-poppler             \
+                        --without-system-poppler          \
                         --with-system-postgresql          \
                         --with-system-redland             \
                         --with-system-serf                \
