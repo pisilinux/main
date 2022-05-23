@@ -16,7 +16,7 @@ def setup():
                -Db_ndebug=true \
                -Dplatforms=x11,wayland \
                -Ddri3=enabled \
-               -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink \
+               -Dgallium-drivers=r300,r600,nouveau,radeonsi,i915,svga,iris,swrast,virgl,crocus,zink \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
                -Dgallium-xvmc=enabled \

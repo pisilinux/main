@@ -15,11 +15,11 @@ def setup():
     # https://bugs.freedesktop.org/show_bug.cgi?id=70366
     #shelltools.export("ac_cv_func_fdatasync", "no")
 
-    shelltools.move("../xdgmime-*", "xdgmime")
+    shelltools.copy("../xdgmime-*/*", "xdgmime")
 
     autotools.make("-C xdgmime")
 
-    mesontools.configure("-Dupdate-mimedb=true")
+    mesontools.configure("-Dupdate-mimedb=false -D xdgmime-path=%s/xdgmime" % get.srcDIR())
      
 def build():
     mesontools.build()

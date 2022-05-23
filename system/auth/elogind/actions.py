@@ -10,6 +10,13 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i '/Disable polkit/,+8 d' meson.build")
+    shelltools.system("""sed '/request_name/i\
+                            r = sd_bus_set_exit_on_disconnect(m->bus, true);\
+                            if (r < 0)\
+                            return log_error_errno(r, "Failed to set exit on disconnect: %m");' \
+                            -i src/login/logind.c""")
+
     mesontools.configure("--prefix=/usr \
                           -Drootlibdir=/usr/lib \
                           -Dpolkit=true \

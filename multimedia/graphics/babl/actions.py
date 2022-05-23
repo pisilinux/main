@@ -8,9 +8,10 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-
+from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.system("sed -i s/Description/description/ meson.build")
     mesontools.configure()
 
 def build():

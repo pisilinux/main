@@ -1,0 +1,24 @@
+
+Allow aufs to be built as module.
+
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
+
+--- a/fs/aufs/Kconfig
++++ b/fs/aufs/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config AUFS_FS
+-	bool "Aufs (Advanced multi layered unification filesystem) support"
++	tristate "Aufs (Advanced multi layered unification filesystem) support"
+ 	help
+ 	Aufs is a stackable unification filesystem such as Unionfs,
+ 	which unifies several directories and provides a merged single
+@@ -72,7 +72,7 @@ endchoice
+ 
+ config AUFS_EXPORT
+ 	bool "NFS-exportable aufs"
+-	depends on EXPORTFS = y
++	depends on EXPORTFS
+ 	help
+ 	If you want to export your mounted aufs via NFS, then enable this
+ 	option. There are several requirements for this configuration.

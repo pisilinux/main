@@ -1,10 +1,10 @@
-diff -Nuar a/kwirte/main.cpp b/kwirte/main.cpp
---- a/kwrite/main.cpp	2021-08-27 23:54:04.000000000 +0300
-+++ b/kwrite/main.cpp	2021-09-13 17:58:21.634483000 +0300
-@@ -30,31 +30,8 @@
- 
+diff -Nuar a/kwrite/main.cpp b/kwrite/main.cpp
+--- a/kwrite/main.cpp	2022-04-13 00:16:30.000000000 +0300
++++ b/kwrite/main.cpp	2022-05-07 17:37:03.255372381 +0300
+@@ -31,31 +31,8 @@
+ #include <signal_watcher.h>
  #include <urlinfo.h>
- 
+
 -#ifndef Q_OS_WIN
 -#include <unistd.h>
 -#endif
@@ -16,20 +16,20 @@ diff -Nuar a/kwirte/main.cpp b/kwirte/main.cpp
 -    // Prohibit using sudo or kdesu (but allow using the root user directly)
 -    if (getuid() == 0) {
 -        if (!qEnvironmentVariableIsEmpty("SUDO_USER")) {
--            std::cout << "Executing KWrite with sudo is not possible due to unfixable security vulnerabilities. "
--                         "It is also not necessary; simply use KWrite normally, and you will be prompted for "
--                         "elevated privileges when saving documents if needed."
+-            std::cout << "Running KWrite with sudo can cause bugs and expose you to security vulnerabilities. "
+-                         "Instead use KWrite normally and you will be prompted for elevated privileges when "
+-                         "saving documents if needed."
 -                      << std::endl;
 -            return EXIT_FAILURE;
 -        } else if (!qEnvironmentVariableIsEmpty("KDESU_USER")) {
--            std::cout << "Executing KWrite with kdesu is not possible due to unfixable security vulnerabilities. "
--                         "It is also not necessary; simply use KWrite normally, and you will be prompted for "
--                         "elevated privileges when saving documents if needed."
+-            std::cout << "Running KWrite with kdesu can cause bugs and expose you to security vulnerabilities. "
+-                         "Instead use KWrite normally and you will be prompted for elevated privileges when "
+-                         "saving documents if needed."
 -                      << std::endl;
 -            return EXIT_FAILURE;
 -        }
 -    }
 -#endif
- 
+
      /**
       * enable high dpi support

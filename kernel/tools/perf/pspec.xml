@@ -12,8 +12,9 @@
         <IsA>app:gui</IsA>
         <Summary>Performance analyser tool that makes full use of the Linux performance counter subsystem</Summary>
         <Description>perf is a new tool which is used to optimize, validate and measure applications, workloads or the full system through the Linux performance counter subsystem.</Description>
-        <Archive sha1sum="baa841f624f6cfdafe01026963dcd32b334a3752" type="targz">https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.gz</Archive>
+        <Archive sha1sum="01961045127c21f8a9dbaa9e7705dbb9e4cffbaa" type="targz">https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.15.tar.gz</Archive>
         <BuildDependencies>
+		<Dependency>git</Dependency>
             <Dependency>libunwind-devel</Dependency>
             <Dependency>audit-devel</Dependency>
             <Dependency>xz-devel</Dependency>
@@ -42,46 +43,65 @@
         </BuildDependencies>
         <Patches>
             <!-- Linux patches -->
-            <Patch level="1" compressionType="xz">patches/linux/patch-5.10.45.xz</Patch>
+            <Patch level="1" compressionType="xz">patches/linux/patch-5.15.41.xz</Patch>
+
+            <!-- aufs5 patchec -->
+            <Patch level="1">patches/aufs5/aufs5.15.36-20220509.patch</Patch>
+            <Patch level="1">patches/aufs5/aufs5-base.patch</Patch>
+            <Patch level="1">patches/aufs5/aufs5-kbuild.patch</Patch>
+            <Patch level="1">patches/aufs5/aufs5-loopback.patch</Patch>
+            <Patch level="1">patches/aufs5/aufs5-mmap.patch</Patch>
+            <Patch level="1">patches/aufs5/tmpfs-idr.patch</Patch>
+            <Patch level="1">patches/aufs5/vfs-ino.patch</Patch>
+            <Patch level="1">patches/aufs5/aufs5-standalone.patch</Patch>
+
             <!-- Mageia Linux patches-->
-            <Patch level="1">patches/mageia/fs-aufs5.10.patch</Patch>
-            <Patch level="1">patches/mageia/fs-aufs5.10-symbol-exports.patch</Patch>
-            <Patch level="1">patches/mageia/fs-aufs5.10-tristate.patch</Patch>
+            <Patch level="1">patches/mageia/fs-procfs-do-not-list-TID-0-in-proc-pid-task.patch</Patch>
+
             <Patch level="1">patches/mageia/CVE-2019-12379.patch</Patch>
             <Patch level="1">patches/mageia/CVE-2020-16119-DCCP-CCID-structure-use-after-free.patch</Patch>
-            
+
+            <Patch level="1">patches/mageia/platform-x86-add-shuttle-wmi-driver.patch</Patch>
+            <Patch level="1">patches/mageia/platform-x86-shuttle-wmi-drop-devinit-exit.patch</Patch>
+            <Patch level="1">patches/mageia/platform-x86-shuttle-wmi-4.2-buildfix.patch</Patch>
+            <Patch level="1">patches/mageia/platform-x86-shuttle-wmi-4.13-buildfix.patch</Patch>
+            <Patch level="1">patches/mageia/platform-x86-shuttle-wmi-kernel-5.5.patch</Patch>
+
             <Patch level="1">patches/mageia/3rd-3rdparty-tree.patch</Patch>
             <Patch level="1">patches/mageia/3rd-3rdparty-merge.patch</Patch>
-            
+
             <Patch level="1">patches/mageia/3rd-ndiswrapper-1.63.patch</Patch>
             <Patch level="1">patches/mageia/3rd-ndiswrapper-Kconfig.patch</Patch>
             <Patch level="1">patches/mageia/3rd-ndiswrapper-Makefile-build-fix.patch</Patch>
             <Patch level="1">patches/mageia/3rd-niswrapper-Kconfig-Makefile.patch</Patch>
-            
+
             <Patch level="1">patches/mageia/3rd-rtl8812au.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8812au-Kconfig-Makefile.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8812au-rename.patch</Patch>
-            <Patch level="1">patches/mageia/3rd-rtl8812au-kernel-5.10.patch</Patch>
-            
+            <Patch level="1">patches/mageia/3rd-rtl8812au-kernel-5.12.patch</Patch>
+            <Patch level="1">patches/mageia/3rd-rtl8812au-kernel-5.15.patch</Patch>
+
             <Patch level="1">patches/mageia/3rd-rtl8723de.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8723de-Kconfig-Makefile.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8723de-fix-redefine.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8723de-nodebug.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8223de-kernel-5.6.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8723de-add-kernel-5.8-support.patch</Patch>
-            
+
             <Patch level="1">patches/mageia/3rd-viahss-0.92.patch</Patch>
             <Patch level="1">patches/mageia/3rd-viahss-config.patch</Patch>
             <Patch level="1">patches/mageia/3rd-viahss-module-license.patch</Patch>
             <Patch level="1">patches/mageia/3rd-viahss-2.6.35-buildfix.patch</Patch>
             <Patch level="1">patches/mageia/3rd-viahss-3.0-buildfix.patch</Patch>
             <Patch level="1">patches/mageia/3rd-viahss-Kconfig-Makefile.patch</Patch>
-            
+
             <Patch level="1">patches/mageia/3rd-rtl8821ce.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8821ce-Kconfig-Makefile.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8821ce-5.8-fix.patch</Patch>
             <Patch level="1">patches/mageia/3rd-rtl8821ce-kernel-5.10.patch</Patch>
-            
+            <Patch level="1">patches/mageia/3rd-rtl8821ce-kernel-5.12.patch</Patch>
+            <Patch level="1">patches/mageia/3rd-rtl8821ce-kernel-5.15.patch</Patch>
+
             <Patch level="1">patches/mageia/3rd-fix-kconfig.patch</Patch>
         </Patches>
     </Source>
@@ -116,6 +136,13 @@
         </Files>
     </Package>
     <History>
+        <Update release="27">
+            <Date>2022-05-21</Date>
+            <Version>5.15.41</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="26">
             <Date>2021-06-19</Date>
             <Version>5.10.45</Version>
