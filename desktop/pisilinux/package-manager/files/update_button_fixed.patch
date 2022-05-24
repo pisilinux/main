@@ -1,0 +1,32 @@
+commit 6bea986efaca4b71056f059fcea0fcc49be9e606 (HEAD -> master, origin/master, origin/HEAD)
+Author: ayhanyalcinsoy <ayhanyalcinsoy@pisilinux.org>
+Date:   Mon May 23 14:36:34 2022 +0300
+
+    fixed update button function
+
+diff --git a/src/mainwidget.py b/src/mainwidget.py
+index a404fc6..41300b2 100755
+--- a/src/mainwidget.py
++++ b/src/mainwidget.py
+@@ -433,7 +433,7 @@ class MainWidget(QWidget, PM, Ui_MainWidget):
+         waitCursor()
+         self.statusUpdater.wait()
+ 
+-        if self.currentState == self.state.ALL or self.state.REMOVE:
++        if self.currentState == self.state.ALL and self.state.REMOVE:
+             action = {self.__remove_action:self.state.REMOVE,
+                       self.__install_action:self.state.INSTALL}.get(self.sender(), self.state.INSTALL)
+             if action:
+diff --git a/src/packagedelegate.py b/src/packagedelegate.py
+index 28378c8..258d5b2 100755
+--- a/src/packagedelegate.py
++++ b/src/packagedelegate.py
+@@ -57,7 +57,7 @@ LIGHTBLUE = QColor('#DEE5F2')
+ DARKVIOLET = QColor('#3B414F')
+ LIGHTGREEN = QColor('#F1F5EC')
+ DARKGREEN = QColor('#32775F')
+-CHECK_ICON = 'list-add'      #add
++CHECK_ICON = 'check'      #add
+ RECT = QRect()
+ DETAIL_LINE_OFFSET = 36
+ ICON_PADDING = 10
