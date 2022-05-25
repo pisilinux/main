@@ -10,11 +10,15 @@ from pisi.actionsapi import shelltools
 
 def setup():
     # DRI3 has been known to be buggy with the current stack, so is disabled
+
     
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    #autotools.autoreconf("-fi")
-    autotools.configure("--with-default-dri=3 \
-                         --disable-dri1 \
+    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    autotools.autoreconf("-fi")
+    pisitools.cflags.add("-fno-plt")
+    pisitools.cxxflags.add("-fno-plt")
+    pisitools.ldflags.add("-z,now")
+
+    autotools.configure("--disable-dri1 \
                          --enable-dri \
                          --enable-sna \
                          --enable-uxa")
