@@ -18,8 +18,7 @@ def setup():
     pisitools.cxxflags.add("-fno-plt")
     pisitools.ldflags.add("-z,now")
 
-    autotools.configure("--disable-dri1 \
-                         --enable-dri \
+    autotools.configure("--enable-dri \
                          --enable-sna \
                          --enable-uxa")
     
