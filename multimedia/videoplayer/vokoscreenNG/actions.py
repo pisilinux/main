@@ -6,6 +6,7 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import autotools
 from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
@@ -16,12 +17,13 @@ def setup():
     qt5.configure("src/vokoscreenNG.pro")
 
 def build():
-    qt5.make()
+    qt5.make("PREFIX=/usr")
 
 def install():
-    pisitools.dobin("vokoscreenNG")
-    pisitools.insinto("/usr/share/applications", "src/applications/vokoscreenNG.desktop", "vokoscreenNG.desktop")
-    pisitools.insinto("/usr/share/pixmaps", "src/applications/vokoscreenNG.png", "vokoscreenNG.png")
+    qt5.install("INSTALL_ROOT=%s" % get.installDIR())
+    #pisitools.dobin("vokoscreenNG")
+    #pisitools.insinto("/usr/share/applications", "src/applications/vokoscreenNG.desktop", "vokoscreenNG.desktop")
+    #pisitools.insinto("/usr/share/pixmaps", "src/applications/vokoscreenNG.png", "vokoscreenNG.png")
     
     pisitools.dodoc("COPYING", "README.md")
 
