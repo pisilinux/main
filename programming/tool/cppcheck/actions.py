@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 j = ''.join([
     ' -DUSE_Z3=ON',
+    ' -DUSE_THREADS=ON',
     ' -DHAVE_RULES=ON',
     ' -DPYTHON_EXECUTABLE=/usr/bin/python3',
     ' -DBUILD_GUI=ON',
