@@ -22,7 +22,6 @@ def setup():
                          --disable-rpath \
                          --disable-silent-rules \
                          --with-systemd-journal=no \
-                         --with-systemd-suspend-resume=no \
                          --with-polkit=permissive")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
