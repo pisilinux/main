@@ -13,6 +13,7 @@ demos_dir_emul32 = "/usr/lib32/mesa/demos"
 def setup():
     autotools.autoreconf("-fvi")
     options = "--disable-static \
+               --enable-autotools \
                --with-system-data-files \
                --bindir=%s" % (demos_dir_emul32 if get.buildTYPE() == "emul32" else demos_dir)
 
