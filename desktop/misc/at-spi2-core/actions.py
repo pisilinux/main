@@ -16,7 +16,7 @@ def setup():
     options = "meson --prefix=/usr --sysconfdir=/etc \
                      --libexec=/usr/libexec/at-spi2 \
                      -Dintrospection=yes \
-                     -D enable_docs=true \
+                     -D docs=true \
               "
     
     if get.buildTYPE() == "emul32":
@@ -25,8 +25,8 @@ def setup():
                     --sysconfdir=/usr/emul32 \
                     --libdir=lib32 \
                     -Dintrospection=no \
-                    -D enable_docs=false .."
-        
+                    -D docs=false .."
+
         
     shelltools.system(options)
     
@@ -47,4 +47,4 @@ def install():
         return
     
     shelltools.cd("..")
-    pisitools.dodoc("COPYING", "NEWS", "README")
+    pisitools.dodoc("COPYING", "NEWS", "README*")
