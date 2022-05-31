@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import mesontools
 
 def setup():
-    mesontools.configure("-Dgtk_doc=true -Dglade_catalog=true")
+    mesontools.configure("-Dgtk_doc=true")
 
 def build():
     mesontools.build()
