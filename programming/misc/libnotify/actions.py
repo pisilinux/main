@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
     # suppress c compiler warnings
     pisitools.cflags.add("-Wno-deprecated-declarations")
-    mesontools.configure()
+    mesontools.configure("-Dman=false")
 
 def build():
     mesontools.build()
@@ -22,4 +22,4 @@ def check():
 
 def install():
     mesontools.install()
-    pisitools.dodoc("SPECIFICATION", "README", "COPYING")
+    pisitools.dodoc("SPECIFICATION", "README*", "COPYING")
