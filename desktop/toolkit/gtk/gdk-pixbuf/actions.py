@@ -10,38 +10,16 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import mesontools
 
 def setup():
-    #options = "\
-                 #--disable-static \
-                 #--disable-silent-rules \
-                 #--with-libjasper \
-                 #--with-x11 \
-                 #--with-included-loaders=png \
-              #"
+  options = "-Dbuiltin_loaders=png \
+            "
+  if get.buildTYPE()=="emul32":
+      options += "-Dintrospection=disabled \
+                  -Dinstalled_tests=false \
+                  --bindir=/usr/bin32"
+  else:
+      options += "-Dintrospection=enabled -Dgtk_doc=true"
 
-    #options += "\
-                 #--bindir=/_emul32/bin \
-                 #--disable-introspection \
-               #" if get.buildTYPE() == "emul32" else \
-               #"\
-                 #--enable-introspection \
-               #"
-    #autotools.configure(options)
-
-    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-    
-	options = "-Dx11=true \
-	           -Dbuiltin_loaders=png \
-	           -Djasper=true \
-			"
-	
-	if get.buildTYPE()=="emul32" :
-		options += "-Dintrospection=disabled \
-                    -Dinstalled_tests=false \
-		            --bindir=/usr/bin32"
-	else:
-		options += "-Dintrospection=enabled -Dgtk_doc=true"
-		
-	mesontools.configure(options)
+  mesontools.configure(options)
 
 def build():
      mesontools.build()
