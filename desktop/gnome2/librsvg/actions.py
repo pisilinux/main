@@ -15,7 +15,7 @@ def setup():
     autotools.autoreconf("-fiv")
     autotools.configure("--enable-vala \
                          --disable-static \
-                         --disable-gtk-doc")
+                         --enable-gtk-doc")
     
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
