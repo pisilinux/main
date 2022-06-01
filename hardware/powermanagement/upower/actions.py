@@ -8,23 +8,19 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    pisitools.dosed("configure", "DISABLE_DEPRECATED", deleteLine=True)
-
-    autotools.configure("--disable-static \
-                         --disable-gtk-doc \
-                         --enable-deprecated \
-                         --with-systemdsystemunitdir=no \
-                         --enable-introspection")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
+    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    #pisitools.dosed("configure", "DISABLE_DEPRECATED", deleteLine=True)
+    mesontools.configure("-Dgtk-doc=false \
+                          -Dudevrulesdir=/lib/udev \
+                          -Dintrospection=enabled \
+                          -Dsystemdsystemunitdir=no")
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("COPYING", "README")
