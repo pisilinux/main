@@ -6,16 +6,14 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import mesontools
-from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    autotools.configure()
 
 def build():
-    mesontools.build()
+    autotools.make()
 
 def install():
-    mesontools.install()
+    autotools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README")

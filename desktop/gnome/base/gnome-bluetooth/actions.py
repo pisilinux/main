@@ -8,8 +8,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dicon-update=false \
-                          -Dgtk_doc=false \
+    mesontools.configure("-Dgtk_doc=false \
                           -Dintrospection=true")
 
 def build():
