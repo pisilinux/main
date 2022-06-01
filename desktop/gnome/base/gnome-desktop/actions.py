@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Dgnome_distributor='Pisilinux' \
-                          -Ddate_in_gnome_version=false \
+                          -Ddate_in_gnome_version=true \
                           -Dgtk_doc=true")
 
 def build():

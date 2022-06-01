@@ -12,7 +12,6 @@ def setup():
                           -Dwayland_eglstream=true \
                           -Dudev=true \
                           -Dnative_backend=true \
-                          -Dprofiler=false \
                           -Dintrospection=true \
                           -Dinstalled_tests=false")
 
