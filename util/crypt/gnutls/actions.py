@@ -22,6 +22,8 @@ def setup():
                      --libdir=/usr/lib32 \
                      --bindir=/usr/emul32/bin \
                      --with-included-unistring \
+                     --without-zstd \
+                     --without-brotli \
                      --enable-local-libopts \
                    "
 
