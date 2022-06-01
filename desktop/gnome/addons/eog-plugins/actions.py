@@ -4,15 +4,15 @@
 # Licensed under the GNU General Public License, version 2.
 # See the file http://www.gnu.org/copyleft/gpl.txt.
 
-from pisi.actionsapi import autotools, get, pisitools
+from pisi.actionsapi import autotools, get, pisitools, mesontools
 
 def setup():
-    autotools.configure()
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
+    pisitools.dodoc("AUTHORS", "ChangeLog*", "README*", "NEWS")

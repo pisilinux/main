@@ -7,6 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
+    pisitools.dosed("src/plugins/background/gtd-plugin-background.c", "libportal/portal-gtk4.h", "libportal-gtk4/portal-gtk4.h")
     mesontools.configure()
 
 def build():
