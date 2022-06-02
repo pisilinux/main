@@ -9,12 +9,10 @@ from pisi.actionsapi import pisitools
 
 def setup():
     mesontools.configure("-Dtracker_core=system \
-                          -Ddocs=false \
                           -Dextract=true \
                           -Dfunctional_tests=false \
                           -Dcue=enabled \
                           -Dexif=enabled \
-                          -Dflac=enabled \
                           -Dgif=enabled \
                           -Dgsf=enabled \
                           -Diptc=enabled \
@@ -24,9 +22,7 @@ def setup():
                           -Dplaylist=enabled \
                           -Dpng=enabled \
                           -Draw=enabled \
-                          -Dtaglib=enabled \
                           -Dtiff=enabled \
-                          -Dvorbis=enabled \
                           -Dxml=enabled \
                           -Dxmp=enabled \
                           -Dxps=enabled \
