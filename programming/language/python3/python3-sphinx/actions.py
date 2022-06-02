@@ -5,6 +5,10 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import shelltools
+
+
+shelltools.export("LC_ALL", "en_US.UTF-8")
 
 def build():
     pythonmodules.compile(pyVer="3")
