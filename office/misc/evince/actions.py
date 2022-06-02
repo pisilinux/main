@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     #shelltools.system("sed -i -e 's:T1_initLib:T1_InitLib:' meson.build || die")
-    mesontools.configure("-Dps=enabled -Dsystemduserunitdir=no -Dplatform=gnome")
+    mesontools.configure("-Dps=enabled -Ddvi=disabled -Dsystemduserunitdir=no -Dplatform=gnome")
 
 def build():
     mesontools.build()
