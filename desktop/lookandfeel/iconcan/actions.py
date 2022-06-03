@@ -9,4 +9,6 @@ from pisi.actionsapi import pisitools
 
 def install():
     # Install branding icon
-    pisitools.insinto("/usr/share/pixmaps", "*")
+    fldr = ("icons","lang-all")
+    for i in fldr:
+    	pisitools.insinto("/usr/share/pixmaps/icons", "%s/*" % i)
