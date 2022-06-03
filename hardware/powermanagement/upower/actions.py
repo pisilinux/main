@@ -15,6 +15,7 @@ def setup():
     #pisitools.dosed("configure", "DISABLE_DEPRECATED", deleteLine=True)
     mesontools.configure("-Dgtk-doc=false \
                           -Dudevrulesdir=/lib/udev \
+                          -Dudevhwdbdir=/etc/udev/hwdb.d \
                           -Dintrospection=enabled \
                           -Dsystemdsystemunitdir=no")
 def build():
