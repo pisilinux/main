@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("--libexec=/usr/lib")
 
 def build():
     mesontools.build()
