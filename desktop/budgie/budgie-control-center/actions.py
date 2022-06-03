@@ -7,7 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("--libexecdir=/usr/lib")
 
 def build():
     mesontools.build()
