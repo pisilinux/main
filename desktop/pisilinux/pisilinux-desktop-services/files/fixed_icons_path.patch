@@ -1,0 +1,146 @@
+diff -Nuar a/pds/environments.py b/pds/environments.py
+--- a/pds/environments.py	2021-05-21 12:07:38.000000000 +0300
++++ b/pds/environments.py	2022-05-27 10:36:13.953911000 +0300
+@@ -30,53 +30,15 @@
+ # kde5 için sınıfı düzenlenecek ve kde5 için bilgiler istenecek!!!
+ class Kde5(DefaultDe):
+     Name                 = 'kde'
+-    SessionTypes         = ('/usr/share/xsessions/plasma-mediacenter')
++    SessionTypes         = ('/usr/share/xsessions/plasma')
+     Version              = '5'
+     VersionKey           = 'KDE_SESSION_VERSION'
+-    ConfigPath           = ('$HOME/.config/', '$HOME/.config5/')
++    ConfigPath           = ('$HOME/.config/', '$HOME/.config/')
+     ConfigFile           = 'kdeglobals'
+     ConfigType           = 'ini'
+-    #ConfigBin            = 'kde4-config'
+-    #DefaultIconFile      = '/usr/share/icons/default.kde4'
+     DefaultConfigPath    = '$HOME/.config/kdeglobals'
+     DefaultIconTheme     = 'breeze' # breeze simge teması svg dosyalarından oluşuyor pds png uzantılı dosyalar açıyor
+     IconKey              = 'Icons/Theme'
+-    #try:
+-    #    from PyKDE4 import kdecore, kdeui
+-    #    i18n                 = kdecore.i18n
+-    #except:
+-    #    pass
+-
+-
+-class Kde4(DefaultDe):
+-    Name                 = 'kde'
+-    SessionTypes         = ('kde-plasma')
+-    Version              = '4'
+-    VersionKey           = 'KDE_SESSION_VERSION'
+-    ConfigPath           = ('$HOME/.kde4/', '$HOME/.kde/')
+-    ConfigFile           = 'share/config/kdeglobals'
+-    ConfigType           = 'ini'
+-    ConfigBin            = 'kde4-config'
+-    DefaultIconFile      = '/usr/share/icons/default.kde4'
+-    DefaultIconTheme     = 'oxygen'
+-    IconKey              = 'Icons/Theme'
+-    #try:
+-    #    from PyKDE4 import kdecore, kdeui
+-    #    i18n                 = kdecore.i18n
+-    #except:
+-    #    pass
+-
+-class Kde3(DefaultDe):
+-    Name                 = 'kde'
+-    Version              = '3.5'
+-    ConfigPath           = '$HOME/.kde/'
+-    ConfigFile           = 'share/config/kdeglobals'
+-    ConfigType           = 'ini'
+-    ConfigBin            = 'kde-config'
+-    DefaultIconFile      = '/usr/share/icons/default.kde'
+-    DefaultIconTheme     = 'crystalsvg'
+-    IconKey              = 'Icons/Theme'
+-    ExtraDirs            = 'KDEDIRS'
+ 
+ class Xfce(DefaultDe):
+     Name                 = 'xfce'
+@@ -107,6 +69,15 @@
+     IconKey              = 'theme/name'
+     DefaultIconFile      = '/usr/share/lxde/images/pisilinuxLogo.png'
+ 
++class LxQt(DefaultDe):
++    Name                 = 'LxQt'
++    Version              = '1.1'
++    ConfigPath           = '$HOME/.config/lxqt'
++    ConfigFile           = ''
++    ConfigType           = None
++    DefaultIconTheme     = 'damadamas'
++    IconKey              = 'theme/name'
++
+ class Fluxbox(DefaultDe):
+     Name                 = 'fluxbox'
+     Version              = '1.3.1'
+@@ -127,16 +98,32 @@
+ class Gnome3(DefaultDe):
+     Name                 = 'gnome3'
+     SessionTypes         = ('gnome-shell')
+-    Version              = '3.0'
+-    ConfigPath           = '$HOME/.gnome2'
++    Version              = '41.3'
++    ConfigPath           = '$HOME/.gconf'
+     ConfigFile           = ''
+     ConfigType           = None
+-    DefaultIconTheme     = 'oxygen'
++    DefaultIconTheme     = 'adwaita'
+ 
+ class Mate(DefaultDe):
+     Name                 = 'mate'
+-    Version              = '1.61'
++    Version              = '1.25'
+     ConfigPath           = '$HOME/.config/mate'
+     ConfigFile           = ''
+     ConfigType           = None
+-    DefaultIconTheme     = 'matefaenza'
++    DefaultIconTheme     = 'mate'
++    
++class Lumina(DefaultDe):
++    Name                 = 'lumina'
++    Version              = '1.6'
++    ConfigPath           = '$HOME/.config/lumina'
++    ConfigFile           = ''
++    ConfigType           = None
++    DefaultIconTheme     = 'adwaita'
++
++class Cinnamon(DefaultDe):
++    Name                 = 'cinnamon'
++    Version              = '5.2'
++    ConfigPath           = '$HOME/.config/cinnamon'
++    ConfigFile           = ''
++    ConfigType           = None
++    DefaultIconTheme     = 'adwaita'
+diff -Nuar a/pds/__init__.py b/pds/__init__.py
+--- a/pds/__init__.py	2021-05-21 12:07:38.000000000 +0300
++++ b/pds/__init__.py	2022-05-27 10:37:09.328910000 +0300
+@@ -32,7 +32,7 @@
+ 
+ class Pds:
+ 
+-    SupportedDesktops = (DefaultDe, Kde5, Kde4, Kde3, Xfce, Enlightenment, LXDE,
++    SupportedDesktops = (DefaultDe, Kde5, Xfce, Enlightenment, LXDE, LxQt, Lumina, Cinnamon, 
+                         Fluxbox, Gnome, Gnome3, Mate)
+ 
+     def __init__(self, catalogName='', debug=False):
+@@ -158,7 +158,7 @@
+                     elif v[1] == 'DESKTOP':
+                         env = v[0].lower()
+                         break
+-            elif env == 'default' or env == 'gnome':
++            elif env == 'default' or env == 'Gnome':
+                 session = readfile('/etc/default/desktop', DefaultDe.Name)
+                 env     = session.split('=')[1].strip()
+             for de in Pds.SupportedDesktops:
+diff -Nuar a/pds/qiconloader.py b/pds/qiconloader.py
+--- a/pds/qiconloader.py	2021-05-21 12:07:38.000000000 +0300
++++ b/pds/qiconloader.py	2022-05-27 09:41:00.436983000 +0300
+@@ -81,7 +81,7 @@
+ 
+         logging.debug('Icon Dirs : %s' % ','.join(self.iconDirs))
+         self.themeIndex = self.readThemeIndex(self.themeName)
+-        self.extraIcons = ['/usr/share/pixmaps']
++        self.extraIcons = ['/usr/share/pixmaps', '/usr/share/pixmaps/icons']
+         self.updateAvailableIcons()
+         
+ 
