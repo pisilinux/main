@@ -16,7 +16,7 @@ def install():
     mesontools.install()
     #these file comes from libhandy
     pisitools.removeDir("/usr/share/locale")
-    pisitools.remove("/usr/lib/libhandy-1.so*")
+    #pisitools.remove("/usr/lib/libhandy-1.so*")
     
 
     pisitools.dodoc("README.md", "LICENSE*")
