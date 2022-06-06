@@ -29,4 +29,4 @@ def build():
 
 def install():
     shelltools.cd("squashfs-tools")
-    autotools.install("INSTALL_DIR='%s/usr/sbin'" % get.installDIR())
+    autotools.install("INSTALL_PREFIX='%s/usr' INSTALL_MANPAGES_DIR='%s/usr/share/man/man1' INSTALL_DIR='%s/usr/sbin'" % (get.installDIR(), get.installDIR(), get.installDIR()))
