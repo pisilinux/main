@@ -1,0 +1,117 @@
+diff -Nuar a/include/exceptions.h b/include/exceptions.h
+--- a/include/exceptions.h	2020-02-11 18:09:41.000000000 +0300
++++ b/include/exceptions.h	2022-06-06 11:52:45.738734704 +0300
+@@ -27,21 +27,21 @@
+ #include <Python.h>
+ 
+ /* custom exceptions for _ped */
+-PyObject *AlignmentException;
+-PyObject *CreateException;
+-PyObject *ConstraintException;
+-PyObject *DeviceException;
+-PyObject *DiskException;
+-PyObject *DiskLabelException;
+-PyObject *FileSystemException;
+-PyObject *GeometryException;
+-PyObject *IOException;
+-PyObject *NotNeededException;
+-PyObject *PartedException;
+-PyObject *PartitionException;
+-PyObject *TimerException;
+-PyObject *UnknownDeviceException;
+-PyObject *UnknownTypeException;
++extern PyObject *AlignmentException;
++extern PyObject *CreateException;
++extern PyObject *ConstraintException;
++extern PyObject *DeviceException;
++extern PyObject *DiskException;
++extern PyObject *DiskLabelException;
++extern PyObject *FileSystemException;
++extern PyObject *GeometryException;
++extern PyObject *IOException;
++extern PyObject *NotNeededException;
++extern PyObject *PartedException;
++extern PyObject *PartitionException;
++extern PyObject *TimerException;
++extern PyObject *UnknownDeviceException;
++extern PyObject *UnknownTypeException;
+ 
+ extern unsigned int partedExnRaised;
+ extern char *partedExnMessage;
+diff -Nuar a/src/_pedmodule.c b/src/_pedmodule.c
+--- a/src/_pedmodule.c	2020-02-11 18:09:41.000000000 +0300
++++ b/src/_pedmodule.c	2022-06-06 11:54:50.231725722 +0300
+@@ -42,23 +42,29 @@
+ #include "pytimer.h"
+ #include "pyunit.h"
+ 
+-#if PED_DISK_LAST_FLAG < 2
+-#define PED_DISK_GPT_PMBR_BOOT 2
+-#endif
+-
+-#if PED_PARTITION_LAST_FLAG < 15
+-#define PED_PARTITION_LEGACY_BOOT 15
+-#endif
+-
+-#if PED_PARTITION_LAST_FLAG < 16
+-#define PED_PARTITION_MSFT_DATA 16
+-#endif
+-
+ char *partedExnMessage = NULL;
+ unsigned int partedExnRaised = 0;
+ 
+ PyObject *exn_handler = NULL;
+ 
++/* custom exceptions for _ped */
++/* These are declared in exceptions.h for use elsewhere. */
++PyObject *AlignmentException;
++PyObject *CreateException;
++PyObject *ConstraintException;
++PyObject *DeviceException;
++PyObject *DiskException;
++PyObject *DiskLabelException;
++PyObject *FileSystemException;
++PyObject *GeometryException;
++PyObject *IOException;
++PyObject *NotNeededException;
++PyObject *PartedException;
++PyObject *PartitionException;
++PyObject *TimerException;
++PyObject *UnknownDeviceException;
++PyObject *UnknownTypeException;
++
+ /* Docs strings are broken out of the module structure here to be at least a
+  * little bit readable.
+  */
+@@ -641,15 +647,22 @@
+     PyModule_AddIntConstant(m, "PARTITION_BIOS_GRUB", PED_PARTITION_BIOS_GRUB);
+     PyModule_AddIntConstant(m, "PARTITION_DIAG", PED_PARTITION_DIAG);
+     PyModule_AddIntConstant(m, "PARTITION_LEGACY_BOOT", PED_PARTITION_LEGACY_BOOT);
+-#ifdef PED_PARTITION_MSFT_DATA
+-    PyModule_AddIntConstant(m, "PARTITION_MSFT_DATA", PED_PARTITION_MSFT_DATA);
+-#endif
+-#ifdef PED_PARTITION_IRST
+-    PyModule_AddIntConstant(m, "PARTITION_IRST", PED_PARTITION_IRST);
+-#endif
+-#ifdef PED_PARTITION_ESP
+-    PyModule_AddIntConstant(m, "PARTITION_ESP", PED_PARTITION_ESP);
+-#endif
++    /* NOT: Enum PED_PARTITION_* değerlerini kullanarak değerlendiremezsiniz.
++    * ön işlemci Onlarla #if veya #ifdef KULLANMAYIN.
++    *
++    * PED_PARTITION_LAST_FLAG ve neye göre koşullu olarak sabitler ekleyin
++    * parted/disk.h'yi biliyoruz
++    */
++    if (PED_PARTITION_LAST_FLAG > 15 )
++    PyModule_AddIntConstant (m, " PARTITION_MSFT_DATA " , PED_PARTITION_MSFT_DATA);
++    if (PED_PARTITION_LAST_FLAG > 16 )
++    PyModule_AddIntConstant (m, " PARTITION_IRST " , PED_PARTITION_IRST);
++    if (PED_PARTITION_LAST_FLAG > 17 )
++    PyModule_AddIntConstant (m, " PARTITION_ESP " , PED_PARTITION_ESP);
++    if (PED_PARTITION_LAST_FLAG > 18 )
++    PyModule_AddIntConstant (m, " PARTITION_CHROMEOS_KERNEL " , PED_PARTITION_CHROMEOS_KERNEL);
++    if (PED_PARTITION_LAST_FLAG > 19 )
++    PyModule_AddIntConstant (m, " PARTITION_BLS_BOOT " , PED_PARTITION_BLS_BOOT);
+ 
+     PyModule_AddIntConstant(m, "DISK_CYLINDER_ALIGNMENT", PED_DISK_CYLINDER_ALIGNMENT);
+     PyModule_AddIntConstant(m, "DISK_GPT_PMBR_BOOT", PED_DISK_GPT_PMBR_BOOT);
