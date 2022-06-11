@@ -14,12 +14,8 @@ def setup():
     pisitools.dosed("Lib/cgi.py","^#.* /usr/local/bin/python","#!/usr/bin/python")
 
     shelltools.unlinkDir("Modules/expat")
-    #shelltools.unlinkDir("Modules/zlib")
     shelltools.unlinkDir("Modules/_ctypes/darwin")
-    #shelltools.unlinkDir("Modules/_ctypes/libffi")
-    #shelltools.unlinkDir("Modules/_ctypes/libffi_msvc")
     shelltools.unlinkDir("Modules/_ctypes/libffi_osx")
-    #shelltools.unlinkDir("Modules/_decimal/libmpdec")
 
     autotools.rawConfigure("\
                             --prefix=/temp \
@@ -41,15 +37,12 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     shelltools.makedirs("%s/usr" % get.installDIR())
-    
-    pisitools.domove("/temp/lib/python3.9/tkinter", "/usr/lib/python3.9")
+    folders = ("tkinter", "turtledemo", "idlelib")
+    for i in folders:
+    	pisitools.domove("/temp/lib/python3.9/%s" % i, "/usr/lib/python3.9")
     pisitools.domove("/temp/lib/python3.9/lib-dynload/_tkinter.cpython-39-x86_64-linux-gnu.so", "/usr/lib/python3.9/lib-dynload")
-    pisitools.domove("/temp/lib/python3.9/turtledemo", "/usr/lib/python3.9")
     pisitools.domove("/temp/bin/idle3*", "/usr/bin/")
-    pisitools.domove("/temp/lib/python3.9/idlelib", "/usr/lib/python3.9")
     
     shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.9" % get.installDIR())
     
     pisitools.removeDir("/temp")
-    #pisitools.remove("/usr/bin/2to3")
-    #pisitools.dodoc("LICENSE", "README.*")
