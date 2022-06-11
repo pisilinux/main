@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>grpc</Name>
+        <Homepage>The C based gRPC (C++, Python, Ruby, Objective-C, PHP, C#)</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>Apache</License>
+        <IsA>library</IsA>
+        <Summary>The C based gRPC (C++, Python, Ruby, Objective-C, PHP, C#)</Summary>
+        <Description>High performance, open source, general RPC framework that puts mobile and HTTP/2 first.</Description>
+        <Archive sha1sum="00d95fdaa75eb97444a22e166133c14d50f1437d" type="targz">https://github.com/grpc/grpc/archive/refs/tags/v1.46.3.tar.gz</Archive>
+        <Archive sha1sum="7b100bb68db8df1060e178c495f3cbe941c9b058" type="targz" target="v1.46.3">https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>re2c</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>cython3</Dependency>
+            <Dependency>chrpath</Dependency>
+            <Dependency>re2-devel</Dependency>
+            <Dependency>php-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>gtest-devel</Dependency>
+            <Dependency>c-ares-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>protobuf-devel</Dependency>
+            <Dependency>benchmark-devel</Dependency>
+            <Dependency>abseil-cpp-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
+            <Dependency>NetworkManager-devel</Dependency>
+            <Dependency>python3-pygobject3-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>python-grpcio-use-system-abseil.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>grpc</Name>
+        <RuntimeDependencies>
+            <Dependency>xapp</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>polkit</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>python3</Dependency>
+            <Dependency>chrpath</Dependency>
+            <Dependency>protobuf</Dependency>
+            <Dependency>benchmark</Dependency>
+            <Dependency>abseil-cpp</Dependency>
+            <Dependency>NetworkManager</Dependency>
+            <Dependency>python3-pynacl</Dependency>
+            <Dependency>python3-protobuf</Dependency>
+            <Dependency>python3-zeroconf</Dependency>
+            <Dependency>python3-setuptools</Dependency>
+            <Dependency>python3-pygobject3</Dependency>
+            <Dependency>python3-cryptography</Dependency>
+            <Dependency>python3-setproctitle</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/grpc</Path>
+            <Path fileType="library">/usr/lib/libgrpc*</Path>
+            <Path fileType="library">/usr/lib/libgpr*</Path>
+            <Path fileType="library">/usr/lib/libupb*</Path>
+            <Path fileType="library">/usr/lib/libaddress*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>grpc-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>abseil-cpp-devel</Dependency>
+            <Dependency release="current">grpc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2022-06-11</Date>
+            <Version>1.46.3</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
