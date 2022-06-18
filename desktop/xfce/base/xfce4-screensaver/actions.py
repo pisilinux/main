@@ -17,7 +17,8 @@ j = ''.join([
     '--with-libgl',
     '--with-shadow',
     '--with-mit-ext',
-    '--with-console-kit',
+    '--with-elogind',
+    '--without-console-kit',
     '--with-pam-auth-type=system',
     '--without-systemd'])
 
