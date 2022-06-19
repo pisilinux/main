@@ -9,6 +9,9 @@ from pisi.actionsapi import mesontools, shelltools, pisitools, get
 i = ''.join([
     '-Dalsadatadir=/usr/share/alsa-card-profile/mixer ',
     '-Dmodlibexecdir=/usr/lib/pulse/modules ',
+    '-Dsystemd=disabled ',
+    '-Dsystem_user=pulse ',
+    '-Dsystem_group=pulse ',
     '-Dudevrulesdir=/lib/udev/rules.d ',
 
     ])
@@ -24,6 +27,7 @@ j = ''.join([
     '-Dfftw=disabled ',
     '-Dgtk=disabled ',
     '-Dx11=disabled ',
+    '-Delogind=disabled ',
     '-Dbluez5=disabled ',
     '-Dtests=false ',
     ])
@@ -48,14 +52,14 @@ def install():
 		shelltools.cd("build/src")
 		pisitools.insinto("/usr/lib32/cmake", "../*.cmake")
 		pisitools.insinto("/usr/lib32/pkgconfig", "../*.pc")
-		pisitools.dolib_so("libpulsecommon-15.0.so", "/usr/lib32/pulseaudio")
-		pisitools.dolib_so("libpulsecommon-15.0.so", "/usr/lib32")
+		pisitools.dolib_so("libpulsecommon-16.0.so", "/usr/lib32/pulseaudio")
+		pisitools.dolib_so("libpulsecommon-16.0.so", "/usr/lib32")
 		pisitools.dolib_so("utils/libpulsedsp.so", "/usr/lib32/pulseaudio")
 		shelltools.cd("pulse")
 		for t in [
 		"libpulse.so",
 		"libpulse.so.0",
-		"libpulse.so.0.24.0",
+		"libpulse.so.0.24.2",
 		"libpulse-simple.so",
 		"libpulse-simple.so.0",
 		"libpulse-simple.so.0.1.1",
@@ -73,6 +77,8 @@ def install():
 	# Needed for service.py
 	pisitools.dodir("/run/pulse")
 	pisitools.dodir("/var/lib/pulse")
+
+	pisitools.dodir("/etc/pulse/default.pa.d")
 
 	pisitools.dodoc("NEWS", "README")
 	pisitools.dohtml("build/doxygen/html/*")
