@@ -12,6 +12,7 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DQTXDG_DEFAPPS_CONF_INSTALL_DIR:PATH=/etc/xdg \
                           -DCMAKE_INSTALL_LIBDIR=/usr/lib", sourceDir="..")
 
 def build():
