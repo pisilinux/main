@@ -27,6 +27,7 @@ def setup():
 						      -DCMAKE_INSTALL_BINDIR=bin32")
 	else:
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
+							  -DCMAKE_BUILD_TYPE=Release \
 						      -DBUILD_SHARED_LIBS=ON \
 						      -DSPIRV_TOOLS_BUILD_STATIC=OFF \
 						      -DSPIRV-Headers_SOURCE_DIR=/usr \
