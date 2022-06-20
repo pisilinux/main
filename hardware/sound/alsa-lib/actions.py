@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
 def setup():
+    shelltools.export("CFLAGS", "%s -flto-partition=none" % get.CFLAGS())
     options = "--disable-aload"
 
     if get.buildTYPE() == "emul32":
@@ -33,6 +34,12 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    if get.buildTYPE() == "emul32": return
+    if get.buildTYPE() == "emul32":
+        pisitools.insinto("/usr/share/alsa", "alsa-ucm-conf-1.2.7.1/ucm2")
+        pisitools.insinto("/usr/share/doc/alsa-ucm-conf", "alsa-ucm-conf-1.2.7.1/LICENSE")
+
+        pisitools.insinto("/usr/share/alsa", "alsa-topology-conf-1.2.5.1/topology")
+        pisitools.insinto("/usr/share/doc/alsa-topology-conf", "alsa-topology-conf-1.2.5.1/LICENSE")
+        return
 
     pisitools.dodoc("ChangeLog", "TODO", "COPYING", "doc/*.txt")
