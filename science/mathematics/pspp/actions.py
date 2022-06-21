@@ -9,7 +9,7 @@ from pisi.actionsapi import get
 
 
 def setup():
-    pisitools.dosed("src/ui/gui/org.fsf.pspp.desktop.in", "Math;", "")
+    pisitools.dosed("doc/org.fsf.pspp.desktop.in", "Math;", "")
     autotools.configure("--disable-rpath \
                          --disable-static")
                          #--without-libreadline-prefix")
