@@ -6,7 +6,6 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 #def setup():
@@ -17,8 +16,6 @@ def build():
 
 def install():
     pisitools.insinto("/usr", "usr/*")
-    shelltools.chmod(get.installDIR() + "/usr/lib/*")
-    shelltools.chmod(get.installDIR() + "/usr/bin/*")
     #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("README*")
