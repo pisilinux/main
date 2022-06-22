@@ -18,5 +18,5 @@ def install():
     kde5.install()
 
 
-    pisitools.dodoc("AUTHORS", "COPYING.LIB", "COPYING")
+    pisitools.dodoc("README.md", "LICENSES/*")
 
