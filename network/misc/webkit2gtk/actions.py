@@ -21,7 +21,7 @@ def setup():
                           -DCMAKE_SKIP_RPATH=ON \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DLIB_INSTALL_DIR=/usr/lib \
-                          -DLIBEXEC_INSTALL_DIR=/usr/lib/webkit2gtk-4.0 \
+                          -DLIBEXEC_INSTALL_DIR=/usr/lib/webkit2gtk-4.1 \
                           -DENABLE_CREDENTIAL_STORAGE=ON \
                           -DENABLE_GEOLOCATION=ON \
                           -DENABLE_VIDEO=ON \
