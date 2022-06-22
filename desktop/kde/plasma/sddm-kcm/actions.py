@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     #shelltools.system("sed -i 's|5.11.0|5.10.0|g' CMakeLists.txt")
-    kde5.configure()
+    kde5.configure("-DSDDM_CONFIG_DIR:PATH=/usr/lib/sddm/sddm.conf.d")
 
 def build():
     kde5.make()
