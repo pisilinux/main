@@ -52,8 +52,8 @@ def install():
 		shelltools.cd("build/src")
 		pisitools.insinto("/usr/lib32/cmake", "../*.cmake")
 		pisitools.insinto("/usr/lib32/pkgconfig", "../*.pc")
-		pisitools.dolib_so("libpulsecommon-16.0.so", "/usr/lib32/pulseaudio")
-		pisitools.dolib_so("libpulsecommon-16.0.so", "/usr/lib32")
+		pisitools.dolib_so("libpulsecommon-16.1.so", "/usr/lib32/pulseaudio")
+		pisitools.dolib_so("libpulsecommon-16.1.so", "/usr/lib32")
 		pisitools.dolib_so("utils/libpulsedsp.so", "/usr/lib32/pulseaudio")
 		shelltools.cd("pulse")
 		for t in [
