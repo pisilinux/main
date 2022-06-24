@@ -45,10 +45,10 @@ def install():
         pisitools.insinto("/usr/bin/","%s/usr/emul32/opj_decompress" % get.installDIR(),"opj_decompress_32")
         pisitools.insinto("/usr/bin/","%s/usr/emul32/opj_dump" % get.installDIR(),"opj_dump_32")
         pisitools.dosed("%s/usr/lib32/pkgconfig/libopenjp2.pc" % get.installDIR(), "emul32", "bin")
-        pisitools.dosed("%s/usr/lib32/openjpeg-2.4/OpenJPEGTargets-relwithdebinfo.cmake" % get.installDIR(), "emul32", "bin")
+        pisitools.dosed("%s/usr/lib32/openjpeg-2.5/OpenJPEGTargets-relwithdebinfo.cmake" % get.installDIR(), "emul32", "bin")
         pisitools.removeDir("/usr/emul32")
         
-        pisitools.dosym("openjpeg-2.3/openjpeg.h", "/usr/include/openjpeg.h")
+        pisitools.dosym("openjpeg-2.5/openjpeg.h", "/usr/include/openjpeg.h")
         
         pisitools.dodoc("AUTHORS*", "CHANGELOG*", "NEWS*", "README*")
         
