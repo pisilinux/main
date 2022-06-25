@@ -1,5 +1,5 @@
 SPDX-License-Identifier: GPL-2.0
-aufs5.15.36 mmap patch
+aufs5.15.41 mmap patch
 
 diff --git a/fs/proc/base.c b/fs/proc/base.c
 index 1f394095eb88..93f2479ef319 100644
@@ -72,7 +72,7 @@ index a6d21fc0033c..02c2de31196e 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 90c2d7f3c7a8..ab1b20fa5837 100644
+index 04345ff97f8c..4ab9bb75c894 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -1813,6 +1813,43 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
@@ -166,7 +166,7 @@ index fc60a40ce954..d45773672730 100644
  obj-$(CONFIG_GENERIC_IOREMAP) += ioremap.o
 +obj-$(CONFIG_AUFS_FS:m=y) += prfile.o
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 1293c3409e42..42b012b99f4e 100644
+index 00e391e75880..d8b52d814319 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
 @@ -3353,7 +3353,7 @@ vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf)

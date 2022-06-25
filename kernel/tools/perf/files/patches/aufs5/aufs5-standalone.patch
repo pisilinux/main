@@ -1,5 +1,5 @@
 SPDX-License-Identifier: GPL-2.0
-aufs5.15.36 standalone patch
+aufs5.15.41 standalone patch
 
 diff --git a/fs/dcache.c b/fs/dcache.c
 index bc5095b734f5..9508bd57a3bc 100644
@@ -45,15 +45,16 @@ index 02382fa9bd34..3418c60b9014 100644
  
  static void f_modown(struct file *filp, struct pid *pid, enum pid_type type,
                       int force)
-diff -Nurp a/fs/file_table.c b/fs/file_table.c
---- a/fs/file_table.c	2022-03-20 22:14:17.000000000 +0200
-+++ b/fs/file_table.c	2022-04-08 20:24:23.624148779 +0300
-@@ -198,6 +198,7 @@ over:
+diff --git a/fs/file_table.c b/fs/file_table.c
+index e8c9016703ad..5e7a880830fb 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -161,6 +161,7 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
  	}
  	return ERR_PTR(-ENFILE);
  }
 +EXPORT_SYMBOL_GPL(alloc_empty_file);
-
+ 
  /*
   * Variant of alloc_empty_file() that doesn't check and modify nr_files.
 diff --git a/fs/namespace.c b/fs/namespace.c
