@@ -40,4 +40,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("README.LDAP", "README")
+    pisitools.dodoc("README.LDAP*", "LICENSE*", "README*")
