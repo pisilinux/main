@@ -15,15 +15,18 @@ def setup():
     cpu = "x86-64" if get.ARCH() == "x86_64" else "sse"
 
     pisitools.dosed("configure", "-faltivec")
-    options = '--with-audio="alsa oss" \
-               --with-cpu=%s \
+    options = '--with-cpu=%s \
                --with-optimization=2 \
                --enable-network=yes \
                --disable-ltdl-install' % cpu
 
     if get.buildTYPE() == "emul32":
-        options += " --with-cpu=i586"
+        options += " --with-audio='alsa oss pulse sdl' --with-cpu=i586"
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
+
+    else:
+        options += " --with-audio='alsa oss pulse sdl jack' \
+                   "
 
     autotools.configure(options)
 
