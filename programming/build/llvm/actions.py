@@ -71,6 +71,7 @@ def setup():
         pisitools.cxxflags.add("-m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
+                     -DCMAKE_INSTALL_LIBEXECDIR=/emul32/libexec \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
                      -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu'"
     
@@ -90,7 +91,7 @@ def setup():
                           -DLLVM_INCLUDEDIR=/usr/include \
                           -DLLVM_ENABLE_ASSERTIONS=OFF \
                           -DFFI_INCLUDE_DIR=/usr/include \
-                          -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." ) 
+                          -DCOMPILER_RT_USE_LIBCXX=OFF" % (options, projects, libsuffix), sourceDir=".." )
 
 def build():
     shelltools.cd("build")
