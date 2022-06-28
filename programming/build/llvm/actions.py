@@ -71,7 +71,6 @@ def setup():
         pisitools.cxxflags.add("-m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
-                     -DCMAKE_INSTALL_LIBEXECDIR=/emul32/libexec \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
                      -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu'"
     
