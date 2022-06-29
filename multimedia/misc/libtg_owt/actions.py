@@ -22,9 +22,9 @@ def setup():
 
     #shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
     shelltools.move("libyuv/*", "src/third_party/libyuv")
-    #shelltools.move("pipewire/*", "src/third_party/pipewire")
+    shelltools.system("rm -rf src/third_party/crc32c/src")
+    shelltools.move("crc32c-1.1.2/*", "src/third_party/crc32c")
 
-    #shelltools.export("CPPFLAGS", "-DNDEBUG")
     pisitools.cflags.add(" -ffat-lto-objects")
     pisitools.cxxflags.add(" -ffat-lto-objects -I/usr/include/libdrm")
     cmaketools.configure("-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
