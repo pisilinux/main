@@ -11,7 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("--libexecdir=/usr/lib/xapp")
+    mesontools.configure()
 
 def build():
     mesontools.build()
