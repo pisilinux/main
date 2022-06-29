@@ -14,7 +14,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.export("NINJAJOBS", "-j 4")
-    #shelltools.export("LC_ALL", "en_US.UTF-8")
+    shelltools.system("patch -p1 < fix-tgcalls-cstdint.patch -d Telegram/ThirdParty/tgcalls")
     shelltools.system("sed -i 's/DESKTOP_APP_USE_PACKAGED/NO_ONE_WILL_EVER_SET_THIS/' \
 		cmake/external/rlottie/CMakeLists.txt || die")
     shelltools.system('echo "target_link_libraries(external_webrtc INTERFACE jpeg Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst X11)" | tee -a cmake/external/webrtc/CMakeLists.txt')
