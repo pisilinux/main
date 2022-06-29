@@ -14,4 +14,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s prefix=/%s install-bin install-man" % (get.installDIR(), get.defaultprefixDIR()))
 
-    pisitools.dodoc("AUTHORS", "CHANGELOG", "LICENSE", "README")
+    pisitools.dodoc("AUTHORS", "LICENSE", "README")
