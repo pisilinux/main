@@ -15,19 +15,22 @@ from pisi.actionsapi import get
 def setup():
     shelltools.makedirs("vokoscreenNG")
     shelltools.cd("vokoscreenNG")
-    shelltools.cd("cd src")
+    #shelltools.cd("cd src")
     pisitools.cxxflags.add("-Wno-deprecated-declarations")
-    qt5.configure("src/vokoscreenNG.pro")
+    qt5.configure("../src/vokoscreenNG.pro")
 
 def build():
+    shelltools.cd("vokoscreenNG")
     qt5.make("PREFIX=/usr")
 
 def install():
+    shelltools.cd("vokoscreenNG")
     qt5.install("INSTALL_ROOT=%s" % get.installDIR())
     #pisitools.dobin("vokoscreenNG")
     #pisitools.insinto("/usr/share/applications", "src/applications/vokoscreenNG.desktop", "vokoscreenNG.desktop")
     #pisitools.insinto("/usr/share/pixmaps", "src/applications/vokoscreenNG.png", "vokoscreenNG.png")
     
+    shelltools.cd("..")
     pisitools.dodoc("COPYING")
 
 
