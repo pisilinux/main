@@ -13,6 +13,9 @@ from pisi.actionsapi import get
 #WorkDir = "vokoscreenNG-%s/src" % get.srcVERSION()
 
 def setup():
+    shelltools.makedirs("vokoscreenNG")
+    shelltools.cd("vokoscreenNG")
+    shelltools.cd("cd src")
     pisitools.cxxflags.add("-Wno-deprecated-declarations")
     qt5.configure("src/vokoscreenNG.pro")
 
@@ -25,6 +28,6 @@ def install():
     #pisitools.insinto("/usr/share/applications", "src/applications/vokoscreenNG.desktop", "vokoscreenNG.desktop")
     #pisitools.insinto("/usr/share/pixmaps", "src/applications/vokoscreenNG.png", "vokoscreenNG.png")
     
-    pisitools.dodoc("COPYING", "README.md")
+    pisitools.dodoc("COPYING")
 
 
