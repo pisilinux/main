@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 def setup():
     mesontools.configure("-Dpackage-name='PisiLinux gstreamer-plugins-bad package' \
                           -Dpackage-origin='https://www.pisilinux.org' \
+                          -Dgpl=enabled \
                           -D msdk=disabled")
 
 def build():
