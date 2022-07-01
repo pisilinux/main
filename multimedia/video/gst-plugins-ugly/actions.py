@@ -11,7 +11,8 @@ from pisi.actionsapi import pisitools
 
 def setup():
     mesontools.configure("-Dpackage-name='PisiLinux gstreamer-plugins-ugly package' \
-                          -Dpackage-origin='https://www.pisilinux.org'")
+                          -Dpackage-origin='https://www.pisilinux.org' \
+                          -Dgpl=enabled")
 
 def build():
     mesontools.build()
