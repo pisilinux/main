@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libvirt-glib</Name>
@@ -12,9 +12,13 @@
         <IsA>library</IsA>
         <Summary>GLib bindings for libvirt</Summary>
         <Description>GLib bindings for libvirt</Description>
-        <Archive sha1sum="64bfa6579b182b891947d869d6fa3bb418def940" type="targz">https://libvirt.org/sources/glib/libvirt-glib-2.0.0.tar.gz</Archive>
+        <Archive sha1sum="8c5209b6e6f40a4c6c99ed9c64e01a6411a89880" type="tarxz">https://libvirt.org/sources/glib/libvirt-glib-4.0.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>intltool</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>meson</Dependency>
             <Dependency>gtk-doc</Dependency>
             <Dependency>vala-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
@@ -34,19 +38,22 @@
             <Dependency>libxml2</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/usr/share</Path>
+            <Path fileType="library">/usr/lib/libvirt*</Path>
+            <Path fileType="library">/usr/lib/girepository-1.0*</Path>
             <Path fileType="data">/usr/share/vala</Path>
             <Path fileType="data">/usr/share/gir-1.0</Path>
             <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
     
     <Package>
         <Name>libvirt-glib-devel</Name>
+        <Icon>development</Icon>
         <Summary>Development files for libvirt-glib</Summary>
         <RuntimeDependencies>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libvirt-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
             <Dependency release="current">libvirt-glib</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -62,11 +69,19 @@
             <Dependency release="current">libvirt-glib</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/gtk-doc</Path>
         </Files>
     </Package>
     
     <History>
+        <Update release="2">
+            <Date>2022-07-02</Date>
+            <Version>4.0.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2019-03-18</Date>
             <Version>2.0.0</Version>

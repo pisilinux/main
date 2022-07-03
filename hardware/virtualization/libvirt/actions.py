@@ -4,65 +4,45 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
 
 def setup():
-    #for f in ["src/Makefile.am", "src/Makefile.in", "daemon/Makefile.am", "daemon/Makefile.in"]:
-        #pisitools.dosed(f, "\$\(localstatedir\)(\/run\/libvirt)", "\\1")
-    #for f in ["daemon/libvirtd.c", "daemon/libvirtd.conf", "daemon/test_libvirtd.aug.in"]:
-        #pisitools.dosed(f, "\/var(\/run\/libvirt)", "\\1")
-    #for f in ["src/locking/virtlockd.pod", "src/virtlockd.8.in", "daemon/libvirtd.8.in", "daemon/libvirtd.pod", ]:
-        #pisitools.dosed(f, "LOCALSTATEDIR(\/run\/libvirt)", "\\1")
-    autotools.configure("--with-init-script=none \
-                         --with-remote-pid-file=/run/libvirtd.pid \
-                         --with-qemu-user=qemu \
-                         --with-qemu-group=qemu \
-                         --with-lxc \
-                         --with-udev \
-                         --with-qemu \
-                         --with-sasl \
-                         --with-audit \
-                         --with-numactl \
-                         --with-avahi \
-                         --with-netcf \
-                         --with-libssh2=/usr/lib \
-                         --with-capng \
-                         --with-polkit \
-                         --with-python \
-                         --with-network \
-                         --with-libvirtd \
-                         --with-storage-fs \
-                         --with-storage-scsi \
-                         --with-storage-mpath \
-                         --with-storage-disk \
-                         --with-storage-lvm \
-                         --without-vbox \
-                         --without-vmware \
-                         --without-esx \
-                         --without-storage-iscsi \
-                         --without-hal \
-                         --without-xen \
-                         --without-phyp \
-                         --without-uml \
-                         --without-openvz \
-                         --without-selinux \
-                         --without-apparmor \
-                         --disable-static")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson --libexecdir=/usr/lib \
+        --prefix=/usr \
+        -Drunstatedir=/run \
+        -Dqemu_user=libvirt-qemu \
+        -Dqemu_group=libvirt-qemu \
+        -Dnetcf=disabled \
+        -Dopenwsman=disabled \
+        -Dapparmor=disabled \
+        -Dapparmor_profiles=disabled \
+        -Dselinux=disabled \
+        -Dwireshark_dissector=disabled \
+        -Ddriver_bhyve=disabled \
+        -Ddriver_hyperv=disabled \
+        -Ddriver_libxl=disabled \
+        -Ddriver_vz=disabled \
+        -Dsanlock=disabled \
+        -Dsecdriver_apparmor=disabled \
+        -Dsecdriver_selinux=disabled \
+        -Dstorage_sheepdog=disabled \
+        -Dstorage_vstorage=disabled \
+        -Ddtrace=disabled \
+        -Dnumad=disabled \
+        -Dstorage_zfs=enabled ..")
 
 def build():
-    autotools.make()
-
-#def check():
- #   for v in ["XDG_HOME", "XDG_CACHE_HOME", "XDG_CONFIG_HOME"]:
-  #      shelltools.export(v, get.workDIR())
-   # autotools.make("check")
-
+    shelltools.cd("build")
+    shelltools.system("ninja")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.removeDir("/usr/share/gtk-doc")
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "NEWS", "README*", "ChangeLog")
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING*", "NEWS*", "README*")
