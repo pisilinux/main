@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libvirt</Name>
@@ -12,38 +12,48 @@
         <IsA>app:console</IsA>
         <Summary>Library providing a simple API to several virtualization systems</Summary>
         <Description>libvirt is a toolkit to interact with the virtualization capabilities of recent versions of Linux (and other OSes). libvirt supports Xen hypervisor, QEMU emulator, KVM hypervisor, LXC Linux container system, OpenVZ Linux container system, User Mode Linux paravirtualized kernel and VirtualBox hypervisor together with remote management possibilities.</Description>
-        <Archive sha1sum="b12262a9e6870f3c6b424e9e83033ccf97e0a078" type="tarxz">http://libvirt.org/sources/libvirt-4.6.0.tar.xz</Archive>
+        <Archive sha1sum="80456c833319bec16f162735c03391bfc0664546" type="tarxz">https://libvirt.org/sources/libvirt-8.4.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qemu</Dependency>
+            <Dependency>meson</Dependency>
             <Dependency>acl-devel</Dependency>
+            <Dependency>yajl-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>util-linux</Dependency>
             <Dependency>curl-devel</Dependency>
             <Dependency>fuse-devel</Dependency>
-            <Dependency>glibc-devel</Dependency>
-            <Dependency>libssh2-devel</Dependency>
-            <Dependency>jansson-devel</Dependency>
             <Dependency>lvm2-devel</Dependency>
             <Dependency>attr-devel</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>glibc-devel</Dependency>
             <Dependency>audit-devel</Dependency>
             <Dependency>avahi-devel</Dependency>
             <Dependency>netcf-devel</Dependency>
-            <Dependency>numactl-devel</Dependency>
-            <Dependency>libxslt-devel</Dependency>
-            <Dependency>libpciaccess-devel</Dependency>
-            <Dependency>yajl-devel</Dependency>
             <Dependency>polkit-devel</Dependency>
-            <Dependency>dbus-devel</Dependency>
-            <Dependency>util-linux</Dependency>
+            <Dependency>libnl-devel</Dependency>
             <Dependency>gnutls-devel</Dependency>
             <Dependency>parted-devel</Dependency>
-            <Dependency>device-mapper-devel</Dependency>
-            <Dependency>libnl-devel</Dependency>
             <Dependency>python-devel</Dependency>
-            <Dependency>cyrus-sasl-devel</Dependency>
-            <Dependency>libcap-ng-devel</Dependency>
+            <Dependency>libssh-devel</Dependency>
+            <Dependency>libpcap-devel</Dependency>
+            <Dependency>numactl-devel</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>libssh2-devel</Dependency>
+            <Dependency>jansson-devel</Dependency>
             <Dependency>readline-devel</Dependency>
             <Dependency>libtirpc-devel</Dependency>
             <Dependency>libXdmcp-devel</Dependency>
+            <Dependency>iptables-devel</Dependency>
+            <Dependency>libiscsi-devel</Dependency>
+            <Dependency>python-docutils</Dependency>
+            <Dependency>glusterfs-devel</Dependency>
+            <Dependency>libcap-ng-devel</Dependency>
             <Dependency>bash-completion</Dependency>
+            <Dependency>cyrus-sasl-devel</Dependency>
+            <Dependency>rpcsvc-proto-devel</Dependency>
+            <Dependency>libpciaccess-devel</Dependency>
+            <Dependency>device-mapper-devel</Dependency>
             <Dependency>kernel-module-headers</Dependency>
         </BuildDependencies>
         <Patches>
@@ -57,8 +67,6 @@
             <Dependency>acl</Dependency>
             <Dependency>curl</Dependency>
             <Dependency>fuse</Dependency>
-            <Dependency>libssh2</Dependency>
-            <Dependency>libtirpc</Dependency>
             <Dependency>dbus</Dependency>
             <Dependency>yajl</Dependency>
             <Dependency>audit</Dependency>
@@ -69,9 +77,16 @@
             <Dependency>gnutls</Dependency>
             <Dependency>parted</Dependency>
             <Dependency>libcap</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libssh</Dependency>
+            <Dependency>libpcap</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>numactl</Dependency>
+            <Dependency>libssh2</Dependency>
             <Dependency>readline</Dependency>
+            <Dependency>libtirpc</Dependency>
+            <Dependency>libiscsi</Dependency>
+            <Dependency>glusterfs</Dependency>
             <Dependency>libcap-ng</Dependency>
             <Dependency>avahi-libs</Dependency>
             <Dependency>cyrus-sasl</Dependency>
@@ -83,14 +98,17 @@
             <Path fileType="config">/etc</Path>
             <Path fileType="config">/usr/lib/tmpfiles.d/libvirt.conf</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="executable">/usr/libexec</Path>
             <Path fileType="executable">/usr/sbin</Path>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libvirt*</Path>
+            <Path fileType="library">/usr/lib/sysctl.d/60-qemu-postcopy-migration.conf</Path>
+            <Path fileType="library">/usr/lib/sysctl.d/60-libvirtd.conf</Path>
+            <Path fileType="library">/usr/lib/firewalld/zones/libvirt.xml</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/augeas</Path>
             <Path fileType="data">/usr/share/polkit-1</Path>
             <Path fileType="data">/usr/share/libvirt</Path>
-            <Path fileType="data">/usr/share/systemtap</Path>
+            <Path fileType="library">/usr/lib/virt-login-shell-helper</Path>
+            <Path fileType="data">/usr/lib/libnss_libvirt*</Path>
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="data">/var</Path>
             <Path fileType="data">/run</Path>
@@ -120,6 +138,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2022-06-29</Date>
+            <Version>8.4.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="6">
             <Date>2020-03-14</Date>
             <Version>4.6.0</Version>

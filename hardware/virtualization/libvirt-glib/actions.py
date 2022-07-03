@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
@@ -6,16 +6,23 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static \
-                         --enable-introspection")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    shelltools.system("meson --prefix=/usr --buildtype=plain")
 
 def build():
-    autotools.make()
+    shelltools.cd("build")
+    shelltools.system("ninja")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "NEWS", "README", "ChangeLog", "INSTALL", "COPYING")
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING", "README")
+
+    #pisitools.dodoc("AUTHORS", "NEWS", "README", "ChangeLog", "INSTALL", "COPYING")
