@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
-WorkDir="gsm-1.0-pl18"
+WorkDir="gsm-1.0-pl19"
 
 def setup():
     multilib = " -m32" if get.buildTYPE() == "emul32" else ""
