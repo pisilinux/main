@@ -1,52 +1,8 @@
 diff --git a/src/plugins/imageformats/svg/qsvgiohandler.cpp b/src/plugins/imageformats/svg/qsvgiohandler.cpp
-index bd39b2a..fd3529a 100644
+index 4136aaf..fd3529a 100644
 --- a/src/plugins/imageformats/svg/qsvgiohandler.cpp
 +++ b/src/plugins/imageformats/svg/qsvgiohandler.cpp
-@@ -118,6 +118,24 @@ QSvgIOHandler::~QSvgIOHandler()
-     delete d;
- }
- 
-+static bool isPossiblySvg(QIODevice *device, bool *isCompressed = nullptr)
-+{
-+    constexpr int bufSize = 64;
-+    char buf[bufSize];
-+    const qint64 readLen = device->peek(buf, bufSize);
-+    if (readLen < 8)
-+        return false;
-+#    ifndef QT_NO_COMPRESS
-+    if (quint8(buf[0]) == 0x1f && quint8(buf[1]) == 0x8b) {
-+        if (isCompressed)
-+            *isCompressed = true;
-+        return true;
-+    }
-+#    endif
-+    QTextStream str(QByteArray::fromRawData(buf, readLen));
-+    QByteArray ba = str.read(16).trimmed().toLatin1();
-+    return ba.startsWith("<?xml") || ba.startsWith("<svg") || ba.startsWith("<!--") || ba.startsWith("<!DOCTYPE svg");
-+}
- 
- bool QSvgIOHandler::canRead() const
- {
-@@ -126,15 +144,9 @@ bool QSvgIOHandler::canRead() const
-     if (d->loaded && !d->readDone)
-         return true;        // Will happen if we have been asked for the size
- 
--    QByteArray buf = device()->peek(16);
--#ifndef QT_NO_COMPRESS
--    if (buf.startsWith("\x1f\x8b")) {
--        setFormat("svgz");
--        return true;
--    } else
--#endif
--    if (buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--") || buf.contains("<!DOCTYPE svg")) {
--        setFormat("svg");
-+    bool isCompressed = false;
-+    if (isPossiblySvg(device(), &isCompressed)) {
-+        setFormat(isCompressed ? "svgz" : "svg");
-         return true;
-     }
-     return false;
-@@ -177,6 +189,8 @@ bool QSvgIOHandler::read(QImage *image)
+@@ -189,6 +189,8 @@ bool QSvgIOHandler::read(QImage *image)
              }
          }
          if (!finalSize.isEmpty()) {
@@ -55,35 +11,11 @@ index bd39b2a..fd3529a 100644
              image->fill(d->backColor.rgba());
              QPainter p(image);
              d->r.render(&p, bounds);
-@@ -260,12 +274,7 @@ bool QSvgIOHandler::supportsOption(ImageOption option) const
- 
- bool QSvgIOHandler::canRead(QIODevice *device)
- {
--    QByteArray buf = device->peek(16);
--    return
--#ifndef QT_NO_COMPRESS
--            buf.startsWith("\x1f\x8b") ||
--#endif
--            buf.contains("<?xml") || buf.contains("<svg") || buf.contains("<!--") || buf.contains("<!DOCTYPE svg");
-+    return isPossiblySvg(device);
- }
- 
- QT_END_NAMESPACE
 diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
-index b3d9aaf..f2653af 100644
+index 9dac05c..f2653af 100644
 --- a/src/svg/qsvghandler.cpp
 +++ b/src/svg/qsvghandler.cpp
-@@ -673,7 +673,8 @@ static qreal toDouble(const QChar *&str)
-             val = -val;
-     } else {
-         val = QByteArray::fromRawData(temp, pos).toDouble();
--        if (qFpClassify(val) != FP_NORMAL)
-+        // Do not tolerate values too wild to be represented normally by floats
-+        if (qFpClassify(float(val)) != FP_NORMAL)
-             val = 0;
-     }
-     return val;
-@@ -727,15 +728,25 @@ static QVector<qreal> parseNumbersList(const QChar *&str)
+@@ -728,15 +728,25 @@ static QVector<qreal> parseNumbersList(const QChar *&str)
      return points;
  }
  
@@ -111,7 +43,7 @@ index b3d9aaf..f2653af 100644
  
          while (str->isSpace())
              ++str;
-@@ -1382,8 +1393,10 @@ static void parseFont(QSvgNode *node,
+@@ -1383,8 +1393,10 @@ static void parseFont(QSvgNode *node,
          case FontSizeNone:
              break;
          case FontSizeValue: {
@@ -124,7 +56,7 @@ index b3d9aaf..f2653af 100644
          }
              break;
          default:
-@@ -1614,6 +1627,7 @@ static void pathArc(QPainterPath &path,
+@@ -1615,6 +1627,7 @@ static void pathArc(QPainterPath &path,
  
  static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
  {
@@ -132,7 +64,7 @@ index b3d9aaf..f2653af 100644
      qreal x0 = 0, y0 = 0;              // starting point
      qreal x = 0, y = 0;                // current point
      char lastMode = 0;
-@@ -1621,28 +1635,31 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1622,28 +1635,31 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
      const QChar *str = dataStr.constData();
      const QChar *end = str + dataStr.size();
  
@@ -169,7 +101,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  x = x0 = num[0] + offsetX;
-@@ -1659,8 +1676,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1660,8 +1676,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'M': {
                  if (count < 2) {
@@ -179,7 +111,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  x = x0 = num[0];
-@@ -1686,8 +1702,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1687,8 +1702,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'l': {
                  if (count < 2) {
@@ -189,7 +121,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  x = num[0] + offsetX;
-@@ -1700,8 +1715,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1701,8 +1715,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'L': {
                  if (count < 2) {
@@ -199,7 +131,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  x = num[0];
-@@ -1741,8 +1755,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1742,8 +1755,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'c': {
                  if (count < 6) {
@@ -209,7 +141,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF c1(num[0] + offsetX, num[1] + offsetY);
-@@ -1758,8 +1771,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1759,8 +1771,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'C': {
                  if (count < 6) {
@@ -219,7 +151,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF c1(num[0], num[1]);
-@@ -1775,8 +1787,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1776,8 +1787,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 's': {
                  if (count < 4) {
@@ -229,7 +161,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF c1;
-@@ -1797,8 +1808,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1798,8 +1808,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'S': {
                  if (count < 4) {
@@ -239,7 +171,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF c1;
-@@ -1819,8 +1829,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1820,8 +1829,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'q': {
                  if (count < 4) {
@@ -249,7 +181,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF c(num[0] + offsetX, num[1] + offsetY);
-@@ -1835,8 +1844,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1836,8 +1844,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'Q': {
                  if (count < 4) {
@@ -259,7 +191,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF c(num[0], num[1]);
-@@ -1851,8 +1859,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1852,8 +1859,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 't': {
                  if (count < 2) {
@@ -269,7 +201,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF e(num[0] + offsetX, num[1] + offsetY);
-@@ -1872,8 +1879,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1873,8 +1879,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'T': {
                  if (count < 2) {
@@ -279,7 +211,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  QPointF e(num[0], num[1]);
-@@ -1893,8 +1899,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1894,8 +1899,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'a': {
                  if (count < 7) {
@@ -289,7 +221,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  qreal rx = (*num++);
-@@ -1916,8 +1921,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1917,8 +1921,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'A': {
                  if (count < 7) {
@@ -299,7 +231,7 @@ index b3d9aaf..f2653af 100644
                      break;
                  }
                  qreal rx = (*num++);
-@@ -1938,12 +1942,15 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1939,12 +1942,15 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
                  break;
              default:
@@ -317,7 +249,7 @@ index b3d9aaf..f2653af 100644
  }
  
  static bool parseStyle(QSvgNode *node,
-@@ -2357,6 +2364,27 @@ static bool parseAnimateNode(QSvgNode *parent,
+@@ -2358,6 +2364,27 @@ static bool parseAnimateNode(QSvgNode *parent,
      return true;
  }
  
@@ -345,7 +277,7 @@ index b3d9aaf..f2653af 100644
  static bool parseAnimateColorNode(QSvgNode *parent,
                                    const QXmlStreamAttributes &attributes,
                                    QSvgHandler *handler)
-@@ -2390,23 +2418,13 @@ static bool parseAnimateColorNode(QSvgNode *parent,
+@@ -2391,23 +2418,13 @@ static bool parseAnimateColorNode(QSvgNode *parent,
          }
      }
  
@@ -376,7 +308,7 @@ index b3d9aaf..f2653af 100644
  
      QSvgAnimateColor *anim = new QSvgAnimateColor(begin, end, 0);
      anim->setArgs((targetStr == QLatin1String("fill")), colors);
-@@ -2496,24 +2514,13 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
+@@ -2497,24 +2514,13 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
          }
      }
  
@@ -408,7 +340,7 @@ index b3d9aaf..f2653af 100644
  
      QSvgAnimateTransform::TransformType type = QSvgAnimateTransform::Empty;
      if (typeStr == QLatin1String("translate")) {
-@@ -2569,6 +2576,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
+@@ -2570,6 +2576,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
      qreal ncx = toDouble(cx);
      qreal ncy = toDouble(cy);
      qreal nr  = toDouble(r);
@@ -417,7 +349,7 @@ index b3d9aaf..f2653af 100644
  
      QRectF rect(ncx-nr, ncy-nr, nr*2, nr*2);
      QSvgNode *circle = new QSvgCircle(parent, rect);
-@@ -2979,8 +2988,8 @@ static QSvgNode *createPathNode(QSvgNode *parent,
+@@ -2980,8 +2988,8 @@ static QSvgNode *createPathNode(QSvgNode *parent,
  
      QPainterPath qpath;
      qpath.setFillRule(Qt::WindingFill);
@@ -428,7 +360,7 @@ index b3d9aaf..f2653af 100644
  
      QSvgNode *path = new QSvgPath(parent, qpath);
      return path;
-@@ -3039,13 +3048,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
+@@ -3040,15 +3048,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
  
      qreal ncx = 0.5;
      qreal ncy = 0.5;
@@ -441,12 +373,14 @@ index b3d9aaf..f2653af 100644
 +    qreal nr = 0.0;
      if (!r.isEmpty())
          nr = toDouble(r);
+-    if (nr < 0.5)
+-        nr = 0.5;
 +    if (nr <= 0.0)
 +        return nullptr;
  
      qreal nfx = ncx;
      if (!fx.isEmpty())
-@@ -3341,7 +3353,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
+@@ -3344,7 +3353,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
      //### editable and rotate not handled
      QSvgHandler::LengthType type;
      qreal nx = parseLength(x, type, handler);
@@ -456,7 +390,7 @@ index b3d9aaf..f2653af 100644
  
      QSvgNode *text = new QSvgText(parent, QPointF(nx, ny));
      return text;
-@@ -3682,9 +3696,7 @@ void QSvgHandler::parse()
+@@ -3685,9 +3696,7 @@ void QSvgHandler::parse()
          case QXmlStreamReader::EndElement:
              endElement(xml->name());
              ++remainingUnfinishedElements;
@@ -487,81 +421,6 @@ index b89608b..89c9e4e 100644
          if (key <= MAX_HASH_VALUE && key >= 0)
              return str == QLatin1String(wordlist[key]);
      }
-diff --git a/tests/auto/qsvgplugin/simple_Utf16BE.svg b/tests/auto/qsvgplugin/simple_Utf16BE.svg
-new file mode 100644
-index 0000000..c3312cb
-Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf16BE.svg differ
-diff --git a/tests/auto/qsvgplugin/simple_Utf16LE.svg b/tests/auto/qsvgplugin/simple_Utf16LE.svg
-new file mode 100644
-index 0000000..cdbeda9
-Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf16LE.svg differ
-diff --git a/tests/auto/qsvgplugin/simple_Utf32BE.svg b/tests/auto/qsvgplugin/simple_Utf32BE.svg
-new file mode 100644
-index 0000000..0d5d02c
-Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf32BE.svg differ
-diff --git a/tests/auto/qsvgplugin/simple_Utf32LE.svg b/tests/auto/qsvgplugin/simple_Utf32LE.svg
-new file mode 100644
-index 0000000..58a7159
-Binary files /dev/null and b/tests/auto/qsvgplugin/simple_Utf32LE.svg differ
-diff --git a/tests/auto/qsvgplugin/simple_Utf8.svg b/tests/auto/qsvgplugin/simple_Utf8.svg
-new file mode 100644
-index 0000000..2052c48
---- /dev/null
-+++ b/tests/auto/qsvgplugin/simple_Utf8.svg
-@@ -0,0 +1,3 @@
-+﻿<svg version="1.0" xmlns="http://www.w3.org/2000/svg">
-+  <circle cx="50" cy="50" r="25" fill="#00ff00" />
-+</svg>
-diff --git a/tests/auto/qsvgplugin/tst_qsvgplugin.cpp b/tests/auto/qsvgplugin/tst_qsvgplugin.cpp
-index e1f84f3..73bbe8b 100644
---- a/tests/auto/qsvgplugin/tst_qsvgplugin.cpp
-+++ b/tests/auto/qsvgplugin/tst_qsvgplugin.cpp
-@@ -61,6 +61,8 @@ private slots:
-     void checkSize_data();
-     void checkSize();
-     void checkImageInclude();
-+    void encodings_data();
-+    void encodings();
- };
- 
- 
-@@ -145,6 +147,36 @@ void tst_QSvgPlugin::checkImageInclude()
-     logMessages.clear();
- }
- 
-+void tst_QSvgPlugin::encodings_data()
-+{
-+    QTest::addColumn<QString>("filename");
-+
-+    QTest::newRow("utf-8") << QFINDTESTDATA("simple_Utf8.svg");
-+    QTest::newRow("utf-16LE") << QFINDTESTDATA("simple_Utf16LE.svg");
-+    QTest::newRow("utf-16BE") << QFINDTESTDATA("simple_Utf16BE.svg");
-+    QTest::newRow("utf-32LE") << QFINDTESTDATA("simple_Utf32LE.svg");
-+    QTest::newRow("utf-32BE") << QFINDTESTDATA("simple_Utf32BE.svg");
-+}
-+
-+void tst_QSvgPlugin::encodings()
-+{
-+    QFETCH(QString, filename);
-+
-+    {
-+        QFile file(filename);
-+        file.open(QIODevice::ReadOnly);
-+        QVERIFY(QSvgIOHandler::canRead(&file));
-+    }
-+
-+    QFile file(filename);
-+    file.open(QIODevice::ReadOnly);
-+    QSvgIOHandler plugin;
-+    plugin.setDevice(&file);
-+    QVERIFY(plugin.canRead());
-+    QImage img;
-+    QVERIFY(plugin.read(&img));
-+    QCOMPARE(img.size(), QSize(50, 50));
-+}
- 
- QTEST_MAIN(tst_QSvgPlugin)
- #include "tst_qsvgplugin.moc"
 diff --git a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp b/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
 index 8f1f03b..36c76ec 100644
 --- a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
