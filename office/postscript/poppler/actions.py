@@ -30,6 +30,7 @@ def setup():
                     -DENABLE_LIBCURL=OFF \
                     -DWITH_NSS3=OFF \
                     -DWITH_GTK=OFF \
+                    -DENABLE_BOOST=OFF \
                     -DWITH_GObjectIntrospection=OFF"
 
     cmaketools.configure(options, sourceDir="..")
