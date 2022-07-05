@@ -9,6 +9,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
+Libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib"
+
 def setup():
     #pisitools.flags.add("-fstack-protector-all", "-DLDAP_DEPRECATED=1")
     pisitools.dosed("config-scripts/cups-sharedlibs.m4", "( -shared )", " -Wl,--as-needed\\1")
@@ -27,7 +29,6 @@ def setup():
                --with-cupsd-file-perm=0755 \
                --with-log-file-perm=0600 \
                --enable-acl \
-               --enable-ssl=yes \
                --enable-libpaper \
                --enable-debug \
                --enable-gssapi \
@@ -35,19 +36,18 @@ def setup():
                --enable-pam=yes \
                --enable-relro \
                --enable-browsing \
-               --enable-threads \
                --enable-raw-printing \
-               --with-tls=no \
-               --disable-launchd \
+               --with-tls=gnutls \
                --disable-libusb \
                --with-rcdir=no \
-               --libdir=/usr/lib \
+               --libdir=%s \
+               --with-pkgconfpath=%s/pkgconfig \
                --with-logdir=/var/log/cups \
                KRB5CONFIG=/usr/bin/krb5-config \
                --localstatedir=/var \
                --with-rundir=/run/cups \
                --with-xinetd=/etc/xinetd.d \
-              ' % get.CFLAGS()
+              ' % (get.CFLAGS(), Libdir, Libdir)
 
     if get.buildTYPE() == "emul32":
         options += '  \
@@ -57,8 +57,7 @@ def setup():
                      --disable-gssapi \
                      --disable-dbus \
                      --bindir=/usr/bin32 \
-                     --sbindir=/usr/sbin32 \
-                     --libdir=/usr/lib32'
+                     --sbindir=/usr/sbin32'
 
     else:
         options += " --with-dnssd=yes"
