@@ -108,6 +108,31 @@ index e6db14eb5..6197d1547 100644
      const int count = contentModel->count();
      qreal maxHeight = 0;
      for (int i = 0; i < count; ++i) {
+diff --git a/src/quicktemplates2/qquickmenu.cpp b/src/quicktemplates2/qquickmenu.cpp
+index a934fa8ae..0043dddde 100644
+--- a/src/quicktemplates2/qquickmenu.cpp
++++ b/src/quicktemplates2/qquickmenu.cpp
+@@ -222,7 +222,6 @@ QQuickMenuPrivate::QQuickMenuPrivate()
+ void QQuickMenuPrivate::init()
+ {
+     Q_Q(QQuickMenu);
+-    QQuickPopupPrivate::init();
+     contentModel = new QQmlObjectModel(q);
+ }
+ 
+diff --git a/src/quicktemplates2/qquickmenu_p_p.h b/src/quicktemplates2/qquickmenu_p_p.h
+index b1fbb1efb..63553f8a5 100644
+--- a/src/quicktemplates2/qquickmenu_p_p.h
++++ b/src/quicktemplates2/qquickmenu_p_p.h
+@@ -73,7 +73,7 @@ public:
+         return menu->d_func();
+     }
+ 
+-    void init() override;
++    void init();
+ 
+     QQuickItem *itemAt(int index) const;
+     void insertItem(int index, QQuickItem *item);
 diff --git a/src/quicktemplates2/qquickoverlay.cpp b/src/quicktemplates2/qquickoverlay.cpp
 index b8d417f29..c8cd142ae 100644
 --- a/src/quicktemplates2/qquickoverlay.cpp
@@ -125,6 +150,390 @@ index b8d417f29..c8cd142ae 100644
  }
  
  void QQuickOverlay::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
+diff --git a/src/quicktemplates2/qquickpopup.cpp b/src/quicktemplates2/qquickpopup.cpp
+index 8a03198e5..bdc6dff27 100644
+--- a/src/quicktemplates2/qquickpopup.cpp
++++ b/src/quicktemplates2/qquickpopup.cpp
+@@ -275,21 +275,9 @@ QQuickPopupPrivate::QQuickPopupPrivate()
+ void QQuickPopupPrivate::init()
+ {
+     Q_Q(QQuickPopup);
+-    createPopupItem();
++    popupItem = new QQuickPopupItem(q);
+     popupItem->setVisible(false);
+     q->setParentItem(qobject_cast<QQuickItem *>(parent));
+-    connectToPopupItem();
+-}
+-
+-void QQuickPopupPrivate::createPopupItem()
+-{
+-    Q_Q(QQuickPopup);
+-    popupItem = new QQuickPopupItem(q);
+-}
+-
+-void QQuickPopupPrivate::connectToPopupItem()
+-{
+-    Q_Q(QQuickPopup);
+     QObject::connect(popupItem, &QQuickControl::paddingChanged, q, &QQuickPopup::paddingChanged);
+     QObject::connect(popupItem, &QQuickControl::backgroundChanged, q, &QQuickPopup::backgroundChanged);
+     QObject::connect(popupItem, &QQuickControl::contentItemChanged, q, &QQuickPopup::contentItemChanged);
+@@ -854,7 +842,8 @@ QQuickPopup::QQuickPopup(QObject *parent)
+ QQuickPopup::QQuickPopup(QQuickPopupPrivate &dd, QObject *parent)
+     : QObject(dd, parent)
+ {
+-    dd.init();
++    Q_D(QQuickPopup);
++    d->init();
+ }
+ 
+ QQuickPopup::~QQuickPopup()
+diff --git a/src/quicktemplates2/qquickpopup_p_p.h b/src/quicktemplates2/qquickpopup_p_p.h
+index 2fc0f133d..ef4b112e2 100644
+--- a/src/quicktemplates2/qquickpopup_p_p.h
++++ b/src/quicktemplates2/qquickpopup_p_p.h
+@@ -96,9 +96,7 @@ public:
+     QQmlListProperty<QObject> contentData();
+     QQmlListProperty<QQuickItem> contentChildren();
+ 
+-    virtual void init();
+-    void createPopupItem();
+-    void connectToPopupItem();
++    void init();
+     void closeOrReject();
+     bool tryClose(const QPointF &pos, QQuickPopup::ClosePolicy flags);
+ 
+diff --git a/src/quicktemplates2/qquickpopupitem.cpp b/src/quicktemplates2/qquickpopupitem.cpp
+index 992d74570..0069b9fc1 100644
+--- a/src/quicktemplates2/qquickpopupitem.cpp
++++ b/src/quicktemplates2/qquickpopupitem.cpp
+@@ -53,33 +53,38 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
++class QQuickPopupItemPrivate : public QQuickPagePrivate
++{
++    Q_DECLARE_PUBLIC(QQuickPopupItem)
++
++public:
++    QQuickPopupItemPrivate(QQuickPopup *popup);
++
++    void implicitWidthChanged() override;
++    void implicitHeightChanged() override;
++
++    void resolveFont() override;
++    void resolvePalette() override;
++
++    QQuickItem *getContentItem() override;
++
++    void cancelContentItem() override;
++    void executeContentItem(bool complete = false) override;
++
++    void cancelBackground() override;
++    void executeBackground(bool complete = false) override;
++
++    int backId = 0;
++    int escapeId = 0;
++    QQuickPopup *popup = nullptr;
++};
++
+ QQuickPopupItemPrivate::QQuickPopupItemPrivate(QQuickPopup *popup)
+     : popup(popup)
+ {
+     isTabFence = true;
+ }
+ 
+-void QQuickPopupItemPrivate::init()
+-{
+-    Q_Q(QQuickPopupItem);
+-    q->setParent(popup);
+-    q->setFlag(QQuickItem::ItemIsFocusScope);
+-    q->setAcceptedMouseButtons(Qt::AllButtons);
+-#if QT_CONFIG(quicktemplates2_multitouch)
+-    q->setAcceptTouchEvents(true);
+-#endif
+-#if QT_CONFIG(cursor)
+-    q->setCursor(Qt::ArrowCursor);
+-#endif
+-
+-#if QT_CONFIG(quicktemplates2_hover)
+-    // TODO: switch to QStyleHints::useHoverEffects in Qt 5.8
+-    q->setHoverEnabled(true);
+-    // setAcceptHoverEvents(QGuiApplication::styleHints()->useHoverEffects());
+-    // connect(QGuiApplication::styleHints(), &QStyleHints::useHoverEffectsChanged, this, &QQuickItem::setAcceptHoverEvents);
+-#endif
+-}
+-
+ void QQuickPopupItemPrivate::implicitWidthChanged()
+ {
+     QQuickPagePrivate::implicitWidthChanged();
+@@ -156,15 +161,22 @@ void QQuickPopupItemPrivate::executeBackground(bool complete)
+ QQuickPopupItem::QQuickPopupItem(QQuickPopup *popup)
+     : QQuickPage(*(new QQuickPopupItemPrivate(popup)), nullptr)
+ {
+-    Q_D(QQuickPopupItem);
+-    d->init();
+-}
++    setParent(popup);
++    setFlag(ItemIsFocusScope);
++    setAcceptedMouseButtons(Qt::AllButtons);
++#if QT_CONFIG(quicktemplates2_multitouch)
++    setAcceptTouchEvents(true);
++#endif
++#if QT_CONFIG(cursor)
++    setCursor(Qt::ArrowCursor);
++#endif
+ 
+-QQuickPopupItem::QQuickPopupItem(QQuickPopupItemPrivate &dd) :
+-    QQuickPage(dd, nullptr)
+-{
+-    Q_D(QQuickPopupItem);
+-    d->init();
++#if QT_CONFIG(quicktemplates2_hover)
++    // TODO: switch to QStyleHints::useHoverEffects in Qt 5.8
++    setHoverEnabled(true);
++    // setAcceptHoverEvents(QGuiApplication::styleHints()->useHoverEffects());
++    // connect(QGuiApplication::styleHints(), &QStyleHints::useHoverEffectsChanged, this, &QQuickItem::setAcceptHoverEvents);
++#endif
+ }
+ 
+ void QQuickPopupItem::grabShortcut()
+diff --git a/src/quicktemplates2/qquickpopupitem_p.h b/src/quicktemplates2/qquickpopupitem_p.h
+deleted file mode 100644
+index df67e7453..000000000
+--- a/src/quicktemplates2/qquickpopupitem_p.h
++++ /dev/null
+@@ -1,121 +0,0 @@
+-/****************************************************************************
+-**
+-** Copyright (C) 2021 The Qt Company Ltd.
+-** Contact: https://www.qt.io/licensing/
+-**
+-** This file is part of the Qt Quick Templates 2 module of the Qt Toolkit.
+-**
+-** $QT_BEGIN_LICENSE:COMM$
+-**
+-** Commercial License Usage
+-** Licensees holding valid commercial Qt licenses may use this file in
+-** accordance with the commercial license agreement provided with the
+-** Software or, alternatively, in accordance with the terms contained in
+-** a written agreement between you and The Qt Company. For licensing terms
+-** and conditions see https://www.qt.io/terms-conditions. For further
+-** information use the contact form at https://www.qt.io/contact-us.
+-**
+-** $QT_END_LICENSE$
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-**
+-****************************************************************************/
+-
+-#ifndef QQUICKPOPUPITEM_P_H
+-#define QQUICKPOPUPITEM_P_H
+-
+-//
+-//  W A R N I N G
+-//  -------------
+-//
+-// This file is not part of the Qt API.  It exists purely as an
+-// implementation detail.  This header file may change from version to
+-// version without notice, or even be removed.
+-//
+-// We mean it.
+-//
+-
+-#include <QtQuickTemplates2/private/qquickpage_p.h>
+-#include <QtQuickTemplates2/private/qquickpage_p_p.h>
+-
+-QT_BEGIN_NAMESPACE
+-
+-class QQuickPopup;
+-class QQuickPopupItemPrivate;
+-
+-class QQuickPopupItem : public QQuickPage
+-{
+-    Q_OBJECT
+-
+-public:
+-    explicit QQuickPopupItem(QQuickPopup *popup);
+-
+-    void grabShortcut();
+-    void ungrabShortcut();
+-
+-protected:
+-    void updatePolish() override;
+-
+-    bool event(QEvent *event) override;
+-    bool childMouseEventFilter(QQuickItem *child, QEvent *event) override;
+-    void focusInEvent(QFocusEvent *event) override;
+-    void focusOutEvent(QFocusEvent *event) override;
+-    void keyPressEvent(QKeyEvent *event) override;
+-    void keyReleaseEvent(QKeyEvent *event) override;
+-    void mousePressEvent(QMouseEvent *event) override;
+-    void mouseMoveEvent(QMouseEvent *event) override;
+-    void mouseReleaseEvent(QMouseEvent *event) override;
+-    void mouseDoubleClickEvent(QMouseEvent *event) override;
+-    void mouseUngrabEvent() override;
+-#if QT_CONFIG(quicktemplates2_multitouch)
+-    void touchEvent(QTouchEvent *event) override;
+-    void touchUngrabEvent() override;
+-#endif
+-#if QT_CONFIG(wheelevent)
+-    void wheelEvent(QWheelEvent *event) override;
+-#endif
+-
+-    void contentItemChange(QQuickItem *newItem, QQuickItem *oldItem) override;
+-    void contentSizeChange(const QSizeF &newSize, const QSizeF &oldSize) override;
+-    void fontChange(const QFont &newFont, const QFont &oldFont) override;
+-    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+-    void localeChange(const QLocale &newLocale, const QLocale &oldLocale) override;
+-    void mirrorChange() override;
+-    void itemChange(ItemChange change, const ItemChangeData &data) override;
+-    void paddingChange(const QMarginsF &newPadding, const QMarginsF &oldPadding) override;
+-    void paletteChange(const QPalette &newPalette, const QPalette &oldPalette) override;
+-    void enabledChange() override;
+-
+-    QFont defaultFont() const override;
+-    QPalette defaultPalette() const override;
+-
+-#if QT_CONFIG(accessibility)
+-    QAccessible::Role accessibleRole() const override;
+-    void accessibilityActiveChanged(bool active) override;
+-#endif
+-
+-protected:
+-    QQuickPopupItem(QQuickPopupItemPrivate &dd);
+-
+-private:
+-    Q_DISABLE_COPY(QQuickPopupItem)
+-    Q_DECLARE_PRIVATE(QQuickPopupItem)
+-    friend class QQuickPopup;
+-};
+-
+-QT_END_NAMESPACE
+-
+-#endif // QQUICKPOPUPITEM_P_H
+diff --git a/src/quicktemplates2/qquickpopupitem_p_p.h b/src/quicktemplates2/qquickpopupitem_p_p.h
+index 65b33b21e..a12e43e0a 100644
+--- a/src/quicktemplates2/qquickpopupitem_p_p.h
++++ b/src/quicktemplates2/qquickpopupitem_p_p.h
+@@ -48,39 +48,67 @@
+ // We mean it.
+ //
+ 
+-#include <QtQuickTemplates2/private/qquickpopupitem_p.h>
+-#include <QtQuickTemplates2/private/qquickpalette_p.h>
++#include <QtQuickTemplates2/private/qquickpage_p.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 
+ class QQuickPopup;
+-
+-class QQuickPopupItemPrivate : public QQuickPagePrivate
++class QQuickPopupItemPrivate;
++class QQuickPopupItem : public QQuickPage
+ {
+-    Q_DECLARE_PUBLIC(QQuickPopupItem)
++    Q_OBJECT
+ 
+ public:
+-    QQuickPopupItemPrivate(QQuickPopup *popup);
+-
+-    void init();
+-
+-    void implicitWidthChanged() override;
+-    void implicitHeightChanged() override;
+-
+-    void resolveFont() override;
+-    void resolvePalette() override;
+-
+-    QQuickItem *getContentItem() override;
+-
+-    void cancelContentItem() override;
+-    void executeContentItem(bool complete = false) override;
+-
+-    void cancelBackground() override;
+-    void executeBackground(bool complete = false) override;
+-
+-    int backId = 0;
+-    int escapeId = 0;
+-    QQuickPopup *popup = nullptr;
++    explicit QQuickPopupItem(QQuickPopup *popup);
++
++    void grabShortcut();
++    void ungrabShortcut();
++
++protected:
++    void updatePolish() override;
++
++    bool event(QEvent *event) override;
++    bool childMouseEventFilter(QQuickItem *child, QEvent *event) override;
++    void focusInEvent(QFocusEvent *event) override;
++    void focusOutEvent(QFocusEvent *event) override;
++    void keyPressEvent(QKeyEvent *event) override;
++    void keyReleaseEvent(QKeyEvent *event) override;
++    void mousePressEvent(QMouseEvent *event) override;
++    void mouseMoveEvent(QMouseEvent *event) override;
++    void mouseReleaseEvent(QMouseEvent *event) override;
++    void mouseDoubleClickEvent(QMouseEvent *event) override;
++    void mouseUngrabEvent() override;
++#if QT_CONFIG(quicktemplates2_multitouch)
++    void touchEvent(QTouchEvent *event) override;
++    void touchUngrabEvent() override;
++#endif
++#if QT_CONFIG(wheelevent)
++    void wheelEvent(QWheelEvent *event) override;
++#endif
++
++    void contentItemChange(QQuickItem *newItem, QQuickItem *oldItem) override;
++    void contentSizeChange(const QSizeF &newSize, const QSizeF &oldSize) override;
++    void fontChange(const QFont &newFont, const QFont &oldFont) override;
++    void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) override;
++    void localeChange(const QLocale &newLocale, const QLocale &oldLocale) override;
++    void mirrorChange() override;
++    void itemChange(ItemChange change, const ItemChangeData &data) override;
++    void paddingChange(const QMarginsF &newPadding, const QMarginsF &oldPadding) override;
++    void paletteChange(const QPalette &newPalette, const QPalette &oldPalette) override;
++    void enabledChange() override;
++
++    QFont defaultFont() const override;
++    QPalette defaultPalette() const override;
++
++#if QT_CONFIG(accessibility)
++    QAccessible::Role accessibleRole() const override;
++    void accessibilityActiveChanged(bool active) override;
++#endif
++
++private:
++    Q_DISABLE_COPY(QQuickPopupItem)
++    Q_DECLARE_PRIVATE(QQuickPopupItem)
++    friend class QQuickPopup;
+ };
+ 
+ QT_END_NAMESPACE
+diff --git a/src/quicktemplates2/quicktemplates2.pri b/src/quicktemplates2/quicktemplates2.pri
+index ba09591bf..fa6929f92 100644
+--- a/src/quicktemplates2/quicktemplates2.pri
++++ b/src/quicktemplates2/quicktemplates2.pri
+@@ -60,7 +60,6 @@ HEADERS += \
+     $$PWD/qquickpopup_p_p.h \
+     $$PWD/qquickpopupanchors_p.h \
+     $$PWD/qquickpopupanchors_p_p.h \
+-    $$PWD/qquickpopupitem_p.h \
+     $$PWD/qquickpopupitem_p_p.h \
+     $$PWD/qquickpopuppositioner_p_p.h \
+     $$PWD/qquickpresshandler_p_p.h \
 diff --git a/tests/auto/controls/data/tst_switch.qml b/tests/auto/controls/data/tst_switch.qml
 index b3fab41ca..10b6baa02 100644
 --- a/tests/auto/controls/data/tst_switch.qml
