@@ -8,6 +8,8 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
+    pisitools.cflags.add(" -fno-semantic-interposition")
+    pisitools.ldflags.add(" -Wl,-Bsymbolic-functions ")
     mesontools.configure("-Dsystemd=false \
                           -Dextensions_tool=true \
                           -Dextensions_app=true \
