@@ -1,0 +1,42 @@
+From 4bc8ef847a1af8218a3cff506f787b41e52009b9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ga=C3=ABl=20Bonithon?= <gael@xfce.org>
+Date: Tue, 26 Apr 2022 17:03:44 +0000
+Subject: [PATCH] color-settings: Fix ColorSettings release
+
+The dialog should not be destroyed, since it is owned by the GtkBuilder,
+which is released at the end of `main()`. Also, when the dialog is
+embedded in the setting manager, the wrong connection of
+`color_settings_dialog_destroy()` causes segmentation fault, since the
+pointers accessed are not the right ones.
+
+Fixes #211
+MR !65
+---
+ dialogs/color-settings/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dialogs/color-settings/main.c b/dialogs/color-settings/main.c
+index fe494564..dff78198 100644
+--- a/dialogs/color-settings/main.c
++++ b/dialogs/color-settings/main.c
+@@ -920,7 +920,6 @@ color_settings_profiles_list_box_row_activated_cb (GtkListBox *list_box,
+ static void
+ color_settings_dialog_destroy (ColorSettings *settings)
+ {
+-    gtk_widget_destroy (GTK_WIDGET (settings->dialog_assign));
+     g_clear_object (&settings->cancellable);
+     g_clear_object (&settings->client);
+     g_clear_object (&settings->current_device);
+@@ -1438,7 +1437,8 @@ main (gint argc, gchar **argv)
+         else {
+             /* Create plug widget */
+             plug = gtk_plug_new (opt_socket_id);
+-            g_signal_connect (plug, "delete-event", G_CALLBACK (color_settings_dialog_destroy), settings);
++            g_signal_connect_swapped (plug, "delete-event",
++                                      G_CALLBACK (color_settings_dialog_destroy), settings);
+             gtk_widget_show (plug);
+ 
+             /* Stop startup notification */
+-- 
+GitLab
+
