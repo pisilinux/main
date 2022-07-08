@@ -9,22 +9,26 @@
             <Email>admins@pisilinux.org</Email>
         </Packager>
         <License>GPLv2+</License>
-        <Icon>virt-manager-icon</Icon>
+        <Icon>virt-manager</Icon>
         <IsA>app:gui</IsA>
         <Summary>Graphical tool for administering virtual machines for KVM, Xen, and QEmu</Summary>
         <Description>Virtual Machine Manager provides a graphical tool for administering virtual machines for KVM, Xen, and QEmu. Start, stop, add or remove virtual devices, connect to a graphical or serial console, and see resource usage statistics for existing VMs on local or remote machines. Uses libvirt as the backend management API.</Description>
-        <Archive sha1sum="f715a3a4dbd9b90bebccc421085d6106c4a64630" type="targz">https://releases.pagure.org/virt-manager/virt-manager-1.5.1.tar.gz</Archive>
+        <Archive sha1sum="853b1a65b346ac7be7c68d83697b4107bb780683" type="targz">https://releases.pagure.org/virt-manager/virt-manager-4.0.0.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>intltool</Dependency>
             <Dependency>vte-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>python-docutils</Dependency>
             <Dependency>libosinfo-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
             <Dependency>libvirt-glib-devel</Dependency>
-            <Dependency>python-cairo-devel</Dependency>
-            <Dependency>python-pygobject3-devel</Dependency>
+            <Dependency>python3-cairo-devel</Dependency>
+            <Dependency>python3-pygobject3-devel</Dependency>
+            <Dependency>desktop-file-utils</Dependency>
         </BuildDependencies>
         <Patches>
-<!-- 	    <Patch level="1">fix-python-name.patch</Patch> -->
+            <Patch level="1">virt-manager-4.0.0-setuptools-61-fix.patch</Patch>
         </Patches>
     </Source>
 
@@ -34,8 +38,8 @@
             <Dependency>ipaddr</Dependency>
             <Dependency>libosinfo</Dependency>
             <Dependency>libvirt-glib</Dependency>
-            <Dependency>libvirt-python</Dependency>
-            <Dependency>python-pygobject3</Dependency>
+            <Dependency>libvirt-python3</Dependency>
+            <Dependency>python3-pygobject3</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -48,11 +52,18 @@
             <Path fileType="localedata">/usr/share/locale</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
+<!--             <AdditionalFile target="po/tr.po">tr.po</AdditionalFile> -->
         </AdditionalFiles>
     </Package>
     
     <History>
+        <Update release="5">
+            <Date>2022-07-08</Date>
+            <Version>4.0.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2019-03-19</Date>
             <Version>1.5.1</Version>
