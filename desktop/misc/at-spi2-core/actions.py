@@ -16,6 +16,7 @@ def setup():
     options = "meson --prefix=/usr --sysconfdir=/etc \
                      --libexec=/usr/libexec/at-spi2 \
                      -Dintrospection=yes \
+                     -Ddbus_daemon=/usr/bin/dbus-daemon \
                      -D docs=true \
               "
     
