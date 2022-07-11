@@ -21,7 +21,7 @@ def setup():
                           -DCMAKE_SKIP_RPATH=ON \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DLIB_INSTALL_DIR=/usr/lib \
-                          -DLIBEXEC_INSTALL_DIR=/usr/lib/webkit2gtk-4.1 \
+                          -DLIBEXEC_INSTALL_DIR=/usr/lib/webkit2gtk-4.0 \
                           -DENABLE_CREDENTIAL_STORAGE=ON \
                           -DENABLE_GEOLOCATION=ON \
                           -DENABLE_VIDEO=ON \
@@ -32,7 +32,7 @@ def setup():
                           -DUSE_WOFF2=OFF \
                           -DUSE_SYSTEMD=OFF \
                           -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-                          -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.4 \
+                          -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.5 \
                           -DSHOULD_INSTALL_JS_SHELL=ON \
                           -DUSE_WPE_RENDERER=OFF \
                           -DENABLE_MINIBROWSER=ON")
