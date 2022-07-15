@@ -44,4 +44,4 @@ def install():
 
         pisitools.remove(x)
 
-    pisitools.dodoc("AUTHORS", "LICENSE")
+    #pisitools.dodoc("README.md", "LICENSE")
