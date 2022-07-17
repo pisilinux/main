@@ -11,6 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.dosed("gtweak/utils.py", "0.7", "0.8")
     mesontools.configure()
 
 def build():
