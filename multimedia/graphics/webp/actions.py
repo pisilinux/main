@@ -28,6 +28,6 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "PATENTS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "PATENTS", "README*")
     #shelltools.move("%s/libwebp-0.2.1/doc/*" % get.workDIR(),"%s/usr/share/doc/webp" % get.installDIR())
     #shelltools.move("%s/libwebp-0.2.1/README" % get.workDIR(),"%s/usr/share/doc/webp" % get.installDIR())
