@@ -20,4 +20,4 @@ def install():
     #pisitools.removeDir("/usr/share/doc/%s-1.6" % get.srcNAME())
     #pisitools.removeDir("/usr/share/devhelp")
 
-    pisitools.dodoc("ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("ChangeLog", "COPYING", "NEWS", "README*")
