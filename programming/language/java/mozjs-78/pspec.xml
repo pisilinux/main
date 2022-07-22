@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>mozjs-78</Name>
+        <Homepage>http://www.mozilla.org/js/spidermonkey/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>NPL-1.1</License>
+        <IsA>library</IsA>
+        <Icon>mozilla-firefox</Icon>
+        <Summary>Stand-alone JavaScript C Library</Summary>
+        <Description>Mozjs is Mozilla's C implementation of JavaScript.</Description>
+        <Archive type="tarxz" sha1sum="83ae378d8bddd9efc5badb99a6246979313f7134">https://ftp.mozilla.org/pub/firefox/releases/78.12.0esr/source/firefox-78.12.0esr.source.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>nspr-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>autoconf213</Dependency>
+            <Dependency>rust</Dependency>
+            <Dependency>llvm</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">mozjs78-silence-sandbox-violations.patch</Patch>
+            <Patch level="1">mozjs78-fix-soname.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>mozjs-78</Name>
+        <RuntimeDependencies>
+            <Dependency>nspr</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>readline</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>mozjs-78-devel</Name>
+        <PartOf>system.devel</PartOf>
+        <Icon>development</Icon>
+        <Summary>Development files for mozjs-78</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">mozjs-78</Dependency>
+            <Dependency>nspr-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2021-08-07</Date>
+            <Version>78.12.0</Version>
+            <Comment>First Release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
