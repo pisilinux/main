@@ -14,11 +14,10 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("--localstatedir=/var \
-                                -Delogind=true \
-                                -Dsystemd=false \
-                                -Dconsolekit=false \
-                                -Dplugin_thunderbolt=false \
-                                -Ddocs=none \
+                                -Delogind=enabled \
+                                -Dsystemd=disabled \
+                                -Dconsolekit=disabled \
+                                -Ddocs=disabled \
                                 -Dman=false")
 
 def build():
