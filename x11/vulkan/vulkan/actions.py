@@ -17,6 +17,7 @@ ver = get.srcVERSION()
 def setup():
     
     loader_opts = "-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+                   -DCMAKE_INSTALL_PREFIX=/usr \
                    -DCMAKE_INSTALL_DATADIR=/share \
                    -DCMAKE_SKIP_RPATH=True \
                    -DBUILD_TESTS=OFF \
@@ -27,6 +28,7 @@ def setup():
                    -DVULKAN_HEADERS_INSTALL_DIR='/usr' \
                  "
     validation_opts = " -DCMAKE_INSTALL_SYSCONFDIR=/etc \
+                        -DCMAKE_INSTALL_PREFIX=/usr \
                         -DCMAKE_INSTALL_DATADIR=/share \
                         -DCMAKE_SKIP_RPATH=True \
                         -DCMAKE_INSTALL_INCLUDEDIR='/usr/include' \
@@ -62,9 +64,6 @@ def setup():
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
-                            -DSPIRV_TOOLS_LIB='/usr/lib32' \
-                            -DSPIRV_TOOLS_OPT_LIB='/usr/lib32' \
-                            -DCMAKE_ASM_FLAGS='--32' \
                            "
                            
         cmaketools.configure(validation_opts, sourceDir="..")
