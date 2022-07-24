@@ -11,19 +11,20 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-    options = "-D graphite=enabled \
-               -D docs=disabled \
+    options = "-D docs=disabled \
               "
 
     if get.buildTYPE() == "emul32":
-        options += " -D graphite=disabled \
+        options += " -D graphite2=disabled \
                      --libdir=/usr/lib32 \
                      --bindir=/usr/bin32 \
                      -D introspection=disabled \
                    "
                    
     else:
-        options += "-Dintrospection=enabled -Ddocs=enabled"
+        options += "-Dintrospection=enabled \
+                    -D graphite2=enabled \
+                    -Ddocs=enabled"
                     
     mesontools.configure(options)
 
