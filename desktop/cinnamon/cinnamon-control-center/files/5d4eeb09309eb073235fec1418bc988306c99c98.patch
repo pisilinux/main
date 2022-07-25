@@ -1,0 +1,56 @@
+From 5d4eeb09309eb073235fec1418bc988306c99c98 Mon Sep 17 00:00:00 2001
+From: Eli Schwartz <eschwartz93@gmail.com>
+Date: Tue, 21 Jun 2022 22:03:15 -0400
+Subject: [PATCH] meson: fix installation of symlinks
+
+Fixes regression in commit 5aa5fab4348de4496efe9ec0b5faa20be234d56e. The
+created symlinks always considered the directory to be installed to, and
+created absolute symlinks pointing from the source to the destination.
+This is wrong, because while the source needs to be installed *into* the
+directory to be installed to, the destination needs to not include the
+$DESTDIR.
+
+There are also some sub-optimal design points around scripting the
+install prefix. Particularly, Meson has a dedicated variable for the
+combination of DESTDIR + prefix, so use that instead of manually slicing
+up the prefix so that `os.path.join` won't drop the DESTDIR. The other
+solution would be to acknowledge that DESTDIR (at least on non-Windows
+systems) uses string concatenation, not path-joining semantics, but...
+Meson already supplies this pre-done, so why bother?
+
+Fixes #285
+---
+ install-scripts/desktop-file-links.py | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/install-scripts/desktop-file-links.py b/install-scripts/desktop-file-links.py
+index 6120b98..fdcd47c 100755
+--- a/install-scripts/desktop-file-links.py
++++ b/install-scripts/desktop-file-links.py
+@@ -4,16 +4,11 @@
+ import subprocess
+ 
+ # Symlinks desktop files to c-c-c's panel dir so the cinnamon-control-center binary can find the plugins.
+-dest = os.environ.get('DESTDIR')
++destdir_prefix = os.environ.get('MESON_INSTALL_DESTDIR_PREFIX')
+ prefix = os.environ.get('MESON_INSTALL_PREFIX')
+ 
+-if dest:
+-    root = dest
+-else:
+-    root = "/"
+-
+-source_location = os.path.join(root, prefix[1:], "share", "applications")
+-target_location = os.path.join(root, prefix[1:], "share", "cinnamon-control-center", "panels")
++source_location = os.path.join(prefix, "share", "applications")
++target_location = os.path.join(destdir_prefix, "share", "cinnamon-control-center", "panels")
+ 
+ links = [
+     "cinnamon-color-panel.desktop",
+@@ -32,4 +27,4 @@
+ 
+     subprocess.call(['ln', '-s', orig_path, link_path])
+ 
+-exit(0)
+\ No newline at end of file
++exit(0)
