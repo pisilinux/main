@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org.tr/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>cinnamon-desktop</Name>
+        <Homepage>https://github.com/linuxmint/cinnamon-desktop</Homepage>
+        <Packager>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <Icon>cinnamon-desktop</Icon>
+        <IsA>app:gui</IsA>
+        <Summary>Library with common API for various Cinnamon modules</Summary>
+        <Description>Library with common API for various Cinnamon modules</Description>
+        <Archive sha1sum="16c3482f53327a029d303bd3ef7747dba11cf331" type="targz">https://github.com/linuxmint/cinnamon-desktop/archive/refs/tags/5.4.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>samurai</Dependency>
+            <Dependency>gettext-devel</Dependency>
+            <Dependency>intltool</Dependency>
+            <Dependency>accountsservice-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>gsettings-desktop-schemas-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>xkeyboard-config</Dependency>
+            <Dependency>libxkbfile-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">config.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>cinnamon-desktop</Name>
+        <RuntimeDependencies>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>libxkbfile</Dependency>
+            <Dependency>pulseaudio-libs</Dependency>
+            <Dependency>gnome-backgrounds</Dependency>
+            <Dependency>gsettings-desktop-schemas</Dependency>
+            <Dependency>gnome-themes-extra-community</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/girepository-1.0</Path>
+            <Path fileType="library">/usr/lib/libcinnamon*</Path>
+            <Path fileType="library">/usr/lib/libcvc*</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/libcinnamon-desktop</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/glib-2.0</Path>
+            <Path fileType="localdata">/usr/share/locale</Path>
+        </Files>
+        <!--<AdditionalFiles>
+            <AdditionalFile permission="0644" owner="root" target="/usr/share/applications/x-cinnamon-mimeapps.list">x-cinnamon-mimeapps.list</AdditionalFile>
+        </AdditionalFiles>-->
+    </Package>
+
+    <Package>
+        <Name>cinnamon-desktop-devel</Name>
+        <Description>Development headers for cinnamon-desktop</Description>
+        <Icon>development</Icon>
+        <RuntimeDependencies>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libxkbfile-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>gsettings-desktop-schemas-devel</Dependency>
+            <Dependency release="current">cinnamon-desktop</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-06-30</Date>
+            <Version>5.4.0</Version>
+            <Comment>First release</Comment>
+            <Name>Alihan Öztürk</Name>
+            <Email>alihan@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
