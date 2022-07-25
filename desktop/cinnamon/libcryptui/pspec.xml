@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org.tr/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libcryptui</Name>
+        <Homepage>https://gitlab.gnome.org/GNOME/libcryptui</Homepage>
+        <Packager>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Packager>
+        <License>GPL</License>
+        <Icon>library</Icon>
+        <IsA>app:gui</IsA>
+        <Summary>Library for OpenPGP prompts</Summary>
+        <Description>Library for OpenPGP prompts</Description>
+        <Archive sha1sum="0fa21934d52bfe958aeecf563b7be9b68bbe1b7b" type="targz">https://gitlab.gnome.org/GNOME/libcryptui/-/archive/3.12.2/libcryptui-3.12.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>gnome-common</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
+            <Dependency>gnupg</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>libnotify-devel</Dependency>
+            <Dependency>gcr-devel</Dependency>
+            <Dependency>atk-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>libSM-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency>gettext-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>libcryptui-3.12.2-gpg22.patch</Patch>
+            <Patch>libcryptui-3.12.2-use-gcr.patch</Patch>
+            <Patch>libcryptui-gpg_version_fix.patch</Patch>
+            <Patch>libcryptui-3.12.2-fix-return-types.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libcryptui</Name>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+            <Dependency>gcr</Dependency>
+            <Dependency>dbus</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libSM</Dependency>
+            <Dependency>gpgme</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>dbus-glib</Dependency>
+            <Dependency>libnotify</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="localdata">/usr/share/locale</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libcryptui-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">libcryptui</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+        </Files>
+    </Package>
+    <History>
+        <Update release="1">
+            <Date>2022-07-23</Date>
+            <Version>3.12.2</Version>
+            <Comment>First release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
