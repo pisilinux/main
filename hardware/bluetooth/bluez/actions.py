@@ -17,7 +17,6 @@ def setup():
     autotools.configure("--localstatedir=/var \
                          --enable-sixaxis \
                          --enable-experimental \
-                         --disable-android \
                          --enable-cups \
                          --enable-datafiles \
                          --enable-optimization \
@@ -27,6 +26,8 @@ def setup():
                          --enable-tools \
                          --enable-manpages \
                          --enable-monitor \
+                         --enable-btpclient \
+                         --enable-midi \
                          --enable-udev \
                          --enable-test \
                          --enable-testing \
@@ -43,7 +44,9 @@ def build():
     autotools.make()
     
 def install():
-    autotools.rawInstall("DESTDIR=%s install-pkglibexecPROGRAMS install-dbussessionbusDATA install-dbussystembusDATA install-dbusDATA install-man8" % get.installDIR())
+    autotools.rawInstall("install-libLTLIBRARIES install-binPROGRAMS install-cupsPROGRAMS install-exec install-pkglibexecPROGRAMS install-pkgincludeHEADERS install-pluginLTLIBRARIES install-udevPROGRAMS install-dbussessionbusDATA install-dbussystembusDATA install-dbusDATA install-man8 DESTDIR=%s" % get.installDIR())
+
+    pisitools.dobin("tools/btpclient")
 
     
     # Install conf files
