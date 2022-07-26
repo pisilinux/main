@@ -1,0 +1,36 @@
+From 7673a6c136ab66e3670919460a87f8887f0ba9b7 Mon Sep 17 00:00:00 2001
+From: Michael Webster <miketwebster@gmail.com>
+Date: Sat, 16 Jul 2022 13:50:21 -0400
+Subject: [PATCH] build: Try to find libxdo with pkgconfig, and use
+ find_library() only if that fails.
+
+Ubuntu/Mint doesn't have a .pc file, so we rely on find_library(),
+but this isn't necessarily the case everywhere else.
+
+Bug report to add the pc file to Ubuntu's packaging:
+https://bugs.launchpad.net/ubuntu/+source/xdotool/+bug/1981895
+---
+ meson.build | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 02b34ba..3ef0fd0 100644
+--- a/meson.build
++++ b/meson.build
+@@ -44,7 +44,15 @@ x11 = dependency('x11')
+ xext = dependency('xext')
+ xrandr = dependency('xrandr', required: false)
+ m = cc.find_library('m')
+-xdo = cc.find_library('xdo')
++
++xdo = dependency('libxdo', required: false)
++if not xdo.found()
++  xdo = cc.find_library('xdo')
++    if not xdo.found()
++      error('could not find usable xdo library (libxdo')
++    endif
++endif
++
+ dbus_services_dir = dependency('dbus-1').get_pkgconfig_variable('session_bus_services_dir', define_variable: ['datadir', datadir])
+ 
+ # check for symbols and headers
