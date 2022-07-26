@@ -16,5 +16,10 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    #FIXME:Remove files which conflict with xorg-proto
+    #pisitools.remove("/usr/include/X11/extensions/xf86mscstr.h")
+    #pisitools.remove("/usr/include/X11/extensions/xf86misc.h")
+    #pisitools.remove("/usr/lib/pkgconfig/xf86miscproto.pc")
 
     pisitools.dodoc("ChangeLog", "COPYING")
