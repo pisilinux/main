@@ -1,0 +1,28 @@
+--- xdotool-3.20211022.1/Makefile.orig	2021-10-22 07:40:46.000000000 +0200
++++ xdotool-3.20211022.1/Makefile	2022-03-30 12:23:31.702427183 +0200
+@@ -71,7 +71,7 @@
+ 	$(CC) -o xdotool.static xdotool.o xdo.o xdo_search.o $(CMDOBJS) $(LDFLAGS)  -lm $(XDOTOOL_LIBS) $(LIBXDO_LIBS)
+ 
+ .PHONY: install
+-install: pre-install installlib installprog installman installheader installpc post-install
++install: pre-install installlib installprog installman installheader installpc
+ 
+ .PHONY: pre-install
+ pre-install:
+@@ -128,13 +128,13 @@
+ 	      *.deb
+ 
+ xdo.o: xdo.c xdo_version.h
+-	$(CC) $(CFLAGS) -fPIC -c xdo.c
++	$(CC) $(LDFLAGS) $(CFLAGS) -fPIC -c xdo.c
+ 
+ xdo_search.o: xdo_search.c
+-	$(CC) $(CFLAGS) -fPIC -c xdo_search.c
++	$(CC) $(LDFLAGS) $(CFLAGS) -fPIC -c xdo_search.c
+ 
+ xdotool.o: xdotool.c xdo_version.h
+-	$(CC) $(CFLAGS) -c xdotool.c
++	$(CC) $(LDFLAGS) $(CFLAGS) -c xdotool.c
+ 
+ xdo_search.c: xdo.h
+ xdo.c: xdo.h
