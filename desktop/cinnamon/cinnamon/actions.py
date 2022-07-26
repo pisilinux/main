@@ -8,7 +8,7 @@
 from pisi.actionsapi import mesontools, shelltools, pisitools
 
 def setup():
-    pisitools.dosed("files/usr/share/cinnamon/cinnamon-settings/modules/cs_notifications.py", "0.7", "0.8")
+    #pisitools.dosed("files/usr/share/cinnamon/cinnamon-settings/modules/cs_notifications.py", "0.7", "0.8")
     #shelltools.system("sed -i 's/mintinstall.desktop/org.gnome.Software.desktop/' data/org.cinnamon.gschema.xml")
     #shelltools.system("sed -i 's/'REQUIRED', '/&polkit-cinnamon-authentication-agent-1;/' meson.build || die")
     #shelltools.system("sed -i 's/RequiredComponents=\(.*\)$/RequiredComponents=\1polkit-gnome-authentication-agent-1;/' \
