@@ -13,11 +13,9 @@ def setup():
     
     pisitools.flags.add("-fno-strict-aliasing")
 
-    autotools.configure("--enable-gtk2 \
-                         --enable-shared \
+    autotools.configure("--enable-shared \
                          --disable-optimise \
                          --disable-debug \
-                         --enable-no_deps \
                          --disable-rpath \
                          --enable-intl \
                          --enable-geometry \
@@ -38,9 +36,7 @@ def setup():
                          --with-libtiff=sys \
                          --with-libxpm=sys \
                          --with-sdl \
-                         --without-gnomeprint \
                          --without-gnomevfs \
-                         --without-odbc \
                          --with-opengl \
                          --with-regex=builtin \
                          --with-zlib=sys \
@@ -50,11 +46,9 @@ def setup():
     shelltools.cd("../wxWidgets-%s-gtk3" % get.srcVERSION())
     
     pisitools.flags.add("-fno-strict-aliasing")
-    autotools.configure("--enable-gtk3 \
-                         --enable-shared \
+    autotools.configure("--enable-shared \
                          --disable-optimise \
                          --disable-debug \
-                         --enable-no_deps \
                          --disable-rpath \
                          --enable-intl \
                          --enable-geometry \
@@ -75,9 +69,7 @@ def setup():
                          --with-libtiff=sys \
                          --with-libxpm=sys \
                          --with-sdl \
-                         --without-gnomeprint \
                          --without-gnomevfs \
-                         --without-odbc \
                          --with-opengl \
                          --with-regex=builtin \
                          --with-zlib=sys \
@@ -99,6 +91,8 @@ def install():
     shelltools.cd("../wxWidgets-%s" % get.srcVERSION())
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     #autotools.install()
+
+    pisitools.insinto("/usr/share/pixmaps", "art/wxlogo.svg")
 
     pisitools.dodoc("docs/*.txt", "docs/*.htm")
     
