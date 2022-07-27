@@ -13,9 +13,10 @@
         <License>LGPLv2</License>
         <License>wxWinFDL-3</License>
         <IsA>library</IsA>
+        <Icon>wxlogo</Icon>
         <Summary>GTK+ version of wxWidgets, a cross-platform C++ GUI toolkit</Summary>
         <Description>wxWidgets/GTK2 is the GTK2 port of the C++ cross-platform wxWidgets GUI library, offering classes for all common GUI controls as well as a comprehensive set of helper classes for most common application tasks, ranging from networking to HTML display and image manipulation.</Description>
-       <Archive sha1sum="406ac736f61d88a3a866aa501e01e408a642c6e7" type="tarbz2">https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.5.1/wxWidgets-3.0.5.1.tar.bz2</Archive>
+       <Archive sha1sum="412e6aad037417527fa79fda028c89df685aacbd" type="tarbz2">https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.0/wxWidgets-3.2.0.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>pkgconfig</Dependency>
             <Dependency>zlib-devel</Dependency>
@@ -31,10 +32,11 @@
             <Dependency>webkit2gtk-devel</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>gconf-devel</Dependency>
+            <Dependency>gst-plugins-bad-devel</Dependency>
             <Dependency>gst-plugins-base-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">make-abicheck-non-fatal.patch</Patch>
+<!--             <Patch level="1">make-abicheck-non-fatal.patch</Patch> -->
             <!--<Patch level="1">wxGTK3-3.0.3-webkit2.patch</Patch>
             <Patch level="1">wxGTK3-3.0.3-avoid-tlw-destroy-assert.patch</Patch>-->
         </Patches>
@@ -51,6 +53,7 @@
             <Dependency>libSM</Dependency>
             <Dependency>libsdl2</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>libXtst</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libpng</Dependency>
             <Dependency>libglvnd</Dependency>
@@ -58,18 +61,19 @@
             <Dependency>gstreamer</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
             <Dependency>libXxf86vm</Dependency>
+            <Dependency>fontconfig</Dependency>
             <Dependency>webkit2gtk</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>gstreamer</Dependency>
-            <Dependency>gst-plugins-base</Dependency>
+            <Dependency>gst-plugins-bad</Dependency>
             <Dependency release="current">wxGTK-common</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libwx_gtk2u*</Path>
-            <Path fileType="library">/usr/lib/wx/include/gtk2-unicode-3.0/wx/setup.h</Path>
+            <Path fileType="library">/usr/lib/wx/include/gtk2-unicode-3.2/wx/setup.h</Path>
             <Path fileType="executable">/usr/bin/wx-config</Path>
-            <Path fileType="library">/usr/lib/wx/config/gtk2-unicode-3.0</Path>
+            <Path fileType="library">/usr/lib/wx/config/gtk2-unicode-3.2</Path>
         </Files>
     </Package>
     
@@ -84,6 +88,8 @@
             <Dependency>libSM</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>wayland</Dependency>
+            <Dependency>libXtst</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libpng</Dependency>
             <Dependency>libsdl2</Dependency>
@@ -92,16 +98,18 @@
             <Dependency>gstreamer</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
             <Dependency>libXxf86vm</Dependency>
+            <Dependency>fontconfig</Dependency>
             <Dependency>webkit2gtk</Dependency>
+            <Dependency>wayland-client</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
-            <Dependency>gst-plugins-base</Dependency>
+            <Dependency>gst-plugins-bad</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libwx_gtk3u*</Path>
-            <Path fileType="library">/usr/lib/wx/include/gtk3-unicode-3.0/wx/setup.h</Path>
+            <Path fileType="library">/usr/lib/wx/include/gtk3-unicode-3.2/wx/setup.h</Path>
             <Path fileType="executable">/usr/bin/wx-config-gtk3</Path>
-            <Path fileType="library">/usr/lib/wx/config/gtk3-unicode-3.0</Path>
-            <Path fileType="library">/usr/lib/wx/3.0/web-extensions/webkit2_extu-3.0.so</Path>
+            <Path fileType="library">/usr/lib/wx/config/gtk3-unicode-3.2</Path>
+            <Path fileType="library">/usr/lib/wx/3.2/web-extensions/webkit2_extu-3.2.so</Path>
         </Files>
     </Package>
     
@@ -110,16 +118,18 @@
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
             <Dependency>expat</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/wxrc</Path>
-            <Path fileType="executable">/usr/bin/wxrc-3.0</Path>
+            <Path fileType="executable">/usr/bin/wxrc-3.2</Path>
             <Path fileType="library">/usr/lib/libwx_baseu*</Path>
             <Path fileType="data">/usr/share/aclocal/</Path>
             <Path fileType="data">/usr/share/bakefile/</Path>
             <Path fileType="localedata">/usr/share/locale/</Path>
             <Path fileType="doc">/usr/share/doc/</Path>
+            <Path fileType="data">/usr/share/pixmaps/</Path>
         </Files>
     </Package>
 
@@ -135,6 +145,13 @@
     </Package>
 
     <History>
+        <Update release="10">
+            <Date>2022-07-26</Date>
+            <Version>3.2.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="9">
             <Date>2022-06-20</Date>
             <Version>3.0.5.1</Version>
