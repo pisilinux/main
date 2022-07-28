@@ -6,20 +6,19 @@
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
-shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
+#shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
+
 
 def setup():
-    shelltools.system("python waf configure --prefix=/usr --libdir=/usr/lib/")
+    mesontools.configure()
 
 def build():
-    shelltools.system("python waf build -v")
+    mesontools.build()
 
 def install():
-    shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("NEWS", "COPYING", "README.md")
-    pisitools.remove("/usr/bin/lv2specgen.py")
-    pisitools.removeDir("/usr/bin/")
-    pisitools.removeDir("/usr/share/lv2specgen/")
