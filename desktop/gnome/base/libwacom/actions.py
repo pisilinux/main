@@ -6,19 +6,21 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
-
 def setup():
-    autotools.configure("--disable-static \
-                         --with-udev-dir=/lib/udev")
+    mesontools.configure("-Dudev-dir=/lib/udev \
+                          --buildtype=release \
+                          -Dtests=disabled")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+
+    pisitools.dosym("/usr/lib/libwacom.so.9.0.0", "/usr/lib/libwacom.so.2")
 
     pisitools.dodoc("COPYING*", "NEWS", "README*")
 
