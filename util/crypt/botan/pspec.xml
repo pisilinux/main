@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>botan</Name>
+        <Homepage>https://botan.randombit.net/</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <Icon>botan</Icon>
+        <Summary>Cryptography Toolkit</Summary>
+        <Description>Crypto library written in C++</Description>
+        <Archive sha1sum="f8690953561b8cb60418d75e60e327d2e94bf6a3" type="tarxz">https://botan.randombit.net/releases/Botan-2.19.2.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>bzip2</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+        </BuildDependencies>
+        <!--Patches>
+            <Patch></Patch>
+        </Patches-->
+    </Source>
+
+    <Package>
+        <Name>botan</Name>
+        <RuntimeDependencies>
+            <Dependency>xz</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>boost</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>python3</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/doc</Path>
+            <Path fileType="library">/usr/lib/python2.7/site-packages</Path>
+            <Path fileType="library">/usr/lib/libbotan*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>botan-devel</Name>
+        <Summary>Development files for botan</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">botan</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-07-29</Date>
+            <Version>2.19.2</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
