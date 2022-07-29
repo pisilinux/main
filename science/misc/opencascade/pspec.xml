@@ -12,25 +12,33 @@
         <License>LGPLv2.1</License>
         <IsA>app:console</IsA>
         <IsA>library</IsA>
+        <Icon>opencascade</Icon>
         <Summary>Open CASCADE Technology, 3D modeling and numerical simulation.</Summary>
         <Description>Open CASCADE Technology (OCCT) is an object-oriented C++ class library designed for rapid production of sophisticated domain-specific CAD/CAM/CAE applications..</Description>
-        <Archive sha1sum="7afa594f25d353c22fc46d06dfdca0c60d8a6a93" type="targz">https://github.com/tpaviot/oce/releases/download/official-upstream-packages/opencascade-7.4.0p1.snapshot.tar.gz</Archive>
+        <Archive sha1sum="c6aff13f7bff5fe4298a7cf842f55be76340dfe6" type="targz">https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_3.tar.gz</Archive>
         <!--
         <Archive sha1sum="7afa594f25d353c22fc46d06dfdca0c60d8a6a93" type="targz">https://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/V7_4_0p1;sf=tgz</Archive>
         -->
         <BuildDependencies>
             <Dependency>cmake</Dependency>
+            <Dependency>tcl-devel</Dependency>
             <Dependency>tcltk-devel</Dependency>
             <Dependency>ffmpeg-devel</Dependency>
             <Dependency>libXmu-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
             <Dependency>freetype-devel</Dependency>
             <Dependency>qt5-base-devel</Dependency>
             <Dependency>intel-tbb-devel</Dependency>
             <Dependency>fontconfig-devel</Dependency>
+            <Dependency>desktop-file-utils</Dependency>
         </BuildDependencies>
         <Patches>
+            <Patch level="1">opencascade-7.6.0-set-env-correctly.patch</Patch>
+            <Patch level="1">opencascade-cmake.patch</Patch>
+            <Patch level="1">oce-7.5.0-clang.patch</Patch>
+            <Patch level="1">opencascade-7.5.0-fix_tbb.patch</Patch>
             <Patch level="1">fix-install-dir-references.patch</Patch>
-            <Patch level="1">cmake-fix-variable.patch</Patch>
         </Patches>
     </Source>
 
@@ -70,6 +78,13 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2022-07-30</Date>
+            <Version>7.6.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="1">
             <Date>2020-09-28</Date>
             <Version>7.4.0</Version>

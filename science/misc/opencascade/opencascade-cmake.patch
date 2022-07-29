@@ -1,0 +1,26 @@
+--- a/adm/templates/OpenCASCADEConfig.cmake.in
++++ b/adm/templates/OpenCASCADEConfig.cmake.in
+@@ -27,7 +27,7 @@ get_filename_component (OpenCASCADE_INST
+ if (OpenCASCADE_INSTALL_PREFIX MATCHES "/cmake$")
+   get_filename_component (OpenCASCADE_INSTALL_PREFIX "${OpenCASCADE_INSTALL_PREFIX}" PATH)
+ endif()
+-if (OpenCASCADE_INSTALL_PREFIX MATCHES "/lib$")
++if (OpenCASCADE_INSTALL_PREFIX MATCHES "/lib$" OR OpenCASCADE_INSTALL_PREFIX MATCHES "/lib64$")
+   get_filename_component (OpenCASCADE_INSTALL_PREFIX "${OpenCASCADE_INSTALL_PREFIX}" PATH)
+ endif()
+ if (OpenCASCADE_INSTALL_PREFIX MATCHES "/libs/${CMAKE_ANDROID_ARCH_ABI}$")
+--- a/adm/cmake/occt_toolkit.cmake
++++ b/adm/cmake/occt_toolkit.cmake
+@@ -244,9 +244,9 @@ else()
+ 
+   install (TARGETS ${PROJECT_NAME}
+            EXPORT OpenCASCADE${CURRENT_MODULE}Targets
+-           RUNTIME DESTINATION "${INSTALL_DIR_BIN}\${OCCT_INSTALL_BIN_LETTER}"
+-           ARCHIVE DESTINATION "${INSTALL_DIR_LIB}\${OCCT_INSTALL_BIN_LETTER}"
+-           LIBRARY DESTINATION "${INSTALL_DIR_LIB}\${OCCT_INSTALL_BIN_LETTER}")
++           RUNTIME DESTINATION "${INSTALL_DIR_BIN}"
++           ARCHIVE DESTINATION "${INSTALL_DIR_LIB}"
++           LIBRARY DESTINATION "${INSTALL_DIR_LIB}")
+ 
+   if (NOT WIN32)
+     if (BUILD_SHARED_LIBS AND NOT "${BUILD_SHARED_LIBRARY_NAME_POSTFIX}" STREQUAL "")
