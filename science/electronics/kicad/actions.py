@@ -19,33 +19,30 @@ def setup():
                           -DKICAD_SKIP_BOOST=ON         \
                           -DKICAD_SCRIPTING=ON          \
                           -DKICAD_SCRIPTING_MODULES=ON  \
+                          -DKICAD_USE_OCE=OFF \
+                          -DKICAD_USE_OCC=OFF \
+                          -DKICAD_USE_EGL=1 \
+                          -DKICAD_SCRIPTING_WXPYTHON=OFF \
+                          -DKICAD_BUILD_QA_TESTS=OFF \
+                          -DKICAD_I18N_UNIX_STRICT_PATH=ON \
                           -DBUILD_GITHUB_PLUGIN=ON", sourceDir="..")
     
-    shelltools.cd("..")
-    shelltools.cd("kicad-i18n-4.0.7")
-    shelltools.makedirs("Release")
-    shelltools.cd("Release")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DKICAD_I18N_UNIX_STRICT_PATH=ON", sourceDir="..")
-    shelltools.cd("..")
+    #shelltools.cd("..")
+    #shelltools.cd("kicad-i18n-5.1.5")
+    #shelltools.makedirs("Release")
+    #shelltools.cd("Release")
+    #cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          #-DKICAD_I18N_UNIX_STRICT_PATH=ON", sourceDir="..")
+    #shelltools.cd("..")
 
 def build():
     shelltools.cd("Release")
     cmaketools.make()
-    shelltools.cd("..")
-    shelltools.cd("kicad-i18n-4.0.7")
-    shelltools.cd("Release")
-    cmaketools.make()
-    shelltools.cd("..")
 
 def install():
     shelltools.cd("Release")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    shelltools.cd("..")
-    shelltools.cd("kicad-i18n-4.0.7")
-    shelltools.cd("Release")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    
+
     #shelltools.cd("..")
 
     #pisitools.dodoc("AUTHORS*", "CHANGELOG*", "README*")
