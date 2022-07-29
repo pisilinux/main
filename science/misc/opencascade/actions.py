@@ -11,16 +11,14 @@ from pisi.actionsapi import cmaketools
 def setup():
     options_cfg = ''.join([
                   '-DUSE_TBB=ON ',
-                  '-DUSE_VTK=True ',
-                  '-DINSTALL_VTK=False ',
+                  '-DUSE_VTK=OFF ',
                   '-DUSE_GL2PS=ON ',
                   '-DUSE_FFMPEG=ON ',
                   '-DUSE_FREEIMAGE=OFF ',
                   '-DINSTALL_DIR_LIB=/usr/lib ',
+                  '-DCMAKE_BUILD_TYPE=Release ',
                   '-DCMAKE_INSTALL_PREFIX=/usr ',
-                  '-D3RDPARTY_VTK_LIBRARY_DIR=/usr/lib ',
-                  '-D3RDPARTY_VTK_INCLUDE_DIR=/usr/include ',
-                  '-DINSTALL_DIR_CMAKE=/usr/lib/cmake/opencascade',
+                  '-DINSTALL_DIR_CMAKE=/usr/lib/cmake/opencascade'
                   ])
     shelltools.makedirs("build")
     shelltools.cd("build")
