@@ -11,7 +11,10 @@ from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.system("sed -i 's|$(datadir)/pixmaps|$(datadir)/icons/hicolor/64x64/apps|' src/mime/Makefile.{am,in}")
+    shelltools.system("sed -i 's|$(datarootdir)/appdata|$(datarootdir)/metainfo|' Makefile.{am,in} src/plugins/contrib/appdata/Makefile.{am,in}")
     shelltools.system("./bootstrap")
+    #shelltools.system("./bootstrap")
     #autotools.autoreconf("-vif")
     #plugins = "AutoVersioning,BrowseTracker,byogames,Cccc,CppCheck,cbkoders,codesnippets,codestat,copystrings,dragscroll,envvars,headerfixup,help,hexeditor,incsearch,keybinder,MouseSap,profiler,regex,exporter,symtab,Valgrind"
     # suppress compiler warnings
