@@ -1,26 +1,31 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>fsarchiver</Name>
-        <Homepage>http://www.fsarchiver.org/</Homepage>
+        <Homepage>https://www.fsarchiver.org/</Homepage>
         <Packager>
             <Name>marcin bojara</Name>
             <Email>marcin@pisilinux.org</Email>
         </Packager>
         <License>GPLv2</License>
         <IsA>app:console</IsA>
+        <PartOf>hardware.disk</PartOf>
         <Summary>Safe and flexible file-system backup/deployment tool.</Summary>
         <Description>FSArchiver is a system tool that allows you to save the contents of a file-system to a compressed archive file.</Description>
-        <Archive sha1sum="1d4cd8064b49213bc825e9439d940d2041e975e0" type="targz">https://github.com/fdupoux/fsarchiver/releases/download/0.8.5/fsarchiver-0.8.5.tar.gz</Archive>
+        <Archive sha1sum="6048ffc284e5284556c292a7e733f0a677785377" type="targz">
+            https://github.com/fdupoux/fsarchiver/releases/download/0.8.6/fsarchiver-0.8.6.tar.gz
+        </Archive>
         <BuildDependencies>
-            <Dependency>lzo-devel</Dependency>
-            <Dependency>xz-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
             <Dependency>bzip2</Dependency>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>lzo-devel</Dependency>
+            <Dependency>lz4-devel</Dependency>
+            <Dependency>attr-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
             <Dependency>e2fsprogs-devel</Dependency>
             <Dependency>libgcrypt-devel</Dependency>
-            <Dependency>attr-devel</Dependency>
             <Dependency>libutil-linux-devel</Dependency>
         </BuildDependencies>
     </Source>
@@ -28,9 +33,11 @@
     <Package>
         <Name>fsarchiver</Name>
         <RuntimeDependencies>
-            <Dependency>lzo</Dependency>
             <Dependency>xz</Dependency>
+            <Dependency>lzo</Dependency>
+            <Dependency>lz4</Dependency>
             <Dependency>zlib</Dependency>
+            <Dependency>zstd</Dependency>
             <Dependency>bzip2</Dependency>
             <Dependency>e2fsprogs</Dependency>
             <Dependency>libgcrypt</Dependency>
@@ -44,6 +51,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2022-07-30</Date>
+            <Version>0.8.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="6">
             <Date>2020-02-01</Date>
             <Version>0.8.5</Version>

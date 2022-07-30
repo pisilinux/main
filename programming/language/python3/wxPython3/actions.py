@@ -13,10 +13,7 @@ shelltools.export("JOBS", get.makeJOBS().replace("-j5", "5"))
 options="WXPORT=gtk3 WX_CONFIG=/usr/bin/wx-config-gtk3"
 
 def build():
-    pythonmodules.compile(options)
+    pythonmodules.compile(pyVer = '3', parameters = options)
 
 def install():
-    pythonmodules.install(options)
-    # install only python libraries
-    pisitools.removeDir("/usr/bin")
-    pisitools.removeDir("/usr/share")
+    pythonmodules.install(pyVer = '3', parameters = options)

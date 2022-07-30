@@ -10,8 +10,8 @@ def setup():
 	pass
 
 def build():
-	pass
+	pythonmodules.compile(pyVer = '3')
 
 def install():
-	pythonmodules.install(pyVer = '3')
+	pythonmodules.install(parameters = '--no-compile --optimize=1', pyVer = '3')
 
