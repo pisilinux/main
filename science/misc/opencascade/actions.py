@@ -18,7 +18,6 @@ def setup():
                   '-DINSTALL_DIR_LIB=/usr/lib ',
                   '-DCMAKE_BUILD_TYPE=Release ',
                   '-DCMAKE_INSTALL_PREFIX=/usr ',
-                  '-DINSTALL_DIR_CMAKE=/usr/lib/cmake/opencascade'
                   ])
     shelltools.makedirs("build")
     shelltools.cd("build")
