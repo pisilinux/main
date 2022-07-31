@@ -52,7 +52,7 @@ def start():
     # Eventhough the ntpdate is a oneshot process, the pidfile hack is used to
     # work around COMAR's silly status() check in startService()
     startService(command="/usr/sbin/ntpdate",
-                 args="%s %s" % (config.get("OPTIONS", "-q -n -g -u ntp -s -b"), tickers),
+                 args="%s %s" % (config.get("OPTIONS", "-u ntp -s -b"), tickers),
                  makepid=True,
                  pidfile=PIDFILE,
                  donotify=True)
