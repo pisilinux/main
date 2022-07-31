@@ -13,7 +13,7 @@ PIDFILE = "/run/ntpd.pid"
 @synchronized
 def start():
     startService(command="/usr/sbin/ntpd",
-                 args=config.get("OPTIONS", "-x -u ntp:ntp -p %s " % PIDFILE),
+                 args=config.get("OPTIONS", "-x -g -u ntp:ntp -p %s " % PIDFILE),
                  donotify=True)
 
 @synchronized
