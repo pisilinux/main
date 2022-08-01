@@ -6,26 +6,25 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    shelltools.system("meson --prefix=/usr \
+    pisitools.dosed("data/org.freedesktop.Accounts.service.in", "SystemdService", deleteLine=True)
+    mesontools.configure("--prefix=/usr \
                              -Dsystemdsystemunitdir=no \
                              -Dadmin_group=wheel \
                              -Ddocbook=true \
                              -Dgtk_doc=true \
-                             --libexecdir=/usr/libexec ..")
+                             -Delogind=true \
+                             -Dvapi=false \
+                             --libexecdir=/usr/libexec")
     
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
     
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
     
-    shelltools.cd("..")
-    pisitools.dodoc("README*", "NEWS", "COPYING", "TODO", "AUTHORS")
+    #shelltools.cd("..")
+    pisitools.dodoc("README*", "COPYING", "TODO", "AUTHORS")
