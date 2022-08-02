@@ -10,16 +10,16 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-#WorkDir="."
+WorkDir="libaom-%s" % get.srcVERSION()
 
 def setup():
     #shelltools.cd("%s" % get.workDIR())
-    #shelltools.move("/*", "aom-%s" % get.srcVERSION())
+    #shelltools.move("libaom-*", "aom-%s" % get.srcVERSION())
     #shelltools.cd("aom-%s" % get.srcVERSION())
     cmaketools.configure("-S . -B build -G Ninja \
                           -DBUILD_SHARED_LIBS=1 \
                           -DCMAKE_BUILD_TYPE=Release \
-                          -DENABLE_TESTS=0", sourceDir="..")
+                          -DENABLE_TESTS=0")
 
 def build():
     shelltools.cd("build")
@@ -29,8 +29,10 @@ def install():
     shelltools.cd("build")
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
 
-    pisitools.dosym("/usr/lib/libaom.so.3.2.0", "/usr/lib/libaom.so.0")
+    #pisitools.dosym("/usr/lib/libaom.so.3.4.0", "/usr/lib/libaom.so.0")
 
-    shelltools.cd("%s" % get.workDIR())
+    pisitools.insinto("/usr/share/pixmaps", "aomedia_logo_200.png", "aom.png")
+
+    shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "CHANGELOG", "README.md")
 
