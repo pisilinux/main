@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("rm -f include/linux/types.h")
+    autotools.autoreconf("-fiv")
     autotools.configure("--sbindir=/sbin \
                          --libexecdir=/usr/lib \
                          --enable-bpf-compiler \
