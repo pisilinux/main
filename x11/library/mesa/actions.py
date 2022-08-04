@@ -67,4 +67,6 @@ def build():
 def install():
     mesontools.install()
 
+    pisitools.insinto("/usr/share/pixmaps", "docs/favicon.svg", "mesa.svg")
+
     pisitools.dohtml("docs/*")
