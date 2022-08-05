@@ -65,3 +65,5 @@ def install():
     # remove .pod and .packlist files
     perlmodules.removePodfiles()
     perlmodules.removePacklist()
+
+    pisitools.dosym("/var/www/localhost/cgi-bin/static/git-logo.png", "/usr/share/pixmaps/git.png")
