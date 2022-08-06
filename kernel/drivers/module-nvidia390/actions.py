@@ -187,6 +187,7 @@ def install():
     # Exit time for emul32 build
     if get.buildTYPE() == 'emul32':
         pisitools.insinto(datadir, "ld.so.conf", "32bit-ld.so.conf")
+        pisitools.insinto("/usr/share/pixmaps", "nvidia-settings.png", "nvidia.png")
         return
 
     pisitools.insinto(datadir, "ld.so.conf")
