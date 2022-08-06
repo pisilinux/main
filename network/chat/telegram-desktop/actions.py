@@ -19,6 +19,10 @@ def setup():
 		cmake/external/rlottie/CMakeLists.txt || die")
     shelltools.system('echo "target_link_libraries(external_webrtc INTERFACE jpeg Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst X11)" | tee -a cmake/external/webrtc/CMakeLists.txt')
     pisitools.cxxflags.add("-Wno-deprecated-declarations -Wno-error=deprecated-declarations -Wno-switch -Wp,-U_GLIBCXX_ASSERTIONS")
+    #pisitools.cxxflags.add(" -std=c++17")
+    #shelltools.export("CC", "gcc")
+    #shelltools.export("CXX", "g++")
+
     params = ' '.join([
         '-B build',
         '-Ddisable_autoupdate=1',
