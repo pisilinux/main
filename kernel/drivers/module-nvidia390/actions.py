@@ -28,8 +28,8 @@ def setup():
     
     #5.5 patch
     #shelltools.move("tmp/.manifest", ".")
-    shelltools.system("patch -p1 < kernel-5.14-pdev.patch")
-    shelltools.system("patch -p1 < kernel-5.14-state.patch")
+    #shelltools.system("patch -p1 < kernel-5.14-pdev.patch")
+    #shelltools.system("patch -p1 < kernel-5.14-state.patch")
     
     #if get.buildTYPE() != 'emul32':
         #shelltools.system("patch -p1 < linux-5.1.patch")
