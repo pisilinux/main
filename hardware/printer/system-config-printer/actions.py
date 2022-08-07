@@ -10,6 +10,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
+    #notify-0.8
+    pisitools.dosed("applet.py", "'0.7'", "'0.8'")
+    pisitools.dosed("jobviewer.py", "'0.7'", "'0.8'")
+
     # we are using different paths
     pisitools.dosed("cupshelpers/cupshelpers.py", "\/lib64\/", "\/lib\/")
     pisitools.dosed("troubleshoot/CheckUSBPermissions.py", "\/usr\/bin\/getfacl", "\/bin\/getfacl")
@@ -28,6 +32,8 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s udevrulesdir=/lib/udev/rules.d udevhelperdir=/lib/udev" % get.installDIR())
+
+    pisitools.insinto("/usr/lib/python3.9/site-packages/cupshelpers", "build/lib/cupshelpers/*.py")
 
     pisitools.dodir("/run/udev-configure-printer")
 
