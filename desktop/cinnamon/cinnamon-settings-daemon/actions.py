@@ -7,6 +7,8 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
+    #notify-0.8
+    pisitools.dosed("meson.build", "0.7.3", "0.8.0")
     mesontools.configure("--prefix=/usr \
                           --libexecdir=/usr/lib/cinnamon-settings-daemon \
                           --buildtype=plain")
