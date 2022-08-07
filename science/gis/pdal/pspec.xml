@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pdal</Name>
+        <Homepage>http://www.pdal.io</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>BSD</License>
+        <IsA>library</IsA>
+        <IsA>app:console</IsA>
+        <Icon>pdal</Icon>
+        <Summary>PDAL is Point Data Abstraction Library.</Summary>
+        <Description>PDAL is a C++ library for translating and manipulating point cloud data. It is very much like the GDAL library which handles raster and vector data. The About page provides high level overview of the library and its philosophy.</Description>
+        <Archive sha1sum="415e86696cc8e148d1413efd038bc0321a7f7b82" type="targz">https://github.com/PDAL/PDAL/releases/download/2.4.3/PDAL-2.4.3-src.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>eigen3</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>gdal-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
+            <Dependency>geos-devel</Dependency>
+            <Dependency>hdf5-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>qhull-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>netcdf-devel</Dependency>
+            <Dependency>python-numpy</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>jsoncpp-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>python3-sphinx</Dependency>
+            <Dependency>python3-breathe</Dependency>
+            <Dependency>libunwind-devel</Dependency>
+            <Dependency>libgeotiff-devel</Dependency>
+            <Dependency>postgresql-server</Dependency>
+            <Dependency>OpenSceneGraph-devel</Dependency>
+            <Dependency>python3-sphinx_rtd_theme</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>PDAL_sphinxconf.patch </Patch>
+            <Patch>PDAL_unbundle.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>pdal</Name>
+        <RuntimeDependencies>
+            <Dependency>curl</Dependency>
+            <Dependency>gdal</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>zstd</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>libunwind</Dependency>
+            <Dependency>libgeotiff</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/bash-completion/completions/pdal</Path>
+            <Path fileType="library">/usr/lib/libpdal_base.so*</Path>
+            <Path fileType="library">/usr/lib/libpdal_plugin_kernel_fauxplugin.so*</Path>
+            <Path fileType="library">/usr/lib/libpdal_plugin_reader_pgpointcloud.so*</Path>
+            <Path fileType="library">/usr/lib/libpdal_util.so*</Path>
+            <Path fileType="library">/usr/lib/libpdal_plugin_writer_pgpointcloud.so*</Path>
+            <Path fileType="library">/usr/lib/libpdalcpp.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pdal-devel</Name>
+        <Summary>Development files for pdal</Summary>
+        <RuntimeDependencies>
+            <Dependency>gdal</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency release="current">pdal</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/cmake/PDAL</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-08-06</Date>
+            <Version>2.4.3</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

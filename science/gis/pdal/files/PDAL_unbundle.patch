@@ -1,0 +1,190 @@
+diff -rupN --no-dereference PDAL-2.4.2-src/CMakeLists.txt PDAL-2.4.2-src-new/CMakeLists.txt
+--- PDAL-2.4.2-src/CMakeLists.txt	2022-06-06 20:04:04.000000000 +0200
++++ PDAL-2.4.2-src-new/CMakeLists.txt	2022-06-07 08:49:13.992039438 +0200
+@@ -138,6 +138,9 @@ include(${PDAL_CMAKE_DIR}/nlohmann.cmake
+ include(${PDAL_CMAKE_DIR}/lazperf.cmake)
+ include(${PDAL_CMAKE_DIR}/openssl.cmake) # Optional
+
++find_package(PkgConfig REQUIRED)
++PKG_CHECK_MODULES(EIGEN REQUIRED eigen3)
++
+ #------------------------------------------------------------------------------
+ # generate the pdal_features.hpp header
+ #------------------------------------------------------------------------------
+@@ -173,7 +176,6 @@ endif()
+ add_subdirectory(plugins)
+
+ if (WITH_TESTS)
+-    include (${PDAL_CMAKE_DIR}/gtest.cmake)
+     add_subdirectory(test)
+ endif()
+ add_subdirectory(dimbuilder)
+@@ -254,11 +256,11 @@ target_include_directories(${PDAL_BASE_L
+         ${ROOT_DIR}
+         ${PROJECT_BINARY_DIR}/include
+         ${PDAL_VENDOR_DIR}
+-        ${PDAL_VENDOR_DIR}/eigen
+         ${LIBXML2_INCLUDE_DIR}
+         ${ZSTD_INCLUDE_DIRS}
+         ${NLOHMANN_INCLUDE_DIR}
+         ${GDAL_INCLUDE_DIR}
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ target_link_libraries(${PDAL_BASE_LIB_NAME}
+     PRIVATE
+diff -rupN --no-dereference PDAL-2.4.2-src/plugins/cpd/CMakeLists.txt PDAL-2.4.2-src-new/plugins/cpd/CMakeLists.txt
+--- PDAL-2.4.2-src/plugins/cpd/CMakeLists.txt	2022-06-06 20:04:01.000000000 +0200
++++ PDAL-2.4.2-src-new/plugins/cpd/CMakeLists.txt	2022-06-07 08:49:13.992039438 +0200
+@@ -4,7 +4,7 @@ find_package(Cpd ${Cpd_VERSION} REQUIRED
+ option(BUILD_PLUGIN_CPD "Build Coherent Point Drift support" ${Cpd_FOUND})
+
+ set(files filters/CpdFilter.cpp)
+-set(include_dirs "${CMAKE_CURRENT_LIST_DIR}" "${PDAL_VENDOR_DIR}/eigen")
++set(include_dirs "${CMAKE_CURRENT_LIST_DIR}" "${EIGEN_INCLUDE_DIRS}")
+
+ PDAL_ADD_PLUGIN(filter_libname filter cpd
+     FILES
+diff -rupN --no-dereference PDAL-2.4.2-src/plugins/i3s/CMakeLists.txt PDAL-2.4.2-src-new/plugins/i3s/CMakeLists.txt
+--- PDAL-2.4.2-src/plugins/i3s/CMakeLists.txt	2022-06-06 20:04:01.000000000 +0200
++++ PDAL-2.4.2-src-new/plugins/i3s/CMakeLists.txt	2022-06-07 08:49:13.992039438 +0200
+@@ -20,7 +20,7 @@ PDAL_ADD_PLUGIN(i3s_reader_libname reade
+     INCLUDES
+         ${NLOHMANN_INCLUDE_DIR}
+         ${PDAL_VENDOR_DIR}
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ target_compile_definitions(${i3s_reader_libname}
+     PRIVATE
+@@ -41,7 +41,7 @@ PDAL_ADD_PLUGIN(slpk_reader_libname read
+     INCLUDES
+         ${NLOHMANN_INCLUDE_DIR}
+         ${PDAL_VENDOR_DIR}
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ target_compile_definitions(${slpk_reader_libname}
+     PRIVATE
+@@ -61,7 +61,7 @@ if (WITH_TESTS)
+             ${PDAL_SRC_DIR}/private/MathUtils.cpp
+         INCLUDES
+             ${NLOHMANN_INCLUDE_DIR}
+-            ${PDAL_VENDOR_DIR}/eigen
++            ${EIGEN_INCLUDE_DIRS}
+     )
+
+     if (BUILD_I3S_TESTS)
+diff -rupN --no-dereference PDAL-2.4.2-src/plugins/rdb/CMakeLists.txt PDAL-2.4.2-src-new/plugins/rdb/CMakeLists.txt
+--- PDAL-2.4.2-src/plugins/rdb/CMakeLists.txt	2022-06-06 20:04:01.000000000 +0200
++++ PDAL-2.4.2-src-new/plugins/rdb/CMakeLists.txt	2022-06-07 08:49:13.992039438 +0200
+@@ -27,7 +27,7 @@ PDAL_ADD_PLUGIN(libname reader rdb
+         ${RDB_INCLUDE_CPP_DIR}
+         ${PDAL_INCLUDE_DIRS}
+ )
+-target_include_directories(${libname} PRIVATE "${PDAL_VENDOR_DIR}/eigen")
++target_include_directories(${libname} PRIVATE "${EIGEN_INCLUDE_DIRS}")
+ target_include_directories(${libname} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../vendor/nlohmann/")
+ target_include_directories(${libname} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../vendor/eigen/")
+
+@@ -55,7 +55,7 @@ if (BUILD_RDBLIB_TESTS)
+             ${PROJECT_BINARY_DIR}/plugins/rdb/test
+             ${PROJECT_SOURCE_DIR}/plugins/rdb/io
+             ${RDB_INCLUDE_CPP_DIR}
+-            ${PDAL_VENDOR_DIR}/eigen
++            ${EIGEN_INCLUDE_DIRS}
+
+     )
+ endif()
+diff -rupN --no-dereference PDAL-2.4.2-src/plugins/teaser/CMakeLists.txt PDAL-2.4.2-src-new/plugins/teaser/CMakeLists.txt
+--- PDAL-2.4.2-src/plugins/teaser/CMakeLists.txt	2022-06-06 20:04:01.000000000 +0200
++++ PDAL-2.4.2-src-new/plugins/teaser/CMakeLists.txt	2022-06-07 08:49:13.992039438 +0200
+@@ -63,6 +63,6 @@ if (WITH_TESTS)
+         LINK_WITH
+             ${filter_libname}
+         INCLUDES
+-            "${PDAL_VENDOR_DIR}/eigen"
++            "${EIGEN_INCLUDE_DIRS}"
+     )
+ endif()
+diff -rupN --no-dereference PDAL-2.4.2-src/test/unit/CMakeLists.txt PDAL-2.4.2-src-new/test/unit/CMakeLists.txt
+--- PDAL-2.4.2-src/test/unit/CMakeLists.txt	2022-06-06 20:04:02.000000000 +0200
++++ PDAL-2.4.2-src-new/test/unit/CMakeLists.txt	2022-06-07 08:49:13.993039438 +0200
+@@ -34,7 +34,7 @@ PDAL_ADD_TEST(pdal_eigen_test
+         ${PDAL_SRC_DIR}/private/MathUtils.cpp
+
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_file_utils_test FILES FileUtilsTest.cpp)
+ PDAL_ADD_TEST(pdal_georeference_test FILES GeoreferenceTest.cpp)
+@@ -43,7 +43,7 @@ PDAL_ADD_TEST(pdal_kdindex_test
+         KDIndexTest.cpp
+     INCLUDES
+         ${PDAL_VENDOR_DIR}
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_kernel_test FILES KernelTest.cpp)
+ PDAL_ADD_TEST(pdal_log_test FILES LogTest.cpp)
+@@ -70,7 +70,7 @@ PDAL_ADD_TEST(pdal_point_view_test
+     FILES
+         PointViewTest.cpp
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_point_table_test FILES PointTableTest.cpp)
+
+@@ -190,13 +190,13 @@ PDAL_ADD_TEST(pdal_io_pcd_reader_test
+     FILES
+         io/PcdReaderTest.cpp
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_io_pcd_writer_test
+     FILES
+         io/PcdWriterTest.cpp
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_io_ply_reader_test
+     FILES
+@@ -233,7 +233,7 @@ PDAL_ADD_TEST(pdal_filters_chipper_test
+         filters/ChipperTest.cpp
+     INCLUDES
+         ${NLOHMANN_INCLUDE_DIR}
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_filters_nndistance_test
+     FILES
+@@ -284,7 +284,7 @@ PDAL_ADD_TEST(pdal_filters_icp_test
+     FILES
+         filters/IcpFilterTest.cpp
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen
++        ${EIGEN_INCLUDE_DIRS}
+ )
+ PDAL_ADD_TEST(pdal_filters_info_test FILES filters/InfoFilterTest.cpp)
+ PDAL_ADD_TEST(pdal_filters_lloydkmeans_test FILES filters/LloydKMeansFilterTest.cpp)
+@@ -305,7 +305,7 @@ PDAL_ADD_TEST(pdal_filters_planefit_test
+     FILES
+         filters/PlaneFitFilterTest.cpp
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen)
++        ${EIGEN_INCLUDE_DIRS})
+ PDAL_ADD_TEST(pdal_filters_pmf_test FILES filters/PMFFilterTest.cpp)
+ PDAL_ADD_TEST(pdal_filters_reprojection_test FILES
+     filters/ReprojectionFilterTest.cpp)
+@@ -330,7 +330,7 @@ PDAL_ADD_TEST(pdal_filters_splitter_test
+     FILES
+         filters/SplitterTest.cpp
+     INCLUDES
+-        ${PDAL_VENDOR_DIR}/eigen)
++        ${EIGEN_INCLUDE_DIRS})
+ PDAL_ADD_TEST(pdal_filters_stats_test FILES filters/StatsFilterTest.cpp)
+ PDAL_ADD_TEST(pdal_filters_transformation_test FILES
+     filters/TransformationFilterTest.cpp)
