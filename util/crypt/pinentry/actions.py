@@ -2,20 +2,20 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 
+j = ''.join([
+    ' --enable-pinentry-tty',
+    ' --enable-pinentry-curses',
+    ' --enable-pinentry-gnome3',
+    ' --enable-pinentry-qt5 '
+    ])
+
 def setup():
-    #autotools.autoreconf("-vfi")
-    autotools.configure("--prefix=/usr \
-                         --enable-pinentry-curses \
-                         --disable-pinentry-gtk \
-                         --disable-pinentry-qt \
-                         --enable-pinentry-gtk2 \
-                         --disable-pinentry-qt4 \
-                         --enable-fallback-curses")
+    autotools.configure(j)
 
 def build():
     autotools.make()
@@ -26,7 +26,4 @@ def install():
     # We're using pinentry-wrapper as additional file instead of upstream pinentry symlink.
     pisitools.remove("/usr/bin/pinentry")
 
-    pisitools.dosym("pinentry-gtk-2", "/usr/bin/pinentry-gtk")
-    #pisitools.dosym("pinentry-qt4", "/usr/bin/pinentry-qt")
-
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "THANKS")
+    pisitools.dodoc("AUTHORS", "NEWS", "THANKS")

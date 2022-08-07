@@ -4,12 +4,9 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
+from pisi.actionsapi import pisitools, cmaketools
 
 def setup():
-    #shelltools.system("svn up")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DENABLE_TOUCH_SUPPORT=ON")
