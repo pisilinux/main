@@ -1,6 +1,7 @@
 #/usr/bin/python
 
 import os
+import getpass
 
 permissions = {
                 "/etc/libvirt"                          :   ["0700", "root:root"],
@@ -36,4 +37,5 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
             os.system("/bin/chown -R %s %s" % (perms[1], _file))
             os.system("/bin/chmod %s %s" % (perms[0], _file))
     os.system("groupadd libvirt")
-    os.system("usermod -G libvirt %s" % os.getusername())
+    #os.system("usermod -G libvirt %s" % os.getusername())
+    os.system("usermod -G libvirt %s" % getpass.getuser())
