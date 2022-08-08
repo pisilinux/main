@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>pinentry</Name>
-        <Homepage>http://www.gnupg.org/aegypten/</Homepage>
+        <Homepage>https://www.gnupg.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -12,21 +12,21 @@
         <IsA>app:console</IsA>
         <Summary>Collection of simple PIN or passphrase entry dialogs which utilize the Assuan protocol</Summary>
         <Description>Pinentry is a collection of simple PIN or passphrase entry dialogs which utilize the Assuan protocol as described by the aegypten project.</Description>
-        <Archive sha1sum="693bdf9f48dfb3e040d92f50b1bb464e268b9fb0" type="tarbz2">ftp://ftp.gnupg.org/gcrypt/pinentry/pinentry-1.1.0.tar.bz2</Archive>
+        <Archive sha1sum="e37fb307f3842c1bb56ab94b4862b64beb38c629" type="tarbz2">https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-1.2.0.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>libsecret-devel</Dependency>
-            <Dependency>libgpg-error-devel</Dependency>
-            <Dependency>libassuan-devel</Dependency>
-            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gcr-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>libcap-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
-<!--             <Dependency>gcr-devel</Dependency> -->
-            <Dependency>fltk-devel</Dependency>
+            <Dependency>libsecret-devel</Dependency>
+            <Dependency>libassuan-devel</Dependency>
+            <Dependency>libgpg-error-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <!--<Patch level="1">moreSecureMemoryForPinentry-qt.diff</Patch>-->
+            <!-- <Patch level="1">missing.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -38,55 +38,89 @@
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
         <RuntimeDependencies>
-<!--             <Dependency>gcr</Dependency> -->
-            <Dependency>fltk</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>glib2</Dependency>
-            <Dependency>libassuan</Dependency>
-            <Dependency>libsecret</Dependency>
-            <Dependency>libgpg-error</Dependency>
-            <Dependency>libcap</Dependency>
-            <Dependency>ncurses</Dependency>
+            <!-- <Dependency></Dependency> -->
         </RuntimeDependencies>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0755" target="/usr/bin/pinentry">pinentry-wrapper</AdditionalFile>
         </AdditionalFiles>
     </Package>
 
-    <!--Package>
-        <Name>pinentry-qt</Name>
-        <Summary>pinentry for Qt4 toolkit</Summary>
-        <RuntimeDependencies>
-            <Dependency>qt</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>pinentry</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="executable">/usr/bin/pinentry-qt*</Path>
-        </Files>
-    </Package-->
-
     <Package>
-        <Name>pinentry-gtk</Name>
-        <Summary>pinentry for GTK toolkit</Summary>
+        <Name>pinentry-tty</Name>
         <RuntimeDependencies>
             <Dependency>pinentry</Dependency>
-            <Dependency>ncurses</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>libcap</Dependency>
             <Dependency>libassuan</Dependency>
             <Dependency>libsecret</Dependency>
             <Dependency>libgpg-error</Dependency>
-            <Dependency>glib2</Dependency>
-            <Dependency>gtk2</Dependency>
-            <Dependency>pango</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/pinentry-gtk*</Path>
+            <Path fileType="executable">/usr/bin/pinentry-tty</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pinentry-curses</Name>
+        <RuntimeDependencies>
+            <Dependency>pinentry</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>libassuan</Dependency>
+            <Dependency>libsecret</Dependency>
+            <Dependency>libgpg-error</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/pinentry-curses</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pinentry-gnome3</Name>
+        <RuntimeDependencies>
+            <Dependency>pinentry</Dependency>
+            <Dependency>gcr</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>libassuan</Dependency>
+            <Dependency>libsecret</Dependency>
+            <Dependency>libgpg-error</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/pinentry-gnome3</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>pinentry-qt</Name>
+        <RuntimeDependencies>
+            <Dependency>pinentry</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libassuan</Dependency>
+            <Dependency>libsecret</Dependency>
+            <Dependency>libgpg-error</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/pinentry-qt</Path>
         </Files>
     </Package>
 
     <History>
-		<Update release="6">
+        <Update release="7">
+            <Date>2022-08-07</Date>
+            <Version>1.2.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
+        <Update release="6">
             <Date>2020-01-19</Date>
             <Version>1.1.0</Version>
             <Comment>Rebuild</Comment>
