@@ -18,5 +18,7 @@ def build():
 
 def install():
     mesontools.install()
+
+    pisitools.insinto("/usr/share/pixmaps/", "data/icons/hicolor/scalable/apps/org.gnome.Chess.svg")
     
     pisitools.dodoc("COPYING", "README*")
