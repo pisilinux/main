@@ -19,5 +19,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    pisitools.insinto("/usr/share/pixmaps/", "icons/scalable/org.xfce.screenshooter.svg")
+
     pisitools.dodoc("AUTHORS", "COPYING", "INSTALL", "NEWS", "README*")
 
