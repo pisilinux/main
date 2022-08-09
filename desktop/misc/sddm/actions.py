@@ -38,8 +38,9 @@ def install():
     shelltools.system('sed -i "s@system-local-login@system-login@" ' + get.installDIR() + "/etc/pam.d/sddm-autologin")
 
     pisitools.insinto("/usr/share/sddm/themes/Sweet-Cat", "../Sweet-Cat-0.1/*")
+    pisitools.insinto("/usr/share/sddm/themes/Pisi-Nar", "../sddm-theme-main/pisinar/*")
 
     pisitools.dodoc("../LICENSE")
 
     ## If you don't like to see any character at all not even while being entered set this to true.
-    pisitools.dosed("%s/usr/share/sddm/themes/Sweet-Cat/theme.conf" % get.installDIR(), 'ForceHideCompletePassword="false"', 'ForceHideCompletePassword="true"')
+    #pisitools.dosed("%s/usr/share/sddm/themes/Sweet-Cat/theme.conf" % get.installDIR(), 'ForceHideCompletePassword="false"', 'ForceHideCompletePassword="true"')
