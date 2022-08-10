@@ -11,8 +11,8 @@ from pisi.actionsapi import get
 
 
 def setup():
-    autotools.autoreconf("-fi")
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    autotools.autoreconf("-fi")
     autotools.configure("--disable-static \
                          --sbindir=/usr/bin \
                          --with-mountutildir=/usr/bin \
@@ -35,4 +35,8 @@ def check():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.dodir("/usr/lib/sysusers.d")
+    shelltools.move("%s/usr/lib/tmpfiles.d/gluster.conf" % get.installDIR(), "%s/usr/lib/sysusers.d" % get.installDIR())
+
     pisitools.dodoc("AUTHORS", "COPYING*", "README*")
