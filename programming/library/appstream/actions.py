@@ -22,6 +22,9 @@ def build():
 def install():
     shelltools.cd("build")
     shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+
+
+    pisitools.insinto("/usr/share/pixmaps/", "../docs/images/src/png/appstream-logo.png")
     
     shelltools.cd("..")
-    pisitools.dodoc("AUTHORS", "LICENSE*", "NEWS", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
