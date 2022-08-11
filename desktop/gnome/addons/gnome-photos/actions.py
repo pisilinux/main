@@ -11,7 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("-Dmanuals=true")
 
 def build():
     mesontools.build()
