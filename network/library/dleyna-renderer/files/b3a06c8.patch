@@ -1,0 +1,2869 @@
+diff -Nuar a/libdleyna/renderer/async.c b/libdleyna/renderer/async.c
+--- a/libdleyna/renderer/async.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/async.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,6 +20,8 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include <libdleyna/core/error.h>
+ #include <libdleyna/core/log.h>
+ 
+@@ -54,10 +56,6 @@
+ {
+ 	dlr_async_task_t *cb_data = user_data;
+ 
+-	if (cb_data->proxy != NULL)
+-		gupnp_service_proxy_cancel_action(cb_data->proxy,
+-						  cb_data->action);
+-
+ 	if (!cb_data->error)
+ 		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+ 					     DLEYNA_ERROR_CANCELLED,
+diff -Nuar a/libdleyna/renderer/device.c b/libdleyna/renderer/device.c
+--- a/libdleyna/renderer/device.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/device.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,6 +20,7 @@
+  *
+  */
+ 
++#include <config.h>
+ 
+ #include <string.h>
+ #include <math.h>
+@@ -72,6 +73,7 @@
+ struct prv_download_info_t_ {
+ 	SoupSession *session;
+ 	SoupMessage *msg;
++	GCancellable *cancellable;
+ 	dlr_async_task_t *task;
+ };
+ 
+@@ -105,8 +107,8 @@
+ static gint prv_compare_rationals(const gchar *a, const gchar *b);
+ 
+ static void prv_get_position_info(dlr_async_task_t *cb_data,
+-				  const gchar *action_name,
+-				  GUPnPServiceProxyActionCallback callback);
++                                  const gchar *action_name,
++                                  GAsyncReadyCallback callback);
+ 
+ static void prv_unref_variant(gpointer variant)
+ {
+@@ -418,7 +420,7 @@
+ 		g_free(dev->rate);
+ 
+ 		g_free(dev->icon.mime_type);
+-		g_free(dev->icon.bytes);
++		g_bytes_unref(dev->icon.bytes);
+ 
+ 		g_free(dev);
+ 	}
+@@ -680,12 +682,12 @@
+                                      GAsyncResult *res,
+ 				     gpointer user_data)
+ {
+-	gchar *result = NULL;
++	g_autofree gchar *result = NULL;
+ 	gboolean end;
+ 	GError *error = NULL;
+ 	dleyna_gasync_task_t *task = NULL;
+ 	prv_new_device_ct_t *priv_t = NULL;
+-	GUPnPServiceProxyAction *action;
++	g_autoptr(GUPnPServiceProxyAction) action = NULL;
+ 
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+@@ -722,58 +724,9 @@
+ 	if (task)
+ 		dleyna_task_queue_task_completed (((dleyna_task_atom_t *) task)->queue_id);
+ 
+-	if (action) {
+-		gupnp_service_proxy_action_unref(action);
+-	}
+-
+-	if (error)
+-		g_error_free(error);
+-
+-	g_free(result);
+-
+ 	DLEYNA_LOG_DEBUG("Exit");
+ }
+ 
+-static void prv_introspection_wrap_cb (GUPnPServiceInfo *info,
+-				  GUPnPServiceIntrospection *introspection,
+-				  const GError *error,
+-				  gpointer user_data)
+-{
+-	if (error != NULL) {
+-		g_task_return_error (G_TASK (user_data),
+-				g_error_copy (error));
+-	} else {
+-		g_task_return_pointer (G_TASK (user_data),
+-				introspection,
+-				g_object_unref);
+-	}
+-
+-	g_object_unref (G_OBJECT (user_data));
+-}
+-
+-void prv_introspect_async (GUPnPServiceInfo    *info,
+-			   GCancellable        *cancellable,
+-			   GAsyncReadyCallback  callback,
+-			   gpointer             user_data)
+-{
+-	GTask *task = g_task_new (info, cancellable, callback, user_data);
+-
+-	gupnp_service_info_get_introspection_async_full (info,
+-			prv_introspection_wrap_cb,
+-			cancellable,
+-			task);
+-}
+-
+-static GUPnPServiceIntrospection *prv_introspect_finish
+-		(GUPnPServiceInfo   *info,
+-		 GAsyncResult       *res,
+-		 GError            **error)
+-{
+-	g_return_val_if_fail (g_task_is_valid (res, info), NULL);
+-
+-	return g_task_propagate_pointer (G_TASK (res), error);
+-}
+-
+ static gint compare_speeds(gconstpointer a, gconstpointer b);
+ 
+ static void prv_introspect_av_cb (GObject *target,
+@@ -791,7 +744,8 @@
+ 
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+-	introspection = prv_introspect_finish (GUPNP_SERVICE_INFO (target), res, &error);
++	introspection = gupnp_service_info_introspect_finish(
++		GUPNP_SERVICE_INFO(target), res, &error);
+ 
+ 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+ 		DLEYNA_LOG_WARNING("GetProtocolInfo operation cancelled");
+@@ -855,7 +809,8 @@
+ 
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+-	introspection = prv_introspect_finish (GUPNP_SERVICE_INFO (target), res, &error);
++	introspection = gupnp_service_info_introspect_finish(
++		GUPNP_SERVICE_INFO(target), res, &error);
+ 
+ 	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+ 		DLEYNA_LOG_WARNING("GetProtocolInfo operation cancelled");
+@@ -889,38 +844,37 @@
+ 	DLEYNA_LOG_DEBUG("Exit");
+ }
+ 
+-static gboolean prv_get_protocol_info(
+-				dleyna_gasync_task_t *task,
+-                        GObject *target)
++static gboolean prv_get_protocol_info(dleyna_gasync_task_t *task,
++                                      GObject *target)
+ {
+-    GUPnPServiceProxyAction *action;
++	GUPnPServiceProxyAction *action;
+ 
+-    action = gupnp_service_proxy_action_new("GetProtocolInfo", NULL);
++	action = gupnp_service_proxy_action_new("GetProtocolInfo", NULL);
+ 
+-    gupnp_service_proxy_call_action_async(GUPNP_SERVICE_PROXY (target), action,
+-            dleyna_gasync_task_get_cancellable (task),
+-            prv_get_protocol_info_cb,
+-            task);
++	gupnp_service_proxy_call_action_async(
++		GUPNP_SERVICE_PROXY(target), action,
++		dleyna_gasync_task_get_cancellable(task),
++		prv_get_protocol_info_cb, task);
+ 
+-    return FALSE;
++	return FALSE;
+ }
+ 
+ static gboolean prv_introspect_av(dleyna_gasync_task_t *task, GObject *target)
+ {
+-	prv_introspect_async (GUPNP_SERVICE_INFO (target),
+-			      dleyna_gasync_task_get_cancellable (task),
+-			      prv_introspect_av_cb,
+-			      task);
++	gupnp_service_info_introspect_async(
++		GUPNP_SERVICE_INFO(target),
++		dleyna_gasync_task_get_cancellable(task), prv_introspect_av_cb,
++		task);
+ 
+ 	return FALSE;
+ }
+ 
+ static gboolean prv_introspect_rc(dleyna_gasync_task_t *task, GObject *target)
+ {
+-	prv_introspect_async (GUPNP_SERVICE_INFO (target),
+-			      dleyna_gasync_task_get_cancellable (task),
+-			      prv_introspect_rc_cb,
+-			      task);
++	gupnp_service_info_introspect_async(
++		GUPNP_SERVICE_INFO(target),
++		dleyna_gasync_task_get_cancellable(task), prv_introspect_rc_cb,
++		task);
+ 
+ 	return FALSE;
+ }
+@@ -1994,32 +1948,34 @@
+ 		prv_process_protocol_info(device, sink);
+ }
+ 
+-static void prv_get_position_info_cb(GUPnPServiceProxy *proxy,
+-				     GUPnPServiceProxyAction *action,
+-				     gpointer user_data)
++static void prv_get_position_info_cb(GObject *source, GAsyncResult *res,
++                                     gpointer user_data)
+ {
+ 	gchar *result = NULL;
+-	const gchar *message;
+-	gboolean end;
+ 	dlr_async_task_t *cb_data = user_data;
+-	GError *error = NULL;
++	g_autoptr(GError) error = NULL;
+ 	GVariantBuilder *changed_props_vb;
+ 	GVariant *changed_props;
+ 
+-	end = gupnp_service_proxy_end_action(
+-					cb_data->proxy, cb_data->action, &error,
+-					"RelTime", G_TYPE_STRING, &result,
+-					NULL);
++	g_autoptr(GUPnPServiceProxyAction) action =
++		gupnp_service_proxy_call_action_finish(
++			GUPNP_SERVICE_PROXY(source), res, &error);
+ 
+-	if (!end || (result == NULL)) {
+-		message = (error != NULL) ? error->message : "Invalid result";
+-		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+-					     DLEYNA_ERROR_OPERATION_FAILED,
+-					     "GetPositionInfo operation failed: %s",
+-					     message);
++	if(g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		// Do nothing. The task wil already be deleted by the queue
++		return;
++	}
+ 
+-		if (error != NULL)
+-			g_error_free(error);
++	if(error == NULL) {
++		gupnp_service_proxy_action_get_result(action, &error, "RelTime",
++		                                      G_TYPE_STRING, &result,
++		                                      NULL);
++	}
++
++	if(error != NULL) {
++		cb_data->error = g_error_new(
++			DLEYNA_SERVER_ERROR, DLEYNA_ERROR_OPERATION_FAILED,
++			"GetPositionInfo operation failed: %s", error->message);
+ 
+ 		goto on_error;
+ 	}
+@@ -2045,35 +2001,38 @@
+ on_error:
+ 
+ 	(void) g_idle_add(dlr_async_task_complete, cb_data);
+-	g_cancellable_disconnect(cb_data->cancellable, cb_data->cancel_id);
+ }
+ 
+-static void prv_get_byte_position_info_cb(GUPnPServiceProxy *proxy,
+-					  GUPnPServiceProxyAction *action,
+-					  gpointer user_data)
++static void prv_get_byte_position_info_cb(GObject *source, GAsyncResult *res,
++                                          gpointer user_data)
+ {
+-	gchar *result = NULL;
+-	const gchar *message;
+-	gboolean end;
++	g_autofree gchar *result = NULL;
+ 	dlr_async_task_t *cb_data = user_data;
+-	GError *error = NULL;
++	g_autoptr(GError) error = NULL;
+ 	GVariantBuilder *changed_props_vb;
+ 	GVariant *changed_props;
+ 
+-	end = gupnp_service_proxy_end_action(
+-					cb_data->proxy, cb_data->action, &error,
+-					"RelByte", G_TYPE_STRING, &result,
+-					NULL);
++	g_autoptr(GUPnPServiceProxyAction) action =
++		gupnp_service_proxy_call_action_finish(
++			GUPNP_SERVICE_PROXY(source), res, &error);
+ 
+-	if (!end || (result == NULL)) {
+-		message = (error != NULL) ? error->message : "Invalid result";
+-		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+-					     DLEYNA_ERROR_OPERATION_FAILED,
+-					     "X_DLNA_GetBytePositionInfo operation failed: %s",
+-					     message);
++	if(g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		// Do nothing. The task already was deleted
++		return;
++	}
++
++	if(error == NULL) {
++		gupnp_service_proxy_action_get_result(action, &error, "RelByte",
++		                                      G_TYPE_STRING, &result,
++		                                      NULL);
++	}
+ 
+-		if (error != NULL)
+-			g_error_free(error);
++	if(error != NULL) {
++		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
++		                             DLEYNA_ERROR_OPERATION_FAILED,
++		                             "X_DLNA_GetBytePositionInfo "
++		                             "operation failed: %s",
++		                             error->message);
+ 
+ 		goto on_error;
+ 	}
+@@ -2082,48 +2041,49 @@
+ 
+ 	g_strstrip(result);
+ 
+-	prv_add_relcount(cb_data->device, result, changed_props_vb);
++	prv_add_reltime(cb_data->device, result, changed_props_vb);
+ 
+-	changed_props = g_variant_ref_sink(
+-				g_variant_builder_end(changed_props_vb));
++	changed_props =
++		g_variant_ref_sink(g_variant_builder_end(changed_props_vb));
+ 	prv_emit_signal_properties_changed(cb_data->device,
+-					   DLR_INTERFACE_PLAYER,
+-					   changed_props);
++	                                   DLR_INTERFACE_PLAYER, changed_props);
+ 	g_variant_unref(changed_props);
+ 	g_variant_builder_unref(changed_props_vb);
+ 
+-	g_free(result);
+-
+ 	prv_get_prop(cb_data);
+ 
+ on_error:
+ 
+ 	(void) g_idle_add(dlr_async_task_complete, cb_data);
+-	g_cancellable_disconnect(cb_data->cancellable, cb_data->cancel_id);
+ }
+ 
+-static void prv_get_all_position_info_cb(GUPnPServiceProxy *proxy,
+-					 GUPnPServiceProxyAction *action,
+-					 gpointer user_data)
++static void prv_get_all_position_info_cb(GObject *source, GAsyncResult *res,
++                                         gpointer user_data)
+ {
+ 	gchar *result = NULL;
+ 	dlr_async_task_t *cb_data = user_data;
+-	GError *error = NULL;
++	g_autoptr(GError) error = NULL;
+ 	dlr_device_data_t *device_data = cb_data->private;
+ 	GVariantBuilder *changed_props_vb;
+ 	GVariant *changed_props;
++	g_autoptr(GUPnPServiceProxyAction) action = NULL;
+ 
+-	if (!gupnp_service_proxy_end_action(cb_data->proxy,
+-					    cb_data->action, &error,
+-					    "RelTime", G_TYPE_STRING, &result,
+-					    NULL)) {
+-		if (error != NULL) {
+-			DLEYNA_LOG_WARNING(
+-					"GetPositionInfo operation failed: %s",
+-					error->message);
++	action = gupnp_service_proxy_call_action_finish(
++		GUPNP_SERVICE_PROXY(source), res, &error);
+ 
+-			g_error_free(error);
+-		}
++	if(g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		return;
++	}
++
++	if(error == NULL) {
++		gupnp_service_proxy_action_get_result(action, &error, "RelTime",
++		                                      G_TYPE_STRING, &result,
++		                                      NULL);
++	}
++
++	if(error != NULL) {
++		DLEYNA_LOG_WARNING("GetPositionInfo operation failed: %s",
++		                   error->message);
+ 	}
+ 
+ 	if (result == NULL) {
+@@ -2166,32 +2126,40 @@
+ on_complete:
+ 
+ 	prv_get_props(cb_data);
++
++on_error:
+ 	(void) g_idle_add(dlr_async_task_complete, cb_data);
+-	g_cancellable_disconnect(cb_data->cancellable, cb_data->cancel_id);
+ 
+ 	return;
+ }
+ 
+-static void prv_get_all_byte_position_info_cb(GUPnPServiceProxy *proxy,
+-					      GUPnPServiceProxyAction *action,
+-					      gpointer user_data)
++static void prv_get_all_byte_position_info_cb(GObject *source,
++                                              GAsyncResult *res,
++                                              gpointer user_data)
+ {
+ 	gchar *result = NULL;
+ 	dlr_async_task_t *cb_data = user_data;
+-	GError *error = NULL;
++	g_autoptr(GError) error = NULL;
+ 	dlr_device_data_t *device_data = cb_data->private;
++	g_autoptr(GUPnPServiceProxyAction) action = NULL;
+ 
+-	if (!gupnp_service_proxy_end_action(cb_data->proxy,
+-					    cb_data->action, &error,
+-					    "RelByte", G_TYPE_STRING, &result,
+-					    NULL)) {
+-		if (error != NULL) {
+-			DLEYNA_LOG_WARNING(
+-			      "X_DLNA_GetBytePositionInfo operation failed: %s",
+-			      error->message);
++	action = gupnp_service_proxy_call_action_finish(
++		GUPNP_SERVICE_PROXY(source), res, &error);
+ 
+-			g_error_free(error);
+-		}
++	if(g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		return;
++	}
++
++	if(error == NULL) {
++		gupnp_service_proxy_action_get_result(action, &error, "RelByte",
++		                                      G_TYPE_STRING, &result,
++		                                      NULL);
++	}
++
++	if(error != NULL) {
++		DLEYNA_LOG_WARNING(
++			"X_DLNA_GetBytePositionInfo operation failed: %s",
++			error->message);
+ 	}
+ 
+ 	if (result == NULL) {
+@@ -2204,41 +2172,33 @@
+ 
+ 	device_data->ut.get_all_position.rel_cnt = result;
+ 
+-	cb_data->action = gupnp_service_proxy_begin_action(
+-						cb_data->proxy,
+-						"GetPositionInfo",
+-						prv_get_all_position_info_cb,
+-						cb_data,
+-						"InstanceID", G_TYPE_INT, 0,
+-						NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		"GetPositionInfo", "InstanceID", G_TYPE_INT, 0, NULL);
+ 
+-	return;
++	gupnp_service_proxy_call_action_async(
++		GUPNP_SERVICE_PROXY(source), cb_data->action,
++		cb_data->cancellable, prv_get_all_position_info_cb, cb_data);
+ }
+ 
+ static void prv_get_position_info(dlr_async_task_t *cb_data,
+-				  const gchar *action_name,
+-				  GUPnPServiceProxyActionCallback callback)
++                                  const gchar *action_name,
++                                  GAsyncReadyCallback callback)
+ {
+ 	dlr_device_context_t *context;
+ 
+ 	context = dlr_device_get_context(cb_data->device);
+ 
+-	cb_data->cancel_id =
+-		g_cancellable_connect(cb_data->cancellable,
+-				      G_CALLBACK(dlr_async_task_cancelled),
+-				      cb_data, NULL);
+ 	cb_data->proxy = context->service_proxies.av_proxy;
+ 
+ 	g_object_add_weak_pointer((G_OBJECT(context->service_proxies.av_proxy)),
+ 				  (gpointer *)&cb_data->proxy);
+ 
+-	cb_data->action = gupnp_service_proxy_begin_action(
+-						cb_data->proxy,
+-						action_name,
+-						callback,
+-						cb_data,
+-						"InstanceID", G_TYPE_INT, 0,
+-						NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		action_name, "InstanceID", G_TYPE_INT, 0, NULL);
++
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable, callback,
++	                                      cb_data);
+ }
+ 
+ /***********************************************************************/
+@@ -2452,7 +2412,6 @@
+ 	GVariant *val;
+ 	GUPnPDeviceInfo *info;
+ 	dlr_device_context_t *context;
+-	dlr_service_proxies_t *service_proxies;
+ 	dlr_props_t *props = &device->props;
+ 	GVariantBuilder *changed_props_vb;
+ 	GVariant *changed_props;
+@@ -2502,29 +2461,37 @@
+ 	g_variant_unref(changed_props);
+ 	g_variant_builder_unref(changed_props_vb);
+ 
+-on_lost_device:
+-
+ 	return device_alive;
+ }
+ 
+-static void prv_simple_call_cb(GUPnPServiceProxy *proxy,
+-			       GUPnPServiceProxyAction *action,
+-			       gpointer user_data)
++static void prv_simple_call_cb(GObject *source, GAsyncResult *res,
++                               gpointer user_data)
+ {
+ 	dlr_async_task_t *cb_data = user_data;
+-	GError *upnp_error = NULL;
++	g_autoptr(GError) upnp_error = NULL;
+ 
+-	if (!gupnp_service_proxy_end_action(cb_data->proxy, cb_data->action,
+-					    &upnp_error, NULL)) {
+-		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+-					     DLEYNA_ERROR_OPERATION_FAILED,
+-					     "Operation failed: %s",
+-					     upnp_error->message);
+-		g_error_free(upnp_error);
++	g_autoptr(GUPnPServiceProxyAction) action = NULL;
++
++	action = gupnp_service_proxy_call_action_finish(
++		GUPNP_SERVICE_PROXY(source), res, &upnp_error);
++
++	if(g_error_matches(upnp_error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		return;
++	}
++
++	// TODO: Work-around to catch SOAP errors
++	if(upnp_error == NULL) {
++		gupnp_service_proxy_action_get_result(action, &upnp_error,
++		                                      NULL);
++	}
++
++	if(upnp_error != NULL) {
++		cb_data->error = g_error_new(
++			DLEYNA_SERVER_ERROR, DLEYNA_ERROR_OPERATION_FAILED,
++			"Operation failed: %s", upnp_error->message);
+ 	}
+ 
+ 	(void) g_idle_add(dlr_async_task_complete, cb_data);
+-	g_cancellable_disconnect(cb_data->cancellable, cb_data->cancel_id);
+ }
+ 
+ static void prv_set_volume(dlr_async_task_t *cb_data, GVariant *params)
+@@ -2536,15 +2503,14 @@
+ 	DLEYNA_LOG_INFO("Set device volume to %d/%d", (guint)volume,
+ 			cb_data->device->max_volume);
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy, "SetVolume",
+-						 prv_simple_call_cb, cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 "Channel",
+-						 G_TYPE_STRING, "Master",
+-						 "DesiredVolume",
+-						 G_TYPE_UINT, (guint) volume,
+-						 NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		"SetVolume", "InstanceID", G_TYPE_INT, 0, "Channel",
++		G_TYPE_STRING, "Master", "DesiredVolume", G_TYPE_UINT,
++		(guint) volume, NULL);
++
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_simple_call_cb, cb_data);
+ }
+ 
+ static void prv_set_mute(dlr_async_task_t *cb_data, GVariant *params)
+@@ -2555,15 +2521,14 @@
+ 
+ 	DLEYNA_LOG_INFO("Set device mute state to %s", mute ? "TRUE" : "FALSE");
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy, "SetMute",
+-						 prv_simple_call_cb, cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 "Channel",
+-						 G_TYPE_STRING, "Master",
+-						 "DesiredMute",
+-						 G_TYPE_BOOLEAN, mute,
+-						 NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		"SetMute", "InstanceID", G_TYPE_INT, 0, "Channel",
++		G_TYPE_STRING, "Master", "DesiredMute", G_TYPE_BOOLEAN, mute,
++		NULL);
++
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_simple_call_cb, cb_data);
+ }
+ 
+ static GVariant *prv_get_rate_value_from_double(GVariant *params,
+@@ -2721,10 +2686,6 @@
+ 
+ 	context = dlr_device_get_context(device);
+ 
+-	cb_data->cancel_id =
+-		g_cancellable_connect(cb_data->cancellable,
+-				      G_CALLBACK(dlr_async_task_cancelled),
+-				      cb_data, NULL);
+ 	cb_data->proxy = context->service_proxies.rc_proxy;
+ 
+ 	g_object_add_weak_pointer((G_OBJECT(context->service_proxies.rc_proxy)),
+@@ -2761,7 +2722,7 @@
+ 	dlr_async_task_t *cb_data = (dlr_async_task_t *)task;
+ 	dlr_task_get_prop_t *get_prop = &task->ut.get_prop;
+ 	const gchar *get_position_action;
+-	GUPnPServiceProxyActionCallback get_position_cb;
++	GAsyncReadyCallback get_position_cb;
+ 
+ 	cb_data->cb = cb;
+ 	cb_data->device = device;
+@@ -2861,23 +2822,17 @@
+ 	cb_data->cb = cb;
+ 	cb_data->device = device;
+ 
+-	cb_data->cancel_id =
+-		g_cancellable_connect(cb_data->cancellable,
+-				      G_CALLBACK(dlr_async_task_cancelled),
+-				      cb_data, NULL);
+ 	cb_data->proxy = context->service_proxies.av_proxy;
+ 
+ 	g_object_add_weak_pointer((G_OBJECT(context->service_proxies.av_proxy)),
+-				  (gpointer *)&cb_data->proxy);
++	                          (gpointer *) &cb_data->proxy);
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy,
+-						 "Play",
+-						 prv_simple_call_cb,
+-						 cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 "Speed", G_TYPE_STRING,
+-						 device->rate, NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		"Play", "InstanceID", G_TYPE_INT, 0, "Speed", G_TYPE_STRING,
++		device->rate, NULL);
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_simple_call_cb, cb_data);
+ }
+ 
+ void dlr_device_play_pause(dlr_device_t *device, dlr_task_t *task,
+@@ -2907,22 +2862,17 @@
+ 	cb_data->cb = cb;
+ 	cb_data->device = device;
+ 
+-	cb_data->cancel_id =
+-		g_cancellable_connect(cb_data->cancellable,
+-				      G_CALLBACK(dlr_async_task_cancelled),
+-				      cb_data, NULL);
+ 	cb_data->proxy = context->service_proxies.av_proxy;
+ 
+ 	g_object_add_weak_pointer((G_OBJECT(context->service_proxies.av_proxy)),
+ 				  (gpointer *)&cb_data->proxy);
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy,
+-						 command_name,
+-						 prv_simple_call_cb,
+-						 cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		command_name, "InstanceID", G_TYPE_INT, 0, NULL);
++
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_simple_call_cb, cb_data);
+ }
+ 
+ void dlr_device_pause(dlr_device_t *device, dlr_task_t *task,
+@@ -3012,23 +2962,32 @@
+ 	g_variant_builder_unref(changed_props_vb);
+ }
+ 
+-static void prv_open_uri_cb(GUPnPServiceProxy *proxy,
+-			       GUPnPServiceProxyAction *action,
+-			       gpointer user_data)
++static void prv_open_uri_cb(GObject *source, GAsyncResult *res,
++                            gpointer user_data)
+ {
+ 	dlr_async_task_t *cb_data = user_data;
+-	GError *upnp_error = NULL;
++	g_autoptr(GError) upnp_error = NULL;
+ #if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
+ 	gchar *type;
+ #endif
+ 
+-	if (!gupnp_service_proxy_end_action(cb_data->proxy, cb_data->action,
+-					    &upnp_error, NULL)) {
+-		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+-					     DLEYNA_ERROR_OPERATION_FAILED,
+-					     "Operation failed: %s",
+-					     upnp_error->message);
+-		g_error_free(upnp_error);
++	g_autoptr(GUPnPServiceProxyAction) action =
++		gupnp_service_proxy_call_action_finish(
++			GUPNP_SERVICE_PROXY(source), res, &upnp_error);
++
++	if(g_error_matches(upnp_error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		return;
++	}
++
++	if(upnp_error == NULL) {
++		gupnp_service_proxy_action_get_result(action, &upnp_error,
++		                                      NULL);
++	}
++
++	if(upnp_error != NULL) {
++		cb_data->error = g_error_new(
++			DLEYNA_SERVER_ERROR, DLEYNA_ERROR_OPERATION_FAILED,
++			"Operation failed: %s", upnp_error->message);
+ 
+ 		goto on_error;
+ 	}
+@@ -3049,22 +3008,19 @@
+ #endif
+ 
+ 	if (cb_data->task.type == DLR_TASK_OPEN_URI) {
+-		cb_data->action =
+-			gupnp_service_proxy_begin_action(
+-						cb_data->proxy,
+-						"Play",
+-						prv_simple_call_cb,
+-						cb_data,
+-						"InstanceID", G_TYPE_INT, 0,
+-						"Speed", G_TYPE_STRING,
+-						cb_data->device->rate, NULL);
++		cb_data->action = gupnp_service_proxy_action_new(
++			"Play", "InstanceID", G_TYPE_INT, 0, "Speed",
++			G_TYPE_STRING, cb_data->device->rate, NULL);
++		gupnp_service_proxy_call_action_async(
++			GUPNP_SERVICE_PROXY(source), cb_data->action,
++			cb_data->cancellable, prv_simple_call_cb, cb_data);
++
+ 		goto on_exit;
+ 	}
+ 
+ on_error:
+ 
+ 	(void) g_idle_add(dlr_async_task_complete, cb_data);
+-	g_cancellable_disconnect(cb_data->cancellable, cb_data->cancel_id);
+ 
+ on_exit:
+ 	return;
+@@ -3086,28 +3042,20 @@
+ 	cb_data->cb = cb;
+ 	cb_data->device = device;
+ 
+-	cb_data->cancel_id =
+-		g_cancellable_connect(cb_data->cancellable,
+-				      G_CALLBACK(dlr_async_task_cancelled),
+-				      cb_data, NULL);
+ 	cb_data->proxy = context->service_proxies.av_proxy;
+ 
+ 	g_object_add_weak_pointer((G_OBJECT(context->service_proxies.av_proxy)),
+-				  (gpointer *)&cb_data->proxy);
++	                          (gpointer *) &cb_data->proxy);
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy,
+-						 open_uri_data->operation,
+-						 prv_open_uri_cb,
+-						 cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 open_uri_data->uri_type,
+-						 G_TYPE_STRING,
+-						 open_uri_data->uri,
+-						 open_uri_data->metadata_type,
+-						 G_TYPE_STRING,
+-						 metadata ? metadata : "",
+-						 NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		open_uri_data->operation, "InstanceID", G_TYPE_INT, 0,
++		open_uri_data->uri_type, G_TYPE_STRING, open_uri_data->uri,
++		open_uri_data->metadata_type, G_TYPE_STRING,
++		metadata ? metadata : "", NULL);
++
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_open_uri_cb, cb_data);
+ }
+ 
+ static void prv_device_set_position(dlr_device_t *device, dlr_task_t *task,
+@@ -3117,7 +3065,7 @@
+ 	dlr_device_context_t *context;
+ 	dlr_async_task_t *cb_data = (dlr_async_task_t *)task;
+ 	dlr_task_seek_t *seek_data = &task->ut.seek;
+-	gchar *position;
++	g_autofree gchar *position = NULL;
+ 
+ 	context = dlr_device_get_context(device);
+ 	cb_data->cb = cb;
+@@ -3133,27 +3081,19 @@
+ 
+ 	DLEYNA_LOG_INFO("set %s position : %s", pos_type, position);
+ 
+-	cb_data->cancel_id =
+-		g_cancellable_connect(cb_data->cancellable,
+-				      G_CALLBACK(dlr_async_task_cancelled),
+-				      cb_data, NULL);
+ 	cb_data->cancellable = cb_data->cancellable;
+ 	cb_data->proxy = context->service_proxies.av_proxy;
+ 
+ 	g_object_add_weak_pointer((G_OBJECT(context->service_proxies.av_proxy)),
+ 				  (gpointer *)&cb_data->proxy);
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy,
+-						 "Seek",
+-						 prv_simple_call_cb,
+-						 cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 "Unit", G_TYPE_STRING,
+-						 pos_type,
+-						 "Target",
+-						 G_TYPE_STRING, position,
+-						 NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		"Seek", "InstanceID", G_TYPE_INT, 0, "Unit", G_TYPE_STRING,
++		pos_type, "Target", G_TYPE_STRING, position, NULL);
++
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_simple_call_cb, cb_data);
+ 
+ 	g_free(position);
+ }
+@@ -3164,7 +3104,7 @@
+ {
+ 	dlr_async_task_t *cb_data = (dlr_async_task_t *)task;
+ 	dlr_task_seek_t *seek_data = &task->ut.seek;
+-	gchar *position;
++	g_autofree gchar *position;
+ 
+ 	cb_data->cb = cb;
+ 	cb_data->device = device;
+@@ -3177,54 +3117,48 @@
+ 
+ 	DLEYNA_LOG_INFO("set %s position : %s", pos_type, position);
+ 
+-	cb_data->action =
+-		gupnp_service_proxy_begin_action(cb_data->proxy,
+-						 "Seek",
+-						 prv_simple_call_cb,
+-						 cb_data,
+-						 "InstanceID", G_TYPE_INT, 0,
+-						 "Unit", G_TYPE_STRING,
+-						 pos_type,
+-						 "Target",
+-						 G_TYPE_STRING, position,
+-						 NULL);
++	cb_data->action = gupnp_service_proxy_action_new(
++		"Seek", "InstanceID", G_TYPE_INT, 0, "Unit", G_TYPE_STRING,
++		pos_type, "Target", G_TYPE_STRING, position, NULL);
+ 
+-	g_free(position);
++	gupnp_service_proxy_call_action_async(cb_data->proxy, cb_data->action,
++	                                      cb_data->cancellable,
++	                                      prv_simple_call_cb, cb_data);
+ }
+ 
+-static void prv_complete_seek_get_position(GUPnPServiceProxy *proxy,
+-					   GUPnPServiceProxyAction *action,
+-					   gpointer user_data)
++static void prv_complete_seek_get_position(GObject *source, GAsyncResult *res,
++                                           gpointer user_data)
+ {
+-	gchar *result = NULL;
+-	const gchar *message;
+-	gboolean end;
+-	GError *error = NULL;
++	g_autofree gchar *result = NULL;
++	g_autoptr(GError) error = NULL;
+ 	dlr_async_task_t *cb_data = user_data;
+ 	dlr_task_t *task = &cb_data->task;
+ 	dlr_task_seek_t *seek_data = &task->ut.seek;
+ 	guint64 count;
+ 
+-	end = gupnp_service_proxy_end_action(
+-					proxy, action, &error,
+-					(task->type == DLR_TASK_SEEK) ?
+-						"RelTime" : "RelByte",
+-					G_TYPE_STRING, &result,
+-					NULL);
++	g_autoptr(GUPnPServiceProxyAction) action =
++		gupnp_service_proxy_call_action_finish(
++			GUPNP_SERVICE_PROXY(source), res, &error);
+ 
+-	if (!end || (result == NULL)) {
+-		message = (error != NULL) ? error->message : "Invalid result";
+-		cb_data->error =
+-			g_error_new(
+-			  DLEYNA_SERVER_ERROR,
+-			  DLEYNA_ERROR_OPERATION_FAILED,
+-			  "%s operation failed: %s",
+-			  (task->type == DLR_TASK_SEEK) ?
+-			      "GetPositionInfo" : "X_DLNA_GetBytePositionInfo",
+-			  message);
++	if(g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
++		return;
++	}
+ 
+-		if (error != NULL)
+-			g_error_free(error);
++	if(error == NULL) {
++		gupnp_service_proxy_action_get_result(
++			action, &error,
++			(task->type == DLR_TASK_SEEK) ? "RelTime" : "RelByte",
++			G_TYPE_STRING, &result, NULL);
++	}
++
++	if(error != NULL) {
++		cb_data->error = g_error_new(
++			DLEYNA_SERVER_ERROR, DLEYNA_ERROR_OPERATION_FAILED,
++			"%s operation failed: %s",
++			(task->type == DLR_TASK_SEEK)
++				? "GetPositionInfo"
++				: "X_DLNA_GetBytePositionInfo",
++			error->message);
+ 
+ 		goto on_error;
+ 	}
+@@ -3245,14 +3179,11 @@
+ 					     "X_DLNA_REL_BYTE", cb_data->cb);
+ 	}
+ 
+-	g_free(result);
+-
+ 	return;
+ 
+ on_error:
+ 
+ 	(void) g_idle_add(dlr_async_task_complete, task);
+-	g_cancellable_disconnect(cb_data->cancellable, cb_data->cancel_id);
+ }
+ 
+ void dlr_device_seek(dlr_device_t *device, dlr_task_t *task,
+@@ -3338,10 +3269,10 @@
+ {
+ 	GVariant *out_p[2];
+ 
+-	out_p[0] = g_variant_new_fixed_array(G_VARIANT_TYPE_BYTE,
+-					     device->icon.bytes,
+-					     device->icon.size,
+-					     1);
++	gsize size;
++	gconstpointer data = g_bytes_get_data(device->icon.bytes, &size);
++	out_p[0] =
++		g_variant_new_fixed_array(G_VARIANT_TYPE_BYTE, data, size, 1);
+ 	out_p[1] = g_variant_new_string(device->icon.mime_type);
+ 	task->result = g_variant_ref_sink(g_variant_new_tuple(out_p, 2));
+ }
+@@ -3354,41 +3285,45 @@
+ 	dlr_async_task_cancelled(cancellable, download->task);
+ 
+ 	if (download->msg) {
+-		soup_session_cancel_message(download->session, download->msg,
+-					    SOUP_STATUS_CANCELLED);
++		g_cancellable_cancel(download->cancellable);
+ 		DLEYNA_LOG_DEBUG("Cancelling device icon download");
+ 	}
+ }
+ 
+ static void prv_free_download_info(prv_download_info_t *download)
+ {
+-	if (download->msg)
+-		g_object_unref(download->msg);
+-	g_object_unref(download->session);
++	g_clear_object(&download->msg);
++	g_clear_object(&download->session);
++	g_clear_object(&download->cancellable);
+ 	g_free(download);
+ }
+ 
+-static void prv_get_icon_session_cb(SoupSession *session,
+-				    SoupMessage *msg,
+-				    gpointer user_data)
++static void prv_get_icon_session_cb(GObject *source, GAsyncResult *res,
++                                    gpointer user_data)
+ {
+ 	prv_download_info_t *download = (prv_download_info_t *)user_data;
+ 	dlr_async_task_t *cb_data = (dlr_async_task_t *)download->task;
+ 	dlr_device_t *device = (dlr_device_t *)cb_data->device;
++	g_autoptr(GError) error = NULL;
++	GBytes *data;
+ 
+-	if (msg->status_code == SOUP_STATUS_CANCELLED)
++	data = soup_session_send_and_read_finish(SOUP_SESSION(source), res,
++	                                         &error);
++
++	if(g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+ 		goto out;
+ 
+-	if (SOUP_STATUS_IS_SUCCESSFUL(msg->status_code)) {
+-		device->icon.size = msg->response_body->length;
+-		device->icon.bytes = g_malloc(device->icon.size);
+-		memcpy(device->icon.bytes, msg->response_body->data,
+-		       device->icon.size);
++	SoupStatus status = soup_message_get_status(download->msg);
++
++	if(SOUP_STATUS_IS_SUCCESSFUL(status)) {
++		device->icon.bytes = data;
+ 
+ 		prv_build_icon_result(device, &cb_data->task);
+ 	} else {
+ 		DLEYNA_LOG_DEBUG("Failed to GET device icon: %s",
+-				 msg->reason_phrase);
++		                 error != NULL ? error->message
++		                               : soup_message_get_reason_phrase(
++							 download->msg));
+ 
+ 		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+ 					     DLEYNA_ERROR_OPERATION_FAILED,
+@@ -3415,7 +3350,7 @@
+ 	cb_data->cb = cb;
+ 	cb_data->device = device;
+ 
+-	if (device->icon.size != 0) {
++	if(device->icon.bytes != NULL) {
+ 		prv_build_icon_result(device, task);
+ 		goto end;
+ 	}
+@@ -3437,6 +3372,7 @@
+ 	download->session = soup_session_new();
+ 	download->msg = soup_message_new(SOUP_METHOD_GET, url);
+ 	download->task = cb_data;
++	download->cancellable = g_cancellable_new();
+ 
+ 	if (!download->msg) {
+ 		DLEYNA_LOG_WARNING("Invalid URL %s", url);
+@@ -3455,9 +3391,9 @@
+ 				      G_CALLBACK(prv_get_icon_cancelled),
+ 				      download, NULL);
+ 
+-	g_object_ref(download->msg);
+-	soup_session_queue_message(download->session, download->msg,
+-				   prv_get_icon_session_cb, download);
++	soup_session_send_and_read_async(
++		download->session, download->msg, G_PRIORITY_DEFAULT,
++		download->cancellable, prv_get_icon_session_cb, download);
+ 
+ 	g_free(url);
+ 
+diff -Nuar a/libdleyna/renderer/device.h b/libdleyna/renderer/device.h
+--- a/libdleyna/renderer/device.h	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/device.h	2022-06-03 00:20:47.000000000 +0300
+@@ -67,8 +67,7 @@
+ typedef struct dlr_device_icon_t_ dlr_device_icon_t;
+ struct dlr_device_icon_t_ {
+ 	gchar *mime_type;
+-	guchar *bytes;
+-	gsize size;
++	GBytes *bytes;
+ };
+ 
+ struct dlr_device_t_ {
+diff -Nuar a/libdleyna/renderer/gasync-task.c b/libdleyna/renderer/gasync-task.c
+--- a/libdleyna/renderer/gasync-task.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/gasync-task.c	2022-06-03 00:20:47.000000000 +0300
+@@ -18,6 +18,8 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include "gasync-task.h"
+ #include <libdleyna/core/task-processor.h>
+ 
+diff -Nuar a/libdleyna/renderer/host-service.c b/libdleyna/renderer/host-service.c
+--- a/libdleyna/renderer/host-service.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/host-service.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,6 +20,7 @@
+  *
+  */
+ 
++#include <config.h>
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -253,8 +254,7 @@
+ {
+ 	dlr_host_server_t *server = host_server;
+ 
+-	if (server) {
+-		soup_server_quit(server->soup_server);
++	if(server) {
+ 		g_object_unref(server->soup_server);
+ 		g_hash_table_unref(server->files);
+ 		g_free(server);
+@@ -296,41 +296,49 @@
+ 	}
+ }
+ 
+-static void prv_soup_server_cb(SoupServer *server, SoupMessage *msg,
+-			       const char *path, GHashTable *query,
+-			       SoupClientContext *client, gpointer user_data)
++static void prv_soup_server_cb(SoupServer *server, SoupServerMessage *msg,
++                               const char *path, GHashTable *query,
++                               gpointer user_data)
+ {
+ 	dlr_host_file_t *hf;
+ 	dlr_host_server_t *hs = user_data;
+ 	const gchar *file_name;
+ 	const char *hdr;
++	const char *method = soup_server_message_get_method(msg);
+ 
+-	if ((msg->method != SOUP_METHOD_GET) &&
+-	    (msg->method != SOUP_METHOD_HEAD)) {
+-		soup_message_set_status(msg, SOUP_STATUS_NOT_IMPLEMENTED);
++	if((method != SOUP_METHOD_GET) && (method != SOUP_METHOD_HEAD)) {
++		soup_server_message_set_status(msg, SOUP_STATUS_NOT_IMPLEMENTED,
++		                               NULL);
+ 		goto on_error;
+ 	}
+ 
+ 	hf = prv_host_server_find_file(hs, path, &file_name);
+ 
+ 	if (!hf) {
+-		soup_message_set_status(msg, SOUP_STATUS_NOT_FOUND);
++		soup_server_message_set_status(msg, SOUP_STATUS_NOT_FOUND,
++		                               NULL);
+ 		goto on_error;
+ 	}
+ 
+-	hdr = soup_message_headers_get_one(msg->request_headers,
+-					   "getContentFeatures.dlna.org");
++	SoupMessageHeaders *request_headers =
++		soup_server_message_get_request_headers(msg);
++	SoupMessageHeaders *response_headers =
++		soup_server_message_get_response_headers(msg);
++	hdr = soup_message_headers_get_one(request_headers,
++	                                   "getContentFeatures.dlna.org");
+ 
+ 	if (hdr) {
+ 		if (strcmp(hdr, "1") != 0) {
+-			soup_message_set_status(msg, SOUP_STATUS_BAD_REQUEST);
++			soup_server_message_set_status(
++				msg, SOUP_STATUS_BAD_REQUEST, NULL);
+ 			goto on_error;
+ 		}
+ 
+ 		if ((hf->dlna_header) && strlen(hf->dlna_header) > 0)
+-			soup_message_headers_append(msg->response_headers,
+-						    "contentFeatures.dlna.org",
+-						    hf->dlna_header);
++
++			soup_message_headers_append(response_headers,
++			                            "contentFeatures.dlna.org",
++			                            hf->dlna_header);
+ 	}
+ 
+ 	if (hf->mapped_file) {
+@@ -342,33 +350,32 @@
+ 						    NULL);
+ 
+ 		if (!hf->mapped_file) {
+-			soup_message_set_status(msg,
+-						SOUP_STATUS_NOT_FOUND);
++			soup_server_message_set_status(
++				msg, SOUP_STATUS_NOT_FOUND, NULL);
+ 			goto on_error;
+ 		}
+ 
+ 		hf->mapped_count = 1;
+ 	}
+ 
+-	if (msg->method == SOUP_METHOD_GET) {
++	if(method == SOUP_METHOD_GET) {
+ 		g_signal_connect(msg, "finished",
+ 				 G_CALLBACK(prv_soup_message_finished_cb), hf);
+ 
+-		soup_message_set_response(
+-				msg, hf->mime_type,
+-				SOUP_MEMORY_STATIC,
+-				g_mapped_file_get_contents(hf->mapped_file),
+-				g_mapped_file_get_length(hf->mapped_file));
++		soup_server_message_set_response(
++			msg, hf->mime_type, SOUP_MEMORY_STATIC,
++			g_mapped_file_get_contents(hf->mapped_file),
++			g_mapped_file_get_length(hf->mapped_file));
+ 	} else {
+-		soup_message_headers_set_content_type(msg->response_headers,
+-						      hf->mime_type, NULL);
++		soup_message_headers_set_content_type(response_headers,
++		                                      hf->mime_type, NULL);
+ 
+ 		soup_message_headers_set_content_length(
+-			msg->response_headers,
++			response_headers,
+ 			g_mapped_file_get_length(hf->mapped_file));
+ 	}
+ 
+-	soup_message_set_status(msg, SOUP_STATUS_OK);
++	soup_server_message_set_status(msg, SOUP_STATUS_OK, NULL);
+ 
+ on_error:
+ 
+@@ -380,27 +387,24 @@
+ 					      GError **error)
+ {
+ 	dlr_host_server_t *server = NULL;
+-	SoupAddress *addr;
+-
+-	addr = soup_address_new(device_if, port);
+-
+-	if (soup_address_resolve_sync(addr, NULL) != SOUP_STATUS_OK) {
+-		*error = g_error_new(DLEYNA_SERVER_ERROR,
+-				     DLEYNA_ERROR_HOST_FAILED,
+-				     "Unable to create host server on %s",
+-				     device_if);
+-		goto on_error;
+-	}
+ 
+ 	server = g_new(dlr_host_server_t, 1);
+ 	server->files = g_hash_table_new_full(g_str_hash, g_str_equal,
+ 					      g_free, prv_host_file_delete);
+ 
+-	server->soup_server = soup_server_new(SOUP_SERVER_INTERFACE, addr,
+-					      NULL);
++	server->soup_server = soup_server_new(NULL, NULL);
++	GSocketAddress *addr =
++		g_inet_socket_address_new_from_string(device_if, port);
++	soup_server_listen(server->soup_server, addr,
++	                   (SoupServerListenOptions) 0, error);
+ 	soup_server_add_handler(server->soup_server, DLR_HOST_SERVICE_ROOT,
+-				prv_soup_server_cb, server, NULL);
+-	soup_server_run_async(server->soup_server);
++	                        prv_soup_server_cb, server, NULL);
++
++	if(error != NULL && *error != NULL) {
++		g_clear_object(&server->soup_server);
++		goto on_error;
++	}
++
+ 	server->counter = 0;
+ 
+ on_error:
+@@ -429,6 +433,7 @@
+ 	unsigned int i;
+ 	dlr_host_file_t *hf;
+ 	gchar *str;
++	g_autoslist(GUri) uris = NULL;
+ 
+ 	hf = g_hash_table_lookup(server->files, file);
+ 
+@@ -449,9 +454,9 @@
+ 			g_ptr_array_add(hf->clients, g_strdup(client));
+ 	}
+ 
++	uris = soup_server_get_uris(server->soup_server);
+ 	str = g_strdup_printf("http://%s:%d%s", device_if,
+-			      soup_server_get_port(server->soup_server),
+-			      hf->path);
++	                      g_uri_get_port(uris->data), hf->path);
+ 
+ 	return str;
+ 
+diff -Nuar a/libdleyna/renderer/manager.c b/libdleyna/renderer/manager.c
+--- a/libdleyna/renderer/manager.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/manager.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,12 +20,14 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include <glib.h>
+ #include <string.h>
+ 
++#include <libdleyna/core/context-filter.h>
+ #include <libdleyna/core/error.h>
+ #include <libdleyna/core/log.h>
+-#include <libdleyna/core/white-list.h>
+ 
+ #include "async.h"
+ #include "manager.h"
+@@ -35,14 +37,14 @@
+ struct dlr_manager_t_ {
+ 	dleyna_connector_id_t connection;
+ 	GUPnPContextManager *cm;
+-	dleyna_white_list_t *wl;
++	dleyna_context_filter_t *cf;
+ };
+ 
+-static GVariant *prv_build_wl_entries(dleyna_settings_t *settings)
++static GVariant *prv_build_cf_entries(dleyna_settings_t *settings)
+ {
+ 	GVariant *result;
+ 
+-	result = dleyna_settings_white_list_entries(settings);
++	result = dleyna_settings_context_filter_entries(settings);
+ 
+ 	if (result == NULL)
+ 		result = g_variant_new("as", NULL);
+@@ -57,13 +59,13 @@
+ 					dleyna_settings_is_never_quit(
+ 								settings)));
+ 
+-	g_variant_builder_add(vb, "{sv}", DLR_INTERFACE_PROP_WHITE_LIST_ENABLED,
+-			      g_variant_new_boolean(
+-					dleyna_settings_is_white_list_enabled(
+-								settings)));
++	g_variant_builder_add(
++		vb, "{sv}", DLR_INTERFACE_PROP_WHITE_LIST_ENABLED,
++		g_variant_new_boolean(
++			dleyna_settings_is_context_filter_enabled(settings)));
+ 
+ 	g_variant_builder_add(vb, "{sv}", DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES,
+-			      prv_build_wl_entries(settings));
++	                      prv_build_cf_entries(settings));
+ }
+ 
+ static GVariant *prv_get_prop(dleyna_settings_t *settings, const gchar *prop)
+@@ -79,10 +81,9 @@
+ 								settings)));
+ 	else if (!strcmp(prop, DLR_INTERFACE_PROP_WHITE_LIST_ENABLED))
+ 		retval = g_variant_ref_sink(g_variant_new_boolean(
+-					dleyna_settings_is_white_list_enabled(
+-								settings)));
++			dleyna_settings_is_context_filter_enabled(settings)));
+ 	else if (!strcmp(prop, DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES))
+-		retval = g_variant_ref_sink(prv_build_wl_entries(settings));
++		retval = g_variant_ref_sink(prv_build_cf_entries(settings));
+ 
+ #if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
+ 	if (retval) {
+@@ -95,9 +96,8 @@
+ 	return retval;
+ }
+ 
+-static void prv_wl_notify_prop(dlr_manager_t *manager,
+-			       const gchar *prop_name,
+-			       GVariant *prop_val)
++static void prv_cf_notify_prop(dlr_manager_t *manager, const gchar *prop_name,
++                               GVariant *prop_val)
+ {
+ 	GVariant *val;
+ 	GVariantBuilder array;
+@@ -122,13 +122,13 @@
+ 			       GUPnPContextManager *connection_manager)
+ {
+ 	dlr_manager_t *manager = g_new0(dlr_manager_t, 1);
+-	GUPnPWhiteList *gupnp_wl;
++	GUPnPContextFilter *gupnp_cf;
+ 
+-	gupnp_wl = gupnp_context_manager_get_white_list(connection_manager);
++	gupnp_cf = gupnp_context_manager_get_context_filter(connection_manager);
+ 
+ 	manager->connection = connection;
+ 	manager->cm = connection_manager;
+-	manager->wl = dleyna_white_list_new(gupnp_wl);
++	manager->cf = dleyna_context_filter_new(gupnp_cf);
+ 
+ 	return manager;
+ }
+@@ -136,14 +136,14 @@
+ void dlr_manager_delete(dlr_manager_t *manager)
+ {
+ 	if (manager != NULL) {
+-		dleyna_white_list_delete(manager->wl);
++		dleyna_context_filter_delete(manager->cf);
+ 		g_free(manager);
+ 	}
+ }
+ 
+-dleyna_white_list_t *dlr_manager_get_white_list(dlr_manager_t *manager)
++dleyna_context_filter_t *dlr_manager_get_context_filter(dlr_manager_t *manager)
+ {
+-	return manager->wl;
++	return manager->cf;
+ }
+ 
+ void dlr_manager_get_all_props(dlr_manager_t *manager,
+@@ -243,9 +243,8 @@
+ 
+ 	if (*error == NULL) {
+ 		prop_val = g_variant_new_boolean(never_quit);
+-		prv_wl_notify_prop(manager,
+-				   DLR_INTERFACE_PROP_NEVER_QUIT,
+-				   prop_val);
++		prv_cf_notify_prop(manager, DLR_INTERFACE_PROP_NEVER_QUIT,
++		                   prop_val);
+ 	}
+ 
+ exit:
+@@ -253,31 +252,30 @@
+ 	return;
+ }
+ 
+-static void prv_set_prop_wl_enabled(dlr_manager_t *manager,
+-				    dleyna_settings_t *settings,
+-				    gboolean enabled,
+-				    GError **error)
++static void prv_set_prop_cf_enabled(dlr_manager_t *manager,
++                                    dleyna_settings_t *settings,
++                                    gboolean enabled, GError **error)
+ {
+ 	GVariant *prop_val;
+ 	gboolean old_val;
+ 
+ 	DLEYNA_LOG_DEBUG("Enter %d", enabled);
+ 
+-	old_val = dleyna_settings_is_white_list_enabled(settings);
++	old_val = dleyna_settings_is_context_filter_enabled(settings);
+ 
+ 	if (old_val == enabled)
+ 		goto exit;
+ 
+ 	/* If no error, the white list will be updated in the reload callack
+ 	 */
+-	dleyna_settings_set_white_list_enabled(settings, enabled, error);
++	dleyna_settings_set_context_filter_enabled(settings, enabled, error);
+ 
+ 	if (*error == NULL) {
+-		dleyna_white_list_enable(manager->wl, enabled);
++		dleyna_context_filter_enable(manager->cf, enabled);
+ 		prop_val = g_variant_new_boolean(enabled);
+-		prv_wl_notify_prop(manager,
+-				   DLR_INTERFACE_PROP_WHITE_LIST_ENABLED,
+-				   prop_val);
++		prv_cf_notify_prop(manager,
++		                   DLR_INTERFACE_PROP_WHITE_LIST_ENABLED,
++		                   prop_val);
+ 	}
+ 
+ exit:
+@@ -285,10 +283,9 @@
+ 	return;
+ }
+ 
+-static void prv_set_prop_wl_entries(dlr_manager_t *manager,
+-				    dleyna_settings_t *settings,
+-				    GVariant *entries,
+-				    GError **error)
++static void prv_set_prop_cf_entries(dlr_manager_t *manager,
++                                    dleyna_settings_t *settings,
++                                    GVariant *entries, GError **error)
+ {
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+@@ -304,15 +301,15 @@
+ 	/* If no error, the white list will be updated in the reload callack
+ 	 * callack
+ 	 */
+-	dleyna_settings_set_white_list_entries(settings, entries, error);
++	dleyna_settings_set_context_filter_entries(settings, entries, error);
+ 
+ 	if (*error == NULL) {
+-		dleyna_white_list_clear(manager->wl);
+-		dleyna_white_list_add_entries(manager->wl, entries);
++		dleyna_context_filter_clear(manager->cf);
++		dleyna_context_filter_add_entries(manager->cf, entries);
+ 
+-		prv_wl_notify_prop(manager,
+-				   DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES,
+-				   entries);
++		prv_cf_notify_prop(manager,
++		                   DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES,
++		                   entries);
+ 	}
+ exit:
+ 	DLEYNA_LOG_DEBUG("Exit");
+@@ -352,11 +349,10 @@
+ 					g_variant_get_boolean(param),
+ 					&error);
+ 	else if (!strcmp(name, DLR_INTERFACE_PROP_WHITE_LIST_ENABLED))
+-		prv_set_prop_wl_enabled(manager, settings,
+-					g_variant_get_boolean(param),
+-					&error);
++		prv_set_prop_cf_enabled(manager, settings,
++		                        g_variant_get_boolean(param), &error);
+ 	else if (!strcmp(name, DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES))
+-		prv_set_prop_wl_entries(manager, settings, param, &error);
++		prv_set_prop_cf_entries(manager, settings, param, &error);
+ 	else
+ 		cb_data->error = g_error_new(DLEYNA_SERVER_ERROR,
+ 					     DLEYNA_ERROR_UNKNOWN_PROPERTY,
+diff -Nuar a/libdleyna/renderer/manager.h b/libdleyna/renderer/manager.h
+--- a/libdleyna/renderer/manager.h	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/manager.h	2022-06-03 00:20:47.000000000 +0300
+@@ -24,6 +24,7 @@
+ #define DLR_MANAGER_H__
+ 
+ #include <libdleyna/core/connector.h>
++#include <libdleyna/core/context-filter.h>
+ #include <libdleyna/core/settings.h>
+ #include <libgupnp/gupnp-context-manager.h>
+ 
+@@ -37,7 +38,7 @@
+ 
+ void dlr_manager_delete(dlr_manager_t *manager);
+ 
+-dleyna_white_list_t *dlr_manager_get_white_list(dlr_manager_t *manager);
++dleyna_context_filter_t *dlr_manager_get_context_filter(dlr_manager_t *manager);
+ 
+ void dlr_manager_get_all_props(dlr_manager_t *manager,
+ 			       dleyna_settings_t *settings,
+diff -Nuar a/libdleyna/renderer/server.c b/libdleyna/renderer/server.c
+--- a/libdleyna/renderer/server.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/server.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,6 +20,7 @@
+  *
+  */
+ 
++#include <config.h>
+ 
+ #include <signal.h>
+ #include <stdbool.h>
+@@ -30,11 +31,11 @@
+ #include <syslog.h>
+ 
+ #include <libdleyna/core/connector.h>
++#include <libdleyna/core/context-filter.h>
+ #include <libdleyna/core/control-point.h>
+ #include <libdleyna/core/error.h>
+ #include <libdleyna/core/log.h>
+ #include <libdleyna/core/task-processor.h>
+-#include <libdleyna/core/white-list.h>
+ 
+ #include "async.h"
+ #include "control-point-renderer.h"
+@@ -138,358 +139,336 @@
+ 
+ static const gchar g_root_introspection[] =
+ 	"<node>"
+-	"  <interface name='"DLEYNA_SERVER_INTERFACE_MANAGER"'>"
+-	"    <method name='"DLR_INTERFACE_GET_VERSION"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_VERSION"'"
++	"  <interface name='" DLEYNA_SERVER_INTERFACE_MANAGER "'>"
++	"    <method name='" DLR_INTERFACE_GET_VERSION "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_VERSION "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_RELEASE"'>"
++	"    <method name='" DLR_INTERFACE_RELEASE "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_GET_RENDERERS"'>"
+-	"      <arg type='ao' name='"DLR_INTERFACE_RENDERERS"'"
++	"    <method name='" DLR_INTERFACE_GET_RENDERERS "'>"
++	"      <arg type='ao' name='" DLR_INTERFACE_RENDERERS "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_RESCAN"'>"
++	"    <method name='" DLR_INTERFACE_RESCAN "'>"
+ 	"    </method>"
+-	"    <signal name='"DLR_INTERFACE_FOUND_RENDERER"'>"
+-	"      <arg type='o' name='"DLR_INTERFACE_PATH"'/>"
++	"    <signal name='" DLR_INTERFACE_FOUND_RENDERER "'>"
++	"      <arg type='o' name='" DLR_INTERFACE_PATH "'/>"
+ 	"    </signal>"
+-	"    <signal name='"DLR_INTERFACE_LOST_RENDERER"'>"
+-	"      <arg type='o' name='"DLR_INTERFACE_PATH"'/>"
++	"    <signal name='" DLR_INTERFACE_LOST_RENDERER "'>"
++	"      <arg type='o' name='" DLR_INTERFACE_PATH "'/>"
+ 	"    </signal>"
+-	"    <property type='as' name='"DLR_INTERFACE_PROP_NEVER_QUIT"'"
++	"    <property type='as' name='" DLR_INTERFACE_PROP_NEVER_QUIT "'"
+ 	"       access='readwrite'/>"
+-	"    <property type='as' name='"DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES"'"
++	"    <property type='as' name='" DLR_INTERFACE_PROP_WHITE_LIST_ENTRIES
++	"'"
+ 	"       access='readwrite'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_WHITE_LIST_ENABLED"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_WHITE_LIST_ENABLED
++	"'"
+ 	"       access='readwrite'/>"
+ 	"  </interface>"
+-	"  <interface name='"DLR_INTERFACE_PROPERTIES"'>"
+-	"    <method name='"DLR_INTERFACE_GET"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'"
++	"  <interface name='" DLR_INTERFACE_PROPERTIES "'>"
++	"    <method name='" DLR_INTERFACE_GET "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_PROPERTY_NAME"'"
++	"      <arg type='s' name='" DLR_INTERFACE_PROPERTY_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='v' name='"DLR_INTERFACE_VALUE"'"
++	"      <arg type='v' name='" DLR_INTERFACE_VALUE "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_GET_ALL"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'"
++	"    <method name='" DLR_INTERFACE_GET_ALL "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='a{sv}' name='"DLR_INTERFACE_PROPERTIES_VALUE"'"
++	"      <arg type='a{sv}' name='" DLR_INTERFACE_PROPERTIES_VALUE "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_SET"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'"
++	"    <method name='" DLR_INTERFACE_SET "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_PROPERTY_NAME"'"
++	"      <arg type='s' name='" DLR_INTERFACE_PROPERTY_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='v' name='"DLR_INTERFACE_VALUE"'"
++	"      <arg type='v' name='" DLR_INTERFACE_VALUE "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <signal name='"DLR_INTERFACE_PROPERTIES_CHANGED"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'/>"
+-	"      <arg type='a{sv}' name='"DLR_INTERFACE_CHANGED_PROPERTIES"'/>"
+-	"      <arg type='as' name='"
+-	DLR_INTERFACE_INVALIDATED_PROPERTIES"'/>"
++	"    <signal name='" DLR_INTERFACE_PROPERTIES_CHANGED "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'/>"
++	"      <arg type='a{sv}' name='" DLR_INTERFACE_CHANGED_PROPERTIES "'/>"
++	"      <arg type='as' name='" DLR_INTERFACE_INVALIDATED_PROPERTIES "'/>"
+ 	"    </signal>"
+ 	"  </interface>"
+ 	"</node>";
+ 
+ static const gchar g_server_introspection[] =
+ 	"<node>"
+-	"  <interface name='"DLR_INTERFACE_PROPERTIES"'>"
+-	"    <method name='"DLR_INTERFACE_GET"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'"
++	"  <interface name='" DLR_INTERFACE_PROPERTIES "'>"
++	"    <method name='" DLR_INTERFACE_GET "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_PROPERTY_NAME"'"
++	"      <arg type='s' name='" DLR_INTERFACE_PROPERTY_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='v' name='"DLR_INTERFACE_VALUE"'"
++	"      <arg type='v' name='" DLR_INTERFACE_VALUE "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_GET_ALL"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'"
++	"    <method name='" DLR_INTERFACE_GET_ALL "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='a{sv}' name='"DLR_INTERFACE_PROPERTIES_VALUE"'"
++	"      <arg type='a{sv}' name='" DLR_INTERFACE_PROPERTIES_VALUE "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_SET"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'"
++	"    <method name='" DLR_INTERFACE_SET "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_PROPERTY_NAME"'"
++	"      <arg type='s' name='" DLR_INTERFACE_PROPERTY_NAME "'"
+ 	"           direction='in'/>"
+-	"      <arg type='v' name='"DLR_INTERFACE_VALUE"'"
++	"      <arg type='v' name='" DLR_INTERFACE_VALUE "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <signal name='"DLR_INTERFACE_PROPERTIES_CHANGED"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_INTERFACE_NAME"'/>"
+-	"      <arg type='a{sv}' name='"DLR_INTERFACE_CHANGED_PROPERTIES"'/>"
+-	"      <arg type='as' name='"DLR_INTERFACE_INVALIDATED_PROPERTIES"'/>"
++	"    <signal name='" DLR_INTERFACE_PROPERTIES_CHANGED "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_INTERFACE_NAME "'/>"
++	"      <arg type='a{sv}' name='" DLR_INTERFACE_CHANGED_PROPERTIES "'/>"
++	"      <arg type='as' name='" DLR_INTERFACE_INVALIDATED_PROPERTIES "'/>"
+ 	"    </signal>"
+ 	"  </interface>"
+-	"  <interface name='"DLR_INTERFACE_SERVER"'>"
+-	"    <method name='"DLR_INTERFACE_RAISE"'>"
++	"  <interface name='" DLR_INTERFACE_SERVER "'>"
++	"    <method name='" DLR_INTERFACE_RAISE "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_QUIT"'>"
++	"    <method name='" DLR_INTERFACE_QUIT "'>"
+ 	"    </method>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_QUIT"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_QUIT "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_RAISE"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_RAISE "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_SET_FULLSCREEN"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_SET_FULLSCREEN
++	"'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_HAS_TRACK_LIST"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_HAS_TRACK_LIST "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_IDENTITY"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_IDENTITY "'"
+ 	"       access='read'/>"
+-	"    <property type='as' name='"DLR_INTERFACE_PROP_SUPPORTED_URIS"'"
++	"    <property type='as' name='" DLR_INTERFACE_PROP_SUPPORTED_URIS "'"
+ 	"       access='read'/>"
+-	"    <property type='as' name='"DLR_INTERFACE_PROP_SUPPORTED_MIME"'"
++	"    <property type='as' name='" DLR_INTERFACE_PROP_SUPPORTED_MIME "'"
+ 	"       access='read'/>"
+ 	"  </interface>"
+-	"  <interface name='"DLR_INTERFACE_PLAYER"'>"
+-	"    <method name='"DLR_INTERFACE_PLAY"'>"
++	"  <interface name='" DLR_INTERFACE_PLAYER "'>"
++	"    <method name='" DLR_INTERFACE_PLAY "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_PAUSE"'>"
++	"    <method name='" DLR_INTERFACE_PAUSE "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_PLAY_PAUSE"'>"
++	"    <method name='" DLR_INTERFACE_PLAY_PAUSE "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_STOP"'>"
++	"    <method name='" DLR_INTERFACE_STOP "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_NEXT"'>"
++	"    <method name='" DLR_INTERFACE_NEXT "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_PREVIOUS"'>"
++	"    <method name='" DLR_INTERFACE_PREVIOUS "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_OPEN_URI"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_URI"'"
++	"    <method name='" DLR_INTERFACE_OPEN_URI "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_URI "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_OPEN_URI_EX"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_URI"'"
++	"    <method name='" DLR_INTERFACE_OPEN_URI_EX "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_URI "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_METADATA"'"
++	"      <arg type='s' name='" DLR_INTERFACE_METADATA "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_OPEN_NEXT_URI"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_URI"'"
++	"    <method name='" DLR_INTERFACE_OPEN_NEXT_URI "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_URI "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_METADATA"'"
++	"      <arg type='s' name='" DLR_INTERFACE_METADATA "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_SET_URI"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_URI"'"
++	"    <method name='" DLR_INTERFACE_SET_URI "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_URI "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_METADATA"'"
++	"      <arg type='s' name='" DLR_INTERFACE_METADATA "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_SEEK"'>"
+-	"      <arg type='x' name='"DLR_INTERFACE_OFFSET"'"
++	"    <method name='" DLR_INTERFACE_SEEK "'>"
++	"      <arg type='x' name='" DLR_INTERFACE_OFFSET "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_BYTE_SEEK"'>"
+-	"      <arg type='x' name='"DLR_INTERFACE_OFFSET"'"
++	"    <method name='" DLR_INTERFACE_BYTE_SEEK "'>"
++	"      <arg type='x' name='" DLR_INTERFACE_OFFSET "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_SET_POSITION"'>"
+-	"      <arg type='o' name='"DLR_INTERFACE_TRACKID"'"
++	"    <method name='" DLR_INTERFACE_SET_POSITION "'>"
++	"      <arg type='o' name='" DLR_INTERFACE_TRACKID "'"
+ 	"           direction='in'/>"
+-	"      <arg type='x' name='"DLR_INTERFACE_POSITION"'"
++	"      <arg type='x' name='" DLR_INTERFACE_POSITION "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_SET_BYTE_POSITION"'>"
+-	"      <arg type='o' name='"DLR_INTERFACE_TRACKID"'"
++	"    <method name='" DLR_INTERFACE_SET_BYTE_POSITION "'>"
++	"      <arg type='o' name='" DLR_INTERFACE_TRACKID "'"
+ 	"           direction='in'/>"
+-	"      <arg type='x' name='"DLR_INTERFACE_BYTE_POSITION"'"
++	"      <arg type='x' name='" DLR_INTERFACE_BYTE_POSITION "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_GOTO_TRACK"'>"
+-	"      <arg type='u' name='"DLR_INTERFACE_TRACK_NUMBER"'"
++	"    <method name='" DLR_INTERFACE_GOTO_TRACK "'>"
++	"      <arg type='u' name='" DLR_INTERFACE_TRACK_NUMBER "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_PLAYBACK_STATUS"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_PLAYBACK_STATUS "'"
+ 	"       access='read'/>"
+-	"    <property type='d' name='"DLR_INTERFACE_PROP_RATE"'"
++	"    <property type='d' name='" DLR_INTERFACE_PROP_RATE "'"
+ 	"       access='readwrite'/>"
+-	"    <property type='d' name='"DLR_INTERFACE_PROP_MINIMUM_RATE"'"
++	"    <property type='d' name='" DLR_INTERFACE_PROP_MINIMUM_RATE "'"
+ 	"       access='read'/>"
+-	"    <property type='d' name='"DLR_INTERFACE_PROP_MAXIMUM_RATE"'"
++	"    <property type='d' name='" DLR_INTERFACE_PROP_MAXIMUM_RATE "'"
+ 	"       access='read'/>"
+ 	"    <property type='ad'"
+-	"       name='"DLR_INTERFACE_PROP_TRANSPORT_PLAY_SPEEDS"'"
++	"       name='" DLR_INTERFACE_PROP_TRANSPORT_PLAY_SPEEDS "'"
+ 	"       access='read'/>"
+-	"    <property type='d' name='"DLR_INTERFACE_PROP_VOLUME"'"
++	"    <property type='d' name='" DLR_INTERFACE_PROP_VOLUME "'"
+ 	"       access='readwrite'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_PLAY"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_PLAY "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_SEEK"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_SEEK "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_BYTE_SEEK"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_BYTE_SEEK "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_CONTROL"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_CONTROL "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_PAUSE"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_PAUSE "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_NEXT"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_NEXT "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_CAN_PREVIOUS"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_CAN_PREVIOUS "'"
+ 	"       access='read'/>"
+-	"    <property type='x' name='"DLR_INTERFACE_PROP_POSITION"'"
++	"    <property type='x' name='" DLR_INTERFACE_PROP_POSITION "'"
+ 	"       access='read'/>"
+-	"    <property type='x' name='"DLR_INTERFACE_PROP_BYTE_POSITION"'"
++	"    <property type='x' name='" DLR_INTERFACE_PROP_BYTE_POSITION "'"
+ 	"       access='read'/>"
+-	"    <property type='a{sv}' name='"DLR_INTERFACE_PROP_METADATA"'"
++	"    <property type='a{sv}' name='" DLR_INTERFACE_PROP_METADATA "'"
+ 	"       access='read'/>"
+-	"    <property type='u' name='"DLR_INTERFACE_PROP_CURRENT_TRACK"'"
++	"    <property type='u' name='" DLR_INTERFACE_PROP_CURRENT_TRACK "'"
+ 	"       access='read'/>"
+-	"    <property type='u' name='"DLR_INTERFACE_PROP_NUMBER_OF_TRACKS"'"
++	"    <property type='u' name='" DLR_INTERFACE_PROP_NUMBER_OF_TRACKS "'"
+ 	"       access='read'/>"
+-	"    <property type='b' name='"DLR_INTERFACE_PROP_MUTE"'"
++	"    <property type='b' name='" DLR_INTERFACE_PROP_MUTE "'"
+ 	"       access='readwrite'/>"
+ 	"  </interface>"
+-	"  <interface name='"DLEYNA_INTERFACE_PUSH_HOST"'>"
+-	"    <method name='"DLR_INTERFACE_HOST_FILE"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_PATH"'"
++	"  <interface name='" DLEYNA_INTERFACE_PUSH_HOST "'>"
++	"    <method name='" DLR_INTERFACE_HOST_FILE "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_PATH "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_URI"'"
++	"      <arg type='s' name='" DLR_INTERFACE_URI "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_REMOVE_FILE"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_PATH"'"
++	"    <method name='" DLR_INTERFACE_REMOVE_FILE "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_PATH "'"
+ 	"           direction='in'/>"
+ 	"    </method>"
+ 	"  </interface>"
+-	"  <interface name='"DLEYNA_SERVER_INTERFACE_RENDERER_DEVICE"'>"
+-	"    <method name='"DLR_INTERFACE_CANCEL"'>"
++	"  <interface name='" DLEYNA_SERVER_INTERFACE_RENDERER_DEVICE "'>"
++	"    <method name='" DLR_INTERFACE_CANCEL "'>"
+ 	"    </method>"
+-	"    <method name='"DLR_INTERFACE_GET_ICON"'>"
+-	"      <arg type='s' name='"DLR_INTERFACE_REQ_MIME_TYPE"'"
++	"    <method name='" DLR_INTERFACE_GET_ICON "'>"
++	"      <arg type='s' name='" DLR_INTERFACE_REQ_MIME_TYPE "'"
+ 	"           direction='in'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_RESOLUTION"'"
++	"      <arg type='s' name='" DLR_INTERFACE_RESOLUTION "'"
+ 	"           direction='in'/>"
+-	"      <arg type='ay' name='"DLR_INTERFACE_ICON_BYTES"'"
++	"      <arg type='ay' name='" DLR_INTERFACE_ICON_BYTES "'"
+ 	"           direction='out'/>"
+-	"      <arg type='s' name='"DLR_INTERFACE_MIME_TYPE"'"
++	"      <arg type='s' name='" DLR_INTERFACE_MIME_TYPE "'"
+ 	"           direction='out'/>"
+ 	"    </method>"
+ 	"    <property type='as' "
+-	"       name='"DLR_INTERFACE_PROP_DLNA_DEVICE_CLASSES"'"
++	"       name='" DLR_INTERFACE_PROP_DLNA_DEVICE_CLASSES "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_DEVICE_TYPE"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_DEVICE_TYPE "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_UDN"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_UDN "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_FRIENDLY_NAME"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_FRIENDLY_NAME "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_ICON_URL"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_ICON_URL "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_MANUFACTURER"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_MANUFACTURER "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_MANUFACTURER_URL"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_MANUFACTURER_URL "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_MODEL_DESCRIPTION"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_MODEL_DESCRIPTION "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_MODEL_NAME"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_MODEL_NAME "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_MODEL_NUMBER"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_MODEL_NUMBER "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_SERIAL_NUMBER"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_SERIAL_NUMBER "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_PRESENTATION_URL"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_PRESENTATION_URL "'"
+ 	"       access='read'/>"
+-	"    <property type='s' name='"DLR_INTERFACE_PROP_PROTOCOL_INFO"'"
++	"    <property type='s' name='" DLR_INTERFACE_PROP_PROTOCOL_INFO "'"
+ 	"       access='read'/>"
+ 	"  </interface>"
+ 	"</node>";
+ 
+ static const gchar *g_manager_interfaces[DLR_MANAGER_INTERFACE_INFO_MAX] = {
+ 	/* MUST be in the exact same order as g_root_introspection */
+-	DLEYNA_SERVER_INTERFACE_MANAGER,
+-	DLR_INTERFACE_PROPERTIES
++	DLEYNA_SERVER_INTERFACE_MANAGER, DLR_INTERFACE_PROPERTIES
+ };
+ 
+ static void prv_process_task(dleyna_task_atom_t *task, gpointer user_data);
+ 
+-static void prv_manager_root_method_call(dleyna_connector_id_t conn,
+-					 const gchar *sender,
+-					 const gchar *object,
+-					 const gchar *interface,
+-					 const gchar *method,
+-					 GVariant *parameters,
+-					 dleyna_connector_msg_id_t invocation);
+-
+-static void prv_manager_props_method_call(dleyna_connector_id_t conn,
+-					  const gchar *sender,
+-					  const gchar *object,
+-					  const gchar *interface,
+-					  const gchar *method,
+-					  GVariant *parameters,
+-					  dleyna_connector_msg_id_t invocation);
++static void prv_manager_root_method_call(
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation);
++
++static void prv_manager_props_method_call(
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation);
+ 
+ static void prv_dlr_device_method_call(dleyna_connector_id_t conn,
+-				       const gchar *sender,
+-				       const gchar *object,
+-				       const gchar *interface,
+-				       const gchar *method,
+-				       GVariant *parameters,
+-				       dleyna_connector_msg_id_t invocation);
++                                       const gchar *sender, const gchar *object,
++                                       const gchar *interface,
++                                       const gchar *method,
++                                       GVariant *parameters,
++                                       dleyna_connector_msg_id_t invocation);
+ 
+ static void prv_props_method_call(dleyna_connector_id_t conn,
+-				  const gchar *sender,
+-				  const gchar *object,
+-				  const gchar *interface,
+-				  const gchar *method,
+-				  GVariant *parameters,
+-				  dleyna_connector_msg_id_t invocation);
++                                  const gchar *sender, const gchar *object,
++                                  const gchar *interface, const gchar *method,
++                                  GVariant *parameters,
++                                  dleyna_connector_msg_id_t invocation);
+ 
+ static void prv_dlr_player_method_call(dleyna_connector_id_t conn,
+-				       const gchar *sender,
+-				       const gchar *object,
+-				       const gchar *interface,
+-				       const gchar *method,
+-				       GVariant *parameters,
+-				       dleyna_connector_msg_id_t invocation);
+-
+-static void prv_dlr_push_host_method_call(dleyna_connector_id_t conn,
+-					  const gchar *sender,
+-					  const gchar *object,
+-					  const gchar *interface,
+-					  const gchar *method,
+-					  GVariant *parameters,
+-					  dleyna_connector_msg_id_t invocation);
++                                       const gchar *sender, const gchar *object,
++                                       const gchar *interface,
++                                       const gchar *method,
++                                       GVariant *parameters,
++                                       dleyna_connector_msg_id_t invocation);
++
++static void prv_dlr_push_host_method_call(
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation);
+ 
+ static void prv_renderer_device_method_call(
+-					dleyna_connector_id_t conn,
+-					const gchar *sender,
+-					const gchar *object,
+-					const gchar *interface,
+-					const gchar *method,
+-					GVariant *parameters,
+-					dleyna_connector_msg_id_t invocation);
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation);
+ 
+ static const dleyna_connector_dispatch_cb_t
+-			g_root_vtables[DLR_MANAGER_INTERFACE_INFO_MAX] = {
+-	/* MUST be in the exact same order as g_root_introspection */
+-	prv_manager_root_method_call,
+-	prv_manager_props_method_call
+-};
++	g_root_vtables[DLR_MANAGER_INTERFACE_INFO_MAX] = {
++		/* MUST be in the exact same order as g_root_introspection */
++		prv_manager_root_method_call, prv_manager_props_method_call
++	};
+ 
+ static const dleyna_connector_dispatch_cb_t
+-				g_server_vtables[DLR_INTERFACE_INFO_MAX] = {
+-	/* MUST be in the exact same order as g_server_introspection */
+-	prv_props_method_call,
+-	prv_dlr_device_method_call,
+-	prv_dlr_player_method_call,
+-	prv_dlr_push_host_method_call,
+-	prv_renderer_device_method_call
+-};
++	g_server_vtables[DLR_INTERFACE_INFO_MAX] = {
++		/* MUST be in the exact same order as g_server_introspection */
++		prv_props_method_call, prv_dlr_device_method_call,
++		prv_dlr_player_method_call, prv_dlr_push_host_method_call,
++		prv_renderer_device_method_call
++	};
+ 
+ static const gchar *g_server_interfaces[DLR_INTERFACE_INFO_MAX] = {
+ 	/* MUST be in the exact same order as g_server_introspection */
+-	DLR_INTERFACE_PROPERTIES,
+-	DLR_INTERFACE_SERVER,
+-	DLR_INTERFACE_PLAYER,
+-	DLEYNA_INTERFACE_PUSH_HOST,
+-	DLEYNA_SERVER_INTERFACE_RENDERER_DEVICE
++	DLR_INTERFACE_PROPERTIES, DLR_INTERFACE_SERVER, DLR_INTERFACE_PLAYER,
++	DLEYNA_INTERFACE_PUSH_HOST, DLEYNA_SERVER_INTERFACE_RENDERER_DEVICE
+ };
+ 
+ const gchar *dlr_renderer_get_interface_name(guint index)
+@@ -516,10 +495,10 @@
+ {
+ 	GError *error;
+ 
+-	switch (task->type) {
++	switch(task->type) {
+ 	case DLR_TASK_GET_VERSION:
+-		task->result = g_variant_ref_sink(g_variant_new_string(
+-								VERSION));
++		task->result =
++			g_variant_ref_sink(g_variant_new_string(VERSION));
+ 		dlr_task_complete(task);
+ 		break;
+ 	case DLR_TASK_GET_SERVERS:
+@@ -533,8 +512,8 @@
+ 	case DLR_TASK_RAISE:
+ 	case DLR_TASK_QUIT:
+ 		error = g_error_new(DLEYNA_SERVER_ERROR,
+-				    DLEYNA_ERROR_NOT_SUPPORTED,
+-				    "Command not supported.");
++		                    DLEYNA_ERROR_NOT_SUPPORTED,
++		                    "Command not supported.");
+ 		dlr_task_fail(task, error);
+ 		g_error_free(error);
+ 		break;
+@@ -553,7 +532,7 @@
+ {
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+-	if (!error) {
++	if(!error) {
+ 		dlr_task_complete(task);
+ 	} else {
+ 		dlr_task_fail(task, error);
+@@ -567,92 +546,87 @@
+ 
+ static void prv_process_async_task(dlr_task_t *task)
+ {
+-	dlr_async_task_t *async_task = (dlr_async_task_t *)task;
++	dlr_async_task_t *async_task = (dlr_async_task_t *) task;
+ 
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+ 	async_task->cancellable = g_cancellable_new();
+ 
+-	switch (task->type) {
++	switch(task->type) {
+ 	case DLR_TASK_GET_PROP:
+ 		dlr_upnp_get_prop(g_context.upnp, task,
+-				  prv_async_task_complete);
++		                  prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_GET_ALL_PROPS:
+ 		dlr_upnp_get_all_props(g_context.upnp, task,
+-				       prv_async_task_complete);
++		                       prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_SET_PROP:
+ 		dlr_upnp_set_prop(g_context.upnp, task,
+-				  prv_async_task_complete);
++		                  prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_PLAY:
+-		dlr_upnp_play(g_context.upnp, task,
+-			      prv_async_task_complete);
++		dlr_upnp_play(g_context.upnp, task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_PAUSE:
+-		dlr_upnp_pause(g_context.upnp, task,
+-			       prv_async_task_complete);
++		dlr_upnp_pause(g_context.upnp, task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_PLAY_PAUSE:
+ 		dlr_upnp_play_pause(g_context.upnp, task,
+-				    prv_async_task_complete);
++		                    prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_STOP:
+-		dlr_upnp_stop(g_context.upnp, task,
+-			      prv_async_task_complete);
++		dlr_upnp_stop(g_context.upnp, task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_NEXT:
+-		dlr_upnp_next(g_context.upnp, task,
+-			      prv_async_task_complete);
++		dlr_upnp_next(g_context.upnp, task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_PREVIOUS:
+ 		dlr_upnp_previous(g_context.upnp, task,
+-				  prv_async_task_complete);
++		                  prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_OPEN_URI:
+ 	case DLR_TASK_OPEN_NEXT_URI:
+ 	case DLR_TASK_SET_URI:
+ 		dlr_upnp_open_uri(g_context.upnp, task,
+-				  prv_async_task_complete);
++		                  prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_SEEK:
+ 	case DLR_TASK_BYTE_SEEK:
+-		dlr_upnp_seek(g_context.upnp, task,
+-			      prv_async_task_complete);
++		dlr_upnp_seek(g_context.upnp, task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_SET_POSITION:
+ 	case DLR_TASK_SET_BYTE_POSITION:
+ 		dlr_upnp_set_position(g_context.upnp, task,
+-				      prv_async_task_complete);
++		                      prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_GOTO_TRACK:
+ 		dlr_upnp_goto_track(g_context.upnp, task,
+-				    prv_async_task_complete);
++		                    prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_HOST_URI:
+ 		dlr_upnp_host_uri(g_context.upnp, task,
+-				  prv_async_task_complete);
++		                  prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_REMOVE_URI:
+ 		dlr_upnp_remove_uri(g_context.upnp, task,
+-				    prv_async_task_complete);
++		                    prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_GET_ICON:
+ 		dlr_upnp_get_icon(g_context.upnp, task,
+-				  prv_async_task_complete);
++		                  prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_MANAGER_GET_PROP:
+ 		dlr_manager_get_prop(g_context.manager, g_context.settings,
+-				     task, prv_async_task_complete);
++		                     task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_MANAGER_GET_ALL_PROPS:
+ 		dlr_manager_get_all_props(g_context.manager, g_context.settings,
+-					  task, prv_async_task_complete);
++		                          task, prv_async_task_complete);
+ 		break;
+ 	case DLR_TASK_MANAGER_SET_PROP:
+ 		dlr_manager_set_prop(g_context.manager, g_context.settings,
+-				     task, prv_async_task_complete);
++		                     task, prv_async_task_complete);
+ 		break;
+ 	default:
+ 		break;
+@@ -663,9 +637,9 @@
+ 
+ static void prv_process_task(dleyna_task_atom_t *task, gpointer user_data)
+ {
+-	dlr_task_t *client_task = (dlr_task_t *)task;
++	dlr_task_t *client_task = (dlr_task_t *) task;
+ 
+-	if (client_task->synchronous)
++	if(client_task->synchronous)
+ 		prv_process_sync_task(client_task);
+ 	else
+ 		prv_process_async_task(client_task);
+@@ -673,26 +647,26 @@
+ 
+ static void prv_cancel_task(dleyna_task_atom_t *task, gpointer user_data)
+ {
+-	dlr_task_cancel((dlr_task_t *)task);
++	dlr_task_cancel((dlr_task_t *) task);
+ }
+ 
+ static void prv_delete_task(dleyna_task_atom_t *task, gpointer user_data)
+ {
+-	dlr_task_delete((dlr_task_t *)task);
++	dlr_task_delete((dlr_task_t *) task);
+ }
+ 
+ static void prv_remove_client(const gchar *name)
+ {
+ 	dleyna_task_processor_remove_queues_for_source(g_context.processor,
+-						       name);
++	                                               name);
+ 
+ 	dlr_upnp_lost_client(g_context.upnp, name);
+ 
+-	if (g_context.watchers > 0)
++	if(g_context.watchers > 0)
+ 		g_context.watchers--;
+ 
+-	if (g_context.watchers == 0)
+-		if (!dleyna_settings_is_never_quit(g_context.settings))
++	if(g_context.watchers == 0)
++		if(!dleyna_settings_is_never_quit(g_context.settings))
+ 			dleyna_task_processor_set_quitting(g_context.processor);
+ }
+ 
+@@ -703,8 +677,8 @@
+ }
+ 
+ static void prv_control_point_initialize(const dleyna_connector_t *connector,
+-					 dleyna_task_processor_t *processor,
+-					 dleyna_settings_t *settings)
++                                         dleyna_task_processor_t *processor,
++                                         dleyna_settings_t *settings)
+ {
+ 	memset(&g_context, 0, sizeof(g_context));
+ 
+@@ -720,69 +694,61 @@
+ {
+ 	uint i;
+ 
+-	if (g_context.upnp) {
++	if(g_context.upnp) {
+ 		dlr_upnp_unsubscribe(g_context.upnp);
+ 		dlr_upnp_delete(g_context.upnp);
+ 		g_context.upnp = NULL;
+ 	}
+ 
+-	if (g_context.connection) {
+-		for (i = 0; i < DLR_MANAGER_INTERFACE_INFO_MAX; i++)
+-			if (g_context.dlr_id[i])
++	if(g_context.connection) {
++		for(i = 0; i < DLR_MANAGER_INTERFACE_INFO_MAX; i++)
++			if(g_context.dlr_id[i])
+ 				g_context.connector->unpublish_object(
+-							g_context.connection,
+-							g_context.dlr_id[i]);
++					g_context.connection,
++					g_context.dlr_id[i]);
+ 	}
+ }
+ 
+-static void prv_control_point_free(void)
+-{
+-}
++static void prv_control_point_free(void) {}
+ 
+ static void prv_add_task(dlr_task_t *task, const gchar *source,
+-			 const gchar *sink)
++                         const gchar *sink)
+ {
+ 	const dleyna_task_queue_key_t *queue_id;
+ 
+-	if (g_context.connector->watch_client(source))
++	if(g_context.connector->watch_client(source))
+ 		g_context.watchers++;
+ 
+ 	queue_id = dleyna_task_processor_lookup_queue(g_context.processor,
+-						      source, sink);
+-	if (!queue_id)
++	                                              source, sink);
++	if(!queue_id)
+ 		queue_id = dleyna_task_processor_add_queue(
+-					g_context.processor,
+-					source,
+-					sink,
+-					DLEYNA_TASK_QUEUE_FLAG_AUTO_START,
+-					prv_process_task,
+-					prv_cancel_task,
+-					prv_delete_task);
++			g_context.processor, source, sink,
++			DLEYNA_TASK_QUEUE_FLAG_AUTO_START, prv_process_task,
++			prv_cancel_task, prv_delete_task);
+ 
+ 	dleyna_task_queue_add_task(queue_id, &task->atom);
+ }
+ 
+ static void prv_manager_root_method_call(
+-				dleyna_connector_id_t conn,
+-				const gchar *sender, const gchar *object,
+-				const gchar *interface,
+-				const gchar *method, GVariant *parameters,
+-				dleyna_connector_msg_id_t invocation)
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 
+ 	DLEYNA_LOG_INFO("Calling %s method", method);
+ 
+-	if (!strcmp(method, DLR_INTERFACE_RELEASE)) {
++	if(!strcmp(method, DLR_INTERFACE_RELEASE)) {
+ 		g_context.connector->unwatch_client(sender);
+ 		prv_remove_client(sender);
+ 		g_context.connector->return_response(invocation, NULL);
+ 	} else {
+-		if (!strcmp(method, DLR_INTERFACE_GET_VERSION))
++		if(!strcmp(method, DLR_INTERFACE_GET_VERSION))
+ 			task = dlr_task_get_version_new(invocation);
+-		else if (!strcmp(method, DLR_INTERFACE_GET_RENDERERS))
++		else if(!strcmp(method, DLR_INTERFACE_GET_RENDERERS))
+ 			task = dlr_task_get_servers_new(invocation);
+-		else if (!strcmp(method, DLR_INTERFACE_RESCAN))
++		else if(!strcmp(method, DLR_INTERFACE_RESCAN))
+ 			task = dlr_task_rescan_new(invocation);
+ 		else
+ 			goto finished;
+@@ -795,30 +761,27 @@
+ 	return;
+ }
+ 
+-static void prv_manager_props_method_call(dleyna_connector_id_t conn,
+-					  const gchar *sender,
+-					  const gchar *object,
+-					  const gchar *interface,
+-					  const gchar *method,
+-					  GVariant *parameters,
+-					  dleyna_connector_msg_id_t invocation)
++static void prv_manager_props_method_call(
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 	GError *error = NULL;
+ 
+-	if (!strcmp(method, DLR_INTERFACE_GET_ALL))
++	if(!strcmp(method, DLR_INTERFACE_GET_ALL))
+ 		task = dlr_task_manager_get_props_new(invocation, object,
+-						      parameters, &error);
+-	else if (!strcmp(method, DLR_INTERFACE_GET))
++		                                      parameters, &error);
++	else if(!strcmp(method, DLR_INTERFACE_GET))
+ 		task = dlr_task_manager_get_prop_new(invocation, object,
+-						     parameters, &error);
+-	else if (!strcmp(method, DLR_INTERFACE_SET))
++		                                     parameters, &error);
++	else if(!strcmp(method, DLR_INTERFACE_SET))
+ 		task = dlr_task_manager_set_prop_new(invocation, object,
+-						     parameters, &error);
++		                                     parameters, &error);
+ 	else
+ 		goto finished;
+ 
+-	if (!task) {
++	if(!task) {
+ 		g_context.connector->return_error(invocation, error);
+ 		g_error_free(error);
+ 
+@@ -836,16 +799,16 @@
+ {
+ 	dlr_device_t *device;
+ 
+-	device = dlr_device_from_path(object,
+-				dlr_upnp_get_server_udn_map(g_context.upnp));
++	device = dlr_device_from_path(
++		object, dlr_upnp_get_server_udn_map(g_context.upnp));
+ 
+-
+-	if (!device) {
++	if(!device) {
+ 		DLEYNA_LOG_WARNING("Cannot locate device for %s", object);
+ 
+ 		*error = g_error_new(DLEYNA_SERVER_ERROR,
+-				     DLEYNA_ERROR_OBJECT_NOT_FOUND,
+-				     "Cannot locate device corresponding to the specified path");
++		                     DLEYNA_ERROR_OBJECT_NOT_FOUND,
++		                     "Cannot locate device corresponding to "
++		                     "the specified path");
+ 		goto on_error;
+ 	}
+ 
+@@ -857,30 +820,28 @@
+ }
+ 
+ static void prv_props_method_call(dleyna_connector_id_t conn,
+-				  const gchar *sender,
+-				  const gchar *object,
+-				  const gchar *interface,
+-				  const gchar *method,
+-				  GVariant *parameters,
+-				  dleyna_connector_msg_id_t invocation)
++                                  const gchar *sender, const gchar *object,
++                                  const gchar *interface, const gchar *method,
++                                  GVariant *parameters,
++                                  dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 	const gchar *device_id;
+ 	GError *error = NULL;
+ 
+ 	device_id = prv_get_device_id(object, &error);
+-	if (!device_id) {
++	if(!device_id) {
+ 		g_context.connector->return_error(invocation, error);
+ 		g_error_free(error);
+ 
+ 		goto finished;
+ 	}
+ 
+-	if (!strcmp(method, DLR_INTERFACE_GET_ALL))
++	if(!strcmp(method, DLR_INTERFACE_GET_ALL))
+ 		task = dlr_task_get_props_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_GET))
++	else if(!strcmp(method, DLR_INTERFACE_GET))
+ 		task = dlr_task_get_prop_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_SET))
++	else if(!strcmp(method, DLR_INTERFACE_SET))
+ 		task = dlr_task_set_prop_new(invocation, object, parameters);
+ 	else
+ 		goto finished;
+@@ -893,28 +854,27 @@
+ }
+ 
+ static void prv_dlr_device_method_call(dleyna_connector_id_t conn,
+-				       const gchar *sender,
+-				       const gchar *object,
+-				       const gchar *interface,
+-				       const gchar *method,
+-				       GVariant *parameters,
+-				       dleyna_connector_msg_id_t invocation)
++                                       const gchar *sender, const gchar *object,
++                                       const gchar *interface,
++                                       const gchar *method,
++                                       GVariant *parameters,
++                                       dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 	const gchar *device_id;
+ 	GError *error = NULL;
+ 
+ 	device_id = prv_get_device_id(object, &error);
+-	if (!device_id) {
++	if(!device_id) {
+ 		g_context.connector->return_error(invocation, error);
+ 		g_error_free(error);
+ 
+ 		goto finished;
+ 	}
+ 
+-	if (!strcmp(method, DLR_INTERFACE_RAISE))
++	if(!strcmp(method, DLR_INTERFACE_RAISE))
+ 		task = dlr_task_raise_new(invocation);
+-	else if (!strcmp(method, DLR_INTERFACE_QUIT))
++	else if(!strcmp(method, DLR_INTERFACE_QUIT))
+ 		task = dlr_task_quit_new(invocation);
+ 	else
+ 		goto finished;
+@@ -927,57 +887,56 @@
+ }
+ 
+ static void prv_dlr_player_method_call(dleyna_connector_id_t conn,
+-				       const gchar *sender,
+-				       const gchar *object,
+-				       const gchar *interface,
+-				       const gchar *method,
+-				       GVariant *parameters,
+-				       dleyna_connector_msg_id_t invocation)
++                                       const gchar *sender, const gchar *object,
++                                       const gchar *interface,
++                                       const gchar *method,
++                                       GVariant *parameters,
++                                       dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 	const gchar *device_id;
+ 	GError *error = NULL;
+ 
+ 	device_id = prv_get_device_id(object, &error);
+-	if (!device_id) {
++	if(!device_id) {
+ 		g_context.connector->return_error(invocation, error);
+ 		g_error_free(error);
+ 
+ 		goto finished;
+ 	}
+ 
+-	if (!strcmp(method, DLR_INTERFACE_PLAY))
++	if(!strcmp(method, DLR_INTERFACE_PLAY))
+ 		task = dlr_task_play_new(invocation, object);
+-	else if (!strcmp(method, DLR_INTERFACE_PAUSE))
++	else if(!strcmp(method, DLR_INTERFACE_PAUSE))
+ 		task = dlr_task_pause_new(invocation, object);
+-	else if (!strcmp(method, DLR_INTERFACE_PLAY_PAUSE))
++	else if(!strcmp(method, DLR_INTERFACE_PLAY_PAUSE))
+ 		task = dlr_task_play_pause_new(invocation, object);
+-	else if (!strcmp(method, DLR_INTERFACE_STOP))
++	else if(!strcmp(method, DLR_INTERFACE_STOP))
+ 		task = dlr_task_stop_new(invocation, object);
+-	else if (!strcmp(method, DLR_INTERFACE_NEXT))
++	else if(!strcmp(method, DLR_INTERFACE_NEXT))
+ 		task = dlr_task_next_new(invocation, object);
+-	else if (!strcmp(method, DLR_INTERFACE_PREVIOUS))
++	else if(!strcmp(method, DLR_INTERFACE_PREVIOUS))
+ 		task = dlr_task_previous_new(invocation, object);
+-	else if (!strcmp(method, DLR_INTERFACE_OPEN_URI))
++	else if(!strcmp(method, DLR_INTERFACE_OPEN_URI))
+ 		task = dlr_task_open_uri_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_OPEN_URI_EX))
++	else if(!strcmp(method, DLR_INTERFACE_OPEN_URI_EX))
+ 		task = dlr_task_open_uri_ex_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_OPEN_NEXT_URI))
++	else if(!strcmp(method, DLR_INTERFACE_OPEN_NEXT_URI))
+ 		task = dlr_task_open_next_uri_new(invocation, object,
+-						  parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_SET_URI))
++		                                  parameters);
++	else if(!strcmp(method, DLR_INTERFACE_SET_URI))
+ 		task = dlr_task_set_uri_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_SEEK))
++	else if(!strcmp(method, DLR_INTERFACE_SEEK))
+ 		task = dlr_task_seek_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_BYTE_SEEK))
++	else if(!strcmp(method, DLR_INTERFACE_BYTE_SEEK))
+ 		task = dlr_task_byte_seek_new(invocation, object, parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_SET_POSITION))
++	else if(!strcmp(method, DLR_INTERFACE_SET_POSITION))
+ 		task = dlr_task_set_position_new(invocation, object,
+-						 parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_SET_BYTE_POSITION))
++		                                 parameters);
++	else if(!strcmp(method, DLR_INTERFACE_SET_BYTE_POSITION))
+ 		task = dlr_task_set_byte_position_new(invocation, object,
+-						      parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_GOTO_TRACK))
++		                                      parameters);
++	else if(!strcmp(method, DLR_INTERFACE_GOTO_TRACK))
+ 		task = dlr_task_goto_track_new(invocation, object, parameters);
+ 	else
+ 		goto finished;
+@@ -989,32 +948,29 @@
+ 	return;
+ }
+ 
+-static void prv_dlr_push_host_method_call(dleyna_connector_id_t conn,
+-					  const gchar *sender,
+-					  const gchar *object,
+-					  const gchar *interface,
+-					  const gchar *method,
+-					  GVariant *parameters,
+-					  dleyna_connector_msg_id_t invocation)
++static void prv_dlr_push_host_method_call(
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 	const gchar *device_id;
+ 	GError *error = NULL;
+ 
+ 	device_id = prv_get_device_id(object, &error);
+-	if (!device_id) {
++	if(!device_id) {
+ 		g_context.connector->return_error(invocation, error);
+ 		g_error_free(error);
+ 
+ 		goto on_error;
+ 	}
+ 
+-	if (!strcmp(method, DLR_INTERFACE_HOST_FILE))
++	if(!strcmp(method, DLR_INTERFACE_HOST_FILE))
+ 		task = dlr_task_host_uri_new(invocation, object, sender,
+-					     parameters);
+-	else if (!strcmp(method, DLR_INTERFACE_REMOVE_FILE))
++		                             parameters);
++	else if(!strcmp(method, DLR_INTERFACE_REMOVE_FILE))
+ 		task = dlr_task_remove_uri_new(invocation, object, sender,
+-					       parameters);
++		                               parameters);
+ 	else
+ 		goto on_error;
+ 
+@@ -1026,13 +982,9 @@
+ }
+ 
+ static void prv_renderer_device_method_call(
+-					dleyna_connector_id_t conn,
+-					const gchar *sender,
+-					const gchar *object,
+-					const gchar *interface,
+-					const gchar *method,
+-					GVariant *parameters,
+-					dleyna_connector_msg_id_t invocation)
++	dleyna_connector_id_t conn, const gchar *sender, const gchar *object,
++	const gchar *interface, const gchar *method, GVariant *parameters,
++	dleyna_connector_msg_id_t invocation)
+ {
+ 	dlr_task_t *task;
+ 	const gchar *device_id = NULL;
+@@ -1040,22 +992,21 @@
+ 	const dleyna_task_queue_key_t *queue_id;
+ 
+ 	device_id = prv_get_device_id(object, &error);
+-	if (!device_id) {
++	if(!device_id) {
+ 		g_context.connector->return_error(invocation, error);
+ 		g_error_free(error);
+ 
+ 		goto finished;
+ 	}
+ 
+-	if (!strcmp(method, DLR_INTERFACE_CANCEL)) {
++	if(!strcmp(method, DLR_INTERFACE_CANCEL)) {
+ 		queue_id = dleyna_task_processor_lookup_queue(
+-							g_context.processor,
+-							sender, device_id);
+-		if (queue_id)
++			g_context.processor, sender, device_id);
++		if(queue_id)
+ 			dleyna_task_processor_cancel_queue(queue_id);
+ 
+ 		g_context.connector->return_response(invocation, NULL);
+-	} else if (!strcmp(method, DLR_INTERFACE_GET_ICON)) {
++	} else if(!strcmp(method, DLR_INTERFACE_GET_ICON)) {
+ 		task = dlr_task_get_icon_new(invocation, object, parameters);
+ 
+ 		prv_add_task(task, sender, device_id);
+@@ -1070,75 +1021,67 @@
+ {
+ 	DLEYNA_LOG_INFO("New media server %s", path);
+ 
+-	(void) g_context.connector->notify(g_context.connection,
+-					   DLEYNA_SERVER_OBJECT,
+-					   DLEYNA_SERVER_INTERFACE_MANAGER,
+-					   DLR_INTERFACE_FOUND_RENDERER,
+-					   g_variant_new("(o)", path),
+-					   NULL);
++	(void) g_context.connector->notify(
++		g_context.connection, DLEYNA_SERVER_OBJECT,
++		DLEYNA_SERVER_INTERFACE_MANAGER, DLR_INTERFACE_FOUND_RENDERER,
++		g_variant_new("(o)", path), NULL);
+ }
+ 
+ static void prv_lost_media_server(const gchar *path)
+ {
+ 	DLEYNA_LOG_INFO("Lost %s", path);
+ 
+-	(void) g_context.connector->notify(g_context.connection,
+-					   DLEYNA_SERVER_OBJECT,
+-					   DLEYNA_SERVER_INTERFACE_MANAGER,
+-					   DLR_INTERFACE_LOST_RENDERER,
+-					   g_variant_new("(o)", path),
+-					   NULL);
++	(void) g_context.connector->notify(
++		g_context.connection, DLEYNA_SERVER_OBJECT,
++		DLEYNA_SERVER_INTERFACE_MANAGER, DLR_INTERFACE_LOST_RENDERER,
++		g_variant_new("(o)", path), NULL);
+ 
+ 	dleyna_task_processor_remove_queues_for_sink(g_context.processor, path);
+ }
+ 
+-static void prv_white_list_init(void)
++static void prv_context_filter_init(void)
+ {
+ 	gboolean enabled;
+ 	GVariant *entries;
+-	dleyna_white_list_t *wl;
++	dleyna_context_filter_t *cf;
+ 
+ 	DLEYNA_LOG_DEBUG("Enter");
+ 
+-	enabled = dleyna_settings_is_white_list_enabled(g_context.settings);
+-	entries = dleyna_settings_white_list_entries(g_context.settings);
++	enabled = dleyna_settings_is_context_filter_enabled(g_context.settings);
++	entries = dleyna_settings_context_filter_entries(g_context.settings);
+ 
+-	wl = dlr_manager_get_white_list(g_context.manager);
++	cf = dlr_manager_get_context_filter(g_context.manager);
+ 
+-	dleyna_white_list_enable(wl, enabled);
+-	dleyna_white_list_add_entries(wl, entries);
++	dleyna_context_filter_enable(cf, enabled);
++	dleyna_context_filter_add_entries(cf, entries);
+ 
+ 	DLEYNA_LOG_DEBUG("Exit");
+ }
+ 
+ static gboolean prv_control_point_start_service(
+-					dleyna_connector_id_t connection)
++	dleyna_connector_id_t connection)
+ {
+ 	gboolean retval = TRUE;
+ 	uint i;
+ 
+ 	g_context.connection = connection;
+ 
+-	for (i = 0; i < DLR_MANAGER_INTERFACE_INFO_MAX; i++)
++	for(i = 0; i < DLR_MANAGER_INTERFACE_INFO_MAX; i++)
+ 		g_context.dlr_id[i] = g_context.connector->publish_object(
+-						connection,
+-						DLEYNA_SERVER_OBJECT,
+-						TRUE,
+-						g_manager_interfaces[i],
+-						g_root_vtables + i);
+-
+-	if (g_context.dlr_id[DLR_MANAGER_INTERFACE_MANAGER]) {
+-		g_context.upnp = dlr_upnp_new(connection,
+-					     dleyna_settings_port(g_context.settings),
+-					     dleyna_settings_push_host_port(g_context.settings),
+-					     g_server_vtables,
+-					     prv_found_media_server,
+-					     prv_lost_media_server);
+-
+-		g_context.manager = dlr_manager_new(connection,
+-					       dlr_upnp_get_context_manager(
+-							g_context.upnp));
+-		prv_white_list_init();
++			connection, DLEYNA_SERVER_OBJECT, TRUE,
++			g_manager_interfaces[i], g_root_vtables + i);
++
++	if(g_context.dlr_id[DLR_MANAGER_INTERFACE_MANAGER]) {
++		g_context.upnp = dlr_upnp_new(
++			connection, dleyna_settings_port(g_context.settings),
++			dleyna_settings_push_host_port(g_context.settings),
++			g_server_vtables, prv_found_media_server,
++			prv_lost_media_server);
++
++		g_context.manager = dlr_manager_new(
++			connection,
++			dlr_upnp_get_context_manager(g_context.upnp));
++		prv_context_filter_init();
+ 	} else {
+ 		retval = FALSE;
+ 	}
+diff -Nuar a/libdleyna/renderer/task.c b/libdleyna/renderer/task.c
+--- a/libdleyna/renderer/task.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/task.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,6 +20,8 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include <libdleyna/core/error.h>
+ #include <libdleyna/core/task-processor.h>
+ 
+diff -Nuar a/libdleyna/renderer/upnp.c b/libdleyna/renderer/upnp.c
+--- a/libdleyna/renderer/upnp.c	2021-10-26 18:51:33.000000000 +0300
++++ b/libdleyna/renderer/upnp.c	2022-06-03 00:20:47.000000000 +0300
+@@ -20,6 +20,8 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include <string.h>
+ 
+ #include <libgssdp/gssdp-resource-browser.h>
+@@ -162,7 +164,7 @@
+ 	udn = gupnp_device_info_get_udn((GUPnPDeviceInfo *)proxy);
+ 
+ 	ip_address = gssdp_client_get_host_ip(
+-		GSSDP_CLIENT(gupnp_control_point_get_context(cp)));
++		gssdp_resource_browser_get_client(GSSDP_RESOURCE_BROWSER(cp)));
+ 
+ 	if (!udn || !ip_address)
+ 		goto on_error;
+@@ -244,7 +246,7 @@
+ 	udn = gupnp_device_info_get_udn((GUPnPDeviceInfo *)proxy);
+ 
+ 	ip_address = gssdp_client_get_host_ip(
+-		GSSDP_CLIENT(gupnp_control_point_get_context(cp)));
++		gssdp_resource_browser_get_client(GSSDP_RESOURCE_BROWSER(cp)));
+ 
+ 	if (!udn || !ip_address)
+ 		goto on_error;
+diff -Nuar a/meson.build b/meson.build
+--- a/meson.build	2021-10-26 18:51:33.000000000 +0300
++++ b/meson.build	2022-06-03 00:20:47.000000000 +0300
+@@ -70,12 +70,12 @@
+ 
+ glib = dependency('glib-2.0', version: '>= 2.28')
+ gio = dependency('gio-2.0', version: '>=2.28')
+-gssdp = dependency('gssdp-1.2', version: '>= 1.2.0')
+-gupnp = dependency('gupnp-1.2', version: '>= 1.2.0')
++gssdp = dependency('gssdp-1.6', version: '>= 1.4.0')
++gupnp = dependency('gupnp-1.6', version: '>= 1.4.0')
+ gupnp_av = dependency('gupnp-av-1.0', version: '>= 0.12.9')
+ gupnp_dlna = dependency('gupnp-dlna-2.0', version: '>= 0.9.4')
+-soup = dependency('libsoup-2.4', version: '>= 2.42.0')
+-dleyna_core = dependency('dleyna-core-1.0', version: '>= 0.6.0', fallback: 'dleyna-core-1.0')
++soup = dependency('libsoup-3.0', version: '>= 3.0')
++dleyna_core = dependency('dleyna-core-1.0', version: '>= 0.8.0', fallback: 'dleyna-core-1.0')
+ 
+ cc = meson.get_compiler('c')
+ math = cc.find_library('m', required: false)
+diff -Nuar a/server/daemon.c b/server/daemon.c
+--- a/server/daemon.c	2021-10-26 18:51:33.000000000 +0300
++++ b/server/daemon.c	2022-06-03 00:20:47.000000000 +0300
+@@ -21,6 +21,8 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include <glib.h>
+ #include <glib-unix.h>
+ 

@@ -1,0 +1,713 @@
+diff -Nuar a/libdleyna/core/context-filter.c b/libdleyna/core/context-filter.c
+--- a/libdleyna/core/context-filter.c	1970-01-01 02:00:00.000000000 +0200
++++ b/libdleyna/core/context-filter.c	2022-06-03 00:22:19.000000000 +0300
+@@ -0,0 +1,140 @@
++/*
++ * dLeyna
++ *
++ * Copyright (C) 2012-2017 Intel Corporation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU Lesser General Public License,
++ * version 2.1, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
++ * for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation, Inc.,
++ * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Ludovic Ferrandis <ludovic.ferrandis@intel.com>
++ *
++ */
++
++#include <config.h>
++
++#include <string.h>
++
++#include "context-filter.h"
++#include "log.h"
++
++struct dleyna_context_filter_t_ {
++	GUPnPContextFilter *gupnp_cf;
++};
++
++#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
++static void prv_dump_cf_entries(GUPnPContextFilter *cf)
++{
++	GList *l;
++
++	l = gupnp_context_filter_get_entries(cf);
++
++	DLEYNA_LOG_DEBUG_NL();
++	DLEYNA_LOG_DEBUG("Context Filter entries:");
++
++	if (l != NULL) {
++		while (l != NULL) {
++			DLEYNA_LOG_DEBUG("     Entry: [%s].", (char *)l->data);
++			l = l->next;
++		}
++	} else {
++		DLEYNA_LOG_DEBUG("     Context Filter Empty.");
++	}
++
++	DLEYNA_LOG_DEBUG_NL();
++}
++#endif
++
++dleyna_context_filter_t *dleyna_context_filter_new(GUPnPContextFilter *gupnp_cf)
++{
++	dleyna_context_filter_t *cf;
++
++	if (gupnp_cf != NULL) {
++		cf =  g_new0(dleyna_context_filter_t, 1);
++
++		cf->gupnp_cf = gupnp_cf;
++	} else {
++		cf = NULL;
++		DLEYNA_LOG_DEBUG("Parameter must not be NULL");
++	}
++
++
++	return cf;
++}
++
++void dleyna_context_filter_delete(dleyna_context_filter_t *cf)
++{
++	g_free(cf);
++}
++
++void dleyna_context_filter_enable(dleyna_context_filter_t *cf,
++			      gboolean enabled)
++{
++	if (cf->gupnp_cf != NULL) {
++		gupnp_context_filter_set_enabled(cf->gupnp_cf, enabled);
++
++		DLEYNA_LOG_DEBUG("White List enabled: %d", enabled);
++	}
++}
++
++void dleyna_context_filter_add_entries(dleyna_context_filter_t *cf,
++				   GVariant *entries)
++{
++	GVariantIter viter;
++	gchar *entry;
++
++	DLEYNA_LOG_DEBUG("Enter");
++
++	if ((entries != NULL) && (cf->gupnp_cf != NULL)) {
++		(void) g_variant_iter_init(&viter, entries);
++
++		while (g_variant_iter_next(&viter, "&s", &entry))
++			(void) gupnp_context_filter_add_entry(cf->gupnp_cf, entry);
++
++#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
++		prv_dump_cf_entries(cf->gupnp_cf);
++#endif
++	}
++
++	DLEYNA_LOG_DEBUG("Exit");
++}
++
++void dleyna_context_filter_remove_entries(dleyna_context_filter_t *cf,
++				      GVariant *entries)
++{
++	GVariantIter viter;
++	gchar *entry;
++
++	if ((entries != NULL) && (cf->gupnp_cf != NULL)) {
++		(void) g_variant_iter_init(&viter, entries);
++
++		while (g_variant_iter_next(&viter, "&s", &entry))
++			(void) gupnp_context_filter_remove_entry(cf->gupnp_cf,
++							     entry);
++
++#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
++		prv_dump_cf_entries(cf->gupnp_cf);
++#endif
++	}
++}
++
++void dleyna_context_filter_clear(dleyna_context_filter_t *cf)
++{
++	if (cf->gupnp_cf != NULL) {
++		DLEYNA_LOG_DEBUG("Clear white list");
++		gupnp_context_filter_clear(cf->gupnp_cf);
++
++#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
++		prv_dump_cf_entries(cf->gupnp_cf);
++#endif
++	}
++}
+diff -Nuar a/libdleyna/core/context-filter.h b/libdleyna/core/context-filter.h
+--- a/libdleyna/core/context-filter.h	1970-01-01 02:00:00.000000000 +0200
++++ b/libdleyna/core/context-filter.h	2022-06-03 00:22:19.000000000 +0300
+@@ -0,0 +1,41 @@
++/*
++ * dLeyna
++ *
++ * Copyright (C) 2012-2017 Intel Corporation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU Lesser General Public License,
++ * version 2.1, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
++ * for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation, Inc.,
++ * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Ludovic Ferrandis <ludovic.ferrandis@intel.com>
++ *
++ */
++
++#pragma once
++
++#include <glib.h>
++#include <libgupnp/gupnp-context-filter.h>
++
++typedef struct dleyna_context_filter_t_ dleyna_context_filter_t;
++
++dleyna_context_filter_t *dleyna_context_filter_new(GUPnPContextFilter *gupnp_wl);
++
++void dleyna_context_filter_delete(dleyna_context_filter_t *wl);
++
++void dleyna_context_filter_enable(dleyna_context_filter_t *wl, gboolean enabled);
++
++void dleyna_context_filter_add_entries(dleyna_context_filter_t *wl, GVariant *entries);
++
++void dleyna_context_filter_remove_entries(dleyna_context_filter_t *wl,
++				      GVariant *entries);
++
++void dleyna_context_filter_clear(dleyna_context_filter_t *wl);
+diff -Nuar a/libdleyna/core/gasync-task.c b/libdleyna/core/gasync-task.c
+--- a/libdleyna/core/gasync-task.c	1970-01-01 02:00:00.000000000 +0200
++++ b/libdleyna/core/gasync-task.c	2022-06-03 00:22:19.000000000 +0300
+@@ -0,0 +1,115 @@
++/*
++ * dLeyna
++ *
++ * Copyright (c) 2019 Jens Georg <mail@jensge.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU Lesser General Public License,
++ * version 2.1, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
++ * for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation, Inc.,
++ * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ */
++
++#include "gasync-task.h"
++#include <libdleyna/core/task-processor.h>
++
++struct dleyna_gasync_task_t_ {
++	dleyna_task_atom_t base;
++	dleyna_gasync_task_action action;
++	GObject *target;
++	GCancellable *cancellable;
++	GDestroyNotify free_func;
++	gboolean current;
++	gpointer cb_user_data;
++};
++
++const char *dleyna_gasync_task_create_source(void)
++{
++	static unsigned int cpt = 1;
++	static char source[27];
++
++	g_snprintf(source, 27, "gasync-source-%d", cpt);
++	cpt++;
++
++	return source;
++}
++
++void dleyna_gasync_task_add(const dleyna_task_queue_key_t *queue_id,
++		dleyna_gasync_task_action action,
++		GObject *target,
++		GCancellable *cancellable,
++		GDestroyNotify free_func,
++		gpointer cb_user_data)
++{
++	dleyna_gasync_task_t *task;
++
++	task = g_new0(dleyna_gasync_task_t, 1);
++
++	task->action = action;
++	task->cancellable = cancellable;
++	task->free_func = free_func;
++	task->cb_user_data = cb_user_data;
++	task->target = target;
++
++	if (target != NULL) {
++		g_object_add_weak_pointer (target, (gpointer *)(&task->target));
++	}
++
++	dleyna_task_queue_add_task(queue_id, &task->base);
++}
++
++void dleyna_gasync_task_process_cb(dleyna_task_atom_t *atom,
++		gpointer user_data)
++{
++	dleyna_gasync_task_t *task = (dleyna_gasync_task_t *)atom;
++
++	task->current = TRUE;
++	task->action(task, task->target);
++}
++
++void dleyna_gasync_task_cancel_cb(dleyna_task_atom_t *atom,
++		gpointer user_data)
++{
++	dleyna_gasync_task_t *task = (dleyna_gasync_task_t *)atom;
++
++	if (task->cancellable) {
++		g_cancellable_cancel (task->cancellable);
++		task->cancellable = NULL;
++
++		if (task->current)
++			dleyna_task_queue_task_completed(task->base.queue_id);
++	}
++}
++
++void dleyna_gasync_task_delete_cb(dleyna_task_atom_t *atom,
++		gpointer user_data)
++{
++	dleyna_gasync_task_t *task = (dleyna_gasync_task_t *)atom;
++
++	if (task->free_func != NULL)
++		task->free_func(task->cb_user_data);
++
++	if (task->target != NULL) {
++		g_object_remove_weak_pointer(task->target, (gpointer *)&task->target);
++	}
++
++	g_free(task);
++}
++
++gpointer dleyna_gasync_task_get_user_data(dleyna_gasync_task_t *task)
++{
++	return task->cb_user_data;
++}
++
++GCancellable *dleyna_gasync_task_get_cancellable(dleyna_gasync_task_t *task)
++{
++	return task->cancellable;
++}
+diff -Nuar a/libdleyna/core/gasync-task.h b/libdleyna/core/gasync-task.h
+--- a/libdleyna/core/gasync-task.h	1970-01-01 02:00:00.000000000 +0200
++++ b/libdleyna/core/gasync-task.h	2022-06-03 00:22:19.000000000 +0300
+@@ -0,0 +1,56 @@
++/*
++ * dLeyna
++ *
++ * Copyright (c) 2019 Jens Georg <mail@jensge.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU Lesser General Public License,
++ * version 2.1, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
++ * for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program; if not, write to the Free Software Foundation, Inc.,
++ * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ */
++
++#pragma once
++
++#include <libdleyna/core/task-atom.h>
++
++#include <glib.h>
++#include <gio/gio.h>
++
++typedef struct dleyna_gasync_task_t_ dleyna_gasync_task_t;
++
++typedef gboolean (*dleyna_gasync_task_action)
++	(dleyna_gasync_task_t *task,
++	 GObject *target);
++
++const char *dleyna_gasync_task_create_source(void);
++
++void dleyna_gasync_task_add(const dleyna_task_queue_key_t *queue_id,
++		dleyna_gasync_task_action action,
++		GObject *target,
++		GCancellable *cancellable,
++		GDestroyNotify free_func,
++		gpointer cb_user_data);
++
++void dleyna_gasync_task_ready_cb(GObject *source, GAsyncResult *res, gpointer user_data);
++
++void dleyna_gasync_task_process_cb(dleyna_task_atom_t *atom,
++		gpointer user_data);
++
++void dleyna_gasync_task_cancel_cb(dleyna_task_atom_t *atom,
++		gpointer user_data);
++
++void dleyna_gasync_task_delete_cb(dleyna_task_atom_t *atom,
++		gpointer user_data);
++
++gpointer dleyna_gasync_task_get_user_data(dleyna_gasync_task_t *task);
++
++GCancellable *dleyna_gasync_task_get_cancellable(dleyna_gasync_task_t *task);
+diff -Nuar a/libdleyna/core/meson.build b/libdleyna/core/meson.build
+--- a/libdleyna/core/meson.build	2021-04-08 13:22:31.000000000 +0300
++++ b/libdleyna/core/meson.build	2022-06-03 00:22:19.000000000 +0300
+@@ -10,11 +10,11 @@
+         'error.h',
+         'log.h',
+         'main-loop.h',
+-        'service-task.h',
++        'gasync-task.h',
+         'settings.h',
+         'task-atom.h',
+         'task-processor.h',
+-        'white-list.h',
++        'context-filter.h',
+     ),
+     subdir : 'dleyna-1.0/libdleyna/core'
+ )
+@@ -27,17 +27,17 @@
+         'error.c',
+         'log.c',
+         'main-loop.c',
+-        'service-task.c',
++        'gasync-task.c',
+         'settings.c',
+         'task-processor.c',
+-        'white-list.c'
++        'context-filter.c'
+     ),
+-    version : '5.0.0',
++    version : '6.0.0',
+     dependencies : [
+         dependency('glib-2.0', version : '>= 2.28'),
+         dependency('gio-2.0', version : '>= 2.28'),
+         dependency('gmodule-2.0', version : '>= 2.28'),
+-        dependency('gupnp-1.2', version : '>= 1.2.0'),
++        dependency('gupnp-1.6', version : '>= 1.2.0'),
+         config_h
+     ],
+     c_args : [
+@@ -58,7 +58,7 @@
+     description : 'UPnP & DLNA core library',
+     subdirs : 'dleyna-1.0',
+     version: meson.project_version(),
+-    requires: ['gupnp-1.2', 'glib-2.0', 'gio-2.0'],
++    requires: ['gupnp-1.6', 'glib-2.0', 'gio-2.0'],
+ )
+ 
+ meson.override_dependency('dleyna-core-1.0', core_dep)
+diff -Nuar a/libdleyna/core/settings.c b/libdleyna/core/settings.c
+--- a/libdleyna/core/settings.c	2021-04-08 13:22:31.000000000 +0300
++++ b/libdleyna/core/settings.c	2022-06-03 00:22:19.000000000 +0300
+@@ -25,7 +25,7 @@
+ 
+ #include "log.h"
+ #include "settings.h"
+-#include "white-list.h"
++#include "context-filter.h"
+ 
+ struct dleyna_settings_t_ {
+ 	GKeyFile *keyfile;
+@@ -514,12 +514,12 @@
+ 	DLEYNA_LOG_DEBUG("Exit");
+ }
+ 
+-gboolean dleyna_settings_is_white_list_enabled(dleyna_settings_t *settings)
++gboolean dleyna_settings_is_context_filter_enabled(dleyna_settings_t *settings)
+ {
+ 	return settings->netf_enabled;
+ }
+ 
+-void dleyna_settings_set_white_list_enabled(dleyna_settings_t *settings,
++void dleyna_settings_set_context_filter_enabled(dleyna_settings_t *settings,
+ 					    gboolean enabled,
+ 					    GError **error)
+ {
+@@ -538,7 +538,7 @@
+ 	DLEYNA_LOG_DEBUG("Exit");
+ }
+ 
+-GVariant *dleyna_settings_white_list_entries(dleyna_settings_t *settings)
++GVariant *dleyna_settings_context_filter_entries(dleyna_settings_t *settings)
+ {
+ 	return settings->netf_entries;
+ }
+@@ -567,7 +567,7 @@
+ 	return strv;
+ }
+ 
+-void dleyna_settings_set_white_list_entries(dleyna_settings_t *settings,
++void dleyna_settings_set_context_filter_entries(dleyna_settings_t *settings,
+ 					    GVariant *entries,
+ 					    GError **error)
+ {
+diff -Nuar a/libdleyna/core/settings.h b/libdleyna/core/settings.h
+--- a/libdleyna/core/settings.h	2021-04-08 13:22:31.000000000 +0300
++++ b/libdleyna/core/settings.h	2022-06-03 00:22:19.000000000 +0300
+@@ -43,15 +43,15 @@
+ 				    gboolean never_quit,
+ 				    GError **error);
+ 
+-gboolean dleyna_settings_is_white_list_enabled(dleyna_settings_t *settings);
++gboolean dleyna_settings_is_context_filter_enabled(dleyna_settings_t *settings);
+ 
+-void dleyna_settings_set_white_list_enabled(dleyna_settings_t *settings,
++void dleyna_settings_set_context_filter_enabled(dleyna_settings_t *settings,
+ 					    gboolean enabled,
+ 					    GError **error);
+ 
+-GVariant *dleyna_settings_white_list_entries(dleyna_settings_t *settings);
++GVariant *dleyna_settings_context_filter_entries(dleyna_settings_t *settings);
+ 
+-void dleyna_settings_set_white_list_entries(dleyna_settings_t *settings,
++void dleyna_settings_set_context_filter_entries(dleyna_settings_t *settings,
+ 					    GVariant *entries,
+ 					    GError **error);
+ 
+diff -Nuar a/libdleyna/core/white-list.c b/libdleyna/core/white-list.c
+--- a/libdleyna/core/white-list.c	2021-04-08 13:22:31.000000000 +0300
++++ b/libdleyna/core/white-list.c	1970-01-01 02:00:00.000000000 +0200
+@@ -1,138 +0,0 @@
+-/*
+- * dLeyna
+- *
+- * Copyright (C) 2012-2017 Intel Corporation. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU Lesser General Public License,
+- * version 2.1, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+- * for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public License
+- * along with this program; if not, write to the Free Software Foundation, Inc.,
+- * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
+- *
+- * Ludovic Ferrandis <ludovic.ferrandis@intel.com>
+- *
+- */
+-
+-#include <string.h>
+-
+-#include "white-list.h"
+-#include "log.h"
+-
+-struct dleyna_white_list_t_ {
+-	GUPnPWhiteList *gupnp_wl;
+-};
+-
+-#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
+-static void prv_dump_wl_entries(GUPnPWhiteList *wl)
+-{
+-	GList *l;
+-
+-	l = gupnp_white_list_get_entries(wl);
+-
+-	DLEYNA_LOG_DEBUG_NL();
+-	DLEYNA_LOG_DEBUG("White List entries:");
+-
+-	if (l != NULL) {
+-		while (l != NULL) {
+-			DLEYNA_LOG_DEBUG("     Entry: [%s].", (char *)l->data);
+-			l = l->next;
+-		}
+-	} else {
+-		DLEYNA_LOG_DEBUG("     White List Empty.");
+-	}
+-
+-	DLEYNA_LOG_DEBUG_NL();
+-}
+-#endif
+-
+-dleyna_white_list_t *dleyna_white_list_new(GUPnPWhiteList *gupnp_wl)
+-{
+-	dleyna_white_list_t *wl;
+-
+-	if (gupnp_wl != NULL) {
+-		wl =  g_new0(dleyna_white_list_t, 1);
+-
+-		wl->gupnp_wl = gupnp_wl;
+-	} else {
+-		wl = NULL;
+-		DLEYNA_LOG_DEBUG("Parameter must not be NULL");
+-	}
+-
+-
+-	return wl;
+-}
+-
+-void dleyna_white_list_delete(dleyna_white_list_t *wl)
+-{
+-	g_free(wl);
+-}
+-
+-void dleyna_white_list_enable(dleyna_white_list_t *wl,
+-			      gboolean enabled)
+-{
+-	if (wl->gupnp_wl != NULL) {
+-		gupnp_white_list_set_enabled(wl->gupnp_wl, enabled);
+-
+-		DLEYNA_LOG_DEBUG("White List enabled: %d", enabled);
+-	}
+-}
+-
+-void dleyna_white_list_add_entries(dleyna_white_list_t *wl,
+-				   GVariant *entries)
+-{
+-	GVariantIter viter;
+-	gchar *entry;
+-
+-	DLEYNA_LOG_DEBUG("Enter");
+-
+-	if ((entries != NULL) && (wl->gupnp_wl != NULL)) {
+-		(void) g_variant_iter_init(&viter, entries);
+-
+-		while (g_variant_iter_next(&viter, "&s", &entry))
+-			(void) gupnp_white_list_add_entry(wl->gupnp_wl, entry);
+-
+-#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
+-		prv_dump_wl_entries(wl->gupnp_wl);
+-#endif
+-	}
+-
+-	DLEYNA_LOG_DEBUG("Exit");
+-}
+-
+-void dleyna_white_list_remove_entries(dleyna_white_list_t *wl,
+-				      GVariant *entries)
+-{
+-	GVariantIter viter;
+-	gchar *entry;
+-
+-	if ((entries != NULL) && (wl->gupnp_wl != NULL)) {
+-		(void) g_variant_iter_init(&viter, entries);
+-
+-		while (g_variant_iter_next(&viter, "&s", &entry))
+-			(void) gupnp_white_list_remove_entry(wl->gupnp_wl,
+-							     entry);
+-
+-#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
+-		prv_dump_wl_entries(wl->gupnp_wl);
+-#endif
+-	}
+-}
+-
+-void dleyna_white_list_clear(dleyna_white_list_t *wl)
+-{
+-	if (wl->gupnp_wl != NULL) {
+-		DLEYNA_LOG_DEBUG("Clear white list");
+-		gupnp_white_list_clear(wl->gupnp_wl);
+-
+-#if DLEYNA_LOG_LEVEL & DLEYNA_LOG_LEVEL_DEBUG
+-		prv_dump_wl_entries(wl->gupnp_wl);
+-#endif
+-	}
+-}
+diff -Nuar a/libdleyna/core/white-list.h b/libdleyna/core/white-list.h
+--- a/libdleyna/core/white-list.h	2021-04-08 13:22:31.000000000 +0300
++++ b/libdleyna/core/white-list.h	1970-01-01 02:00:00.000000000 +0200
+@@ -1,44 +0,0 @@
+-/*
+- * dLeyna
+- *
+- * Copyright (C) 2012-2017 Intel Corporation. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU Lesser General Public License,
+- * version 2.1, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+- * for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public License
+- * along with this program; if not, write to the Free Software Foundation, Inc.,
+- * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
+- *
+- * Ludovic Ferrandis <ludovic.ferrandis@intel.com>
+- *
+- */
+-
+-#ifndef DLEYNA_WHITE_LIST_H__
+-#define DLEYNA_WHITE_LIST_H__
+-
+-#include <glib.h>
+-#include <libgupnp/gupnp-white-list.h>
+-
+-typedef struct dleyna_white_list_t_ dleyna_white_list_t;
+-
+-dleyna_white_list_t *dleyna_white_list_new(GUPnPWhiteList *gupnp_wl);
+-
+-void dleyna_white_list_delete(dleyna_white_list_t *wl);
+-
+-void dleyna_white_list_enable(dleyna_white_list_t *wl, gboolean enabled);
+-
+-void dleyna_white_list_add_entries(dleyna_white_list_t *wl, GVariant *entries);
+-
+-void dleyna_white_list_remove_entries(dleyna_white_list_t *wl,
+-				      GVariant *entries);
+-
+-void dleyna_white_list_clear(dleyna_white_list_t *wl);
+-
+-#endif /* DLEYNA_WHITE_LIST_H__ */
+diff -Nuar a/meson.build b/meson.build
+--- a/meson.build	2021-04-08 13:22:31.000000000 +0300
++++ b/meson.build	2022-06-03 00:22:19.000000000 +0300
+@@ -1,4 +1,8 @@
+-project('dleyna-core', 'c', version: '0.7.0')
++project('dleyna-core', 'c',
++  version: '0.8.0',
++  license: 'LGPL-2.1-or-later',
++  meson_version: '>=0.54.0'
++)
+ 
+ pkg = import('pkgconfig')
+ 
+@@ -32,6 +36,7 @@
+ conf.set_quoted('DLEYNA_CONNECTOR_NAME', 'dbus', description : 'IPC connector name')
+ conf.set_quoted('DLEYNA_CONNECTOR_LIB_PATTERN', 'libdleyna-connector-', description : 'Starting pattern for dleyna connector libraries')
+ conf.set('DLEYNA_LOG_TYPE', '0', description: 'Define log output technology')
++conf.set('DLEYNA_ENABLE_DEBUG', '1')
+ 
+ exclusive = get_option('log_level').contains('0') or get_option('log_level').contains('7') or get_option('log_level').contains('8')
+ 
+diff -Nuar a/meson_options.txt b/meson_options.txt
+--- a/meson_options.txt	2021-04-08 13:22:31.000000000 +0300
++++ b/meson_options.txt	2022-06-03 00:22:19.000000000 +0300
+@@ -1 +1,2 @@
+ option('log_level', type: 'array', choices : ['0', '1', '2', '3', '4', '5', '6', '7', '8'], value : ['7'])
++option('enable_debug', type: 'boolean', value: 'false')
+diff -Nuar a/README.md b/README.md
+--- a/README.md	2021-04-08 13:22:31.000000000 +0300
++++ b/README.md	2022-06-03 00:22:19.000000000 +0300
+@@ -16,7 +16,7 @@
+ 
+    Clone repository
+ ```
+-     # git clone git://github.com/phako/dleyna-core.git
++     # git clone https://github.com/phako/dleyna-core.git
+      # cd dleyna-core
+ ```
+    Configure and build
