@@ -17,9 +17,9 @@ def build():
     #shelltools.export("OS_CXXFLAGS", "%s -fno-strict-aliasing" % get.CXXFLAGS())
 
     shelltools.makedirs("phc-winner-argon2-20190702")
-    autotools.make()
+    autotools.make("OPTTARGET='none' LIBRARY_REL='lib' ARGON2_VERSION='%s'" % get.srcVERSION())
 
 def install():
-    autotools.rawInstall("DESTDIR=%s LIBDIR=%s/usr/lib" % (get.installDIR(), get.installDIR()))
+    autotools.rawInstall("DESTDIR=%s LIBRARY_REL='lib' LIBDIR=%s/usr/lib ARGON2_VERSION='%s'" % (get.installDIR(), get.installDIR(), get.srcVERSION()))
 
     pisitools.dodoc("LICENSE", "README.md")
