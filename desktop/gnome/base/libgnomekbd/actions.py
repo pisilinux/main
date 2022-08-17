@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-fi")
+    autotools.autoreconf("-fi")
     autotools.configure("--disable-static \
                          --enable-introspection")
 
