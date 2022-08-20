@@ -9,8 +9,8 @@ from pisi.actionsapi import autotools, pisitools, get
 def setup():
 	pisitools.cflags.add("-Wno-deprecated-declarations")
 	pisitools.unlink("*.stamp")
-	autotools.autoreconf("-fiv")
-	autotools.configure("--enable-gtk3 --enable-buildin-polkit --enable-buildin-clipboard")
+	autotools.autoreconf("-fv")
+	autotools.configure("--enable-gtk3 --disable-buildin-polkit --disable-buildin-clipboard")
 
 def build():
 	autotools.make()
