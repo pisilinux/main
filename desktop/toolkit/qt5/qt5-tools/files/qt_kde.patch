@@ -1,13 +1,15 @@
-diff --git a/src/linguist/shared/qm.cpp b/src/linguist/shared/qm.cpp
-index 288607824..8c3fc3faf 100644
---- a/src/linguist/shared/qm.cpp
-+++ b/src/linguist/shared/qm.cpp
-@@ -552,7 +552,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
-                 goto end;
-             case Tag_Translation: {
-                 int len = read32(m);
--                if (len % 1) {
-+                if (len & 1) {
-                     cd.appendError(QLatin1String("QM-Format error"));
-                     return false;
-                 }
+diff --git a/src/assistant/qhelpgenerator/helpgenerator.cpp b/src/assistant/qhelpgenerator/helpgenerator.cpp
+index feab1e2d5..cbfb82507 100644
+--- a/src/assistant/qhelpgenerator/helpgenerator.cpp
++++ b/src/assistant/qhelpgenerator/helpgenerator.cpp
+@@ -445,7 +445,9 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
+     if (filterSetId < 0)
+         return false;
+     ++filterSetId;
+-    for (int attId : qAsConst(filterAtts)) {
++    QList<int> attValues = filterAtts.values();
++    std::sort(attValues.begin(), attValues.end());
++    for (int attId : qAsConst(attValues)) {
+         m_query->prepare(QLatin1String("INSERT INTO FileAttributeSetTable "
+             "VALUES(?, ?)"));
+         m_query->bindValue(0, filterSetId);
