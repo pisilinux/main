@@ -421,6 +421,37 @@ index b89608b..89c9e4e 100644
          if (key <= MAX_HASH_VALUE && key >= 0)
              return str == QLatin1String(wordlist[key]);
      }
+diff --git a/src/svg/qsvgtinydocument.cpp b/src/svg/qsvgtinydocument.cpp
+index 63d0797..19e7154 100644
+--- a/src/svg/qsvgtinydocument.cpp
++++ b/src/svg/qsvgtinydocument.cpp
+@@ -433,8 +433,16 @@ void QSvgTinyDocument::draw(QPainter *p, QSvgExtraStates &)
+     draw(p);
+ }
+ 
++static bool isValidMatrix(const QTransform &transform)
++{
++    qreal determinant = transform.determinant();
++    return qIsFinite(determinant);
++}
++
+ void QSvgTinyDocument::mapSourceToTarget(QPainter *p, const QRectF &targetRect, const QRectF &sourceRect)
+ {
++    QTransform oldTransform = p->worldTransform();
++
+     QRectF target = targetRect;
+     if (target.isEmpty()) {
+         QPaintDevice *dev = p->device();
+@@ -487,6 +495,9 @@ void QSvgTinyDocument::mapSourceToTarget(QPainter *p, const QRectF &targetRect,
+         }
+ #endif
+     }
++
++    if (!isValidMatrix(p->worldTransform()))
++        p->setWorldTransform(oldTransform);
+ }
+ 
+ QRectF QSvgTinyDocument::boundsOnElement(const QString &id) const
 diff --git a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp b/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
 index 8f1f03b..36c76ec 100644
 --- a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
