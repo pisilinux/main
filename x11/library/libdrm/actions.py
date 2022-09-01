@@ -17,7 +17,7 @@ def setup():
     if get.buildTYPE() == "emul32":
         options = " --libdir=lib32 \
                     -Dudev=false \
-                    -Dvalgrind=false"
+                    -Dvalgrind=disabled"
 
 
 
