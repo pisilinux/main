@@ -1,0 +1,23 @@
+From 616fc2cbd5522137b78097c247feb04e266ff780 Mon Sep 17 00:00:00 2001
+From: Nikolaj Bjorner <nbjorner@microsoft.com>
+Date: Sun, 4 Sep 2022 16:22:11 -0700
+Subject: [PATCH] fix #6314
+
+Signed-off-by: Nikolaj Bjorner <nbjorner@microsoft.com>
+---
+ src/solver/assertions/asserted_formulas.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/solver/assertions/asserted_formulas.cpp b/src/solver/assertions/asserted_formulas.cpp
+index 5780ef227e..5dec90ba7a 100644
+--- a/src/solver/assertions/asserted_formulas.cpp
++++ b/src/solver/assertions/asserted_formulas.cpp
+@@ -732,7 +732,7 @@ void asserted_formulas::bv_size_reduce_fn::simplify(justified_expr const& j, exp
+     auto check_reduce = [&](expr* a, expr* b) {
+         if (bv.is_extract(a, lo, hi, x) && lo > 0 && hi + 1 == bv.get_bv_size(x) && bv.is_numeral(b, r) && r == 0) {
+             // insert x -> x[0,lo-1] ++ n into sub
+-            new_term = bv.mk_concat(bv.mk_extract(lo - 1, 0, x), b);
++            new_term = bv.mk_concat(b, bv.mk_extract(lo - 1, 0, x));
+             m_sub.insert(x, new_term);
+             n = j.get_fml();
+             return true;

@@ -31,5 +31,5 @@ def build():
 def install():
 	shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
 
-	pisitools.dodoc("LICENSE.txt", "README*", "RELEASE_NOTES")
+	pisitools.dodoc("RELEASE_NOTES.md")
 
