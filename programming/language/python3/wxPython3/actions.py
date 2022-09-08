@@ -12,6 +12,9 @@ from pisi.actionsapi import get
 shelltools.export("JOBS", get.makeJOBS().replace("-j5", "5"))
 options="WXPORT=gtk3 WX_CONFIG=/usr/bin/wx-config-gtk3"
 
+def setup():
+    pisitools.dosed("buildtools/config.py", "attrdict", deleteLine = True)
+
 def build():
     pythonmodules.compile(pyVer = '3', parameters = options)
 
