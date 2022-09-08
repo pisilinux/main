@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 j = ''.join([
     ' -DUSE_Z3=ON',
+    ' -DUSE_BOOST=ON',
     ' -DUSE_THREADS=ON',
     ' -DHAVE_RULES=ON',
     ' -DPYTHON_EXECUTABLE=/usr/bin/python3',
@@ -18,6 +19,7 @@ j = ''.join([
     ' -DBUILD_SHARED_LIBS=ON',
     ' -DBUILD_TESTS=OFF',
     ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo',
     ' -DUSE_BUNDLED_TINYXML2=OFF',
     ' -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON',
     ' -DENABLE_CHECK_INTERNAL=ON',
