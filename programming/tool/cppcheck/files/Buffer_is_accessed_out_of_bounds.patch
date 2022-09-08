@@ -1,0 +1,170 @@
+From 1e14e360cbb1418a4d4799d4b3a94dfb3b87f271 Mon Sep 17 00:00:00 2001
+From: chrchr-github <78114321+chrchr-github@users.noreply.github.com>
+Date: Mon, 29 Aug 2022 12:24:58 +0200
+Subject: [PATCH] Fix #8295 FN (error) Buffer is accessed out of bounds
+ (wcpncpy, wcsncpy) (#4412)
+
+* Fix #8295 FN (error) Buffer is accessed out of bounds (wcpncpy, wcsncpy)
+
+* Fix cfg, validation
+
+* Fix validation
+---
+ cfg/cppcheck-cfg.rng       | 19 ++++++++++++++++++-
+ cfg/posix.cfg              |  2 +-
+ cfg/std.cfg                |  2 +-
+ lib/checkbufferoverrun.cpp | 12 +++++++++---
+ lib/library.cpp            |  6 +++---
+ test/cfg/posix.c           |  8 ++++++++
+ test/cfg/std.c             |  8 ++++++++
+ 7 files changed, 48 insertions(+), 9 deletions(-)
+
+diff --git a/cfg/cppcheck-cfg.rng b/cfg/cppcheck-cfg.rng
+index b81a3533526..1f7b37de26b 100644
+--- a/cfg/cppcheck-cfg.rng
++++ b/cfg/cppcheck-cfg.rng
+@@ -283,7 +283,6 @@
+                       <attribute name="type">
+                         <choice>
+                           <value>strlen</value>
+-                          <value>argvalue</value>
+                           <value>sizeof</value>
+                           <value>mul</value>
+                         </choice>
+@@ -310,6 +309,24 @@
+                         <attribute name="baseType"><text/></attribute>
+                       </optional>
+                     </element>
++                    <element name="minsize">
++                      <attribute name="type">
++                        <choice>
++                          <value>argvalue</value>
++                        </choice>
++                      </attribute>
++                      <attribute name="arg">
++                        <ref name="ARGNO"/>
++                      </attribute>
++                      <optional>
++                        <attribute name="arg2">
++                          <ref name="ARGNO"/>
++                        </attribute>
++                      </optional>
++                      <optional>
++                        <attribute name="baseType"><text/></attribute>
++                      </optional>
++                    </element>
+                   </choice>
+                 </zeroOrMore>
+                 <optional>
+diff --git a/cfg/posix.cfg b/cfg/posix.cfg
+index 9fa1597f433..83766ed1215 100644
+--- a/cfg/posix.cfg
++++ b/cfg/posix.cfg
+@@ -5449,7 +5449,7 @@ The function 'mktemp' is considered to be dangerous due to race conditions and s
+     <not-overlapping-data ptr1-arg="1" ptr2-arg="2" size-arg="3"/>
+     <arg nr="1" direction="out">
+       <not-null/>
+-      <minsize type="argvalue" arg="3"/>
++      <minsize type="argvalue" arg="3" baseType="wchar_t"/>
+     </arg>
+     <arg nr="2" direction="in">
+       <not-null/>
+diff --git a/cfg/std.cfg b/cfg/std.cfg
+index 86ce3954a2c..a7387dfb353 100644
+--- a/cfg/std.cfg
++++ b/cfg/std.cfg
+@@ -5359,7 +5359,7 @@ The obsolete function 'gets' is called. With 'gets' you'll get a buffer overrun
+     <not-overlapping-data ptr1-arg="1" ptr2-arg="2" size-arg="3"/>
+     <arg nr="1">
+       <not-null/>
+-      <minsize type="argvalue" arg="3"/>
++      <minsize type="argvalue" arg="3" baseType="wchar_t"/>
+     </arg>
+     <arg nr="2" direction="in">
+       <not-null/>
+diff --git a/lib/checkbufferoverrun.cpp b/lib/checkbufferoverrun.cpp
+index f929bdbeb73..d8160e81bab 100644
+--- a/lib/checkbufferoverrun.cpp
++++ b/lib/checkbufferoverrun.cpp
+@@ -593,10 +593,16 @@ static bool checkBufferSize(const Token *ftok, const Library::ArgumentChecks::Mi
+                 return Token::getStrLength(strtoken) < bufferSize;
+         }
+         break;
+-    case Library::ArgumentChecks::MinSize::Type::ARGVALUE:
+-        if (arg && arg->hasKnownIntValue())
+-            return arg->getKnownIntValue() <= bufferSize;
++    case Library::ArgumentChecks::MinSize::Type::ARGVALUE: {
++        if (arg && arg->hasKnownIntValue()) {
++            MathLib::bigint myMinsize = arg->getKnownIntValue();
++            unsigned int baseSize = tokenizer->sizeOfType(minsize.baseType);
++            if (baseSize != 0)
++                myMinsize *= baseSize;
++            return myMinsize <= bufferSize;
++        }
+         break;
++    }
+     case Library::ArgumentChecks::MinSize::Type::SIZEOF:
+         // TODO
+         break;
+diff --git a/lib/library.cpp b/lib/library.cpp
+index c22d76c3cba..f74b000edb2 100644
+--- a/lib/library.cpp
++++ b/lib/library.cpp
+@@ -783,9 +783,6 @@ Library::Error Library::loadFunction(const tinyxml2::XMLElement * const node, co
+                             return Error(ErrorCode::BAD_ATTRIBUTE_VALUE, valueattr);
+                         ac.minsizes.emplace_back(type, 0);
+                         ac.minsizes.back().value = minsizevalue;
+-                        const char* baseTypeAttr = argnode->Attribute("baseType");
+-                        if (baseTypeAttr)
+-                            ac.minsizes.back().baseType = baseTypeAttr;
+                     } else {
+                         const char *argattr = argnode->Attribute("arg");
+                         if (!argattr)
+@@ -804,6 +801,9 @@ Library::Error Library::loadFunction(const tinyxml2::XMLElement * const node, co
+                             ac.minsizes.back().arg2 = arg2attr[0] - '0';
+                         }
+                     }
++                    const char* baseTypeAttr = argnode->Attribute("baseType"); // used by VALUE, ARGVALUE
++                    if (baseTypeAttr)
++                        ac.minsizes.back().baseType = baseTypeAttr;
+                 }
+ 
+                 else if (argnodename == "iterator") {
+diff --git a/test/cfg/posix.c b/test/cfg/posix.c
+index aad6217ee20..195f86f8575 100644
+--- a/test/cfg/posix.c
++++ b/test/cfg/posix.c
+@@ -564,6 +564,14 @@ size_t bufferAccessOutOfBounds_strnlen(const char *s, size_t maxlen)
+     return len;
+ }
+ 
++void bufferAccessOutOfBounds_wcpncpy()
++{
++    wchar_t s[16];
++    wcpncpy(s, L"abc", 16);
++    // cppcheck-suppress bufferAccessOutOfBounds
++    wcpncpy(s, L"abc", 17);
++}
++
+ size_t nullPointer_strnlen(const char *s, size_t maxlen)
+ {
+     // No warning shall be shown:
+diff --git a/test/cfg/std.c b/test/cfg/std.c
+index 9ca3a61f06c..e60e9063704 100644
+--- a/test/cfg/std.c
++++ b/test/cfg/std.c
+@@ -556,6 +556,14 @@ void bufferAccessOutOfBounds_wcsftime(wchar_t* ptr, size_t maxsize, const wchar_
+     (void)wcsftime(ptr, maxsize, format, timeptr);
+ }
+ 
++void bufferAccessOutOfBounds_wcsncpy()
++{
++    wchar_t s[16];
++    wcsncpy(s, L"abc", 16);
++    // cppcheck-suppress bufferAccessOutOfBounds
++    wcsncpy(s, L"abc", 17);
++}
++
+ int nullPointer_wcsncmp(const wchar_t* s1, const wchar_t* s2, size_t n)
+ {
+     // cppcheck-suppress nullPointer
