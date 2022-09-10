@@ -17,6 +17,7 @@ def setup():
                          --disable-geoclue \
                          --disable-docbook-docs \
                          --disable-libportal \
+                         --with-systemduserunitdir=no \
                          --enable-pipewire")
 #--with-systemduserunitdir=none \
 def build():
@@ -24,5 +25,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.dosed("%s/usr/share/dbus-1/services/*.service" % get.installDIR(), "SystemdService", deleteLine=True )
 
     pisitools.dodoc("COPYING", "README*", "NEWS")

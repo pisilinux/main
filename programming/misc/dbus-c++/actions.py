@@ -16,6 +16,7 @@ def setup():
     shelltools.export("LDFLAGS", "%s -lpthread" % get.LDFLAGS())
 
     #shelltools.system("./autogen.sh")
+    autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
                          --enable-glib \
                          --disable-ecore \
