@@ -27,7 +27,7 @@ def install():
     
     pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so")
     pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so.3")
-    pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so.3.9.2")
+    pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so.3.12.0")
     
     # Move pkgconfig file to /usr/lib
     #pisitools.domove("/lib/pkgconfig", "/usr/lib/")
