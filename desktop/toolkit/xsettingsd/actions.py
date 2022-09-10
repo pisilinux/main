@@ -12,6 +12,8 @@ from pisi.actionsapi import get
 # WorkDir = ""
 
 def setup():
+    shelltools.system("sed -i 's|lib/systemd/user|share/dbus-1/services|g' CMakeLists.txt")
+
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
