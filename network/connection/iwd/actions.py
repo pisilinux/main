@@ -13,7 +13,7 @@ def setup():
                          --enable-external-ell   \
                          --disable-systemd-service \
                          --localstatedir=/var \
-                         --with-dbus-busdir=/etc/dbus-1/systemd \
+                         --with-dbus-busdir=/usr/share/dbus-1 \
                          --enable-ofono          \
                          --enable-wired          \
                          --enable-hwsim          \
