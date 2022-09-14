@@ -31,7 +31,7 @@ def build():
     
 def check():
     shelltools.cd("build")
-    autotools.make("test -j2")
+    autotools.make("test")
 
 def install():
     shelltools.cd("build")
