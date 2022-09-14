@@ -14,12 +14,14 @@ from pisi.actionsapi import get
 def setup():
     # fix unittest error
     pisitools.dosed("tests/unittests/torture_misc.c", "cmocka_unit_test\(torture_path_expand_tilde_unix\),", "")
-    
+    pisitools.dosed("tests/unittests/CMakeLists.txt", "torture_config", "")
+
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DUNIT_TESTING=ON \
+                          -DWITH_NACL=OFF \
                           -DWITH_GSSAPI=OFF", sourceDir="..")
 
 def build():
@@ -29,7 +31,7 @@ def build():
     
 def check():
     shelltools.cd("build")
-    autotools.make("test")
+    autotools.make("test -j2")
 
 def install():
     shelltools.cd("build")
