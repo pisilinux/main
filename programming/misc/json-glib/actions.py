@@ -12,7 +12,7 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-    options = "-Ddocs=false \
+    options = "-Dgtk_doc=disabled \
               "
                
     if get.buildTYPE() == "_emul32":
