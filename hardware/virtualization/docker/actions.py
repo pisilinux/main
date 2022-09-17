@@ -9,11 +9,15 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+# shelltools.export("DISABLE_WARN_OUTSIDE_CONTAINER", "1")
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT","99e3ed8")
+shelltools.export("DOCKER_GITCOMMIT","b40c2f6")
 shelltools.export("IAMSTATIC", "false")
-shelltools.export("VERSION", "19.03.15")
+shelltools.export("VERSION", "20.10.18")
 shelltools.export("GOROOT","/usr/lib/go")
+shelltools.export("GO111MODULE","off")
+
+# shelltools.export("GOPATH", "%s/cli-%s" % (get.workDIR(), get.srcVERSION()))
 
 shelltools.export("GOPATH", "%s" % get.workDIR())
 shelltools.export("CGO_CFLAGS", "-I/usr/include")
@@ -23,32 +27,46 @@ shelltools.export("DOCKER_BUILDTAGS","seccomp")
 NoStrip=["/"]
 
 def setup():
-    shelltools.makedirs("components/cli/src/github.com/docker")
-    shelltools.cd("components/cli/src/github.com/docker")
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.move("cli-*", "cli")
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.move("moby-*", "engine")
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.move("docker-ce-packaging-19.03.13", "packaging")
+
+    # shelltools.copy( "../moby-%s/*" % get.srcVERSION(), "engine")
+    shelltools.makedirs("cli/src/github.com/docker/docker")
+    shelltools.cd("cli/src/github.com/docker")
     shelltools.system("ln -s ../../../../cli . ")
 
 def build():
     shelltools.cd("%s" % get.workDIR())
-    shelltools.cd("docker-ce-%s/components/engine" % get.srcVERSION())
+    shelltools.cd("engine")
+    # shelltools.makedirs("github.com/docker/docker")
+    # shelltools.system("make VERSION=%s dynbinary-daemon" % get.srcVERSION())
     shelltools.system("hack/make.sh dynbinary-daemon")
+    # shelltools.system("make.sh dynbinary-daemon")
     
-    # build cli
+    # build
     shelltools.cd("%s" % get.workDIR())
-    shelltools.cd("docker-ce-%s/components/cli" % get.srcVERSION())
-    shelltools.system("LDFLAGS='' GOPATH=%s/docker-ce-%s/components/cli ./scripts/build/dynbinary" % (get.workDIR(), get.srcVERSION()))
+    shelltools.cd("cli")
+    shelltools.system("LDFLAGS='' GOPATH=%s/cli ./scripts/build/binary" % get.workDIR())
 
 def install():
-    shelltools.cd("%s/docker-ce-%s" % (get.workDIR(), get.srcVERSION()))
+    shelltools.cd("%s/cli" % get.workDIR())
     
-    pisitools.dobin("components/cli/build/docker*")
-    pisitools.dobin("components/engine/bundles/dynbinary-daemon/*")
+    pisitools.dobin("build/docker*")
+
+    shelltools.cd("%s" % get.workDIR())
+    pisitools.dobin("engine/bundles/dynbinary-daemon/*")
        
     # insert udev rules
-    pisitools.insinto("/lib/udev/rules.d", "components/engine/contrib/udev/*.rules")
+    pisitools.insinto("/lib/udev/rules.d", "engine/contrib/udev/*.rules")
 
     #insert contrib in docs
-    pisitools.insinto("/usr/share/doc/docker", "components/cli/contrib")
+    pisitools.insinto("/usr/share/doc/docker", "cli/contrib")
     
-    pisitools.dobin("components/engine/contrib/check-config.sh")
+    pisitools.dobin("engine/contrib/check-config.sh")
 
-    pisitools.dodoc("VERSION", "README.md","CONTRIBUTING.md", "CHANGELOG.md")
+    shelltools.cd("%s/cli" % get.workDIR())
+    pisitools.dodoc("VERSION", "README.md","CONTRIBUTING.md")
