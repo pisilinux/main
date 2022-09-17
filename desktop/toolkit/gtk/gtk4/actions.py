@@ -31,7 +31,7 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.insinto("/usr/share/pixmaps/", "docs/tools/gtk-logo.png", "gtk4-logo.png")
+    pisitools.insinto("/usr/share/pixmaps/", "docs/reference/gtk/images/gtk-logo.png", "gtk4-logo.png")
 
     pisitools.rename("/usr/share/doc", "gtk-doc")
     pisitools.dodoc("AUTHORS", "README*", "COPYING*", "NEWS")
