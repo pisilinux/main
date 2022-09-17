@@ -12,31 +12,35 @@ from pisi.actionsapi import get
 
 #shelltools.export("GOPATH", "%s" % get.curDIR())
 shelltools.export("DOCKER_BUILDTAGS","seccomp")
-shelltools.export("COMMIT","52b36a2")
+shelltools.export("COMMIT"," 5fd4c4d")
 shelltools.export("BINDIR","/usr/bin")
 
 def setup():
     shelltools.cd("%s" % get.workDIR())
-    shelltools.move("runc-*", "runc")
+    # shelltools.move("runc-*", "runc")
     
-    shelltools.cd("runc")
+    # shelltools.cd("runc")
     #shelltools.move("vendor", "src")
 
     shelltools.export("GOPATH", "%s" % get.workDIR())
     
-    shelltools.makedirs("src/github.com/opencontainers")
-    shelltools.cd("src/github.com/opencontainers")
+    shelltools.makedirs("%s/src/github.com/opencontainers/runc" % get.workDIR())
+    # shelltools.cd("src/github.com/opencontainers")
     
-    shelltools.system("ln -rsf %s/runc ./runc" % get.workDIR())
+    # shelltools.system("ln -rsf %s/runc ./runc" % get.workDIR())
     
+    shelltools.copy("%s/runc-%s/*" % (get.workDIR(), get.srcVERSION()), "%s/src/github.com/opencontainers/runc/" % get.workDIR())
+
 def build():
-    shelltools.cd("%s/runc/src/github.com/opencontainers/runc" % get.workDIR())
-    
-    build_runc = "make GOPATH=/runc COMMIT=52b36a2"
+    # shelltools.cd("%s" % get.workDIR())
+    shelltools.cd("%s/src/github.com/opencontainers/runc" % get.workDIR())
+
+    build_runc = "make GOPATH=/runc COMMIT=5fd4c4d"
 
     shelltools.system(build_runc)
 
 def install():
+    shelltools.cd("%s/src/github.com/opencontainers/runc" % get.workDIR())
     pisitools.dobin("runc")
     
     # symlink containerd/run (nice integration with docker)
