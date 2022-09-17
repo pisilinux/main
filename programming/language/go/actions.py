@@ -28,7 +28,7 @@ def build():
     
     shelltools.cd("src")
 
-    shelltools.system("./make.bash")
+    shelltools.system("bash -x ./make.bash")
 
 def install():
     shelltools.export("GOROOT_FINAL", "/usr/lib/go")
