@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir = "lsof_%s_src" % get.srcVERSION()
+# WorkDir = "lsof_%s_src" % get.srcVERSION()
 
 def setup():
     shelltools.export("LINUX_BASE", "/proc")
@@ -26,5 +26,5 @@ def install():
 
     pisitools.insinto("/usr/share/lsof/scripts", "scripts/*")
 
-    pisitools.doman("lsof.8")
+    pisitools.doman("Lsof.8")
     pisitools.dodoc("00*")

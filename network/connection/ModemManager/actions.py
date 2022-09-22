@@ -7,32 +7,28 @@
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("./autogen.sh")
-    autotools.autoreconf("-fiv")
-    autotools.configure("--prefix=/usr --disable-static \
-                         --enable-more-warnings=yes \
-                         --with-udev-base-dir=/lib/udev \
-                         --enable-gtk-doc \
-                         --enable-plugin-qcom-soc \
-                         --with-qmi=yes \
-                         --with-mbim=yes \
-                         --disable-rpath \
-                         --disable-silent-rules \
-                         --with-systemd-journal=no \
-                         --with-polkit=permissive")
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    mesontools.configure("-Dvapi=true \
+                          -Dgtk_doc=true \
+                          -Dpolkit=permissive \
+                          -Dsystemd_journal=false \
+                          -Dsystemdsystemunitdir=no \
+                          -Dat_command_via_dbus=true \
+                          -Ddbus_policy_dir=/usr/share/dbus-1/system.d \
+                          ")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
-def check():
-    autotools.make("check")
+# def check():
+     # mesontools.build("test")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+
+    pisitools.dosed("%s/usr/share/dbus-1/system-services/*.service" % get.installDIR(), "SystemdService", deleteLine=True )
 
     pisitools.dodoc("README", "COPYING")
