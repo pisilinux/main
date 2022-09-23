@@ -1,253 +1,136 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>rust</Name>
-        <Homepage>https://www.rust-lang.org/</Homepage>
+        <Name>libadwaita</Name>
+        <Homepage>https://gitlab.gnome.org/GNOME/libadwaita</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>MIT</License>
-        <IsA>app</IsA>
-        <Summary>Systems programming language focused on safety, speed and concurrency</Summary>
-        <Description>Systems programming language focused on safety, speed and concurrency</Description>
-        <Archive sha1sum="553e89e2f9376d56bb71a21fd656c715e8013004" type="targz">https://static.rust-lang.org/dist/rustc-1.62.1-src.tar.gz</Archive>
-        <!-- Not: İkinci aşamada aşağıdaki satıra ihtiyaç olmayacak. Yoruma çevrilebilir. -->
-        <!-- The line below will be unnecessary at phase 2, can be commented out. -->
-        <Archive sha1sum="8e5272687c7cb14abf9f8379cc51c653eb0d46f0" type="targz" target="rustc-1.62.1-src">https://static.rust-lang.org/dist/rust-1.62.1-x86_64-unknown-linux-gnu.tar.gz</Archive>
-        <AdditionalFiles>
-            <AdditionalFile target="config.toml">bootstrap-config.toml</AdditionalFile>
-        </AdditionalFiles>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Icon>org.gnome.Adwaita1.Demo</Icon>
+        <Summary>Building blocks for modern GNOME applications.</Summary>
+        <Description>Modern GNOME uygulamaları için yapı taşları.</Description>
+        <Archive sha1sum="485dd0f13b581d57e8b8db364c5bb3009adfc609" type="tarxz">https://download.gnome.org/sources/libadwaita/1.2/libadwaita-1.2.0.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency versionFrom="1.62.0">rust</Dependency>
-            <Dependency>perl</Dependency>
-            <Dependency versionFrom="14.0.6">llvm</Dependency>
-            <Dependency>cmake</Dependency>
-            <Dependency>ninja</Dependency>
-            <Dependency>ocaml</Dependency>
-            <Dependency>valgrind-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
-            <Dependency>glibc-devel</Dependency>
-            <Dependency>libxml2-devel</Dependency>
-            <Dependency>openssl-devel</Dependency>
-            <Dependency>libssh2-devel</Dependency>
-            <Dependency>gdb-devel</Dependency>
-            <Dependency>curl-devel</Dependency>
-            <Dependency>python3-devel</Dependency>
-            <Dependency>libffi-devel</Dependency>
+            <Dependency>meson</Dependency>
+            <Dependency>sassc</Dependency>
+            <Dependency>gtk4-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>libsass-devel</Dependency>
+            <Dependency>fribidi-devel</Dependency>
+            <Dependency>graphene-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
         </BuildDependencies>
+        <!--
         <Patches>
-            <!--Patch level="1">70163.patch</Patch-->
-<!--             <Patch level="1">0001-WIP-minimize-the-rust-std-component.patch</Patch> -->
+            <Patch>libadwaita.patch</Patch>
+            <Patch level="1">libadwaita.patch</Patch>
         </Patches>
+        -->
     </Source>
 
     <Package>
-        <Name>rust</Name>
+        <Name>libadwaita</Name>
         <RuntimeDependencies>
-            <Dependency>curl</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>libssh2</Dependency>
-            <Dependency>openssl</Dependency>
-            <Dependency versionFrom="14.0.3">llvm-libs</Dependency>
+            <Dependency>gtk4</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>libsass</Dependency>
+            <Dependency>fribidi</Dependency>
+            <Dependency>graphene</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="executable">/usr/libexec</Path>
-            <Path fileType="config">/etc</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="data">/usr/share</Path>
-            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="data">/usr/share/vala</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/zsh</Path>
         </Files>
     </Package>
-    
+
     <Package>
-        <Name>rust-docs</Name>
-        <Summary>Development files for rust</Summary>
+        <Name>libadwaita-devel</Name>
+        <Summary>Development files for libadwaita</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">rust</Dependency>
+            <Dependency release="current">libadwaita</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>gtk4-devel</Dependency>
+            <Dependency>fribidi-devel</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/usr/share/doc/rust/html</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
-        <Update release="25">
-            <Date>2022-07-25</Date>
-            <Version>1.62.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="24">
-            <Date>2022-07-04</Date>
-            <Version>1.62.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="23">
-            <Date>2022-05-01</Date>
-            <Version>1.60.0</Version>
-            <Comment>Version bump</Comment>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
-        </Update>
-        <Update release="22">
-            <Date>2022-02-14</Date>
-            <Version>1.58.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>İdris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
-        </Update>
-        <Update release="21">
-            <Date>2021-10-25</Date>
-            <Version>1.56.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="20">
-            <Date>2021-10-16</Date>
-            <Version>1.55.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="19">
-            <Date>2021-06-06</Date>
-            <Version>1.52.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="18">
-            <Date>2021-02-24</Date>
-            <Version>1.50.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>İdris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
-        </Update>
-        <Update release="17">
-            <Date>2020-12-26</Date>
-            <Version>1.48.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>İdris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
-        </Update>
-        <Update release="16">
-            <Date>2020-09-22</Date>
-            <Version>1.46.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="15">
-            <Date>2020-07-02</Date>
-            <Version>1.44.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="14">
-            <Date>2020-05-05</Date>
-            <Version>1.43.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="13">
-            <Date>2020-03-28</Date>
-            <Version>1.42.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Idris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
-        </Update>
-        <Update release="12">
-            <Date>2019-10-21</Date>
-            <Version>1.38.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="11">
-            <Date>2019-05-29</Date>
-            <Version>1.35.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
-        </Update>
-        <Update release="10">
-            <Date>2019-05-27</Date>
-            <Version>1.34.2</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
-        </Update>
         <Update release="9">
-            <Date>2019-04-17</Date>
-            <Version>1.34.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-09-16</Date>
+            <Version>1.2.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="8">
-            <Date>2019-02-11</Date>
-            <Version>1.32.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-09-06</Date>
+            <Version>1.1.5</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="7">
-            <Date>2018-12-19</Date>
-            <Version>1.31.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-08-06</Date>
+            <Version>1.1.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="6">
-            <Date>2018-10-29</Date>
-            <Version>1.30.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-07-09</Date>
+            <Version>1.1.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="5">
-            <Date>2018-10-29</Date>
-            <Version>1.29.2</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-06-02</Date>
+            <Version>1.1.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="4">
-            <Date>2018-08-30</Date>
-            <Version>1.27.0</Version>
-            <Comment>Version Bump.</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-05-31</Date>
+            <Version>1.1.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="3">
-            <Date>2018-04-17</Date>
-            <Version>1.25.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2022-01-02</Date>
+            <Version>1.0.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="2">
-            <Date>2017-11-13</Date>
-            <Version>1.21.0</Version>
-            <Comment>Version Bump</Comment>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Date>2021-11-02</Date>
+            <Version>1.0.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="1">
-            <Date>2017-09-26</Date>
-            <Version>1.20.0</Version>
+            <Date>2021-09-30</Date>
+            <Version>1.0.0</Version>
             <Comment>First release</Comment>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
