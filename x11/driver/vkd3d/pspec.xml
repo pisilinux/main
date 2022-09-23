@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>vkd3d</Name>
+        <Homepage>https://source.winehq.org/git/vkd3d.git</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>D3D12 to Vulkan translation library</Summary>
+        <Icon>vkd3d</Icon>
+        <Description>D3D12 to Vulkan translation library</Description>
+        <Archive sha1sum="983f1e2df9a7e64c4f437ffe78a5ac4096ed10f1" type="tarxz">https://dl.winehq.org/vkd3d/source/vkd3d-1.4.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>xorg-proto</Dependency>
+            <Dependency>vulkan-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>spirv-headers</Dependency>
+            <Dependency>vulkan-headers</Dependency>
+            <Dependency>xcb-util-devel</Dependency>
+            <Dependency>spirv-tools-devel</Dependency>
+            <Dependency>xcb-util-wm-devel</Dependency>
+            <Dependency>xcb-util-keysyms-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>vkd3d.patch</Patch>
+            <Patch level="1">vkd3d.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>vkd3d</Name>
+        <RuntimeDependencies>
+            <Dependency>ncurses</Dependency>
+            <Dependency>spirv-tools</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>vkd3d-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for vkd3d</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>vulkan-32bit</Dependency>
+            <Dependency>libxcb-32bit</Dependency>
+            <Dependency>xcb-util-32bit</Dependency>
+            <Dependency>spirv-tools-32bit</Dependency>
+            <Dependency>xcb-util-wm-32bit</Dependency>
+            <Dependency>xcb-util-keysyms-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">vkd3d</Dependency>
+            <Dependency>spirv-tools-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>vkd3d-devel</Name>
+        <Summary>Development files for vkd3d</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">vkd3d</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-09-23</Date>
+            <Version>1.4</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
