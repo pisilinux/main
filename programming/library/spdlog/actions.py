@@ -9,6 +9,7 @@ from pisi.actionsapi import shelltools, cmaketools, pisitools, get
 i = "%s" % get.installDIR()
 
 j = ''.join([
+    ' -B_build',
     ' -DSPDLOG_BUILD_SHARED=ON',
     ' -DSPDLOG_FMT_EXTERNAL=ON',
     ' -DCMAKE_BUILD_TYPE=None',
@@ -18,9 +19,7 @@ j = ''.join([
 t = "#define SPDLOG_FMT_EXTERNAL"
 
 def setup():
-	shelltools.makedirs("_build")
-	shelltools.cd("_build")
-	cmaketools.configure(j, sourceDir = "..")
+	cmaketools.configure(j)
 
 def build():
 	shelltools.cd("_build")
