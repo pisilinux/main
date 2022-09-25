@@ -43,6 +43,7 @@ def setup():
                --with-dbus \
                --with-opengl \
                --with-alsa \
+               --prefix=/usr \
                --with-x \
                "
 
@@ -77,9 +78,9 @@ def install():
     shelltools.cd("build-wine")
 
     if get.buildTYPE() == "emul32":
-        autotools.install("UPDATE_DESKTOP_DATABASE=/bin/true libdir=%s/usr/lib32 dlldir=%s/usr/lib32/wine" % (get.installDIR(), get.installDIR()))
+        autotools.install("UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib32 dlldir=%s/usr/lib32/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
     else:
-        autotools.install("UPDATE_DESKTOP_DATABASE=/bin/true libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR()))
+        autotools.install("UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
         
     shelltools.cd("..")
 
