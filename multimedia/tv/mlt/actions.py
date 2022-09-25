@@ -18,6 +18,7 @@ def setup():
 
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DMOD_OPENCV=ON \
+                          -DMOD_GLAXNIMATE=ON \
                           -DSWIG_PERL=ON \
                           -DCMAKE_INSTALL_MANDIR=/usr/share/man/man1 \
                           -DSWIG_PYTHON=ON", sourceDir="..")
