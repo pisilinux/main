@@ -8,23 +8,17 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 
 def setup():
-    autotools.autoreconf("-fi")
-    shelltools.system("mkdir build")
-    shelltools.cd("build")
-    shelltools.system("../configure --disable-sanitizers \
-                                    --prefix=/usr \
-                                    --sysconfdir=/etc")
+    mesontools.configure()
 
 def build():
-    shelltools.cd("build")
-    autotools.make()
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
+    pisitools.dodoc("LICENSE", "README*")
