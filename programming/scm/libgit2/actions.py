@@ -14,6 +14,7 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-DTHREADSAFE:BOOL=ON \
+                          -DREGEX_BACKEND=pcre2 \
                           -DUSE_HTTP_PARSER=system")
 
 def build():
