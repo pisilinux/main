@@ -10,5 +10,4 @@ from pisi.actionsapi import pisitools
 def install():
     pisitools.insinto("/usr/share/fonts/amiri", "Amiri*.ttf")
 
-    pisitools.dodoc("OFL.txt", "README-Arabic", "README", )
-    pisitools.insinto("/usr/share/amiri-fonts", "*.pdf")
+    pisitools.dodoc("OFL.txt", "README-Arabic.md", "README.md", )
