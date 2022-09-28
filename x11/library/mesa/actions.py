@@ -16,7 +16,6 @@ def setup():
                -Db_ndebug=true \
                -Dplatforms=x11,wayland \
                -Ddri3=enabled \
-               -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
                -Dgallium-xvmc=enabled \
@@ -24,7 +23,8 @@ def setup():
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
                -Dvulkan-drivers=amd,intel,swrast \
-               -D vulkan-layers=device-select,intel-nullhw,overlay \
+               -Dvulkan-layers=device-select,intel-nullhw,overlay \
+               -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
                -Dshared-glapi=enabled \
                -Dgles1=enabled \
                -Dgles2=enabled \
@@ -42,7 +42,9 @@ def setup():
               " % (libdir)
 
     if get.buildTYPE() == "emul32":
-        options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled"
+        options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled \
+                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink \
+                   "
         #shelltools.export("CC", "clang -m32")
         #shelltools.export("CXX", "clang++ -m32")
         pisitools.cflags.add("-m32 ")
@@ -56,7 +58,8 @@ def setup():
         #shelltools.export("CXX", "clang++")
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
-        options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled"
+        options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled \
+                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
     mesontools.configure(options)
