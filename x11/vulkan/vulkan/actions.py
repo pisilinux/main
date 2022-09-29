@@ -24,7 +24,7 @@ def setup():
                    -DBUILD_WSI_XCB_SUPPORT=On \
                    -DBUILD_WSI_XLIB_SUPPORT=On \
                    -DBUILD_WSI_WAYLAND_SUPPORT=On \
-                   -DBUILD_SHARED_LIBS=ON \
+                   -DCMAKE_BUILD_TYPE:STRING=Release \
                    -DVULKAN_HEADERS_INSTALL_DIR='/usr' \
                  "
     validation_opts = " -DCMAKE_INSTALL_SYSCONFDIR=/etc \
@@ -36,7 +36,7 @@ def setup():
                         -DBUILD_WSI_XCB_SUPPORT=On \
                         -DBUILD_WSI_XLIB_SUPPORT=On \
                         -DBUILD_WSI_WAYLAND_SUPPORT=On \
-                        -DBUILD_SHARED_LIBS=ON \
+                        -DCMAKE_BUILD_TYPE:STRING=Release \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
                         -DSPIRV_TOOLS_INSTALL_DIR='/usr' \
                         -DUSE_ROBIN_HOOD_HASHING=OFF \
@@ -59,7 +59,8 @@ def setup():
                        
         cmaketools.configure(loader_opts, sourceDir="..")
         
-        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
         shelltools.makedirs("build")
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
@@ -72,14 +73,16 @@ def setup():
         shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
         shelltools.makedirs("build")
         shelltools.cd("build")
-        
+        shelltools.export("CC", "gcc")
+        shelltools.export("CXX", "g++")
         loader_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
                         -DSPIRV_HEADERS_INSTALL_DIR='/usr/include/spirv' \
                        "
                        
         cmaketools.configure(loader_opts, sourceDir="..")
         
-        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
         shelltools.makedirs("build")
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
@@ -95,11 +98,12 @@ def setup():
 def build():
     shelltools.cd("%s/Vulkan-Loader-%s" %(get.workDIR(), ver))
     shelltools.cd("build")
-    cmaketools.make("-j1")
+    cmaketools.make("-j4")
     
-    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
     shelltools.cd("build")
-    cmaketools.make("-j1")
+    cmaketools.make("-j4")
     
 def install():
     
@@ -107,7 +111,8 @@ def install():
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())
     
-    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())  
     
