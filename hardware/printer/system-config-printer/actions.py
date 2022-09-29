@@ -11,8 +11,8 @@ from pisi.actionsapi import shelltools
 
 def setup():
     #notify-0.8
-    pisitools.dosed("applet.py", "'0.7'", "'0.8'")
-    pisitools.dosed("jobviewer.py", "'0.7'", "'0.8'")
+    #pisitools.dosed("applet.py", "'0.7'", "'0.8'")
+    #pisitools.dosed("jobviewer.py", "'0.7'", "'0.8'")
 
     # we are using different paths
     pisitools.dosed("cupshelpers/cupshelpers.py", "\/lib64\/", "\/lib\/")
