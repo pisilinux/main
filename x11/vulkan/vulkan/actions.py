@@ -59,8 +59,8 @@ def setup():
                        
         cmaketools.configure(loader_opts, sourceDir="..")
         
-        # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-        shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
+        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        # shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
         shelltools.makedirs("build")
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
@@ -81,8 +81,8 @@ def setup():
                        
         cmaketools.configure(loader_opts, sourceDir="..")
         
-        # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-        shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
+        shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+        # shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
         shelltools.makedirs("build")
         shelltools.cd("build")
         #shelltools.system("../scripts/update_deps.py")
@@ -100,8 +100,8 @@ def build():
     shelltools.cd("build")
     cmaketools.make("-j4")
     
-    # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-    shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
+    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    # shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
     shelltools.cd("build")
     cmaketools.make("-j4")
     
@@ -111,8 +111,8 @@ def install():
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())
     
-    # shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
-    shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
+    shelltools.cd("%s/Vulkan-ValidationLayers-%s" %(get.workDIR(), ver))
+    # shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" %get.installDIR())  
     
