@@ -14,6 +14,7 @@ ObjDir = "build"
 MOZAPPDIR= "/usr/lib/thunderbird"
 shelltools.export("SHELL", "/bin/sh")
 shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
+shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 
 locales = "be  ca  da  de  el  en-GB en-US  es-AR  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
 xpidir = "%s/xpi" % get.workDIR()
