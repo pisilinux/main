@@ -41,25 +41,25 @@ def build():
     shelltools.export("PKG_CONFIG_ALLOW_SYSTEM_LIBS", "1")
     shelltools.export("PKG_CONFIG_ALLOW_SYSTEM_CFLAGS", "1")
 
-    autotools.make("-C nss/coreconf -j1")
-    autotools.make("-C nss/lib/util -j1")
+    autotools.make("-C nss/coreconf -j2")
+    autotools.make("-C nss/lib/util -j2")
     autotools.make("-C nss/lib/dbm")
-    autotools.make("-C  nss/lib/sysinit -j1")
-    autotools.make("-C nss all -j1")
+    autotools.make("-C  nss/lib/sysinit -j2")
+    autotools.make("-C nss all -j2")
 
 def install():
     for binary in ["*util", "shlibsign", "signtool", "signver", "ssltap"]:
         pisitools.insinto("/usr/bin","dist/Linux*/bin/%s" % binary, sym=False)
 
     for lib in ["*.a","*.chk","*.so"]:
-        pisitools.insinto("/usr/lib/nss","dist/Linux*/lib/%s" % lib, sym=False)
+        pisitools.insinto("/usr/lib","dist/Linux*/lib/%s" % lib, sym=False)
 
     # Headers
     for header in ["dist/private/nss/*.h","dist/public/nss/*.h"]:
-        pisitools.insinto("/usr/include/nss", header, sym=False)
+        pisitools.insinto("/usr/include/nss3", header, sym=False)
 
     # Drop executable bits from headers
-    shelltools.chmod("%s/usr/include/nss/*.h" % get.installDIR(), mode=0644)
+    shelltools.chmod("%s/usr/include/nss3/*.h" % get.installDIR(), mode=0644)
 
     # Install nss-config and nss.pc
     pisitools.insinto("/usr/lib/pkgconfig", "dist/pkgconfig/nss.pc")
@@ -67,7 +67,10 @@ def install():
 
     # create empty NSS database
     pisitools.dodir("/etc/pki/nssdb")
-    shelltools.export("LD_LIBRARY_PATH", "%s/usr/lib/nss" % get.installDIR())
+    shelltools.export("LD_LIBRARY_PATH", "%s/usr/lib" % get.installDIR())
     shelltools.system("%s/usr/bin/modutil -force -dbdir \"sql:%s/etc/pki/nssdb\" -create" % (get.installDIR(), get.installDIR()))
     shelltools.chmod("%s/etc/pki/nssdb/*" % get.installDIR(), 0644)
     pisitools.dosed("%s/etc/pki/nssdb/*" % get.installDIR(), get.installDIR(), "")
+
+    # srt Conflicts
+    pisitools.remove("/usr/lib/libgtest.a")
