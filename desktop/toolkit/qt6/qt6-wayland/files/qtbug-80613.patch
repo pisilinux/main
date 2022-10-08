@@ -1,0 +1,39 @@
+From 80ed5501cf5dcc4b6ef2a1a126d9d564c1c73851 Mon Sep 17 00:00:00 2001
+From: Johan Klokkhammer Helsing <johan.helsing@qt.io>
+Date: Mon, 9 Dec 2019 11:06:18 +0100
+Subject: Client: Fix inverse repeat rate implementation
+
+The rate from wl_keyboard.repeat_info was used as if it was an interval. Fixed
+by converting from key strokes per second to milliseconds per key stroke.
+
+This fixes a regression, as repeat rate used to be hard-coded to something
+sensible before.
+
+[ChangeLog][QPA plugin] Fixed keyboard repeat rate being set inversely, so
+higher rates would actually result in fewer characters per second, and vice
+versa.
+
+Fixes: QTBUG-80613
+Change-Id: Ie783b90cba13dde6f37c0cd1be584d352cddfe7c
+Reviewed-by: David Edmundson <davidedmundson@kde.org>
+Reviewed-by: Paul Olav Tvete <paul.tvete@qt.io>
+---
+ src/client/qwaylandinputdevice.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
+index d812918e..3b26dc42 100644
+--- a/src/client/qwaylandinputdevice.cpp
++++ b/src/client/qwaylandinputdevice.cpp
+@@ -88,7 +88,7 @@ QWaylandInputDevice::Keyboard::Keyboard(QWaylandInputDevice *p)
+             // or the server didn't send an enter event first.
+             return;
+         }
+-        mRepeatTimer.setInterval(mRepeatRate);
++        mRepeatTimer.setInterval(1000 / mRepeatRate);
+         handleKey(mRepeatKey.time, QEvent::KeyRelease, mRepeatKey.key, mRepeatKey.modifiers,
+                   mRepeatKey.code, mRepeatKey.nativeVirtualKey, mRepeatKey.nativeModifiers,
+                   mRepeatKey.text, true);
+-- 
+cgit v1.2.1
+

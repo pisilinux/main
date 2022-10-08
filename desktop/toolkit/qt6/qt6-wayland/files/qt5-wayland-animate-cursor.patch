@@ -1,0 +1,122 @@
+From 36974955d13578071387695adb13a47be33e4d32 Mon Sep 17 00:00:00 2001
+From: David Edmundson <davidedmundson@kde.org>
+Date: Thu, 28 Nov 2019 02:31:17 +0100
+Subject: Avoid animating single frame cursors
+
+Currently to determine if a cursor is animated or not we check the
+cursor theme delay.
+
+This doesn't work in practice as by default many cursor themes have a
+delay of 50 set even if they don't animate.
+
+This comes from xcursorgen which specifies a delay of 50ms if there
+isn't anything set in the config.
+(https://github.com/freedesktop/xcursorgen/blob/master/xcursorgen.c#L92)
+
+Given many themes will have a delay we should also check the number of
+images in a given cursor.
+
+In order to do that without a double lookup QWaylandCursor needed to
+return the native wl_cursor, not wl_cursor_image and move the relevant
+logic.
+
+Change-Id: Ie782ace8054910ae76e61cab33ceca0377194929
+Reviewed-by: Johan Helsing <johan.helsing@qt.io>
+---
+ src/client/qwaylandcursor.cpp      | 12 ++----------
+ src/client/qwaylandcursor_p.h      |  3 +--
+ src/client/qwaylandinputdevice.cpp | 16 ++++++++++++----
+ 3 files changed, 15 insertions(+), 16 deletions(-)
+
+diff --git a/src/client/qwaylandcursor.cpp b/src/client/qwaylandcursor.cpp
+index 4356b23a..1d3d88be 100644
+--- a/src/client/qwaylandcursor.cpp
++++ b/src/client/qwaylandcursor.cpp
+@@ -219,7 +219,7 @@ wl_cursor *QWaylandCursorTheme::requestCursor(WaylandCursor shape)
+     return nullptr;
+ }
+ 
+-::wl_cursor_image *QWaylandCursorTheme::cursorImage(Qt::CursorShape shape, uint millisecondsIntoAnimation)
++::wl_cursor *QWaylandCursorTheme::cursor(Qt::CursorShape shape)
+ {
+     struct wl_cursor *waylandCursor = nullptr;
+ 
+@@ -237,15 +237,7 @@ wl_cursor *QWaylandCursorTheme::requestCursor(WaylandCursor shape)
+         return nullptr;
+     }
+ 
+-    int frame = wl_cursor_frame(waylandCursor, millisecondsIntoAnimation);
+-    ::wl_cursor_image *image = waylandCursor->images[frame];
+-    ::wl_buffer *buffer = wl_cursor_image_get_buffer(image);
+-    if (!buffer) {
+-        qCWarning(lcQpaWayland) << "Could not find buffer for cursor";
+-        return nullptr;
+-    }
+-
+-    return image;
++    return waylandCursor;
+ }
+ 
+ QWaylandCursor::QWaylandCursor(QWaylandDisplay *display)
+diff --git a/src/client/qwaylandcursor_p.h b/src/client/qwaylandcursor_p.h
+index a4605f3d..751ffa68 100644
+--- a/src/client/qwaylandcursor_p.h
++++ b/src/client/qwaylandcursor_p.h
+@@ -75,7 +75,7 @@ class Q_WAYLAND_CLIENT_EXPORT QWaylandCursorTheme
+ public:
+     static QWaylandCursorTheme *create(QWaylandShm *shm, int size, const QString &themeName);
+     ~QWaylandCursorTheme();
+-    ::wl_cursor_image *cursorImage(Qt::CursorShape shape, uint millisecondsIntoAnimation = 0);
++    ::wl_cursor *cursor(Qt::CursorShape shape);
+ 
+ private:
+     enum WaylandCursor {
+@@ -129,7 +129,6 @@ public:
+     void setPos(const QPoint &pos) override;
+ 
+     static QSharedPointer<QWaylandBuffer> cursorBitmapBuffer(QWaylandDisplay *display, const QCursor *cursor);
+-    struct wl_cursor_image *cursorImage(Qt::CursorShape shape);
+ 
+ private:
+     QWaylandDisplay *mDisplay = nullptr;
+diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
+index a4098edd..d812918e 100644
+--- a/src/client/qwaylandinputdevice.cpp
++++ b/src/client/qwaylandinputdevice.cpp
+@@ -283,8 +283,8 @@ void QWaylandInputDevice::Pointer::updateCursorTheme()
+     if (!mCursor.theme)
+         return; // A warning has already been printed in loadCursorTheme
+ 
+-    if (auto *arrow = mCursor.theme->cursorImage(Qt::ArrowCursor)) {
+-        int arrowPixelSize = qMax(arrow->width, arrow->height); // Not all cursor themes are square
++    if (auto *arrow = mCursor.theme->cursor(Qt::ArrowCursor)) {
++        int arrowPixelSize = qMax(arrow->images[0]->width, arrow->images[0]->height); // Not all cursor themes are square
+         while (scale > 1 && arrowPixelSize / scale < cursorSize())
+             --scale;
+     } else {
+@@ -326,12 +326,20 @@ void QWaylandInputDevice::Pointer::updateCursor()
+ 
+     // Set from shape using theme
+     uint time = seat()->mCursor.animationTimer.elapsed();
+-    if (struct ::wl_cursor_image *image = mCursor.theme->cursorImage(shape, time)) {
++
++    if (struct ::wl_cursor *waylandCursor = mCursor.theme->cursor(shape)) {
++        int frame = wl_cursor_frame(waylandCursor, time);
++        ::wl_cursor_image *image = waylandCursor->images[frame];
++
+         struct wl_buffer *buffer = wl_cursor_image_get_buffer(image);
++        if (!buffer) {
++            qCWarning(lcQpaWayland) << "Could not find buffer for cursor" << shape;
++            return;
++        }
+         int bufferScale = mCursor.themeBufferScale;
+         QPoint hotspot = QPoint(image->hotspot_x, image->hotspot_y) / bufferScale;
+         QSize size = QSize(image->width, image->height) / bufferScale;
+-        bool animated = image->delay > 0;
++        bool animated = waylandCursor->image_count > 1 && image->delay > 0;
+         getOrCreateCursorSurface()->update(buffer, hotspot, size, bufferScale, animated);
+         return;
+     }
+-- 
+cgit v1.2.1
+
