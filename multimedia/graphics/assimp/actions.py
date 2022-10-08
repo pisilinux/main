@@ -20,4 +20,4 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 
-    pisitools.dodoc("LICENSE", "Readme.md", "README")
+    pisitools.dodoc("LICENSE", "Readme.md")
