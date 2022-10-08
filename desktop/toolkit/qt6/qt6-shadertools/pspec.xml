@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>qt6-shadertools</Name>
+        <Homepage>https://www.qt.io</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv3</License>
+        <IsA>library</IsA>
+        <Summary>Provides functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenGL</Summary>
+        <Icon>qt6-shadertools</Icon>
+        <Description>OpenGL'ye ek olarak Qt Quick'in Vulkan, Metal ve Direct3D üzerinde çalışmasına izin veren gölgelendirici ardışık düzeni için işlevsellik sağlar</Description>
+        <Archive sha1sum="c6bb15568362317d27d80a134248d3fc6244ce19" type="tarxz">https://download.qt.io/official_releases/qt/6.4/6.4.0/submodules/qtshadertools-everywhere-src-6.4.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>ninja</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>vulkan-headers</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-base-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>qt6-shadertools.patch</Patch>
+            <Patch level="1">qt6-shadertools.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>qt6-shadertools</Name>
+        <RuntimeDependencies>
+            <Dependency>qt6-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/lib/qt6/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/usr/lib/metatypes</Path>
+            <Path fileType="data">/usr/lib/qt6/mkspecs</Path>
+            <Path fileType="data">/usr/share/qt6/modules</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>qt6-shadertools-devel</Name>
+        <Summary>Development files for qt6-shadertools</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">qt6-shadertools</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-base-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-10-06</Date>
+            <Version>6.4.0</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

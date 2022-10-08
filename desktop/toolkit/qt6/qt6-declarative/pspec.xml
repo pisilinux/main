@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>qt6-declarative</Name>
+        <Homepage>http://qt.digia.com/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <Summary>Classes for QML and JavaScript languages</Summary>
+        <Description>Classes for QML and JavaScript languages</Description>
+        <License>LGPLv2.1-linking-exception</License>
+        <Archive sha1sum="6507c431fb870847fc9ae27d970a25f054eed9ee" type="tarxz">https://download.qt.io/official_releases/qt/6.4/6.4.0/submodules/qtdeclarative-everywhere-src-6.4.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>ninja</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>python3</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
+            <Dependency versionFrom="13.0.4">mesa-devel</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-sql-sqlite</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-base-devel</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-languageserver-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1">qt_kde.patch</Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>qt6-declarative</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+<!--             <Dependency>libglvnd</Dependency> -->
+            <Dependency versionFrom="6.4.0">qt6-base</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-languageserver</Dependency>
+            <Dependency>libglvnd</Dependency>
+<!--             <Dependency versionFrom="6.4.0">qt6-xmlpatterns</Dependency> -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/qt6</Path>
+            <Path fileType="data">/usr/share/licenses</Path>
+            <Path fileType="executable">/usr/lib/qt6/bin</Path>
+            <Path fileType="executable">/usr/bin/</Path>
+            <Path fileType="data">/usr/share/qt6/modules</Path>
+        </Files>
+
+    </Package>
+
+    <Package>
+        <Name>qt6-declarative-devel</Name>
+        <Files>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="header">/usr/include/qt6</Path>
+        </Files>
+        <RuntimeDependencies>
+            <Dependency versionFrom="6.4.0">qt6-base-devel</Dependency>
+            <Dependency release="current">qt6-declarative</Dependency>
+        </RuntimeDependencies>
+    </Package>
+
+    <!--Package>
+        <Name>qt6-declarative-docs</Name>
+        <RuntimeDependencies>
+            <Dependency versionFrom="6.4.0">qt6-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/qt6</Path>
+        </Files>
+    </Package-->
+
+    <History>
+        <Update release="1">
+            <Date>2022-10-05</Date>
+            <Version>6.4.0</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>

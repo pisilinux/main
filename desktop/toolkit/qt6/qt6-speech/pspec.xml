@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>qt6-speech</Name>
+        <Homepage>http://qt-project.org/</Homepage>
+        <Packager>
+            <Name>Stefan Gronewold</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Packager>
+        <License>custom</License>
+        <License>FDL</License>
+        <License>GPL3</License>
+        <License>LGPL3</License>
+        <Summary>Qt module to make text to speech and speech recognition easy</Summary>
+        <Description>Qt module to make text to speech and speech recognition easy</Description>
+        <Archive type="tarxz" sha1sum="7f49c0901f3543439451d90d828700b2db88851c">https://download.qt.io/official_releases/qt/6.4/6.4.0/submodules/qtspeech-everywhere-src-6.4.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>ninja</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>flite-devel</Dependency>
+            <Dependency>speech-dispatcher-devel</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-base-devel</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-multimedia-devel</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-declarative-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch>qtspeech-speech-dispatcher_includes.patch</Patch> -->
+        </Patches>
+    </Source>
+    <Package>
+        <Name>qt6-speech</Name>
+        <Summary>Qt module to make text to speech and speech recognition easy</Summary>
+        <RuntimeDependencies>
+            <Dependency>flite</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>speech-dispatcher</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-base</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-multimedia</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-declarative</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/qt6</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/qt6/modules</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>qt6-speech-devel</Name>
+        <Summary>Development headers for qt6-speech</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">qt6-speech</Dependency>
+            <Dependency versionFrom="6.4.0">qt6-base-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/usr/lib/cmake</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="2">
+            <Date>2022-10-07</Date>
+            <Version>6.4.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="1">
+            <Date>2022-07-05</Date>
+            <Version>5.15.5</Version>
+            <Comment>First Release.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>

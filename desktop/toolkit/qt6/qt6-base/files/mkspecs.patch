@@ -1,0 +1,47 @@
+diff -Nuar a/mkspecs/common/g++-base.conf b/mkspecs/common/g++-base.conf
+--- a/mkspecs/common/g++-base.conf	2021-11-15 00:00:01.000000000 +0200
++++ b/mkspecs/common/g++-base.conf	2021-11-15 22:49:20.969099951 +0200
+@@ -10,15 +10,17 @@
+ 
+ QMAKE_COMPILER          = gcc
+ 
+-QMAKE_CC                = $${CROSS_COMPILE}gcc
++QMAKE_CC                = PISILINUX_CC
+ 
+-QMAKE_LINK_C            = $$QMAKE_CC
+-QMAKE_LINK_C_SHLIB      = $$QMAKE_CC
++QMAKE_LINK_C            = PISILINUX_CC
++QMAKE_LINK_C_SHLIB      = PISILINUX_CC
+ 
+-QMAKE_CXX               = $${CROSS_COMPILE}g++
++QMAKE_CXX               = PISILINUX_CXX
+ 
+-QMAKE_LINK              = $$QMAKE_CXX
+-QMAKE_LINK_SHLIB        = $$QMAKE_CXX
++QMAKE_LINK              = PISILINUX_CXX
++QMAKE_LINK_SHLIB        = PISILINUX_CXX
++
++QMAKE_LFLAGS_RELEASE    += PISILINUX_LDFLAGS
+ 
+ QMAKE_PCH_OUTPUT_EXT    = .gch
+ 
+diff -Nuar a/mkspecs/common/g++-unix.conf b/mkspecs/common/g++-unix.conf
+--- a/mkspecs/common/g++-unix.conf	2021-11-15 00:00:01.000000000 +0200
++++ b/mkspecs/common/g++-unix.conf	2021-11-15 22:51:51.058450056 +0200
+@@ -10,5 +10,5 @@
+ 
+ include(g++-base.conf)
+ 
+-QMAKE_LFLAGS_RELEASE   += -Wl,-O1
++QMAKE_LFLAGS_RELEASE   += PISILINUX_LDFLAGS
+ QMAKE_LFLAGS_NOUNDEF   += -Wl,--no-undefined
+diff -Nuar a/mkspecs/common/linux.conf b/mkspecs/common/linux.conf
+--- a/mkspecs/common/linux.conf	2021-11-15 00:00:01.000000000 +0200
++++ b/mkspecs/common/linux.conf	2021-11-15 22:52:35.802019704 +0200
+@@ -48,5 +48,5 @@
+ QMAKE_NM                = nm -P
+ QMAKE_RANLIB            =
+ 
+-QMAKE_STRIP             = strip
++QMAKE_STRIP             =
+ QMAKE_STRIPFLAGS_LIB   += --strip-unneeded

@@ -1,0 +1,91 @@
+From 26a6372bb0c6528358e34f8175a14ff0be47fb12 Mon Sep 17 00:00:00 2001
+From: Johan Klokkhammer Helsing <johan.helsing@qt.io>
+Date: Mon, 19 Mar 2018 10:21:47 +0100
+Subject: xdg-shell v5,v6 shell integrations: Fix crash when showing popups
+
+If a popup was shown without any input events happening first, it would cause
+nullptr dereferences in both xdg-shell v5 and v6.
+
+Fixes crashes in:
+
+- tst_QAccessibility::comboBoxTest
+- tst_QAccessibility::menuTest
+- tst_QWindow::touchInterruptedByPopup
+- tst_QFocusEvent::checkReason_Popup
+
+Task-number: QTBUG-67150
+Change-Id: Ib3e06326f71e4ab5f74727cb4f79626a21c34d55
+Reviewed-by: Paul Olav Tvete <paul.tvete@qt.io>
+---
+ src/client/qwaylandxdgshell.cpp            | 3 +--
+ src/client/qwaylandxdgshell_p.h            | 2 +-
+ src/client/qwaylandxdgshellintegration.cpp | 5 +++--
+ src/client/qwaylandxdgshellv6.cpp          | 5 +++--
+ 4 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/src/client/qwaylandxdgshell.cpp b/src/client/qwaylandxdgshell.cpp
+index 8b252b95..9a34e72d 100644
+--- a/src/client/qwaylandxdgshell.cpp
++++ b/src/client/qwaylandxdgshell.cpp
+@@ -73,12 +73,11 @@ QWaylandXdgSurface *QWaylandXdgShell::createXdgSurface(QWaylandWindow *window)
+     return new QWaylandXdgSurface(this, window);
+ }
+ 
+-QWaylandXdgPopup *QWaylandXdgShell::createXdgPopup(QWaylandWindow *window)
++QWaylandXdgPopup *QWaylandXdgShell::createXdgPopup(QWaylandWindow *window, QWaylandInputDevice *inputDevice)
+ {
+     QWaylandWindow *parentWindow = m_popups.empty() ? window->transientParent() : m_popups.last();
+     ::wl_surface *parentSurface = parentWindow->object();
+ 
+-    QWaylandInputDevice *inputDevice = window->display()->lastInputDevice();
+     if (m_popupSerial == 0)
+         m_popupSerial = inputDevice->serial();
+     ::wl_seat *seat = inputDevice->wl_seat();
+diff --git a/src/client/qwaylandxdgshell_p.h b/src/client/qwaylandxdgshell_p.h
+index afbd9c59..761f2521 100644
+--- a/src/client/qwaylandxdgshell_p.h
++++ b/src/client/qwaylandxdgshell_p.h
+@@ -79,7 +79,7 @@ public:
+     ~QWaylandXdgShell() override;
+ 
+     QWaylandXdgSurface *createXdgSurface(QWaylandWindow *window);
+-    QWaylandXdgPopup *createXdgPopup(QWaylandWindow *window);
++    QWaylandXdgPopup *createXdgPopup(QWaylandWindow *window, QWaylandInputDevice *inputDevice);
+ 
+ private:
+     void xdg_shell_ping(uint32_t serial) override;
+diff --git a/src/client/qwaylandxdgshellintegration.cpp b/src/client/qwaylandxdgshellintegration.cpp
+index 5fa4385d..ee72c2d5 100644
+--- a/src/client/qwaylandxdgshellintegration.cpp
++++ b/src/client/qwaylandxdgshellintegration.cpp
+@@ -74,8 +74,9 @@ bool QWaylandXdgShellIntegration::initialize(QWaylandDisplay *display)
+ 
+ QWaylandShellSurface *QWaylandXdgShellIntegration::createShellSurface(QWaylandWindow *window)
+ {
+-    if (window->window()->type() == Qt::WindowType::Popup)
+-        return m_xdgShell->createXdgPopup(window);
++    QWaylandInputDevice *inputDevice = window->display()->lastInputDevice();
++    if (window->window()->type() == Qt::WindowType::Popup && inputDevice)
++        return m_xdgShell->createXdgPopup(window, inputDevice);
+     else
+         return m_xdgShell->createXdgSurface(window);
+ }
+diff --git a/src/client/qwaylandxdgshellv6.cpp b/src/client/qwaylandxdgshellv6.cpp
+index c89c8316..a166a3bc 100644
+--- a/src/client/qwaylandxdgshellv6.cpp
++++ b/src/client/qwaylandxdgshellv6.cpp
+@@ -165,8 +165,9 @@ void QWaylandXdgSurfaceV6::setAppId(const QString &appId)
+ 
+ void QWaylandXdgSurfaceV6::setType(Qt::WindowType type, QWaylandWindow *transientParent)
+ {
+-    if ((type == Qt::Popup || type == Qt::ToolTip) && transientParent) {
+-        setPopup(transientParent, m_window->display()->lastInputDevice(), m_window->display()->lastInputSerial(), type == Qt::Popup);
++    QWaylandDisplay *display = m_window->display();
++    if ((type == Qt::Popup || type == Qt::ToolTip) && transientParent && display->lastInputDevice()) {
++        setPopup(transientParent, display->lastInputDevice(), display->lastInputSerial(), type == Qt::Popup);
+     } else {
+         setToplevel();
+         if (transientParent) {
+-- 
+cgit v1.2.1
+
