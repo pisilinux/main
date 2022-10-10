@@ -29,4 +29,4 @@ def install():
     for bin in shelltools.ls("%s/usr/lib/qt6/bin" % get.installDIR()):
         pisitools.dosym("/usr/lib/qt6/bin/%s" % bin, "/usr/bin/%s-qt6" % bin)
 
-    pisitools.dodoc("LICENSE.GPL*")
+    pisitools.dodoc("LICENSES/*")
