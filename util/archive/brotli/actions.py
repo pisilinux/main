@@ -32,8 +32,8 @@ def build():
     
 def check():
     cmaketools.make("test")
-    shelltools.cd("../build_python3/%s" % WorkDir)
-    pythonmodules.run("setup.py test", pyVer="3")
+    #shelltools.cd("../build_python3/%s" % WorkDir)
+    #pythonmodules.run("setup.py test", pyVer="3")
 
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
