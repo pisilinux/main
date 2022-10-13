@@ -15,24 +15,26 @@ from pisi.actionsapi import get
 def setup():
     shelltools.cd("%s" % get.workDIR())
     shelltools.cd("sip-%s" % get.srcVERSION())
-    shelltools.copytree("../sip-%s" % (get.srcVERSION().replace("_", "~")), "../sip-%s-pyqt5" % get.srcVERSION())
+    shelltools.copytree("../sip-%s" % (get.srcVERSION().replace("_", "~")), "../sip-%s-pyqt6" % get.srcVERSION())
     
-    shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.9\/Python.h/g' {} \;")
+    # shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.9\/Python.h/g' {} \;")
     
-    pythonmodules.run('configure.py CFLAGS="%s" CXXFLAGS="%s"' % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
+    # pythonmodules.compile(pyVer="3")
     
-    shelltools.cd("../sip-%s-pyqt5" % get.srcVERSION())    
-    pythonmodules.run('configure.py CFLAGS="%s" CXXFLAGS="%s" --sip-module PyQt5.sip --no-tools' % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
+    # shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
+    # pythonmodules.compile(pyVer="3")
                         
 
 def build():
-    autotools.make()
+    pythonmodules.compile(pyVer="3")
     
-    shelltools.cd("../sip-%s-pyqt5" % get.srcVERSION())
-    autotools.make()
+    shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
+    pythonmodules.compile(pyVer="3")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pythonmodules.install(pyVer="3")
+    # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    shelltools.cd("../sip-%s-pyqt5" % get.srcVERSION())
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
+    pythonmodules.install(pyVer="3")
+    # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
