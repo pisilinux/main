@@ -13,6 +13,7 @@ def setup():
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
+                          -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON \
                           -DCMAKE_INSTALL_LIBDIR=/usr/lib", sourceDir="..")
 
 def build():
