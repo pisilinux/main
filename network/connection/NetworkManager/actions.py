@@ -18,10 +18,15 @@ def setup():
     #pisitools.dosed("configure.ac", "\/var(\/run\/ConsoleKit)", "\\1")
     #pisitools.dosed("configure.ac", "^initscript", deleteLine=True)
     
-    shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
+    #shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
+
+    #pisitools.dosed("src/core/nm-hostname-manager.c", "/etc/hostname", "/etc/env.d/01hostname")
     pisitools.cxxflags.add("-O2 -fPIC")
 
     mesontools.configure("-Dmodify_system=true \
+                          -Difupdown=false \
+                          -Dconfig_plugins_default=keyfile \
+                          -Dhostname_persist=default \
                           -Dqt=false \
                           -Dselinux=false \
                           -Debpf=true \
@@ -40,8 +45,8 @@ def setup():
                           -Dpppd_plugin_dir=/usr/lib/pppd/2.4.9 \
                           -Ddbus_conf_dir=/usr/share/dbus-1/system.d \
                           -Ddhclient=enabled \
+                          -D config_dns_rc_manager_default=symlink \
                           -Dudev_dir=/lib/udev \
-                          -Dresolvconf=/etc/resolv.default.conf \
                           -Diptables=/sbin/iptables \
                           -Ddnsmasq=/usr/sbin/dnsmasq \
                           -Dsystemdsystemunitdir=no \
@@ -60,5 +65,7 @@ def install():
     mesontools.install()
 
     pisitools.dodir("/etc/NetworkManager/VPN")
+
+    #pisitools.dosym("/etc/env.d/01hostname", "/etc/hostname")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "CONTRIBUTING*", "COPYING", "NEWS", "README*")

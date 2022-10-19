@@ -4,18 +4,41 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+
+
 def setup():
-    autotools.autoreconf("-vif")
-    autotools.configure("--disable-static")
+    # shelltools.system("sed -i 's/120/600/' test/meson.build")
+    options = " --buildtype=release -Dloongson-mmi=disabled \
+                          --prefix=/usr \
+                          -Dvmx=disabled \
+                          -Darm-simd=disabled \
+                          -Dneon=disabled \
+                          -Diwmmxt=disabled \
+                          -Dmips-dspr2=disabled \
+                          -Dgtk=disabled"
+
+    if get.buildTYPE() == "_emul32":
+        options += " -Dtests=disabled \
+                     --libdir=/usr/lib32 \
+                   "
+
+    mesontools.configure(options)
 
 def build():
-    autotools.make()
+    mesontools.build()
+
+# def check():
+    # mesontools.build("test")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+
+    if get.buildTYPE() == "_emul32":
+        return
 
     pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "README")
