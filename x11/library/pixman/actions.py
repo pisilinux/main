@@ -15,6 +15,7 @@ def setup():
     # shelltools.system("sed -i 's/120/600/' test/meson.build")
     options = " --buildtype=release -Dloongson-mmi=disabled \
                           --prefix=/usr \
+                          --libdir=lib \
                           -Dvmx=disabled \
                           -Darm-simd=disabled \
                           -Dneon=disabled \
@@ -23,8 +24,10 @@ def setup():
                           -Dgtk=disabled"
 
     if get.buildTYPE() == "_emul32":
-        options += " -Dtests=disabled \
-                     --libdir=/usr/lib32 \
+        shelltools.export("CC", "%s -m32" % get.CC())
+        shelltools.export("CXX", "%s -m32" % get.CXX())
+        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        options += " --libdir=lib32 \
                    "
 
     mesontools.configure(options)
