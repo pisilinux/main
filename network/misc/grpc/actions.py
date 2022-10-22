@@ -10,6 +10,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("ln -rsf googletest-release-1.12.1/googlemock  third_party/googletest/googlemock")
+    shelltools.system("ln -rsf googletest-release-1.12.1/googletest  third_party/googletest/googletest")
+
     shelltools.makedirs("build")
     shelltools.cd("build")
 
@@ -21,7 +24,7 @@ def setup():
         -DgRPC_RE2_PROVIDER=package \
         -DgRPC_SSL_PROVIDER=package \
         -DgRPC_ZLIB_PROVIDER=package \
-        -DgRPC_BUILD_TESTS=$(usex test) \
+        -DgRPC_BUILD_TESTS=ON \
         -DCMAKE_CXX_STANDARD=17", sourceDir="..")
 
 def build():
