@@ -24,7 +24,7 @@ def setup():
         -DgRPC_RE2_PROVIDER=package \
         -DgRPC_SSL_PROVIDER=package \
         -DgRPC_ZLIB_PROVIDER=package \
-        -DgRPC_BUILD_TESTS=ON \
+        -DgRPC_BUILD_TESTS=$(usex test) \
         -DCMAKE_CXX_STANDARD=17", sourceDir="..")
 
 def build():
