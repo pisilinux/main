@@ -41,7 +41,7 @@ def install():
     # dkms packages
     with open("env.sh") as f:
         for l in f.readlines():
-            if l.startswith("BUILD_PLATFORM_ARCH"):
+            if l.startswith("KBUILD_HOST_ARCH"):
                 a = l.split("=")[1].strip()[1:-1]
                 break
 
@@ -91,7 +91,7 @@ def install():
     for link in apps:
         pisitools.dosym("../share/virtualbox/VBox.sh", "/usr/bin/%s" % link)
 
-    pisitools.dobin("VBoxTunctl")
+    # pisitools.dobin("VBoxTunctl")
 
     # Desktop file, mimetype file for xml and icon
     pisitools.domove("%s/*.desktop" % VBoxLibDir, "/usr/share/applications")

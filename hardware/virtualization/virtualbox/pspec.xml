@@ -12,7 +12,7 @@
         <IsA>app:gui</IsA>
         <Summary>A powerful virtualization program</Summary>
         <Description>VirtualBox is a family of powerful x86 virtualization products for enterprise as well as home use. This is the Open Source Edition which lacks USB support and some other things.</Description>
-        <Archive sha1sum="6d9ad6298fb9a40e91952d0462a4aae75f051e15" type="tarbz2">http://download.virtualbox.org/virtualbox/6.1.38/VirtualBox-6.1.38.tar.bz2</Archive>
+        <Archive sha1sum="5f3be30b408f73a35bada12f6b5d03c649846125" type="tarbz2">http://download.virtualbox.org/virtualbox/7.0.2/VirtualBox-7.0.2.tar.bz2</Archive>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="dkms.conf">dkms.conf</AdditionalFile>
             <AdditionalFile owner="root" permission="0644" target="dkms-guest.conf">dkms-guest.conf</AdditionalFile>
@@ -21,9 +21,12 @@
             <Dependency>dev86</Dependency>
             <Dependency>cdrkit</Dependency>
             <Dependency>acpica</Dependency>
+            <Dependency>yasm-devel</Dependency>
             <Dependency>mesa-devel</Dependency>
             <Dependency>curl-devel</Dependency>
             <Dependency>python-devel</Dependency>
+            <Dependency>libtpms-devel</Dependency>
+            <Dependency>glslang-devel</Dependency>
             <Dependency>pam-devel</Dependency>
             <Dependency>device-mapper-devel</Dependency>
             <Dependency>libcap-devel</Dependency>
@@ -58,24 +61,22 @@
             <Dependency>docbook-xml</Dependency>
             <Dependency>libglvnd-devel</Dependency>
             <Dependency>python3-devel</Dependency>
+            <Dependency>qt5-assistant-devel</Dependency>
         </BuildDependencies>
         <AdditionalFiles>
             <AdditionalFile target="LocalConfig.kmk">LocalConfig.kmk</AdditionalFile>
         </AdditionalFiles>
         <Patches>
-            <Patch level="1">wrapper.patch</Patch>
-            <Patch level="1">004-drop-Wno-format.patch</Patch>
-            <Patch level="1">005-gsoap-build.patch</Patch>
-            <Patch level="1">006-rdesktop-vrdp-keymap-path.patch</Patch>
-            <Patch level="1">008-root-window.patch</Patch>
+            <Patch level="1">archlinux/001-disable-update.patch</Patch>
+            <Patch level="1">archlinux/004-drop-Wno-format.patch</Patch>
+            <Patch level="1">archlinux/005-gsoap-build.patch</Patch>
+            <Patch level="1">archlinux/008-no-vboxvideo.patch</Patch>
+            <Patch level="1">archlinux/009-properly-handle-i3wm.patch</Patch>
+            <Patch level="1">archlinux/012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch</Patch>
+            <Patch level="1">archlinux/013-support-building-from-dkms.patch</Patch>
+            <Patch level="1">archlinux/018-upate-xclient-script.patch</Patch>
+            <Patch level="1">archlinux/019-fix-liblzf-linkage.patch</Patch>
             <Patch level="1">python.patch</Patch>
-            <Patch level="1">008-no-vboxvideo.patch</Patch>
-            <Patch level="1">VirtualBox-6.1.2-disable-update.patch</Patch>
-            <Patch level="1">012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch</Patch>
-            <Patch level="1">013-Makefile.patch</Patch>
-            <Patch level="1">017-fix-narrowing-conversion.patch</Patch>
-            <Patch level="1">018-xclient.patch</Patch>
-<!--             <Patch level="1">019-vboxr0-cflags.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -85,11 +86,13 @@
             <Dependency>qt5-base</Dependency>
             <Dependency>libxcb</Dependency>
             <Dependency>mesa</Dependency>
+            <Dependency>liblzf</Dependency>
             <Dependency>libXt</Dependency>
             <Dependency>gsoap</Dependency>
             <Dependency>libvpx</Dependency>
             <Dependency>libXmu</Dependency>
             <Dependency>libsdl</Dependency>
+            <Dependency>libtpms</Dependency>
             <Dependency>libXext</Dependency>
             <Dependency>libopus</Dependency>
             <Dependency>libXcursor</Dependency>
@@ -108,6 +111,7 @@
             <Dependency>qt5-x11extras</Dependency>
             <Dependency>libglvnd</Dependency>
             <Dependency>python3</Dependency>
+            <Dependency>qt5-assistant</Dependency>
 <!--             <Dependency>virtualbox-guest-iso</Dependency> -->
             <AnyDependency>
                 <Dependency version="current">module-virtualbox</Dependency>
@@ -142,7 +146,9 @@
         <Summary>VirtualBox guest utilities and drivers</Summary>
         <RuntimeDependencies>
             <Dependency>pam</Dependency>
+            <Dependency>zlib</Dependency>
             <Dependency>libXt</Dependency>
+            <Dependency>libX11</Dependency>
             <Dependency>libXmu</Dependency>
             <Dependency>libXext</Dependency>
             <Dependency>libXfixes</Dependency>
@@ -204,6 +210,13 @@
     </Package>
 
     <History>
+        <Update release="55">
+            <Date>2022-10-23</Date>
+            <Version>7.0.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="54">
             <Date>2022-09-16</Date>
             <Version>6.1.38</Version>
