@@ -22,6 +22,6 @@ def check():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/share/GeoIP", "GeoIP-data/*")
+    pisitools.insinto("/usr/share/GeoIP", "GeoIP*.dat")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README*")
