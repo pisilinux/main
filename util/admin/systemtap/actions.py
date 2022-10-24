@@ -23,6 +23,7 @@ def setup():
                          --disable-publican \
                          --disable-crash \
                          --disable-silent-rules \
+                         --without-systemd \
                          --docdir=/%s/%s \
                          --without-rpm" % (get.docDIR(), get.srcNAME()))
 
@@ -43,6 +44,7 @@ def install():
     pisitools.dobin("stap-prep")
     pisitools.domove("/var/run/stap-server", "/run/")
     pisitools.removeDir("var/run")
+    pisitools.removeDir("/usr/lib/systemd")
 
     shelltools.copytree("testsuite", "%s/usr/share/systemtap" % get.installDIR())
 
