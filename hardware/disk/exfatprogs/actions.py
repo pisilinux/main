@@ -2,57 +2,18 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
-    shelltools.unlink('pwd.lock')
-
-    pisitools.dosed("configure.ac", "-Werror")
-    pisitools.dosed("Makefile.am", "-Werror")
-    autotools.autoreconf("-vfi")
-
-    autotools.configure("--enable-sqlite \
-                         --enable-pie \
-                         --disable-docs \
-                         --disable-static \
-                         --disable-publican \
-                         --disable-crash \
-                         --disable-silent-rules \
-                         --without-systemd \
-                         --docdir=/%s/%s \
-                         --without-rpm" % (get.docDIR(), get.srcNAME()))
+	autotools.configure("--disable-static")
 
 def build():
-    autotools.make()
+	autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodir("/var/cache/systemtap")
-    pisitools.dodir("/run/systemtap")
-    pisitools.dodir("/var/log/stap-server")
-    pisitools.dodir("/etc/logrotate.d")
-    pisitools.dodir("/etc/stap-server/conf.d")
-    pisitools.dodir("/etc/systemtap/conf.d")
-    pisitools.dodir("/etc/systemtap/script.d")
-    
-    pisitools.dobin("stap-prep")
-    pisitools.domove("/var/run/stap-server", "/run/")
-    pisitools.removeDir("var/run")
-    pisitools.removeDir("/usr/lib/systemd")
+	pisitools.dodoc("NEWS")
 
-    shelltools.copytree("testsuite", "%s/usr/share/systemtap" % get.installDIR())
-
-    pisitools.insinto("/etc/logrotate.d", "initscript/logrotate.stap-server", "stap-server")
-    pisitools.insinto("/etc/conf.d", "initscript/config.stap-server", "stap-server")
-    pisitools.insinto("/etc/systemtap", "initscript/config.systemtap", "config")
-
-    # Clean uprobes directory
-    #autotools.make("-C %s/usr/share/systemtap/runtime/uprobes clean" % get.installDIR())
-
-    pisitools.dodoc("COPYING", "HACKING", "INTERNALS", "README.*")
