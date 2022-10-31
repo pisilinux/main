@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libcec</Name>
+        <Homepage>https://github.com/Pulse-Eight/libcec</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv3</License>
+        <IsA>library</IsA>
+        <Summary>This library provides support for Pulse-Eight's USB-CEC adapter and other CEC capable hardware, like the Raspberry Pi.</Summary>
+        <Description>Bu kitaplık, Pulse-Eight'ın USB-CEC adaptörü ve Raspberry Pi gibi diğer CEC özellikli donanımlar için destek sağlar.</Description>
+        <Archive sha1sum="3991875a67fbbcb0a4421a6133b79a4a16194ddd" type="targz">https://github.com/Pulse-Eight/libcec/archive/refs/tags/libcec-6.0.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>swig</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>p8-platform-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>libcec.patch</Patch>
+            <Patch level="1">libcec.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>libcec</Name>
+        <RuntimeDependencies>
+            <Dependency>eudev</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>python3</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>p8-platform</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libcec-devel</Name>
+        <Summary>Development files for libcec</Summary>
+        <RuntimeDependencies>
+            <Dependency>p8-platform-devel</Dependency>
+            <Dependency release="current">libcec</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2022-10-31</Date>
+            <Version>6.0.2</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
