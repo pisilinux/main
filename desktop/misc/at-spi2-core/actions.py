@@ -48,4 +48,4 @@ def install():
         return
     
     shelltools.cd("..")
-    pisitools.dodoc("COPYING", "NEWS", "README*")
+    pisitools.dodoc("NEWS", "README*")

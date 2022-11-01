@@ -12,7 +12,7 @@
         <IsA>service</IsA>
         <Summary>Protocol definitions and daemons for D-Bus at-spi</Summary>
         <Description>at-spi allows assistive technologies to access GTK-based applications. Essentially it exposes the internals of applications over D-Bus for automation.</Description>
-        <Archive sha1sum="89a11a1b236d0e496a122b186f4f2f4c7e1f9c99" type="tarxz">mirrors://gnome/at-spi2-core/2.44/at-spi2-core-2.44.1.tar.xz</Archive>
+        <Archive sha1sum="5097087d8959ffc68bd4f36ee94bdaf1bb1fa803" type="tarxz">mirrors://gnome/at-spi2-core/2.46/at-spi2-core-2.46.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>meson</Dependency>
             <Dependency>gtk-doc</Dependency>
@@ -36,10 +36,11 @@
     <Package>
         <Name>at-spi2-core</Name>
         <RuntimeDependencies>
-            <Dependency>libXtst</Dependency>
-            <Dependency>libX11</Dependency>
             <Dependency>dbus</Dependency>
             <Dependency>glib2</Dependency>
+            <Dependency>libXi</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXtst</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -56,9 +57,9 @@
 
     <Package>
         <Name>at-spi2-core-32bit</Name>
-        <PartOf>emul32</PartOf> -->
-        <Summary>32-bit shared libraries for at-spi2-core</Summary> --> -->
-        <BuildType>emul32</BuildType> --> -->
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for at-spi2-core</Summary>
+        <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>dbus-32bit</Dependency>
             <Dependency>glib2-32bit</Dependency>
@@ -105,7 +106,118 @@
         </Files>
     </Package>
 
+    <Package>
+        <Name>atk</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/girepository-1.0/Atk-1.0.typelib</Path>
+            <Path fileType="library">/usr/lib/libatk-1.0.so.0</Path>
+            <Path fileType="library">/usr/lib/libatk-1.0.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>atk-devel</Name>
+        <Summary>Development files for atk</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">atk</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/atk-1.0</Path>
+            <Path fileType="data">/usr/share/gir-1.0/Atk-1.0.gir</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/atk.pc</Path>
+            <Path fileType="library">/usr/lib32/pkgconfig/atk.pc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>atk-32bit</Name>
+        <Summary>32-bit shared libraries for atk</Summary>
+        <BuildDependencies>
+            <Dependency>glib2-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency release="current">atk</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/libatk-1.0.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>at-spi2-atk</Name>
+        <RuntimeDependencies>
+            <Dependency>atk</Dependency>
+            <Dependency>dbus</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>at-spi2-core</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libatk-bridge-2.0.so*</Path>
+            <Path fileType="library">/usr/lib/gtk-2.0/modules/libatk-bridge.so*</Path>
+            <Path fileType="library">/usr/lib/gnome-settings-daemon-3.0/gtk-modules/at-spi2-atk.desktop</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>at-spi2-atk-32bit</Name>
+        <Summary>32-bit shared libraries for at-spi2-atk</Summary>
+        <BuildDependencies>
+            <Dependency>at-spi2-core-32bit</Dependency>
+            <Dependency>atk-32bit</Dependency>
+            <Dependency>dbus-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>libxml2-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>atk-32bit</Dependency>
+            <Dependency>dbus-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
+            <Dependency>at-spi2-core-32bit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/libatk-bridge-2.0.so*</Path>
+            <Path fileType="library">/usr/lib32/gtk-2.0/modules/libatk-bridge.so</Path>
+            <Path fileType="library">/usr/lib32/gnome-settings-daemon-3.0/gtk-modules/at-spi2-atk.desktop</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>at-spi2-atk-devel</Name>
+        <Summary>at-spi2-atk için geliştirme dosyaları</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">at-spi2-atk</Dependency>
+            <Dependency>atk-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>at-spi2-core-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/pkgconfig/atk-bridge-2.0.pc</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/atk-bridge-2.0.pc</Path>
+            <Path fileType="header">/usr/include/at-spi2-atk</Path>
+        </Files>
+    </Package>
+
     <History>
+        <Update release="20">
+            <Date>2022-09-17</Date>
+            <Version>2.46.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="19">
+            <Date>2022-07-02</Date>
+            <Version>2.45.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="18">
             <Date>2022-04-22</Date>
             <Version>2.44.1</Version>
