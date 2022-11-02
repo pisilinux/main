@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Licensed under the GNU General Public License, version 3.
-# See the file https://www.gnu.org/licenses/gpl-3.0.txt
+# Licensed under the GNU General Public License, version 2.
+# See the file http://www.gnu.org/copyleft/gpl.txt.
 
-from pisi.actionsapi import mesontools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools, pisitools
 
 def setup():
+    pisitools.dosed("meson.build", "javascriptcoregtk-4.1", "javascriptcoregtk-5.0")
+    pisitools.dosed("meson.build", "webkit2gtk-4.1", "webkit2gtk-5.0")
     mesontools.configure()
 
 def build():
@@ -16,4 +17,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
+    pisitools.dodoc("COPYING", "NEWS", "README")
