@@ -11,6 +11,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    # pisitools.dosed("CMakeLists.txt", "webkit2gtk-4.1", "webkit2gtk-5.0")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr   \
                           -DSYSCONF_INSTALL_DIR=/etc    \
                           -DENABLE_VALA_BINDINGS=ON     \
@@ -26,6 +27,8 @@ def setup():
                           -DENABLE_GTK_DOC=OFF          \
                           -DENABLE_OAUTH2=ON            \
                           -DENABLE_GOA=OFF              \
+                          -DENABLE_OAUTH2_WEBKITGTK=OFF \
+                          -DENABLE_OAUTH2_WEBKITGTK4=ON \
                           -DWITH_SYSTEMDUSERUNITDIR=NO")
 
 def build():
