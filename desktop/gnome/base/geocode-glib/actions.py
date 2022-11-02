@@ -11,7 +11,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
 
 def setup():
-    mesontools.configure("-D enable-installed-tests=false")
+    mesontools.configure("-D enable-installed-tests=false \
+                          -Dsoup2=false")
 
 def build():
     mesontools.build
