@@ -11,9 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dgnome_distributor='Pisilinux' \
-                          -Ddate_in_gnome_version=true \
-                          -Dgtk_doc=true")
+    mesontools.configure("-Dgtk_doc=true")
 
 def build():
     mesontools.build()

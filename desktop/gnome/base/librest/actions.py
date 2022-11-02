@@ -7,6 +7,7 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
@@ -23,14 +24,14 @@ def setup():
         shelltools.export("CXX", "%s -m32" % get.CXX())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
         
-    autotools.configure(options)
+    mesontools.configure(options)
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    # pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
     
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "README")
+    pisitools.dodoc("AUTHORS", "COPYING*", "README*")

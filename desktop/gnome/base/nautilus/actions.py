@@ -9,6 +9,7 @@ from pisi.actionsapi import mesontools
 
 def setup():
     mesontools.configure("-Dselinux=false \
+                          -D docs=true \
                           -Dpackagekit=false")
 
 def build():
@@ -16,4 +17,7 @@ def build():
 
 def install():
     mesontools.install()
+
+    pisitools.dosym("/usr/lib/pkgconfig/libnautilus-extension-4.pc", "/usr/lib/pkgconfig/libnautilus-extension.pc")
+
     pisitools.dodoc("LICENSE", "NEWS", "README*")

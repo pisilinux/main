@@ -18,6 +18,7 @@ def setup():
     autotools.autoreconf("-fi")
     autotools.configure("--disable-silent-rules \
                          --disable-static \
+                         --without-gfbgraph \
                          --disable-windows-live")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
