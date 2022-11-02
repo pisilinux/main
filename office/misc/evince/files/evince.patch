@@ -1,0 +1,48 @@
+diff -Nuar a/properties/ev-properties-main.c b/properties/ev-properties-main.c
+--- a/properties/ev-properties-main.c	2022-09-18 16:56:00.000000000 +0300
++++ b/properties/ev-properties-main.c	2022-09-24 18:10:09.110565576 +0300
+@@ -40,10 +40,10 @@
+ #include "ev-properties-view.h"
+ 
+ static GType epp_type = 0;
+-static void property_page_provider_iface_init
+-	(NautilusPropertyPageProviderIface *iface);
++static void property_page_provider_iface_info
++	(NautilusPropertiesModelProviderInterface *iface);
+ static GList *ev_properties_get_pages
+-	(NautilusPropertyPageProvider *provider, GList *files);
++	(NautilusPropertiesModelProvider *provider, GList *files);
+ 
+ static void
+ ev_properties_plugin_register_type (GTypeModule *module)
+@@ -60,7 +60,7 @@
+ 		(GInstanceInitFunc) NULL
+ 	};
+ 	const GInterfaceInfo property_page_provider_iface_info = {
+-		(GInterfaceInitFunc)property_page_provider_iface_init,
++		(GInterfaceInitFunc)property_page_provider_iface_info,
+ 		NULL,
+ 		NULL
+ 	};
+@@ -70,18 +70,18 @@
+ 			&info, 0);
+ 	g_type_module_add_interface (module,
+ 			epp_type,
+-			NAUTILUS_TYPE_PROPERTY_PAGE_PROVIDER,
++			NAUTILUS_TYPE_PROPERTIES_MODEL_PROVIDER,
+ 			&property_page_provider_iface_info);
+ }
+ 
+ static void
+-property_page_provider_iface_init (NautilusPropertyPageProviderIface *iface)
++property_page_provider_iface_info (NautilusPropertiesModelProviderInterface *iface)
+ {
+ 	iface->get_pages = ev_properties_get_pages;
+ }
+ 
+ static GList *
+-ev_properties_get_pages (NautilusPropertyPageProvider *provider,
++ev_properties_get_pages (NautilusPropertiesModelProvider *provider,
+ 			 GList *files)
+ {
+ 	GError *error = NULL;
