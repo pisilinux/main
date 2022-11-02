@@ -9,7 +9,6 @@ from pisi.actionsapi import autotools, get, mesontools, pisitools
 def setup():
     mesontools.configure("--libexecdir=/usr/lib \
                           -Denable-gtk-doc=true \
-                          -Dgst-inspect=false \
                           -Dwith-plugins=all \
                           -Denable-python=yes")
 

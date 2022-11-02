@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     mesontools.configure("-Dhelp=false \
+                          -Dplugin_editorconfig=false \
                           -Dnetwork_tests=false")
 
 def build():

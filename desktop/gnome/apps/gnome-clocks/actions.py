@@ -7,6 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
+    pisitools.dosed("meson.build", "geocode-glib-1.0", "geocode-glib-2.0")
     mesontools.configure()
 
 def build():
