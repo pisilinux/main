@@ -11,6 +11,8 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
+    # pisitools.dosed("meson.build", "gcr-base-3", "gcr-4")
+    # pisitools.dosed("gdata/gdata-service.c", "gcr-base.h", "gcr.h")
     mesontools.configure()
 
 def build():
