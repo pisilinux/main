@@ -12,7 +12,6 @@ from pisi.actionsapi import mesontools
 
 def setup():
     options = " -Dbrotli=disabled \
-                -Dgtk_doc=true \
                 -Dintrospection=enabled"
 
     #if get.buildTYPE() == "_emul32":
