@@ -15,4 +15,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("NEWS", "README*", "AUTHORS", "COPYING")
+    pisitools.dodoc("NEWS", "README*", "COPYING")
