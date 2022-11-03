@@ -10,20 +10,10 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.dosed("configure", "rest-0.7", "rest-1.0")
-    pisitools.dosed("configure.ac", "rest-0.7", "rest-1.0")
-    pisitools.dosed("Makefile.am", "rest-0.7", "rest-1.0")
-    pisitools.dosed("Makefile.in", "rest-0.7", "rest-1.0")
-
     shelltools.export("GFBGRAPH_LIBS","-ltracker-sparql-3.0")
     shelltools.export("TRACKER_LIBS","-ltracker-sparql-3.0")
     shelltools.export("TRACKER_LIBS","-ltracker-sparql-3.0")
     shelltools.export("TRACKER_LIBS","-ltracker-sparql-3.0")
-
-    # pisitools.dosed("configure", "libsoup-2.4", "libsoup-3.0")
-    # pisitools.dosed("configure.ac", "libsoup-2.4", "libsoup-3.0")
-    # pisitools.dosed("Makefile.am", "libsoup-2.4", "libsoup-3.0")
-    # pisitools.dosed("Makefile.in", "libsoup-2.4", "libsoup-3.0")
 
     autotools.autoreconf("-fiv")
 
