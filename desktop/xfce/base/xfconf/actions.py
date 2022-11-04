@@ -6,6 +6,7 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 i = "--enable-introspection \
@@ -17,6 +18,7 @@ i = "--enable-introspection \
     "
 
 def setup():
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure(i)
 
     #pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
@@ -29,5 +31,5 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "TODO")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "TODO")
 
