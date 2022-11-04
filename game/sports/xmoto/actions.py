@@ -4,28 +4,24 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("./bootstrap")
-    #shelltools.system("rm -r src/ode")
-    shelltools.export("CPPFLAGS", "-D_GLIBCXX_USE_CXX11_ABI=0")
-    autotools.autoreconf("-vfi")
-    autotools.configure("--prefix=/usr \
-                         --enable-threads=posix \
-                         --disable-sdltest \
-                         --with-OpenGL \
-                         --with-renderer-sdlGfx=0 \
-                         --with-renderer-openGl=1 \
-                         --with-internal-xdg=1")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+
+    cmaketools.configure("-DOpenGL_GL_PREFERENCE=GLVND", sourceDir="..")
 
 def build():
-    autotools.make()
+    cmaketools.make("-C build")
+    #cmaketools.make("-C build doc")
 
 def install():
-    autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
-    pisitools.insinto("/usr/share/applications", "extra/xmoto.desktop")
-    pisitools.insinto("/usr/share/pixmaps", "extra/xmoto.xpm")
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    shelltools.cd("..")
+    pisitools.dodoc("COPYING*", "README*")
