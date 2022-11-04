@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.dosed("CMakeLists.txt", "webkit2gtk-4.1", "webkit2gtk-5.0")
+    # pisitools.dosed("CMakeLists.txt", "webkit2gtk-4.1", "webkit2gtk-5.0")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DSYSCONF_INSTALL_DIR=/etc \
                           -DENABLE_INSTALLED_TESTS=OFF \
