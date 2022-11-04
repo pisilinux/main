@@ -8,8 +8,8 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    pisitools.dosed("meson.build", "2.33.2", "2.33.1")
-    pisitools.dosed("meson.build", "2.37.1", "2.36.4")
+    #pisitools.dosed("meson.build", "2.33.2", "2.33.1")
+    #pisitools.dosed("meson.build", "2.37.1", "2.36.4")
     # pisitools.dosed("meson.build", "webkit2gtk-web-extension-4.1", "webkit2gtk-web-extension-5.0")
     mesontools.configure("-Dunit_tests=disabled")
 
