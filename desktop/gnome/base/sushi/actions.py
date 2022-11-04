@@ -7,8 +7,6 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    # pisitools.dosed("meson.build", "javascriptcoregtk-4.1", "javascriptcoregtk-5.0")
-    # pisitools.dosed("meson.build", "webkit2gtk-4.1", "webkit2gtk-5.0")
     mesontools.configure()
 
 def build():
