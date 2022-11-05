@@ -12,10 +12,11 @@ from pisi.actionsapi import get
 shelltools.export("python2", "/usr/bin/python2.7")
 
 def setup():
-    shelltools.system("sed 's/g_memdup/&2/' -i             \
-                            src/lib/plugin_apis/vdo.{c,api} \
-                            src/plugins/vdo.c")
+    # shelltools.system("sed 's/g_memdup/&2/' -i             \
+                            # src/lib/plugin_apis/vdo.{c,api} \
+                            # src/plugins/vdo.c")
 
+    shelltools.system("sh ./autogen.sh")
     shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure("--without-gtk-doc \
                          --without-nvdimm \
