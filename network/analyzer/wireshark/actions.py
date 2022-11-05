@@ -22,17 +22,17 @@ def build():
 
 def install():
     mesontools.install()
-
-    for f in ["epan/register.h", "ws_diag_control.h", "file.h", "cfile.h", "ws_symbol_export.h"]:
+#"ws_diag_control.h","ws_symbol_export.h"
+    for f in ["epan/register.h", "build/config.h","file.h", "cfile.h"]:
         pisitools.insinto("/usr/include/wireshark/", f)
 
     pisitools.insinto("/usr/include/wireshark/epan/", "epan/*.h")
     pisitools.insinto("/usr/include/wireshark/wsutil/", "wsutil/*.h")
+    pisitools.insinto("/usr/include/wireshark/wsutil/wmem/", "wsutil/wmem/*.h")
     pisitools.insinto("/usr/include/wireshark/wiretap/", "wiretap/*.h")
     pisitools.insinto("/usr/include/wireshark/epan/crypt/", "epan/crypt/*.h")
     pisitools.insinto("/usr/include/wireshark/epan/ftypes/", "epan/ftypes/*.h")
     pisitools.insinto("/usr/include/wireshark/epan/dfilter/", "epan/dfilter/*.h")
     pisitools.insinto("/usr/include/wireshark/epan/dissectors/", "epan/dissectors/*.h")
-    pisitools.insinto("/usr/include/wireshark/epan/wmem/", "epan/wmem/*.h")
 
     pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README*")
