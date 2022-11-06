@@ -20,4 +20,4 @@ def install():
     #for dir in dirs:
         #pisitools.removeDir(dir)
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README*")
