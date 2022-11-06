@@ -29,7 +29,7 @@ def setup():
         '-DCMAKE_BUILD_TYPE=Release',
         '-DCMAKE_INSTALL_PREFIX="/usr"',
         '-DTDESKTOP_API_TEST=ON',
-        '-DDESKTOP_APP_QT6=OFF',
+        '-DDESKTOP_APP_QT6=ON',
         '-DDESKTOP_APP_USE_PACKAGED=ON',
         '-DDESKTOP_APP_DISABLE_CRASH_REPORTS=ON',
         '-DDESKTOP_APP_SPECIAL_TARGET=""',
