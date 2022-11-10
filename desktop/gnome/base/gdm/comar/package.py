@@ -14,6 +14,7 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
         os.system("passwd -ql %s" % (OUR_NAME))
 
         os.system("/bin/chown gdm:gdm -R /var/lib/gdm")
+        os.system("service gdm on")
         os.system("/bin/chown root:gdm -R /var/log/gdm")
     except:
         pass
