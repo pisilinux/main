@@ -2,7 +2,8 @@
 
 import os, re
 
-OUR_ID = 42
+@OUR_ID = 42
+OUR_ID = 65
 OUR_NAME = "gdm"
 OUR_DESC = "GDM"
 
