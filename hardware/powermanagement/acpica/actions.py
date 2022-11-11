@@ -2,22 +2,14 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
 
 def build():
-    shelltools.system("sed -i -e 's/_CYGWIN/_LINUX/g' -e 's/-Werror//g' generate/unix/Makefile.*")
-    shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
-    pisitools.dosed("generate/unix/iasl/Makefile", "-Werror", "")
-    if get.ARCH() == "x86_64":
-        autotools.make("BITS=64")
-    else:
-        autotools.make("BITS=32")
+	autotools.make()
 
 def install():
-    autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
-    pisitools.dodoc("changes.txt")
+	autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
+
+	pisitools.dodoc("documents/changes.txt")

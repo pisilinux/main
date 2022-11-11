@@ -9,10 +9,15 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+j = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DUPNPC_BUILD_STATIC=OFF',
+    ' -Bbuild -L '
+    ])
+
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    cmaketools.configure('-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -L', sourceDir = '..')
+    cmaketools.configure(j)
 
 def build():
     pythonmodules.compile(pyVer = '3')
