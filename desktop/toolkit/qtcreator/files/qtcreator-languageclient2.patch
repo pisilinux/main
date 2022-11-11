@@ -1,0 +1,60 @@
+From bd00cc8bf8742a0c344266879cef680093bfdbf0 Mon Sep 17 00:00:00 2001
+From: Christian Kandeler <christian.kandeler@qt.io>
+Date: Wed, 10 Aug 2022 15:37:31 +0200
+Subject: LanguageClient: Introduce timeout for restart counter
+
+While it makes sense to stop trying to restart a continuously crashing
+server, the restart counter should be reset regularly, as it's not
+critical if the server restarts "once in a while" during a longer
+programming session.
+
+Change-Id: Ia2efca28ae4a4dba72da947d9eb776e3909d0cb3
+Reviewed-by: <github-actions-qt-creator@cristianadam.eu>
+Reviewed-by: David Schulz <david.schulz@qt.io>
+---
+ src/plugins/languageclient/client.cpp | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/src/plugins/languageclient/client.cpp b/src/plugins/languageclient/client.cpp
+index 78a2a259c9..c624b13979 100644
+--- a/src/plugins/languageclient/client.cpp
++++ b/src/plugins/languageclient/client.cpp
+@@ -197,6 +197,11 @@ public:
+         connect(&m_shutdownTimer, &QTimer::timeout, this, [this] {
+             LanguageClientManager::deleteClient(q);
+         });
++
++        m_restartCountResetTimer.setSingleShot(true);
++        m_restartCountResetTimer.setInterval(5 * 60 * 1000);
++        connect(&m_restartCountResetTimer, &QTimer::timeout,
++                this, [this] { m_restartsLeft = MaxRestarts; });
+     }
+ 
+     ~ClientPrivate()
+@@ -307,7 +312,9 @@ public:
+     AssistProviders m_clientProviders;
+     QMap<TextEditor::TextDocument *, AssistProviders> m_resetAssistProvider;
+     QHash<TextEditor::TextEditorWidget *, LanguageServerProtocol::MessageId> m_highlightRequests;
+-    int m_restartsLeft = 5;
++    static const int MaxRestarts = 2;
++    int m_restartsLeft = MaxRestarts;
++    QTimer m_restartCountResetTimer;
+     InterfaceController *m_clientInterface = nullptr;
+     DiagnosticManager *m_diagnosticManager = nullptr;
+     DocumentSymbolCache m_documentSymbolCache;
+@@ -1511,8 +1518,11 @@ bool Client::reset()
+ 
+ bool ClientPrivate::reset()
+ {
+-    if (!m_restartsLeft)
++    if (!m_restartsLeft) {
++        m_restartCountResetTimer.stop();
+         return false;
++    }
++    m_restartCountResetTimer.start();
+     --m_restartsLeft;
+     m_state = Client::Uninitialized;
+     m_responseHandlers.clear();
+-- 
+cgit v1.2.1
+
