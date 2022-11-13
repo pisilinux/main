@@ -24,7 +24,8 @@ def build():
 #                    STRIP="true"' % (get.CXXFLAGS(), get.CXX()))
 
 def install():
-    pisitools.dobin("unrar")
+    autotools.rawInstall("DESTDIR=%s/usr" % get.installDIR())
+    # pisitools.dobin("unrar")
     
     shelltools.cd("%s" % get.workDIR())
     shelltools.cd("libunrar")
