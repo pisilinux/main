@@ -9,7 +9,7 @@ from pisi.actionsapi import pythonmodules, shelltools, get
 shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION", "5.0.0")
 
 def build():
-    pythonmodules.run("-m build --no-isolation --skip-dependency-check --wheel", pyVer = '3')
+    pythonmodules.run("-m build", pyVer = '3')
 
 def install():
     pythonmodules.run("-m installer -d %s dist/importlib_metadata-5.0.0-py3-none-any.whl" % get.installDIR(), pyVer = '3')
