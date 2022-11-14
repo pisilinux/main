@@ -6,10 +6,11 @@
 
 from pisi.actionsapi import pythonmodules as py3, shelltools, get
 
+t = "dist/importlib_resources-5.10.0-py3-none-any.whl"
 shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION", "5.10.0")
 
 def build():
     py3.run("-m build", pyVer = '3')
 
 def install():
-    py3.run("-m installer -d %s dist/importlib_resources-5.10.0-py3-none-any.whl" % get.installDIR(), pyVer = '3')
+    py3.run("-m installer -d %s %s" % (get.installDIR(), t), pyVer = '3')
