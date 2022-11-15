@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import pythonmodules as py3, shelltools, get
 
-shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","3.0.0")
+t = "dist/importlib_resources-5.10.0-py3-none-any.whl"
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION", "5.10.0")
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    py3.run("-m build", pyVer = '3')
 
 def install():
-    pythonmodules.install(pyVer="3")
+    py3.run("-m installer -d %s %s" % (get.installDIR(), t), pyVer = '3')
