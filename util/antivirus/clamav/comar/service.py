@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import os
 from comar.service import *
 
@@ -8,19 +9,16 @@ serviceDesc = _({"en": "Clam Anti-Virus Daemon",
 
 @synchronized
 def start():
-    #if config.get("DAZUKO_SUPPORT", "no") == "yes":
-    #            call("System.Service.start", "dazuko")
-
     startService(command="/usr/sbin/clamd",
-            chuid="clamav",
-            pidfile="/run/clamav/clamd.pid",
-            donotify=False)
+                 #chuid="clamav",
+                 pidfile="/run/clamd.pid",
+                 donotify=False)
     time.sleep(3)
     startService(command="/usr/bin/freshclam",
-            args="-d -p /run/clamav/freshclam.pid",
-            chuid="clamav",
-            pidfile="/run/clamav/freshclam.pid",
-            donotify=True)
+                 args="-d -p /run/freshclam.pid",
+                 #chuid="clamav",
+                 pidfile="/run/freshclam.pid",
+                 donotify=True)
 
 @synchronized
 def stop():
@@ -29,8 +27,6 @@ def stop():
     time.sleep(4)
     stopService(command="/usr/bin/freshclam",
                         donotify=True)
-    #if config.get("DAZUKO_SUPPORT", "no") == "yes":
-    #    call("System.Service.stop", "dazuko")
 
 def status():
-    return isServiceRunning("/run/clamav/clamd.pid") and isServiceRunning("/run/clamav/freshclam.pid")
+    return isServiceRunning("/run/clamd.pid") and isServiceRunning("/run/freshclam.pid")

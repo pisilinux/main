@@ -2,47 +2,35 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import shelltools, cmaketools, pisitools, get
+
+j = ''.join([
+    ' -DENABLE_EXAMPLES=ON',
+    ' -DENABLE_MILTER=OFF',
+    ' -DENABLE_SYSTEMD=OFF',
+    ' -DAPP_CONFIG_DIRECTORY=/etc/clamav',
+    ' -DDATABASE_DIRECTORY=/var/lib/clamav',
+    ' -G Ninja',
+    ' -B_build -L '
+    ])
 
 def setup():
-    #autotools.autoreconf("-fiv")
-    autotools.configure("--prefix=/usr \
-                         --sbindir=/usr/bin \
-                         --runstatedir=/run \
-                         --enable-id-check \
-                         --enable-clamdtop \
-                         --disable-static \
-                         --disable-clamav \
-                         --disable-fanotify \
-                         --disable-experimental \
-                         --disable-silent-rules \
-                         --with-system-tommath \
-                         --with-zlib=/usr \
-                         --with-no-cache \
-                         --with-user=clamav \
-                         --with-group=clamav \
-                         --disable-llvm \
-                         --with-tcpwrappers \
-                         --sysconfdir=/etc \
-                         --with-dbdir=/var/lib/clamav")
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    cmaketools.configure(j)
 
 def build():
-    autotools.make()
+    shelltools.system("ninja -C _build")
+
+def check():
+    #pass
+    shelltools.system("ninja -C _build test")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja -C _build install" % get.installDIR())
 
     #pisitools.dodir("/run/clamav")
-    #pisitools.dodir("/var/lib/clamav")
+    pisitools.dodir("/var/lib/clamav")
     #pisitools.dodir("/var/log/clamav")
-    #shelltools.touch(get.installDIR() + "/var/log/clamav/freshclam.log")
-    #shelltools.chmod(get.installDIR() + "/var/log/clamav/freshclam.log", 0600)
-    #shelltools.chown("%s/var/log/clamav/freshclam.log" % get.installDIR(), "clamav", "clamav")
 
-    pisitools.dodoc("COPYING*", "NEWS*", "README*")
+    shelltools.system("find %s/etc/clamav -type f | sed -e 'p;s:.sample::' | xargs -n2 mv" % get.installDIR())
