@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>libmilter</Name>
+		<Homepage>https://www.proofpoint.com/us/sendmail-open-source</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>custom</License>
+		<IsA>library</IsA>
+		<PartOf>network.library</PartOf>
+		<Summary>Sendmail Mail Filter API.</Summary>
+		<Description>pass</Description>
+		<Archive sha1sum="d4d2568fe48da0e0fe8209a9cbc6f842e9014e46" type="targz">
+			https://ftp.sendmail.org/sendmail.8.17.1.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>db-devel</Dependency>
+			<Dependency>kernel-headers</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<Patch level='1'>site_config_m4.patch</Patch>
+			<Patch level='1'>alpinelinux/libmilter_sharedlib.patch</Patch>
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>libmilter</Name>
+		<RuntimeDependencies>
+			<Dependency>db</Dependency>
+			<Dependency>glibc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="header">/usr/include/libmilter</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2022-11-15</Date>
+			<Version>8.17.1</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
