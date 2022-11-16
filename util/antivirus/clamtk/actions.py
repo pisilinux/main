@@ -12,7 +12,7 @@ def install():
 		pisitools.insinto("/usr/lib/perl5/vendor_perl/5.32.0/ClamTk", lib)
 
 	for mo in shelltools.ls("po/*.po"):
-		shelltools.chmod(lib, mode = 0644)
+		shelltools.chmod(mo, mode = 0644)
 		pisitools.domo(mo, shelltools.baseName(mo).replace(".po", ""), "clamtk.mo")
 
 	pisitools.dobin("clamtk")
