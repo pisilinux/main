@@ -1,0 +1,333 @@
+diff -Naurp lxpanel-0.10.1.orig/plugins/batt/batt.c lxpanel-0.10.1/plugins/batt/batt.c
+--- lxpanel-0.10.1.orig/plugins/batt/batt.c	2019-03-01 00:31:41.000000000 +0100
++++ lxpanel-0.10.1/plugins/batt/batt.c	2022-10-14 11:14:57.009987046 +0200
+@@ -446,6 +446,23 @@ static void updateSizes(lx_battery *b)
+         b->width = b->length;
+ }
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean batt_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
+ 
+ static GtkWidget * constructor(LXPanel *panel, config_setting_t *settings)
+ {
+@@ -564,6 +581,10 @@ static GtkWidget * constructor(LXPanel *
+     /* Start the update loop */
+     lx_b->timer = g_timeout_add_seconds( 9, (GSourceFunc) update_timout, (gpointer) lx_b);
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++    g_signal_connect(lx_b->drawingArea, "query-tooltip", G_CALLBACK(batt_query_tooltip), NULL);
++#endif
++
+     RET(p);
+ }
+ 
+diff -Naurp lxpanel-0.10.1.orig/plugins/launch-button.c lxpanel-0.10.1/plugins/launch-button.c
+--- lxpanel-0.10.1.orig/plugins/launch-button.c	2019-01-13 22:35:07.000000000 +0100
++++ lxpanel-0.10.1/plugins/launch-button.c	2022-10-14 11:14:57.009987046 +0200
+@@ -39,6 +39,24 @@ struct _LaunchButton
+ };
+ 
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean launch_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
++
+ static void launch_button_job_finished(FmJob *job, LaunchButton *self)
+ {
+     GtkWidget *image;
+@@ -179,6 +197,9 @@ LaunchButton *launch_button_new(LXPanel
+             return NULL;
+         }
+     }
++#if GTK_CHECK_VERSION(3, 0, 0)
++    g_signal_connect(GTK_WIDGET(self), "query-tooltip", G_CALLBACK(launch_query_tooltip), NULL);
++#endif
+     return self;
+ }
+ 
+diff -Naurp lxpanel-0.10.1.orig/plugins/monitors/monitors.c lxpanel-0.10.1/plugins/monitors/monitors.c
+--- lxpanel-0.10.1.orig/plugins/monitors/monitors.c	2019-01-13 22:37:42.000000000 +0100
++++ lxpanel-0.10.1/plugins/monitors/monitors.c	2022-10-14 11:14:57.010987046 +0200
+@@ -220,6 +220,24 @@ monitor_set_foreground_color(MonitorsPlu
+  *                          End of monitor functions                          *
+  ******************************************************************************/
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean monitor_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
++
+ /******************************************************************************
+  *                                 CPU monitor                                *
+  ******************************************************************************/
+@@ -285,6 +303,9 @@ cpu_tooltip_update (Monitor *m)
+         tooltip_text = g_strdup_printf(_("CPU usage: %.2f%%"),
+                 m->stats[ring_pos] * 100);
+         gtk_widget_set_tooltip_text(m->da, tooltip_text);
++#if GTK_CHECK_VERSION(3, 0, 0)
++        g_signal_connect(m->da, "query-tooltip", G_CALLBACK(monitor_query_tooltip), NULL);
++#endif
+         g_free(tooltip_text);
+     }
+ }
+@@ -387,6 +408,9 @@ mem_tooltip_update (Monitor *m)
+                 m->stats[ring_pos] * m->total / 1024,
+                 m->stats[ring_pos] * 100);
+         gtk_widget_set_tooltip_text(m->da, tooltip_text);
++#if GTK_CHECK_VERSION(3, 0, 0)
++        g_signal_connect(m->da, "query-tooltip", G_CALLBACK(monitor_query_tooltip), NULL);
++#endif
+         g_free(tooltip_text);
+     }
+ }
+diff -Naurp lxpanel-0.10.1.orig/plugins/netstat/statusicon.c lxpanel-0.10.1/plugins/netstat/statusicon.c
+--- lxpanel-0.10.1.orig/plugins/netstat/statusicon.c	2019-01-13 22:35:07.000000000 +0100
++++ lxpanel-0.10.1/plugins/netstat/statusicon.c	2022-10-14 11:23:56.563275687 +0200
+@@ -26,6 +26,24 @@
+ #include "statusicon.h"
+ #include "misc.h"
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean statusicon_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
++
+ struct statusicon *create_statusicon(LXPanel *panel, GtkWidget *box,
+         const char *filename, const char *tooltips, const char* icon_name)
+ {
+@@ -48,6 +66,10 @@ struct statusicon *create_statusicon(LXP
+     /* tooltip */
+     gtk_widget_set_tooltip_text(newicon->main, tooltips);
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++    g_signal_connect(newicon->main, "query-tooltip", G_CALLBACK(statusicon_query_tooltip), NULL);
++#endif
++
+     return newicon;
+ }
+ 
+diff -Naurp lxpanel-0.10.1.orig/plugins/task-button.c lxpanel-0.10.1/plugins/task-button.c
+--- lxpanel-0.10.1.orig/plugins/task-button.c	2022-10-12 13:07:42.368701277 +0200
++++ lxpanel-0.10.1/plugins/task-button.c	2022-10-14 11:17:37.905073119 +0200
+@@ -1135,6 +1135,24 @@ static void task_update_icon(TaskButton
+                                                          task, NULL);
+ }
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean task_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
++
+ /* Draw the label and tooltip on a taskbar button. */
+ static void task_draw_label(TaskButton *tb, gboolean bold_style, gboolean force)
+ {
+@@ -1372,6 +1390,11 @@ static gboolean task_button_leave_notify
+ {
+     TaskButton *tb = PANEL_TASK_BUTTON(widget);
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_has_tooltip(parent, FALSE);
++#endif
++
+     tb->entered_state = FALSE;
+     task_draw_label(tb, FALSE, FALSE);
+     if (tb->flags.flat_button)
+@@ -1499,6 +1522,9 @@ TaskButton *task_button_new(Window win,
+     assemble_gui(self);
+     /* and finally set visibility on it */
+     gtk_widget_set_visible(GTK_WIDGET(self), self->n_visible > 0);
++#if GTK_CHECK_VERSION(3, 0, 0)
++    g_signal_connect(GTK_WIDGET(self), "query-tooltip", G_CALLBACK(task_query_tooltip), NULL);
++#endif
+     return self;
+ }
+ 
+diff -Naurp lxpanel-0.10.1.orig/plugins/weather/weatherwidget.c lxpanel-0.10.1/plugins/weather/weatherwidget.c
+--- lxpanel-0.10.1.orig/plugins/weather/weatherwidget.c	2019-02-22 22:21:13.000000000 +0100
++++ lxpanel-0.10.1/plugins/weather/weatherwidget.c	2022-10-14 11:14:57.011987047 +0200
+@@ -452,6 +452,24 @@ gtk_weather_size_allocate(GtkWidget * wi
+   gtk_widget_size_allocate(GTK_WIDGET(priv->hbox), &box_allocation);
+ }
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean weather_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
++
+ /**
+  * Helper function to update the widget based on internal change.
+  *
+@@ -530,6 +548,10 @@ gtk_weather_render(GtkWeather * weather)
+ 
+   gtk_widget_set_tooltip_text(GTK_WIDGET(weather), tooltip_text);
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++    g_signal_connect(weather, "query-tooltip", G_CALLBACK(weather_query_tooltip), NULL);
++#endif
++
+   g_free(tooltip_text);
+ }
+ 
+diff -Naurp lxpanel-0.10.1.orig/src/misc.c lxpanel-0.10.1/src/misc.c
+--- lxpanel-0.10.1.orig/src/misc.c	2019-01-13 22:35:07.000000000 +0100
++++ lxpanel-0.10.1/src/misc.c	2022-10-14 11:55:44.518153250 +0200
+@@ -1258,6 +1258,11 @@ static gboolean fb_button_enter(GtkImage
+ /* Handler for "leave-notify-event" signal on image that has highlighting requested. */
+ static gboolean fb_button_leave(GtkImage * widget, GdkEventCrossing * event, gpointer user_data)
+ {
++#if GTK_CHECK_VERSION(3, 0, 0)
++    GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(widget));
++    gtk_widget_set_has_tooltip(parent, FALSE);
++#endif
++
+     if (gtk_image_get_storage_type(widget) == GTK_IMAGE_PIXBUF)
+     {
+         ImgData * data = (ImgData *) g_object_get_qdata(G_OBJECT(widget), img_data_id);
+diff -Naurp lxpanel-0.10.1.orig/src/panel.c lxpanel-0.10.1/src/panel.c
+--- lxpanel-0.10.1.orig/src/panel.c	2022-10-12 13:07:42.360701278 +0200
++++ lxpanel-0.10.1/src/panel.c	2022-10-14 11:14:57.012987047 +0200
+@@ -401,6 +401,14 @@ static gboolean lxpanel_button_press(Gtk
+     return FALSE;
+ }
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean lxpanel_enter_notify(GtkWidget* widget, GdkEventCrossing event, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    return FALSE;
++}
++#endif
++
+ static void lxpanel_class_init(PanelToplevelClass *klass)
+ {
+     GObjectClass *gobject_class = (GObjectClass *)klass;
+@@ -430,6 +438,7 @@ static void lxpanel_class_init(PanelTopl
+     widget_class->button_press_event = lxpanel_button_press;
+     widget_class->button_release_event = _lxpanel_button_release;
+     widget_class->motion_notify_event = _lxpanel_motion_notify;
++    widget_class->enter_notify_event = lxpanel_enter_notify;
+ 
+     signals[ICON_SIZE_CHANGED] =
+         g_signal_new("icon-size-changed",
+diff -Naurp lxpanel-0.10.1.orig/src/plugin.c lxpanel-0.10.1/src/plugin.c
+--- lxpanel-0.10.1.orig/src/plugin.c	2021-01-29 23:28:51.000000000 +0100
++++ lxpanel-0.10.1/src/plugin.c	2022-10-14 11:14:57.012987047 +0200
+@@ -499,6 +499,24 @@ static void on_size_allocate(GtkWidget *
+ //    _queue_panel_calculate_size(p);
+ }
+ 
++#if GTK_CHECK_VERSION(3, 0, 0)
++static gboolean enable_query_tooltip(gpointer p_data)
++{
++    GtkWidget *widget = p_data;
++    gtk_widget_set_has_tooltip(widget, TRUE);
++    return G_SOURCE_REMOVE;
++}
++
++static gboolean plugin_query_tooltip(GtkWidget *widget, gint x, gint y, gboolean keyboard_tip, GtkTooltip *tooltip, gpointer p_data)
++{
++    gtk_widget_set_has_tooltip(widget, FALSE);
++    GtkWidget *parent = gtk_widget_get_toplevel(widget);
++    gtk_widget_set_tooltip_text(parent, gtk_widget_get_tooltip_text(widget));
++    g_timeout_add(2 * G_TIME_SPAN_MILLISECOND, enable_query_tooltip, widget);
++    return TRUE;
++}
++#endif
++
+ GtkWidget *lxpanel_add_plugin(LXPanel *p, const char *name, config_setting_t *cfg, gint at)
+ {
+     const LXPanelPluginInit *init;
+@@ -587,6 +605,11 @@ GtkWidget *lxpanel_add_plugin(LXPanel *p
+     g_object_set_qdata(G_OBJECT(widget), lxpanel_plugin_qinit, (gpointer)init);
+     g_object_set_qdata_full(G_OBJECT(widget), lxpanel_plugin_qsize,
+                             g_new0(GdkRectangle, 1), g_free);
++
++#if GTK_CHECK_VERSION(3, 0, 0)
++    g_signal_connect(widget, "query-tooltip", G_CALLBACK(plugin_query_tooltip), NULL);
++#endif
++
+     return widget;
+ }
+ 
