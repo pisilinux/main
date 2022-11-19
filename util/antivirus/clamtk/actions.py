@@ -20,4 +20,4 @@ def install():
 	pisitools.dopixmaps("images/*")
 	pisitools.doman("clamtk.1.gz")
 
-	pisitools.insinto("/usr/share/appdata", "com.github.davetheunsub.clamtk.appdata.xml")
+	pisitools.insinto("/usr/share/metainfo", "com.github.davetheunsub.clamtk.appdata.xml")
