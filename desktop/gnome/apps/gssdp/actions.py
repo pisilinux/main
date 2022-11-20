@@ -7,7 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("-Dmanpages=false")
 
 def build():
     mesontools.build()
