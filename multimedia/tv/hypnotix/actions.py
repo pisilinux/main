@@ -8,9 +8,11 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-#def setup():
+def setup():
     #autotools.configure()
-
+    #undefined symbol: mpv_detach_destroy
+    pisitools.dosed("usr/lib/hypnotix/mpv.py", "mpv_detach_destroy", "mpv_destroy")
+    
 def build():
     autotools.make()
 
