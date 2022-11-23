@@ -11,6 +11,7 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
+    shelltools.unlink('testsuite/gtk/gtkresources.c')
     options = "--prefix=/usr             \
                --sysconfdir=/etc         \
                --enable-x11-backend \
