@@ -1,71 +1,83 @@
 <?xml version="1.0" ?>
 <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-    <Source>
-        <Name>alsa-plugins</Name>
-        <Homepage>http://www.alsa-project.org/</Homepage>
-        <Packager>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
-        </Packager>
-        <License>GPLv2</License>
-        <IsA>app:console</IsA>
-        <Summary>Additional library plugins Eg.jack, pulse, maemo ...</Summary>
-        <Description>alsa-plugins contains ALSA (Advanced Linux Sound Architecture) </Description>
-        <Archive sha1sum="4958b886ed9b4e1d2596a3e45faaf24590335326" type="tarbz2">https://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.6.tar.bz2</Archive>
-        <BuildDependencies>
-            <Dependency>dbus-devel</Dependency>
-            <Dependency>libavtp-devel</Dependency>
-            <Dependency>pulseaudio-libs-devel</Dependency>
-            <Dependency>libsamplerate-devel</Dependency>
-            <Dependency>speexdsp-devel</Dependency>
-            <Dependency>ffmpeg-devel</Dependency>
-            <Dependency>jack-audio-connection-kit-devel</Dependency>
-            <Dependency versionFrom="1.2.7">alsa-lib-devel</Dependency>
-        </BuildDependencies>
-        <Patches>
-            <!-- Patch level="1">usx2yloader_udev.patch</Patch -->
-        </Patches>
-    </Source>
+	<Source>
+		<Name>alsa-plugins</Name>
+		<Homepage>https://www.alsa-project.org/wiki/Main_Page</Homepage>
+		<Packager>
+			<Name>PisiLinux Community</Name>
+			<Email>admins@pisilinux.org</Email>
+		</Packager>
+		<License>GPLv2</License>
+		<License>LGPLv2.1</License>
+		<IsA>library</IsA>
+		<PartOf>multimedia.plugin</PartOf>
+		<Summary>The Advanced Linux Sound Architecture (ALSA) plugins.</Summary>
+		<Description>alsa-plugins provides plugins like JACK, PulseAudio, etc. for ALSA.</Description>
+		<Archive sha1sum="9dfcc70fb226820a2109cbf6a833ae24acac440c" type="tarbz2">
+			http://www.alsa-project.org/files/pub/plugins/alsa-plugins-1.2.7.1.tar.bz2
+		</Archive>
+		<BuildDependencies>
+			<Dependency>dbus-devel</Dependency>
+			<Dependency>ffmpeg-devel</Dependency>
+			<Dependency>libavtp-devel</Dependency>
+			<Dependency>alsa-lib-devel</Dependency>
+			<Dependency>speexdsp-devel</Dependency>
+			<Dependency>libsamplerate-devel</Dependency>
+			<Dependency>pulseaudio-libs-devel</Dependency>
+			<Dependency>jack-audio-connection-kit-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level="1">Arch/pulse_default_conf.patch</Patch> -->
+		</Patches>
+		<AdditionalFiles>
+			<!-- <AdditionalFile target="">missing</AdditionalFile> -->
+		</AdditionalFiles>
+	</Source>
 
-    <Package>
-        <Name>alsa-plugins</Name>
-        <Summary>ALSA console plugins</Summary>
-        <Description>alsa-plugins contains ALSA (Advanced Linux Sound Architecture)</Description>
-        <RuntimeDependencies>
-            <Dependency>dbus</Dependency>
-            <Dependency>libavtp</Dependency>
-            <Dependency>pulseaudio-libs</Dependency>
-            <Dependency>libsamplerate</Dependency>
-            <Dependency>speexdsp</Dependency>
-            <Dependency>ffmpeg</Dependency>
-            <Dependency>jack-audio-connection-kit</Dependency>
-            <Dependency versionFrom="1.2.7">alsa-lib</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="config">/etc/alsa/conf.d</Path>
-            <Path fileType="library">/usr/lib/alsa-lib</Path>
-            <Path fileType="data">/usr/share/alsa</Path>
-        </Files>
-        <AdditionalFiles>
-            <!-- AdditionalFile target="/lib/udev/rules.d/90-alsa-tools-firmware.rules" permission="0644">90-alsa-tools-firmware.rules</AdditionalFile -->
-            </AdditionalFiles>
-    </Package>
+	<Package>
+		<Name>alsa-plugins</Name>
+		<RuntimeDependencies>
+			<Dependency>ffmpeg</Dependency>
+			<Dependency>libavtp</Dependency>
+			<Dependency>alsa-lib</Dependency>
+			<Dependency>speexdsp</Dependency>
+			<Dependency>libsamplerate</Dependency>
+			<Dependency>pulseaudio-libs</Dependency>
+			<Dependency>jack-audio-connection-kit</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="config">/etc/alsa/conf.d</Path>
+			<Path fileType="library">/usr/lib/alsa-lib</Path>
+			<Path fileType="data">/usr/share/alsa/alsa.conf.d</Path>
+			<Path fileType="doc">/usr/share/doc/alsa-plugins</Path>
+		</Files>
+		<AdditionalFiles>
+			<!-- <AdditionalFile owner="root" permission="0644" target="">missing</AdditionalFile> -->
+		</AdditionalFiles>
+	</Package>
 
-    <History>
-        <Update release="2">
-            <Date>2022-06-03</Date>
-            <Version>1.2.5</Version>
-            <Comment>Rebuild.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-         <Update release="1">
-            <Date>2022-01-25</Date>
-            <Version>1.2.6</Version>
-            <Comment>First release</Comment>
-            <Name>Ali Cengiz Kurt</Name>
-            <Email>alicengizkurt@gmail.com</Email>
-        </Update>
-    </History>
+	<History>
+		<Update release="4">
+			<Date>2022-11-24</Date>
+			<Version>1.2.7.1</Version>
+			<Comment>Version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="2">
+			<Date>2022-06-03</Date>
+			<Version>1.2.6</Version>
+			<Comment>Rebuild.</Comment>
+			<Name>Mustafa Cinasal</Name>
+			<Email>muscnsl@gmail.com</Email>
+		</Update>
+		 <Update release="1">
+			<Date>2022-01-25</Date>
+			<Version>1.2.6</Version>
+			<Comment>First release</Comment>
+			<Name>Ali Cengiz Kurt</Name>
+			<Email>alicengizkurt@gmail.com</Email>
+		</Update>
+	</History>
 </PISI>
