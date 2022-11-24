@@ -6,18 +6,19 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 
 def setup():
     shelltools.export("PYTHON","/usr/bin/python3")
 
-    autotools.configure("--disable-static")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("COPYING", "README")
+    pisitools.dodoc("AUTHORS", "README*")
