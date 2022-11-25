@@ -8,10 +8,13 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
+i = ''.join([
+    ' -DBUILD_SHARED_LIBS=ON',
+    ' -DWITH_ZLIB=ON -L '
+    ])
+
 def setup():
-    cmaketools.configure("-DBUILD_SHARED_LIBS=ON \
-                          -DWITH_MP4=ON \
-                          -DWITH_ASF=ON")
+    cmaketools.configure(i)
 
 def build():
     cmaketools.make()
@@ -19,4 +22,4 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING*")
+    pisitools.dodoc("AUTHORS", "NEWS")
