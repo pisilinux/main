@@ -14,7 +14,7 @@ from pisi.actionsapi import texlivemodules
 import os
 
 WorkDir = "."
-buildDir = 'texlive-20200406-source/build'
+buildDir = 'texlive-20220321-source/build'
 
 def setup():
     shelltools.makedirs(buildDir)
