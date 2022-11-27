@@ -7,6 +7,7 @@
 from pisi.actionsapi import shelltools, autotools, pisitools, get
 
 def setup():
+	pisitools.dosed("doc/apireference.rst", "api", deleteLine = True)
 	autotools.autoreconf("-vif")
 	autotools.configure("--disable-static")
 
@@ -14,11 +15,11 @@ def build():
 	autotools.make()
 	# doc compilation.
 	shelltools.cd("doc")
-	autotools.make("html man")
+	autotools.make("man")
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	# doc installation.
 	pisitools.doman("doc/_build/man/*")
-	shelltools.copytree("doc/_build/html", "%s/usr/share/vapoursynth/html" % get.installDIR())
+	#shelltools.copytree("doc/_build/html", "%s/usr/share/vapoursynth/html" % get.installDIR())

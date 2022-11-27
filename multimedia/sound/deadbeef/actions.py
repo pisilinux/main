@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("CC", "/usr/bin/clang")
     shelltools.export("CXX", "/usr/bin/clang++")
-    shelltools.export("LDFLAGS", "%s -fuse-ld=lld -ldl " % get.LDFLAGS())
+    #shelltools.export("LDFLAGS", "%s -fuse-ld=lld -ldl " % get.LDFLAGS())
     autotools.configure("--disable-oss --disable-coreaudio")
 
 def build():

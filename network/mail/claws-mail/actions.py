@@ -14,7 +14,6 @@ i = ''.join([
     ])
 def setup():
 	autotools.configure(i)
-
 #	pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -23,5 +22,5 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "README")
+	pisitools.dodoc("AUTHORS", "NEWS", "RELEASE_NOTES")
 

@@ -46,6 +46,7 @@ def setup():
                         --disable-odk                     \
                         --enable-qt5                      \
                         --enable-gtk3                     \
+                        --enable-gtk4 \
                         --enable-kf5                      \
                         --enable-release-build=yes        \
                         --enable-python=system            \
@@ -58,7 +59,6 @@ def setup():
                         --with-help                       \
                         --with-myspell-dicts              \
                         --with-java                       \
-                        --with-system-apr                 \
                         --with-system-cairo               \
                         --with-system-clucene             \
                         --with-system-cppunit             \
@@ -85,10 +85,8 @@ def setup():
                         --with-system-libwpd              \
                         --with-system-libwpg              \
                         --with-system-libwps              \
-                        --with-system-libxml              \
                         --with-system-mdds                \
                         --with-system-liblangtag          \
-                        --with-system-neon                \
                         --with-system-nss                 \
                         --with-system-odbc                \
                         --with-system-openldap            \
@@ -96,7 +94,6 @@ def setup():
                         --without-system-poppler          \
                         --with-system-postgresql          \
                         --with-system-redland             \
-                        --with-system-serf                \
                         --with-system-zlib                \
                         --with-system-libetonyek          \
                         --without-system-dicts            \
@@ -119,7 +116,7 @@ def build():
     shelltools.system("sed -i 's/.PHONY : check-if-root/.PHONY : /g' Makefile")
     shelltools.system("sed -i 's/bootstrap: check-if-root/bootstrap: /g' Makefile")
     shelltools.system("touch src.downloaded")
-    autotools.make("build-nocheck")
+    autotools.make("build")
 
 def install():
     autotools.rawInstall("DESTDIR=%s distro-pack-install" % get.installDIR())
@@ -139,8 +136,8 @@ def install():
     pisitools.dosym("/usr/lib/libreoffice/share/psprint/psprint.conf", "/etc/libreoffice/psprint.conf")
 
     # make pyuno find its modules
-    pisitools.dosym("/usr/lib/libreoffice/program/uno.py", "/usr/lib/python3.8/site-packages/uno.py")
-    pisitools.dosym("/usr/lib/libreoffice/program/unohelper.py", "/usr/lib/python3.8/site-packages/unohelper.py")
+    pisitools.dosym("/usr/lib/libreoffice/program/uno.py", "/usr/lib/python3.9/site-packages/uno.py")
+    pisitools.dosym("/usr/lib/libreoffice/program/unohelper.py", "/usr/lib/python3.9/site-packages/unohelper.py")
 
     for pix in ["libreoffice-base.png", "libreoffice-calc.png", "libreoffice-draw.png", "libreoffice-impress.png", "libreoffice-main.png", "libreoffice-math.png", "libreoffice-startcenter.png", "libreoffice-writer.png"]:
         pisitools.dosym("/usr/share/icons/hicolor/32x32/apps/%s" % pix, "/usr/share/pixmaps/%s" %pix)

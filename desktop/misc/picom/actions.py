@@ -7,10 +7,12 @@
 from pisi.actionsapi import mesontools, pisitools
 
 j = ''.join([
-    '-Ddbus=true ',
-    '-Dopengl=true ',
-    '-Dwith_docs=true ',
-    '-Dconfig_file=true'
+    ' -Ddbus=true',
+    ' -Dopengl=true',
+    ' -Dvsync_drm=true',
+    ' -Dwith_docs=true',
+    ' -Dconfig_file=true',
+    ' -Dcompton=false '
     ])
 
 def setup():

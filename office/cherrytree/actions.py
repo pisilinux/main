@@ -8,6 +8,7 @@ from pisi.actionsapi import shelltools, cmaketools, get
 
 j = ''.join([
     ' -B_build',
+    ' -DUSE_VTE=ON',
     ' -DAUTO_RUN_TESTING=OFF',
     ' -DBUILD_GMOCK=OFF',
     ' -DBUILD_TESTING=OFF',

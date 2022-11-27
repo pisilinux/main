@@ -12,13 +12,15 @@ from pisi.actionsapi import libtools
 
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.autoreconf("-vfi")
     autotools.automake("-afc")
     libtools.libtoolize("--automake")
     autotools.aclocal()
     autotools.autoconf()
-    autotools.configure("--disable-static --enable-shared")
+    autotools.configure("--disable-static \
+                         --with-gtk4 \
+                         --enable-shared")
 
 def build():
     autotools.make()
@@ -27,4 +29,4 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodir("/usr/lib/pkgconfig")
-    pisitools.dodoc("COPYING*", "README")
+    pisitools.dodoc("COPYING*", "README*")

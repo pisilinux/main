@@ -14,7 +14,7 @@ from pisi.actionsapi import texlivemodules
 import os
 
 WorkDir = "."
-buildDir = 'texlive-20200406-source/build'
+buildDir = 'texlive-20220321-source/build'
 
 def setup():
     shelltools.makedirs(buildDir)
@@ -58,7 +58,7 @@ def install():
     autotools.rawInstall("prefix=/usr DESTDIR=%s" % get.installDIR())
     shelltools.system("pwd")
     #install biber
-    pisitools.dobin("../../biber-2.16/bin/biber")
+    pisitools.dobin("../../biber-2.18/bin/biber")
 
     #pisitools.dodir("/usr/share/tlpkg/TeXLive")
     #shelltools.move("%s/source/utils/biber/TeXLive/*.pm" % get.workDIR(), "%s/usr/share/tlpkg/TeXLive" % get.installDIR())

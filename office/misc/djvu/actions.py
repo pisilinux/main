@@ -2,24 +2,23 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
 
-WorkDir = "djvulibre-%s" % get.srcVERSION() if len(get.srcVERSION().split(".")) < 4 else "djvulibre-%s" % get.srcVERSION()[:get.srcVERSION().rfind(".")]
+j = ''.join([
+    ' --enable-xmltools',
+    ' --disable-desktopfiles',
+    ' --with-jpeg',
+    ' --with-tiff '
+    ])
 
 def setup():
     autotools.aclocal("-I config")
     autotools.autoconf("-f")
 
-    autotools.configure("--enable-threads \
-                         --disable-desktopfiles \
-                         --enable-xmltools \
-                         --enable-i18n \
-                         --with-jpeg \
-                         --with-tiff")
+    autotools.configure(j)
+
 def build():
     autotools.make()
 
@@ -31,4 +30,4 @@ def install():
     for size in ["22", "32", "48", "64"]:
         pisitools.insinto("/usr/share/icons/hicolor/%sx%s/mimetypes" %(size, size), "desktopfiles/prebuilt-hi%s-djvu.png" % size, "image-vnd.djvu.png")
 
-    pisitools.dodoc("COPY*", "README", "NEWS")
+    pisitools.dodoc("NEWS")

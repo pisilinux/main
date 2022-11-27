@@ -16,8 +16,8 @@
 		<Description>
 			gpsd is a service daemon that monitor one or more GPSes attached to a host computer through serial or USB ports, making all data of the sensors available to be queried on TCP port 2947 of the host computer.
 		</Description>
-		<Archive sha1sum="2ca76a2fbb5a14b3913b5fb0df50f494356f2e8d" type="tarxz">
-			http://download-mirror.savannah.gnu.org/releases/gpsd/gpsd-3.23.1.tar.xz
+		<Archive sha1sum="708ec5a77bc92c09f7563a66c0e9cdccd7ddebcb" type="tarxz">
+			http://download-mirror.savannah.gnu.org/releases/gpsd/gpsd-3.24.tar.xz
 		</Archive>
 		<BuildDependencies>
 			<Dependency>scons</Dependency>
@@ -43,23 +43,24 @@
 			<Dependency>dbus</Dependency>
 			<Dependency>libgcc</Dependency>
 			<Dependency>libusb</Dependency>
-			<Dependency>ncurses</Dependency>
 			<Dependency>libsocket</Dependency>
 			<Dependency>bluez-libs</Dependency>
-			<Dependency>python3-pyserial</Dependency>
 		</RuntimeDependencies>
 		<Files>
-			<Path fileType="config">/etc/conf.d</Path>
-			<Path fileType="executable">/usr/bin</Path>
+			<!-- <Path fileType="config">/etc/conf.d</Path> -->
 			<Path fileType="executable">/usr/sbin</Path>
 			<Path fileType="executable">/lib/udev/gpsd.hotplug</Path>
 			<Path fileType="library">/usr/lib</Path>
 			<Path fileType="data">/lib/udev/rules.d</Path>
-			<Path fileType="man">/usr/share/man</Path>
+			<Path fileType="man">/usr/share/man/man3</Path>
+			<Path fileType="man">/usr/share/man/man5</Path>
+			<Path fileType="man">/usr/share/man/man8/gpsd.8</Path>
+			<Path fileType="man">/usr/share/man/man8/gpsinit.8</Path>
+			<Path fileType="man">/usr/share/man/man8/gpsdctl.8</Path>
 			<Path fileType="doc">/usr/share/gpsd/doc</Path>
 		</Files>
 		<AdditionalFiles>
-			<AdditionalFile owner="root" permission="0644" target="/etc/conf.d/gpsd">gpsd.sysconfig</AdditionalFile>
+			<!-- <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/gpsd">gpsd.sysconfig</AdditionalFile> -->
 		</AdditionalFiles>
 		<Provides>
 			<COMAR script="service.py">System.Service</COMAR>
@@ -69,32 +70,18 @@
 	<Package>
 		<Name>gpsd-clients</Name>
 		<RuntimeDependencies>
-			<Dependency release="current">gpsd</Dependency>
+			<!-- <Dependency release="current">gpsd</Dependency> -->
 			<Dependency>dbus</Dependency>
 			<Dependency>libusb</Dependency>
 			<Dependency>ncurses</Dependency>
 			<Dependency>bluez-libs</Dependency>
+			<Dependency>python3-gpsd</Dependency>
 			<Dependency>python3-pyserial</Dependency>
 		</RuntimeDependencies>
-		<Summary>Various text based and graphical clients for gpsd.</Summary>
 		<Files>
-			<Path fileType="executable">/usr/bin/cgps</Path>
-			<Path fileType="executable">/usr/bin/gpscat</Path>
-			<Path fileType="executable">/usr/bin/gpsdecode</Path>
-			<Path fileType="executable">/usr/bin/gpspipe</Path>
-			<Path fileType="executable">/usr/bin/gpxlogger</Path>
-			<Path fileType="executable">/usr/bin/lcdgps</Path>
-			<Path fileType="executable">/usr/bin/xgps</Path>
-			<Path fileType="executable">/usr/bin/xgpsspeed</Path>
-			<Path fileType="man">/usr/share/man/man1/gps.1*</Path>
-			<Path fileType="man">/usr/share/man/man1/cgps*</Path>
-			<Path fileType="man">/usr/share/man/man1/gpscat*</Path>
-			<Path fileType="man">/usr/share/man/man1/gpsdecode*</Path>
-			<Path fileType="man">/usr/share/man/man1/gpspipe*</Path>
-			<Path fileType="man">/usr/share/man/man1/gpxlogger*</Path>
-			<Path fileType="man">/usr/share/man/man1/cgpxlogger*</Path>
-			<Path fileType="man">/usr/share/man/man1/lcdgps*</Path>
-			<Path fileType="man">/usr/share/man/man1/xgps*</Path>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="man">/usr/share/man/man1</Path>
+			<Path fileType="man">/usr/share/man/man8/ppscheck.8</Path>
 			<Path fileType="data">/usr/share/applications</Path>
 			<Path fileType="data">/usr/share/gpsd/icons</Path>
 			<Path fileType="data">/usr/share/pixmaps</Path>
@@ -107,23 +94,40 @@
 	</Package>
 
 	<Package>
-		<Name>gpsd-devel</Name>
-		<Summary>Development files for gpsd.</Summary>
+		<Name>python3-gpsd</Name>
 		<RuntimeDependencies>
-			<Dependency release="current">gpsd</Dependency>
+			<Dependency>python3-pyserial</Dependency>
 		</RuntimeDependencies>
 		<Files>
+			<Path fileType="executable">/usr/bin/gpscat</Path>
+			<Path fileType="executable">/usr/bin/gpsprof</Path>
 			<Path fileType="executable">/usr/bin/gpsfake</Path>
-			<Path fileType="library">/usr/lib/python*/site-packages/gps/fake.py</Path>
-			<Path fileType="header">/usr/include</Path>
-			<Path fileType="data">/usr/lib/pkgconfig</Path>
-			<Path fileType="man">/usr/share/man/man3</Path>
-			<Path fileType="man">/usr/share/man/man5</Path>
+			<Path fileType="library">/usr/lib/python3.9</Path>
+			<Path fileType="man">/usr/share/man/man1/gpscat.1</Path>
+			<Path fileType="man">/usr/share/man/man1/gpsprof.1</Path>
 			<Path fileType="man">/usr/share/man/man1/gpsfake.1</Path>
 		</Files>
 	</Package>
 
+	<Package>
+		<Name>gpsd-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">gpsd</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include</Path>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+		</Files>
+	</Package>
+
 	<History>
+		<Update release="3">
+			<Date>2022-11-10</Date>
+			<Version>3.24</Version>
+			<Comment>Version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
 		<Update release="2">
 			<Date>2021-10-24</Date>
 			<Version>3.23.1</Version>
