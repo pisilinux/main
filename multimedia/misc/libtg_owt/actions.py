@@ -16,12 +16,14 @@ def setup():
     shelltools.move("tg_owt-*", "tg-owt-%s" % get.srcVERSION())
     shelltools.cd("tg-owt-%s" % get.srcVERSION())
 
-    #shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
+    # shelltools.system("git clone https://chromium.googlesource.com/webm/libvpx")
     shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv")
-    #shelltools.system("git clone https://github.com/PipeWire/pipewire")
+    # shelltools.system("git clone https://github.com/PipeWire/pipewire")
 
-    #shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
+    # shelltools.system("rm -rf src/third_party/libvpx/source/libvpx")
+    # shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
     shelltools.move("libyuv/*", "src/third_party/libyuv")
+    # shelltools.move("pipewire/*", "src/third_party/pipewire")
     shelltools.system("rm -rf src/third_party/crc32c/src")
     shelltools.move("crc32c-1.1.2/*", "src/third_party/crc32c")
 
