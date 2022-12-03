@@ -2,26 +2,25 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
+
+j = ''.join([
+    ' --with-aspell',
+    ' --with-hunspell',
+    ' --with-nuspell',
+    ' --with-hspell',
+    ' --with-voikko',
+    ' --with-zemberek',
+    ' --with-hunspell-dir=/usr/share/hunspell',
+    ' --with-hspell-dir=/usr/share/hspell',
+    ' --with-voikko-dir=/usr/share/voikko',
+    ' --disable-static '
+    ])
 
 def setup():
-    shelltools.system("./bootstrap")
-    
-    #suppress g++ warnings
-    pisitools.cxxflags.add("-Wno-useless-cast -Wno-old-style-cast -Wno-deprecated-declarations\
-							-Wno-effc++ -Wno-abi")
-    #suppress gcc warnings
-    pisitools.cflags.add("-fno-stack-protector -Wno-suggest-attribute=malloc")
-    autotools.configure("--disable-static \
-                         --with-zemberek \
-                         --with-aspell \
-                         --with-myspell \
-                         --with-myspell-dir=/usr/share/hunspell")
+    autotools.configure(j)
 
     #fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -31,7 +30,6 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    
+
     pisitools.rename("/usr/share/enchant/enchant.ordering", "enchant.ordering-2")
-    
-    pisitools.dodoc("AUTHORS", "NEWS", "README", "HACKING")
+    pisitools.dodoc("AUTHORS", "NEWS")
