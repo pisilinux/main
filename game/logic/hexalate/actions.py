@@ -8,15 +8,22 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
-from pisi.actionsapi import qt5
+from pisi.actionsapi import cmaketools
+
 
 def setup():
-    qt5.configure(parameters="PREFIX=/usr")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+
+    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
+                                        -DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
 
 def build():
-    qt5.make()
+    cmaketools.make("-C build")
 
 def install():
-    qt5.install()
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    shelltools.cd("..")
     pisitools.dodoc("COPYING", "README")
