@@ -1,0 +1,31 @@
+source3/wscript: Fix detection of major/minor macros
+
+These macros are only available via <sys/sysmacros.h> as of glibc
+commit e16deca62e16f645213dffd4ecd1153c37765f17 ("[BZ #19239] Don't
+include sys/sysmacros.h from sys/types.h."), which went into
+glibc 2.28.
+
+This is different from the usual C99 cleanups because it changes
+the configure check result with existing compilers that usually
+accept implicit function declarations.
+
+Submitted upstream: <https://gitlab.com/samba-team/samba/-/merge_requests/2807>
+
+diff --git a/source3/wscript b/source3/wscript
+index 22be17a1a6fd1126..ca27deaa54381446 100644
+--- a/source3/wscript
++++ b/source3/wscript
+@@ -603,11 +603,11 @@ msg.msg_accrightslen = sizeof(fd);
+     conf.CHECK_HEADERS('asm/types.h')
+ 
+     conf.CHECK_CODE('dev_t dev; int i = major(dev); return 0', "HAVE_DEVICE_MAJOR_FN",
+-                    headers='unistd.h sys/types.h',
++                    headers='sys/sysmacros.h unistd.h sys/types.h',
+                     msg="Checking for major macro")
+ 
+     conf.CHECK_CODE('dev_t dev; int i = minor(dev); return 0', "HAVE_DEVICE_MINOR_FN",
+-                    headers='unistd.h sys/types.h',
++                    headers='sys/sysmacros.h unistd.h sys/types.h',
+                     msg="Checking for minor macro")
+ 
+     conf.CHECK_STRUCTURE_MEMBER('struct dirent', 'd_off',
