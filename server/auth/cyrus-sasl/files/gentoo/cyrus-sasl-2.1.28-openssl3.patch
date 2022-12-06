@@ -1,0 +1,183 @@
+https://github.com/cyrusimap/cyrus-sasl/commit/887dbc0435056ec58ee48c4d803f110ade1e4c39
+https://github.com/cyrusimap/cyrus-sasl/commit/dfaa62392e7caecc6ecf0097b4d73738ec4fc0a8
+https://github.com/cyrusimap/cyrus-sasl/commit/c2bd3afbca57f176d8c650670ce371444bb7fcc0.
+
+From 887dbc0435056ec58ee48c4d803f110ade1e4c39 Mon Sep 17 00:00:00 2001
+From: Simo Sorce <simo@redhat.com>
+Date: Mon, 21 Jun 2021 14:24:18 -0400
+Subject: [PATCH] Gracefully handle failed initializations
+
+In OpenSSL 3.0 these algorithms have been moved to the legacy provider
+which is not enabled by default. This means allocation can and do fail.
+Handle failed allocations by returning an actual error instead of
+crashing later with a NULL context.
+
+Signed-off-by: Simo Sorce <simo@redhat.com>
+--- a/plugins/digestmd5.c
++++ b/plugins/digestmd5.c
+@@ -254,6 +254,7 @@ typedef struct context {
+     decode_context_t decode_context;
+ 
+     /* if privacy mode is used use these functions for encode and decode */
++    char *cipher_name;
+     cipher_function_t *cipher_enc;
+     cipher_function_t *cipher_dec;
+     cipher_init_t *cipher_init;
+@@ -2818,6 +2819,7 @@ static int digestmd5_server_mech_step2(server_context_t *stext,
+ 	}
+ 	
+ 	if (cptr->name) {
++	    text->cipher_name = cptr->name;
+ 	    text->cipher_enc = cptr->cipher_enc;
+ 	    text->cipher_dec = cptr->cipher_dec;
+ 	    text->cipher_init = cptr->cipher_init;
+@@ -2961,7 +2963,10 @@ static int digestmd5_server_mech_step2(server_context_t *stext,
+ 	if (text->cipher_init) {
+ 	    if (text->cipher_init(text, enckey, deckey) != SASL_OK) {
+ 		sparams->utils->seterror(sparams->utils->conn, 0,
+-					 "couldn't init cipher");
++					 "couldn't init cipher '%s'",
++                                         text->cipher_name);
++                result = SASL_FAIL;
++                goto FreeAllMem;
+ 	    }
+ 	}
+     }
+@@ -3512,6 +3517,7 @@ static int make_client_response(context_t *text,
+ 	oparams->mech_ssf = ctext->cipher->ssf;
+ 
+ 	nbits = ctext->cipher->n;
++	text->cipher_name = ctext->cipher->name;
+ 	text->cipher_enc = ctext->cipher->cipher_enc;
+ 	text->cipher_dec = ctext->cipher->cipher_dec;
+ 	text->cipher_free = ctext->cipher->cipher_free;
+@@ -3736,7 +3742,13 @@ static int make_client_response(context_t *text,
+ 	
+ 	/* initialize cipher if need be */
+ 	if (text->cipher_init) {
+-	    text->cipher_init(text, enckey, deckey);
++	    if (text->cipher_init(text, enckey, deckey) != SASL_OK) {
++	        params->utils->seterror(params->utils->conn, 0,
++		         "internal error: failed to init cipher '%s'",
++                         text->cipher_name);
++                result = SASL_FAIL;
++                goto FreeAllocatedMem;
++            }
+ 	}
+     }
+     
+
+From dfaa62392e7caecc6ecf0097b4d73738ec4fc0a8 Mon Sep 17 00:00:00 2001
+From: Simo Sorce <simo@redhat.com>
+Date: Wed, 21 Jul 2021 06:05:45 -0400
+Subject: [PATCH] Catch errors from EVP_Digest* functions
+
+In OpenSSL 3.0 digest init can fail simply because a legacy provider is
+not loaded of FIPS mode is active and the digest is not allowed.
+If the errors are not handled the application may crash later trying to
+access uninitialized contexts.
+
+Signed-off-by: Simo Sorce <simo@redhat.com>
+--- a/saslauthd/lak.c
++++ b/saslauthd/lak.c
+@@ -1806,18 +1806,36 @@ static int lak_check_hashed(
+ 		return rc;
+ 	}
+ 
+-	EVP_DigestInit(mdctx, md);
+-	EVP_DigestUpdate(mdctx, passwd, strlen(passwd));
++	rc = EVP_DigestInit(mdctx, md);
++	if (rc != 1) {
++		rc = LAK_FAIL;
++		goto done;
++	}
++	rc = EVP_DigestUpdate(mdctx, passwd, strlen(passwd));
++	if (rc != 1) {
++		rc = LAK_FAIL;
++		goto done;
++	}
+ 	if (hrock->salted) {
+-		EVP_DigestUpdate(mdctx, &cred[EVP_MD_size(md)],
+-				 clen - EVP_MD_size(md));
++		rc = EVP_DigestUpdate(mdctx, &cred[EVP_MD_size(md)],
++				      clen - EVP_MD_size(md));
++		if (rc != 1) {
++		    rc = LAK_FAIL;
++		    goto done;
++		}
++	}
++	rc = EVP_DigestFinal(mdctx, digest, NULL);
++	if (rc != 1) {
++		rc = LAK_FAIL;
++		goto done;
+ 	}
+-	EVP_DigestFinal(mdctx, digest, NULL);
+-	EVP_MD_CTX_free(mdctx);
+ 
+ 	rc = memcmp((char *)cred, (char *)digest, EVP_MD_size(md));
++	rc = rc ? LAK_INVALID_PASSWORD : LAK_OK;
++done:
++	EVP_MD_CTX_free(mdctx);
+ 	free(cred);
+-	return rc ? LAK_INVALID_PASSWORD : LAK_OK;
++	return rc;
+ }
+ 
+ #endif /* HAVE_OPENSSL */
+
+From c2bd3afbca57f176d8c650670ce371444bb7fcc0 Mon Sep 17 00:00:00 2001
+From: Simo Sorce <simo@redhat.com>
+Date: Wed, 21 Jul 2021 07:07:24 -0400
+Subject: [PATCH] Add a HMAC wrapper for deprecated function
+
+HMAC() is deprecated since 1.0, add a wrapper used when compiling
+against OpenSSL 3.0+ so that we slowly move away from deprecated
+functions.
+
+Signed-off-by: Simo Sorce <simo@redhat.com>
+--- a/plugins/scram.c
++++ b/plugins/scram.c
+@@ -65,7 +65,9 @@
+ 
+ #include <openssl/sha.h>
+ #include <openssl/evp.h>
++#if OPENSSL_VERSION_NUMBER < 0x30000000L
+ #include <openssl/hmac.h>
++#endif
+ 
+ /*****************************  Common Section  *****************************/
+ 
+@@ -289,6 +291,32 @@ print_hash (const char * func, const char * hash, size_t hash_size)
+ }
+ #endif
+ 
++#if OPENSSL_VERSION_NUMBER >= 0x30000000L
++
++/* Decalre as void given functions never use the result */
++void *HMAC(const EVP_MD *evp_md, const void *key, int key_len,
++                     const unsigned char *data, size_t data_len,
++                     unsigned char *md, unsigned int *md_len)
++{
++    const char *digest;
++    size_t digest_size;
++    size_t out_len;
++    void *ret = NULL;
++
++    digest = EVP_MD_get0_name(evp_md);
++    if (digest == NULL) {
++        return NULL;
++    }
++    digest_size = EVP_MD_size(evp_md);
++
++    ret = EVP_Q_mac(NULL, "hmac", NULL, digest, NULL, key, key_len,
++                    data, data_len, md, digest_size, &out_len);
++    if (ret != NULL) {
++        *md_len = (unsigned int)out_len;
++    }
++    return ret;
++}
++#endif
+ 
+ /* The result variable need to point to a buffer big enough for the [SHA-*] hash */
+ static void
+
