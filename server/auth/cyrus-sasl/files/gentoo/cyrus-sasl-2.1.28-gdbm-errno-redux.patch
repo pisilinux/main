@@ -1,0 +1,21 @@
+https://github.com/cyrusimap/cyrus-sasl/commit/92be047033d56c29473223c44985592b1290a701
+
+From 92be047033d56c29473223c44985592b1290a701 Mon Sep 17 00:00:00 2001
+From: Quanah Gibson-Mount <quanah@symas.com>
+Date: Tue, 3 May 2022 16:31:37 +0000
+Subject: [PATCH] Fix earlier #554 commit to use fetch_errno instead of
+ gdbm_errno
+
+Signed-off-by: Quanah Gibson-Mount <quanah@symas.com>
+--- a/sasldb/db_gdbm.c
++++ b/sasldb/db_gdbm.c
+@@ -119,7 +119,7 @@ int _sasldb_getdata(const sasl_utils_t *utils,
+       } else {
+ 	  utils->seterror(conn, 0,
+ 			  "Couldn't fetch entry from %s: gdbm_errno=%d",
+-			  path, gdbm_errno);
++			  path, fetch_errno);
+ 	  result = SASL_FAIL;
+       }
+       goto cleanup;
+
