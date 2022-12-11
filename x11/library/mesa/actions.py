@@ -18,7 +18,6 @@ def setup():
                -Ddri3=enabled \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
-               -Dgallium-xvmc=enabled \
                -Dgallium-va=enabled \
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
@@ -59,7 +58,9 @@ def setup():
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
         options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled \
-                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
+                             -Dgallium-rusticl=true \
+                             -Drust_std=2021 \
+                             -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
     mesontools.configure(options)
