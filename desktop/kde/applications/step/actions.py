@@ -9,7 +9,7 @@ from pisi.actionsapi import kde5, shelltools
 
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3")
 
 def build():
     kde5.make()
