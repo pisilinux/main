@@ -93,6 +93,9 @@ def install():
 
     # Install branding icon
     pisitools.insinto("/usr/share/pixmaps", "browser/branding/official/default256.png", "firefox.png")
+
+    for s in (16, 22, 24, 32, 48, 64, 128, 256):
+        pisitools.insinto("/usr/share/icons/hicolor/%dx%d/apps" % (s,s), "browser/branding/official/default%d.png" % s, "firefox.png")
     
     # Install docs
     pisitools.dodoc("README*", "LICENSE")
