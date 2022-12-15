@@ -21,4 +21,4 @@ def build():
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-	# pisitools.dosym("/usr/share/pixmaps/gnubg-big.png","/usr/share/gnubg/pixmaps/gnubg-big.png")
+	pisitools.dosym("/usr/share/gnubg/pixmaps/gnubg-big.png",  "/usr/share/pixmaps/gnubg-big.png")
