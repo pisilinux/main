@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>enchant2</Name>
@@ -8,27 +8,32 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-		<PartOf>office.spellcheck</PartOf>
+        <PartOf>office.spellcheck</PartOf>
         <License>LGPLv2.1</License>
         <IsA>library</IsA>
         <Summary>Spellchecker wrapping library</Summary>
         <Description>enchant is a library that wraps other spell checking backends.</Description>
-        <Archive sha1sum="b0863f70c9972c1abcfac7ce0a486afa364fbb46" type="targz">https://github.com/AbiWord/enchant/archive/v2.3.0.tar.gz</Archive>
+        <Archive sha1sum="1f0f0cb4862a76157dfeb7f966909aa6ea2d7811" type="targz">
+            https://github.com/AbiWord/enchant/releases/download/v2.3.3/enchant-2.3.3.tar.gz
+        </Archive>
         <BuildDependencies>
-            <Dependency>dbus-glib-devel</Dependency>
-            <Dependency>hunspell-devel</Dependency>
-            <Dependency>aspell-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
             <Dependency>gnupg</Dependency>
-            <Dependency>git</Dependency>
+            <Dependency>hspell</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>aspell-devel</Dependency>
+            <Dependency>nuspell-devel</Dependency>
+            <Dependency>hunspell-devel</Dependency>
+            <Dependency>dbus-glib-devel</Dependency>
+            <Dependency>libvoikko-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>enchant2</Name>
-		<Summary>Spellchecker wrapping library</Summary>
+        <Summary>Spellchecker wrapping library</Summary>
         <RuntimeDependencies>
             <Dependency>glib2</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>hunspell</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -36,15 +41,16 @@
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/enchant</Path>
+            <Path fileType="data">/usr/share/enchant/enchant.ordering-2</Path>
         </Files>
     </Package>
 
     <Package>
         <Name>enchant2-aspell</Name>
-        <Summary>aspell backend for Enchant</Summary>
+        <Summary>aspell backend for enchant</Summary>
         <RuntimeDependencies>
             <Dependency>enchant2</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>aspell</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -54,13 +60,55 @@
 
     <Package>
         <Name>enchant2-zemberek</Name>
-        <Summary>zemberek backend for Enchant</Summary>
+        <Summary>zemberek backend for enchant</Summary>
         <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>enchant2</Dependency>
+            <Dependency>dbus-glib</Dependency>
             <Dependency>zemberek-office</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/enchant-2/enchant_zemberek.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>enchant2-nuspell</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>icu4c</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>nuspell</Dependency>
+            <!-- <Dependency>enchant2</Dependency> -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/enchant-2/enchant_nuspell.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>enchant2-hspell</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>hspell</Dependency>
+            <Dependency>enchant2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/enchant-2/enchant_hspell.so</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>enchant2-voikko</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>enchant2</Dependency>
+            <Dependency>voikko-fi</Dependency>
+            <Dependency>libvoikko</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/enchant-2/enchant_voikko.so</Path>
         </Files>
     </Package>
 
@@ -78,6 +126,13 @@
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2022-12-02</Date>
+            <Version>2.3.3</Version>
+            <Comment>Version bump</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="3">
             <Date>2021-06-30</Date>
             <Version>2.3.0</Version>

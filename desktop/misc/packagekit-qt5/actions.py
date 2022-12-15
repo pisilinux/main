@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def setup():
     shelltools.system("mkdir build")
     shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                                        -DCMAKE_PREFIX_PATH=/usr/lib/cmake/Qt5", sourceDir="..")
 
 def build():
     cmaketools.make("-C build")

@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>hspell</Name>
+		<Homepage>http://hspell.ivrix.org.il/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>AGPL-3</License>
+		<IsA>app:console</IsA>
+		<PartOf>office.spellcheck</PartOf>
+		<Summary>A free Hebrew linguistic project.</Summary>
+		<Description>A free Hebrew spell-checker and morphological analyzer.</Description>
+		<Archive sha1sum="dc0bcc7847e3a2e87487c45f77436498b788c358" type="targz">
+			http://hspell.ivrix.org.il/hspell-1.4.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>perl</Dependency>
+			<Dependency>zlib-devel</Dependency>
+			<Dependency>hunspell-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<Patch level='1'>hspell-1.4-rh-perl.patch</Patch>
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>hspell</Name>
+		<RuntimeDependencies>
+			<Dependency>perl</Dependency>
+			<Dependency>zlib</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin/hspell</Path>
+			<Path fileType="executable">/usr/bin/hspell-i</Path>
+			<Path fileType="executable">/usr/bin/multispell</Path>
+			<Path fileType="header">/usr/include/hspell.h</Path>
+			<Path fileType="header">/usr/include/linginfo.h</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="library">/usr/lib/libhspell.a</Path>
+			<Path fileType="manpages">/usr/share/man/man1</Path>
+			<Path fileType="manpages">/usr/share/man/man3</Path>
+			<Path fileType="data">/usr/share/hspell</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>hunspell-dict-he</Name>
+		<PartOf>office.dictionary</PartOf>
+		<RuntimeDependencies>
+			<Dependency>perl</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="data">/usr/share/hunspell/he_IL.aff</Path>
+			<Path fileType="data">/usr/share/hunspell/he_IL.dic</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2022-12-02</Date>
+			<Version>1.4</Version>
+			<Comment>First build</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

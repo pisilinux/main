@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>nuspell</Name>
+		<Homepage>https://nuspell.github.io/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>GPL-3</License>
+		<License>LGPL-3</License>
+		<IsA>library</IsA>
+		<PartOf>office.spellcheck</PartOf>
+		<Summary>Fast and safe spellchecking C++ library.</Summary>
+		<Description>
+			Nuspell is designed for languages with rich morphology and complex word compounding. Nuspell is written in modern C++ and it supports Hunspell dictionaries.
+		</Description>
+		<Archive sha1sum="2fc6a4b1dba1f6f26d51add3bbe21addfb3e60b4" type="targz">
+			https://github.com/nuspell/nuspell/archive/refs/tags/v5.1.2.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>catch2</Dependency>
+			<Dependency>icu4c-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>nuspell</Name>
+		<RuntimeDependencies>
+			<Dependency>icu4c</Dependency>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="data">/usr/share/doc/nuspell/README.md</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>nuspell-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">nuspell</Dependency>
+			<Dependency>icu4c-devel</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include/nuspell</Path>
+			<Path fileType="data">/usr/lib/cmake/nuspell</Path>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2022-11-23</Date>
+			<Version>5.1.2</Version>
+			<Comment>First build</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

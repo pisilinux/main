@@ -23,4 +23,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s install" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog","COPYING","README","src/README.XAW3D")
+    pisitools.dodoc("ChangeLog","COPYING","README*","src/README.XAW3D")

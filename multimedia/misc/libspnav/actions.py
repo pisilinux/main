@@ -24,4 +24,6 @@ def install():
     #pisitools.insinto("/usr/lib/", "*.so*")
     #pisitools.insinto("/usr/include/", "*.h")
 
-    pisitools.dodoc("README")
+    pisitools.domove("/usr/share/pkgconfig", "/usr/lib")
+
+    pisitools.dodoc("README*")

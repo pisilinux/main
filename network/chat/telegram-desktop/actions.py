@@ -19,12 +19,11 @@ def setup():
 		cmake/external/rlottie/CMakeLists.txt || die")
     shelltools.system('echo "target_link_libraries(external_webrtc INTERFACE jpeg Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst X11)" | tee -a cmake/external/webrtc/CMakeLists.txt')
     pisitools.cxxflags.add("-Wno-deprecated-declarations -Wno-error=deprecated-declarations -Wno-switch -Wp,-U_GLIBCXX_ASSERTIONS")
-    #pisitools.cxxflags.add(" -std=c++17")
-    #shelltools.export("CC", "gcc")
-    #shelltools.export("CXX", "g++")
+    # shelltools.system("rm -rf Telegram/ThirdParty/libtgvoip/webrtc_dsp/absl")
 
     params = ' '.join([
         '-B build',
+        '-G Ninja',
         '-Ddisable_autoupdate=1',
         '-DCMAKE_BUILD_TYPE=Release',
         '-DCMAKE_INSTALL_PREFIX="/usr"',
@@ -34,6 +33,7 @@ def setup():
         '-DDESKTOP_APP_DISABLE_CRASH_REPORTS=ON',
         '-DDESKTOP_APP_SPECIAL_TARGET=""',
         '-DDESKTOP_APP_DISABLE_WAYLAND_INTEGRATION=ON',
+        '-DCMAKE_DEPENDS_IN_PROJECT_ONLY=ON',
         '-DTDESKTOP_API_ID=611335',
         '-DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c',
         '-DTDESKTOP_LAUNCHER_BASENAME="telegramdesktop"'
@@ -43,12 +43,13 @@ def setup():
 
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make("-j4")
-    #mesontools.build()
+    # shelltools.cd("build")
+    shelltools.system("ninja -C build")
+    # cmaketools.make("-j4")
 
 
 def install():
     shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #mesontools.install()
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    # shelltools.cd("build")
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())

@@ -1,18 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import get
+from pisi.actionsapi import mesontools, cmaketools, get
+
+j = ''.join([
+    ' -DCMAKE_BUILD_TYPE=release',
+    ' -DCREDITSDIR=/usr/share/doc/rawtherapee',
+    ' -DLICENCEDIR=/usr/share/doc/rawtherapee',
+    ' -B_build',
+    ' -G Ninja -L '
+    ])
 
 def setup():
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=release \
-                          -DCREDITSDIR=/usr/share/doc/rawtherapee \
-                          -DLICENCEDIR=/usr/share/doc/rawtherapee", installPrefix="/usr")
+    cmaketools.configure(j, installPrefix='/usr')
 
 def build():
-    cmaketools.make()
+    mesontools.build("-C _build")
 
 def install():
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install("-C _build")
