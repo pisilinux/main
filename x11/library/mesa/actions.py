@@ -18,11 +18,10 @@ def setup():
                -Ddri3=enabled \
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
-               -Dgallium-xvmc=enabled \
                -Dgallium-va=enabled \
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
-               -Dvulkan-drivers=amd,intel,swrast \
+               -Dvulkan-drivers=amd,intel,intel_hasvk,swrast \
                -Dvulkan-layers=device-select,intel-nullhw,overlay \
                -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
                -Dshared-glapi=enabled \
@@ -59,7 +58,9 @@ def setup():
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
         options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled \
-                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
+                             -Dgallium-rusticl=true \
+                             -Drust_std=2021 \
+                             -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
     mesontools.configure(options)
