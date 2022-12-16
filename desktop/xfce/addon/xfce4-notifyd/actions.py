@@ -23,5 +23,5 @@ def install():
 
     pisitools.removeDir("usr/lib/systemd")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*")
 
