@@ -22,7 +22,7 @@ def build():
     shelltools.system("sed '/TOFU_CJK /c #define TOFU_CJK 1/' -i include/mupdf/fitz/config.h")
     shelltools.system("sed -i '/ttc/s/^/#/' Makefile")
     # remove bundled packages, use our system libraries
-    shelltools.system("rm -rf thirdparty/{curl,freetype,harfbuzz,libjpeg,openjpeg,zlib}")
+    shelltools.system("rm -rf thirdparty/{curl,freetype,glut,harfbuzz,libjpeg,openjpeg,zlib}")
 
     autotools.make("prefix=/usr %s" % i)
 
