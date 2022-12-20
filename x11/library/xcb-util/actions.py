@@ -27,4 +27,4 @@ def install():
     if get.buildTYPE() == "emul32":
         return
 
-    pisitools.dodoc("README")
+    pisitools.dodoc("README*")
