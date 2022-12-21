@@ -1,15 +1,3 @@
-diff --git a/src/3rdparty/masm/yarr/Yarr.h b/src/3rdparty/masm/yarr/Yarr.h
-index ccf78f9880..2955ea7e72 100644
---- a/src/3rdparty/masm/yarr/Yarr.h
-+++ b/src/3rdparty/masm/yarr/Yarr.h
-@@ -28,6 +28,7 @@
- #pragma once
- 
- #include <limits.h>
-+#include <limits>
- #include "YarrErrorCode.h"
- 
- namespace JSC { namespace Yarr {
 diff --git a/src/qml/common/qqmljsfixedpoolarray_p.h b/src/qml/common/qqmljsfixedpoolarray_p.h
 index b65b994d6c..15a8cd6878 100644
 --- a/src/qml/common/qqmljsfixedpoolarray_p.h
@@ -60,7 +48,7 @@ index 06caf04e5a..da149a67c4 100644
              else
                  ++it;
 diff --git a/src/qmlmodels/qqmldelegatemodel.cpp b/src/qmlmodels/qqmldelegatemodel.cpp
-index 312a621029..f5d586a4c2 100644
+index 2079a8ed04..a577cb2351 100644
 --- a/src/qmlmodels/qqmldelegatemodel.cpp
 +++ b/src/qmlmodels/qqmldelegatemodel.cpp
 @@ -389,6 +389,12 @@ void QQmlDelegateModelPrivate::connectToAbstractItemModel()
@@ -89,7 +77,7 @@ index 312a621029..f5d586a4c2 100644
      QObject::disconnect(aim, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
                          q, SLOT(_q_dataChanged(QModelIndex,QModelIndex,QVector<int>)));
      QObject::disconnect(aim, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-@@ -1960,6 +1972,38 @@ void QQmlDelegateModel::_q_rowsMoved(
+@@ -1973,6 +1985,38 @@ void QQmlDelegateModel::_q_rowsMoved(
      }
  }
  
@@ -142,8 +130,128 @@ index 8aab4badca..d140bfbaaf 100644
      void _q_rowsAboutToBeRemoved(const QModelIndex &parent, int begin, int end);
      void _q_rowsRemoved(const QModelIndex &,int,int);
      void _q_rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
+diff --git a/src/quick/accessible/qaccessiblequickitem.cpp b/src/quick/accessible/qaccessiblequickitem.cpp
+index 85719fdc80..78e2ab302c 100644
+--- a/src/quick/accessible/qaccessiblequickitem.cpp
++++ b/src/quick/accessible/qaccessiblequickitem.cpp
+@@ -46,6 +46,7 @@
+ #include "QtQuick/private/qquicktextinput_p.h"
+ #include "QtQuick/private/qquickaccessibleattached_p.h"
+ #include "QtQuick/qquicktextdocument.h"
++#include "QtQuick/qquickrendercontrol.h"
+ QT_BEGIN_NAMESPACE
+ 
+ #if QT_CONFIG(accessibility)
+@@ -57,7 +58,19 @@ QAccessibleQuickItem::QAccessibleQuickItem(QQuickItem *item)
+ 
+ QWindow *QAccessibleQuickItem::window() const
+ {
+-    return item()->window();
++    QQuickWindow *window = item()->window();
++
++    // For QQuickWidget the above window will be the offscreen QQuickWindow,
++    // which is not a part of the accessibility tree. Detect this case and
++    // return the window for the QQuickWidget instead.
++    if (window && !window->handle()) {
++        if (QQuickRenderControl *renderControl = QQuickWindowPrivate::get(window)->renderControl) {
++            if (QWindow *renderWindow = renderControl->renderWindow(nullptr))
++                return renderWindow;
++        }
++    }
++
++    return window;
+ }
+ 
+ int QAccessibleQuickItem::childCount() const
+@@ -113,19 +126,15 @@ QAccessibleInterface *QAccessibleQuickItem::childAt(int x, int y) const
+ QAccessibleInterface *QAccessibleQuickItem::parent() const
+ {
+     QQuickItem *parent = item()->parentItem();
+-    QQuickWindow *window = item()->window();
+-    QQuickItem *ci = window ? window->contentItem() : nullptr;
++    QQuickWindow *itemWindow = item()->window();
++    QQuickItem *ci = itemWindow ? itemWindow->contentItem() : nullptr;
+     while (parent && !QQuickItemPrivate::get(parent)->isAccessible && parent != ci)
+         parent = parent->parentItem();
+ 
+     if (parent) {
+         if (parent == ci) {
+-            // Jump out to the scene widget if the parent is the root item.
+-            // There are two root items, QQuickWindow::rootItem and
+-            // QQuickView::declarativeRoot. The former is the true root item,
+-            // but is not a part of the accessibility tree. Check if we hit
+-            // it here and return an interface for the scene instead.
+-            return QAccessible::queryAccessibleInterface(window);
++            // Jump out to the window if the parent is the root item
++            return QAccessible::queryAccessibleInterface(window());
+         } else {
+             while (parent && !parent->d_func()->isAccessible)
+                 parent = parent->parentItem();
+@@ -188,7 +197,7 @@ QAccessible::State QAccessibleQuickItem::state() const
+     QRect viewRect_ = viewRect();
+     QRect itemRect = rect();
+ 
+-    if (viewRect_.isNull() || itemRect.isNull() || !item()->window() || !item()->window()->isVisible() ||!item()->isVisible() || qFuzzyIsNull(item()->opacity()))
++    if (viewRect_.isNull() || itemRect.isNull() || !window() || !window()->isVisible() ||!item()->isVisible() || qFuzzyIsNull(item()->opacity()))
+         state.invisible = true;
+     if (!viewRect_.intersects(itemRect))
+         state.offscreen = true;
+@@ -201,6 +210,10 @@ QAccessible::State QAccessibleQuickItem::state() const
+     if (role() == QAccessible::EditableText)
+         if (auto ti = qobject_cast<QQuickTextInput *>(item()))
+             state.passwordEdit = ti->echoMode() != QQuickTextInput::Normal;
++    if (!item()->isEnabled()) {
++        state.focusable = false;
++        state.disabled = true;
++    }
+     return state;
+ }
+ 
+diff --git a/src/quick/accessible/qaccessiblequickview_p.h b/src/quick/accessible/qaccessiblequickview_p.h
+index 39ffcaf39c..8baa01330c 100644
+--- a/src/quick/accessible/qaccessiblequickview_p.h
++++ b/src/quick/accessible/qaccessiblequickview_p.h
+@@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
+ 
+ #if QT_CONFIG(accessibility)
+ 
+-class QAccessibleQuickWindow : public QAccessibleObject
++class Q_QUICK_EXPORT QAccessibleQuickWindow : public QAccessibleObject
+ {
+ public:
+     QAccessibleQuickWindow(QQuickWindow *object);
+diff --git a/src/quick/items/qquickdrag.cpp b/src/quick/items/qquickdrag.cpp
+index 8321fcfeed..383078b3b9 100644
+--- a/src/quick/items/qquickdrag.cpp
++++ b/src/quick/items/qquickdrag.cpp
+@@ -481,7 +481,9 @@ void QQuickDragAttached::setKeys(const QStringList &keys)
+     \qmlattachedproperty stringlist QtQuick::Drag::mimeData
+     \since 5.2
+ 
+-    This property holds a map of mimeData that is used during startDrag.
++    This property holds a map from mime type to data that is used during startDrag.
++    The mime data needs to be a \c string, or an \c ArrayBuffer with the data encoded
++    according to the mime type.
+ */
+ 
+ QVariantMap QQuickDragAttached::mimeData() const
+@@ -766,8 +768,12 @@ Qt::DropAction QQuickDragAttachedPrivate::startDrag(Qt::DropActions supportedAct
+     QDrag *drag = new QDrag(source ? source : q);
+     QMimeData *mimeData = new QMimeData();
+ 
+-    for (auto it = externalMimeData.cbegin(), end = externalMimeData.cend(); it != end; ++it)
+-        mimeData->setData(it.key(), it.value().toString().toUtf8());
++    for (auto it = externalMimeData.cbegin(), end = externalMimeData.cend(); it != end; ++it) {
++        if (static_cast<QMetaType::Type>(it.value().type()) == QMetaType::QByteArray)
++            mimeData->setData(it.key(), it.value().toByteArray());
++        else
++            mimeData->setData(it.key(), it.value().toString().toUtf8());
++    }
+ 
+     drag->setMimeData(mimeData);
+     if (pixmapLoader.isReady()) {
 diff --git a/src/quick/items/qquickflickable.cpp b/src/quick/items/qquickflickable.cpp
-index 9a68be4c49..2a5b16c31a 100644
+index e12e85db64..2fa3b7142c 100644
 --- a/src/quick/items/qquickflickable.cpp
 +++ b/src/quick/items/qquickflickable.cpp
 @@ -62,6 +62,8 @@
@@ -302,7 +410,7 @@ index 9a68be4c49..2a5b16c31a 100644
  }
  
  void QQuickFlickable::viewportMoved(Qt::Orientations orient)
-@@ -2491,9 +2514,23 @@ void QQuickFlickable::setMaximumFlickVelocity(qreal v)
+@@ -2504,9 +2527,23 @@ void QQuickFlickable::setMaximumFlickVelocity(qreal v)
  
  /*!
      \qmlproperty real QtQuick::Flickable::flickDeceleration
@@ -329,7 +437,7 @@ index 9a68be4c49..2a5b16c31a 100644
  */
  qreal QQuickFlickable::flickDeceleration() const
  {
-@@ -2506,7 +2543,7 @@ void QQuickFlickable::setFlickDeceleration(qreal deceleration)
+@@ -2519,7 +2556,7 @@ void QQuickFlickable::setFlickDeceleration(qreal deceleration)
      Q_D(QQuickFlickable);
      if (deceleration == d->deceleration)
          return;
@@ -351,7 +459,7 @@ index 414c9c33d6..6163613493 100644
      enum FixupMode { Normal, Immediate, ExtentChanged };
      FixupMode fixupMode;
 diff --git a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
-index 3df899d63d..83e52b12e5 100644
+index 75f1457816..dec0ae19ae 100644
 --- a/src/quick/items/qquickitem.cpp
 +++ b/src/quick/items/qquickitem.cpp
 @@ -59,6 +59,7 @@
@@ -362,7 +470,15 @@ index 3df899d63d..83e52b12e5 100644
  
  #include <private/qqmlglobal_p.h>
  #include <private/qqmlengine_p.h>
-@@ -2526,6 +2527,7 @@ QQuickItem* QQuickItemPrivate::nextPrevItemInTabFocusChain(QQuickItem *item, boo
+@@ -2326,6 +2327,7 @@ QQuickItem::QQuickItem(QQuickItemPrivate &dd, QQuickItem *parent)
+ QQuickItem::~QQuickItem()
+ {
+     Q_D(QQuickItem);
++    d->inDestructor = true;
+ 
+     if (d->windowRefCount > 1)
+         d->windowRefCount = 1; // Make sure window is set to null in next call to derefWindow().
+@@ -2526,6 +2528,7 @@ QQuickItem* QQuickItemPrivate::nextPrevItemInTabFocusChain(QQuickItem *item, boo
      QQuickItem *current = item;
      qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: startItem:" << startItem;
      qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: firstFromItem:" << firstFromItem;
@@ -370,7 +486,7 @@ index 3df899d63d..83e52b12e5 100644
      do {
          qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: current:" << current;
          qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: from:" << from;
-@@ -2592,7 +2594,10 @@ QQuickItem* QQuickItemPrivate::nextPrevItemInTabFocusChain(QQuickItem *item, boo
+@@ -2592,7 +2595,10 @@ QQuickItem* QQuickItemPrivate::nextPrevItemInTabFocusChain(QQuickItem *item, boo
          // traversed all of the chain (by compare the [current] item with [startItem])
          // Since the [startItem] might be promoted to its parent if it is invisible,
          // we still have to check [current] item with original start item
@@ -382,20 +498,126 @@ index 3df899d63d..83e52b12e5 100644
              // wrapped around, avoid endless loops
              if (item == contentItem) {
                  qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: looped, return contentItem";
-diff --git a/src/quick/items/qquickloader.cpp b/src/quick/items/qquickloader.cpp
-index cb4f79a3c2..7fbe66fdda 100644
---- a/src/quick/items/qquickloader.cpp
-+++ b/src/quick/items/qquickloader.cpp
-@@ -737,6 +737,9 @@ void QQuickLoaderPrivate::_q_sourceLoaded()
-         return;
+@@ -2689,9 +2695,8 @@ void QQuickItem::setParentItem(QQuickItem *parentItem)
+ 
+         const bool wasVisible = isVisible();
+         op->removeChild(this);
+-        if (wasVisible) {
++        if (wasVisible && !op->inDestructor)
+             emit oldParentItem->visibleChildrenChanged();
+-        }
+     } else if (d->window) {
+         QQuickWindowPrivate::get(d->window)->parentlessItems.remove(this);
+     }
+@@ -2768,8 +2773,9 @@ void QQuickItem::setParentItem(QQuickItem *parentItem)
+ 
+     d->itemChange(ItemParentHasChanged, d->parentItem);
+ 
+-    emit parentChanged(d->parentItem);
+-    if (isVisible() && d->parentItem)
++    if (!d->inDestructor)
++        emit parentChanged(d->parentItem);
++    if (isVisible() && d->parentItem && !QQuickItemPrivate::get(d->parentItem)->inDestructor)
+         emit d->parentItem->visibleChildrenChanged();
+ }
+ 
+@@ -2965,7 +2971,8 @@ void QQuickItemPrivate::removeChild(QQuickItem *child)
+ 
+     itemChange(QQuickItem::ItemChildRemovedChange, child);
+ 
+-    emit q->childrenChanged();
++    if (!inDestructor)
++        emit q->childrenChanged();
+ }
+ 
+ void QQuickItemPrivate::refWindow(QQuickWindow *c)
+@@ -3194,6 +3201,7 @@ QQuickItemPrivate::QQuickItemPrivate()
+     , touchEnabled(false)
+ #endif
+     , hasCursorHandler(false)
++    , inDestructor(false)
+     , dirtyAttributes(0)
+     , nextDirtyItem(nullptr)
+     , prevDirtyItem(nullptr)
+@@ -5120,6 +5128,13 @@ void QQuickItem::componentComplete()
+         d->addToDirtyList();
+         QQuickWindowPrivate::get(d->window)->dirtyItem(this);
+     }
++
++#if QT_CONFIG(accessibility)
++    if (d->isAccessible && d->effectiveVisible) {
++        QAccessibleEvent ev(this, QAccessible::ObjectShow);
++        QAccessible::updateAccessibility(&ev);
++    }
++#endif
+ }
+ 
+ QQuickStateGroup *QQuickItemPrivate::_states()
+@@ -6106,9 +6121,11 @@ bool QQuickItemPrivate::setEffectiveVisibleRecur(bool newEffectiveVisible)
+         QAccessible::updateAccessibility(&ev);
+     }
+ #endif
+-    emit q->visibleChanged();
+-    if (childVisibilityChanged)
+-        emit q->visibleChildrenChanged();
++    if (!inDestructor) {
++        emit q->visibleChanged();
++        if (childVisibilityChanged)
++            emit q->visibleChildrenChanged();
++    }
+ 
+     return true;    // effective visibility DID change
+ }
+@@ -6157,6 +6174,15 @@ void QQuickItemPrivate::setEffectiveEnableRecur(QQuickItem *scope, bool newEffec
      }
  
-+    if (!active)
-+        return;
-+
-     QQmlContext *creationContext = component->creationContext();
-     if (!creationContext) creationContext = qmlContext(q);
-     itemContext = new QQmlContext(creationContext);
+     itemChange(QQuickItem::ItemEnabledHasChanged, effectiveEnable);
++#if QT_CONFIG(accessibility)
++    if (isAccessible) {
++        QAccessible::State changedState;
++        changedState.disabled = true;
++        changedState.focusable = true;
++        QAccessibleStateChangeEvent ev(q, changedState);
++        QAccessible::updateAccessibility(&ev);
++    }
++#endif
+     emit q->enabledChanged();
+ }
+ 
+diff --git a/src/quick/items/qquickitem_p.h b/src/quick/items/qquickitem_p.h
+index 841d91bb40..ade8fb61f2 100644
+--- a/src/quick/items/qquickitem_p.h
++++ b/src/quick/items/qquickitem_p.h
+@@ -472,6 +472,7 @@ public:
+     bool replayingPressEvent:1;
+     bool touchEnabled:1;
+     bool hasCursorHandler:1;
++    quint32 inDestructor:1; // has entered ~QQuickItem
+ 
+     enum DirtyType {
+         TransformOrigin         = 0x00000001,
+diff --git a/src/quick/items/qquickitemview.cpp b/src/quick/items/qquickitemview.cpp
+index 13e7b87049..f8ad168a17 100644
+--- a/src/quick/items/qquickitemview.cpp
++++ b/src/quick/items/qquickitemview.cpp
+@@ -1785,7 +1785,7 @@ void QQuickItemViewPrivate::refill(qreal from, qreal to)
+ 
+     do {
+         bufferPause.stop();
+-        if (currentChanges.hasPendingChanges() || bufferedChanges.hasPendingChanges()) {
++        if (currentChanges.hasPendingChanges() || bufferedChanges.hasPendingChanges() || currentChanges.active) {
+             currentChanges.reset();
+             bufferedChanges.reset();
+             releaseVisibleItems(reusableFlag);
+@@ -2402,8 +2402,6 @@ void QQuickItemView::createdItem(int index, QObject* object)
+             d->repositionPackageItemAt(item, index);
+         else if (index == d->currentIndex)
+             d->updateCurrent(index);
+-    } else if (index == d->currentIndex) {
+-        d->updateCurrent(index);
+     }
+ }
+ 
 diff --git a/src/quick/items/qquickmousearea_p_p.h b/src/quick/items/qquickmousearea_p_p.h
 index fba383e268..0d63618622 100644
 --- a/src/quick/items/qquickmousearea_p_p.h
@@ -467,131 +689,6 @@ index 6230186933..e823ca1095 100644
      \endcode
  
      \c Text.StyledText parser is strict, requiring tags to be correctly nested.
-diff --git a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
-index 3c60f830de..0fd6581dc4 100644
---- a/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
-+++ b/src/quick/scenegraph/qsgdefaultglyphnode_p.cpp
-@@ -428,6 +428,18 @@ QSGTextMaskRhiShader::QSGTextMaskRhiShader(QFontEngine::GlyphFormat glyphFormat)
-                       QStringLiteral(":/qt-project.org/scenegraph/shaders_ng/textmask.frag.qsb"));
- }
- 
-+enum UbufOffset {
-+    ModelViewMatrixOffset = 0,
-+    ProjectionMatrixOffset = ModelViewMatrixOffset + 64,
-+    ColorOffset = ProjectionMatrixOffset + 64,
-+    TextureScaleOffset = ColorOffset + 16,
-+    DprOffset = TextureScaleOffset + 8,
-+
-+    // + 1 float padding (vec4 must be aligned to 16)
-+    StyleColorOffset = DprOffset + 4 + 4,
-+    ShiftOffset = StyleColorOffset + 16
-+};
-+
- bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
-                                              QSGMaterial *newMaterial, QSGMaterial *oldMaterial)
- {
-@@ -443,11 +455,14 @@ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
- 
-     bool changed = false;
-     QByteArray *buf = state.uniformData();
--    Q_ASSERT(buf->size() >= 92);
-+    Q_ASSERT(buf->size() >= DprOffset + 4);
- 
-     if (state.isMatrixDirty()) {
--        const QMatrix4x4 m = state.combinedMatrix();
--        memcpy(buf->data(), m.constData(), 64);
-+        const QMatrix4x4 mv = state.modelViewMatrix();
-+        memcpy(buf->data() + ModelViewMatrixOffset, mv.constData(), 64);
-+        const QMatrix4x4 p = state.projectionMatrix();
-+        memcpy(buf->data() + ProjectionMatrixOffset, p.constData(), 64);
-+
-         changed = true;
-     }
- 
-@@ -456,13 +471,13 @@ bool QSGTextMaskRhiShader::updateUniformData(RenderState &state,
-     if (updated || !oldMat || oldRtex != newRtex) {
-         const QVector2D textureScale = QVector2D(1.0f / mat->rhiGlyphCache()->width(),
-                                                  1.0f / mat->rhiGlyphCache()->height());
--        memcpy(buf->data() + 64 + 16, &textureScale, 8);
-+        memcpy(buf->data() + TextureScaleOffset, &textureScale, 8);
-         changed = true;
-     }
- 
-     if (!oldMat) {
-         float dpr = state.devicePixelRatio();
--        memcpy(buf->data() + 64 + 16 + 8, &dpr, 4);
-+        memcpy(buf->data() + DprOffset, &dpr, 4);
-     }
- 
-     // move texture uploads/copies onto the renderer's soon-to-be-committed list
-@@ -510,11 +525,11 @@ bool QSG8BitTextMaskRhiShader::updateUniformData(RenderState &state,
-     QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
- 
-     QByteArray *buf = state.uniformData();
--    Q_ASSERT(buf->size() >= 80);
-+    Q_ASSERT(buf->size() >= ColorOffset + 16);
- 
-     if (oldMat == nullptr || mat->color() != oldMat->color() || state.isOpacityDirty()) {
-         const QVector4D color = qsg_premultiply(mat->color(), state.opacity());
--        memcpy(buf->data() + 64, &color, 16);
-+        memcpy(buf->data() + ColorOffset, &color, 16);
-         changed = true;
-     }
- 
-@@ -553,12 +568,12 @@ bool QSG24BitTextMaskRhiShader::updateUniformData(RenderState &state,
-     QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
- 
-     QByteArray *buf = state.uniformData();
--    Q_ASSERT(buf->size() >= 92);
-+    Q_ASSERT(buf->size() >= ColorOffset + 16);
- 
-     if (oldMat == nullptr || mat->color() != oldMat->color() || state.isOpacityDirty()) {
-         // shader takes vec4 but uses alpha only; coloring happens via the blend constant
-         const QVector4D color = qsg_premultiply(mat->color(), state.opacity());
--        memcpy(buf->data() + 64, &color, 16);
-+        memcpy(buf->data() + ColorOffset, &color, 16);
-         changed = true;
-     }
- 
-@@ -608,12 +623,12 @@ bool QSG32BitColorTextRhiShader::updateUniformData(RenderState &state,
-     QSGTextMaskMaterial *oldMat = static_cast<QSGTextMaskMaterial *>(oldMaterial);
- 
-     QByteArray *buf = state.uniformData();
--    Q_ASSERT(buf->size() >= 92);
-+    Q_ASSERT(buf->size() >= ColorOffset + 16);
- 
-     if (oldMat == nullptr || mat->color() != oldMat->color() || state.isOpacityDirty()) {
-         // shader takes vec4 but uses alpha only
-         const QVector4D color(0, 0, 0, mat->color().w() * state.opacity());
--        memcpy(buf->data() + 64, &color, 16);
-+        memcpy(buf->data() + ColorOffset, &color, 16);
-         changed = true;
-     }
- 
-@@ -649,20 +664,17 @@ bool QSGStyledTextRhiShader::updateUniformData(RenderState &state,
-     QSGStyledTextMaterial *oldMat = static_cast<QSGStyledTextMaterial *>(oldMaterial);
- 
-     QByteArray *buf = state.uniformData();
--    Q_ASSERT(buf->size() >= 120);
--
--    // matrix..dpr + 1 float padding (vec4 must be aligned to 16)
--    const int startOffset = 64 + 16 + 8 + 4 + 4;
-+    Q_ASSERT(buf->size() >= ShiftOffset + 8);
- 
-     if (oldMat == nullptr || mat->styleColor() != oldMat->styleColor() || state.isOpacityDirty()) {
-         const QVector4D styleColor = qsg_premultiply(mat->styleColor(), state.opacity());
--        memcpy(buf->data() + startOffset, &styleColor, 16);
-+        memcpy(buf->data() + StyleColorOffset, &styleColor, 16);
-         changed = true;
-     }
- 
-     if (oldMat == nullptr || oldMat->styleShift() != mat->styleShift()) {
-         const QVector2D v = mat->styleShift();
--        memcpy(buf->data() + startOffset + 16, &v, 8);
-+        memcpy(buf->data() + ShiftOffset, &v, 8);
-         changed = true;
-     }
- 
 diff --git a/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp b/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp
 index 53b6fe117f..219cdd5966 100644
 --- a/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp
@@ -625,220 +722,6 @@ index 53b6fe117f..219cdd5966 100644
                  qWarning("qtdf table too small in font '%s'.",
                           qPrintable(font.familyName()));
                  return false;
-diff --git a/src/quick/scenegraph/shaders_ng/24bittextmask.frag b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
-index bc3826a924..ed8da4cd30 100644
---- a/src/quick/scenegraph/shaders_ng/24bittextmask.frag
-+++ b/src/quick/scenegraph/shaders_ng/24bittextmask.frag
-@@ -6,8 +6,9 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
--    vec4 color; // only alpha is used, but must be vec4 due to layout compat
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-+    vec4 color;
-     vec2 textureScale;
-     float dpr;
- } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
-index 63e445f90b..4198a4d339 100644
---- a/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
-+++ b/src/quick/scenegraph/shaders_ng/32bitcolortext.frag
-@@ -6,8 +6,9 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
--    vec4 color; // only alpha is used, but must be vec4 due to layout compat
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-+    vec4 color;
-     vec2 textureScale;
-     float dpr;
- } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/8bittextmask.frag b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
-index 6304e821ff..a06743876d 100644
---- a/src/quick/scenegraph/shaders_ng/8bittextmask.frag
-+++ b/src/quick/scenegraph/shaders_ng/8bittextmask.frag
-@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
-index 0d0fa1cd3a..f725cbc5e7 100644
---- a/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
-+++ b/src/quick/scenegraph/shaders_ng/8bittextmask_a.frag
-@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext.frag b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
-index 947d161a50..e2f82d3845 100644
---- a/src/quick/scenegraph/shaders_ng/outlinedtext.frag
-+++ b/src/quick/scenegraph/shaders_ng/outlinedtext.frag
-@@ -11,11 +11,12 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    // must match styledtext
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-+    // the above must stay compatible with textmask/8bittextmask
-     vec4 styleColor;
-     vec2 shift;
- } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext.vert b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
-index 023f9dfdc2..4068e42f28 100644
---- a/src/quick/scenegraph/shaders_ng/outlinedtext.vert
-+++ b/src/quick/scenegraph/shaders_ng/outlinedtext.vert
-@@ -10,11 +10,12 @@ layout(location = 3) out vec2 sCoordLeft;
- layout(location = 4) out vec2 sCoordRight;
- 
- layout(std140, binding = 0) uniform buf {
--    // must match styledtext
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-+    // the above must stay compatible with textmask/8bittextmask
-     vec4 styleColor;
-     vec2 shift;
- } ubuf;
-@@ -28,6 +29,6 @@ void main()
-      sCoordDown = (tCoord - vec2(0.0, 1.0)) * ubuf.textureScale;
-      sCoordLeft = (tCoord - vec2(-1.0, 0.0)) * ubuf.textureScale;
-      sCoordRight = (tCoord - vec2(1.0, 0.0)) * ubuf.textureScale;
--     vec3 dprSnapPos = floor(vCoord.xyz * ubuf.dpr + 0.5) / ubuf.dpr;
--     gl_Position = ubuf.matrix * vec4(dprSnapPos, vCoord.w);
-+     vec4 xformed = ubuf.modelViewMatrix * vCoord;
-+     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
- }
-diff --git a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
-index 5b7bd9ca82..274d891a3c 100644
---- a/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
-+++ b/src/quick/scenegraph/shaders_ng/outlinedtext_a.frag
-@@ -11,11 +11,12 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    // must match styledtext
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-+    // the above must stay compatible with textmask/8bittextmask
-     vec4 styleColor;
-     vec2 shift;
- } ubuf;
-diff --git a/src/quick/scenegraph/shaders_ng/styledtext.frag b/src/quick/scenegraph/shaders_ng/styledtext.frag
-index 0b16396037..2e380dfeae 100644
---- a/src/quick/scenegraph/shaders_ng/styledtext.frag
-+++ b/src/quick/scenegraph/shaders_ng/styledtext.frag
-@@ -8,7 +8,8 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/styledtext.vert b/src/quick/scenegraph/shaders_ng/styledtext.vert
-index beadf07c79..271dae8d8a 100644
---- a/src/quick/scenegraph/shaders_ng/styledtext.vert
-+++ b/src/quick/scenegraph/shaders_ng/styledtext.vert
-@@ -7,7 +7,8 @@ layout(location = 0) out vec2 sampleCoord;
- layout(location = 1) out vec2 shiftedSampleCoord;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-@@ -22,6 +23,6 @@ void main()
- {
-      sampleCoord = tCoord * ubuf.textureScale;
-      shiftedSampleCoord = (tCoord - ubuf.shift) * ubuf.textureScale;
--     vec3 dprSnapPos = floor(vCoord.xyz * ubuf.dpr + 0.5) / ubuf.dpr;
--     gl_Position = ubuf.matrix * vec4(dprSnapPos, vCoord.w);
-+     vec4 xformed = ubuf.modelViewMatrix * vCoord;
-+     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
- }
-diff --git a/src/quick/scenegraph/shaders_ng/styledtext_a.frag b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
-index b673137895..62e162c851 100644
---- a/src/quick/scenegraph/shaders_ng/styledtext_a.frag
-+++ b/src/quick/scenegraph/shaders_ng/styledtext_a.frag
-@@ -8,7 +8,8 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/textmask.frag b/src/quick/scenegraph/shaders_ng/textmask.frag
-index 518d5c965f..ed8da4cd30 100644
---- a/src/quick/scenegraph/shaders_ng/textmask.frag
-+++ b/src/quick/scenegraph/shaders_ng/textmask.frag
-@@ -6,7 +6,8 @@ layout(location = 0) out vec4 fragColor;
- layout(binding = 1) uniform sampler2D _qt_texture;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-diff --git a/src/quick/scenegraph/shaders_ng/textmask.vert b/src/quick/scenegraph/shaders_ng/textmask.vert
-index 9d80d5dadb..e0b3c01bce 100644
---- a/src/quick/scenegraph/shaders_ng/textmask.vert
-+++ b/src/quick/scenegraph/shaders_ng/textmask.vert
-@@ -6,7 +6,8 @@ layout(location = 1) in vec2 tCoord;
- layout(location = 0) out vec2 sampleCoord;
- 
- layout(std140, binding = 0) uniform buf {
--    mat4 matrix;
-+    mat4 modelViewMatrix;
-+    mat4 projectionMatrix;
-     vec4 color;
-     vec2 textureScale;
-     float dpr;
-@@ -17,6 +18,6 @@ out gl_PerVertex { vec4 gl_Position; };
- void main()
- {
-      sampleCoord = tCoord * ubuf.textureScale;
--     vec3 dprSnapPos = floor(vCoord.xyz * ubuf.dpr + 0.5) / ubuf.dpr;
--     gl_Position = ubuf.matrix * vec4(dprSnapPos, vCoord.w);
-+     vec4 xformed = ubuf.modelViewMatrix * vCoord;
-+     gl_Position = ubuf.projectionMatrix * vec4(floor(xformed.xyz * ubuf.dpr + 0.5) / ubuf.dpr, xformed.w);
- }
 diff --git a/src/quick/util/qquickstyledtext.cpp b/src/quick/util/qquickstyledtext.cpp
 index d531fc9205..a25af90414 100644
 --- a/src/quick/util/qquickstyledtext.cpp
@@ -873,19 +756,415 @@ index 7ec7c827eb..abe6eb7261 100644
      remove(&timeLineValue);
      timeLineValue._t = nullptr;
  }
+diff --git a/src/quickwidgets/qaccessiblequickwidget.cpp b/src/quickwidgets/qaccessiblequickwidget.cpp
+new file mode 100644
+index 0000000000..8a1c901880
+--- /dev/null
++++ b/src/quickwidgets/qaccessiblequickwidget.cpp
+@@ -0,0 +1,110 @@
++/****************************************************************************
++**
++** Copyright (C) 2021 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the QtQuick module of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "qaccessiblequickwidget_p.h"
++
++#include "qquickwidget_p.h"
++
++QT_BEGIN_NAMESPACE
++
++#if QT_CONFIG(accessibility)
++
++QAccessibleQuickWidget::QAccessibleQuickWidget(QQuickWidget* widget)
++: QAccessibleWidget(widget)
++, m_accessibleWindow(QQuickWidgetPrivate::get(widget)->offscreenWindow)
++{
++    // NOTE: m_accessibleWindow is a QAccessibleQuickWindow, and not a
++    // QAccessibleQuickWidgetOffscreenWindow (defined below). This means
++    // it will return the Quick item child interfaces, which is what's needed here
++    // (unlike QAccessibleQuickWidgetOffscreenWindow, which will report 0 children).
++}
++
++QAccessibleInterface *QAccessibleQuickWidget::child(int index) const
++{
++    return m_accessibleWindow.child(index);
++}
++
++int QAccessibleQuickWidget::childCount() const
++{
++    return m_accessibleWindow.childCount();
++}
++
++int QAccessibleQuickWidget::indexOfChild(const QAccessibleInterface *iface) const
++{
++    return m_accessibleWindow.indexOfChild(iface);
++}
++
++QAccessibleInterface *QAccessibleQuickWidget::childAt(int x, int y) const
++{
++    return m_accessibleWindow.childAt(x, y);
++}
++
++QAccessibleQuickWidgetOffscreenWindow::QAccessibleQuickWidgetOffscreenWindow(QQuickWindow *window)
++:QAccessibleQuickWindow(window)
++{
++
++}
++
++QAccessibleInterface *QAccessibleQuickWidgetOffscreenWindow::child(int index) const
++{
++    Q_UNUSED(index);
++    return nullptr;
++}
++
++int QAccessibleQuickWidgetOffscreenWindow::childCount() const
++{
++    return 0;
++}
++
++int QAccessibleQuickWidgetOffscreenWindow::indexOfChild(const QAccessibleInterface *iface) const
++{
++    Q_UNUSED(iface);
++    return -1;
++}
++
++QAccessibleInterface *QAccessibleQuickWidgetOffscreenWindow::QAccessibleQuickWidgetOffscreenWindow::childAt(int x, int y) const
++{
++    Q_UNUSED(x);
++    Q_UNUSED(y);
++    return nullptr;
++}
++
++#endif // accessibility
++
++QT_END_NAMESPACE
+diff --git a/src/quickwidgets/qaccessiblequickwidget_p.h b/src/quickwidgets/qaccessiblequickwidget_p.h
+new file mode 100644
+index 0000000000..7c2ab930e0
+--- /dev/null
++++ b/src/quickwidgets/qaccessiblequickwidget_p.h
+@@ -0,0 +1,95 @@
++/****************************************************************************
++**
++** Copyright (C) 2021 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the QtQuick module of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#ifndef QACCESSIBLEQUICKWIDGET_H
++#define QACCESSIBLEQUICKWIDGET_H
++
++//
++//  W A R N I N G
++//  -------------
++//
++// This file is not part of the Qt API.  It exists purely as an
++// implementation detail.  This header file may change from version to
++// version without notice, or even be removed.
++//
++// We mean it.
++//
++
++#include "qquickwidget.h"
++#include <QtWidgets/qaccessiblewidget.h>
++
++#include <private/qaccessiblequickview_p.h>
++
++QT_BEGIN_NAMESPACE
++
++#if QT_CONFIG(accessibility)
++
++// These classes implement the QQuickWiget accessibility switcharoo,
++// where the child items of the QQuickWidgetOffscreenWindow are reported
++// as child accessible interfaces of the QAccessibleQuickWidget.
++class QAccessibleQuickWidget: public QAccessibleWidget
++{
++public:
++    QAccessibleQuickWidget(QQuickWidget* widget);
++
++    QAccessibleInterface *child(int index) const override;
++    int childCount() const override;
++    int indexOfChild(const QAccessibleInterface *iface) const override;
++    QAccessibleInterface *childAt(int x, int y) const override;
++
++private:
++    QAccessibleQuickWindow m_accessibleWindow;
++    Q_DISABLE_COPY(QAccessibleQuickWidget)
++};
++
++class QAccessibleQuickWidgetOffscreenWindow: public QAccessibleQuickWindow
++{
++public:
++    QAccessibleQuickWidgetOffscreenWindow(QQuickWindow *window);
++    QAccessibleInterface *child(int index) const override;
++    int childCount() const override;
++    int indexOfChild(const QAccessibleInterface *iface) const override;
++    QAccessibleInterface *childAt(int x, int y) const override;
++};
++
++#endif // accessibility
++
++QT_END_NAMESPACE
++
++#endif
+diff --git a/src/quickwidgets/qaccessiblequickwidgetfactory.cpp b/src/quickwidgets/qaccessiblequickwidgetfactory.cpp
+new file mode 100644
+index 0000000000..7ba88a1769
+--- /dev/null
++++ b/src/quickwidgets/qaccessiblequickwidgetfactory.cpp
+@@ -0,0 +1,60 @@
++/****************************************************************************
++**
++** Copyright (C) 2021 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the QtQuick module of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "qaccessiblequickwidgetfactory_p.h"
++#include "qaccessiblequickwidget_p.h"
++
++QT_BEGIN_NAMESPACE
++
++#if QT_CONFIG(accessibility)
++
++QAccessibleInterface *qAccessibleQuickWidgetFactory(const QString &classname, QObject *object)
++{
++    if (classname == QLatin1String("QQuickWidget")) {
++        return new QAccessibleQuickWidget(qobject_cast<QQuickWidget *>(object));
++    } else if (classname == QLatin1String("QQuickWidgetOffscreenWindow")) {
++        return new QAccessibleQuickWidgetOffscreenWindow(qobject_cast<QQuickWindow *>(object));
++    }
++    return 0;
++}
++
++#endif // accessibility
++
++QT_END_NAMESPACE
++
+diff --git a/src/quickwidgets/qaccessiblequickwidgetfactory_p.h b/src/quickwidgets/qaccessiblequickwidgetfactory_p.h
+new file mode 100644
+index 0000000000..8c63b09f81
+--- /dev/null
++++ b/src/quickwidgets/qaccessiblequickwidgetfactory_p.h
+@@ -0,0 +1,66 @@
++/****************************************************************************
++**
++** Copyright (C) 2021 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the QtQuick module of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include <QtGui/qaccessible.h>
++
++#ifndef QACCESSIBLEQUICKWIDGETFACTORY_H
++#define QACCESSIBLEQUICKWIDGETFACTORY_H
++
++//
++//  W A R N I N G
++//  -------------
++//
++// This file is not part of the Qt API.  It exists purely as an
++// implementation detail.  This header file may change from version to
++// version without notice, or even be removed.
++//
++// We mean it.
++//
++
++QT_BEGIN_NAMESPACE
++
++#if QT_CONFIG(accessibility)
++
++QAccessibleInterface *qAccessibleQuickWidgetFactory(const QString &classname, QObject *object);
++
++#endif
++
++QT_END_NAMESPACE
++
++#endif
 diff --git a/src/quickwidgets/qquickwidget.cpp b/src/quickwidgets/qquickwidget.cpp
-index 39780f8de3..223d91f579 100644
+index 39780f8de3..9c97b43518 100644
 --- a/src/quickwidgets/qquickwidget.cpp
 +++ b/src/quickwidgets/qquickwidget.cpp
-@@ -106,6 +106,7 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
+@@ -39,6 +39,7 @@
+ 
+ #include "qquickwidget.h"
+ #include "qquickwidget_p.h"
++#include "qaccessiblequickwidgetfactory_p.h"
+ 
+ #include "private/qquickwindow_p.h"
+ #include "private/qquickitem_p.h"
+@@ -75,9 +76,16 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
++QQuickWidgetOffscreenWindow::QQuickWidgetOffscreenWindow(QQuickWindowPrivate &dd, QQuickRenderControl *control)
++:QQuickWindow(dd, control)
++{
++    setTitle(QString::fromLatin1("Offscreen"));
++    setObjectName(QString::fromLatin1("QQuickOffScreenWindow"));
++}
++
+ // override setVisble to prevent accidental offscreen window being created
+ // by base class.
+-class QQuickOffcreenWindowPrivate: public QQuickWindowPrivate {
++class QQuickWidgetOffscreenWindowPrivate: public QQuickWindowPrivate {
+ public:
+     void setVisible(bool visible) override {
+         Q_Q(QWindow);
+@@ -105,9 +113,8 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
+     Q_Q(QQuickWidget);
  
      renderControl = new QQuickWidgetRenderControl(q);
-     offscreenWindow = new QQuickWindow(*new QQuickOffcreenWindowPrivate(),renderControl);
+-    offscreenWindow = new QQuickWindow(*new QQuickOffcreenWindowPrivate(),renderControl);
+-    offscreenWindow->setTitle(QString::fromLatin1("Offscreen"));
+-    offscreenWindow->setObjectName(QString::fromLatin1("QQuickOffScreenWindow"));
++    offscreenWindow = new QQuickWidgetOffscreenWindow(*new QQuickWidgetOffscreenWindowPrivate(), renderControl);
 +    offscreenWindow->setScreen(q->screen());
-     offscreenWindow->setTitle(QString::fromLatin1("Offscreen"));
-     offscreenWindow->setObjectName(QString::fromLatin1("QQuickOffScreenWindow"));
      // Do not call create() on offscreenWindow.
-@@ -901,9 +902,7 @@ void QQuickWidgetPrivate::createContext()
+ 
+     // Check if the Software Adaptation is being used
+@@ -138,6 +145,10 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
+     QWidget::connect(offscreenWindow, &QQuickWindow::focusObjectChanged, q, &QQuickWidget::propagateFocusObjectChanged);
+     QObject::connect(renderControl, SIGNAL(renderRequested()), q, SLOT(triggerUpdate()));
+     QObject::connect(renderControl, SIGNAL(sceneChanged()), q, SLOT(triggerUpdate()));
++
++#if QT_CONFIG(accessibility)
++    QAccessible::installFactory(&qAccessibleQuickWidgetFactory);
++#endif
+ }
+ 
+ void QQuickWidgetPrivate::ensureEngine() const
+@@ -901,9 +912,7 @@ void QQuickWidgetPrivate::createContext()
  
          context = new QOpenGLContext;
          context->setFormat(offscreenWindow->requestedFormat());
@@ -896,7 +1175,7 @@ index 39780f8de3..223d91f579 100644
          QOpenGLContext *shareContext = qt_gl_global_share_context();
          if (!shareContext)
              shareContext = QWidgetPrivate::get(q->window())->shareContext();
-@@ -1520,19 +1519,16 @@ bool QQuickWidget::event(QEvent *e)
+@@ -1520,19 +1529,16 @@ bool QQuickWidget::event(QEvent *e)
          d->handleWindowChange();
          break;
  
@@ -924,7 +1203,7 @@ index 39780f8de3..223d91f579 100644
  
          if (d->useSoftwareRenderer
  #if QT_CONFIG(opengl)
-@@ -1545,7 +1541,7 @@ bool QQuickWidget::event(QEvent *e)
+@@ -1545,7 +1551,7 @@ bool QQuickWidget::event(QEvent *e)
              d->render(true);
          }
          break;
@@ -933,6 +1212,45 @@ index 39780f8de3..223d91f579 100644
      case QEvent::Show:
      case QEvent::Move:
          d->updatePosition();
+diff --git a/src/quickwidgets/qquickwidget_p.h b/src/quickwidgets/qquickwidget_p.h
+index 881f7f9220..1a946bcc71 100644
+--- a/src/quickwidgets/qquickwidget_p.h
++++ b/src/quickwidgets/qquickwidget_p.h
+@@ -148,6 +148,14 @@ public:
+     bool forceFullUpdate;
+ };
+ 
++class QQuickWidgetOffscreenWindow: public QQuickWindow
++{
++    Q_OBJECT
++
++public:
++    QQuickWidgetOffscreenWindow(QQuickWindowPrivate &dd, QQuickRenderControl *control);
++};
++
+ QT_END_NAMESPACE
+ 
+ #endif // QQuickWidget_P_H
+diff --git a/src/quickwidgets/quickwidgets.pro b/src/quickwidgets/quickwidgets.pro
+index 2438e577ae..85d156b8a3 100644
+--- a/src/quickwidgets/quickwidgets.pro
++++ b/src/quickwidgets/quickwidgets.pro
+@@ -7,9 +7,13 @@ DEFINES   += QT_NO_URL_CAST_FROM_STRING QT_NO_INTEGER_EVENT_COORDINATES QT_NO_FO
+ HEADERS += \
+     qquickwidget.h \
+     qquickwidget_p.h \
+-    qtquickwidgetsglobal.h
++    qtquickwidgetsglobal.h \
++    qaccessiblequickwidget_p.h \
++    qaccessiblequickwidgetfactory_p.h
+ 
+ SOURCES += \
+-    qquickwidget.cpp
++    qquickwidget.cpp \
++    qaccessiblequickwidget.cpp \
++    qaccessiblequickwidgetfactory.cpp
+ 
+ load(qt_module)
 diff --git a/tests/auto/qml/qjsengine/tst_qjsengine.cpp b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
 index 3b7d74df63..b75bf820d5 100644
 --- a/tests/auto/qml/qjsengine/tst_qjsengine.cpp
@@ -1008,7 +1326,7 @@ index 0000000000..206133bb39
 +    }
 +}
 diff --git a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
-index 9bc359d243..120b1897a1 100644
+index 35f1e2c94d..1722447830 100644
 --- a/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
 +++ b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
 @@ -27,6 +27,8 @@
@@ -1020,16 +1338,16 @@ index 9bc359d243..120b1897a1 100644
  #include <QtQml/qqmlcomponent.h>
  #include <QtQmlModels/private/qqmldelegatemodel_p.h>
  #include <QtQuick/qquickview.h>
-@@ -46,6 +48,7 @@ private slots:
-     void valueWithoutCallingObjectFirst();
+@@ -47,6 +49,7 @@ private slots:
      void filterOnGroup_removeWhenCompleted();
      void qtbug_86017();
+     void contextAccessedByHandler();
 +    void redrawUponColumnChange();
  };
  
  class AbstractItemModel : public QAbstractItemModel
-@@ -164,6 +167,30 @@ void tst_QQmlDelegateModel::qtbug_86017()
-     QCOMPARE(model->filterGroup(), "selected");
+@@ -186,6 +189,30 @@ void tst_QQmlDelegateModel::contextAccessedByHandler()
+     QVERIFY(root->property("works").toBool());
  }
  
 +void tst_QQmlDelegateModel::redrawUponColumnChange()
@@ -1165,10 +1483,10 @@ index 0000000000..889e480f3b
 +    }
 +}
 diff --git a/tests/auto/quick/qquickitem2/tst_qquickitem.cpp b/tests/auto/quick/qquickitem2/tst_qquickitem.cpp
-index f65650cf9c..eeff768bb4 100644
+index c8f251dbe1..c8ef36ee68 100644
 --- a/tests/auto/quick/qquickitem2/tst_qquickitem.cpp
 +++ b/tests/auto/quick/qquickitem2/tst_qquickitem.cpp
-@@ -66,6 +66,7 @@ private slots:
+@@ -67,6 +67,7 @@ private slots:
      void activeFocusOnTab10();
      void activeFocusOnTab_infiniteLoop_data();
      void activeFocusOnTab_infiniteLoop();
@@ -1176,7 +1494,7 @@ index f65650cf9c..eeff768bb4 100644
  
      void nextItemInFocusChain();
      void nextItemInFocusChain2();
-@@ -1055,6 +1056,17 @@ void tst_QQuickItem::activeFocusOnTab_infiniteLoop()
+@@ -1057,6 +1058,17 @@ void tst_QQuickItem::activeFocusOnTab_infiniteLoop()
      QCOMPARE(item, window->rootObject());
  }
  
@@ -1194,176 +1512,58 @@ index f65650cf9c..eeff768bb4 100644
  void tst_QQuickItem::nextItemInFocusChain()
  {
      if (!qt_tab_all_widgets())
-diff --git a/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
-new file mode 100644
-index 0000000000..a56dcea5ad
---- /dev/null
-+++ b/tests/auto/quick/qquickloader/data/loader-async-race-rect.qml
-@@ -0,0 +1,10 @@
-+import QtQuick 2.15
-+
-+Rectangle {
-+    anchors.fill: parent
-+    color: "blue"
-+    Item {
-+        Item {
-+        }
-+    }
-+}
-diff --git a/tests/auto/quick/qquickloader/data/loader-async-race.qml b/tests/auto/quick/qquickloader/data/loader-async-race.qml
-new file mode 100644
-index 0000000000..8ba625c5c1
---- /dev/null
-+++ b/tests/auto/quick/qquickloader/data/loader-async-race.qml
-@@ -0,0 +1,14 @@
-+import QtQuick 2.15
-+
-+Item {
-+    id: root
-+    Component.onCompleted: {
-+        myloader.active = false
-+    }
-+    Loader {
-+        id: myloader
-+        anchors.fill: parent
-+        asynchronous: true
-+        source: "loader-async-race-rect.qml"
-+    }
-+}
-diff --git a/tests/auto/quick/qquickloader/tst_qquickloader.cpp b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
-index 0f6c811adb..dddacbaa0b 100644
---- a/tests/auto/quick/qquickloader/tst_qquickloader.cpp
-+++ b/tests/auto/quick/qquickloader/tst_qquickloader.cpp
-@@ -132,6 +132,7 @@ private slots:
-     void statusChangeOnlyEmittedOnce();
- 
-     void setSourceAndCheckStatus();
-+    void asyncLoaderRace();
- };
- 
- Q_DECLARE_METATYPE(QList<QQmlError>)
-@@ -1496,6 +1497,24 @@ void tst_QQuickLoader::setSourceAndCheckStatus()
-     QCOMPARE(loader->status(), QQuickLoader::Null);
+diff --git a/tests/auto/quick/qquicklistview/data/qtbug86744.qml b/tests/auto/quick/qquicklistview/data/qtbug86744.qml
+deleted file mode 100644
+index 6dc82d57eb..0000000000
+--- a/tests/auto/quick/qquicklistview/data/qtbug86744.qml
++++ /dev/null
+@@ -1,21 +0,0 @@
+-import QtQuick 2.15
+-import QtQml.Models 2.15
+-
+-Item {
+-    height: 200
+-    width: 100
+-    DelegateModel {
+-        id: dm
+-        model: 2
+-        delegate: Item {
+-            width: 100; height: 20
+-            property bool isCurrent: ListView.isCurrentItem
+-        }
+-    }
+-    ListView {
+-        objectName: "listView"
+-        model: dm
+-        currentIndex: 1
+-        anchors.fill: parent
+-    }
+-}
+diff --git a/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp b/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp
+index df329f8318..b564fd3ba5 100644
+--- a/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp
++++ b/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp
+@@ -10201,20 +10201,6 @@ void tst_QQuickListView::dragDelegateWithMouseArea_data()
+     }
  }
  
-+void tst_QQuickLoader::asyncLoaderRace()
-+{
-+    QQmlApplicationEngine engine;
-+    auto url = testFileUrl("loader-async-race.qml");
-+    engine.load(url);
-+    auto root = engine.rootObjects().at(0);
-+    QVERIFY(root);
-+
-+    QQuickLoader *loader = root->findChild<QQuickLoader *>();
-+    QCOMPARE(loader->active(), false);
-+    QCOMPARE(loader->status(), QQuickLoader::Null);
-+    QCOMPARE(loader->item(), nullptr);
-+
-+    QSignalSpy spy(loader, &QQuickLoader::itemChanged);
-+    QVERIFY(!spy.wait(100));
-+    QCOMPARE(loader->item(), nullptr);
-+}
-+
- QTEST_MAIN(tst_QQuickLoader)
+-void tst_QQuickListView::isCurrentItem_DelegateModel()
+-{
+-    QScopedPointer<QQuickView> window(createView());
+-    window->setSource(testFileUrl("qtbug86744.qml"));
+-    window->resize(640, 480);
+-    window->show();
+-    QVERIFY(QTest::qWaitForWindowExposed(window.data()));
+-
+-    QQuickListView* listView = window->rootObject()->findChild<QQuickListView*>("listView");
+-    QVERIFY(listView);
+-    QVariant value = listView->itemAtIndex(1)->property("isCurrent");
+-    QVERIFY(value.toBool() == true);
+-}
+-
+ QTEST_MAIN(tst_QQuickListView)
  
- #include "tst_qquickloader.moc"
-diff --git a/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
-new file mode 100644
-index 0000000000..c60fc4d8b0
---- /dev/null
-+++ b/tests/manual/scenegraph_lancelot/data/text/text_nativerendering_subpixelpositions.qml
-@@ -0,0 +1,91 @@
-+import QtQuick 2.0
-+
-+//vary font style, native rendering at non-integer offsets
-+
-+Item {
-+    id: topLevel
-+    width: 320
-+    height: 580
-+
-+    Repeater {
-+        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
-+        Text {
-+            y: 20 * index
-+            clip: true
-+            renderType: Text.NativeRendering
-+            width: parent.width
-+            wrapMode: Text.Wrap
-+            font.pointSize: 10
-+            style: modelData
-+            styleColor: "green"
-+            text: "The quick fox jumps in style " + modelData
-+        }
-+    }
-+
-+    Repeater {
-+        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
-+        Text {
-+            y: 100.5 + 20 * index
-+            clip: true
-+            renderType: Text.NativeRendering
-+            width: parent.width
-+            wrapMode: Text.Wrap
-+            font.pointSize: 10
-+            style: modelData
-+            styleColor: "green"
-+            text: "The quick fox jumps in style " + modelData
-+        }
-+    }
-+
-+    Repeater {
-+        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
-+        Text {
-+            y: 200.5 + 20 * index
-+            x: 0.5
-+            clip: true
-+            renderType: Text.NativeRendering
-+            width: parent.width
-+            wrapMode: Text.Wrap
-+            font.pointSize: 10
-+            style: modelData
-+            styleColor: "green"
-+            text: "The quick fox jumps in style " + modelData
-+        }
-+    }
-+
-+    Repeater {
-+        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
-+        Text {
-+            y: 300.5 + 20 * index
-+            x: 0.5
-+            clip: true
-+            renderType: Text.NativeRendering
-+            width: parent.width
-+            wrapMode: Text.Wrap
-+            font.pointSize: 10
-+            style: modelData
-+            styleColor: "green"
-+            text: "The quick fox jumps in style " + modelData
-+        }
-+    }
-+
-+    Repeater {
-+        model: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken]
-+        Rectangle {
-+            y: 400.5 + 20 * index
-+            x: 0.5
-+            width: topLevel.width
-+            height: topLevel.height
-+            clip: true
-+            Text {
-+                renderType: Text.NativeRendering
-+                width: parent.width
-+                wrapMode: Text.Wrap
-+                font.pointSize: 10
-+                style: modelData
-+                styleColor: "green"
-+                text: "The quick fox jumps in style " + modelData
-+            }
-+        }
-+    }
-+}
+ #include "tst_qquicklistview.moc"
 diff --git a/tests/manual/touch/flicktext.qml b/tests/manual/touch/flicktext.qml
 index 9e84261687..e69d6207a9 100644
 --- a/tests/manual/touch/flicktext.qml
