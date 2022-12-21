@@ -12,43 +12,16 @@ index 4136aaf..fd3529a 100644
              QPainter p(image);
              d->r.render(&p, bounds);
 diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
-index 9dac05c..f2653af 100644
+index 299efac..8dda563 100644
 --- a/src/svg/qsvghandler.cpp
 +++ b/src/svg/qsvghandler.cpp
-@@ -728,15 +728,25 @@ static QVector<qreal> parseNumbersList(const QChar *&str)
-     return points;
- }
- 
--static inline void parseNumbersArray(const QChar *&str, QVarLengthArray<qreal, 8> &points)
-+static inline void parseNumbersArray(const QChar *&str, QVarLengthArray<qreal, 8> &points,
-+                                     const char *pattern = nullptr)
- {
-+    const size_t patternLen = qstrlen(pattern);
-     while (str->isSpace())
-         ++str;
-     while (isDigit(str->unicode()) ||
-            *str == QLatin1Char('-') || *str == QLatin1Char('+') ||
-            *str == QLatin1Char('.')) {
- 
--        points.append(toDouble(str));
-+        if (patternLen && pattern[points.size() % patternLen] == 'f') {
-+            // flag expected, may only be 0 or 1
-+            if (*str != QLatin1Char('0') && *str != QLatin1Char('1'))
-+                return;
-+            points.append(*str == QLatin1Char('0') ? 0.0 : 1.0);
-+            ++str;
-+        } else {
-+            points.append(toDouble(str));
-+        }
- 
-         while (str->isSpace())
-             ++str;
-@@ -1383,8 +1393,10 @@ static void parseFont(QSvgNode *node,
+@@ -1393,9 +1393,10 @@ static void parseFont(QSvgNode *node,
          case FontSizeNone:
              break;
          case FontSizeValue: {
 -            QSvgHandler::LengthType dummy; // should always be pixel size
--            fontStyle->setSize(parseLength(attributes.fontSize, dummy, handler));
+-            fontStyle->setSize(qMin(parseLength(attributes.fontSize, dummy, handler),
+-                                    qreal(0xffff)));
 +            QSvgHandler::LengthType type;
 +            qreal fs = parseLength(attributes.fontSize, type, handler);
 +            fs = convertToPixels(fs, true, type);
@@ -56,35 +29,25 @@ index 9dac05c..f2653af 100644
          }
              break;
          default:
-@@ -1615,6 +1627,7 @@ static void pathArc(QPainterPath &path,
- 
+@@ -1626,6 +1627,7 @@ static void pathArc(QPainterPath &path,
+
  static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
  {
 +    const int maxElementCount = 0x7fff; // Assume file corruption if more path elements than this
      qreal x0 = 0, y0 = 0;              // starting point
      qreal x = 0, y = 0;                // current point
      char lastMode = 0;
-@@ -1622,28 +1635,31 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1633,7 +1635,8 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
      const QChar *str = dataStr.constData();
      const QChar *end = str + dataStr.size();
- 
+
 -    while (str != end) {
 +    bool ok = true;
 +    while (ok && str != end) {
          while (str->isSpace() && (str + 1) != end)
              ++str;
          QChar pathElem = *str;
-         ++str;
-         QChar endc = *end;
-         *const_cast<QChar *>(end) = 0; // parseNumbersArray requires 0-termination that QStringRef cannot guarantee
-+        const char *pattern = nullptr;
-+        if (pathElem == QLatin1Char('a') || pathElem == QLatin1Char('A'))
-+            pattern = "rrrffrr";
-         QVarLengthArray<qreal, 8> arg;
--        parseNumbersArray(str, arg);
-+        parseNumbersArray(str, arg, pattern);
-         *const_cast<QChar *>(end) = endc;
-         if (pathElem == QLatin1Char('z') || pathElem == QLatin1Char('Z'))
+@@ -1650,14 +1653,13 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              arg.append(0);//dummy
          const qreal *num = arg.constData();
          int count = arg.count();
@@ -101,7 +64,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  x = x0 = num[0] + offsetX;
-@@ -1660,8 +1676,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1674,8 +1676,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'M': {
                  if (count < 2) {
@@ -111,7 +74,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  x = x0 = num[0];
-@@ -1687,8 +1702,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1701,8 +1702,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'l': {
                  if (count < 2) {
@@ -121,7 +84,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  x = num[0] + offsetX;
-@@ -1701,8 +1715,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1715,8 +1715,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'L': {
                  if (count < 2) {
@@ -131,7 +94,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  x = num[0];
-@@ -1742,8 +1755,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1756,8 +1755,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'c': {
                  if (count < 6) {
@@ -141,7 +104,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF c1(num[0] + offsetX, num[1] + offsetY);
-@@ -1759,8 +1771,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1773,8 +1771,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'C': {
                  if (count < 6) {
@@ -151,7 +114,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF c1(num[0], num[1]);
-@@ -1776,8 +1787,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1790,8 +1787,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 's': {
                  if (count < 4) {
@@ -161,7 +124,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF c1;
-@@ -1798,8 +1808,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1812,8 +1808,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'S': {
                  if (count < 4) {
@@ -171,7 +134,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF c1;
-@@ -1820,8 +1829,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1834,8 +1829,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'q': {
                  if (count < 4) {
@@ -181,7 +144,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF c(num[0] + offsetX, num[1] + offsetY);
-@@ -1836,8 +1844,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1850,8 +1844,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'Q': {
                  if (count < 4) {
@@ -191,7 +154,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF c(num[0], num[1]);
-@@ -1852,8 +1859,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1866,8 +1859,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 't': {
                  if (count < 2) {
@@ -201,7 +164,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF e(num[0] + offsetX, num[1] + offsetY);
-@@ -1873,8 +1879,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1887,8 +1879,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'T': {
                  if (count < 2) {
@@ -211,7 +174,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  QPointF e(num[0], num[1]);
-@@ -1894,8 +1899,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1908,8 +1899,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
              case 'a': {
                  if (count < 7) {
@@ -221,7 +184,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  qreal rx = (*num++);
-@@ -1917,8 +1921,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1931,8 +1921,7 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
                  break;
              case 'A': {
                  if (count < 7) {
@@ -231,7 +194,7 @@ index 9dac05c..f2653af 100644
                      break;
                  }
                  qreal rx = (*num++);
-@@ -1939,12 +1942,15 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
+@@ -1953,12 +1942,15 @@ static bool parsePathDataFast(const QStringRef &dataStr, QPainterPath &path)
              }
                  break;
              default:
@@ -247,121 +210,39 @@ index 9dac05c..f2653af 100644
 -    return true;
 +    return ok;
  }
- 
+
  static bool parseStyle(QSvgNode *node,
-@@ -2358,6 +2364,27 @@ static bool parseAnimateNode(QSvgNode *parent,
-     return true;
- }
- 
-+static int parseClockValue(QString str, bool *ok)
-+{
-+    int res = 0;
-+    int ms = 1000;
-+    str = str.trimmed();
-+    if (str.endsWith(QLatin1String("ms"))) {
-+        str.chop(2);
-+        ms = 1;
-+    } else if (str.endsWith(QLatin1String("s"))) {
-+        str.chop(1);
-+    }
-+    double val = ms * toDouble(str, ok);
-+    if (ok) {
-+        if (val > std::numeric_limits<int>::min() && val < std::numeric_limits<int>::max())
-+            res = static_cast<int>(val);
-+        else
-+            *ok = false;
-+    }
-+    return res;
-+}
-+
- static bool parseAnimateColorNode(QSvgNode *parent,
-                                   const QXmlStreamAttributes &attributes,
-                                   QSvgHandler *handler)
-@@ -2391,23 +2418,13 @@ static bool parseAnimateColorNode(QSvgNode *parent,
+@@ -2522,6 +2514,8 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
+             ++s;
          }
      }
- 
--    int ms = 1000;
--    beginStr = beginStr.trimmed();
--    if (beginStr.endsWith(QLatin1String("ms"))) {
--        beginStr.chop(2);
--        ms = 1;
--    } else if (beginStr.endsWith(QLatin1String("s"))) {
--        beginStr.chop(1);
--    }
--    durStr = durStr.trimmed();
--    if (durStr.endsWith(QLatin1String("ms"))) {
--        durStr.chop(2);
--        ms = 1;
--    } else if (durStr.endsWith(QLatin1String("s"))) {
--        durStr.chop(1);
--    }
--    int begin = static_cast<int>(toDouble(beginStr) * ms);
--    int end   = static_cast<int>((toDouble(durStr) + begin) * ms);
-+    bool ok = true;
-+    int begin = parseClockValue(beginStr, &ok);
-+    if (!ok)
++    if (vals.count() % 3 != 0)
 +        return false;
-+    int end = begin + parseClockValue(durStr, &ok);
-+    if (!ok || end <= begin)
-+        return false;
- 
-     QSvgAnimateColor *anim = new QSvgAnimateColor(begin, end, 0);
-     anim->setArgs((targetStr == QLatin1String("fill")), colors);
-@@ -2497,24 +2514,13 @@ static bool parseAnimateTransformNode(QSvgNode *parent,
-         }
-     }
- 
--    int ms = 1000;
--    beginStr = beginStr.trimmed();
--    if (beginStr.endsWith(QLatin1String("ms"))) {
--        beginStr.chop(2);
--        ms = 1;
--    } else if (beginStr.endsWith(QLatin1String("s"))) {
--        beginStr.chop(1);
--    }
--    int begin = static_cast<int>(toDouble(beginStr) * ms);
--    durStr = durStr.trimmed();
--    if (durStr.endsWith(QLatin1String("ms"))) {
--        durStr.chop(2);
--        ms = 1;
--    } else if (durStr.endsWith(QLatin1String("s"))) {
--        durStr.chop(1);
--        ms = 1000;
--    }
--    int end = static_cast<int>(toDouble(durStr)*ms) + begin;
-+    bool ok = true;
-+    int begin = parseClockValue(beginStr, &ok);
-+    if (!ok)
-+        return false;
-+    int end = begin + parseClockValue(durStr, &ok);
-+    if (!ok || end <= begin)
-+        return false;
- 
-     QSvgAnimateTransform::TransformType type = QSvgAnimateTransform::Empty;
-     if (typeStr == QLatin1String("translate")) {
-@@ -2570,6 +2576,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
+
+     bool ok = true;
+     int begin = parseClockValue(beginStr, &ok);
+@@ -2585,6 +2579,8 @@ static QSvgNode *createCircleNode(QSvgNode *parent,
      qreal ncx = toDouble(cx);
      qreal ncy = toDouble(cy);
      qreal nr  = toDouble(r);
 +    if (nr < 0.0)
 +        return nullptr;
- 
+
      QRectF rect(ncx-nr, ncy-nr, nr*2, nr*2);
      QSvgNode *circle = new QSvgCircle(parent, rect);
-@@ -2980,8 +2988,8 @@ static QSvgNode *createPathNode(QSvgNode *parent,
- 
+@@ -2995,8 +2991,8 @@ static QSvgNode *createPathNode(QSvgNode *parent,
+
      QPainterPath qpath;
      qpath.setFillRule(Qt::WindingFill);
 -    //XXX do error handling
 -    parsePathDataFast(data, qpath);
 +    if (!parsePathDataFast(data, qpath))
 +        qCWarning(lcSvgHandler, "Invalid path data; path truncated.");
- 
+
      QSvgNode *path = new QSvgPath(parent, qpath);
      return path;
-@@ -3040,15 +3048,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
- 
+@@ -3055,15 +3051,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
+
      qreal ncx = 0.5;
      qreal ncy = 0.5;
 -    qreal nr  = 0.5;
@@ -377,20 +258,20 @@ index 9dac05c..f2653af 100644
 -        nr = 0.5;
 +    if (nr <= 0.0)
 +        return nullptr;
- 
+
      qreal nfx = ncx;
      if (!fx.isEmpty())
-@@ -3344,7 +3353,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
+@@ -3359,7 +3356,9 @@ static QSvgNode *createTextNode(QSvgNode *parent,
      //### editable and rotate not handled
      QSvgHandler::LengthType type;
      qreal nx = parseLength(x, type, handler);
 +    nx = convertToPixels(nx, true, type);
      qreal ny = parseLength(y, type, handler);
 +    ny = convertToPixels(ny, true, type);
- 
+
      QSvgNode *text = new QSvgText(parent, QPointF(nx, ny));
      return text;
-@@ -3685,9 +3696,7 @@ void QSvgHandler::parse()
+@@ -3700,9 +3699,7 @@ void QSvgHandler::parse()
          case QXmlStreamReader::EndElement:
              endElement(xml->name());
              ++remainingUnfinishedElements;
@@ -407,7 +288,7 @@ index b89608b..89c9e4e 100644
 +++ b/src/svg/qsvgstructure.cpp
 @@ -255,9 +255,13 @@ inline static bool isSupportedSvgFeature(const QString &str)
      };
- 
+
      if (str.length() <= MAX_WORD_LENGTH && str.length() >= MIN_WORD_LENGTH) {
 +        const char16_t unicode44 = str.at(44).unicode();
 +        const char16_t unicode45 = str.at(45).unicode();
@@ -428,7 +309,7 @@ index 63d0797..19e7154 100644
 @@ -433,8 +433,16 @@ void QSvgTinyDocument::draw(QPainter *p, QSvgExtraStates &)
      draw(p);
  }
- 
+
 +static bool isValidMatrix(const QTransform &transform)
 +{
 +    qreal determinant = transform.determinant();
@@ -450,37 +331,41 @@ index 63d0797..19e7154 100644
 +    if (!isValidMatrix(p->worldTransform()))
 +        p->setWorldTransform(oldTransform);
  }
- 
+
  QRectF QSvgTinyDocument::boundsOnElement(const QString &id) const
 diff --git a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp b/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
-index 8f1f03b..36c76ec 100644
+index 36c76ec..db71e02 100644
 --- a/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
 +++ b/tests/auto/qsvgrenderer/tst_qsvgrenderer.cpp
-@@ -74,6 +74,7 @@ private slots:
-     void fillRule();
-     void opacity();
-     void paths();
-+    void paths2();
-     void displayMode();
-     void strokeInherit();
-     void testFillInheritance();
-@@ -1047,6 +1048,19 @@ void tst_QSvgRenderer::paths()
-     }
+@@ -86,6 +86,8 @@ private slots:
+     void oss_fuzz_23731();
+     void oss_fuzz_24131();
+     void oss_fuzz_24738();
++    void illegalAnimateTransform_data();
++    void illegalAnimateTransform();
+
+ #ifndef QT_NO_COMPRESS
+     void testGzLoading();
+@@ -1646,5 +1648,22 @@ void tst_QSvgRenderer::oss_fuzz_24738()
+     QSvgRenderer().load(QByteArray("<svg><path d=\"a 2 1e-212.....\">"));
  }
- 
-+void tst_QSvgRenderer::paths2()
+
++void tst_QSvgRenderer::illegalAnimateTransform_data()
 +{
-+    const char *svg =
-+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\">"
-+            "<path d=\"M 3 8 A 5 5 0 1013 8\" id=\"path1\"/>"
-+        "</svg>";
++    QTest::addColumn<QByteArray>("svg");
 +
-+    QByteArray data(svg);
-+    QSvgRenderer renderer(data);
-+    QVERIFY(renderer.isValid());
-+    QCOMPARE(renderer.boundsOnElement(QLatin1String("path1")).toRect(), QRect(3, 8, 10, 5));
++    QTest::newRow("case1") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" values=\"8,0,5,0\">");
++    QTest::newRow("case2") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" values=\"1,2\">");
++    QTest::newRow("case3") << QByteArray("<svg><animateTransform type=\"rotate\" begin=\"1\" dur=\"2\" from=\".. 5 2\" to=\"f\">");
++    QTest::newRow("case4") << QByteArray("<svg><animateTransform type=\"scale\" begin=\"1\" dur=\"2\" by=\"--,..\">");
 +}
 +
- void tst_QSvgRenderer::displayMode()
- {
-     static const char *svgs[] = {
++void tst_QSvgRenderer::illegalAnimateTransform()
++{
++    QFETCH(QByteArray, svg);
++    QSvgRenderer renderer;
++    QVERIFY(!renderer.load(svg)); // also shouldn't assert
++}
++
+ QTEST_MAIN(tst_QSvgRenderer)
+ #include "tst_qsvgrenderer.moc"
