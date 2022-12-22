@@ -8,16 +8,17 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 
 def setup():
-    shelltools.unlink('testsuite/gtk/gtkresources.c')
-    options = "--prefix=/usr             \
-               --sysconfdir=/etc         \
-               --enable-x11-backend \
-               --enable-broadway-backend \
-               --enable-wayland-backend \
-              "
+    # shelltools.unlink('testsuite/gtk/gtkresources.c')
+    options = "-Dbroadway_backend=true \
+                     -Dxinerama=yes \
+                     -Dgtk_doc=true \
+                     -Dcolord=yes \
+                     -Dcloudproviders=true \
+                    "
 
     shelltools.export("CFLAGS", get.CFLAGS().replace("-fomit-frame-pointer",""))
 
@@ -25,7 +26,7 @@ def setup():
         options += " --libdir=/usr/lib32 \
                      --bindir=/usr/bin32 \
                      --sbindir=/usr/sbin32 \
-                     --enable-colord=no \
+                     -Dcolord=no \
                    "
 
         shelltools.export("CC", "%s -m32" % get.CC())
@@ -35,22 +36,22 @@ def setup():
         shelltools.export("LDFLAGS", "%s -m32" % get.LDFLAGS())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
 
-        pisitools.dosed("configure.ac", "cups-config", "cups-config-32bit")
+        # pisitools.dosed("configure.ac", "cups-config", "cups-config-32bit")
 
-    autotools.autoreconf("-fiv")
-    autotools.configure(options)
+    # autotools.autoreconf("-fiv")
+    mesontools.configure(options)
 
-    pisitools.dosed("libtool", "( -shared )", r" -Wl,-O1,--as-needed\1")
+    # pisitools.dosed("libtool", "( -shared )", r" -Wl,-O1,--as-needed\1")
 
 def build():
-    autotools.make()
+     mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     # remove empty dir
-    pisitools.removeDir("/usr/share/man")
-    pisitools.dodoc("AUTHORS", "README*", "HACKING", "ChangeLog*", "NEWS*")
+    # pisitools.removeDir("/usr/share/man")
+    pisitools.dodoc("README*", "COPYING*", "NEWS*")
 
     if get.buildTYPE() == "emul32":
         for binaries in ["gtk-query-immodules-3.0"]:
