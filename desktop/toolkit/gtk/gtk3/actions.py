@@ -16,7 +16,6 @@ def setup():
     options = "-Dbroadway_backend=true \
                      -Dxinerama=yes \
                      -Dgtk_doc=true \
-                     -Dcolord=yes \
                      -Dcloudproviders=true \
                     "
 
