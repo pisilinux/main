@@ -31,7 +31,7 @@ def build():
     #İkinci aşamada bu satırlar da yoruma çevrilecek.
     #At phase 2, these lines also will be commented out.
     shelltools.cd(RustBinDir)
-    shelltools.system("./install.sh --prefix=%s --without=rust-docs" %RustcDir)
+    shelltools.system("./install.sh --prefix=%s" %RustcDir)
     shelltools.cd("..")
     pisitools.dosed("config.toml", "/usr/bin/cargo", RustcDir+"/bin/cargo")
     pisitools.dosed("config.toml", "/usr/bin/rustc", RustcDir+"/bin/rustc")
