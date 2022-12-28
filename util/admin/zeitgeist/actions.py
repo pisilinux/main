@@ -8,7 +8,7 @@ from pisi.actionsapi import shelltools, autotools, pisitools, get
 
 def setup():
 	shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-	autotools.configure()
+	autotools.configure("--enable-fts")
 
 def build():
 	autotools.make()
