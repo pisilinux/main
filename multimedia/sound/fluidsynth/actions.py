@@ -13,7 +13,8 @@ shelltools.export("CFLAGS", "%s -lpthread" % get.CFLAGS())
 
 def setup():
     cmaketools.configure("-Denable-ladspa=ON \
-                          -DLIB_SUFFIX=\"\"")
+                                        -DFLUID_DAEMON_ENV_FILE=/etc/conf.d/fluidsynth \
+                                        -DLIB_SUFFIX=\"\"")
 
 def build():
     cmaketools.make()
@@ -21,4 +22,5 @@ def build():
 def install():
     cmaketools.install()
 
+    pisitools.insinto("/etc/conf.d", "fluidsynth.conf", "fluidsynth")
     pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "THANKS", "TODO")
