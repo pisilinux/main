@@ -13,8 +13,8 @@ shelltools.export("CFLAGS", "%s -DSPAMC_SSL -lssl -lcrypto" % get.CFLAGS())
 
 def setup():
 	perlmodules.configure()
-	shelltools.cd("spamc")
-	shelltools.system("./configure.pl && ./configure --enable-ssl=yes")
+	#shelltools.cd("spamc")
+	#shelltools.system("./configure.pl && ./configure --enable-ssl=yes")
 
 def build():
 	perlmodules.make()

@@ -4,7 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools, cmaketools, pisitools, get
+from pisi.actionsapi import shelltools, mesontools, cmaketools, pisitools, get
 
 j = ''.join([
     ' -DENABLE_EXAMPLES=ON',
@@ -20,14 +20,14 @@ def setup():
     cmaketools.configure(j)
 
 def build():
-    shelltools.system("ninja -C _build")
+    mesontools.build("-C _build")
 
 def check():
     #pass
-    shelltools.system("ninja -C _build test")
+    mesontools.build("-C _build test")
 
 def install():
-    shelltools.system("DESTDIR=%s ninja -C _build install" % get.installDIR())
+    mesontools.install("-C _build install")
 
     #pisitools.dodir("/run/clamav")
     pisitools.dodir("/var/lib/clamav")
