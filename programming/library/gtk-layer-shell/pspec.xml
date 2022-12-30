@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>gtk-layer-shell</Name>
+		<Homepage>https://github.com/wmww/gtk-layer-shell</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>GPL-3</License>
+		<IsA>library</IsA>
+		<PartOf>programming.library</PartOf>
+		<Summary>A library to write GTK applications that use Layer Shell.</Summary>
+		<Description>A library to create panels and other desktop components for Wayland using the Layer Shell protocol.</Description>
+		<Archive sha1sum="2e9711f3d6761a85517364ae90d56ed4792c5e1c" type="targz">
+			https://github.com/wmww/gtk-layer-shell/archive/refs/tags/v0.8.0.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>meson</Dependency>
+			<Dependency>gtk3-devel</Dependency>
+			<Dependency>vala-devel</Dependency>
+			<Dependency>wayland-devel</Dependency>
+			<Dependency>wayland-client</Dependency>
+			<Dependency>gobject-introspection-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>gtk-layer-shell</Name>
+		<RuntimeDependencies>
+			<Dependency>gtk3</Dependency>
+			<Dependency>glib2</Dependency>
+			<Dependency>wayland</Dependency>
+			<Dependency>wayland-client</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="library">/usr/lib/girepository-1.0</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>gtk-layer-shell-devel</Name>
+		<RuntimeDependencies>
+			<Dependency>wayland-devel</Dependency>
+			<Dependency>wayland-client</Dependency>
+			<Dependency>gtk3-devel</Dependency>
+			<Dependency release="current">gtk-layer-shell</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="headers">/usr/include/gtk-layer-shell/gtk-layer-shell.h</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/gtk-layer-shell-0.pc</Path>
+			<Path fileType="data">/usr/share/gir-1.0</Path>
+			<Path fileType="data">/usr/share/vala/vapi</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2022-12-30</Date>
+			<Version>0.8.0</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
