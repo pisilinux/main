@@ -40,4 +40,4 @@ def install():
         pisitools.dosym("/usr/lib/%s" % i, "/usr/lib/x86_64-linux-gnu/%s" % i)
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "HELP", "NEWS",
-                    "README", "SECURITY", "doc/README.DAEMON")
+                    "README", "SECURITY", "doc/README.*")
