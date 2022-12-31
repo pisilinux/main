@@ -14,7 +14,6 @@ USBDROPDIR = "/usr/lib/pcsc/drivers"
 def setup():
     options = "--enable-usbdropdir=%s \
                --disable-libsystemd \
-               --disable-dependency-tracking \
                --disable-static" % USBDROPDIR
 
 
