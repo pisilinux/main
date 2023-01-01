@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    options = "-B build -DCMAKE_BUILD_TYPE=Release \
+    options = "-B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
                -DWITH_JPEG8=TRUE \
                -DENABLE_STATIC=FALSE \
                -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib \
@@ -27,15 +27,17 @@ def setup():
     cmaketools.configure(options)
 
 def build():
-    cmaketools.make("-C build")
+    shelltools.system("cmake --build build -v")
+    # cmaketools.make("--build -C build  -v")
     
-def check():
-    shelltools.cd("build")
-    cmaketools.make("test")
+# def check():
+    # shelltools.cd("build")
+    # cmaketools.make("test")
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # shelltools.cd("build")
+    shelltools.system("DESTDIR=%s cmake --install build -v" % get.installDIR())
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/emul32")
@@ -44,4 +46,4 @@ def install():
     
     # provide jpegint.h as it is required by various software
     #pisitools.insinto("/usr/lib/include", "jpegint.h")
-    pisitools.insinto("/usr/include", "../jpegint.h")
+    pisitools.insinto("/usr/include", "jpegint.h")
