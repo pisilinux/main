@@ -15,6 +15,7 @@ def setup():
     shelltools.cd("build")
     cmaketools.configure("-GNinja .. \
                             -DCMAKE_SKIP_RPATH=TRUE \
+                            -DCMAKE_CXX_STANDARD=17 \
                             -DCMAKE_INSTALL_PREFIX=/usr \
                             -DCMAKE_INSTALL_LIBDIR=lib \
                             -Dbuild_examples=ON \
