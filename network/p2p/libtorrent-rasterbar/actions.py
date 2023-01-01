@@ -13,8 +13,7 @@ def setup():
     pisitools.dosed("Makefile", "PREFIX=/usr/local/", "PREFIX=/usr")
     shelltools.system("mkdir build")
     shelltools.cd("build")
-    cmaketools.configure("-GNinja .. \
-                            -DCMAKE_SKIP_RPATH=TRUE \
+    cmaketools.configure("-DCMAKE_SKIP_RPATH=TRUE \
                             -DCMAKE_CXX_STANDARD=17 \
                             -DCMAKE_INSTALL_PREFIX=/usr \
                             -DCMAKE_INSTALL_LIBDIR=lib \
@@ -27,8 +26,8 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    shelltools.system("ninja")
-    #cmaketools.make()
+    # shelltools.system("ninja")
+    cmaketools.make()
 
 #def check():
     #cmaketools.make("test")
@@ -36,8 +35,8 @@ def build():
 
 def install():
     shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    #cmaketools.rawInstall("DESTDIR=%s ninja install" % get.installDIR())
+    # shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     shelltools.cd("..")
     pisitools.dohtml("docs/*")
