@@ -99,6 +99,7 @@ def setup():
                             --enable-mad \
                             --enable-mod \
                             --enable-mpc \
+                            --enable-microdns \
                             --enable-nls \
                             --enable-ogg \
                             --enable-opus \
