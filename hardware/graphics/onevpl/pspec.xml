@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>onevpl</Name>
+		<Homepage>https://github.com/oneapi-src/oneVPL</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<IsA>library</IsA>
+		<PartOf>hardware.graphics</PartOf>
+		<Summary>Video Processing Library.</Summary>
+		<Description>
+			The oneAPI Video Processing Library (oneVPL) is a programming interface for video decoding, encoding, and processing to build portable media pipelines on CPUs, GPUs, and other accelerators.
+		</Description>
+		<Archive sha1sum="6a5886981b9ab9ad643a1e6c2eca31ca2f479350" type="targz">
+			https://github.com/oneapi-src/oneVPL/archive/refs/tags/v2023.1.1.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
+			<Dependency>libva-devel</Dependency>
+			<Dependency>libxcb-devel</Dependency>
+			<Dependency>libdrm-devel</Dependency>
+			<Dependency>libX11-devel</Dependency>
+			<Dependency>wayland-devel</Dependency>
+			<Dependency>wayland-client</Dependency>
+			<!-- <Dependency>wayland-server</Dependency> -->
+			<Dependency>libpciaccess-devel</Dependency>
+			<Dependency>wayland-protocols-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>onevpl</Name>
+		<RuntimeDependencies>
+			<Dependency>libva</Dependency>
+			<Dependency>libxcb</Dependency>
+			<Dependency>libX11</Dependency>
+			<Dependency>libgcc</Dependency>
+			<Dependency>libdrm</Dependency>
+			<Dependency>libdrm-intel</Dependency>
+			<Dependency>wayland-client</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="library">/usr/lib/vpl</Path>
+			<Path fileType="data">/usr/share/doc/onevpl</Path>
+			<Path fileType="data">/usr/share/vpl/licensing</Path>
+			<Path fileType="data">/usr/share/vpl/vars.sh</Path>
+			<Path fileType="data">/usr/share/vpl/modulefiles/vpl</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>onevpl-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">onevpl</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/cmake/vpl</Path>
+			<Path fileType="library">/usr/lib/pkgconfig/vpl.pc</Path>
+			<Path fileType="headers">/usr/include/vpl</Path>
+			<Path fileType="data">/usr/share/vpl/examples</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2023-01-02</Date>
+			<Version>2023.1.1</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
