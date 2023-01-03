@@ -1,68 +1,86 @@
 <?xml version="1.0" ?>
 <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-    <Source>
-      <Name>opencl-icd</Name>
-        <Homepage>https://github.com/OCL-dev/ocl-icd</Homepage>
-        <Packager>
-            <Name>Mathias Freire</Name>
-            <Email>mathiasfreire45@gmail.com</Email>
-        </Packager>
-        <License>BSD-2-Clause</License>
-        <IsA>library</IsA>
-        <Summary>OpenCL ICD loader library</Summary>
-        <Description>OpenCL is a royalty-free standard for cross-platform, parallel programming of modern processors found in personal computers, servers and handheld/embedded devices.</Description>
-        <Archive sha1sum="30c8817d54582d3cc26dd4fa0a0c1d408847de05" type="targz">https://github.com/OCL-dev/ocl-icd/archive/v2.2.14.tar.gz</Archive>
-<!--         <Archive sha1sum="67aaa4264084ae0551f1f3045998e78b217ee37d" type="tarxz" target="ocl-icd-2.2.14">https://sourceforge.net/projects/pisilinux/files/source/OpenCL-Headers-2.1.tar.xz</Archive> -->
-        <Archive sha1sum="11bb1a594bec203b78184d934257e91c9e68084a" type="targz" target="ocl-icd-2.2.14">https://github.com/KhronosGroup/OpenCL-Headers/archive/v2020.12.18.tar.gz</Archive>
-        <BuildDependencies>
-            <Dependency>ruby</Dependency>
-        </BuildDependencies>
-    </Source>
+	<Source>
+	  <Name>opencl-icd</Name>
+		<Homepage>https://github.com/OCL-dev/ocl-icd</Homepage>
+		<Packager>
+			<Name>Mathias Freire</Name>
+			<Email>mathiasfreire45@gmail.com</Email>
+		</Packager>
+		<License>Apach-2</License>
+		<License>BSD-2-Clause</License>
+		<IsA>library</IsA>
+		<Summary>OpenCL ICD loader library</Summary>
+		<Description>OpenCL is a royalty-free standard for cross-platform, parallel programming of modern processors found in personal computers, servers and handheld/embedded devices.</Description>
+		<Archive sha1sum="2466775f66ad1febda29615f6701411cc48e4efe" type="targz">
+			https://github.com/OCL-dev/ocl-icd/archive/refs/tags/v2.3.1.tar.gz
+		</Archive>
+		<Archive sha1sum="d1b8b405eda94e6166a31ba91ab8b0a759e12a99" type="targz" target="ocl-icd-2.3.1">
+			https://github.com/KhronosGroup/OpenCL-CLHPP/archive/refs/tags/v2.0.15.tar.gz
+		</Archive>
+		<Archive sha1sum="66226403b631dc3c320d761a5a0e2c36ef5304f5" type="targz" target="ocl-icd-2.3.1">
+			https://github.com/KhronosGroup/OpenCL-Headers/archive/refs/tags/v2021.06.30.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>ruby</Dependency>
+			<!-- <Dependency>doxygen</Dependency> -->
+			<Dependency>python3</Dependency>
+		</BuildDependencies>
+	</Source>
 
-    <Package>
-        <Name>opencl-icd</Name>
-        <Files>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-        </Files>
-    </Package>
+	<Package>
+		<Name>opencl-icd</Name>
+		<Files>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="man">/usr/share/man</Path>
+			<Path fileType="doc">/usr/share/doc</Path>
+		</Files>
+	</Package>
 
-    <Package>
-        <Name>opencl-icd-32bit</Name>
-        <BuildType>emul32</BuildType>
-        <PartOf>emul32</PartOf>
-        <Files>
-            <Path fileType="library">/usr/lib32</Path>
-        </Files>
-    </Package>
+	<Package>
+		<Name>opencl-icd-32bit</Name>
+		<BuildType>emul32</BuildType>
+		<PartOf>emul32</PartOf>
+		<Files>
+			<Path fileType="library">/usr/lib32</Path>
+		</Files>
+	</Package>
 
-    <Package>
-        <Name>opencl-icd-devel</Name>
-        <RuntimeDependencies>
-            <Dependency release="current">opencl-icd</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="config">/usr/lib/pkgconfig</Path>
-        </Files>
-    </Package>
+	<Package>
+		<Name>opencl-icd-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">opencl-icd</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="header">/usr/include</Path>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+			<Path fileType="data">/usr/share/cmake</Path>
+		</Files>
+	</Package>
 
-    <History>
-        <Update release="2">
-            <Date>2021-01-28</Date>
-            <Version>2.2.14</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="1">
-            <Date>2019-11-15</Date>
-            <Version>2.2.12</Version>
-            <Comment>First Release</Comment>
-            <Name>Idris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
-        </Update>
-    </History>
+	<History>
+		<Update release="3">
+			<Date>2023-01-02</Date>
+			<Version>2.3.1</Version>
+			<Comment>Version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="2">
+			<Date>2021-01-28</Date>
+			<Version>2.2.14</Version>
+			<Comment>Version bump.</Comment>
+			<Name>Mustafa Cinasal</Name>
+			<Email>muscnsl@gmail.com</Email>
+		</Update>
+		<Update release="1">
+			<Date>2019-11-15</Date>
+			<Version>2.2.12</Version>
+			<Comment>First Release</Comment>
+			<Name>Idris Kalp</Name>
+			<Email>idriskalp@gmail.com</Email>
+		</Update>
+	</History>
 </PISI>
