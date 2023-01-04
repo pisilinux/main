@@ -2,21 +2,23 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 
+j = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DSUPPORT_JAVA_PROGRAMS=OFF',
+    ' -DUSE_SPARSE_LEVMAR=OFF',
+    ' -B_build -L '
+    ])
+
 def setup():
-    autotools.configure("--disable-static \
-                         --without-java")
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    cmaketools.configure(j)
 
 def build():
-    autotools.make()
+    cmaketools.make("-C _build")
 
 def install():
-    autotools.install()
-
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README", "doc/*.txt")
+    cmaketools.install("-C _build")
