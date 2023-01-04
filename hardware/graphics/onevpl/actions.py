@@ -8,12 +8,13 @@ from pisi.actionsapi import cmaketools, mesontools, pisitools
 
 j = ''.join([
     ' -DCMAKE_BUILD_TYPE=Release',
-    ' -DONEAPI_INSTALL_ENVDIR=/usr/share//vpl',
+    ' -DONEAPI_INSTALL_ENVDIR=/usr/share/vpl',
     ' -DONEAPI_INSTALL_MODFILEDIR=/usr/share/vpl/modulefiles',
     ' -DBUILD_TOOLS_ONEVPL_EXPERIMENTAL=OFF',
     ' -DBUILD_DISPATCHER_ONEVPL_EXPERIMENTAL=OFF',
     ' -DBUILD_TESTS=ON',
-    ' -DBUILD_TOOLS=OFF',
+    ' -DBUILD_TOOLS=ON',
+    ' -DBUILD_DEV=ON',
     ' -B_build -G Ninja -L '
     ])
 
