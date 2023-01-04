@@ -44,7 +44,7 @@ def build():
 def install():
     shelltools.export("TERMINFO", "%s/usr/share/terminfo" % get.installDIR())
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.dobin("doc/rxvt-tabbed")
+    #pisitools.dobin("doc/rxvt-tabbed")
 
     pisitools.insinto("/usr/share/terminfo/r", "doc/etc/rxvt-unicode.terminfo", "rxvt-unicode")
     pisitools.insinto("/etc", "doc/etc/rxvt-unicode.termcap")
