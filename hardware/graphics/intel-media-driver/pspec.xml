@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>intel-media-driver</Name>
+		<Homepage>https://github.com/intel/media-driver/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<License>BSD-3-Clause</License>
+		<IsA>library</IsA>
+		<PartOf>hardware.graphics</PartOf>
+		<Summary>Media Driver for VAAPI.</Summary>
+		<Description>
+			The Intel(R) Media Driver for VAAPI is a new VA-API (Video Acceleration API) user mode driver supporting hardware accelerated decoding, encoding, and video post processing for GEN based graphics hardware.
+		</Description>
+		<Archive sha1sum="2c893287b857265889019f62e68e87de9b920975" type="targz">
+			https://github.com/intel/media-driver/archive/refs/tags/intel-media-22.5.4.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
+			<Dependency>mesa-devel</Dependency>
+			<Dependency>libva-devel</Dependency>
+			<Dependency>libdrm-devel</Dependency>
+			<Dependency>libX11-devel</Dependency>
+			<Dependency>gmmlib-devel</Dependency>
+			<Dependency>libpciaccess-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>intel-media-driver</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+			<Dependency>libva</Dependency>
+			<Dependency>gmmlib</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="headers">/usr/include/igfxcmrt</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/igfxcmrt.pc</Path>
+			<Path fileType="library">/usr/lib/dri/iHD_drv_video.so</Path>
+			<Path fileType="library">/usr/lib/libigfxcmrt.so</Path>
+			<Path fileType="library">/usr/lib/libigfxcmrt.so.7</Path>
+			<Path fileType="library">/usr/lib/libigfxcmrt.so.7.2.0</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2023-01-01</Date>
+			<Version>22.5.4</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
