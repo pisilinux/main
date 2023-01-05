@@ -9,10 +9,8 @@ from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 
 def setup():
-    # fix build failure w/ xfce4-panel-4.15.0
-    pisitools.dosed("panel-plugin/wavelan.c", "<libxfce4panel/xfce-panel-plugin.h>", "<libxfce4panel/libxfce4panel.h>")
     autotools.configure()
-    
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -21,5 +19,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
-
+    pisitools.dodoc("AUTHORS", "NEWS", "THANKS")

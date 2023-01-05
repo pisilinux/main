@@ -21,6 +21,7 @@ j = ''.join([
     ])
 
 def setup():
+	pisitools.dosed("driver/Makefile.in", "UPDATE_ICON_CACHE", deleteLine = True)
 	autotools.configure(j)
 
 def build():
