@@ -33,4 +33,4 @@ def install():
     pisitools.dodoc("COPYING", "README.md")
 
     # Pisi Linux does not have Cinnamon Desktop yet.
-    pisitools.removeDir("/usr/share/nemo-python")
+    # pisitools.removeDir("/usr/share/nemo-python")

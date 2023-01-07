@@ -13,7 +13,7 @@
         <IsA>app:gui</IsA>
         <Summary>The Nextcloud Client</Summary>
         <Description>Nextcloud-client enables you to connect to your private Nextcloud Server. With it you can create folders in your home directory, and keep the contents of those folders synced with your Nextcloud server.</Description>
-        <Archive sha1sum="5aaf6a048381abab50e2dbad831b31e10ad3bbc9" type="targz">https://github.com/nextcloud/desktop/archive/v3.3.2/desktop-3.3.2.tar.gz</Archive>
+        <Archive sha1sum="7730d7294609499fbbcbd8721e2581b264ceddf1" type="targz">https://github.com/nextcloud/desktop/archive/refs/tags/v3.6.4.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>check-devel</Dependency>
             <Dependency>chrpath</Dependency>
@@ -44,8 +44,8 @@
             <Dependency>libgnome-keyring</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">xcb.patch</Patch>
-            <Patch level="1">require-cmake-3.16.patch</Patch>
+<!--             <Patch level="1">xcb.patch</Patch> -->
+<!--             <Patch level="1">require-cmake-3.16.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -62,10 +62,10 @@
             <Dependency>qt5-websockets</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/etc/Nextcloud</Path>
+            <Path fileType="config">/etc/Nextcloud</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib/libnextcloudsync.so.0</Path>
-            <Path fileType="library">/usr/lib/libnextcloudsync.so.3.3.2</Path>
+            <Path fileType="library">/usr/lib/libnextcloudsync.so*</Path>
+<!--             <Path fileType="library">/usr/lib/libnextcloudsync.so.3.3.2</Path> -->
             <Path fileType="library">/usr/lib/libnextcloud_csync.so*</Path>
             <Path fileType="data">/usr/share/appdata</Path>
             <Path fileType="data">/usr/share/applications</Path>
@@ -128,6 +128,20 @@
     </Package>
 
     <Package>
+        <Name>nextcloud-client-nemo</Name>
+        <Summary>nextcloud-client overlay icons for the nemo file manager</Summary>
+        <Description>This package provides overlay icons to visualize the sync state in the nemo file manager.</Description>
+        <RuntimeDependencies>
+            <Dependency release="current">nextcloud-client</Dependency>
+            <Dependency>nemo</Dependency>
+            <Dependency>nemo-python</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/nemo-python/extensions</Path>
+        </Files>
+    </Package>
+
+    <Package>
         <Name>nextcloud-client-devel</Name>
         <Summary>Development files for nextcloud-client</Summary>
         <RuntimeDependencies>
@@ -135,13 +149,20 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/nextcloudsync</Path>
-            <Path fileType="library">/usr/lib/libnextcloudsync.so</Path>
+<!--             <Path fileType="library">/usr/lib/libnextcloudsync.so</Path> -->
             <Path fileType="library">/usr/lib/nextcloudsync_vfs_suffix.so</Path>
             <Path fileType="library">/usr/lib/nextcloudsync_vfs_xattr.so</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2023-01-07</Date>
+            <Version>3.6.4</Version>
+            <Comment>version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2021-09-01</Date>
             <Version>3.3.2</Version>
