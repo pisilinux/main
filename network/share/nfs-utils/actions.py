@@ -13,6 +13,9 @@ shelltools.export("CFLAGS","%s -fpie -D_FILE_OFFSET_BITS=64" % get.CFLAGS())
 shelltools.export("LDFLAGS","%s -pie" % get.LDFLAGS())
 
 def setup():
+    shelltools.system("sed -i 's|/usr/lib/udev/rules.d/|/lib/udev/rules.d/|g' tools/nfsrahead/Makefile.in")
+    shelltools.system("sed -i 's|/usr/lib/udev/rules.d/|/lib/udev/rules.d/|g' tools/nfsrahead/Makefile.am")
+
     autotools.autoreconf("-vfi")
     autotools.configure("--enable-mountconfig \
                          --enable-ipv6 \
@@ -20,7 +23,7 @@ def setup():
                          --enable-nfsv4 \
                          --enable-gss \
                          --with-krb5=/usr \
-                         --libexecdir=/usr/lib \
+                         --with-modprobedir=/etc/modprobe.d \
                          --with-statedir=/var/lib/nfs")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
