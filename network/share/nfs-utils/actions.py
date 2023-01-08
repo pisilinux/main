@@ -20,6 +20,7 @@ def setup():
                          --enable-nfsv4 \
                          --enable-gss \
                          --with-krb5=/usr \
+                         --libexecdir=/usr/lib \
                          --with-statedir=/var/lib/nfs")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
