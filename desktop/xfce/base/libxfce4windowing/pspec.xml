@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libxfce4windowing</Name>
+        <Homepage>https://github.com/xfce-mirror/libxfce4windowing</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Libxfce4windowing is an abstraction library that attempts to present windowing concepts (screens, toplevel windows, workspaces, etc.) in a windowing-system-independent manner.</Summary>
+        <Icon>libxfce4windowing</Icon>
+        <Description>Libxfce4windowing, pencereleme kavramlarını (ekranlar, üst düzey pencereler, çalışma alanları vb.) pencere sisteminden bağımsız bir şekilde sunmaya çalışan bir soyutlama kitaplığıdır.</Description>
+        <Archive sha1sum="86ee55f0846f6910809a1f517522f49a35810196" type="tarbz2">https://archive.xfce.org/src/xfce/libxfce4windowing/4.19/libxfce4windowing-4.19.1.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>intltool</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>gettext-devel</Dependency>
+            <Dependency>xfce4-dev-tools</Dependency>
+            <Dependency>libwnck3-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">gentoo/libxfce4windowing-4.19.1-no-x.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libxfce4windowing</Name>
+        <RuntimeDependencies>
+            <Dependency>gtk3</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libwnck3</Dependency>
+            <Dependency>wayland-client</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libxfce4windowing-devel</Name>
+        <Summary>Development files for libxfce4windowing</Summary>
+        <RuntimeDependencies>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency release="current">libxfce4windowing</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libxfce4windowing-docs</Name>
+        <Summary>Development files for libxfce4windowing</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libxfce4windowing</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/gtk-doc</Path>
+        </Files>
+    </Package>
+    <History>
+        <Update release="1">
+            <Date>2023-01-12</Date>
+            <Version>4.19.1</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
