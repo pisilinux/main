@@ -10,13 +10,12 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("rm -f include/linux/types.h")
+    shelltools.system("rm -f include/linux/{kernel,types}.h")
     autotools.autoreconf("-fiv")
     autotools.configure("--sbindir=/sbin \
                          --libexecdir=/usr/lib \
                          --enable-bpf-compiler \
                          --enable-devel \
-                         --disable-nftables \
                          --enable-libipq \
                          --enable-shared \
                          --enable-static")
