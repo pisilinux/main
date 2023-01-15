@@ -14,6 +14,7 @@ def setup():
     shelltools.export("DEBUG", "-DNDEBUG")
 
     autotools.configure("--enable-readline=yes \
+                         root_libdir=/lib \
                          --enable-blkid=yes")
 
 def build():
