@@ -19,7 +19,8 @@ def install():
     mesontools.install()
         
     pisitools.removeDir("/dev")
-    pisitools.removeDir("/etc")
+    # pisitools.removeDir("/etc")
+    pisitools.remove("/etc/init.d/fuse3")
     
     # Make compat symlinks into /usr/bin
     pisitools.dosym("/usr/bin/fusermount3", "/bin/fusermount3")
@@ -27,7 +28,7 @@ def install():
     
     pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so")
     pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so.3")
-    pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so.3.12.0")
+    pisitools.dosym("/usr/lib/libfuse3.so", "/lib/libfuse3.so.3.13.0")
     
     # Move pkgconfig file to /usr/lib
     #pisitools.domove("/lib/pkgconfig", "/usr/lib/")
