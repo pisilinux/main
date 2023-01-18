@@ -9,7 +9,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.autoreconf("-vif")
-    autotools.configure("--disable-static")
+    autotools.configure("--disable-static --disable-open-zfile")
     
 def build():
     autotools.make()
