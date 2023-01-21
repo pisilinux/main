@@ -9,8 +9,8 @@ from pisi.actionsapi import cmaketools, mesontools, pisitools
 i = ''.join([
     ' -DBUILD_TOOLS=ON',
     ' -DENABLE_LTO=ON',
-    ' -DUSE_CMARK_GFM=OFF',
-    ' -DUSE_CMARK=ON',
+    ' -DUSE_CMARK_GFM=ON',
+    ' -DUSE_CMARK=OFF',
     ' -DCMAKE_BUILD_TYPE=Release',
     ' -DCRE_BUILD_STATIC=OFF',
     ' -DADD_DEBUG_EXTRA_OPTS=OFF',
