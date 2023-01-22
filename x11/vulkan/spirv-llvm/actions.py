@@ -32,7 +32,7 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
 
         options += " -DLLVM_LIBDIR_SUFFIX=32 \
-                             -DCMAKE_INSTALL_BINDIR:PATH=bin32 \
+                             -DCMAKE_INSTALL_BINDIR:PATH=bin32"
 
     cmaketools.configure(options)
 
