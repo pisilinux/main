@@ -16,7 +16,7 @@ def start():
         args.append("-R%s " % config.get("REPEAT_TYPE"))
     args.append(config.get("APPEND", ""))
 
-    startService(command="/usr/sbin/gpm",
+    startService(command="/usr/bin/gpm",
                  args=" ".join(args),
                  donotify=True)
 
