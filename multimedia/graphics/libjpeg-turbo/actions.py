@@ -14,15 +14,18 @@ def setup():
                -DWITH_JPEG8=TRUE \
                -DENABLE_STATIC=FALSE \
                -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib \
-               -DCMAKE_INSTALL_PREFIX=/usr"
+              "
                
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
-        options = "-B build -DCMAKE_INSTALL_DEFAULT_LIBDIR=/usr/lib32 \
+        options += " -DCMAKE_INSTALL_DEFAULT_LIBDIR=/usr/lib32 \
                    -DCMAKE_INSTALL_PREFIX=/emul32"
+
+    else:
+        options += "  -DCMAKE_INSTALL_PREFIX=/usr"
     
     cmaketools.configure(options)
 
@@ -42,6 +45,7 @@ def install():
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/emul32")
         pisitools.dosed("%s/usr/lib32/pkgconfig/*.pc" % get.installDIR(), "emul32", "usr")
+        pisitools.dosed("%s/usr/lib32/cmake/libjpeg-turbo/*.cmake" % get.installDIR(), "emul32", "usr")
         return
     
     # provide jpegint.h as it is required by various software
