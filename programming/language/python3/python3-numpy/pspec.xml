@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>python3-numpy</Name>
@@ -13,18 +13,22 @@
         <IsA>library</IsA>
         <Summary>The fundamental package needed for scientific computing with Python</Summary>
         <Description>Numpy contains a powerful N-dimensional array object, sophisticated (broadcasting) functions, tools for integrating C/C++ and Fortran code, and useful linear algebra, Fourier transform, and random number capabilities.</Description>
-        <Archive sha1sum="d114cbd62939f097940fc765962491239e97ec5f" type="targz">https://github.com/numpy/numpy/archive/v1.21.2.tar.gz</Archive>
+        <Archive sha1sum="65fdaa7e39c3cf75dde5120e6a8f4cd4f0a11399" type="targz">
+            https://files.pythonhosted.org/packages/source/n/numpy/numpy-1.24.1.tar.gz
+        </Archive>
         <BuildDependencies>
             <Dependency>cython3</Dependency>
-            <Dependency>libgfortran</Dependency>
             <Dependency>cblas-devel</Dependency>
+            <Dependency>libgfortran</Dependency>
             <Dependency>lapack-devel</Dependency>
             <Dependency>python3-nose</Dependency>
             <Dependency>python3-devel</Dependency>
+            <Dependency>python3-tomli</Dependency>
             <Dependency>python3-setuptools</Dependency>
-            <!-- For creating documentations
-            <Dependency>python3-sphinx</Dependency>
-            <Dependency>python3-scipy-sphinx-theme</Dependency>-->
+            <Dependency>python3-importlib_metadata</Dependency>
+            <!-- For creating documentations -->
+            <!-- <Dependency>python3-sphinx</Dependency> -->
+            <!-- <Dependency>python3-scipy-sphinx-theme</Dependency> -->
         </BuildDependencies>
     </Source>
 
@@ -34,6 +38,7 @@
         <RuntimeDependencies>
             <Dependency>blas</Dependency>
             <Dependency>cblas</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>lapack</Dependency>
             <Dependency>python3</Dependency>
             <Dependency>libquadmath</Dependency>
@@ -42,11 +47,13 @@
         <Files>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="doc">/usr/share/doc/python3-numpy/README*</Path>
-            <Path fileType="doc">/usr/share/doc/python3-numpy/LICENSE*</Path>
+            <Path fileType="doc">/usr/share/doc/python3-numpy/PKG-INFO</Path>
+            <Path fileType="doc">/usr/share/doc/python3-numpy/README.md</Path>
+            <Path fileType="doc">/usr/share/doc/python3-numpy/THANKS.txt</Path>
+            <Path fileType="doc">/usr/share/doc/python3-numpy/LICENSE.txt</Path>
         </Files>
     </Package>
-    
+
     <Package>
         <Name>python3-numpy-docs</Name>
         <Summary>Documentation files for python3-numpy</Summary>
@@ -59,6 +66,13 @@
     </Package>
 
     <History>
+        <Update release="13">
+            <Date>2023-01-22</Date>
+            <Version>1.24.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="12">
             <Date>2021-10-22</Date>
             <Version>1.21.2</Version>
