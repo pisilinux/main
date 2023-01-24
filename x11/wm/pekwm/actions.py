@@ -6,8 +6,13 @@
 
 from pisi.actionsapi import cmaketools, pisitools, get
 
+i = ''.join([
+    ' -DCMAKE_BUILD_TYPE=RELEASE',
+    ' -DCMAKE_INSTALL_PREFIX=/usr -L '
+    ])
+
 def setup():
-	cmaketools.configure('-DCMAKE_INSTALL_PREFIX=/usr')
+	cmaketools.configure(i)
 
 def build():
 	cmaketools.make()
