@@ -13,7 +13,7 @@ def setup():
     shelltools.system("sed -e 's/^\(SUBDIRS =.*\)examples\(.*\)$/\1\2/' \
                                         -i Makefile.am Makefile.in || die")
     shelltools.system("sed -e 's/ -Werror/ /' -i tests/Makefile.am tests/Makefile.in || die")
-    autotools.autoreconf("-fiv")
+    autotools.autoreconf("-fi")
     autotools.configure()
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
