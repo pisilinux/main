@@ -24,6 +24,7 @@ def setup():
         options += " --bindir=/usr/bin32 \
                      --libdir=/usr/lib32 \
                      --libexecdir=/usr/libexec32 \
+                     -Dexamples=disabled \
                      -Dintrospection=disabled \
                    "
     
