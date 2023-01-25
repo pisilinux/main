@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>pybind11</Name>
@@ -12,33 +12,50 @@
         <IsA>app</IsA>
         <Summary>Seamless operability between C++11 and Python</Summary>
         <Description>Seamless operability between C++11 and Python</Description>
-        <Archive sha1sum="e340be2d61439deaf7bdd4bd273bb8c51b713f26" type="targz">https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz</Archive>
+        <Archive sha1sum="6cd93bee0447ec432803c005fdcdeadc5d425c6d" type="targz">
+            <!-- https://files.pythonhosted.org/packages/source/p/pybind11/pybind11-2.10.3.tar.gz -->
+            https://github.com/pybind/pybind11/archive/refs/tags/v2.10.3.tar.gz
+        </Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
             <Dependency>boost-devel</Dependency>
             <Dependency>python3-devel</Dependency>
+            <!-- <Dependency>python3-pytest</Dependency> -->
+            <!-- <Dependency>python3-sphinx</Dependency> -->
             <Dependency>python3-setuptools</Dependency>
-            <Dependency>python3-pytest</Dependency>
+            <Dependency>python3-importlib_metadata</Dependency>
         </BuildDependencies>
-        <!--
         <Patches>
-            <Patch>pybind11.patch</Patch>
-            <Patch level="1">pybind11.patch</Patch>
+            <!-- <Patch level="1">pybind11.patch</Patch> -->
         </Patches>
-        -->
     </Source>
 
     <Package>
         <Name>pybind11</Name>
         <RuntimeDependencies>
+            <!-- <Dependency></Dependency> -->
         </RuntimeDependencies>
         <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/share</Path>
+            <Path fileType="header">/usr/include/pybind11</Path>
+            <Path fileType="data">/usr/share/cmake/pybind11</Path>
+            <Path fileType="data">/usr/share/pkgconfig/pybind11.pc</Path>
+            <Path fileType="executable">/usr/bin/pybind11-config</Path>
+            <Path fileType="header">/usr/lib/python3.9/site-packages/pybind11/include</Path>
+            <Path fileType="data">/usr/lib/python3.9</Path>
+            <Path fileType="data">/usr/lib/python3.9/site-packages/pybind11/share/cmake</Path>
+            <Path fileType="data">/usr/lib/python3.9/site-packages/pybind11/share/pkgconfig</Path>
+            <Path fileType="data">/usr/share/doc/pybind11</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2023-01-26</Date>
+            <Version>2.10.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="1">
             <Date>2021-03-10</Date>
             <Version>2.6.2</Version>
