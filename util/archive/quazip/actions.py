@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                                           -DQUAZIP_QT_MAJOR_VERSION=5 \
                                             -DBUILD_WITH_QT4:BOOL=OFF")
 
 def build():
