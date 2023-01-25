@@ -7,7 +7,6 @@
 from pisi.actionsapi import pythonmodules, shelltools, pisitools
 
 def setup():
-    pass
     # dodoc method cannot move LICENSE named dir, so i delete the directory
     shelltools.unlinkDir("LICENSE")
     pisitools.dosed("setupext.py", "LICENSE", deleteLine = True)
