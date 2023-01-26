@@ -1,20 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import pythonmodules, cmaketools
+
+j = ''.join([
+    ' -DPYBIND11_FINDPYTHON=ON',
+    ' -DUSE_PYTHON_INCLUDE_DIR=OFF',
+    ' -B_build -L '
+    ])
 
 def setup():
-    cmaketools.configure()
+    cmaketools.configure(j)
 
 def build():
-    cmaketools.make()
+    cmaketools.make("-C _build")
+    pythonmodules.compile(pyVer = "3")
 
 def install():
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dodoc("LICENSE")
+    cmaketools.install("-C _build")
+    pythonmodules.install(pyVer = "3")
