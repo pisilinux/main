@@ -1,27 +1,17 @@
---- bind-9.5.0b2/bin/named/Makefile.in.pie	2008-02-11 17:21:47.000000000 +0100
-+++ bind-9.5.0b2/bin/named/Makefile.in	2008-02-11 17:22:10.000000000 +0100
-@@ -100,8 +100,12 @@ HTMLPAGES =	named.html lwresd.html named
+diff --git a/bin/named/Makefile.am b/bin/named/Makefile.am
+index 57a023b..085f2f7 100644
+--- a/bin/named/Makefile.am
++++ b/bin/named/Makefile.am
+@@ -32,9 +32,12 @@ AM_CPPFLAGS +=				\
+ endif HAVE_LIBXML2
  
- MANOBJS =	${MANPAGES} ${HTMLPAGES}
+ AM_CPPFLAGS +=						\
++	-fpie                                           \
+ 	-DNAMED_LOCALSTATEDIR=\"${localstatedir}\"	\
+ 	-DNAMED_SYSCONFDIR=\"${sysconfdir}\"
  
-+EXT_CFLAGS = -fpie
++AM_LDFLAGS += -pie -Wl,-z,relro,-z,now,-z,nodlopen,-z,noexecstack
 +
- @BIND9_MAKE_RULES@
+ sbin_PROGRAMS = named
  
-+LDFLAGS += -pie -Wl,-z,relro,-z,now,-z,nodlopen,-z,noexecstack
-+
- main.@O@: main.c
- 	${LIBTOOL_MODE_COMPILE} ${CC} ${ALL_CFLAGS} \
- 		-DVERSION=\"${VERSION}\" \
-diff -up bind-9.5.0b2/bin/named/unix/Makefile.in.pie bind-9.5.0b2/bin/named/unix/Makefile.in
---- bind-9.5.0b2/bin/named/unix/Makefile.in.pie	2008-02-11 17:22:21.000000000 +0100
-+++ bind-9.5.0b2/bin/named/unix/Makefile.in	2008-02-11 17:23:00.000000000 +0100
-@@ -19,6 +19,8 @@ srcdir =	@srcdir@
- VPATH =		@srcdir@
- top_srcdir =	@top_srcdir@
- 
-+EXT_CFLAGS = -fpie
-+
- @BIND9_MAKE_INCLUDES@
- 
- CINCLUDES =	-I${srcdir}/include -I${srcdir}/../include \
+ nodist_named_SOURCES = xsl.c
