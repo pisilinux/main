@@ -16,7 +16,8 @@ directories = ("/var/named", \
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     if not os.path.exists("/etc/bind/rndc.key"):
-        os.system("/usr/sbin/rndc-confgen -r /dev/urandom -a -u named")
+        os.system("/usr/sbin/rndc-confgen -t /dev/urandom -a -u named")
+        # os.system("/usr/sbin/rndc-confgen -r /dev/urandom -a -u named")
 
     # Ownerships
     for d in directories:

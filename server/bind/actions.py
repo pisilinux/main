@@ -20,13 +20,13 @@ shelltools.export("CPPFLAGS", "%s -DDIG_SIGCHASE" % get.CXXFLAGS())
 def setup():
     shelltools.makedirs("m4")
     # Fix PATHs in manpages
-    pisitools.dosed("bin/named/named.8", "/etc/named.conf", "/etc/bind/named.conf")
-    pisitools.dosed("bin/check/named-checkconf.8", "/etc/named.conf", "/etc/bind/named.conf")
-    pisitools.dosed("bin/rndc/rndc.8", "/etc/rndc.conf", "/etc/bind/rndc.conf")
-    pisitools.dosed("bin/rndc/rndc.8", "/etc/rndc.key", "/etc/bind/rndc.key")
+    # pisitools.dosed("bin/named/named.8", "/etc/named.conf", "/etc/bind/named.conf")
+    # pisitools.dosed("bin/check/named-checkconf.8", "/etc/named.conf", "/etc/bind/named.conf")
+    # pisitools.dosed("bin/rndc/rndc.8", "/etc/rndc.conf", "/etc/bind/rndc.conf")
+    # pisitools.dosed("bin/rndc/rndc.8", "/etc/rndc.key", "/etc/bind/rndc.key")
 
     # Adjust version
-    pisitools.dosed("version", "^RELEASEVER=.*$", "RELEASEVER=Pisi Linux-1.0")
+    # pisitools.dosed("version", "^RELEASEVER=.*$", "RELEASEVER=Pisi Linux-1.0")
 
     libtools.libtoolize("-cf")
     autotools.aclocal("-I m4")
@@ -35,17 +35,26 @@ def setup():
     autotools.configure("--localstatedir=/var \
                          --sysconfdir=/etc/bind \
                          --with-openssl \
-                         --with-libtool \
                          --with-pic \
-                         --with-randomdev=/dev/urandom \
                          --enable-linux-caps \
-                         --enable-threads \
                          --includedir=/usr/include/bind9 \
-                         --enable-ipv6 \
                          --enable-largefile \
                          --disable-static \
+                         --with-randomdev=/dev/urandom \
+                         --with-libtool \
+                         --enable-threads \
+                         --enable-ipv6 \
+                         --with-maxminddb \
+                         --with-tuning=large \
+                         --enable-fixed-rrset \
+                         --enable-full-report \
+                         --with-python=/usr/bin/python3 \
+                         NAMED_CONF=/etc/bind/named.conf \
+                         DRNDC_CONFFILE=/etc/bind/rndc.conf \
+                         DRNDC_KEYFILE=/etc/bind/rndc.key \
                          PYTHON=/usr/bin/python3")
-    
+
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -54,8 +63,10 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    # pisitools.insinto("/etc/bind", "bin/tests/system/common/rndc.key")
+
     # Prepare chroot jail
-    for d in ("dev", "etc/bind", "etc/pki/dnssec-keys", "lib/bind", "var/tmp", "var/log", "var/run/named", "var/named"):
+    for d in ("dev", "etc/bind", "etc/pki/dnssec-keys", "lib/bind", "var/tmp", "var/log", "var/run/named", "var/named", "etc/bind/rndc.key"):
         pisitools.dodir("%s/%s" % (CHROOT, d))
 
     # At least drop a file in it
@@ -73,7 +84,7 @@ def install():
         pisitools.dosym(src, dest)
 
     # Documentation
-    pisitools.dodoc("CHANGES", "COPYRIGHT", "README")
-    pisitools.dodoc("doc/misc/*", "contrib/scripts/named-bootconf.sh", "contrib/scripts/nanny.pl")
+    pisitools.dodoc("CHANGES", "COPYRIGHT", "README*")
+    # pisitools.dodoc("doc/misc/*", "contrib/scripts/named-bootconf.sh", "contrib/scripts/nanny.pl")
     pisitools.dohtml("doc/arm/*")
-    pisitools.remove("/usr/share/doc/%s/Makefile*" % get.srcNAME())
+    # pisitools.remove("/usr/share/doc/%s/Makefile*" % get.srcNAME())
