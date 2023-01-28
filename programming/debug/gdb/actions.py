@@ -45,6 +45,7 @@ def install():
         pisitools.remove("/usr/include/%s.h" % hea)
 
     pisitools.remove("/usr/share/info/bfd.info")
+    pisitools.remove("/usr/share/info/ctf-spec.info")
 
     shelltools.cd("..")
     pisitools.dodoc("README*", "COPYING*", "ChangeLog*")
