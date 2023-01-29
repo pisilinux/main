@@ -2,22 +2,17 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-
-from pisi.actionsapi import get
-from pisi.actionsapi import mesontools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    mesontools.configure("-Ddocs=false \
-                          -Dexiv2=enabled \
-                          -Dgdk-pixbuf=enabled")
+    mesontools.configure("-Dexiv2=enabled -Dgdk-pixbuf=enabled -Ddocs=false")
 
 def build():
     mesontools.build()
-    
+
 def install():
     mesontools.install()
-    
-    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LESSER")
+
+    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LESSER", "NEWS")
