@@ -4,10 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools,  pisitools
 
 j = ''.join([
     ' -DUSE_Z3=ON',
@@ -19,25 +16,24 @@ j = ''.join([
     ' -DBUILD_SHARED_LIBS=ON',
     ' -DBUILD_TESTS=OFF',
     ' -DCMAKE_BUILD_TYPE=Release',
-    ' -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo',
+    ' -DCMAKE_CONFIGURATION_TYPES=Release',
     ' -DUSE_BUNDLED_TINYXML2=OFF',
     ' -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON',
     ' -DENABLE_CHECK_INTERNAL=ON',
-    ' -DWITH_QCHART=ON -L '
+    ' -DWITH_QCHART=ON',
+    ' -B_build -G Ninja -L '
     ])
 
 def setup():
-	cmaketools.configure("-Bbuild %s" % j)
+	cmaketools.configure(j)
 
 def build():
-	shelltools.cd("build")
-	cmaketools.make()
+	mesontools.build("-C _build")
 
 def check():
 	pass
 
 def install():
-	shelltools.cd("build")
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+	mesontools.install("-C _build")
 
-	pisitools.dodoc("../AUTHORS")
+	pisitools.dodoc("AUTHORS")
