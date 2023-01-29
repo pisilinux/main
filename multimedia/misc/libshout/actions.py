@@ -2,17 +2,20 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt.
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import autotools, pisitools
+
+i = ''.join([
+    ' --enable-theora',
+    ' --enable-speex',
+    ' --disable-static '
+    ])
 
 def setup():
     autotools.autoreconf("-fi")
-    autotools.configure("--disable-static \
-                         --enable-theora \
-                         --enable-speex")
-    
+    autotools.configure(i)
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -20,5 +23,3 @@ def build():
 
 def install():
     autotools.install()
-
-    #pisitools.removeDir("/usr/bin")
