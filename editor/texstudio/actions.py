@@ -12,7 +12,8 @@ j = "USE_SYSTEM_QUAZIP=1 USE_SYSTEM_HUNSPELL=1 INTERNAL_TERMINAL=1 \
 	  QUAZIP_INCLUDE='usr/include/QuaZip-Qt5-1.4/quazip'"
 
 def setup():
-	qt5.configure("texstudio.pro", parameters='%s' % j)
+	#qt5.configure("texstudio.pro", parameters='%s' % j)
+	qt5.configure()
 
 def build():
 	qt5.make()
