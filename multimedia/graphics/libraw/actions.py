@@ -18,4 +18,6 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    pisitools.dosym("/usr/lib/libraw.so.23", "/usr/lib/libraw.so.20")
+
     pisitools.dodoc("README*")
