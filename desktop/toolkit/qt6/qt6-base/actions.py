@@ -69,6 +69,7 @@ def setup():
                     -DQT_FEATURE_system_zlib=ON \
                     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
                     -DCMAKE_MESSAGE_LOG_LEVEL=STATUS \
+                    -DQT_FEATURE_system_xcb_xinput=ON \
                     -DQT_FEATURE_openssl_linked=ON" % (qt6.prefix, bindirQt6, qt6.headerdir, qt6.archdatadir, qt6.docdir, qt6.datadir, qt6.mkspecsdir, qt6.examplesdir)
                     #-G Ninja \
                     #-DQT_FEATURE_directfb=ON \
