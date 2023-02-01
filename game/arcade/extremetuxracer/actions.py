@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-WorkDir = "etr-0.8.1"
+WorkDir = "etr-0.8.2"
 
 def setup():
     autotools.configure("--prefix=/usr")
