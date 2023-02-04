@@ -26,8 +26,8 @@ def setup():
 	cmaketools.configure(i)
 
 def build():
-	# fix incorrect g++ options
-	shelltools.system("find . -iname 'link.txt' -exec sed -i 's: -R: -Wl,-R:g' {} \;")
+	# fix incorrect g++ options //not required for gcc12
+	# shelltools.system("find . -iname 'link.txt' -exec sed -i 's: -R: -Wl,-R:g' {} \;")
 	cmaketools.make("-C _build")
 
 def install():
