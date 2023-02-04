@@ -34,7 +34,7 @@ def install():
     pisitools.insinto("/etc/fonts", "fonts.conf", "fonts.conf.new")
 
     enabled_configs = ("10-sub-pixel-rgb.conf", "70-yes-bitmaps.conf")
-    disabled_configs = ("10-no-sub-pixel.conf",)
+    disabled_configs = ("10-sub-pixel-none.conf",)
 
     # for cfg in enabled_configs:
         # pisitools.dosym("/usr/share/fontconfig/conf.avail/%s" % cfg, "/etc/fonts/conf.d/%s" % cfg)
