@@ -8,6 +8,7 @@ from pisi.actionsapi import cmaketools, mesontools, pisitools
 
 i = ''.join([
     ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DUSE_QT=QT6',
     ' -B_build -G Ninja -L '
     ])
 
