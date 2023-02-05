@@ -8,13 +8,14 @@ from pisi.actionsapi import cmaketools, mesontools,  pisitools
 
 j = ''.join([
     ' -DUSE_Z3=ON',
+    ' -DUSE_QT6=ON',
     ' -DUSE_BOOST=ON',
     ' -DUSE_THREADS=ON',
     ' -DHAVE_RULES=ON',
     ' -DPYTHON_EXECUTABLE=/usr/bin/python3',
     ' -DBUILD_GUI=ON',
     ' -DBUILD_SHARED_LIBS=ON',
-    ' -DBUILD_TESTS=OFF',
+    ' -DBUILD_TESTS=ON',
     ' -DCMAKE_BUILD_TYPE=Release',
     ' -DCMAKE_CONFIGURATION_TYPES=Release',
     ' -DUSE_BUNDLED_TINYXML2=OFF',
