@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>libdeflate</Name>
+		<Homepage>https://github.com/ebiggers/libdeflate</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<IsA>library</IsA>
+		<PartOf>util.archive</PartOf>
+		<Summary>Heavily optimized library for DEFLATE/zlib/gzip compression and decompression.</Summary>
+		<Description>libdeflate is a library for fast, whole-buffer DEFLATE-based compression and decompression.</Description>
+		<Archive sha1sum="239e5db41261d722f20682a1cddf5839e8e05edf" type="targz">
+			https://github.com/ebiggers/libdeflate/archive/refs/tags/v1.17.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>gzip</Dependency>
+			<Dependency>zlib-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>libdeflate</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib/libdeflate.so*</Path>
+			<Path fileType="data">/usr/share/doc/libdeflate</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libdeflate-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">libdeflate</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="data">/usr/lib/cmake/libdeflate</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/libdeflate.pc</Path>
+			<Path fileType="header">/usr/include/libdeflate.h</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2023-02-08</Date>
+			<Version>1.17</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>
