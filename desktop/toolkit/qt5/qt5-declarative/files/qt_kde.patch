@@ -12,34 +12,34 @@ index b65b994d6c..15a8cd6878 100644
          }
      }
 diff --git a/src/qml/jsruntime/qv4qobjectwrapper.cpp b/src/qml/jsruntime/qv4qobjectwrapper.cpp
-index 9899c9274e..272b85069f 100644
+index e57cdd8278..94613598af 100644
 --- a/src/qml/jsruntime/qv4qobjectwrapper.cpp
 +++ b/src/qml/jsruntime/qv4qobjectwrapper.cpp
-@@ -1160,8 +1160,7 @@ void Heap::QObjectWrapper::markObjects(Heap::Base *that, QV4::MarkStack *markSta
+@@ -1145,8 +1145,7 @@ void Heap::QObjectWrapper::markObjects(Heap::Base *that, QV4::MarkStack *markSta
  void QObjectWrapper::destroyObject(bool lastCall)
  {
      Heap::QObjectWrapper *h = d();
 -    if (!h->internalClass)
 -        return; // destroyObject already got called
 +    Q_ASSERT(h->internalClass);
- 
+
      if (h->object()) {
          QQmlData *ddata = QQmlData::get(h->object(), false);
-@@ -1191,7 +1190,7 @@ void QObjectWrapper::destroyObject(bool lastCall)
+@@ -1176,7 +1175,7 @@ void QObjectWrapper::destroyObject(bool lastCall)
          }
      }
- 
+
 -    h->~Data();
 +    h->destroy();
  }
- 
- 
+
+
 diff --git a/src/qml/memory/qv4mm.cpp b/src/qml/memory/qv4mm.cpp
 index 06caf04e5a..da149a67c4 100644
 --- a/src/qml/memory/qv4mm.cpp
 +++ b/src/qml/memory/qv4mm.cpp
 @@ -981,7 +981,7 @@ void MemoryManager::sweep(bool lastSweep, ClassDestroyStatsCallback classCountPt
- 
+
      if (MultiplyWrappedQObjectMap *multiplyWrappedQObjects = engine->m_multiplyWrappedQObjects) {
          for (MultiplyWrappedQObjectMap::Iterator it = multiplyWrappedQObjects->begin(); it != multiplyWrappedQObjects->end();) {
 -            if (!it.value().isNullOrUndefined())
@@ -47,6 +47,36 @@ index 06caf04e5a..da149a67c4 100644
                  it = multiplyWrappedQObjects->erase(it);
              else
                  ++it;
+diff --git a/src/qml/qml/qqmltypewrapper.cpp b/src/qml/qml/qqmltypewrapper.cpp
+index 175de8b936..a6ba4b8cb3 100644
+--- a/src/qml/qml/qqmltypewrapper.cpp
++++ b/src/qml/qml/qqmltypewrapper.cpp
+@@ -419,8 +419,10 @@ ReturnedValue QQmlTypeWrapper::virtualInstanceOf(const Object *typeObject, const
+             return Encode(false);
+
+         QQmlRefPointer<QQmlTypeData> td = qenginepriv->typeLoader.getType(typeWrapper->d()->type().sourceUrl());
+-        ExecutableCompilationUnit *cu = td->compilationUnit();
+-        myQmlType = qenginepriv->metaObjectForType(cu->metaTypeId);
++        if (ExecutableCompilationUnit *cu = td->compilationUnit())
++            myQmlType = qenginepriv->metaObjectForType(cu->metaTypeId);
++        else
++            return Encode(false); // It seems myQmlType has some errors, so we could not compile it.
+     } else {
+         myQmlType = qenginepriv->metaObjectForType(myTypeId);
+     }
+diff --git a/src/qml/types/qqmlconnections.cpp b/src/qml/types/qqmlconnections.cpp
+index 29ed62cd39..aba930dfe1 100644
+--- a/src/qml/types/qqmlconnections.cpp
++++ b/src/qml/types/qqmlconnections.cpp
+@@ -338,7 +338,7 @@ void QQmlConnections::connectSignalsToMethods()
+                    && propName.at(2).isUpper()) {
+             qmlWarning(this) << tr("Detected function \"%1\" in Connections element. "
+                                    "This is probably intended to be a signal handler but no "
+-                                   "signal of the target matches the name.").arg(propName);
++                                   "signal of the \"%2\" target matches the name.").arg(propName).arg(target->metaObject()->className());
+         }
+     }
+ }
 diff --git a/src/qmlmodels/qqmldelegatemodel.cpp b/src/qmlmodels/qqmldelegatemodel.cpp
 index 2079a8ed04..a577cb2351 100644
 --- a/src/qmlmodels/qqmldelegatemodel.cpp
@@ -80,7 +110,7 @@ index 2079a8ed04..a577cb2351 100644
 @@ -1973,6 +1985,38 @@ void QQmlDelegateModel::_q_rowsMoved(
      }
  }
- 
+
 +void QQmlDelegateModel::_q_columnsInserted(const QModelIndex &parent, int begin, int end)
 +{
 +    Q_D(QQmlDelegateModel);
@@ -140,10 +170,10 @@ index 85719fdc80..78e2ab302c 100644
  #include "QtQuick/qquicktextdocument.h"
 +#include "QtQuick/qquickrendercontrol.h"
  QT_BEGIN_NAMESPACE
- 
+
  #if QT_CONFIG(accessibility)
 @@ -57,7 +58,19 @@ QAccessibleQuickItem::QAccessibleQuickItem(QQuickItem *item)
- 
+
  QWindow *QAccessibleQuickItem::window() const
  {
 -    return item()->window();
@@ -161,7 +191,7 @@ index 85719fdc80..78e2ab302c 100644
 +
 +    return window;
  }
- 
+
  int QAccessibleQuickItem::childCount() const
 @@ -113,19 +126,15 @@ QAccessibleInterface *QAccessibleQuickItem::childAt(int x, int y) const
  QAccessibleInterface *QAccessibleQuickItem::parent() const
@@ -173,7 +203,7 @@ index 85719fdc80..78e2ab302c 100644
 +    QQuickItem *ci = itemWindow ? itemWindow->contentItem() : nullptr;
      while (parent && !QQuickItemPrivate::get(parent)->isAccessible && parent != ci)
          parent = parent->parentItem();
- 
+
      if (parent) {
          if (parent == ci) {
 -            // Jump out to the scene widget if the parent is the root item.
@@ -190,7 +220,7 @@ index 85719fdc80..78e2ab302c 100644
 @@ -188,7 +197,7 @@ QAccessible::State QAccessibleQuickItem::state() const
      QRect viewRect_ = viewRect();
      QRect itemRect = rect();
- 
+
 -    if (viewRect_.isNull() || itemRect.isNull() || !item()->window() || !item()->window()->isVisible() ||!item()->isVisible() || qFuzzyIsNull(item()->opacity()))
 +    if (viewRect_.isNull() || itemRect.isNull() || !window() || !window()->isVisible() ||!item()->isVisible() || qFuzzyIsNull(item()->opacity()))
          state.invisible = true;
@@ -206,15 +236,15 @@ index 85719fdc80..78e2ab302c 100644
 +    }
      return state;
  }
- 
+
 diff --git a/src/quick/accessible/qaccessiblequickview_p.h b/src/quick/accessible/qaccessiblequickview_p.h
 index 39ffcaf39c..8baa01330c 100644
 --- a/src/quick/accessible/qaccessiblequickview_p.h
 +++ b/src/quick/accessible/qaccessiblequickview_p.h
 @@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
- 
+
  #if QT_CONFIG(accessibility)
- 
+
 -class QAccessibleQuickWindow : public QAccessibleObject
 +class Q_QUICK_EXPORT QAccessibleQuickWindow : public QAccessibleObject
  {
@@ -227,18 +257,18 @@ index 8321fcfeed..383078b3b9 100644
 @@ -481,7 +481,9 @@ void QQuickDragAttached::setKeys(const QStringList &keys)
      \qmlattachedproperty stringlist QtQuick::Drag::mimeData
      \since 5.2
- 
+
 -    This property holds a map of mimeData that is used during startDrag.
 +    This property holds a map from mime type to data that is used during startDrag.
 +    The mime data needs to be a \c string, or an \c ArrayBuffer with the data encoded
 +    according to the mime type.
  */
- 
+
  QVariantMap QQuickDragAttached::mimeData() const
 @@ -766,8 +768,12 @@ Qt::DropAction QQuickDragAttachedPrivate::startDrag(Qt::DropActions supportedAct
      QDrag *drag = new QDrag(source ? source : q);
      QMimeData *mimeData = new QMimeData();
- 
+
 -    for (auto it = externalMimeData.cbegin(), end = externalMimeData.cend(); it != end; ++it)
 -        mimeData->setData(it.key(), it.value().toString().toUtf8());
 +    for (auto it = externalMimeData.cbegin(), end = externalMimeData.cend(); it != end; ++it) {
@@ -247,217 +277,9 @@ index 8321fcfeed..383078b3b9 100644
 +        else
 +            mimeData->setData(it.key(), it.value().toString().toUtf8());
 +    }
- 
+
      drag->setMimeData(mimeData);
      if (pixmapLoader.isReady()) {
-diff --git a/src/quick/items/qquickflickable.cpp b/src/quick/items/qquickflickable.cpp
-index e12e85db64..2fa3b7142c 100644
---- a/src/quick/items/qquickflickable.cpp
-+++ b/src/quick/items/qquickflickable.cpp
-@@ -62,6 +62,8 @@
- QT_BEGIN_NAMESPACE
- 
- Q_DECLARE_LOGGING_CATEGORY(lcHandlerParent)
-+Q_LOGGING_CATEGORY(lcWheel, "qt.quick.flickable.wheel")
-+Q_LOGGING_CATEGORY(lcVel, "qt.quick.flickable.velocity")
- 
- // FlickThreshold determines how far the "mouse" must have moved
- // before we perform a flick.
-@@ -263,7 +265,8 @@ QQuickFlickablePrivate::QQuickFlickablePrivate()
-     , deceleration(QML_FLICK_DEFAULTDECELERATION)
-     , maxVelocity(QML_FLICK_DEFAULTMAXVELOCITY), reportedVelocitySmoothing(100)
-     , delayedPressEvent(nullptr), pressDelay(0), fixupDuration(400)
--    , flickBoost(1.0), fixupMode(Normal), vTime(0), visibleArea(nullptr)
-+    , flickBoost(1.0), initialWheelFlickDistance(qApp->styleHints()->wheelScrollLines() * 24)
-+    , fixupMode(Normal), vTime(0), visibleArea(nullptr)
-     , flickableDirection(QQuickFlickable::AutoFlickDirection)
-     , boundsBehavior(QQuickFlickable::DragAndOvershootBounds)
-     , boundsMovement(QQuickFlickable::FollowBoundsBehavior)
-@@ -531,10 +534,14 @@ void QQuickFlickablePrivate::updateBeginningEnd()
-     if (atBeginning != vData.atBeginning) {
-         vData.atBeginning = atBeginning;
-         atYBeginningChange = true;
-+        if (!vData.moving && atBeginning)
-+            vData.smoothVelocity.setValue(0);
-     }
-     if (atEnd != vData.atEnd) {
-         vData.atEnd = atEnd;
-         atYEndChange = true;
-+        if (!vData.moving && atEnd)
-+            vData.smoothVelocity.setValue(0);
-     }
- 
-     // Horizontal
-@@ -547,10 +554,14 @@ void QQuickFlickablePrivate::updateBeginningEnd()
-     if (atBeginning != hData.atBeginning) {
-         hData.atBeginning = atBeginning;
-         atXBeginningChange = true;
-+        if (!hData.moving && atBeginning)
-+            hData.smoothVelocity.setValue(0);
-     }
-     if (atEnd != hData.atEnd) {
-         hData.atEnd = atEnd;
-         atXEndChange = true;
-+        if (!hData.moving && atEnd)
-+            hData.smoothVelocity.setValue(0);
-     }
- 
-     if (vData.extentsChanged) {
-@@ -1489,6 +1500,7 @@ void QQuickFlickable::wheelEvent(QWheelEvent *event)
-         d->hData.velocity = 0;
-         d->timer.start();
-         d->maybeBeginDrag(currentTimestamp, event->position());
-+        d->lastPosTime = -1;
-         break;
-     case Qt::NoScrollPhase: // default phase with an ordinary wheel mouse
-     case Qt::ScrollUpdate:
-@@ -1515,20 +1527,34 @@ void QQuickFlickable::wheelEvent(QWheelEvent *event)
-         return;
-     }
- 
-+    qreal elapsed = qreal(currentTimestamp - d->lastPosTime) / qreal(1000);
-+    if (elapsed <= 0) {
-+        d->lastPosTime = currentTimestamp;
-+        qCDebug(lcWheel) << "insufficient elapsed time: can't calculate velocity" << elapsed;
-+        return;
-+    }
-+
-     if (event->source() == Qt::MouseEventNotSynthesized || event->pixelDelta().isNull()) {
--        // physical mouse wheel, so use angleDelta
-+        // no pixel delta (physical mouse wheel, or "dumb" touchpad), so use angleDelta
-         int xDelta = event->angleDelta().x();
-         int yDelta = event->angleDelta().y();
-+        // For a single "clicky" wheel event (angleDelta +/- 120),
-+        // we want flick() to end up moving a distance proportional to QStyleHints::wheelScrollLines().
-+        // The decel algo from there is
-+        // qreal dist = v2 / (accel * 2.0);
-+        // i.e. initialWheelFlickDistance = (120 / dt)^2 / (deceleration * 2)
-+        // now solve for dt:
-+        // dt = 120 / sqrt(deceleration * 2 * initialWheelFlickDistance)
-+        if (!isMoving())
-+            elapsed = 120 / qSqrt(d->deceleration * 2 * d->initialWheelFlickDistance);
-         if (yflick() && yDelta != 0) {
--            bool valid = false;
--            if (yDelta > 0 && contentY() > -minYExtent()) {
--                d->vData.velocity = qMax(yDelta*2 - d->vData.smoothVelocity.value(), qreal(d->maxVelocity/4));
--                valid = true;
--            } else if (yDelta < 0 && contentY() < -maxYExtent()) {
--                d->vData.velocity = qMin(yDelta*2 - d->vData.smoothVelocity.value(), qreal(-d->maxVelocity/4));
--                valid = true;
--            }
--            if (valid) {
-+            qreal instVelocity = yDelta / elapsed;
-+            // if the direction has changed, start over with filtering, to allow instant movement in the opposite direction
-+            if ((instVelocity < 0 && d->vData.velocity > 0) || (instVelocity > 0 && d->vData.velocity < 0))
-+                d->vData.velocityBuffer.clear();
-+            d->vData.addVelocitySample(instVelocity, d->maxVelocity);
-+            d->vData.updateVelocity();
-+            if ((yDelta > 0 && contentY() > -minYExtent()) || (yDelta < 0 && contentY() < -maxYExtent())) {
-                 d->flickY(d->vData.velocity);
-                 d->flickingStarted(false, true);
-                 if (d->vData.flicking) {
-@@ -1539,15 +1565,13 @@ void QQuickFlickable::wheelEvent(QWheelEvent *event)
-             }
-         }
-         if (xflick() && xDelta != 0) {
--            bool valid = false;
--            if (xDelta > 0 && contentX() > -minXExtent()) {
--                d->hData.velocity = qMax(xDelta*2 - d->hData.smoothVelocity.value(), qreal(d->maxVelocity/4));
--                valid = true;
--            } else if (xDelta < 0 && contentX() < -maxXExtent()) {
--                d->hData.velocity = qMin(xDelta*2 - d->hData.smoothVelocity.value(), qreal(-d->maxVelocity/4));
--                valid = true;
--            }
--            if (valid) {
-+            qreal instVelocity = xDelta / elapsed;
-+            // if the direction has changed, start over with filtering, to allow instant movement in the opposite direction
-+            if ((instVelocity < 0 && d->hData.velocity > 0) || (instVelocity > 0 && d->hData.velocity < 0))
-+                d->hData.velocityBuffer.clear();
-+            d->hData.addVelocitySample(instVelocity, d->maxVelocity);
-+            d->hData.updateVelocity();
-+            if ((xDelta > 0 && contentX() > -minXExtent()) || (xDelta < 0 && contentX() < -maxXExtent())) {
-                 d->flickX(d->hData.velocity);
-                 d->flickingStarted(true, false);
-                 if (d->hData.flicking) {
-@@ -1562,18 +1586,13 @@ void QQuickFlickable::wheelEvent(QWheelEvent *event)
-         int xDelta = event->pixelDelta().x();
-         int yDelta = event->pixelDelta().y();
- 
--        qreal elapsed = qreal(currentTimestamp - d->lastPosTime) / 1000.;
--        if (elapsed <= 0) {
--            d->lastPosTime = currentTimestamp;
--            return;
--        }
-         QVector2D velocity(xDelta / elapsed, yDelta / elapsed);
--        d->lastPosTime = currentTimestamp;
-         d->accumulatedWheelPixelDelta += QVector2D(event->pixelDelta());
-         d->drag(currentTimestamp, event->type(), event->position(), d->accumulatedWheelPixelDelta,
-                 true, !d->scrollingPhase, true, velocity);
-         event->accept();
-     }
-+    d->lastPosTime = currentTimestamp;
- 
-     if (!event->isAccepted())
-         QQuickItem::wheelEvent(event);
-@@ -1744,6 +1763,10 @@ void QQuickFlickable::componentComplete()
-         setContentX(-minXExtent());
-     if (!d->vData.explicitValue && d->vData.startMargin != 0.)
-         setContentY(-minYExtent());
-+    if (lcWheel().isDebugEnabled() || lcVel().isDebugEnabled()) {
-+        d->timeline.setObjectName(QLatin1String("timeline for Flickable ") + objectName());
-+        d->velocityTimeline.setObjectName(QLatin1String("velocity timeline for Flickable ") + objectName());
-+    }
- }
- 
- void QQuickFlickable::viewportMoved(Qt::Orientations orient)
-@@ -2504,9 +2527,23 @@ void QQuickFlickable::setMaximumFlickVelocity(qreal v)
- 
- /*!
-     \qmlproperty real QtQuick::Flickable::flickDeceleration
--    This property holds the rate at which a flick will decelerate.
--
--    The default value is platform dependent.
-+    This property holds the rate at which a flick will decelerate:
-+    the higher the number, the faster it slows down when the user stops
-+    flicking via touch, touchpad or mouse wheel. For example 0.0001 is nearly
-+    "frictionless", and 10000 feels quite "sticky".
-+
-+    The default value is platform dependent. Values of zero or less are not allowed.
-+
-+    \note For touchpad flicking, some platforms drive Flickable directly by
-+    sending QWheelEvents with QWheelEvent::phase() being \c Qt::ScrollMomentum,
-+    after the user has released all fingers from the touchpad. In that case,
-+    the operating system is controlling the deceleration, and this property has
-+    no effect.
-+
-+    \note For mouse wheel scrolling, and for gesture scrolling on touchpads
-+    that do not have a momentum phase, extremely large values of
-+    flickDeceleration can make Flickable very resistant to scrolling,
-+    especially if \l maximumFlickVelocity is too small.
- */
- qreal QQuickFlickable::flickDeceleration() const
- {
-@@ -2519,7 +2556,7 @@ void QQuickFlickable::setFlickDeceleration(qreal deceleration)
-     Q_D(QQuickFlickable);
-     if (deceleration == d->deceleration)
-         return;
--    d->deceleration = deceleration;
-+    d->deceleration = qMax(0.001, deceleration);
-     emit flickDecelerationChanged();
- }
- 
-diff --git a/src/quick/items/qquickflickable_p_p.h b/src/quick/items/qquickflickable_p_p.h
-index 414c9c33d6..6163613493 100644
---- a/src/quick/items/qquickflickable_p_p.h
-+++ b/src/quick/items/qquickflickable_p_p.h
-@@ -241,6 +241,7 @@ public:
-     int pressDelay;
-     int fixupDuration;
-     qreal flickBoost;
-+    qreal initialWheelFlickDistance;
- 
-     enum FixupMode { Normal, Immediate, ExtentChanged };
-     FixupMode fixupMode;
 diff --git a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
 index 75f1457816..dec0ae19ae 100644
 --- a/src/quick/items/qquickitem.cpp
@@ -467,7 +289,7 @@ index 75f1457816..dec0ae19ae 100644
  #include <QtGui/qpa/qplatformtheme.h>
  #include <QtCore/qloggingcategory.h>
 +#include <QtCore/private/qduplicatetracker_p.h>
- 
+
  #include <private/qqmlglobal_p.h>
  #include <private/qqmlengine_p.h>
 @@ -2326,6 +2327,7 @@ QQuickItem::QQuickItem(QQuickItemPrivate &dd, QQuickItem *parent)
@@ -475,7 +297,7 @@ index 75f1457816..dec0ae19ae 100644
  {
      Q_D(QQuickItem);
 +    d->inDestructor = true;
- 
+
      if (d->windowRefCount > 1)
          d->windowRefCount = 1; // Make sure window is set to null in next call to derefWindow().
 @@ -2526,6 +2528,7 @@ QQuickItem* QQuickItemPrivate::nextPrevItemInTabFocusChain(QQuickItem *item, boo
@@ -499,7 +321,7 @@ index 75f1457816..dec0ae19ae 100644
              if (item == contentItem) {
                  qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: looped, return contentItem";
 @@ -2689,9 +2695,8 @@ void QQuickItem::setParentItem(QQuickItem *parentItem)
- 
+
          const bool wasVisible = isVisible();
          op->removeChild(this);
 -        if (wasVisible) {
@@ -510,9 +332,9 @@ index 75f1457816..dec0ae19ae 100644
          QQuickWindowPrivate::get(d->window)->parentlessItems.remove(this);
      }
 @@ -2768,8 +2773,9 @@ void QQuickItem::setParentItem(QQuickItem *parentItem)
- 
+
      d->itemChange(ItemParentHasChanged, d->parentItem);
- 
+
 -    emit parentChanged(d->parentItem);
 -    if (isVisible() && d->parentItem)
 +    if (!d->inDestructor)
@@ -520,16 +342,16 @@ index 75f1457816..dec0ae19ae 100644
 +    if (isVisible() && d->parentItem && !QQuickItemPrivate::get(d->parentItem)->inDestructor)
          emit d->parentItem->visibleChildrenChanged();
  }
- 
+
 @@ -2965,7 +2971,8 @@ void QQuickItemPrivate::removeChild(QQuickItem *child)
- 
+
      itemChange(QQuickItem::ItemChildRemovedChange, child);
- 
+
 -    emit q->childrenChanged();
 +    if (!inDestructor)
 +        emit q->childrenChanged();
  }
- 
+
  void QQuickItemPrivate::refWindow(QQuickWindow *c)
 @@ -3194,6 +3201,7 @@ QQuickItemPrivate::QQuickItemPrivate()
      , touchEnabled(false)
@@ -551,7 +373,7 @@ index 75f1457816..dec0ae19ae 100644
 +    }
 +#endif
  }
- 
+
  QQuickStateGroup *QQuickItemPrivate::_states()
 @@ -6106,9 +6121,11 @@ bool QQuickItemPrivate::setEffectiveVisibleRecur(bool newEffectiveVisible)
          QAccessible::updateAccessibility(&ev);
@@ -565,12 +387,12 @@ index 75f1457816..dec0ae19ae 100644
 +        if (childVisibilityChanged)
 +            emit q->visibleChildrenChanged();
 +    }
- 
+
      return true;    // effective visibility DID change
  }
 @@ -6157,6 +6174,15 @@ void QQuickItemPrivate::setEffectiveEnableRecur(QQuickItem *scope, bool newEffec
      }
- 
+
      itemChange(QQuickItem::ItemEnabledHasChanged, effectiveEnable);
 +#if QT_CONFIG(accessibility)
 +    if (isAccessible) {
@@ -583,7 +405,7 @@ index 75f1457816..dec0ae19ae 100644
 +#endif
      emit q->enabledChanged();
  }
- 
+
 diff --git a/src/quick/items/qquickitem_p.h b/src/quick/items/qquickitem_p.h
 index 841d91bb40..ade8fb61f2 100644
 --- a/src/quick/items/qquickitem_p.h
@@ -593,15 +415,15 @@ index 841d91bb40..ade8fb61f2 100644
      bool touchEnabled:1;
      bool hasCursorHandler:1;
 +    quint32 inDestructor:1; // has entered ~QQuickItem
- 
+
      enum DirtyType {
          TransformOrigin         = 0x00000001,
 diff --git a/src/quick/items/qquickitemview.cpp b/src/quick/items/qquickitemview.cpp
-index 13e7b87049..f8ad168a17 100644
+index 010a0152e1..f8ad168a17 100644
 --- a/src/quick/items/qquickitemview.cpp
 +++ b/src/quick/items/qquickitemview.cpp
 @@ -1785,7 +1785,7 @@ void QQuickItemViewPrivate::refill(qreal from, qreal to)
- 
+
      do {
          bufferPause.stop();
 -        if (currentChanges.hasPendingChanges() || bufferedChanges.hasPendingChanges()) {
@@ -609,21 +431,12 @@ index 13e7b87049..f8ad168a17 100644
              currentChanges.reset();
              bufferedChanges.reset();
              releaseVisibleItems(reusableFlag);
-@@ -2402,8 +2402,6 @@ void QQuickItemView::createdItem(int index, QObject* object)
-             d->repositionPackageItemAt(item, index);
-         else if (index == d->currentIndex)
-             d->updateCurrent(index);
--    } else if (index == d->currentIndex) {
--        d->updateCurrent(index);
-     }
- }
- 
 diff --git a/src/quick/items/qquickmousearea_p_p.h b/src/quick/items/qquickmousearea_p_p.h
 index fba383e268..0d63618622 100644
 --- a/src/quick/items/qquickmousearea_p_p.h
 +++ b/src/quick/items/qquickmousearea_p_p.h
 @@ -61,7 +61,6 @@ QT_BEGIN_NAMESPACE
- 
+
  class QQuickMouseEvent;
  class QQuickMouseArea;
 -class QQuickPointerMask;
@@ -638,44 +451,6 @@ index fba383e268..0d63618622 100644
      QPointF startScene;
      QPointF targetStartPos;
      QPointF lastPos;
-diff --git a/src/quick/items/qquickshadereffectsource.cpp b/src/quick/items/qquickshadereffectsource.cpp
-index 4f61d61309..b298ed74da 100644
---- a/src/quick/items/qquickshadereffectsource.cpp
-+++ b/src/quick/items/qquickshadereffectsource.cpp
-@@ -344,7 +344,6 @@ void QQuickShaderEffectSource::setSourceItem(QQuickItem *item)
-             d->refFromEffectItem(m_hideSource);
-             d->addItemChangeListener(this, QQuickItemPrivate::Geometry);
-             connect(m_sourceItem, SIGNAL(destroyed(QObject*)), this, SLOT(sourceItemDestroyed(QObject*)));
--            connect(m_sourceItem, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(sourceItemParentChanged(QQuickItem*)));
-         } else {
-             qWarning("ShaderEffectSource: sourceItem and ShaderEffectSource must both be children of the same window.");
-             m_sourceItem = nullptr;
-@@ -364,13 +363,6 @@ void QQuickShaderEffectSource::sourceItemDestroyed(QObject *item)
- }
- 
- 
--void QQuickShaderEffectSource::sourceItemParentChanged(QQuickItem *parent)
--{
--    if (!parent && m_texture)
--        m_texture->setItem(0);
--}
--
--
- /*!
-     \qmlproperty rect QtQuick::ShaderEffectSource::sourceRect
- 
-diff --git a/src/quick/items/qquickshadereffectsource_p.h b/src/quick/items/qquickshadereffectsource_p.h
-index 4deb6c70a3..c0a1ccab78 100644
---- a/src/quick/items/qquickshadereffectsource_p.h
-+++ b/src/quick/items/qquickshadereffectsource_p.h
-@@ -173,7 +173,6 @@ Q_SIGNALS:
- private Q_SLOTS:
-     void sourceItemDestroyed(QObject *item);
-     void invalidateSceneGraph();
--    void sourceItemParentChanged(QQuickItem *parent);
- 
- protected:
-     void releaseResources() override;
 diff --git a/src/quick/items/qquicktext.cpp b/src/quick/items/qquicktext.cpp
 index 6230186933..e823ca1095 100644
 --- a/src/quick/items/qquicktext.cpp
@@ -687,14 +462,14 @@ index 6230186933..e823ca1095 100644
 -    &gt; &lt; &amp;
 +    &gt; &lt; &amp; &quot; &nbsp; &apos;
      \endcode
- 
+
      \c Text.StyledText parser is strict, requiring tags to be correctly nested.
 diff --git a/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp b/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp
-index 53b6fe117f..219cdd5966 100644
+index eb4db0f85e..2325a2665b 100644
 --- a/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp
 +++ b/src/quick/scenegraph/qsgrhidistancefieldglyphcache.cpp
 @@ -446,7 +446,7 @@ bool QSGRhiDistanceFieldGlyphCache::loadPregeneratedCache(const QRawFont &font)
- 
+
          const char *textureRecord = allocatorData;
          for (int i = 0; i < textureCount; ++i, textureRecord += Qtdf::TextureRecordSize) {
 -            if (textureRecord + Qtdf::TextureRecordSize > qtdfTableEnd) {
@@ -703,7 +478,7 @@ index 53b6fe117f..219cdd5966 100644
                           qPrintable(font.familyName()));
                  return false;
 @@ -462,7 +462,7 @@ bool QSGRhiDistanceFieldGlyphCache::loadPregeneratedCache(const QRawFont &font)
- 
+
          const char *glyphRecord = textureRecord;
          for (quint32 i = 0; i < glyphCount; ++i, glyphRecord += Qtdf::GlyphRecordSize) {
 -            if (glyphRecord + Qtdf::GlyphRecordSize > qtdfTableEnd) {
@@ -712,7 +487,7 @@ index 53b6fe117f..219cdd5966 100644
                           qPrintable(font.familyName()));
                  return false;
 @@ -512,8 +512,8 @@ bool QSGRhiDistanceFieldGlyphCache::loadPregeneratedCache(const QRawFont &font)
- 
+
              int width = texInfo->allocatedArea.width();
              int height = texInfo->allocatedArea.height();
 -            qint64 size = width * height;
@@ -735,27 +510,6 @@ index d531fc9205..a25af90414 100644
              else if (entity == QLatin1String("quot"))
                  textOut += QChar(34);
              else if (entity == QLatin1String("nbsp"))
-diff --git a/src/quick/util/qquicktimeline.cpp b/src/quick/util/qquicktimeline.cpp
-index 7ec7c827eb..abe6eb7261 100644
---- a/src/quick/util/qquicktimeline.cpp
-+++ b/src/quick/util/qquicktimeline.cpp
-@@ -53,6 +53,8 @@
- 
- QT_BEGIN_NAMESPACE
- 
-+Q_LOGGING_CATEGORY(lcTl, "qt.quick.timeline")
-+
- struct Update {
-     Update(QQuickTimeLineValue *_g, qreal _v)
-         : g(_g), v(_v) {}
-@@ -513,6 +515,7 @@ void QQuickTimeLine::reset(QQuickTimeLineValue &timeLineValue)
-         qWarning() << "QQuickTimeLine: Cannot reset a QQuickTimeLineValue owned by another timeline.";
-         return;
-     }
-+    qCDebug(lcTl) << static_cast<QObject*>(this) << timeLineValue.value();
-     remove(&timeLineValue);
-     timeLineValue._t = nullptr;
- }
 diff --git a/src/quickwidgets/qaccessiblequickwidget.cpp b/src/quickwidgets/qaccessiblequickwidget.cpp
 new file mode 100644
 index 0000000000..8a1c901880
@@ -1116,17 +870,17 @@ index 39780f8de3..9c97b43518 100644
 --- a/src/quickwidgets/qquickwidget.cpp
 +++ b/src/quickwidgets/qquickwidget.cpp
 @@ -39,6 +39,7 @@
- 
+
  #include "qquickwidget.h"
  #include "qquickwidget_p.h"
 +#include "qaccessiblequickwidgetfactory_p.h"
- 
+
  #include "private/qquickwindow_p.h"
  #include "private/qquickitem_p.h"
 @@ -75,9 +76,16 @@
- 
+
  QT_BEGIN_NAMESPACE
- 
+
 +QQuickWidgetOffscreenWindow::QQuickWidgetOffscreenWindow(QQuickWindowPrivate &dd, QQuickRenderControl *control)
 +:QQuickWindow(dd, control)
 +{
@@ -1143,7 +897,7 @@ index 39780f8de3..9c97b43518 100644
          Q_Q(QWindow);
 @@ -105,9 +113,8 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
      Q_Q(QQuickWidget);
- 
+
      renderControl = new QQuickWidgetRenderControl(q);
 -    offscreenWindow = new QQuickWindow(*new QQuickOffcreenWindowPrivate(),renderControl);
 -    offscreenWindow->setTitle(QString::fromLatin1("Offscreen"));
@@ -1151,7 +905,7 @@ index 39780f8de3..9c97b43518 100644
 +    offscreenWindow = new QQuickWidgetOffscreenWindow(*new QQuickWidgetOffscreenWindowPrivate(), renderControl);
 +    offscreenWindow->setScreen(q->screen());
      // Do not call create() on offscreenWindow.
- 
+
      // Check if the Software Adaptation is being used
 @@ -138,6 +145,10 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
      QWidget::connect(offscreenWindow, &QQuickWindow::focusObjectChanged, q, &QQuickWidget::propagateFocusObjectChanged);
@@ -1162,10 +916,10 @@ index 39780f8de3..9c97b43518 100644
 +    QAccessible::installFactory(&qAccessibleQuickWidgetFactory);
 +#endif
  }
- 
+
  void QQuickWidgetPrivate::ensureEngine() const
 @@ -901,9 +912,7 @@ void QQuickWidgetPrivate::createContext()
- 
+
          context = new QOpenGLContext;
          context->setFormat(offscreenWindow->requestedFormat());
 -        const QWindow *win = q->window()->windowHandle();
@@ -1178,7 +932,7 @@ index 39780f8de3..9c97b43518 100644
 @@ -1520,19 +1529,16 @@ bool QQuickWidget::event(QEvent *e)
          d->handleWindowChange();
          break;
- 
+
 -    case QEvent::ScreenChangeInternal:
 -        if (QWindow *window = this->window()->windowHandle()) {
 -            QScreen *newScreen = window->screen();
@@ -1200,7 +954,7 @@ index 39780f8de3..9c97b43518 100644
 +            d->context->setScreen(newScreen);
  #endif
 -        }
- 
+
          if (d->useSoftwareRenderer
  #if QT_CONFIG(opengl)
 @@ -1545,7 +1551,7 @@ bool QQuickWidget::event(QEvent *e)
@@ -1219,7 +973,7 @@ index 881f7f9220..1a946bcc71 100644
 @@ -148,6 +148,14 @@ public:
      bool forceFullUpdate;
  };
- 
+
 +class QQuickWidgetOffscreenWindow: public QQuickWindow
 +{
 +    Q_OBJECT
@@ -1229,7 +983,7 @@ index 881f7f9220..1a946bcc71 100644
 +};
 +
  QT_END_NAMESPACE
- 
+
  #endif // QQuickWidget_P_H
 diff --git a/src/quickwidgets/quickwidgets.pro b/src/quickwidgets/quickwidgets.pro
 index 2438e577ae..85d156b8a3 100644
@@ -1243,13 +997,13 @@ index 2438e577ae..85d156b8a3 100644
 +    qtquickwidgetsglobal.h \
 +    qaccessiblequickwidget_p.h \
 +    qaccessiblequickwidgetfactory_p.h
- 
+
  SOURCES += \
 -    qquickwidget.cpp
 +    qquickwidget.cpp \
 +    qaccessiblequickwidget.cpp \
 +    qaccessiblequickwidgetfactory.cpp
- 
+
  load(qt_module)
 diff --git a/tests/auto/qml/qjsengine/tst_qjsengine.cpp b/tests/auto/qml/qjsengine/tst_qjsengine.cpp
 index 3b7d74df63..b75bf820d5 100644
@@ -1266,7 +1020,7 @@ index 3b7d74df63..b75bf820d5 100644
 @@ -1809,6 +1810,44 @@ void tst_QJSEngine::collectGarbage()
      QVERIFY(ptr.isNull());
  }
- 
+
 +class TestObjectContainer : public QObject
 +{
 +    Q_OBJECT
@@ -1331,7 +1085,7 @@ index 35f1e2c94d..1722447830 100644
 +++ b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
 @@ -27,6 +27,8 @@
  ****************************************************************************/
- 
+
  #include <QtTest/qtest.h>
 +#include <QtCore/QConcatenateTablesProxyModel>
 +#include <QtGui/QStandardItemModel>
@@ -1344,12 +1098,12 @@ index 35f1e2c94d..1722447830 100644
      void contextAccessedByHandler();
 +    void redrawUponColumnChange();
  };
- 
+
  class AbstractItemModel : public QAbstractItemModel
 @@ -186,6 +189,30 @@ void tst_QQmlDelegateModel::contextAccessedByHandler()
      QVERIFY(root->property("works").toBool());
  }
- 
+
 +void tst_QQmlDelegateModel::redrawUponColumnChange()
 +{
 +    QStandardItemModel m1;
@@ -1375,8 +1129,65 @@ index 35f1e2c94d..1722447830 100644
 +}
 +
  QTEST_MAIN(tst_QQmlDelegateModel)
- 
+
  #include "tst_qqmldelegatemodel.moc"
+diff --git a/tests/auto/qml/qqmllanguage/data/Broken.qml b/tests/auto/qml/qqmllanguage/data/Broken.qml
+new file mode 100644
+index 0000000000..e24d9112a8
+--- /dev/null
++++ b/tests/auto/qml/qqmllanguage/data/Broken.qml
+@@ -0,0 +1,5 @@
++import QtQml 2.15
++
++QtObject {
++    notThere: 5
++}
+diff --git a/tests/auto/qml/qqmllanguage/data/asBroken.qml b/tests/auto/qml/qqmllanguage/data/asBroken.qml
+new file mode 100644
+index 0000000000..bd88d14c76
+--- /dev/null
++++ b/tests/auto/qml/qqmllanguage/data/asBroken.qml
+@@ -0,0 +1,6 @@
++import QtQml 2.15
++
++QtObject {
++    id: self
++    property var selfAsBroken: self as Broken
++}
+diff --git a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
+index bffb62c59e..97cc64991f 100644
+--- a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
++++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
+@@ -336,6 +336,7 @@ private slots:
+     void bareInlineComponent();
+
+     void hangOnWarning();
++    void objectAsBroken();
+
+     void ambiguousContainingType();
+
+@@ -5876,6 +5877,21 @@ void tst_qqmllanguage::ambiguousContainingType()
+     }
+ }
+
++void tst_qqmllanguage::objectAsBroken()
++{
++    QQmlEngine engine;
++    QQmlComponent c(&engine, testFileUrl("asBroken.qml"));
++    QVERIFY2(c.isReady(), qPrintable(c.errorString()));
++    QScopedPointer<QObject> o(c.create());
++    QVERIFY(!o.isNull());
++    QVariant selfAsBroken = o->property("selfAsBroken");
++    QVERIFY(selfAsBroken.isValid());
++    // QCOMPARE(selfAsBroken.metaType(), QMetaType::fromType<std::nullptr_t>());
++
++    QQmlComponent b(&engine, testFileUrl("Broken.qml"));
++    QVERIFY(b.isError());
++}
++
+ QTEST_MAIN(tst_qqmllanguage)
+
+ #include "tst_qqmllanguage.moc"
 diff --git a/tests/auto/qml/qv4mm/tst_qv4mm.cpp b/tests/auto/qml/qv4mm/tst_qv4mm.cpp
 index 5d635aa63b..824fd89e5b 100644
 --- a/tests/auto/qml/qv4mm/tst_qv4mm.cpp
@@ -1384,7 +1195,7 @@ index 5d635aa63b..824fd89e5b 100644
 @@ -76,10 +76,10 @@ void tst_qv4mm::multiWrappedQObjects()
          QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 1);
          QCOMPARE(engine2.memoryManager->m_pendingFreedObjectWrapperValue.size(), 0);
- 
+
 -        // Moves the additional WeakValue from m_multiplyWrappedQObjects to
 -        // m_pendingFreedObjectWrapperValue. It's still alive after all.
 +        // The additional WeakValue from m_multiplyWrappedQObjects hasn't been moved
@@ -1392,77 +1203,9 @@ index 5d635aa63b..824fd89e5b 100644
          engine1.memoryManager->runGC();
 -        QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 2);
 +        QCOMPARE(engine1.memoryManager->m_pendingFreedObjectWrapperValue.size(), 1);
- 
+
          // engine2 doesn't own the object as engine1 was the first to wrap it above.
          // Therefore, no effect here.
-diff --git a/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp b/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp
-index f3659290eb..9fa51da6f8 100644
---- a/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp
-+++ b/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp
-@@ -870,6 +870,7 @@ void tst_qquickflickable::wheel()
-     QVERIFY(flick != nullptr);
-     QQuickFlickablePrivate *fp = QQuickFlickablePrivate::get(flick);
-     QSignalSpy moveEndSpy(flick, SIGNAL(movementEnded()));
-+    quint64 timestamp = 10;
- 
-     // test a vertical flick
-     {
-@@ -877,6 +878,7 @@ void tst_qquickflickable::wheel()
-         QWheelEvent event(pos, window->mapToGlobal(pos), QPoint(), QPoint(0,-120),
-                           Qt::NoButton, Qt::NoModifier, Qt::NoScrollPhase, false);
-         event.setAccepted(false);
-+        event.setTimestamp(timestamp);
-         QGuiApplication::sendEvent(window.data(), &event);
-     }
- 
-@@ -887,6 +889,7 @@ void tst_qquickflickable::wheel()
-     QCOMPARE(fp->velocityTimeline.isActive(), false);
-     QCOMPARE(fp->timeline.isActive(), false);
-     QTest::qWait(50); // make sure that onContentYChanged won't sneak in again
-+    timestamp += 50;
-     QCOMPARE(flick->property("movementsAfterEnd").value<int>(), 0); // QTBUG-55886
- 
-     // get ready to test horizontal flick
-@@ -900,8 +903,8 @@ void tst_qquickflickable::wheel()
-         QPoint pos(200, 200);
-         QWheelEvent event(pos, window->mapToGlobal(pos), QPoint(), QPoint(-120,0),
-                           Qt::NoButton, Qt::NoModifier, Qt::NoScrollPhase, false);
--
-         event.setAccepted(false);
-+        event.setTimestamp(timestamp);
-         QGuiApplication::sendEvent(window.data(), &event);
-     }
- 
-@@ -926,11 +929,13 @@ void tst_qquickflickable::trackpad()
-     QVERIFY(flick != nullptr);
-     QSignalSpy moveEndSpy(flick, SIGNAL(movementEnded()));
-     QPoint pos(200, 200);
-+    quint64 timestamp = 10;
- 
-     {
-         QWheelEvent event(pos, window->mapToGlobal(pos), QPoint(0,-100), QPoint(0,-120),
-                           Qt::NoButton, Qt::NoModifier, Qt::ScrollBegin, false);
-         event.setAccepted(false);
-+        event.setTimestamp(timestamp++);
-         QGuiApplication::sendEvent(window.data(), &event);
-     }
- 
-@@ -944,6 +949,7 @@ void tst_qquickflickable::trackpad()
-         QWheelEvent event(pos, window->mapToGlobal(pos), QPoint(-100,0), QPoint(-120,0),
-                           Qt::NoButton, Qt::NoModifier, Qt::ScrollUpdate, false);
-         event.setAccepted(false);
-+        event.setTimestamp(timestamp++);
-         QGuiApplication::sendEvent(window.data(), &event);
-     }
- 
-@@ -954,6 +960,7 @@ void tst_qquickflickable::trackpad()
-         QWheelEvent event(pos, window->mapToGlobal(pos), QPoint(0,0), QPoint(0,0),
-                           Qt::NoButton, Qt::NoModifier, Qt::ScrollEnd, false);
-         event.setAccepted(false);
-+        event.setTimestamp(timestamp++);
-         QGuiApplication::sendEvent(window.data(), &event);
-     }
- 
 diff --git a/tests/auto/quick/qquickitem2/data/activeFocusOnTab_infiniteLoop3.qml b/tests/auto/quick/qquickitem2/data/activeFocusOnTab_infiniteLoop3.qml
 new file mode 100644
 index 0000000000..889e480f3b
@@ -1491,13 +1234,13 @@ index c8f251dbe1..c8ef36ee68 100644
      void activeFocusOnTab_infiniteLoop_data();
      void activeFocusOnTab_infiniteLoop();
 +    void activeFocusOnTab_infiniteLoopControls();
- 
+
      void nextItemInFocusChain();
      void nextItemInFocusChain2();
 @@ -1057,6 +1058,17 @@ void tst_QQuickItem::activeFocusOnTab_infiniteLoop()
      QCOMPARE(item, window->rootObject());
  }
- 
+
 +
 +void tst_QQuickItem::activeFocusOnTab_infiniteLoopControls()
 +{
@@ -1512,96 +1255,3 @@ index c8f251dbe1..c8ef36ee68 100644
  void tst_QQuickItem::nextItemInFocusChain()
  {
      if (!qt_tab_all_widgets())
-diff --git a/tests/auto/quick/qquicklistview/data/qtbug86744.qml b/tests/auto/quick/qquicklistview/data/qtbug86744.qml
-deleted file mode 100644
-index 6dc82d57eb..0000000000
---- a/tests/auto/quick/qquicklistview/data/qtbug86744.qml
-+++ /dev/null
-@@ -1,21 +0,0 @@
--import QtQuick 2.15
--import QtQml.Models 2.15
--
--Item {
--    height: 200
--    width: 100
--    DelegateModel {
--        id: dm
--        model: 2
--        delegate: Item {
--            width: 100; height: 20
--            property bool isCurrent: ListView.isCurrentItem
--        }
--    }
--    ListView {
--        objectName: "listView"
--        model: dm
--        currentIndex: 1
--        anchors.fill: parent
--    }
--}
-diff --git a/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp b/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp
-index df329f8318..b564fd3ba5 100644
---- a/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp
-+++ b/tests/auto/quick/qquicklistview/tst_qquicklistview.cpp
-@@ -10201,20 +10201,6 @@ void tst_QQuickListView::dragDelegateWithMouseArea_data()
-     }
- }
- 
--void tst_QQuickListView::isCurrentItem_DelegateModel()
--{
--    QScopedPointer<QQuickView> window(createView());
--    window->setSource(testFileUrl("qtbug86744.qml"));
--    window->resize(640, 480);
--    window->show();
--    QVERIFY(QTest::qWaitForWindowExposed(window.data()));
--
--    QQuickListView* listView = window->rootObject()->findChild<QQuickListView*>("listView");
--    QVERIFY(listView);
--    QVariant value = listView->itemAtIndex(1)->property("isCurrent");
--    QVERIFY(value.toBool() == true);
--}
--
- QTEST_MAIN(tst_QQuickListView)
- 
- #include "tst_qquicklistview.moc"
-diff --git a/tests/manual/touch/flicktext.qml b/tests/manual/touch/flicktext.qml
-index 9e84261687..e69d6207a9 100644
---- a/tests/manual/touch/flicktext.qml
-+++ b/tests/manual/touch/flicktext.qml
-@@ -380,6 +380,36 @@ Rectangle {
-                 text: "content X " + flick.contentX.toFixed(2) + " Y " + flick.contentY.toFixed(2)
-             }
-         }
-+
-+        Column {
-+            Row {
-+                spacing: 2
-+                Examples.Button {
-+                    id: decrButton
-+                    text: "-"
-+                    onClicked: flick.flickDeceleration -= 100
-+                    Timer {
-+                        running: decrButton.pressed
-+                        interval: 100; repeat: true
-+                        onTriggered: flick.flickDeceleration -= 100
-+                    }
-+                }
-+                Text {
-+                    horizontalAlignment: Text.AlignHCenter
-+                    text: "decel:\n" + flick.flickDeceleration.toFixed(4)
-+                }
-+                Examples.Button {
-+                    id: incrButton
-+                    text: "+"
-+                    onClicked: flick.flickDeceleration += 100
-+                }
-+                Timer {
-+                    running: incrButton.pressed
-+                    interval: 100; repeat: true
-+                    onTriggered: flick.flickDeceleration += 100
-+                }
-+            }
-+        }
-     }
- 
-     Component.onCompleted: {
