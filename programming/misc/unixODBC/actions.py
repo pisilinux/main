@@ -21,6 +21,7 @@ def setup():
                          --disable-gui \
                          --enable-threads \
                          --enable-drivers \
+                         --enable-driverc \
                          --enable-driver-conf \
                          --disable-stats ")
 
