@@ -22,23 +22,23 @@ index ef5132c6..7f68aaae 100644
 +assert(not (enable_systemd and enable_elogind), 'Can not support systemd and elogind at once')
 +if enable_systemd or enable_elogind or enable_consolekit
    session_bin_deps += dependency('gio-unix-2.0', version: glib_req_version)
- 
+
    # Check for systemd
 @@ -152,6 +154,10 @@ if enable_systemd or enable_consolekit
      endif
- 
+
      session_tracking = 'systemd'
 +  elif enable_elogind
 +    libelogind_dep = dependency('libelogind', version: '>= 239.4')
 +    session_bin_deps += libelogind_dep
 +    session_tracking = 'elogind'
    endif
- 
+
    # Check for ConsoleKit
 @@ -161,7 +167,7 @@ if enable_systemd or enable_consolekit
- 
+
      session_bin_deps += dbus_glib_dep
- 
+
 -    if enable_systemd
 +    if enable_systemd or enable_elogind
        session_tracking += ' (with fallback to ConsoleKit)'
@@ -63,5 +63,6 @@ index 4c05dc6e..512d1528 100644
  option('session_selector', type: 'boolean', value: false, description: 'enable building a custom session selector dialog')
  option('systemd', type: 'boolean', value: true, description: 'Use systemd')
  option('systemd_session', type: 'combo', choices: ['disable', 'enable', 'default'], value: 'default', description: 'Whether to include systemd session support and use it by default')
--- 
+--
 2.26.2
+
