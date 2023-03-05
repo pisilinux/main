@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools, pisitools, get
 
 i = ''.join([
     ' --prefix=/usr',
-    ' --bindir=/usr/local/bin',
+    ' --bindir=/usr/bin',
     ' --includedir=/usr/include/iconv',
     ' --enable-extra-encodings',
     ' --disable-static '
@@ -23,5 +23,6 @@ def build():
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+	pisitools.rename("/usr/bin/iconv", "libiconv")
 	pisitools.remove("/usr/share/doc/*.html")
 	pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "THANKS")
