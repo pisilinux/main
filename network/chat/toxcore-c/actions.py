@@ -8,6 +8,7 @@ from pisi.actionsapi import shelltools, cmaketools, pisitools, get
 
 j = ''.join([
     ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DMUST_BUILD_TOXAV=ON',
     ' -DDHT_BOOTSTRAP=OFF',
     ' -DENABLE_STATIC=OFF',
     ' -B_build -L '
@@ -15,6 +16,8 @@ j = ''.join([
 
 def setup():
 	pisitools.dosed("CMakeLists.txt", "RPATH", deleteLine = True)
+	pisitools.unlinkDir("third_party/cmp")
+	shelltools.system("ln -s cmp-e836703291392aba9db92b46fb47929521fac71f ./third_party/cmp")
 	cmaketools.configure(j)
 
 def build():
@@ -23,7 +26,6 @@ def build():
 
 def install():
 	pisitools.insinto("/etc", "other/bootstrap_daemon/tox-bootstrapd.conf")
-	shelltools.chmod("%s/etc/tox-bootstrapd.conf" % get.installDIR(), mode = 0644)
 
 	shelltools.cd("_build")
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
