@@ -1,102 +1,93 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-    <Source>
-        <Name>dia</Name>
-        <Homepage>https://live.gnome.org/Dia</Homepage>
-        <Packager>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
-        </Packager>
-        <License>GPLv3</License>
-        <PartOf>multimedia.graphics</PartOf>
-        <Icon>dia</Icon>
-        <IsA>app:gui</IsA>
-        <Summary>Diagram editor</Summary>
-        <Description>Dia is a GTK+ based diagram creation program for GNU/Linux,</Description>
-        <Archive sha1sum="316393951daebd186ba387e1cd6e34160a458c39" type="tarxz">http://ftp.gnome.org/pub/gnome/sources/dia/0.97/dia-0.97.3.tar.xz</Archive>
-        <BuildDependencies>
-            <Dependency>intltool</Dependency>
-            <Dependency>qt5-base-devel</Dependency>            
-            <Dependency>cairo-devel</Dependency>
-            <Dependency>python-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
-            <Dependency>freetype-devel</Dependency>
-            <Dependency>gdk-pixbuf-devel</Dependency>
-            <Dependency>gtk2-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency>pango-devel</Dependency>
-            <Dependency>libxml2-devel</Dependency>
-            <Dependency>libpng-devel</Dependency>
-            <Dependency>libart_lgpl-devel</Dependency>
-            <Dependency>atk-devel</Dependency>
-            <Dependency>docbook-xsl</Dependency>
-            <Dependency>perl-XML-Parser</Dependency>
-            <Dependency>libxslt-devel</Dependency>
-            <Dependency>fontconfig-devel</Dependency>
-        </BuildDependencies>
-    </Source>
+	<Source>
+		<Name>dia</Name>
+		<Homepage>http://wiki.gnome.org/Apps/Dia</Homepage>
+		<Packager>
+			<Name>PisiLinux Community</Name>
+			<Email>admins@pisilinux.org</Email>
+		</Packager>
+		<License>GPL-2</License>
+		<IsA>app:gui</IsA>
+		<PartOf>multimedia.graphics</PartOf>
+		<Summary>Versatile diagramming tool.</Summary>
+		<Description>Dia is a program for drawing diagrams.</Description>
+		<Archive sha1sum="316393951daebd186ba387e1cd6e34160a458c39" type="tarxz">
+			https://download.gnome.org/sources/dia/0.97/dia-0.97.3.tar.xz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>swig</Dependency>
+			<Dependency>intltool</Dependency>
+			<Dependency>gtk2-devel</Dependency>
+			<Dependency>libpng-devel</Dependency>
+			<Dependency>libxml2-devel</Dependency>
+			<Dependency>libxslt-devel</Dependency>
+			<Dependency>python-devel</Dependency>
+			<Dependency>docbook-xsl</Dependency>
+			<Dependency>libart_lgpl-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+			<Patch level='1'>dia-unregister-import.patch</Patch>
+			<Patch level='1'>isinf.patch</Patch>
+			<Patch level='1'>CVE-2019-19451.patch</Patch>
+		</Patches>
+	</Source>
 
-    <Package>
-        <Name>dia</Name>
-        <RuntimeDependencies>
-            <Dependency>python</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>freetype</Dependency>
-            <Dependency>cairo</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
-            <Dependency>gtk2</Dependency>
-            <Dependency>pango</Dependency>
-            <Dependency>libxml2</Dependency>
-            <Dependency>libpng</Dependency>
-            <Dependency>libart_lgpl</Dependency>
-            <Dependency>atk</Dependency>
-            <Dependency>libxslt</Dependency>
-            <Dependency>fontconfig</Dependency>
-            <Dependency>glib2</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib/dia</Path>
-            <Path fileType="data">/usr/share/applications</Path>
-            <Path fileType="data">/usr/share/icons</Path>
-            <Path fileType="data">/usr/share/oaf</Path>
-            <Path fileType="data">/usr/share/dia</Path>
-            <Path fileType="data">/usr/share/mime-info</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="doc">/usr/share/man</Path>
-        </Files>
-    </Package>
+	<Package>
+		<Name>dia</Name>
+		<RuntimeDependencies>
+			<Dependency>gtk2</Dependency>
+			<Dependency>pango</Dependency>
+			<Dependency>cairo</Dependency>
+			<Dependency>libart_lgpl</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib/dia</Path>
+			<Path fileType="data">/usr/share</Path>
+			<Path fileType="data">/usr/share/dia</Path>
+			<Path fileType="data">/usr/share/man/man1</Path>
+			<Path fileType="data">/usr/share/mime-info</Path>
+		</Files>
+	</Package>
 
-    <History>
-        <Update release="4">
-            <Date>2020-03-05</Date>
-            <Version>0.97.3</Version>
-            <Comment>Rebuild with new toolchain</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@pisilinux.org</Email>
-        </Update>
-        <Update release="3">
-            <Date>2018-08-05</Date>
-            <Version>0.97.3</Version>
-            <Comment>Rebuild with new toolchain</Comment>
-            <Name>Stefan Gronewold</Name>
-            <Email>groni@pisilinux.org</Email>
-        </Update>
-        <Update release="2">
-            <Date>2017-04-15</Date>
-            <Version>0.97.3</Version>
-            <Comment>Rebuild with new toolchain</Comment>
-            <Name>Stefan Gronewold</Name>
-            <Email>groni@pisilinux.org</Email>
-        </Update>
-        <Update release="1">
-            <Date>2016-12-07</Date>
-            <Version>0.97.3</Version>
-            <Comment>First Release</Comment>
-            <Name>Stefan Gronewold</Name>
-            <Email>groni@pisilinux.org</Email>
-        </Update>
-    </History>
+	<History>
+		<Update release="5">
+			<Date>2023-03-09</Date>
+			<Version>0.97.3</Version>
+			<Comment>Rebuild.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="4">
+			<Date>2020-03-05</Date>
+			<Version>0.97.3</Version>
+			<Comment>Rebuild with new toolchain</Comment>
+			<Name>Mustafa Cinasal</Name>
+			<Email>muscnsl@pisilinux.org</Email>
+		</Update>
+		<Update release="3">
+			<Date>2018-08-05</Date>
+			<Version>0.97.3</Version>
+			<Comment>Rebuild with new toolchain</Comment>
+			<Name>Stefan Gronewold</Name>
+			<Email>groni@pisilinux.org</Email>
+		</Update>
+		<Update release="2">
+			<Date>2017-04-15</Date>
+			<Version>0.97.3</Version>
+			<Comment>Rebuild with new toolchain</Comment>
+			<Name>Stefan Gronewold</Name>
+			<Email>groni@pisilinux.org</Email>
+		</Update>
+		<Update release="1">
+			<Date>2016-12-07</Date>
+			<Version>0.97.3</Version>
+			<Comment>First Release</Comment>
+			<Name>Stefan Gronewold</Name>
+			<Email>groni@pisilinux.org</Email>
+		</Update>
+	</History>
 </PISI>
