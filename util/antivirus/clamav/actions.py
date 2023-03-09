@@ -13,11 +13,11 @@ j = ''.join([
     ' -DENABLE_SYSTEMD=OFF',
     ' -DAPP_CONFIG_DIRECTORY=/etc/clamav',
     ' -DDATABASE_DIRECTORY=/var/lib/clamav',
-    ' -G Ninja',
-    ' -B_build -L '
+    ' -B_build -G Ninja -L '
     ])
 
 def setup():
+    shelltools.export("CFLAGS", "%s -I/usr/include/iconv " % get.CFLAGS())
     cmaketools.configure(j)
 
 def build():
@@ -25,8 +25,8 @@ def build():
 
 def check():
     # failed utf16 to utf8 converting
-    pass
-    #mesontools.build("-C _build test")
+    #pass
+    mesontools.build("-C _build test")
 
 def install():
     mesontools.install("-C _build install")
