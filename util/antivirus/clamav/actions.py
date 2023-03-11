@@ -35,4 +35,5 @@ def install():
     pisitools.dodir("/var/lib/clamav")
     #pisitools.dodir("/var/log/clamav")
 
-    shelltools.system("find %s/etc/clamav -type f | sed -e 'p;s:.sample::' | xargs -n2 mv" % get.installDIR())
+    for t in shelltools.ls("%s/etc/clamav" % get.installDIR()):
+        pisitools.rename("/etc/clamav/%s" % t, t.replace(".sample", ""))
