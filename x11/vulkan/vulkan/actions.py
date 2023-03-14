@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Licensed under the GNU General Public License, version 3.
+# Licensed under the GNU General Public License, verion 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import cmaketools
@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-pisitools.cxxflags.add("-std=gnu++11")
+# pisitools.cxxflags.add("-std=gnu++11")
 
 ver = get.srcVERSION()
 
@@ -38,7 +38,6 @@ def setup():
                         -DBUILD_WSI_WAYLAND_SUPPORT=On \
                         -DCMAKE_BUILD_TYPE:STRING=Release \
                         -DBUILD_LAYER_SUPPORT_FILES=ON \
-                        -DSPIRV_TOOLS_INSTALL_DIR='/usr' \
                         -DUSE_ROBIN_HOOD_HASHING=OFF \
                         -DGLSLANG_INSTALL_DIR=/usr \
                       "
@@ -63,7 +62,7 @@ def setup():
         # shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
         shelltools.makedirs("build")
         shelltools.cd("build")
-        #shelltools.system("../scripts/update_deps.py")
+        # shelltools.system("../scripts/update_deps.py")
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib32 \
                            "
                            
@@ -85,7 +84,7 @@ def setup():
         # shelltools.cd("%s/Vulkan-ValidationLayers-master" % get.workDIR())
         shelltools.makedirs("build")
         shelltools.cd("build")
-        #shelltools.system("../scripts/update_deps.py")
+        # shelltools.system("../scripts/update_deps.py")
         
         validation_opts += "-DCMAKE_INSTALL_LIBDIR=lib \
                             -DSPIRV_TOOLS_LIB='/usr/lib' \
