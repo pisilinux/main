@@ -27,5 +27,8 @@ def setup():
 def build():
 	mesontools.build("-C _build")
 
+def check():
+    mesontools.build("-C _build test")
+
 def install():
 	mesontools.install("-C _build")
