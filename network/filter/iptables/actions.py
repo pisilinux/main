@@ -33,4 +33,5 @@ def install():
     pisitools.insinto("/usr/include/libiptc", "include/libiptc/*.h")
 
     pisitools.dodir("/var/lib/iptables")
+    pisitools.dodir("/var/lock/subsys")
     pisitools.dodir("/etc/iptables")
