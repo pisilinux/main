@@ -27,7 +27,7 @@ def setup():
     shelltools.move("abseil-cpp/*", "src/third_party/abseil-cpp")
     # shelltools.move("pipewire/*", "src/third_party/pipewire")
     shelltools.system("rm -rf src/third_party/crc32c/src")
-    shelltools.move("crc32c-1.1.2/*", "src/third_party/crc32c")
+    shelltools.move("crc32c-1.1.2/*", "src/third_party/crc32c/src")
 
     pisitools.cflags.add(" -ffat-lto-objects")
     pisitools.cxxflags.add(" -ffat-lto-objects -I/usr/include/libdrm")
