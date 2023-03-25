@@ -1,26 +1,21 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
-    #shelltools.unlink("m4/libtool.m4")
-    #shelltools.unlink("acinclude.m4")
-    #autotools.autoreconf("-vif")
-
-    autotools.configure("--enable-nls \
-                         --without-included-gettext \
-                         --disable-static")
+    autotools.configure("--disable-static")
 
 def build():
     autotools.make()
 
+def check():
+    autotools.make("check")
+
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README", "THANKS", "TODO")
+    pisitools.dodoc("AUTHORS", "NEWS", "THANKS")
