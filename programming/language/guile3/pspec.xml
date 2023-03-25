@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>guile3</Name>
+        <Homepage>https://www.gnu.org/software/guile/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <PartOf>programming.language</PartOf>
+        <License>GPL-3/LGPL-3</License>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <PartOf>programming.language</PartOf>
+        <Summary>GNU Scheme interpreter and library</Summary>
+        <Description>GUILE (GNU's Ubiquitous Intelligent Language for Extension) is a library implementation of the Scheme programming language, written in C. GUILE provides a machine-independent execution platform that can be linked in as a library during the building of extensible programs.</Description>
+        <Archive sha1sum="bf6af1aac320a56233d4d8c0fbeb2c0dca474eab" type="tarxz">
+            https://ftp.gnu.org/gnu/guile/guile-3.0.9.tar.xz
+        </Archive>
+        <BuildDependencies>
+            <Dependency>gc-devel</Dependency>
+            <Dependency>gmp-devel</Dependency>
+            <Dependency>libffi-devel</Dependency>
+            <Dependency>gettext-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>libunistring-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>guile3</Name>
+        <Summary>GNU Scheme interpreter and library</Summary>
+        <RuntimeDependencies>
+            <Dependency>gc</Dependency>
+            <Dependency>gmp</Dependency>
+            <Dependency>libffi</Dependency>
+            <Dependency>readline</Dependency>
+            <Dependency>libunistring</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/guile/3.0</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/usr/share/guile/3.0</Path>
+            <Path fileType="man">/usr/share/man/man1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>guile3-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>gc-devel</Dependency>
+            <Dependency>gmp-devel</Dependency>
+            <Dependency release="current">guile3</Dependency>
+            <Dependency>libunistring-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/guile/3.0</Path>
+            <Path fileType="header">/usr/include/guile/3.0/libguile</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/guile-3.0.pc</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-03-25</Date>
+            <Version>3.0.9</Version>
+            <Comment>First 3.x build.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
+    </History>
+</PISI>
