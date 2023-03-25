@@ -6,25 +6,26 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 
 demos_dir = "/usr/lib/mesa/demos"
 demos_dir_emul32 = "/usr/lib32/mesa/demos"
 
 def setup():
-    autotools.autoreconf("-fvi")
-    options = "--disable-static \
-               --enable-autotools \
-               --with-system-data-files \
+    # autotools.autoreconf("-fvi")
+    options = "-Dwith-system-data-files=true \
                --bindir=%s" % (demos_dir_emul32 if get.buildTYPE() == "emul32" else demos_dir)
 
-    autotools.configure(options)
-    pisitools.dosed("libtool","( -shared )", " -Wl,--as-needed\\1")
+    mesontools.configure(options)
+    # pisitools.dosed("libtool","( -shared )", " -Wl,--as-needed\\1")
 
 def build():
-    autotools.make()
+    mesontools.build()
+    # autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+    # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     if get.buildTYPE() == "emul32":
         for util in ("glxgears", "glxinfo"):
@@ -33,4 +34,4 @@ def install():
 
     for util in ("glxgears", "glxinfo", "eglinfo"):
         pisitools.domove("%s/%s" % (demos_dir, util), "/usr/bin/")
-        pisitools.dobin("src/egl/opengl/xeglgears")
+        pisitools.dobin("build/src/egl/opengl/xeglgears")
