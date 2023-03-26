@@ -15,6 +15,7 @@ def setup():
                           -D efi_sbat_distro_summary='Pisi Linux' \
                           -D efi_sbat_distro_pkgname='fwupd-efi' \
                           -D efi_sbat_distro_version=%s \
+                          --libexecdir=/usr/lib \
                           -D efi_sbat_distro_url='https://github.com/pisilinux/main/issues'" % get.srcVERSION())
 
 def build():

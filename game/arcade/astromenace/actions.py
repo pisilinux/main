@@ -1,31 +1,34 @@
+#!/usr/bin/env python
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import get
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-
-
-datadir = "/usr/share/%s" % get.srcNAME()
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 
 def setup():
-    cmaketools.configure("-DDATADIR=%s" % datadir)
+    shelltools.makedirs("build")
+    shelltools.cd("build")
 
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+      -DDATADIR=/usr/share/astromenace", sourceDir="..")
 
 def build():
-    cmaketools.make()
-    shelltools.system("./AstroMenace --pack --rawdata=./RAW_VFS_DATA --dir=./")
+    cmaketools.make("-C build")
 
 def install():
-    pisitools.dobin("AstroMenace")
-    pisitools.insinto(datadir, "gamedata.vfs")
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    pisitools.domove("/usr/astromenace", "/usr/bin")
+    pisitools.domove("/usr/gamedata.vfs", "/usr/share/astromenace")
+    pisitools.dosym("/usr/bin/astromenace", "/usr/bin/AstroMenace")
 
-
-    pisitools.dodoc("gpl-3.0.txt", "License.txt", "ReadMe.txt")
+    # pisitools.dodoc("README.md", "LICENSE.md")
 
 

@@ -10,13 +10,12 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("rm -f include/linux/types.h")
+    shelltools.system("rm -f include/linux/{kernel,types}.h")
     autotools.autoreconf("-fiv")
     autotools.configure("--sbindir=/sbin \
                          --libexecdir=/usr/lib \
                          --enable-bpf-compiler \
                          --enable-devel \
-                         --disable-nftables \
                          --enable-libipq \
                          --enable-shared \
                          --enable-static")
@@ -34,4 +33,5 @@ def install():
     pisitools.insinto("/usr/include/libiptc", "include/libiptc/*.h")
 
     pisitools.dodir("/var/lib/iptables")
+    pisitools.dodir("/var/lock/subsys")
     pisitools.dodir("/etc/iptables")

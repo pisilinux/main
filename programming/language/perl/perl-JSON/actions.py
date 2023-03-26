@@ -2,13 +2,9 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import perlmodules
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
-
-WorkDir = "%s-%s" % (get.srcNAME()[5:], get.srcVERSION())
+from pisi.actionsapi import perlmodules, pisitools
 
 def setup():
     perlmodules.configure()

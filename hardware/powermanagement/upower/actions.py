@@ -11,10 +11,10 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
 
 def setup():
-    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    shelltools.system("sed '/parse_version/d' -i src/linux/integration-test.py")
     #pisitools.dosed("configure", "DISABLE_DEPRECATED", deleteLine=True)
     mesontools.configure("-Dgtk-doc=false \
-                          -Dudevrulesdir=/lib/udev \
+                          -Dudevrulesdir=/lib/udev/rules.d \
                           -Dudevhwdbdir=/etc/udev/hwdb.d \
                           -Dintrospection=enabled \
                           -Dsystemdsystemunitdir=no")

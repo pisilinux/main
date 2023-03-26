@@ -10,6 +10,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i 's/Linux..345/&6/' makedefs")
+    shelltools.system("sed -i 's/LINUX2/LINUX6/' src/util/sys_defs.h")
+
     pisitools.dosed("src/util/sys_defs.h", "hash:\/etc\/aliases", "hash:/etc/mail/aliases")
 
 def build():

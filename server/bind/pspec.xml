@@ -12,7 +12,7 @@
         <IsA>service</IsA>
         <Summary>The Berkeley Internet Name Domain (BIND) DNS (Domain Name System) server</Summary>
         <Description>bind is an implementation of the DNS protocols, bind includes a DNS server (named), a resolver library and tools for verifying that the DNS server is operating properly.</Description>
-        <Archive sha1sum="a45f4c8b44755d8c4019181d0787e4e72d836661" type="targz">ftp://ftp.isc.org/isc/bind9/9.14.9/bind-9.14.9.tar.gz</Archive>
+        <Archive sha1sum="99853477e9ae59fc395e2873c406e62e9ea386c5" type="tarxz">ftp://ftp.isc.org/isc/bind9/9.18.11/bind-9.18.11.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>openssl-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
@@ -23,23 +23,22 @@
             <Dependency>geoip-devel</Dependency>
             <Dependency>python3-devel</Dependency>
             <Dependency>python3-PLY</Dependency>
+
+            <Dependency>lmdb-devel</Dependency>
+            <Dependency>libuv-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
+            <Dependency>libedit-devel</Dependency>
+            <Dependency>jemalloc-devel</Dependency>
+            <Dependency>libnghttp2-devel</Dependency>
+            <Dependency>libmaxminddb-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <Patch level="1">nslookup-pisilinux.patch</Patch>
             <Patch level="1">fedora/bind-9.5-PIE.patch</Patch>
-<!--             <Patch level="1">fedora/bind-9.5-parallel-build.patch</Patch> -->
-<!--
-            <Patch level="1">fedora/bind-96-libtool2.patch</Patch>
--->
-<!--             <Patch level="1">fedora/bind-95-rh452060.patch</Patch>
-                 <Patch level="0">fedora/bind93-rh490837.patch</Patch> -->
-            
-<!--             <Patch level="1">fedora/bind97-rh478718.patch</Patch> -->
-            <Patch level="1">fedora/bind97-rh645544.patch</Patch>
-            <Patch level="1">fedora/bind99-rh640538.patch</Patch>
-<!--
-            <Patch level="1">lfs/bind-9.12.0-use_iproute2-1.patch</Patch>
--->
+
+            <Patch level="1">fedora/bind-9.18-zt-include-rwlock.patch</Patch>
+            <Patch level="1">fedora/bind-9.18-unittest-netmgr-unstable.patch</Patch>
+            <Patch level="1">fedora/bind-9.11-fips-tests.patch</Patch>
         </Patches>
     </Source>
 
@@ -52,6 +51,12 @@
             <Dependency>openssl</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>mit-kerberos</Dependency>
+            <Dependency>lmdb</Dependency>
+            <Dependency>libuv</Dependency>
+            <Dependency>json-c</Dependency>
+            <Dependency>jemalloc</Dependency>
+            <Dependency>libnghttp2</Dependency>
+            <Dependency>libmaxminddb</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
@@ -85,6 +90,7 @@
             <Dependency>mit-kerberos</Dependency>
             <Dependency>python3</Dependency>
             <Dependency>python3-PLY</Dependency>
+            <Dependency>libedit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -148,6 +154,13 @@
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2023-01-25</Date>
+            <Version>9.18.11</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
 		<Update release="5">
             <Date>2020-01-15</Date>
             <Version>9.14.9</Version>

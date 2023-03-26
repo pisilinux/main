@@ -12,8 +12,8 @@
         <IsA>app:console</IsA>
         <Summary>Clam Antivirus software.</Summary>
         <Description>Clam AntiVirus is a GPL anti-virus toolkit for UNIX.</Description>
-        <Archive sha1sum="e5fa557de1713faeb23a8b1f6788c27c7b7a340f" type="targz">
-            https://www.clamav.net/downloads/production/clamav-0.105.1.tar.gz
+        <Archive sha1sum="e9167e8cee8eab364c08a8ea35a3849e38554396" type="targz">
+            https://www.clamav.net/downloads/production/clamav-1.0.1.tar.gz
         </Archive>	  
         <BuildDependencies>
             <Dependency>rust</Dependency>
@@ -29,6 +29,7 @@
             <Dependency>python3-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
             <Dependency>libpcre2-devel</Dependency>
+            <Dependency>libiconv-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <Patch level="1">daemon_confs.patch</Patch>
@@ -47,12 +48,13 @@
             <Dependency>ncurses</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>libpcre2</Dependency>
+            <Dependency>libiconv</Dependency>
             <!-- <Dependency>libmilter</Dependency> -->
         </RuntimeDependencies>
         <Files>
+            <Path fileType="cfgfiles">/etc/clamav</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/sbin</Path>
-            <Path fileType="cfgfiles">/etc/clamav</Path>
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="data">/run/clamav</Path>
             <Path fileType="data">/var/lib/clamav</Path>
@@ -65,7 +67,26 @@
         </AdditionalFiles>
         <Provides>
             <COMAR script="package.py">System.Package</COMAR>
-            <COMAR script="service.py">System.Service</COMAR>
+            <COMAR script="clamd.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+    <Package>
+        <Name>freshclam</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">clamav</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="cfgfiles">/etc/clamav/freshclam.conf</Path>
+            <Path fileType="executable">/usr/bin/freshclam</Path>
+            <Path fileType="data">/usr/lib/libfreshclam.so</Path>
+            <Path fileType="data">/usr/lib/libfreshclam.so.2</Path>
+            <Path fileType="data">/usr/lib/libfreshclam.so.2.0.2</Path>
+            <Path fileType="man">/usr/share/man/man1/freshclam.1</Path>
+            <Path fileType="man">/usr/share/man/man5/freshclam.conf.5</Path>
+        </Files>
+        <Provides>
+            <COMAR script="freshclam.py">System.Service</COMAR>
         </Provides>
     </Package>
 
@@ -81,6 +102,20 @@
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2023-03-09</Date>
+            <Version>1.0.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
+        <Update release="5">
+            <Date>2022-12-25</Date>
+            <Version>1.0.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="4">
             <Date>2022-11-15</Date>
             <Version>0.105.1</Version>

@@ -16,13 +16,16 @@ def build():
     cflags = get.CFLAGS() + " -DCONFIG_DEBUG_SYSLOG"
     shelltools.export("CFLAGS", cflags)
 
-    autotools.make("V=1")
-    autotools.make("eapol_test")
+    autotools.make("LIBDIR=/usr/lib BINDIR=/usr/sbin V=1")
+    # autotools.make("eapol_test")
+    autotools.make("LIBDIR=/usr/lib BINDIR=/usr/sbin eapol_test")
 
 def install():
     shelltools.cd("wpa_supplicant")
+    autotools.rawInstall("LIBDIR=/usr/lib BINDIR=/usr/sbin eapol_test DESTDIR=%s" % get.installDIR())
 
-    for bin in ["wpa_supplicant", "wpa_cli", "wpa_passphrase", "eapol_test"]:
+    # for bin in ["wpa_supplicant", "wpa_cli", "wpa_passphrase", "eapol_test"]:
+    for bin in ["eapol_test"]:
         pisitools.dosbin(bin)
 
     # Install dbus files

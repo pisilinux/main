@@ -12,8 +12,9 @@ def build():
     autotools.make('CC="%s" CFLAGS="%s" SKIPDIRS="patches"' % (get.CC(),get.CFLAGS()))
 
 def install():
-    pisitools.doexe("traceroute/traceroute", "/bin/")
-    pisitools.dosym("/bin/traceroute", "/bin/tracert")
+    autotools.rawInstall("prefix=/usr DESTDIR=%s" % get.installDIR())
+    # pisitools.doexe("traceroute/traceroute", "/bin/")
+    # pisitools.dosym("/bin/traceroute", "/bin/tracert")
 
-    pisitools.doman("traceroute/traceroute.8")
+    # pisitools.doman("traceroute/traceroute.8")
     pisitools.dodoc("ChangeLog", "COPYING", "CREDITS", "README", "TODO")

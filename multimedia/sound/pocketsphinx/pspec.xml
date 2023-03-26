@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>pocketsphinx</Name>
+        <Homepage>https://cmusphinx.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>asis</License>
+        <IsA>library</IsA>
+        <Icon>nemo</Icon>
+        <Summary>A small speech recognizer</Summary>
+        <Description>This is PocketSphinx, one of Carnegie Mellon University's open source large vocabulary, speaker-independent continuous speech recognition engines.</Description>
+        <Archive sha1sum="50d6d103444fbee2f17abd20fb39ab2b1333ac73" type="targz">https://github.com/cmusphinx/pocketsphinx/archive/refs/tags/v5.0.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>cython3</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>python3-pytest</Dependency>
+            <Dependency>gstreamer-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
+            <Dependency>gst-plugins-base-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1"></Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>pocketsphinx</Name>
+        <RuntimeDependencies>
+            <Dependency>gstreamer</Dependency>
+            <Dependency>gst-plugins-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/share/pocketsphinx/model</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libpocketsphinx.a</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+
+    </Package>
+
+    <Package>
+        <Name>pocketsphinx-devel</Name>
+        <Summary>Development files for pocketsphinx</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">pocketsphinx</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+
+    <History>
+        <Update release="1">
+            <Date>2023-02-01</Date>
+            <Version>5.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

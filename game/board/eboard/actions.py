@@ -9,17 +9,24 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 from pisi.actionsapi import libtools
 
+import os
+
+datadir = "/usr/share/eboard"
+
 def setup():
     libtools.libtoolize("--copy --force")
 
-    autotools.configure("--man-prefix=/usr/share/man --extra-libs=dl --prefix=/usr")
+    autotools.configure("--prefix=/usr --man-prefix=/usr/share/man --extra-libs=dl")
+    autotools.configure("-with-data-dir=%s" % datadir)
 
 def build():
     autotools.make()
 
 def install():
+    pisitools.dodir(datadir)
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.domove("/usr/man", "/usr/share")
 
-    pisitools.insinto("/usr/share/pixmaps", "icon-eboard.xpm")
+    # pisitools.insinto("/usr/share/pixmaps", "icon-eboard.xpm")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README", "TODO")
+    pisitools.dodoc("AUTHORS", "COPYING", "README")

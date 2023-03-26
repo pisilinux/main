@@ -8,28 +8,34 @@
 			<Name>PisiLinux Community</Name>
 			<Email>admins@pisilinux.org</Email>
 		</Packager>
-		<License>MIT</License>
-		<License>GPL-2</License>
-		<IsA>service</IsA>
+		<License>GPL</License>
 		<IsA>app:gui</IsA>
 		<IsA>app:console</IsA>
 		<PartOf>network.p2p</PartOf>
 		<Summary>A fast, easy, and free BitTorrent client.</Summary>
 		<Description>Transmission is a free, lightweight Bittorrent client. It features a simple, intuitive interface on top of an efficient backend. This package provides only daemon, web interface and command line client. If you want use Transmission with graphical interface, you should install transmission-gtk or transmission-qt.</Description>
-		<Archive sha1sum="fd6bd78cfe5a612b422a49e8193d82df2486a3c4" type="tarxz">
-			https://github.com/transmission/transmission-releases/raw/master/transmission-3.00.tar.xz
+		<Archive sha1sum="98fb92b1146f97e00414b27259c5275d038faec9" type="tarxz">
+			https://github.com/transmission/transmission/releases/download/4.0.2/transmission-4.0.2.tar.xz
 		</Archive>
 		<BuildDependencies>
-			<Dependency>intltool</Dependency>
+			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
+			<Dependency>gtest</Dependency>
 			<Dependency>curl-devel</Dependency>
-			<Dependency>gtk3-devel</Dependency>
-			<Dependency>qt5-linguist</Dependency>
+			<Dependency>gtkmm3-devel</Dependency>
+			<Dependency>libpsl-devel</Dependency>
+			<Dependency>qt6-linguist</Dependency>
+			<Dependency>qt6-svg-devel</Dependency>
 			<Dependency>openssl-devel</Dependency>
-			<Dependency>qt5-base-devel</Dependency>
+			<Dependency>qt6-base-devel</Dependency>
 			<Dependency>xfsprogs-devel</Dependency>
 			<Dependency>libevent-devel</Dependency>
-			<Dependency>libnotify-devel</Dependency>
+			<Dependency>appstream-devel</Dependency>
+			<!-- <Dependency>libnotify-devel</Dependency> -->
 			<Dependency>miniupnpc-devel</Dependency>
+			<!-- <Dependency>llvm-clang-devel</Dependency> -->
+			<Dependency>libdeflate-devel</Dependency>
+			<Dependency>ayatana-libappindicator-devel</Dependency>
 		</BuildDependencies>
 		<Patches>
 			<!-- <Patch level="1">missing.patch</Patch> -->
@@ -41,16 +47,19 @@
 		<IsA>app:console</IsA>
 		<Summary>Transmission's cli tools, web interface and daemon.</Summary>
 		<RuntimeDependencies>
-			<Dependency>zlib</Dependency>
 			<Dependency>curl</Dependency>
+			<Dependency>libgcc</Dependency>
+			<Dependency>libpsl</Dependency>
 			<Dependency>openssl</Dependency>
 			<Dependency>libevent</Dependency>
 			<Dependency>miniupnpc</Dependency>
+			<Dependency>libdeflate</Dependency>
 		</RuntimeDependencies>
 		<Files>
 			<Path fileType="executable">/usr/bin</Path>
 			<Path fileType="config">/etc</Path>
 			<Path fileType="data">/usr/share</Path>
+			<Path fileType="data">/usr/share/transmission/public_html</Path>
 			<Path fileType="man">/usr/share/man</Path>
 			<Path fileType="doc">/usr/share/doc</Path>
 		</Files>
@@ -61,17 +70,22 @@
 		<IsA>app:gui</IsA>
 		<Summary>Transmission's GTK+ interface (default).</Summary>
 		<RuntimeDependencies>
-			<Dependency release="current">transmission-cli</Dependency>
-			<Dependency>zlib</Dependency>
 			<Dependency>curl</Dependency>
 			<Dependency>gtk3</Dependency>
+			<Dependency>atkmm</Dependency>
 			<Dependency>glib2</Dependency>
-			<Dependency>pango</Dependency>
+			<Dependency>glibmm</Dependency>
+			<Dependency>gtkmm3</Dependency>
+			<Dependency>libgcc</Dependency>
+			<Dependency>libpsl</Dependency>
+			<Dependency>cairomm</Dependency>
 			<Dependency>openssl</Dependency>
+			<Dependency>pangomm</Dependency>
 			<Dependency>libevent</Dependency>
+			<Dependency>libsigc++</Dependency>
 			<Dependency>miniupnpc</Dependency>
-			<Dependency>libnotify</Dependency>
-			<Dependency>gdk-pixbuf</Dependency>
+			<Dependency>libdeflate</Dependency>
+			<Dependency>ayatana-libappindicator</Dependency>
 		</RuntimeDependencies>
 		<Files>
 			<Path fileType="executable">/usr/bin/transmission-gtk</Path>
@@ -87,24 +101,45 @@
 		<IsA>app:gui</IsA>
 		<Summary>Transmission's Qt interface.</Summary>
 		<RuntimeDependencies>
-			<Dependency release="current">transmission-cli</Dependency>
-			<Dependency>zlib</Dependency>
 			<Dependency>curl</Dependency>
 			<Dependency>libgcc</Dependency>
+			<Dependency>libpsl</Dependency>
 			<Dependency>openssl</Dependency>
+			<Dependency>qt6-base</Dependency>
 			<Dependency>libevent</Dependency>
-			<Dependency>qt5-base</Dependency>
 			<Dependency>miniupnpc</Dependency>
+			<Dependency>libdeflate</Dependency>
 		</RuntimeDependencies>
 		<Files>
 			<Path fileType="executable">/usr/bin/transmission-qt</Path>
 			<Path fileType="data">/usr/share/applications/transmission-qt.desktop</Path>
 			<Path fileType="man">/usr/share/man/man1/transmission-qt.1</Path>
-			<Path fileType="doc">/usr/share/doc/transmission/README-QT</Path>
+			<Path fileType="localedata">/usr/share/transmission/translations</Path>
 		</Files>
 	</Package>
 
 	<History>
+		<Update release="4">
+			<Date>2023-03-16</Date>
+			<Version>4.0.2</Version>
+			<Comment>Minor bugfix version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="3">
+			<Date>2023-02-24</Date>
+			<Version>4.0.1</Version>
+			<Comment>Version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="2">
+			<Date>2023-02-08</Date>
+			<Version>4.0.0</Version>
+			<Comment>Version bump.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
 		<Update release="1">
 			<Date>2021-10-14</Date>
 			<Version>3.00</Version>
@@ -114,4 +149,3 @@
 		</Update>
 	</History>
 </PISI>
-

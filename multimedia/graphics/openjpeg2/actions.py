@@ -10,34 +10,35 @@ from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
 
 
-def setup():
-    #shelltools.makedirs("build")
-    #shelltools.cd("build")
+libdir = "lib32" if get.buildTYPE() == "emul32" else "lib"
 
-    options = "-DCMAKE_BUILD_TYPE=Release \
+def setup():
+    options = "-B build -DCMAKE_BUILD_TYPE=Release \
                -DOPENJPEG_INSTALL_LIB_DIR=lib \
                -DCMAKE_INSTALL_PREFIX=/usr \
                -DBUILD_SHARED_LIBS=ON \
-               -DBUILD_STATIC_LIBS=OFF \
-               -DBUILD_DOC=on"
+               -DOPENJPEG_INSTALL_LIB_DIR=%s \
+               -DBUILD_STATIC_LIBS=OFF" % libdir
                
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "gcc -m32")
         shelltools.export("CXX", "g++ -m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
-        options = "-DOPENJPEG_INSTALL_LIB_DIR=lib32 \
-                   -DOPENJPEG_INSTALL_BIN_DIR=emul32 \
-                   -DBUILD_DOC=OFF"
+        options += " -DOPENJPEG_INSTALL_BIN_DIR=emul32 \
+                             -DBUILD_DOC=OFF"
+
+    else:
+        options += " -DBUILD_DOC=on"
     
     cmaketools.configure(options)
 
 def build():
-    #shelltools.cd("build")
+    shelltools.cd("build")
     cmaketools.make()
 
 def install():
-    #shelltools.cd("build")
+    shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     if get.buildTYPE() == "emul32":
@@ -45,10 +46,12 @@ def install():
         pisitools.insinto("/usr/bin/","%s/usr/emul32/opj_decompress" % get.installDIR(),"opj_decompress_32")
         pisitools.insinto("/usr/bin/","%s/usr/emul32/opj_dump" % get.installDIR(),"opj_dump_32")
         pisitools.dosed("%s/usr/lib32/pkgconfig/libopenjp2.pc" % get.installDIR(), "emul32", "bin")
-        pisitools.dosed("%s/usr/lib32/openjpeg-2.5/OpenJPEGTargets-relwithdebinfo.cmake" % get.installDIR(), "emul32", "bin")
+        pisitools.dosed("%s/usr/lib32/openjpeg-2.5/OpenJPEGTargets-release.cmake" % get.installDIR(), "emul32", "bin")
         pisitools.removeDir("/usr/emul32")
+        return
         
         pisitools.dosym("openjpeg-2.5/openjpeg.h", "/usr/include/openjpeg.h")
         
+        shelltools.cd("..")
         pisitools.dodoc("AUTHORS*", "CHANGELOG*", "NEWS*", "README*")
         

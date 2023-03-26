@@ -10,14 +10,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 J = ''.join([
-    ' --disable-static',
+    ' --prefix=/usr',
     ' --disable-rpath',
+    ' --disable-gtk4',
     ' --disable-silent-rules',
-    ' --enable-qsv',
+    ' --disable-update-checks',
     ' --enable-x265',
+    ' --enable-qsv',
     ' --enable-numa',
-    ' --enable-fdk-aac',
-    ' --enable-libav-aac '
+    ' --enable-fdk-aac '
     ])
 
 def setup():
@@ -26,15 +27,12 @@ def setup():
 	shelltools.cd("gtk")
 	autotools.autoreconf("-fiv")
 	shelltools.cd("..")
-	autotools.rawConfigure("--prefix=/usr --force %s" % J)
+	autotools.rawConfigure("--force %s" % J)
 
 def build():
-	shelltools.cd("build")
-	autotools.make()
+	autotools.make("-C build")
 
 def install():
-	shelltools.cd("build")
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+	autotools.rawInstall("-C build DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("../*.markdown", "../COPYING", "../LICENSE")
-
+	pisitools.dodoc("*.markdown", "COPYING", "LICENSE")

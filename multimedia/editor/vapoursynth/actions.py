@@ -7,7 +7,7 @@
 from pisi.actionsapi import shelltools, autotools, pisitools, get
 
 def setup():
-	pisitools.dosed("doc/apireference.rst", "api", deleteLine = True)
+#	pisitools.dosed("doc/apireference.rst", "api", deleteLine = True)
 	autotools.autoreconf("-vif")
 	autotools.configure("--disable-static")
 

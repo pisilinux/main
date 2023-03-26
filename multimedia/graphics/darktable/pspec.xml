@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>darktable</Name>
@@ -12,16 +12,22 @@
         <PartOf>multimedia.graphics</PartOf>
         <Summary>darktable is an open source photography workflow application and RAW developer.</Summary>
         <Description>darktable is an open source photography workflow application and RAW developer. A virtual lighttable and darkroom for photographers.</Description>
-        <Archive type="tarxz" sha1sum="8947f647d1a990f81f3493cd2f9a88ea3e8441ed">https://github.com/darktable-org/darktable/releases/download/release-3.4.1/darktable-3.4.1.tar.xz</Archive>
+        <Archive type="tarxz" sha1sum="1f84d1d18677797215c0a71886ad15954c10da41">
+            https://github.com/darktable-org/darktable/releases/download/release-4.2.0/darktable-4.2.0.tar.xz
+        </Archive>
         <BuildDependencies>
             <Dependency>llvm</Dependency>
             <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>ccache</Dependency>
             <Dependency>libgomp</Dependency>
             <Dependency>intltool</Dependency>
+            <Dependency>lua-devel</Dependency>
             <Dependency>llvm-libs</Dependency>
             <Dependency>llvm-mlir</Dependency>
             <Dependency>llvm-polly</Dependency>
-            <Dependency>gtk2-devel</Dependency>
+            <Dependency>gmic-devel</Dependency>
+            <!-- <Dependency>gtk2-devel</Dependency> -->
             <Dependency>gtk3-devel</Dependency>
             <Dependency>mesa-devel</Dependency>
             <Dependency>webp-devel</Dependency>
@@ -33,10 +39,13 @@
             <Dependency>gconf-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>lcms2-devel</Dependency>
+            <Dependency>imath-devel</Dependency>
             <Dependency>colord-devel</Dependency>
             <Dependency>libX11-devel</Dependency>
             <Dependency>libpng-devel</Dependency>
+            <Dependency>jasper-devel</Dependency>
             <Dependency>sqlite-devel</Dependency>
+            <Dependency>libheif-devel</Dependency>
             <Dependency>lensfun-devel</Dependency>
             <Dependency>librsvg-devel</Dependency>
             <Dependency>libsdl2-devel</Dependency>
@@ -58,10 +67,11 @@
             <Dependency>ghostscript-devel</Dependency>
             <Dependency>desktop-file-utils</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>perl-Image-ExifTool</Dependency>
             <Dependency>GraphicsMagick-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">darktable-openexr3.patch</Patch>
+            <!-- <Patch level="1">darktable-openexr3.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -69,6 +79,8 @@
         <Name>darktable</Name>
         <Summary>darktable is an open source photography workflow application and RAW developer.</Summary>
         <RuntimeDependencies>
+            <Dependency>lua</Dependency>
+            <Dependency>gmic</Dependency>
             <Dependency>webp</Dependency>
             <Dependency>cups</Dependency>
             <Dependency>curl</Dependency>
@@ -77,15 +89,18 @@
             <Dependency>mesa</Dependency>
             <Dependency>tiff</Dependency>
             <Dependency>gtk2</Dependency>
+            <Dependency>icu4c</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>lcms2</Dependency>
             <Dependency>pango</Dependency>
+            <Dependency>imath</Dependency>
             <Dependency>colord</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libpng</Dependency>
             <Dependency>sqlite</Dependency>
+            <Dependency>libheif</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>pugixml</Dependency>
             <Dependency>libsdl2</Dependency>
@@ -115,7 +130,7 @@
             <Path fileType="man">/usr/share/man</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="data">/usr/share/icons</Path>
-            <Path fileType="data">/usr/share/appdata</Path>
+            <Path fileType="data">/usr/share/metainfo</Path>
             <Path fileType="data">/usr/share/darktable</Path>
             <Path fileType="library">/usr/lib/darktable</Path>
             <Path fileType="data">/usr/share/applications</Path>
@@ -125,6 +140,13 @@
     </Package>
 
     <History>
+        <Update release="13">
+            <Date>2022-12-31</Date>
+            <Version>4.2.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
         <Update release="12">
             <Date>2021-02-24</Date>
             <Version>3.4.1</Version>

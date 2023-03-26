@@ -2,33 +2,27 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
+j = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DENABLE_LAPACK=yes',
+    ' -B_build -G Ninja -L '
+    ])
+
 def setup():
-    shelltools.unlink("CMakeModules/FindZLIB.cmake")
-    shelltools.makedirs("build")
-    shelltools.cd("build") 
-    
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -DENABLE_LAPACK=yes", sourceDir="..")
+    #shelltools.unlink("CMakeModules/FindZLIB.cmake")
+    cmaketools.configure(j)
 
 def build():
-    shelltools.makedirs("build")
-    shelltools.cd("build") 
-    
-    cmaketools.make()
+    mesontools.build("-C _build")
 
 def install():
-    shelltools.makedirs("build")
-    shelltools.cd("build") 
-    
-    cmaketools.rawInstall('DESTDIR="%s"' % get.installDIR())
-    
-    shelltools.cd("..")
+    mesontools.install("-C _build")
 
-    pisitools.dodoc("AUTHORS", "README", "TODO")
+    pisitools.dodoc("authors.txt", "Changes.txt")

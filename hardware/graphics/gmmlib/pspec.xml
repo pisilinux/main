@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>gmmlib</Name>
+		<Homepage>https://github.com/intel/gmmlib</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<IsA>library</IsA>
+		<PartOf>hardware.graphics</PartOf>
+		<Summary>Graphics Memory Management Library.</Summary>
+		<Description>
+			The Intel(R) Graphics Memory Management Library provides device specific and buffer management for the Intel(R) Graphics Compute Runtime for OpenCL(TM) and the Intel(R) Media Driver for VAAPI.
+		</Description>
+		<Archive sha1sum="60a253e6e5eb394553982a60665ebd1efa62f63d" type="targz">
+			https://github.com/intel/gmmlib/archive/refs/tags/intel-gmmlib-22.2.0.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>gmmlib</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/libigdgmm.so</Path>
+			<Path fileType="library">/usr/lib/libigdgmm.so.12</Path>
+			<Path fileType="library">/usr/lib/libigdgmm.so.12.2.0</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>gmmlib-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">gmmlib</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="headers">/usr/include/igdgmm/GmmLib</Path>
+			<Path fileType="headers">/usr/include/igdgmm/inc</Path>
+			<Path fileType="headers">/usr/include/igdgmm/util</Path>
+			<Path fileType="headers">/usr/include/igdgmm/igdgmm.h</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/igdgmm.pc</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2023-01-01</Date>
+			<Version>22.2.0</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

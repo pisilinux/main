@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>libjxl</Name>
+		<Homepage>https://jpegxl.info/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>BSD-3-Clause</License>
+		<IsA>library</IsA>
+		<PartOf>multimedia.graphics</PartOf>
+		<Summary>JPEG XL image format reference implementation.</Summary>
+		<Description>A reference implementation of JPEG XL (encoder and decoder), called libjxl.</Description>
+		<Archive sha1sum="458bd257778be4664b5d259ae0cde6e213d48669" type="targz">
+			https://github.com/libjxl/libjxl/archive/refs/tags/v0.8.1.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>gtest-devel</Dependency>
+			<Dependency>lcms2-devel</Dependency>
+			<Dependency>brotli-devel</Dependency>
+			<Dependency>libhwy-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>libjxl</Name>
+		<RuntimeDependencies>
+			<Dependency>lcms2</Dependency>
+			<Dependency>brotli</Dependency>
+			<Dependency>libhwy</Dependency>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="data">/usr/share</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libjxl-devel</Name>
+		<RuntimeDependencies>
+			<Dependency>lcms2-devel</Dependency>
+			<Dependency>brotli-devel</Dependency>
+			<Dependency>libhwy-devel</Dependency>
+			<Dependency release="current">libjxl</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="headers">/usr/include</Path>
+			<Path fileType="data">/usr/lib/pkgconfig</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="3">
+			<Date>2023-02-04</Date>
+			<Version>0.8.1</Version>
+			<Comment>Minor bugfix release.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="2">
+			<Date>2023-01-27</Date>
+			<Version>0.8.0</Version>
+			<Comment>Version bump</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+		<Update release="1">
+			<Date>2023-01-06</Date>
+			<Version>0.7.0</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>intel-media-sdk</Name>
+		<Homepage>https://github.com/Intel-Media-SDK/MediaSDK/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>MIT</License>
+		<IsA>library</IsA>
+		<PartOf>programming.tools</PartOf>
+		<Summary>The Intel Media SDK.</Summary>
+		<Description>Media SDK provides a plain C API to access hardware-accelerated video decode, encode and filtering on Intel® Gen graphics hardware platforms.</Description>
+		<Archive sha1sum="121bf42101bdd57426bf87d2bafb34c3faca82f9" type="targz">
+			https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/intel-mediasdk-22.5.4.tar.gz
+		</Archive>
+		<BuildDependencies>
+			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
+			<Dependency>libva-devel</Dependency>
+			<Dependency>libdrm-devel</Dependency>
+			<Dependency>libxcb-devel</Dependency>
+			<Dependency>libX11-devel</Dependency>
+			<Dependency>opencl-icd-devel</Dependency>
+			<Dependency>libpciaccess-devel</Dependency>
+			<Dependency>wayland-protocols-devel</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>intel-media-sdk</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+			<Dependency>libva</Dependency>
+			<Dependency>libdrm</Dependency>
+			<Dependency>libdrm-intel</Dependency>
+			<Dependency>opencl-icd</Dependency>
+			<Dependency>wayland-client</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin</Path>
+			<Path fileType="library">/usr/lib</Path>
+			<Path fileType="library">/usr/lib/mfx</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/limfxhw64.pc</Path>
+			<Path fileType="data">/usr/share/mfx</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libmfx</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="library">/usr/lib/libmfx.so</Path>
+			<Path fileType="library">/usr/lib/libmfx.so.1</Path>
+			<Path fileType="library">/usr/lib/libmfx.so.1.35</Path>
+		</Files>
+	</Package>
+
+	<Package>
+		<Name>libmfx-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">libmfx</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="data">/usr/lib/pkgconfig/mfx.pc</Path>
+			<Path fileType="data">/usr/lib/pkgconfig/libmfx.pc</Path>
+			<Path fileType="headers">/usr/include/mfx</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2023-01-03</Date>
+			<Version>22.5.4</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

@@ -22,6 +22,7 @@ def setup():
                          --enable-gtk-doc \
                          --enable-python-library \
                          --with-python=python3 \
+                         --disable-systemd-services \
                          --enable-gtk4 \
                          --enable-gtk3 \
                          --enable-gtk2")

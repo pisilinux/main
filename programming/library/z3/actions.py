@@ -4,10 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools,  pisitools
 
 j = ''.join([
     ' -DCMAKE_INSTALL_PREFIX=/usr',
@@ -17,19 +14,18 @@ j = ''.join([
     ' -DZ3_LINK_TIME_OPTIMIZATION=True',
     ' -DZ3_BUILD_LIBZ3_SHARED=True',
     ' -DZ3_BUILD_PYTHON_BINDINGS=True',
-    ' -DZ3_INSTALL_PYTHON_BINDINGS=True '
+    ' -DZ3_INSTALL_PYTHON_BINDINGS=True',
+    ' PYTHON=/usr/bin/python3',
+    ' -B_build -G Ninja -L '
     ])
 
-shelltools.export("PYTHON", "/usr/bin/python3")
-
 def setup():
-	cmaketools.configure("-Bbuild %s -G 'Ninja'" % j)
+	cmaketools.configure(j)
 
 def build():
-	shelltools.system("ninja -C build")
+	mesontools.build("-C _build")
 
 def install():
-	shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
+	mesontools.install("-C _build")
 
 	pisitools.dodoc("RELEASE_NOTES.md")
-

@@ -25,4 +25,7 @@ def install():
     
     pisitools.insinto("/etc/", "src/Info.plist", "libccid_Info.plist")
 
+    pisitools.insinto("/etc/udev/rules.d/", "src/92_pcscd_ccid.rules", "92-pcsc-ccid.rules")
+    pisitools.dosed("%s/etc/udev/rules.d/92-pcsc-ccid.rules" % get.installDIR(), "Kobil_mIDentity_switch", deleteLine = True)
+
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*")

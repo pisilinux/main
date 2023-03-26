@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+	<Source>
+		<Name>mac</Name>
+		<Homepage>https://monkeysaudio.com/</Homepage>
+		<Packager>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Packager>
+		<License>custom</License>
+		<IsA>library</IsA>
+		<PartOf>multimedia.sound</PartOf>
+		<Summary>Lossless audio compressor.</Summary>
+		<Description>Monkey’s Audio is a fast and easy way to compress digital music.</Description>
+		<Archive sha1sum="761d17f2baf77d841e0d21870b4a3c9d3bbfb0b2" type="zip">
+			https://monkeysaudio.com/files/MAC_904_SDK.zip
+		</Archive>
+		<BuildDependencies>
+			<Dependency>libgcc</Dependency>
+		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level='1'></Patch> -->
+		</Patches>
+	</Source>
+
+	<Package>
+		<Name>mac</Name>
+		<RuntimeDependencies>
+			<Dependency>libgcc</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="executable">/usr/bin/mac</Path>
+			<Path fileType="library">/usr/lib/libMAC.so</Path>
+			<Path fileType="library">/usr/lib/libMAC.so.8</Path>
+			<Path fileType="data">/usr/share/doc/MAC/LICENSE</Path>
+		</Files>
+		<AdditionalFiles>
+			<AdditionalFile owner="root" permission="0644" target="/usr/share/doc/MAC/LICENSE">LICENSE</AdditionalFile>
+		</AdditionalFiles>
+	</Package>
+
+	<Package>
+		<Name>mac-devel</Name>
+		<RuntimeDependencies>
+			<Dependency release="current">mac</Dependency>
+		</RuntimeDependencies>
+		<Files>
+			<Path fileType="headers">/usr/include/MAC</Path>
+		</Files>
+	</Package>
+
+	<History>
+		<Update release="1">
+			<Date>2023-01-22</Date>
+			<Version>904</Version>
+			<Comment>First build.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
+	</History>
+</PISI>

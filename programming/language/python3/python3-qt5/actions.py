@@ -12,24 +12,24 @@ from pisi.actionsapi import get
 
 #WorkDir="PyQt5_gpl-%s" % get.srcVERSION()
 
-def setup():   
-    pythonmodules.run("configure.py --confirm-license \
-                                    --qsci-api \
-                                    --sip /usr/bin/sip \
-                                    --qmake='/usr/bin/qmake' \
-                                    --destdir='/usr/lib/python3.9/site-packages' \
-                                    --sip-incdir='/usr/include/python3.9' \
-                                    CFLAGS='%s' CXXFLAGS='%s'" % (get.CFLAGS(), get.CXXFLAGS()), pyVer = "3")
+def setup():
+    shelltools.system("sip-build \
+                        --confirm-license \
+                        --no-make \
+                        --qt-shared \
+                        --qmake=/usr/bin/qmake \
+                        --api-dir /usr/share/qt5/qsci/api/python3.9 \
+                        --pep484-pyi")
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
 def build():
-    autotools.make()
+    autotools.make("-C build")
 
 def install():
     #shelltools.cd("%s/PyQt5_gpl-%s" % (get.workDIR(),get.srcVERSION()))
-    autotools.rawInstall("-C pyrcc DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
-    autotools.rawInstall("-C pylupdate DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
-    autotools.rawInstall("DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
+    autotools.rawInstall("-C build pyrcc DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
+    autotools.rawInstall("-C build pylupdate DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
+    autotools.rawInstall("-C build DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
 
     
     #pisitools.dohtml("doc/html/*")
