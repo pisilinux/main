@@ -30,4 +30,4 @@ def install():
     # No static libs
     #pisitools.remove("/usr/lib/*.a")
 
-    pisitools.dodoc("ChangeLog")
+    pisitools.dodoc("README*")
