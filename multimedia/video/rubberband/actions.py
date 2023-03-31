@@ -7,20 +7,19 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 JAVA_HOME = "/usr/lib/jvm/java-8-openjdk"
 shelltools.export("JAVA_HOME", JAVA_HOME)
 
 def setup():
-    autotools.autoreconf("-vfi")
-    autotools.configure()
+    mesontools.configure()
 
 def build():
-    autotools.make()
-    autotools.make("jni")
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("CHANGELOG", "COPYING", "README*")
