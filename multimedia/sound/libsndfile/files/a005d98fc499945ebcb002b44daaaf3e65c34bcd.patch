@@ -1,0 +1,24 @@
+From a005d98fc499945ebcb002b44daaaf3e65c34bcd Mon Sep 17 00:00:00 2001
+From: Pierre Wendling <pierre.wendling.4@gmail.com>
+Date: Wed, 1 Mar 2023 21:41:57 -0500
+Subject: [PATCH] CMake: Explicitly link against Ogg::ogg.
+
+This worked previously because Vorbis and FLAC have a dependency on
+Ogg::ogg, but since we have a direct dependency on it, it should be
+linked explicitly.
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 71b20f2f5..3bfe29f51 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -391,6 +391,7 @@ target_include_directories (sndfile
+ target_link_libraries (sndfile
+ 	PRIVATE
+ 		$<$<BOOL:${LIBM_REQUIRED}>:m>
++		$<$<BOOL:${HAVE_EXTERNAL_XIPH_LIBS}>:Ogg::ogg>
+ 		$<$<BOOL:${HAVE_EXTERNAL_XIPH_LIBS}>:Vorbis::vorbisenc>
+ 		$<$<BOOL:${HAVE_EXTERNAL_XIPH_LIBS}>:FLAC::FLAC>
+ 		$<$<AND:$<BOOL:${ENABLE_EXPERIMENTAL}>,$<BOOL:${HAVE_EXTERNAL_XIPH_LIBS}>,$<BOOL:${HAVE_SPEEX}>>:Speex::Speex>
