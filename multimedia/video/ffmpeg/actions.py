@@ -2,100 +2,100 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import get
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import shelltools, autotools, pisitools, get
+
+i = ''.join([
+    ' --prefix=/usr',
+    ' --mandir=/usr/share/man',
+    ' --disable-debug',
+    ' --disable-static',
+    ' --disable-stripping',
+    ' --disable-liblensfun',
+    ' --enable-libpulse',
+    ' --enable-version3',
+    ' --enable-gpl',
+    ' --enable-shared',
+    ' --enable-frei0r',
+    ' --enable-ladspa',
+    ' --enable-nonfree',
+    ' --enable-avfilter',
+    ' --enable-pic',
+    ' --enable-libaom',
+    ' --enable-libjxl',
+    ' --enable-libbs2b',
+    ' --enable-libass',
+    ' --enable-libaribb24',
+    ' --enable-libcelt',
+    ' --enable-libcdio',
+    ' --enable-libcodec2',
+    ' --enable-libbluray',
+    ' --enable-libdav1d',
+    ' --enable-libdavs2',
+    ' --enable-libdc1394',
+    ' --enable-libfdk-aac',
+    ' --enable-libflite',
+    ' --enable-libfribidi',
+    ' --enable-libfreetype',
+    ' --enable-libfontconfig',
+    ' --enable-libgme',
+    ' --enable-libgsm',
+    ' --enable-libilbc',
+    ' --enable-libjack',
+    ' --enable-libkvazaar',
+    ' --enable-libmodplug',
+    ' --enable-libmp3lame',
+    ' --enable-libiec61883',
+    ' --enable-libopus',
+    ' --enable-libopenjpeg',
+    ' --enable-librsvg',
+    ' --enable-librubberband',
+    ' --enable-librtmp',
+    ' --enable-libshine',
+    ' --enable-libsnappy',
+    ' --enable-libsoxr',
+    ' --enable-libspeex',
+    ' --enable-libtheora',
+    ' --enable-libopencore_amrnb',
+    ' --enable-libopencore_amrwb',
+    ' --enable-libtwolame',
+    ' --enable-libvidstab',
+    ' --enable-libv4l2',
+    ' --enable-libvpx',
+    ' --enable-libvorbis',
+    ' --enable-libwebp',
+    ' --enable-libxavs',
+    ' --enable-libxavs2',
+    ' --enable-libxcb',
+    ' --enable-libxvid',
+    ' --enable-libx264',
+    ' --enable-libx265',
+    ' --enable-libvo-amrwbenc',
+    ' --enable-libxml2',
+    ' --enable-libzmq',
+    ' --enable-libzimg',
+    ' --enable-librav1e',
+    ' --enable-postproc',
+    ' --enable-runtime-cpudetect',
+    ' --enable-libsvtav1',
+    ' --enable-swresample',
+    ' --enable-vdpau',
+    ' --enable-openal',
+    ' --enable-opencl',
+    ' --enable-openssl',
+    ' --enable-libdrm',
+    ' --enable-libmfx',
+    ' --enable-nvenc',
+    ' --enable-nvdec',
+    ' --enable-vaapi',
+    ' --enable-libsrt',
+    ' --enable-omx',
+    ' --extra-ldflags="-lasound -lm" '
+    ])
 
 def setup():
-	shelltools.system("./configure --prefix=/usr \
-                            --mandir=/usr/share/man \
-                            --disable-debug \
-                            --disable-static \
-                            --disable-stripping \
-                            --enable-version3 \
-                            --enable-nonfree \
-                            --enable-avfilter \
-                            --enable-avresample \
-                            --enable-frei0r \
-                            --enable-gpl \
-                            --enable-ladspa \
-                            --enable-libaom \
-                            --enable-libaribb24 \
-                            --enable-libass \
-                            --enable-libbluray \
-                            --enable-libbs2b \
-                            --enable-libcelt \
-                            --enable-libcdio \
-                            --enable-libcodec2 \
-                            --enable-libdav1d \
-                            --enable-libdavs2 \
-                            --enable-libdc1394 \
-                            --enable-libfdk-aac \
-                            --enable-libflite \
-                            --enable-libfontconfig \
-                            --enable-libfreetype \
-                            --enable-libfribidi \
-                            --enable-libgme \
-                            --enable-libgsm \
-                            --enable-libiec61883 \
-                            --enable-libilbc \
-                            --enable-libjack \
-                            --enable-libkvazaar \
-                            --disable-liblensfun \
-                            --enable-libmodplug \
-                            --enable-libmp3lame \
-                            --enable-libopencore_amrnb \
-                            --enable-libopencore_amrwb \
-                            --enable-libopenjpeg \
-                            --enable-libopus \
-                            --enable-libpulse \
-                            --enable-librsvg \
-                            --enable-librubberband \
-                            --enable-librtmp \
-                            --enable-libshine \
-                            --enable-libsnappy \
-                            --enable-libsoxr \
-                            --enable-libspeex \
-                            --enable-libtheora \
-                            --enable-libtwolame \
-                            --enable-libvidstab \
-                            --enable-libv4l2 \
-                            --enable-libvo-amrwbenc \
-                            --enable-libvorbis \
-                            --enable-libvpx \
-                            --enable-libwebp \
-                            --enable-libx264 \
-                            --enable-libx265 \
-                            --enable-libxavs \
-                            --enable-libxavs2 \
-                            --enable-libxcb \
-                            --enable-libxvid \
-                            --enable-libxml2 \
-                            --enable-libzmq \
-                            --enable-libzimg \
-                            --enable-pic \
-                            --enable-postproc \
-                            --enable-librav1e \
-                            --enable-runtime-cpudetect \
-                            --enable-shared \
-                            --enable-libsvtav1 \
-                            --enable-swresample \
-                            --enable-vdpau \
-                            --enable-openal \
-                            --enable-opencl \
-                            --enable-openssl \
-                            --enable-libdrm \
-                            --enable-libmfx \
-                            --enable-nvdec \
-                            --enable-nvenc \
-                            --enable-vaapi \
-                            --enable-vdpau \
-                            --enable-omx \
-                            --enable-libsrt \
-                            --extra-ldflags='-lasound -lm'")
+    shelltools.system("./configure %s" % i)
 
 def build():
     autotools.make()
@@ -105,5 +105,5 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s install-man" % get.installDIR())
     pisitools.dobin("tools/qt-faststart")
-    
-    pisitools.dodoc("Changelog", "README.md", "LICENSE.md", "COPYING*")
+
+    pisitools.dodoc("Changelog", "MAINTAINERS")
