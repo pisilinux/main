@@ -2,30 +2,24 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import autotools, pisitools, get
+
+i = ''.join([
+    ' --disable-dependency-tracking',
+    ' --disable-static '
+    ])
 
 def setup():
-    options  = "--with-pic \
-                --enable-ogg \
-                --enable-sse \
-                --disable-doxygen-docs \
-                --disable-dependency-tracking \
-                --disable-xmms-plugin \
-                --disable-static"
-    pisitools.cflags.add("-Wno-stringop-overflow -Wno-stringop-truncation")
-    autotools.autoconf()
-    autotools.configure(options)
+    autotools.configure(i)
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     autotools.make()
 
-#def check():
+def check():
+    pass
     #autotools.make("check")
 
 def install():
