@@ -15,7 +15,8 @@ def setup():
     # suppress compiler warnings
     pisitools.cflags.add("-Wno-unused-result")
     autotools.configure("--sbindir=/usr/bin \
-                         --enable-plugins")
+                                     --localstatedir=/var \
+                                     --enable-plugins")
 
     #pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
     #pisitools.dosed("libtool", "^(runpath_var=)LD_RUN_PATH", "\\1DIE_RPATH_DIE")
