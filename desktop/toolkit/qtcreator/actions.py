@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 #WorkDir="qt-creator-opensource-src-%s" % get.srcVERSION()
 def setup():
-    # pisitools.dosed("qtcreator.pri", "libexec/qtcreator", "lib/qtcreator")
+    pisitools.dosed("qtcreator.pri", "libexec/qtcreator", "lib/qtcreator")
     # pisitools.dosed("src/tools/tools.pro", "libexec", "lib")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                             -DCMAKE_INSTALL_LIBEXECDIR=lib \
