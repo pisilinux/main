@@ -47,4 +47,4 @@ def install():
         pisitools.dosed("%s/usr/lib32/cmake/OpenAL/OpenALConfig.cmake" % get.installDIR(), "emul32", "usr")
         return
 
-    pisitools.dodoc("COPYING", "alsoftrc.sample")
+    pisitools.dodoc("COPYING", "alsoftrc.sample", "README*")
