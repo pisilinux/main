@@ -67,6 +67,7 @@ def setup():
                     -DQT_FEATURE_dbus_linked=ON \
                     -DQT_FEATURE_journald=ON \
                     -DQT_FEATURE_system_zlib=ON \
+                    -DFEATURE_no_direct_extern_access=ON \
                     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
                     -DCMAKE_MESSAGE_LOG_LEVEL=STATUS \
                     -DQT_FEATURE_system_xcb_xinput=ON \
