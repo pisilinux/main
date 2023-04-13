@@ -52,5 +52,9 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     libtools.preplib()
 
+    if get.buildTYPE() == "emul32":
+        pisitools.dosed("%s/usr/lib32/cmake/SDL2/*.cmake" % get.installDIR(), "emul32", "usr")
+        return
+
 
     pisitools.dodoc("BUGS.txt", "CREDITS.txt", "README*", "README-SDL.txt", "TODO.txt", "WhatsNew.txt")

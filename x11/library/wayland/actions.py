@@ -38,4 +38,4 @@ def install():
             pisitools.insinto("/usr/share/pixmaps/icons", "doc/publican/sources/images/wayland.png")
         return
 
-    pisitools.dodoc("COPYING", "CONTRIBUTING*", "README")
+    pisitools.dodoc("COPYING", "CONTRIBUTING*", "README*")

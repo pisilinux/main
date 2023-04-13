@@ -16,7 +16,8 @@ def setup():
     #autotools.autoreconf("-vfi")
     #autotools.configure()
     
-    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_INSTALL_LIBDIR=/usr/lib \
                           -DBUILD_SHARED_LIBS=ON")
 
 def build():

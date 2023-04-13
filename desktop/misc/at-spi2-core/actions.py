@@ -15,7 +15,7 @@ def setup():
     shelltools.cd("build")
     options = "meson --prefix=/usr --sysconfdir=/etc \
                      --libexec=/usr/libexec/at-spi2 \
-                     -Dintrospection=yes \
+                     -Dintrospection=enabled \
                      -Ddbus_daemon=/usr/bin/dbus-daemon \
                      -D docs=true \
               "
@@ -25,7 +25,7 @@ def setup():
                     --libexec=/usr/emul32 \
                     --sysconfdir=/usr/emul32 \
                     --libdir=lib32 \
-                    -Dintrospection=no \
+                    -Dintrospection=disabled \
                     -D docs=false .."
 
         

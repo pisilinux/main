@@ -15,6 +15,9 @@ def install():
     # Copy Notification Rc file for Kde
     pisitools.insinto("%s/package-manager/" % kde5.appsdir, "src/package-manager.notifyrc")
 
+    # mate gnome adwaita icons
+    pisitools.insinto("/usr/share/icons/Adwaita/symbolic/status", "data/application-x-pisi.svg")
+
     for lang in ('de','en','es','fr','nl','sv','tr'):
         pisitools.insinto("%s/html/%s/package-manager/" % (kde5.docdir, lang),
                           "help/%s/main_help.html" % lang, "index.html")

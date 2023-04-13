@@ -4,44 +4,26 @@ index e5fe734f7..e36922775 100644
 +++ b/src/imports/platform/widgets/qwidgetplatformmenu.cpp
 @@ -38,6 +38,7 @@
  #include "qwidgetplatformmenuitem_p.h"
-
+ 
  #include <QtGui/qwindow.h>
 +#include <QtGui/private/qhighdpiscaling_p.h>
  #include <QtWidgets/qmenu.h>
  #include <QtWidgets/qaction.h>
-
+ 
 @@ -145,7 +146,7 @@ void QWidgetPlatformMenu::showPopup(const QWindow *window, const QRect &targetRe
-
+ 
      QPoint targetPos = targetRect.bottomLeft();
      if (window)
 -        targetPos = window->mapToGlobal(targetPos);
 +        targetPos = window->mapToGlobal(QHighDpi::fromNativeLocalPosition(targetPos, window));
-
+ 
      const QWidgetPlatformMenuItem *widgetItem = qobject_cast<const QWidgetPlatformMenuItem *>(item);
      m_menu->popup(targetPos, widgetItem ? widgetItem->action() : nullptr);
 diff --git a/src/quicktemplates2/qquickabstractbutton.cpp b/src/quicktemplates2/qquickabstractbutton.cpp
-index 950e4e099..b81fbea0b 100644
+index 20cf59c1a..43af47a94 100644
 --- a/src/quicktemplates2/qquickabstractbutton.cpp
 +++ b/src/quicktemplates2/qquickabstractbutton.cpp
-@@ -387,6 +387,17 @@ void QQuickAbstractButtonPrivate::itemImplicitHeightChanged(QQuickItem *item)
-         emit q->implicitIndicatorHeightChanged();
- }
-
-+void QQuickAbstractButtonPrivate::itemDestroyed(QQuickItem *item)
-+{
-+    Q_Q(QQuickAbstractButton);
-+    QQuickControlPrivate::itemDestroyed(item);
-+    if (item == indicator) {
-+        indicator = nullptr;
-+        emit q->implicitIndicatorWidthChanged();
-+        emit q->implicitIndicatorHeightChanged();
-+    }
-+}
-+
- QQuickAbstractButton *QQuickAbstractButtonPrivate::findCheckedButton() const
- {
-     Q_Q(const QQuickAbstractButton);
-@@ -1176,6 +1187,12 @@ QAccessible::Role QQuickAbstractButton::accessibleRole() const
+@@ -1201,6 +1201,12 @@ QAccessible::Role QQuickAbstractButton::accessibleRole() const
      }
      return QAccessible::Button;
  }
@@ -52,7 +34,7 @@ index 950e4e099..b81fbea0b 100644
 +    d->trigger();
 +}
  #endif
-
+ 
  QT_END_NAMESPACE
 diff --git a/src/quicktemplates2/qquickabstractbutton_p.h b/src/quicktemplates2/qquickabstractbutton_p.h
 index 0fa48980e..ab66220d0 100644
@@ -64,33 +46,8 @@ index 0fa48980e..ab66220d0 100644
      QAccessible::Role accessibleRole() const override;
 +    Q_INVOKABLE void accessiblePressAction();
  #endif
-
+ 
  private:
-diff --git a/src/quicktemplates2/qquickabstractbutton_p_p.h b/src/quicktemplates2/qquickabstractbutton_p_p.h
-index 9291c1a87..b729720f2 100644
---- a/src/quicktemplates2/qquickabstractbutton_p_p.h
-+++ b/src/quicktemplates2/qquickabstractbutton_p_p.h
-@@ -109,6 +109,7 @@ public:
-
-     void itemImplicitWidthChanged(QQuickItem *item) override;
-     void itemImplicitHeightChanged(QQuickItem *item) override;
-+    void itemDestroyed(QQuickItem *item) override;
-
-     // copied from qabstractbutton.cpp
-     static const int AUTO_REPEAT_DELAY = 300;
-diff --git a/src/quicktemplates2/qquickaction.cpp b/src/quicktemplates2/qquickaction.cpp
-index 2041e7741..8610cdfae 100644
---- a/src/quicktemplates2/qquickaction.cpp
-+++ b/src/quicktemplates2/qquickaction.cpp
-@@ -145,7 +145,7 @@ int QQuickActionPrivate::ShortcutEntry::shortcutId() const
-
- void QQuickActionPrivate::ShortcutEntry::grab(const QKeySequence &shortcut, bool enabled)
- {
--    if (shortcut.isEmpty())
-+    if (shortcut.isEmpty() || m_shortcutId)
-         return;
-
-     Qt::ShortcutContext context = Qt::WindowShortcut; // TODO
 diff --git a/src/quicktemplates2/qquickcontainer.cpp b/src/quicktemplates2/qquickcontainer.cpp
 index f38c2b09c..6eed2a024 100644
 --- a/src/quicktemplates2/qquickcontainer.cpp
@@ -101,7 +58,7 @@ index f38c2b09c..6eed2a024 100644
      delete contentModel;
 +    contentModel = nullptr;
  }
-
+ 
  QQuickItem *QQuickContainerPrivate::itemAt(int index) const
 @@ -436,7 +437,7 @@ void QQuickContainerPrivate::contentChildren_clear(QQmlListProperty<QQuickItem>
  void QQuickContainerPrivate::updateContentWidth()
@@ -110,7 +67,7 @@ index f38c2b09c..6eed2a024 100644
 -    if (hasContentWidth || qFuzzyCompare(contentWidth, implicitContentWidth))
 +    if (hasContentWidth || qFuzzyCompare(contentWidth, implicitContentWidth) || !contentModel)
          return;
-
+ 
      contentWidth = implicitContentWidth;
 @@ -446,7 +447,7 @@ void QQuickContainerPrivate::updateContentWidth()
  void QQuickContainerPrivate::updateContentHeight()
@@ -119,7 +76,7 @@ index f38c2b09c..6eed2a024 100644
 -    if (hasContentHeight || qFuzzyCompare(contentHeight, implicitContentHeight))
 +    if (hasContentHeight || qFuzzyCompare(contentHeight, implicitContentHeight) || !contentModel)
          return;
-
+ 
      contentHeight = implicitContentHeight;
 diff --git a/src/quicktemplates2/qquickcontrol.cpp b/src/quicktemplates2/qquickcontrol.cpp
 index bbbd0e622..1f4b47343 100644
@@ -128,7 +85,7 @@ index bbbd0e622..1f4b47343 100644
 @@ -845,6 +845,13 @@ void QQuickControlPrivate::executeBackground(bool complete)
          quickCompleteDeferred(q, backgroundName(), background);
  }
-
+ 
 +/*
 +    \internal
 +
@@ -142,7 +99,7 @@ index bbbd0e622..1f4b47343 100644
 @@ -863,6 +870,29 @@ void QQuickControlPrivate::hideOldItem(QQuickItem *item)
  #endif
  }
-
+ 
 +/*
 +    \internal
 +
@@ -175,12 +132,12 @@ index 8e979079e..a6e624c91 100644
 +++ b/src/quicktemplates2/qquickcontrol_p_p.h
 @@ -173,6 +173,7 @@ public:
      virtual void executeBackground(bool complete = false);
-
+ 
      static void hideOldItem(QQuickItem *item);
 +    static void unhideOldItem(QQuickControl *control, QQuickItem *item);
-
+ 
      void updateBaselineOffset();
-
+ 
 diff --git a/src/quicktemplates2/qquickdialogbuttonbox.cpp b/src/quicktemplates2/qquickdialogbuttonbox.cpp
 index e6db14eb5..6197d1547 100644
 --- a/src/quicktemplates2/qquickdialogbuttonbox.cpp
@@ -192,7 +149,7 @@ index e6db14eb5..6197d1547 100644
 -    if (!contentItem)
 +    if (!contentItem || !contentModel)
          return;
-
+ 
      QRectF geometry = q->boundingRect().adjusted(q->leftPadding(), q->topPadding(), -q->rightPadding(), -q->bottomPadding());
 @@ -322,6 +322,9 @@ void QQuickDialogButtonBoxPrivate::updateLayout()
  qreal QQuickDialogButtonBoxPrivate::getContentWidth() const
@@ -215,13 +172,13 @@ index e6db14eb5..6197d1547 100644
      qreal maxHeight = 0;
      for (int i = 0; i < count; ++i) {
 diff --git a/src/quicktemplates2/qquickoverlay.cpp b/src/quicktemplates2/qquickoverlay.cpp
-index b8d417f29..c8cd142ae 100644
+index 91bd59184..0ce518f84 100644
 --- a/src/quicktemplates2/qquickoverlay.cpp
 +++ b/src/quicktemplates2/qquickoverlay.cpp
 @@ -399,8 +399,11 @@ void QQuickOverlay::itemChange(ItemChange change, const ItemChangeData &data)
      Q_D(QQuickOverlay);
      QQuickItem::itemChange(change, data);
-
+ 
 -    if (change == ItemChildAddedChange || change == ItemChildRemovedChange)
 +    if (change == ItemChildAddedChange || change == ItemChildRemovedChange) {
          setVisible(!d->allDrawers.isEmpty() || !childItems().isEmpty());
@@ -229,7 +186,7 @@ index b8d417f29..c8cd142ae 100644
 +            d->setMouseGrabberPopup(nullptr);
 +    }
  }
-
+ 
  void QQuickOverlay::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry)
 diff --git a/src/quicktemplates2/qquickscrollbar.cpp b/src/quicktemplates2/qquickscrollbar.cpp
 index 4e2f509db..1c4b308cd 100644
@@ -238,7 +195,7 @@ index 4e2f509db..1c4b308cd 100644
 @@ -797,6 +797,14 @@ void QQuickScrollBarAttachedPrivate::initHorizontal()
      if (parent && parent == flickable->parentItem())
          horizontal->stackAfter(flickable);
-
+ 
 +    // If a scroll bar was previously hidden (due to e.g. setting a new contentItem
 +    // on a ScrollView), we need to make sure that we un-hide it.
 +    // We don't bother checking if the item is actually the old one, because
@@ -253,7 +210,7 @@ index 4e2f509db..1c4b308cd 100644
 @@ -818,6 +826,9 @@ void QQuickScrollBarAttachedPrivate::initVertical()
      if (parent && parent == flickable->parentItem())
          vertical->stackAfter(flickable);
-
+ 
 +    if (auto control = qobject_cast<QQuickControl*>(q_ptr->parent()))
 +        QQuickControlPrivate::unhideOldItem(control, vertical);
 +
@@ -314,38 +271,6 @@ index 0e8b08352..cd4931184 100644
 +        mouseDrag(verticalScrollBar, verticalScrollBar.width / 2, verticalScrollBar.height / 2, 0, 50)
 +        verify(verticalScrollBar.active)
 +        verify(horizontalScrollBar.active)
-+    }
- }
-diff --git a/tests/auto/controls/data/tst_switch.qml b/tests/auto/controls/data/tst_switch.qml
-index b3fab41ca..10b6baa02 100644
---- a/tests/auto/controls/data/tst_switch.qml
-+++ b/tests/auto/controls/data/tst_switch.qml
-@@ -608,4 +608,27 @@ TestCase {
-         mouseClick(control.indicator)
-         verify(control.activeFocus)
-     }
-+
-+    Component {
-+        id: deletionOrder1
-+        Item {
-+            Image { id: innerImage }
-+            Switch { indicator: innerImage }
-+        }
-+    }
-+
-+    Component {
-+        id: deletionOrder2
-+        Item {
-+            Switch { indicator: innerImage }
-+            Image { id: innerImage }
-+        }
-+    }
-+
-+    function test_deletionOrder() {
-+        var control1 = createTemporaryObject(deletionOrder1, testCase)
-+        verify(control1)
-+        var control2 = createTemporaryObject(deletionOrder2, testCase)
-+        verify(control2)
 +    }
  }
 diff --git a/tests/auto/qquickpopup/data/releaseAfterExitTransition.qml b/tests/auto/qquickpopup/data/releaseAfterExitTransition.qml
@@ -433,21 +358,21 @@ index 000000000..9e4598b9f
 +    }
 +}
 diff --git a/tests/auto/qquickpopup/tst_qquickpopup.cpp b/tests/auto/qquickpopup/tst_qquickpopup.cpp
-index ede3640c2..f1840946b 100644
+index 54952d128..3d50e2dd4 100644
 --- a/tests/auto/qquickpopup/tst_qquickpopup.cpp
 +++ b/tests/auto/qquickpopup/tst_qquickpopup.cpp
-@@ -97,6 +97,7 @@ private slots:
+@@ -100,6 +100,7 @@ private slots:
      void invisibleToolTipOpen();
      void centerInOverlayWithinStackViewItem();
      void destroyDuringExitTransition();
 +    void releaseAfterExitTransition();
  };
-
+ 
  void tst_QQuickPopup::initTestCase()
-@@ -1459,6 +1460,34 @@ void tst_QQuickPopup::destroyDuringExitTransition()
+@@ -1575,6 +1576,34 @@ void tst_QQuickPopup::destroyDuringExitTransition()
      QVERIFY(!button->isDown());
  }
-
+ 
 +void tst_QQuickPopup::releaseAfterExitTransition()
 +{
 +    QQuickApplicationHelper helper(this, "releaseAfterExitTransition.qml");
@@ -477,5 +402,5 @@ index ede3640c2..f1840946b 100644
 +
 +
  QTEST_QUICKCONTROLS_MAIN(tst_QQuickPopup)
-
+ 
  #include "tst_qquickpopup.moc"

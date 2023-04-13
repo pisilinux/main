@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure("--enable-static=no")
+    autotools.configure("--enable-static=no --disable-go")
 
 def build():
     autotools.make()
