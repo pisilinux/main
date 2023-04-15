@@ -79,8 +79,10 @@ def setup():
     autotools.rawConfigure('--with-mpm=prefork \
                             --enable-layout=PisiLinux \
                             --enable-mods-shared=all \
-                            --with-ssl=/usr \
+                            --with-ssl=/usr/bin/openssl \
                             --enable-ssl=shared \
+                            --enable-ssl \
+                            --enable-so \
                             %s \
                             --with-z=/usr \
                             --with-port=80 \
