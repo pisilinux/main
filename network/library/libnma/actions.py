@@ -18,6 +18,8 @@ def build():
 
 def install():
     mesontools.install()
+
+    # network-manager-applet 1.32.0
+    pisitools.remove("/usr/share/glib-2.0/schemas/org.gnome.nm-applet.gschema.xml")
     
-    #shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README")
