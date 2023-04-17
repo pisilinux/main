@@ -18,7 +18,7 @@ i = "--enable-introspection \
     "
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure(i)
 
     #pisitools.dosed("libtool", "^(hardcode_libdir_flag_spec=).*", '\\1""')
