@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.cflags.add("-Wno-deprecated-declarations")
-    autotools.autoreconf("-fiv")
+    #autotools.autoreconf("-fiv")
     # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--disable-static")
 
