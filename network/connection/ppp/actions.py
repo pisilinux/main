@@ -15,24 +15,24 @@ def setup():
     pisitools.dosed("pppd/plugins/dhcp/Makefile.linux", "^(CFLAGS=.+)\s-O2", "\\1 %s" % get.CFLAGS())
 
     # Enable atm
-    # pisitools.dosed("pppd/Makefile.linux", "^#(HAVE_LIBATM=yes)", "\\1")
+    pisitools.dosed("pppd/Makefile.linux", "^#(HAVE_LIBATM=yes)", "\\1")
     # Enable pam
-    # pisitools.dosed("pppd/Makefile.linux", "^#(USE_PAM=y)", "\\1")
+    pisitools.dosed("pppd/Makefile.linux", "^#(USE_PAM=y)", "\\1")
     # Enable CBCP
-    # pisitools.dosed("pppd/Makefile.linux", "^#(CBCP=y)", "\\1")
+    pisitools.dosed("pppd/Makefile.linux", "^#(CBCP=y)", "\\1")
     # Enable IPv6
-    # pisitools.dosed("pppd/Makefile.linux", "^#(HAVE_INET6)", "\\1")
+    pisitools.dosed("pppd/Makefile.linux", "^#(HAVE_INET6)", "\\1")
     # Enable dhcp
-    # pisitools.dosed("pppd/plugins/Makefile.linux", "^(SUBDIRS\s:=.+)", "\\1 dhcp")
+    pisitools.dosed("pppd/plugins/Makefile.linux", "^(SUBDIRS\s:=.+)", "\\1 dhcp")
 
-    autotools.configure("--enable-cbcp --enable-ipv6cp=yes")
+    autotools.configure()
 
 def build():
     autotools.make()
 
 def install():
     # The build mechanism is crap. Don't remove \/usr from DESTDIR or else the paths will fail
-    autotools.rawInstall("DESTDIR=%s  INSTROOT=%s" % ((get.installDIR(),)*2))
+    autotools.rawInstall("DESTDIR=%s/usr INSTROOT=%s install-etcppp" % ((get.installDIR(),)*2))
 
     # No suid libraries
     shelltools.chmod("%s/usr/lib/pppd/%s/*.so" % (get.installDIR(),get.srcVERSION()), 0755)
