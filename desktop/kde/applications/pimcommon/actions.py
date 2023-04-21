@@ -7,7 +7,8 @@
 from pisi.actionsapi import kde5
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DCMAKE_INSTALL_LIBDIR=lib \
+                    -DBUILD_TESTING=OFF")
 
 def build():
     kde5.make()
