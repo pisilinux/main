@@ -34,6 +34,13 @@ def build():
 
 def install():
     pythonmodules.install()
+
+    #Remove .py extensions from scripts in /usr/bin
+    for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        pisitools.domove("/usr/bin/%s" % f, "/usr/bin", f.replace(".py", ""))
+
+    for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        pisitools.rename("/usr/bin/%s" % bin, "%s_2" % bin)
     
     shelltools.cd("../build_python3/%s" % WorkDir)
     pythonmodules.install(pyVer="3")
@@ -42,14 +49,14 @@ def install():
     for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
         pisitools.domove("/usr/bin/%s" % f, "/usr/bin", f.replace(".py", ""))
         
-    for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
-        pisitools.rename("/usr/bin/%s" % bin, "%s_3" % bin)
+    # for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        # pisitools.rename("/usr/bin/%s" % bin, "%s_3" % bin)
     
-    shelltools.cd("../../build_python/%s" % WorkDir)
-    pythonmodules.install()
+    # shelltools.cd("../../build_python/%s" % WorkDir)
+    # pythonmodules.install()
     
     
 
     #Remove .py extensions from scripts in /usr/bin
-    for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
-        pisitools.domove("/usr/bin/%s" % f, "/usr/bin", f.replace(".py", ""))
+    # for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        # pisitools.domove("/usr/bin/%s" % f, "/usr/bin", f.replace(".py", ""))
