@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     mesontools.configure("-Ddocs=false \
                           -Dman=true \
+                          -Dsoup=soup3 \
                           -Dstemmer=disabled \
                           -Dsystemd_user_services=false \
                           -Dsystemd_user_services_dir=no \
