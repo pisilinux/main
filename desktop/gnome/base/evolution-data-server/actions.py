@@ -27,7 +27,7 @@ def setup():
                           -DENABLE_GTK_DOC=OFF          \
                           -DENABLE_OAUTH2=ON            \
                           -DENABLE_GOA=OFF              \
-                          -DENABLE_OAUTH2_WEBKITGTK=ON \
+                          -DENABLE_OAUTH2_WEBKITGTK=OFF \
                           -DWITH_SYSTEMDUSERUNITDIR=NO")
 
 def build():
