@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 def setup():
     mesontools.configure("-Dskip_dbus_tests=true \
                           -Dskip_gtk_tests=true  \
-                          -Dprofiler=disabled    \
+                          -Dprofiler=disabled \
                           -Dinstalled_tests=false")
 
 def build():
