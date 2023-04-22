@@ -1,0 +1,34 @@
+diff -Nuar a/installed-tests/js/meson.build b/installed-tests/js/meson.build
+--- a/installed-tests/js/meson.build	2023-03-19 00:04:55.000000000 +0300
++++ b/installed-tests/js/meson.build	2023-03-19 11:23:33.538726462 +0300
+@@ -203,9 +203,13 @@
+ # during build should be run using dbus-run-session
+ 
+ dbus_tests = ['GDBus']
+-if have_gtk4 and not get_option('skip_gtk_tests')
+-    # FIXME: find out why GTK4 tries to acquire a message bus
+-    dbus_tests += 'Gtk4'
++if not get_option('skip_gtk_tests')
++    have_gtk4 = dependency('gtk4', required: false).found()
++
++    if have_gtk4 
++        # FIXME: find out why GTK4 tries to acquire a message bus
++        dbus_tests += 'Gtk4'
++    endif
+ endif
+ 
+ bus_config = files('../../test/test-bus.conf')
+diff -Nuar a/meson.build b/meson.build
+--- a/meson.build	2023-03-19 00:04:55.000000000 +0300
++++ b/meson.build	2023-03-19 11:20:02.940359304 +0300
+@@ -679,10 +679,6 @@
+ 
+ ### Tests and test setups ######################################################
+ 
+-if not get_option('skip_gtk_tests')
+-    have_gtk4 = dependency('gtk4', required: false).found()
+-endif
+-
+ subdir('installed-tests')
+ 
+ # Note: The test program in test/ needs to be ported

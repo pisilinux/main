@@ -7,8 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    mesontools.configure("-Denable-static=no \
-                            -Denable-shoutcast=no \
+    mesontools.configure("-Denable-shoutcast=no \
                             -Denable-bookmarks=yes \
                             -Denable-dleyna=yes \
                             -Denable-dmap=yes \
@@ -22,6 +21,7 @@ def setup():
                             -Denable-tmdb=yes \
                             -Denable-youtube=yes \
                             -Denable-tracker=no \
+                            -Denable-youtube=no \
                             -Denable-tracker3=yes")
 
 def build():
