@@ -13,7 +13,6 @@ def setup():
     pisitools.cflags.add("-fcommon -fno-plt")
     shelltools.export("CXXFLAGS", "-fno-plt")
     pisitools.ldflags.add("-z,now")
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--enable-glamor")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
