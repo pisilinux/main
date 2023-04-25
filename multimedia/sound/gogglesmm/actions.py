@@ -4,18 +4,19 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import shelltools, cmaketools, pisitools, get
 
 j = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
     ' -DWITH_ALSA=ON',
-    ' -DWITH_NATIVE=OFF -L '
+    ' -DWITH_CFOX=OFF',
+    ' -DWITH_NATIVE=OFF',
+    ' -B_build -L '
     ])
 
 def setup():
-	cmaketools.configure("-B_build %s" % j)
+	#shelltools.unlinkDir("cfox")
+	cmaketools.configure(j)
 
 def build():
 	shelltools.cd("_build")
@@ -26,4 +27,3 @@ def install():
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	pisitools.dodoc("../AUTHORS", "../ChangeLog")
-
