@@ -19,7 +19,7 @@ j = ''.join([
 def setup():
 	pisitools.dosed("configure.ac", "-fno-stack-protector", "-fstack-protector-strong")
 	pisitools.dosed("lib/FXRex.cpp", "#define\ TOPIC_REXDUMP", "// #define TOPIC_REXDUMP")
-	autotools.autoreconf()
+	autotools.autoreconf("-fiv")
 	autotools.configure(j)
 
 def build():
