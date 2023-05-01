@@ -16,3 +16,17 @@ def build():
 def install():
     cmaketools.install()
 
+    # srt-devel
+    pisitools.removeDir("/usr/lib/cmake/GTest")
+    pisitools.removeDir("/usr/include/gmock")
+    pisitools.removeDir("/usr/include/gtest")
+
+    pisitools.remove("/usr/lib/pkgconfig/gtest_main.pc")
+    pisitools.remove("/usr/lib/libgmock.a")
+    pisitools.remove("/usr/lib/libgtest.a")
+    pisitools.remove("/usr/lib/pkgconfig/gtest.pc")
+    pisitools.remove("/usr/lib/pkgconfig/gmock.pc")
+    pisitools.remove("/usr/lib/pkgconfig/gmock_main.pc")
+    pisitools.remove("/usr/lib/libgtest_main.a")
+    pisitools.remove("/usr/lib/libgmock_main.a")
+
