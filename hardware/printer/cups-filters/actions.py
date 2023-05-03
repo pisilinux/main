@@ -20,8 +20,8 @@ def setup():
                          --enable-auto-setup-driverless-only \
                          --with-gs-path=/usr/bin/gs \
                          --with-pdftops-path=/usr/bin/gs \
-                         --docdir=/usr/share/doc/cups-filters-1.28.1 \
-                         --with-browseremoteprotocols=DNSSD,CUPS ")
+                         --docdir=/usr/share/doc/cups-filters-%s \
+                         --with-browseremoteprotocols=DNSSD,CUPS " % get.srcVERSION())
                          #--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf")
 
     #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
