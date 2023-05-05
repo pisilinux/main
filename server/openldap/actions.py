@@ -94,6 +94,8 @@ def install():
     if get.buildTYPE() == "emul32":
         autotools.rawInstall("DESTDIR=%s" % get.installDIR())
         pisitools.dosym("/usr/lib/libslapi.so.2.0.200", "/usr/lib/libldap-2.4.so.2")
+        pisitools.dosym("/usr/lib/liblber.so.2.0.200", "/usr/lib/liblber-2.4.so.2")
+        pisitools.dosym("/usr/lib/libslapi.so.2.0.200", "/usr/lib/libslapi-2.4.so.2")
         return
 
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
