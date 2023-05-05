@@ -11,9 +11,9 @@
         <License>OPENLDAP</License>
         <Summary>Open-source suite of LDAP applications and development tools</Summary>
         <Description>OpenLDAP is an open-source suite of LDAP (Lightweight Directory Access Protocol) applications and development tools</Description>
-        <Archive sha1sum="b154d06bbf40fafafb34fffc4b116946d931efef" type="targz">ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.59.tgz</Archive>
+        <Archive sha1sum="8ed73b552324a92d2f6e53381f9b1d10ca0b5485" type="targz">ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.6.4.tgz</Archive>
         <BuildDependencies>
-            <Dependency>nss-devel</Dependency>
+<!--             <Dependency>nss-devel</Dependency> -->
             <Dependency>db-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>tcp-wrappers-devel</Dependency>
@@ -28,27 +28,10 @@
             <Dependency>groff</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch level="1">openldap-2.4.39-blfs_paths-1.patch</Patch> -->
-<!--             <Patch level="1">openldap-2.4.44-consolidated-2.patch</Patch> -->
-<!--             <Patch level="1">openldap-2.4.39-symbol_versions-1.patch</Patch> -->
-            <Patch level="1">openldap-2.4.39-ntlm-1.patch</Patch>
-<!--             <Patch level="1">fedora/openldap-sql-linking.patch</Patch> -->
-            <Patch level="1">fedora/openldap-reentrant-gethostby.patch</Patch>
+            <!--Patch level="1">fedora/openldap-reentrant-gethostby.patch</Patch>
             <Patch level="1">fedora/openldap-ldaprc-currentdir.patch</Patch>
-<!--             <Patch level="1">fedora/openldap-userconfig-setgid.patch</Patch> -->
-            <!--<Patch level="1">fedora/openldap-dns-priority.patch</Patch>-->
-<!--             <Patch level="1">fedora/openldap-syncrepl-unset-tls-options.patch</Patch> -->
-            <Patch level="1">fedora/openldap-nss-update-list-of-ciphers.patch</Patch>
-<!--             <Patch level="1">fedora/openldap-tls-no-reuse-of-tls_session.patch</Patch> -->
-<!--             <Patch level="1">fedora/openldap-nss-regex-search-hashed-cacert-dir.patch</Patch> -->
-            <Patch level="1">fedora/openldap-nss-ignore-certdb-type-prefix.patch</Patch>
-<!--             <Patch level="1">fedora/openldap-nss-certs-from-certdb-fallback-pem.patch</Patch> -->
-            <Patch level="1">fedora/openldap-nss-pk11-freeslot.patch</Patch>
             <Patch level="1">fedora/openldap-switch-to-lt_dlopenadvise-to-get-RTLD_GLOBAL-set.patch</Patch>
-<!--             <Patch level="1">fedora/openldap-ldapi-sasl.patch</Patch> -->
-            <Patch level="1">fedora/openldap-autoconf-pkgconfig-nss.patch</Patch>
-            <Patch level="1">fedora/openldap-ai-addrconfig.patch </Patch>
-            <!--Patch level="1">fedora/openldap-smbk5pwd-overlay.patch</Patch-->
+            <Patch level="1">fedora/openldap-ai-addrconfig.patch </Patch-->
         </Patches>
     </Source>
 
@@ -58,9 +41,10 @@
         <IsA>app:console</IsA>
         <Summary>Command-line ldap client commands (ldapsearch, ldapadd etc..)</Summary>
         <RuntimeDependencies>
-            <Dependency>nss</Dependency>
-            <Dependency>nspr</Dependency>
+<!--             <Dependency>nss</Dependency> -->
+<!--             <Dependency>nspr</Dependency> -->
             <Dependency>openssl</Dependency>
+            <Dependency>libutil-linux</Dependency>
             <Dependency>cyrus-sasl</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -79,13 +63,14 @@
         <Summary>OpenLDAP server slapd and releated tools</Summary>
         <Description>OpenLDAP server slapd, additional backends, configuration files, schema definitions required for operation, and database maintenance tools</Description>
         <RuntimeDependencies>
-            <Dependency>db</Dependency>
+<!--             <Dependency>db</Dependency> -->
             <Dependency>perl</Dependency>
+            <Dependency>openssl</Dependency>
             <Dependency>unixODBC</Dependency>
             <Dependency>libutil-linux</Dependency>
             <Dependency>tcp-wrappers</Dependency>
             <Dependency>libtool-ltdl</Dependency>
-            <Dependency>nss</Dependency>
+<!--             <Dependency>nss</Dependency> -->
             <Dependency>cyrus-sasl</Dependency>
             <Dependency release="current">openldap-client</Dependency>
         </RuntimeDependencies>
@@ -120,7 +105,7 @@
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>openssl-32bit</Dependency>
-            <Dependency>libtool-ltdl-32bit</Dependency>
+           <Dependency>libtool-ltdl-32bit</Dependency>
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency>openssl-32bit</Dependency>
@@ -132,6 +117,13 @@
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2023-05-05</Date>
+            <Version>2.6.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="8">
             <Date>2021-11-06</Date>
             <Version>2.4.59</Version>

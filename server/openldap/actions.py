@@ -19,54 +19,45 @@ def setup():
     )
     pisitools.dosed("servers/slapd/Makefile.in", "(\$\(DESTDIR\))\$\(localstatedir\)(\/run)", r"\1\2")
 
-    pisitools.flags.add("-D_REENTRANT -D_GNU_SOURCE -fPIC -Wl,--as-needed -DLDAP_CONNECTIONLESS")
+    # pisitools.flags.add("-D_REENTRANT -D_GNU_SOURCE -fPIC -Wl,--as-needed -DLDAP_CONNECTIONLESS")
+
+    # shelltools.system("sed -i 's|%LOCALSTATEDIR%/run|/run/openldap|' servers/slapd/slapd.{conf,ldif}")
+    shelltools.system("sed -i 's|-m 644 $(LIBRARY)|-m 755 $(LIBRARY)|' libraries/{liblber,libldap}/Makefile.in")
     #pisitools.ldflags.add("-pie")
 
     options = "--prefix=/usr \
-               --disable-bdb \
-               --disable-hdb \
                --enable-backends=mod \
                --enable-slapd \
                --enable-passwd=mod \
                --enable-dnssrv=mod \
                --enable-ldap \
-               --enable-wrappers \
                --enable-meta=mod \
-               --enable-monitor=mod \
                --enable-null=mod \
-               --enable-shell=mod \
-               --enable-rewrite \
                --enable-rlookups \
-               --enable-aci \
                --enable-modules \
                --enable-cleartext \
-               --enable-lmpasswd \
-               --enable-spasswd \
                --enable-slapi \
                --enable-dyngroup \
                --enable-proxycache \
-               --enable-perl \
                --enable-syslog \
                --enable-dynamic \
                --enable-local \
-               --enable-proctitle \
                --enable-overlays=mod \
-               --enable-ndb=no \
                --with-pic \
-               --with-threads \
-               --with-cyrus-sasl \
                --without-fetch \
-               --without-threads \
+               --disable-wt \
                --enable-crypt \
                --enable-ipv6 \
                --enable-dynacl \
                --enable-shared \
-               --disable-static \
+               --enable-static=no \
                --disable-slp \
                --localstatedir=/var/lib"
+                              # --enable-aci \
+                            # --enable-wrappers \
 
     if get.buildTYPE() == "emul32":
-        options =  " --prefix=/emul32 \
+        options +=  " --prefix=/emul32 \
                      --libdir=/usr/lib32 \
                      --libexecdir=/emul32/libexec \
                      --disable-bdb \
@@ -74,9 +65,21 @@ def setup():
                      --disable-wrappers \
                      --disable-spasswd \
                      --disable-perl \
-                     --without-tls \
+                     --with-tls=auto \
+                     --disable-ndb \
+                     --disable-sql \
                      --without-cyrus-sasl"
-    else: options += " --with-tls=auto"
+
+    else: options += " --enable-wrappers \
+                                  --enable-spasswd \
+                                  --enable-perl \
+                                  --enable-mdb=yes \
+                                  --with-cyrus-sasl \
+                                  --enable-bdb=yes \
+                                  --enable-hdb=yes \
+                                  --with-gnu-ld \
+                                  --with-threads \
+                                  --with-tls=auto"
 
     shelltools.export("AUTOMAKE", "/bin/true")
     autotools.autoreconf("-fi")
@@ -90,6 +93,7 @@ def build():
 def install():
     if get.buildTYPE() == "emul32":
         autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+        pisitools.dosym("/usr/lib/libslapi.so.2.0.200", "/usr/lib/libldap-2.4.so.2")
         return
 
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
