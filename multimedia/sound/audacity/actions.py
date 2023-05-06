@@ -33,6 +33,7 @@ def setup():
                             -D audacity_has_crashreports=OFF \
                             -D audacity_has_updates_check=OFF \
                             -D audacity_has_sentry_reporting=OFF \
+                            -Daudacity_has_vst3=Off \
                             -D audacity_lib_preference=system \
                             -D audacity_use_lv2:STRING=local \
                             -D audacity_use_portsmf:STRING=local \
@@ -48,6 +49,6 @@ def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.remove("/usr/audacity")
+    # pisitools.remove("/usr/audacity")
 
     pisitools.dodir("/usr/share/audacity/help/manual")
