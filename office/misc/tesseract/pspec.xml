@@ -13,7 +13,7 @@
         <IsA>app:console</IsA>
         <Summary>Tesseract OCR Engine</Summary>
         <Description>This package contains an OCR engine - libtesseract and a command line program - tesseract. Tesseract 4 adds a new neural net (LSTM) based OCR engine which is focused on line recognition, but also still supports the legacy Tesseract OCR engine of Tess</Description>
-        <Archive sha1sum="25318bb3f57ef72d5736730739451673f4a66f51" type="targz">https://github.com/tesseract-ocr/tesseract/archive/4.1.1.tar.gz</Archive>
+        <Archive sha1sum="eda6a3958352fd6fc7d77a0d387df647de73f34c" type="targz">https://github.com/tesseract-ocr/tesseract/archive/refs/tags/5.3.1.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>leptonica-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
@@ -31,14 +31,13 @@
         <Name>tesseract</Name>
         <Summary>Tesseract OCR Engine</Summary>
         <RuntimeDependencies>
-            <Dependency>leptonica</Dependency>
-            <Dependency>libgomp</Dependency>
             <Dependency>tiff</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libgomp</Dependency>
+            <Dependency>leptonica</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/libtesseract.so.4.0.1</Path>
-            <Path fileType="library">/usr/lib/libtesseract.so.4</Path>
-            <Path fileType="library">/usr/lib/libtesseract.so</Path>
+            <Path fileType="library">/usr/lib/libtesseract.so*</Path>
             <Path fileType="executable">/usr/bin/tesseract</Path>
             <Path fileType="data">/usr/share/tessdata</Path>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -50,6 +49,7 @@
         <Name>tesseract-devel</Name>
         <Summary>Development files for tesseract</Summary>
         <RuntimeDependencies>
+            <Dependency>leptonica-devel</Dependency>
             <Dependency release="current">tesseract</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -62,12 +62,14 @@
         <Name>tesseract-tools</Name>
         <Summary>Tools for tesseract</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">tesseract</Dependency>
-            <Dependency>fontconfig</Dependency>
-            <Dependency>leptonica</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>icu4c</Dependency>
             <Dependency>pango</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>harfbuzz</Dependency>
+            <Dependency>leptonica</Dependency>
+            <Dependency>fontconfig</Dependency>
+            <Dependency release="current">tesseract</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/set_unicharset_properties</Path>
@@ -92,6 +94,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2023-05-09</Date>
+            <Version>5.3.1</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2020-01-19</Date>
             <Version>4.1.1</Version>
