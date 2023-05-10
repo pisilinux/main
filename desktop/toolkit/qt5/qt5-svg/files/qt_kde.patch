@@ -11,8 +11,31 @@ index 561e77e..12e0574 100644
              image->fill(d->backColor.rgba());
              QPainter p(image);
              d->r.render(&p, bounds);
+diff --git a/src/svg/qsvgfont_p.h b/src/svg/qsvgfont_p.h
+index fd0a3fa..fcffbe8 100644
+--- a/src/svg/qsvgfont_p.h
++++ b/src/svg/qsvgfont_p.h
+@@ -74,6 +74,7 @@ public:
+ class Q_SVG_PRIVATE_EXPORT QSvgFont : public QSvgRefCounted
+ {
+ public:
++    static constexpr qreal DEFAULT_UNITS_PER_EM = 1000;
+     QSvgFont(qreal horizAdvX);
+ 
+     void setFamilyName(const QString &name);
+@@ -86,9 +87,7 @@ public:
+     void draw(QPainter *p, const QPointF &point, const QString &str, qreal pixelSize, Qt::Alignment alignment) const;
+ public:
+     QString m_familyName;
+-    qreal m_unitsPerEm;
+-    qreal m_ascent;
+-    qreal m_descent;
++    qreal m_unitsPerEm = DEFAULT_UNITS_PER_EM;
+     qreal m_horizAdvX;
+     QHash<QChar, QSvgGlyph> m_glyphs;
+ };
 diff --git a/src/svg/qsvghandler.cpp b/src/svg/qsvghandler.cpp
-index b2227b6..8dda563 100644
+index b2227b6..222b6d8 100644
 --- a/src/svg/qsvghandler.cpp
 +++ b/src/svg/qsvghandler.cpp
 @@ -1393,9 +1393,10 @@ static void parseFont(QSvgNode *node,
@@ -47,6 +70,15 @@ index b2227b6..8dda563 100644
  
      QRectF rect(ncx-nr, ncy-nr, nr*2, nr*2);
      QSvgNode *circle = new QSvgCircle(parent, rect);
+@@ -2666,7 +2671,7 @@ static bool parseFontFaceNode(QSvgStyleProperty *parent,
+ 
+     qreal unitsPerEm = toDouble(unitsPerEmStr);
+     if (!unitsPerEm)
+-        unitsPerEm = 1000;
++        unitsPerEm = QSvgFont::DEFAULT_UNITS_PER_EM;
+ 
+     if (!name.isEmpty())
+         font->setFamilyName(name);
 @@ -3046,15 +3051,16 @@ static QSvgStyleProperty *createRadialGradientNode(QSvgNode *node,
  
      qreal ncx = 0.5;
