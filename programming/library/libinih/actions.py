@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Ddistro_install=true \
-                          -Dwith_INIReader=true")
+                                        -Dwith_INIReader=true")
 
 def build():
     mesontools.build()
@@ -20,5 +20,4 @@ def build():
 def install():
     mesontools.install()
     
-    #shelltools.cd("..")
     pisitools.dodoc("LICENSE*", "README*")
