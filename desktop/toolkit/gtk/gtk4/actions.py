@@ -12,6 +12,10 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
+    shelltools.system("sed -i -e '/gtk4-update-icon-cache/d' tools/meson.build || die")
+    shelltools.system("sed -i -e 's/^ld =.*/ld = disabler()/g' gtk/meson.build demos/gtk-demo/meson.build demos/widget-factory/meson.build || die")
+    shelltools.system("sed -i -e 's/^objcopy =.*/objcopy = disabler()/g' gtk/meson.build demos/gtk-demo/meson.build demos/widget-factory/meson.build || die")
+
     mesontools.configure("-Dx11-backend=true \
                           -Dwayland-backend=true \
                           -Dbroadway-backend=true \
