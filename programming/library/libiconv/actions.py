@@ -25,4 +25,6 @@ def install():
 
 	pisitools.rename("/usr/bin/iconv", "libiconv")
 	pisitools.remove("/usr/share/doc/*.html")
+	pisitools.removeDir("/usr/share/man/man3")
+	pisitools.removeDir("/usr/share/man/man1")
 	pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "THANKS")
