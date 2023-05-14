@@ -16,8 +16,6 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DFREETYPE_INCLUDE_DIR=/usr/include/freetype2 \
-                          -DPODOFO_BUILD_SHARED=1 \
-                          -DPODOFO_BUILD_STATIC=0 \
                           -DPODOFO_HAVE_JPEG_LIB=1 \
                           -DPODOFO_HAVE_PNG_LIB=1 \
                           -DPODOFO_HAVE_TIFF_LIB=1 \
@@ -34,5 +32,5 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     
     shelltools.cd("..")
-    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LIB", "ChangeLog", "NEWS", "TODO")
-    pisitools.dohtml("README.html", "FAQ.html")
+    pisitools.dodoc("AUTHORS*", "COPYING", "TODO*")
+    # pisitools.dohtml("README.html", "FAQ.html")
