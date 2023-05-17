@@ -20,6 +20,8 @@ def setup():
                           -DPODOFO_HAVE_PNG_LIB=1 \
                           -DPODOFO_HAVE_TIFF_LIB=1 \
                           -DWANT_FONTCONFIG=1 \
+                          -DPODOFO_BUILD_SHARED=TRUE \
+                          -DPODOFO_BUILD_STATIC=FALSE \
                           -DWANT_BOOST=1", sourceDir="..")
     #-DUSE_STLPORT=1"
 
