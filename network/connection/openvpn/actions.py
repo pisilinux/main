@@ -57,4 +57,15 @@ def install():
     pisitools.domove("/usr/share/openvpn/sample/sample-keys/*.crt", "/etc/openvpn")
     pisitools.domove("/usr/share/openvpn/sample/sample-keys/*.pem", "/etc/openvpn")
 
+    # EasyRSA
+    pisitools.dobin("EasyRSA-3.1.3/easyrsa")
+    pisitools.insinto("/etc/easy-rsa", "EasyRSA-3.1.3/openssl-easyrsa.cnf")
+    pisitools.insinto("/etc/easy-rsa", "EasyRSA-3.1.3/vars.example", "vars")
+    pisitools.insinto("/etc/easy-rsa/x509-types/", "EasyRSA-3.1.3/x509-types/*")
+
+    shelltools.chmod(get.installDIR() + "/etc/easy-rsa/openssl-easyrsa.cnf", 0644)
+    shelltools.chmod(get.installDIR() + "/etc/easy-rsa/vars", 0644)
+
+    pisitools.dodoc("EasyRSA-3.1.3/ChangeLog", "EasyRSA-3.1.3/COPYING.md")
+
     pisitools.dodoc("COPYING", "COPYRIGHT.GPL", "README*")
