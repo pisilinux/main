@@ -18,13 +18,19 @@ def setup():
     autotools.configure("--with-apr=/usr \
                          --includedir=/usr/include/apr-1 \
                          --with-ldap \
-                         --without-gdbm \
                          --with-sqlite3 \
                          --with-pgsql \
-                         --with-odbc=/usr/bin/odbc_config \
+                         --with-odbc=/usr \
                          --with-mysql \
-                         --without-freetds \
                          --with-berkeley-db \
+                         --with-berkeley-db=/usr \
+                         --with-openssl=/usr \
+                         --with-sqlite3=/usr \
+                         --with-nss=/usr \
+                         --with-odbc=/usr \
+                         --with-pgsql=/usr \
+                         --with-mysql=/usr \
+                         --with-oracle=/usr \
                          --without-sqlite2")
     
     #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
@@ -32,7 +38,8 @@ def setup():
 def build():
     autotools.make()
 
-# def check():
+def check():
+    shelltools.system("make -j1 check")
     # autotools.make("-j1 test")
 
 def install():
