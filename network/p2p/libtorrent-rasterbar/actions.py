@@ -22,6 +22,7 @@ def setup():
                             -Dbuild_tools=ON \
                             -Dpython-bindings=ON \
                             -Dpython-egg-info=ON \
+                            -Dboost-python-module-name='python3' \
                             -Dpython-install-system-dir=ON", sourceDir="..")
 
 def build():
