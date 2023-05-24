@@ -22,7 +22,7 @@ def setup():
                          --enable-javahl \
                          --with-apr=/usr \
                          --with-apr-util=/usr \
-                         --with-apache=/usr/lib/apache2/ \
+                         --with-apache-libexecdir=/usr/lib/apache2/modules \
                          --with-apxs \
                          --with-serf=/usr \
                          --with-sqlite=/usr \
