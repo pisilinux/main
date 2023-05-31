@@ -59,6 +59,7 @@ def setup():
                     -DINSTALL_DATADIR=%s \
                     -DINSTALL_MKSPECSDIR=%s \
                     -DINSTALL_EXAMPLESDIR=%s \
+                    -DQT_FEATURE_sql_ibase:BOOL=OFF \
                     -DQT_FEATURE_libproxy=ON \
                     -DQT_FEATURE_vulkan=ON \
                     -DQT_FEATURE_system_freetype=ON \
