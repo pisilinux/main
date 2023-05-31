@@ -15,19 +15,23 @@ def setup():
                          --include=/usr/include/postgresql \
                          --with-includes=/usr/include/libxml2/ \
                          --with-tcl \
-                         --with-krb5 \
+                         --with-gssapi \
                          --with-openssl \
                          --enable-nls \
                          --with-pam \
                          --with-libxml \
                          --with-libxslt \
                          --with-ldap \
+                         --with-readline \
+                         --with-lz4 \
+                         --with-libxslt \
                          --enable-integer-datetimes \
                          --enable-thread-safety \
                          --enable-depend \
                          --host=%s \
                          --libdir=/usr/lib \
                          --disable-rpath \
+                         --with-system-tzdata=/usr/share/zoneinfo \
                          --with-docdir=/usr/share/doc/postgresql" % get.CHOST())
 
 def build():
