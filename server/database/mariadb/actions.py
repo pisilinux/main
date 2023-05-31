@@ -21,10 +21,12 @@ def setup():
     cmaketools.configure("-DBUILD_CONFIG=mysql_release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DSYSCONFDIR=/etc/mysql \
+                          -DINSTALL_SYSCONFDIR=/etc/mysql \
                           -DMYSQL_DATADIR=/var/lib/mysql \
                           -DMYSQL_UNIX_ADDR=/run/mysqld/mysqld.sock \
-                          -DDEFAULT_CHARSET=utf8 \
-                          -DDEFAULT_COLLATION=utf8_general_ci \
+                          -DINSTALL_UNIX_ADDRDIR=/run/mysqld/mysqld.sock \
+                          -DDEFAULT_CHARSET=utf8mb4 \
+                          -DDEFAULT_COLLATION=utf8mb4_unicode_ci \
                           -DENABLED_LOCAL_INFILE=ON \
                           -DINSTALL_INFODIR=share/mysql/docs \
                           -DINSTALL_MANDIR=share/man \
@@ -42,6 +44,7 @@ def setup():
                           -DWITH_LIBWRAP=OFF \
                           -DWITH_JEMALLOC=ON \
                           -DWITH_PCRE=system \
+                          -DPLUGIN_FEDERATED=NO \
                           -DWITH_EXTRA_CHARSETS=complex \
                           -DWITH_EMBEDDED_SERVER=ON \
                           -DWITH_ARCHIVE_STORAGE_ENGINE=1 \
