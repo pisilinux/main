@@ -9,14 +9,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vfi")
     autotools.configure("--disable-static \
                          --enable-shared \
-                         --enable-curl \
-                         --enable-largefile \
-                         --enable-messages")
-    
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+                         --disable-curl \
+                         --disable-examples \
+                         --enable-https")
 
 def build():
     autotools.make()
