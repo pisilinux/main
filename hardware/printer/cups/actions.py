@@ -55,6 +55,7 @@ def setup():
                      --enable-libusb=no \
                      --with-dnssd=no \
                      --disable-gssapi \
+                     --disable-systemd \
                      --disable-dbus \
                      --bindir=/usr/bin32 \
                      --sbindir=/usr/sbin32'
