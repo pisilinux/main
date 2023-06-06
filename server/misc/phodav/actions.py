@@ -8,7 +8,8 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("--sbindir=/usr/bin")
+    mesontools.configure("--sbindir=/usr/bin \
+                                        -Dudevrulesdir=/lib/udev/rules.d")
 
 def build():
     mesontools.build()
