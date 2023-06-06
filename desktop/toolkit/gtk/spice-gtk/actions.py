@@ -8,7 +8,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("--sbindir=/usr/bin")
+    mesontools.configure("--sbindir=/usr/bin -Dusb-ids-path=/usr/share/hwdata/usb.ids")
 
 def build():
     mesontools.build()
