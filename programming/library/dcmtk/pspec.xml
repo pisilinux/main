@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>dcmtk</Name>
+        <Homepage>https://github.com/DCMTK/dcmtk</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>ASIS</License>
+        <IsA>library</IsA>
+        <Icon>dcmtk</Icon>
+        <Summary>A collection of libraries and applications implementing large parts the DICOM standard</Summary>
+        <Description>DCMTK is a collection of libraries and applications implementing large parts the DICOM standard.</Description>
+        <Archive sha1sum="d6304e564458d97074c48bd8054c30d9a8bf1062" type="targz">https://github.com/DCMTK/dcmtk/archive/refs/tags/DCMTK-3.6.7.tar.gz</Archive>
+         <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>libiconv-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch></Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>dcmtk</Name>
+        <RuntimeDependencies>
+            <Dependency>tiff</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>icu4c</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>libiconv</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>dcmtk-devel</Name>
+        <Summary>Development files for dcmtk</Summary>
+        <RuntimeDependencies>
+            <Dependency>tiff-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency release="current">dcmtk</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-06-06</Date>
+            <Version>3.6.7</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
