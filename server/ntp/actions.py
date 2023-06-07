@@ -25,6 +25,7 @@ def setup():
                          --enable-parse-clocks \
                          --enable-linuxcaps \
                          --enable-ipv6 \
+                         --enable-ntp-signd \
                          --with-crypto")
 
 def build():
