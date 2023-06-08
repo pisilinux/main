@@ -9,11 +9,11 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-# shelltools.export("DISABLE_WARN_OUTSIDE_CONTAINER", "1")
+shelltools.export("DISABLE_WARN_OUTSIDE_CONTAINER", "1")
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT","5d6db84")
+shelltools.export("DOCKER_GITCOMMIT","659604f")
 shelltools.export("IAMSTATIC", "false")
-shelltools.export("VERSION", "20.10.24")
+shelltools.export("VERSION", "24.0.2")
 shelltools.export("GOROOT","/usr/lib/go")
 shelltools.export("GO111MODULE","off")
 
@@ -44,7 +44,7 @@ def build():
     shelltools.cd("engine")
     # shelltools.makedirs("github.com/docker/docker")
     # shelltools.system("make VERSION=%s dynbinary-daemon" % get.srcVERSION())
-    shelltools.system("hack/make.sh dynbinary-daemon")
+    shelltools.system("hack/make.sh dynbinary")
     # shelltools.system("make.sh dynbinary-daemon")
     
     # build
