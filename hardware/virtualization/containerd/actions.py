@@ -26,7 +26,8 @@ def build():
     
     #shelltools.system("LDFLAGS= GOPATH=%s make GIT_COMMIT=72cec4b" % get.curDIR())
 
-    shelltools.system("LDFLAGS= make GIT_COMMIT=2806fc1 EXTRA_LDFLAGS='-buildid='")
+    # shelltools.system("LDFLAGS= make GIT_COMMIT=1677a17 EXTRA_LDFLAGS='-buildid='")
+    shelltools.system("LDFLAGS= make  GO_BUILD_FLAGS='' GO_GCFLAGS='' EXTRA_LDFLAGS='-buildid='")
 
 def install():
     shelltools.cd("%s/containerd" % get.workDIR())
