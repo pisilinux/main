@@ -50,10 +50,10 @@ def install():
 
     # remove testdata, which hit cave fix-linkage
     pisitools.remove("/usr/lib/go/src/debug/elf/testdata/gcc-386-freebsd-exec")
-    pisitools.removeDir("/usr/lib/go/pkg/obj")
+    # pisitools.removeDir("/usr/lib/go/pkg/obj")
 
     # dirty fix thanks @erturk
-    pisitools.removeDir("/usr/lib/go/pkg/linux_amd64")
+    # pisitools.removeDir("/usr/lib/go/pkg/linux_amd64")
     
 
     pisitools.dodoc("LICENSE", "PATENTS", "README*")
