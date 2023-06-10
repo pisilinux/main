@@ -14,8 +14,8 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("rm -rf cmake/external/glib/cppgir/expected-lite")
-    shelltools.copy("../expected-lite-*/*", "cmake/external/glib/cppgir/expected-lite")
-    shelltools.copy("../cppgir-*/*", "cmake/external/glib/cppgir")
+    shelltools.copy("expected-lite-*/*", "cmake/external/glib/cppgir/expected-lite")
+    shelltools.copy("cppgir-*/*", "cmake/external/glib/cppgir")
 
     shelltools.export("NINJAJOBS", "-j 4")
     shelltools.system("patch -p1 < fix-tgcalls-cstdint.patch -d Telegram/ThirdParty/tgcalls")
