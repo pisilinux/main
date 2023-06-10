@@ -13,6 +13,7 @@ from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.system("rm -rf cmake/external/glib/cppgir/expected-lite")
     shelltools.copy("../expected-lite-*/*", "cmake/external/glib/cppgir/expected-lite")
     shelltools.copy("../cppgir-*/*", "cmake/external/glib/cppgir")
 
