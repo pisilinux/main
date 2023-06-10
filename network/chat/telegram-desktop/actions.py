@@ -13,6 +13,9 @@ from pisi.actionsapi import get
 
 
 def setup():
+    shelltools.copy("../expected-lite-*/*", "cmake/external/glib/cppgir/expected-lite")
+    shelltools.copy("../cppgir-*/*", "cmake/external/glib/cppgir")
+
     shelltools.export("NINJAJOBS", "-j 4")
     shelltools.system("patch -p1 < fix-tgcalls-cstdint.patch -d Telegram/ThirdParty/tgcalls")
     shelltools.system("sed -i 's/DESKTOP_APP_USE_PACKAGED/NO_ONE_WILL_EVER_SET_THIS/' \

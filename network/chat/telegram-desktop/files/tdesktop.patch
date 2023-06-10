@@ -1,22 +1,22 @@
-diff -Nuar a/Telegram/lib_lottie/lottie/lottie_emoji.h b/Telegram/lib_lottie/lottie/lottie_emoji.h
---- a/Telegram/lib_lottie/lottie/lottie_emoji.h	2022-07-25 12:46:55.000000000 +0300
-+++ b/Telegram/lib_lottie/lottie/lottie_emoji.h	2022-08-06 15:19:52.852451704 +0300
-@@ -9,6 +9,7 @@
- #include "ui/effects/frame_generator.h"
+From 6b0eeb2c15aa278ffa577bcefebcff8f2c98aca9 Mon Sep 17 00:00:00 2001
+From: Ilya Fedin <fedin-ilja2010@ya.ru>
+Date: Thu, 1 Jun 2023 23:18:26 +0400
+Subject: [PATCH] Ensure cppgir is not getting installed
 
- #include <QtGui/QImage>
-+#include <memory>
+---
+ external/glib/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- namespace rlottie {
- class Animation;
-diff -Nuar a/Telegram/SourceFiles/ffmpeg/ffmpeg_emoji.h b/Telegram/SourceFiles/ffmpeg/ffmpeg_emoji.h
---- a/Telegram/SourceFiles/ffmpeg/ffmpeg_emoji.h	2022-08-05 10:12:48.000000000 +0300
-+++ b/Telegram/SourceFiles/ffmpeg/ffmpeg_emoji.h	2022-08-06 15:19:14.286454487 +0300
-@@ -10,6 +10,7 @@
- #include "ui/effects/frame_generator.h"
-
- #include <QtGui/QImage>
-+#include <memory>
-
- namespace FFmpeg {
+diff --git a/cmake/external/glib/CMakeLists.txt b/cmake/external/glib/CMakeLists.txt
+index 66385e3b..20b62a70 100644
+--- a/cmake/external/glib/CMakeLists.txt
++++ b/cmake/external/glib/CMakeLists.txt
+@@ -11,7 +11,7 @@ function(add_cppgir) # isolate scope
+     set(BUILD_TESTING OFF)
+     set(BUILD_DOC OFF)
+     set(CMAKE_DISABLE_FIND_PACKAGE_Qt5Core ON)
+-    add_subdirectory(cppgir)
++    add_subdirectory(cppgir EXCLUDE_FROM_ALL)
+ endfunction()
+ add_cppgir()
 
