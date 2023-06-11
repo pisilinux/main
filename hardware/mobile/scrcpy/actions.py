@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 NoStrip=["/usr/local"]
 
 def setup():
-    mesontools.configure("-D b_lto=true -D b_ndebug=true -D prebuilt_server='%s/scrcpy-server-v1.24'" % get.workDIR())
+    mesontools.configure("-D b_lto=true -D b_ndebug=true -D prebuilt_server='%s/scrcpy-server-v2.0'" % get.workDIR())
 
 def build():
     mesontools.build()
