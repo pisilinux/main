@@ -1,0 +1,245 @@
+diff --git a/src/plugins/geoservices/esri/geocodingmanagerengine_esri.cpp b/src/plugins/geoservices/esri/geocodingmanagerengine_esri.cpp
+index 5a40467e9d953ec114ef37294daf2fd7d8eee4fe..d123c6a86a05ef95791eb70faa4bf452f0b7afb4 100644
+--- a/src/plugins/geoservices/esri/geocodingmanagerengine_esri.cpp
++++ b/src/plugins/geoservices/esri/geocodingmanagerengine_esri.cpp
+@@ -59,8 +59,10 @@ QT_BEGIN_NAMESPACE
+ static const QString kPrefixEsri(QStringLiteral("esri."));
+ static const QString kParamUserAgent(kPrefixEsri + QStringLiteral("useragent"));
+ 
+-static const QString kUrlGeocode(QStringLiteral("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates"));
+-static const QString kUrlReverseGeocode(QStringLiteral("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode"));
++static const QString kUrlGeocode(QStringLiteral("https://geocode.arcgis.com/arcgis/rest/services/"
++                                                "World/GeocodeServer/findAddressCandidates"));
++static const QString kUrlReverseGeocode(QStringLiteral(
++        "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode"));
+ 
+ static QString addressToQuery(const QGeoAddress &address)
+ {
+diff --git a/src/plugins/geoservices/esri/georoutejsonparser_esri.cpp b/src/plugins/geoservices/esri/georoutejsonparser_esri.cpp
+index 17492d94c13ceadcde521fb788e6db30cb26ca90..96c12b1b946860b18263488970b23b5bac08246b 100644
+--- a/src/plugins/geoservices/esri/georoutejsonparser_esri.cpp
++++ b/src/plugins/geoservices/esri/georoutejsonparser_esri.cpp
+@@ -46,7 +46,8 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
+-// JSON reference: http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
++// JSON reference:
++// https://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
+ 
+ static const QString kErrorMessage(QStringLiteral("Error %1: %2."));
+ static const QString kErrorJson(QStringLiteral("Error: invalide JSON document."));
+diff --git a/src/plugins/geoservices/esri/georoutereply_esri.cpp b/src/plugins/geoservices/esri/georoutereply_esri.cpp
+index 8cadfb296407d673206c3336ab682d469418e4d0..92b6bb13af4b2eff5331257c9fb896a33666f904 100644
+--- a/src/plugins/geoservices/esri/georoutereply_esri.cpp
++++ b/src/plugins/geoservices/esri/georoutereply_esri.cpp
+@@ -44,7 +44,8 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
+-// JSON reference: http://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
++// JSON reference:
++// https://resources.arcgis.com/en/help/arcgis-rest-api/#/Route_service_with_synchronous_execution/02r300000036000000/
+ 
+ GeoRouteReplyEsri::GeoRouteReplyEsri(QNetworkReply *reply, const QGeoRouteRequest &request,
+                                      QObject *parent) :
+diff --git a/src/plugins/geoservices/esri/georoutingmanagerengine_esri.cpp b/src/plugins/geoservices/esri/georoutingmanagerengine_esri.cpp
+index 0e6bc2c7c3402b463837c4f6bf31458f657a0ab9..ed613f4b29c28652d131619a27cf404a262d19d7 100644
+--- a/src/plugins/geoservices/esri/georoutingmanagerengine_esri.cpp
++++ b/src/plugins/geoservices/esri/georoutingmanagerengine_esri.cpp
+@@ -48,7 +48,8 @@ static const QString kPrefixEsri(QStringLiteral("esri."));
+ static const QString kParamUserAgent(kPrefixEsri + QStringLiteral("useragent"));
+ static const QString kParamToken(kPrefixEsri + QStringLiteral("token"));
+ 
+-static const QString kUrlRouting(QStringLiteral("http://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve"));
++static const QString kUrlRouting(QStringLiteral(
++        "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve"));
+ 
+ GeoRoutingManagerEngineEsri::GeoRoutingManagerEngineEsri(const QVariantMap &parameters,
+                                                          QGeoServiceProvider::Error *error,
+@@ -70,7 +71,8 @@ GeoRoutingManagerEngineEsri::~GeoRoutingManagerEngineEsri()
+ {
+ }
+ 
+-// REST reference: http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000036000000
++// REST reference:
++// https://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000036000000
+ 
+ QGeoRouteReply *GeoRoutingManagerEngineEsri::calculateRoute(const QGeoRouteRequest &request)
+ {
+@@ -125,7 +127,7 @@ void GeoRoutingManagerEngineEsri::replyError(QGeoRouteReply::Error errorCode, co
+ QString GeoRoutingManagerEngineEsri::preferedDirectionLangage()
+ {
+     // list of supported langages is defined in:
+-    // http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000036000000
++    // https://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000036000000
+     const QStringList supportedLanguages = {
+         "ar", // Generate directions in Arabic
+         "cs", // Generate directions in Czech
+diff --git a/src/plugins/geoservices/esri/geotiledmappingmanagerengine_esri.cpp b/src/plugins/geoservices/esri/geotiledmappingmanagerengine_esri.cpp
+index 5d15835d0dac3a38075c845a27fad05bf252fa0f..24148f95108a6e8adb85e3a0c5a742af4fa25c0c 100644
+--- a/src/plugins/geoservices/esri/geotiledmappingmanagerengine_esri.cpp
++++ b/src/plugins/geoservices/esri/geotiledmappingmanagerengine_esri.cpp
+@@ -230,7 +230,8 @@ QGeoMap *GeoTiledMappingManagerEngineEsri::createMap()
+ // ${y} = Y
+ // ${token} = Token
+ 
+-// template = 'http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{{z}}/{{y}}/{{x}}.png'
++// template =
++// 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{{z}}/{{y}}/{{x}}.png'
+ 
+ bool GeoTiledMappingManagerEngineEsri::initializeMapSources(QGeoServiceProvider::Error *error,
+                                                             QString *errorString,
+diff --git a/src/plugins/geoservices/esri/maps.json b/src/plugins/geoservices/esri/maps.json
+index 8167ae7d2a682cff2db51d6551969320b5dffb65..862e087d218e298f578d64c0e1aa022c7649c7f8 100644
+--- a/src/plugins/geoservices/esri/maps.json
++++ b/src/plugins/geoservices/esri/maps.json
+@@ -6,8 +6,8 @@
+             "description": "ArcGIS Online World Street Map",
+             "mobile": true,
+             "night": false,
+-            "url": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=3b93337983e9436f8db950e38a8629af'>Esri</a> contributors"
++            "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=3b93337983e9436f8db950e38a8629af'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -16,8 +16,8 @@
+             "": "ArcGIS Online World Imagery",
+             "mobile": true,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -26,8 +26,8 @@
+             "description": "ArcGIS Online World Terrain Base",
+             "mobile": false,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=c61ad8ab017d49e1a82f580ee1298931'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=c61ad8ab017d49e1a82f580ee1298931'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -36,8 +36,8 @@
+             "description": "ArcGIS Online World Topography",
+             "mobile": true,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=30e5fe3149c34df1ba922e6f5bbf808f'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=30e5fe3149c34df1ba922e6f5bbf808f'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -46,8 +46,8 @@
+             "description": "This map presents land cover and detailed topographic maps for the United States.",
+             "mobile": true,
+             "night": false,
+-            "url": "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=99cd5fbd98934028802b4f797c4b1732'>Esri</a> contributors"
++            "url": "https://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=99cd5fbd98934028802b4f797c4b1732'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -56,8 +56,8 @@
+             "description": "National Geographic World Map",
+             "mobile": false,
+             "night": false,
+-            "url": "http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=b9b1b422198944fbbd5250b3241691b6'>Esri</a> contributors"
++            "url": "https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=b9b1b422198944fbbd5250b3241691b6'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -66,8 +66,8 @@
+             "description": "Thematic content providing a neutral background with minimal colors",
+             "mobile": true,
+             "night": false,
+-            "url": "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=ed712cb1db3e4bae9e85329040fb9a49'>Esri</a> contributors"
++            "url": "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=ed712cb1db3e4bae9e85329040fb9a49'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -76,8 +76,8 @@
+             "description": "Natural Earth physical map for the world",
+             "mobile": false,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=c4ec722a1cd34cf0a23904aadf8923a0'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=c4ec722a1cd34cf0a23904aadf8923a0'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -86,8 +86,8 @@
+             "description": "Portrays surface elevation as shaded relief",
+             "mobile": false,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -96,8 +96,8 @@
+             "description": "This map is designed to be used as a basemap by marine GIS professionals and as a reference map by anyone interested in ocean data",
+             "mobile": false,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=1e126e7520f9466c9ca28b8f28b5e500'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=1e126e7520f9466c9ca28b8f28b5e500'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -106,8 +106,8 @@
+             "description": "Thematic content providing a neutral background with minimal colors",
+             "mobile": false,
+             "night": true,
+-            "url": "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=a284a9b99b3446a3910d4144a50990f6'>Esri</a> contributors"
++            "url": "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=a284a9b99b3446a3910d4144a50990f6'>Esri</a> contributors"
+         },
+ 
+         {
+@@ -116,8 +116,8 @@
+             "description": "DeLorme’s topographic basemap is a seamless global data set that portrays transportation, hydrography, jurisdiction boundaries, and major geographic features",
+             "mobile": false,
+             "night": false,
+-            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer",
+-            "copyrightText": "&copy; <a href='http://www.arcgis.com/home/item.html?id=b165c3df453e4be6b5ac4fdb241effbe'>Esri</a> contributors"
++            "url": "https://server.arcgisonline.com/ArcGIS/rest/services/Specialty/DeLorme_World_Base_Map/MapServer",
++            "copyrightText": "&copy; <a href='https://www.arcgis.com/home/item.html?id=b165c3df453e4be6b5ac4fdb241effbe'>Esri</a> contributors"
+         }
+     ]
+ }
+diff --git a/src/plugins/geoservices/esri/placemanagerengine_esri.cpp b/src/plugins/geoservices/esri/placemanagerengine_esri.cpp
+index 3858ddf5a71b54fde01e21c52d9c91c0c41e58e5..af66f28ecfe06bc88bab60ae764b902bdc3a9f35 100644
+--- a/src/plugins/geoservices/esri/placemanagerengine_esri.cpp
++++ b/src/plugins/geoservices/esri/placemanagerengine_esri.cpp
+@@ -63,8 +63,10 @@ static const QString kCountriesKey(QStringLiteral("detailedCountries"));
+ static const QString kLocalizedNamesKey(QStringLiteral("localizedNames"));
+ static const QString kMaxLocationsKey(QStringLiteral("maxLocations"));
+ 
+-static const QUrl kUrlGeocodeServer("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer?f=pjson");
+-static const QUrl kUrlFindAddressCandidates("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates");
++static const QUrl kUrlGeocodeServer(
++        "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer?f=pjson");
++static const QUrl kUrlFindAddressCandidates("https://geocode.arcgis.com/arcgis/rest/services/World/"
++                                            "GeocodeServer/findAddressCandidates");
+ 
+ PlaceManagerEngineEsri::PlaceManagerEngineEsri(const QVariantMap &parameters, QGeoServiceProvider::Error *error,
+                                                QString *errorString) :

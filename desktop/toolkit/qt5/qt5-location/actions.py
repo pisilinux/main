@@ -11,6 +11,7 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("patch  -R -p1 < 3eaed3d6.diff")
     qt5.configure()
 
 def build():
