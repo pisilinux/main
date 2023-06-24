@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>sord</Name>
+        <Homepage>https://drobilla.net/software/sord.html</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>as-is</License>
+        <Icon>sord</Icon>
+        <IsA>library</IsA>
+        <Summary>Sord is a lightweight C library for storing RDF statements in memory.</Summary>
+        <Description>Sord is a lightweight C library for storing RDF statements in memory.</Description>
+        <Archive sha1sum="2dd84cea04b0191f149d051dcd1ecf5b467157ae" type="tarxz">http://download.drobilla.net/sord-0.16.14.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>doxygen</Dependency>
+            <Dependency>serd-devel</Dependency>
+            <Dependency>glibc-devel</Dependency>
+            <Dependency>libpcre-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>sord</Name>
+        <RuntimeDependencies>
+            <Dependency>serd</Dependency>
+            <Dependency>libpcre</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libsord-0.so*</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>sord-devel</Name>
+        <Summary>Development files for sord</Summary>
+        <RuntimeDependencies>
+            <Dependency>serd-devel</Dependency>
+            <Dependency release="current">sord</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-06-24</Date>
+            <Version>0.16.14</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
