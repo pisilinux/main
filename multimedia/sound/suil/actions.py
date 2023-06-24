@@ -4,19 +4,21 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
-
 def setup():
-    shelltools.system("python waf configure --prefix=/usr --libdir=/usr/lib/ --configdir=/etc")
+    mesontools.configure()
 
 def build():
-    shelltools.system("python waf build -v")
+    mesontools.build()
+
+def check():
+    mesontools.build("test")
 
 def install():
-    shelltools.system("DESTDIR=%s python waf install" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "NEWS", "COPYING", "README*")
+    pisitools.dodoc("COPYING")
