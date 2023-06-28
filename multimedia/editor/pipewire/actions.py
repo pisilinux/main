@@ -19,6 +19,7 @@ def setup():
                           -Dbluez5=enabled \
                           -Dffmpeg=enabled \
                           -Dpipewire-alsa=enabled \
+                          -D compress-offload=disabled \
                           -Djack=disabled \
                           -Dlibcamera=disabled")
 
