@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.dosed("configure.ac", "rst2man", "rst2man_3")
+    # pisitools.dosed("configure.ac", "rst2man", "rst2man_3")
     #shelltools.system("sed -i -e '/SystemdService/d' obexd/src/org.bluez.obex.service.in")
     pisitools.dosed("obexd/src/org.bluez.obex.service.in", "SystemdService", deleteLine=True)
     autotools.autoreconf("-fi")
