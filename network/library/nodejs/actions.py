@@ -21,12 +21,12 @@ def setup():
                             --shared-openssl \
                             --shared-nghttp2 \
                             --shared-zlib \
-                            --with-intl=system-icu")
-
+                            ")
+                            # --with-intl=system-icu
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "README*")
+    pisitools.dodoc("LICENSE", "README*")
