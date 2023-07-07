@@ -96,12 +96,12 @@ def setup():
                         --with-system-redland             \
                         --with-system-zlib                \
                         --with-system-libetonyek          \
+                        --with-system-zxing               \
                         --without-system-dicts            \
                         --without-fonts                   \
                         --without-system-hsqldb           \
                         --without-system-libstaroffice    \
                         --without-system-libzmf           \
-                        --without-system-ucpp             \
                         --without-system-coinmp           \
                         --without-system-firebird         \
                         --without-system-libcmis          \

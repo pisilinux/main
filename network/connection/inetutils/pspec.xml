@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>inetutils</Name>
+        <Homepage>https://www.gnu.org/software/inetutils/</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>GPL3</License>
+        <Icon>inetutils</Icon>
+        <Summary>A collection of common network programs</Summary>
+        <Description>netutils is a collection of common network programs. It includes: An inetd meta-server. An ftp client and server. A telnet client and server.</Description>
+        <Archive sha1sum="df64dd4ea0e752a839dd51dd8a6a001c9c7d1e96" type="tarxz">https://ftp.gnu.org/gnu/inetutils/inetutils-2.4.tar.xz</Archive>
+         <BuildDependencies>
+            <Dependency>pam-devel</Dependency>
+            <Dependency>libcap-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>libxcrypt-devel</Dependency>
+            <Dependency>help2man</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch></Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>inetutils</Name>
+        <RuntimeDependencies>
+            <Dependency>pam</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>readline</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>libxcrypt</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/tftpd</Path>
+            <Path fileType="library">/usr/lib/talkd</Path>
+<!--             <Path fileType="library">/usr/lib/rshd</Path> -->
+            <Path fileType="library">/usr/lib/uucpd</Path>
+<!--             <Path fileType="library">/usr/lib/rexecd</Path> -->
+            <Path fileType="library">/usr/lib/ftpd</Path>
+            <Path fileType="library">/usr/lib/syslogd</Path>
+            <Path fileType="library">/usr/lib/telnetd</Path>
+<!--             <Path fileType="library">/usr/lib/rlogind</Path> -->
+            <Path fileType="library">/usr/lib/inetd</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/info</Path>
+            <Path fileType="config">/etc/xinetd.d</Path>
+            <Path fileType="config">/etc/pam.d</Path>
+            <Path fileType="data">/usr/share/dbus-1/services</Path>
+            <Path fileType="data">/var/run/inetutils</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/etc/xinetd.d/telnet">telnet.xinetd</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/xinetd.d/talk">talk.xinetd</AdditionalFile>
+            <AdditionalFile target="/usr/share/dbus-1/services/ftpd.service" permission="0644" owner="root">ftpd.service</AdditionalFile>
+            <AdditionalFile target="/usr/share/dbus-1/services/talk.service" permission="0644" owner="root">talk.service</AdditionalFile>
+            <AdditionalFile target="/usr/share/dbus-1/services/telnet@.service" permission="0644" owner="root">telnet@.service</AdditionalFile>
+            <AdditionalFile target="/var/run/inetutils/talk.socket" permission="0644" owner="root">talk.socket</AdditionalFile>
+            <AdditionalFile target="/var/run/inetutils/telnet.socket" permission="0644" owner="root">telnet.socket</AdditionalFile>
+<!--                 FIXME: Güvenlik kaygısıyla aşagıdakiler kapatıldı, gerekenleri açılabilirsiniz.
+                    The following has been closed for security concerns, you can open the necessary ones. -->
+<!--             <AdditionalFile target="/var/run/inetutils/rlogin.socket" permission="0644" owner="root">rlogin.socket</AdditionalFile> -->
+<!--             <AdditionalFile target="/var/run/inetutils/rsh.socket" permission="0644" owner="root">rsh.socket</AdditionalFile> -->
+<!--             <AdditionalFile target="/usr/share/dbus-1/services/rlogin@.service" permission="0644" owner="root">rlogin@.service</AdditionalFile> -->
+<!--             <AdditionalFile target="/usr/share/dbus-1/services/rsh@.service" permission="0644" owner="root">rsh@.service</AdditionalFile> -->
+<!--             <AdditionalFile owner="root" permission="0644" target="/etc/xinetd.d/rlogin">rlogin.xinetd</AdditionalFile> -->
+<!--             <AdditionalFile owner="root" permission="0644" target="/etc/xinetd.d/rsh">rsh.xinetd</AdditionalFile> -->
+<!--             <AdditionalFile owner="root" permission="0644" target="/etc/pam.d/rlogin">rlogin.pam</AdditionalFile> -->
+<!--             <AdditionalFile owner="root" permission="0644" target="/etc/pam.d/rsh">rsh.pam</AdditionalFile> -->
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-07-07</Date>
+            <Version>2.4</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
