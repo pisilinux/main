@@ -31,6 +31,44 @@ index 420a934ba2..a828d0e234 100644
          }
          break;
      }
+diff --git a/src/qml/common/qqmljsmemorypool_p.h b/src/qml/common/qqmljsmemorypool_p.h
+index 0cf7ea84e6..1b81a87a2c 100644
+--- a/src/qml/common/qqmljsmemorypool_p.h
++++ b/src/qml/common/qqmljsmemorypool_p.h
+@@ -87,7 +87,7 @@ public:
+     inline void *allocate(size_t size)
+     {
+         size = (size + 7) & ~size_t(7);
+-        if (Q_LIKELY(_ptr && (_ptr + size < _end))) {
++        if (Q_LIKELY(_ptr && size < size_t(_end - _ptr))) {
+             void *addr = _ptr;
+             _ptr += size;
+             return addr;
+diff --git a/src/qml/jit/qv4baselinejit.cpp b/src/qml/jit/qv4baselinejit.cpp
+index 45150cfffd..5ad53faf95 100644
+--- a/src/qml/jit/qv4baselinejit.cpp
++++ b/src/qml/jit/qv4baselinejit.cpp
+@@ -540,6 +540,8 @@ void BaselineJIT::generate_ThrowException()
+     as->passEngineAsArg(0);
+     BASELINEJIT_GENERATE_RUNTIME_CALL(ThrowException, CallResultDestination::Ignore);
+     as->gotoCatchException();
++
++    // LOAD_ACC(); <- not needed here since it would be unreachable.
+ }
+
+ void BaselineJIT::generate_GetException() { as->getException(); }
+@@ -547,9 +549,11 @@ void BaselineJIT::generate_SetException() { as->setException(); }
+
+ void BaselineJIT::generate_CreateCallContext()
+ {
++    STORE_ACC();
+     as->prepareCallWithArgCount(1);
+     as->passCppFrameAsArg(0);
+     BASELINEJIT_GENERATE_RUNTIME_CALL(PushCallContext, CallResultDestination::Ignore);
++    LOAD_ACC();
+ }
+
+ void BaselineJIT::generate_PushCatchContext(int index, int name) { as->pushCatchContext(index, name); }
 diff --git a/src/qml/jsruntime/qv4function.cpp b/src/qml/jsruntime/qv4function.cpp
 index aeb4835c40..9082628a1a 100644
 --- a/src/qml/jsruntime/qv4function.cpp
@@ -44,6 +82,40 @@ index aeb4835c40..9082628a1a 100644
              parameterNames.append(dup);
              parameterNames[duplicate] =
                      QString(0xfffe) + QString::number(duplicate) + dup;
+diff --git a/src/qml/qml/ftw/qrecyclepool_p.h b/src/qml/qml/ftw/qrecyclepool_p.h
+index 39f4f88512..c963e1878e 100644
+--- a/src/qml/qml/ftw/qrecyclepool_p.h
++++ b/src/qml/qml/ftw/qrecyclepool_p.h
+@@ -130,8 +130,7 @@ template<typename T, int Step>
+ T *QRecyclePool<T, Step>::New()
+ {
+     T *rv = d->allocate();
+-    new (rv) T;
+-    return rv;
++    return new (rv) T;
+ }
+
+ template<typename T, int Step>
+@@ -139,8 +138,7 @@ template<typename T1>
+ T *QRecyclePool<T, Step>::New(const T1 &a)
+ {
+     T *rv = d->allocate();
+-    new (rv) T(a);
+-    return rv;
++    return new (rv) T(a);
+ }
+
+ template<typename T, int Step>
+@@ -148,8 +146,7 @@ template<typename T1>
+ T *QRecyclePool<T, Step>::New(T1 &a)
+ {
+     T *rv = d->allocate();
+-    new (rv) T(a);
+-    return rv;
++    return new (rv) T(a);
+ }
+
+ template<typename T, int Step>
 diff --git a/src/qml/qml/qqmlimport.cpp b/src/qml/qml/qqmlimport.cpp
 index 10c6c41338..39bfcdc999 100644
 --- a/src/qml/qml/qqmlimport.cpp
@@ -51,7 +123,7 @@ index 10c6c41338..39bfcdc999 100644
 @@ -2120,9 +2120,12 @@ void QQmlImportDatabase::addImportPath(const QString& path)
          cPath.replace(Backslash, Slash);
      }
- 
+
 -    if (!cPath.isEmpty()
 -        && !fileImportPath.contains(cPath))
 -        fileImportPath.prepend(cPath);
@@ -62,7 +134,7 @@ index 10c6c41338..39bfcdc999 100644
 +            fileImportPath.prepend(cPath);
 +    }
  }
- 
+
  /*!
 diff --git a/src/qml/qml/qqmltypewrapper.cpp b/src/qml/qml/qqmltypewrapper.cpp
 index 175de8b936..a6ba4b8cb3 100644
@@ -70,7 +142,7 @@ index 175de8b936..a6ba4b8cb3 100644
 +++ b/src/qml/qml/qqmltypewrapper.cpp
 @@ -419,8 +419,10 @@ ReturnedValue QQmlTypeWrapper::virtualInstanceOf(const Object *typeObject, const
              return Encode(false);
- 
+
          QQmlRefPointer<QQmlTypeData> td = qenginepriv->typeLoader.getType(typeWrapper->d()->type().sourceUrl());
 -        ExecutableCompilationUnit *cu = td->compilationUnit();
 -        myQmlType = qenginepriv->metaObjectForType(cu->metaTypeId);
@@ -88,12 +160,12 @@ index aa9f4bc1bd..09503a7e99 100644
 @@ -254,7 +254,7 @@ void QQmlVMEMetaObjectEndpoint::tryConnect()
              if (!pd)
                  return;
- 
+
 -            if (pd->notifyIndex() != -1)
 +            if (pd->notifyIndex() != -1 && ctxt->engine)
                  connect(target, pd->notifyIndex(), ctxt->engine);
          }
- 
+
 diff --git a/src/qml/types/qqmlconnections.cpp b/src/qml/types/qqmlconnections.cpp
 index 29ed62cd39..aba930dfe1 100644
 --- a/src/qml/types/qqmlconnections.cpp
@@ -140,7 +212,7 @@ index 4fcff70de6..5b7e767ae2 100644
 @@ -1871,10 +1883,15 @@ void QQmlDelegateModelPrivate::emitChanges()
      for (int i = 1; i < m_groupCount; ++i)
          QQmlDelegateModelGroupPrivate::get(m_groups[i])->emitModelUpdated(reset);
- 
+
 -    auto cacheCopy = m_cache; // deliberate; emitChanges may alter m_cache
 -    for (QQmlDelegateModelItem *cacheItem : qAsConst(cacheCopy)) {
 -        if (cacheItem->attached)
@@ -156,11 +228,11 @@ index 4fcff70de6..5b7e767ae2 100644
 +            attached->emitChanges();
      }
  }
- 
+
 @@ -1974,6 +1991,38 @@ void QQmlDelegateModel::_q_rowsMoved(
      }
  }
- 
+
 +void QQmlDelegateModel::_q_columnsInserted(const QModelIndex &parent, int begin, int end)
 +{
 +    Q_D(QQmlDelegateModel);
@@ -198,7 +270,7 @@ index 4fcff70de6..5b7e767ae2 100644
      Q_D(QQmlDelegateModel);
 @@ -2663,20 +2712,24 @@ void QQmlDelegateModelAttached::emitChanges()
      m_previousGroups = m_cacheItem->groups;
- 
+
      int indexChanges = 0;
 -    for (int i = 1; i < m_cacheItem->metaType->groupCount; ++i) {
 +    const int groupCount = m_cacheItem->metaType->groupCount;
@@ -208,7 +280,7 @@ index 4fcff70de6..5b7e767ae2 100644
              indexChanges |= (1 << i);
          }
      }
- 
+
 +    // Don't access m_cacheItem anymore once we've started sending signals.
 +    // We don't own it and someone might delete it.
 +
@@ -248,10 +320,10 @@ index ae1954ae8d..99e6eff7c3 100644
  #include "QtQuick/qquicktextdocument.h"
 +#include "QtQuick/qquickrendercontrol.h"
  QT_BEGIN_NAMESPACE
- 
+
  #if QT_CONFIG(accessibility)
 @@ -57,7 +58,19 @@ QAccessibleQuickItem::QAccessibleQuickItem(QQuickItem *item)
- 
+
  QWindow *QAccessibleQuickItem::window() const
  {
 -    return item()->window();
@@ -269,7 +341,7 @@ index ae1954ae8d..99e6eff7c3 100644
 +
 +    return window;
  }
- 
+
  int QAccessibleQuickItem::childCount() const
 @@ -113,19 +126,15 @@ QAccessibleInterface *QAccessibleQuickItem::childAt(int x, int y) const
  QAccessibleInterface *QAccessibleQuickItem::parent() const
@@ -281,7 +353,7 @@ index ae1954ae8d..99e6eff7c3 100644
 +    QQuickItem *ci = itemWindow ? itemWindow->contentItem() : nullptr;
      while (parent && !QQuickItemPrivate::get(parent)->isAccessible && parent != ci)
          parent = parent->parentItem();
- 
+
      if (parent) {
          if (parent == ci) {
 -            // Jump out to the scene widget if the parent is the root item.
@@ -298,7 +370,7 @@ index ae1954ae8d..99e6eff7c3 100644
 @@ -193,7 +202,7 @@ QAccessible::State QAccessibleQuickItem::state() const
      QRect viewRect_ = viewRect();
      QRect itemRect = rect();
- 
+
 -    if (viewRect_.isNull() || itemRect.isNull() || !item()->window() || !item()->window()->isVisible() ||!item()->isVisible() || qFuzzyIsNull(item()->opacity()))
 +    if (viewRect_.isNull() || itemRect.isNull() || !window() || !window()->isVisible() ||!item()->isVisible() || qFuzzyIsNull(item()->opacity()))
          state.invisible = true;
@@ -314,9 +386,9 @@ index ae1954ae8d..99e6eff7c3 100644
 +    }
      return state;
  }
- 
+
 @@ -217,7 +230,7 @@ QAccessible::Role QAccessibleQuickItem::role() const
- 
+
      QAccessible::Role role = QAccessible::NoRole;
      if (item())
 -        role = QQuickItemPrivate::get(item())->accessibleRole();
@@ -329,9 +401,9 @@ index 39ffcaf39c..8baa01330c 100644
 --- a/src/quick/accessible/qaccessiblequickview_p.h
 +++ b/src/quick/accessible/qaccessiblequickview_p.h
 @@ -58,7 +58,7 @@ QT_BEGIN_NAMESPACE
- 
+
  #if QT_CONFIG(accessibility)
- 
+
 -class QAccessibleQuickWindow : public QAccessibleObject
 +class Q_QUICK_EXPORT QAccessibleQuickWindow : public QAccessibleObject
  {
@@ -344,18 +416,18 @@ index 8321fcfeed..383078b3b9 100644
 @@ -481,7 +481,9 @@ void QQuickDragAttached::setKeys(const QStringList &keys)
      \qmlattachedproperty stringlist QtQuick::Drag::mimeData
      \since 5.2
- 
+
 -    This property holds a map of mimeData that is used during startDrag.
 +    This property holds a map from mime type to data that is used during startDrag.
 +    The mime data needs to be a \c string, or an \c ArrayBuffer with the data encoded
 +    according to the mime type.
  */
- 
+
  QVariantMap QQuickDragAttached::mimeData() const
 @@ -766,8 +768,12 @@ Qt::DropAction QQuickDragAttachedPrivate::startDrag(Qt::DropActions supportedAct
      QDrag *drag = new QDrag(source ? source : q);
      QMimeData *mimeData = new QMimeData();
- 
+
 -    for (auto it = externalMimeData.cbegin(), end = externalMimeData.cend(); it != end; ++it)
 -        mimeData->setData(it.key(), it.value().toString().toUtf8());
 +    for (auto it = externalMimeData.cbegin(), end = externalMimeData.cend(); it != end; ++it) {
@@ -364,7 +436,7 @@ index 8321fcfeed..383078b3b9 100644
 +        else
 +            mimeData->setData(it.key(), it.value().toString().toUtf8());
 +    }
- 
+
      drag->setMimeData(mimeData);
      if (pixmapLoader.isReady()) {
 diff --git a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
@@ -376,7 +448,7 @@ index 33da9762d3..9e8b289376 100644
  #include <QtGui/qpa/qplatformtheme.h>
  #include <QtCore/qloggingcategory.h>
 +#include <QtCore/private/qduplicatetracker_p.h>
- 
+
  #include <private/qqmlglobal_p.h>
  #include <private/qqmlengine_p.h>
 @@ -2326,6 +2327,7 @@ QQuickItem::QQuickItem(QQuickItemPrivate &dd, QQuickItem *parent)
@@ -384,12 +456,12 @@ index 33da9762d3..9e8b289376 100644
  {
      Q_D(QQuickItem);
 +    d->inDestructor = true;
- 
+
      if (d->windowRefCount > 1)
          d->windowRefCount = 1; // Make sure window is set to null in next call to derefWindow().
 @@ -2398,7 +2400,7 @@ bool QQuickItemPrivate::canAcceptTabFocus(QQuickItem *item)
          return true;
- 
+
  #if QT_CONFIG(accessibility)
 -    QAccessible::Role role = QQuickItemPrivate::get(item)->accessibleRole();
 +    QAccessible::Role role = QQuickItemPrivate::get(item)->effectiveAccessibleRole();
@@ -417,7 +489,7 @@ index 33da9762d3..9e8b289376 100644
              if (item == contentItem) {
                  qCDebug(DBG_FOCUS) << "QQuickItemPrivate::nextPrevItemInTabFocusChain: looped, return contentItem";
 @@ -2689,9 +2695,8 @@ void QQuickItem::setParentItem(QQuickItem *parentItem)
- 
+
          const bool wasVisible = isVisible();
          op->removeChild(this);
 -        if (wasVisible) {
@@ -428,9 +500,9 @@ index 33da9762d3..9e8b289376 100644
          QQuickWindowPrivate::get(d->window)->parentlessItems.remove(this);
      }
 @@ -2768,8 +2773,9 @@ void QQuickItem::setParentItem(QQuickItem *parentItem)
- 
+
      d->itemChange(ItemParentHasChanged, d->parentItem);
- 
+
 -    emit parentChanged(d->parentItem);
 -    if (isVisible() && d->parentItem)
 +    if (!d->inDestructor)
@@ -438,16 +510,16 @@ index 33da9762d3..9e8b289376 100644
 +    if (isVisible() && d->parentItem && !QQuickItemPrivate::get(d->parentItem)->inDestructor)
          emit d->parentItem->visibleChildrenChanged();
  }
- 
+
 @@ -2965,7 +2971,8 @@ void QQuickItemPrivate::removeChild(QQuickItem *child)
- 
+
      itemChange(QQuickItem::ItemChildRemovedChange, child);
- 
+
 -    emit q->childrenChanged();
 +    if (!inDestructor)
 +        emit q->childrenChanged();
  }
- 
+
  void QQuickItemPrivate::refWindow(QQuickWindow *c)
 @@ -3194,6 +3201,7 @@ QQuickItemPrivate::QQuickItemPrivate()
      , touchEnabled(false)
@@ -469,7 +541,7 @@ index 33da9762d3..9e8b289376 100644
 +    }
 +#endif
  }
- 
+
  QQuickStateGroup *QQuickItemPrivate::_states()
 @@ -6106,9 +6121,11 @@ bool QQuickItemPrivate::setEffectiveVisibleRecur(bool newEffectiveVisible)
          QAccessible::updateAccessibility(&ev);
@@ -483,12 +555,12 @@ index 33da9762d3..9e8b289376 100644
 +        if (childVisibilityChanged)
 +            emit q->visibleChildrenChanged();
 +    }
- 
+
      return true;    // effective visibility DID change
  }
 @@ -6157,6 +6174,15 @@ void QQuickItemPrivate::setEffectiveEnableRecur(QQuickItem *scope, bool newEffec
      }
- 
+
      itemChange(QQuickItem::ItemEnabledHasChanged, effectiveEnable);
 +#if QT_CONFIG(accessibility)
 +    if (isAccessible) {
@@ -501,10 +573,10 @@ index 33da9762d3..9e8b289376 100644
 +#endif
      emit q->enabledChanged();
  }
- 
+
 @@ -8974,13 +9000,20 @@ QQuickItemPrivate::ExtraData::ExtraData()
- 
- 
+
+
  #if QT_CONFIG(accessibility)
 -QAccessible::Role QQuickItemPrivate::accessibleRole() const
 +QAccessible::Role QQuickItemPrivate::effectiveAccessibleRole() const
@@ -521,7 +593,7 @@ index 33da9762d3..9e8b289376 100644
 +        role = accessibleRole();
 +    return role;
 +}
- 
+
 +QAccessible::Role QQuickItemPrivate::accessibleRole() const
 +{
      return QAccessible::NoRole;
@@ -536,26 +608,26 @@ index 841d91bb40..6f329bd119 100644
      bool touchEnabled:1;
      bool hasCursorHandler:1;
 +    quint32 inDestructor:1; // has entered ~QQuickItem
- 
+
      enum DirtyType {
          TransformOrigin         = 0x00000001,
 @@ -574,7 +575,10 @@ public:
      virtual void implicitHeightChanged();
- 
+
  #if QT_CONFIG(accessibility)
 +    QAccessible::Role effectiveAccessibleRole() const;
 +private:
      virtual QAccessible::Role accessibleRole() const;
 +public:
  #endif
- 
+
      void setImplicitAntialiasing(bool antialiasing);
 diff --git a/src/quick/items/qquickmousearea_p_p.h b/src/quick/items/qquickmousearea_p_p.h
 index fba383e268..0d63618622 100644
 --- a/src/quick/items/qquickmousearea_p_p.h
 +++ b/src/quick/items/qquickmousearea_p_p.h
 @@ -61,7 +61,6 @@ QT_BEGIN_NAMESPACE
- 
+
  class QQuickMouseEvent;
  class QQuickMouseArea;
 -class QQuickPointerMask;
@@ -951,17 +1023,17 @@ index 39780f8de3..9c97b43518 100644
 --- a/src/quickwidgets/qquickwidget.cpp
 +++ b/src/quickwidgets/qquickwidget.cpp
 @@ -39,6 +39,7 @@
- 
+
  #include "qquickwidget.h"
  #include "qquickwidget_p.h"
 +#include "qaccessiblequickwidgetfactory_p.h"
- 
+
  #include "private/qquickwindow_p.h"
  #include "private/qquickitem_p.h"
 @@ -75,9 +76,16 @@
- 
+
  QT_BEGIN_NAMESPACE
- 
+
 +QQuickWidgetOffscreenWindow::QQuickWidgetOffscreenWindow(QQuickWindowPrivate &dd, QQuickRenderControl *control)
 +:QQuickWindow(dd, control)
 +{
@@ -978,7 +1050,7 @@ index 39780f8de3..9c97b43518 100644
          Q_Q(QWindow);
 @@ -105,9 +113,8 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
      Q_Q(QQuickWidget);
- 
+
      renderControl = new QQuickWidgetRenderControl(q);
 -    offscreenWindow = new QQuickWindow(*new QQuickOffcreenWindowPrivate(),renderControl);
 -    offscreenWindow->setTitle(QString::fromLatin1("Offscreen"));
@@ -986,7 +1058,7 @@ index 39780f8de3..9c97b43518 100644
 +    offscreenWindow = new QQuickWidgetOffscreenWindow(*new QQuickWidgetOffscreenWindowPrivate(), renderControl);
 +    offscreenWindow->setScreen(q->screen());
      // Do not call create() on offscreenWindow.
- 
+
      // Check if the Software Adaptation is being used
 @@ -138,6 +145,10 @@ void QQuickWidgetPrivate::init(QQmlEngine* e)
      QWidget::connect(offscreenWindow, &QQuickWindow::focusObjectChanged, q, &QQuickWidget::propagateFocusObjectChanged);
@@ -997,10 +1069,10 @@ index 39780f8de3..9c97b43518 100644
 +    QAccessible::installFactory(&qAccessibleQuickWidgetFactory);
 +#endif
  }
- 
+
  void QQuickWidgetPrivate::ensureEngine() const
 @@ -901,9 +912,7 @@ void QQuickWidgetPrivate::createContext()
- 
+
          context = new QOpenGLContext;
          context->setFormat(offscreenWindow->requestedFormat());
 -        const QWindow *win = q->window()->windowHandle();
@@ -1013,7 +1085,7 @@ index 39780f8de3..9c97b43518 100644
 @@ -1520,19 +1529,16 @@ bool QQuickWidget::event(QEvent *e)
          d->handleWindowChange();
          break;
- 
+
 -    case QEvent::ScreenChangeInternal:
 -        if (QWindow *window = this->window()->windowHandle()) {
 -            QScreen *newScreen = window->screen();
@@ -1035,7 +1107,7 @@ index 39780f8de3..9c97b43518 100644
 +            d->context->setScreen(newScreen);
  #endif
 -        }
- 
+
          if (d->useSoftwareRenderer
  #if QT_CONFIG(opengl)
 @@ -1545,7 +1551,7 @@ bool QQuickWidget::event(QEvent *e)
@@ -1054,7 +1126,7 @@ index 881f7f9220..1a946bcc71 100644
 @@ -148,6 +148,14 @@ public:
      bool forceFullUpdate;
  };
- 
+
 +class QQuickWidgetOffscreenWindow: public QQuickWindow
 +{
 +    Q_OBJECT
@@ -1064,7 +1136,7 @@ index 881f7f9220..1a946bcc71 100644
 +};
 +
  QT_END_NAMESPACE
- 
+
  #endif // QQuickWidget_P_H
 diff --git a/src/quickwidgets/quickwidgets.pro b/src/quickwidgets/quickwidgets.pro
 index 2438e577ae..85d156b8a3 100644
@@ -1078,13 +1150,13 @@ index 2438e577ae..85d156b8a3 100644
 +    qtquickwidgetsglobal.h \
 +    qaccessiblequickwidget_p.h \
 +    qaccessiblequickwidgetfactory_p.h
- 
+
  SOURCES += \
 -    qquickwidget.cpp
 +    qquickwidget.cpp \
 +    qaccessiblequickwidget.cpp \
 +    qaccessiblequickwidgetfactory.cpp
- 
+
  load(qt_module)
 diff --git a/tests/auto/qml/qqmldelegatemodel/data/deleteRace.qml b/tests/auto/qml/qqmldelegatemodel/data/deleteRace.qml
 new file mode 100644
@@ -1165,7 +1237,7 @@ index 35f1e2c94d..f473cff75f 100644
 +++ b/tests/auto/qml/qqmldelegatemodel/tst_qqmldelegatemodel.cpp
 @@ -27,6 +27,8 @@
  ****************************************************************************/
- 
+
  #include <QtTest/qtest.h>
 +#include <QtCore/QConcatenateTablesProxyModel>
 +#include <QtGui/QStandardItemModel>
@@ -1179,12 +1251,12 @@ index 35f1e2c94d..f473cff75f 100644
 +    void redrawUponColumnChange();
 +    void deleteRace();
  };
- 
+
  class AbstractItemModel : public QAbstractItemModel
 @@ -186,6 +190,41 @@ void tst_QQmlDelegateModel::contextAccessedByHandler()
      QVERIFY(root->property("works").toBool());
  }
- 
+
 +void tst_QQmlDelegateModel::redrawUponColumnChange()
 +{
 +    QStandardItemModel m1;
@@ -1221,7 +1293,7 @@ index 35f1e2c94d..f473cff75f 100644
 +}
 +
  QTEST_MAIN(tst_QQmlDelegateModel)
- 
+
  #include "tst_qqmldelegatemodel.moc"
 diff --git a/tests/auto/qml/qqmlimport/tst_qqmlimport.cpp b/tests/auto/qml/qqmlimport/tst_qqmlimport.cpp
 index 9c865b3f73..1f788f7a7f 100644
@@ -1237,7 +1309,7 @@ index 9c865b3f73..1f788f7a7f 100644
 +    expectedImportPaths.move(expectedImportPaths.indexOf(qml2Imports), 0);
 +    QCOMPARE(expectedImportPaths, engine.importPathList());
  }
- 
+
  Q_DECLARE_METATYPE(QQmlImports::ImportVersion)
 diff --git a/tests/auto/qml/qqmllanguage/data/Broken.qml b/tests/auto/qml/qqmllanguage/data/Broken.qml
 new file mode 100644
@@ -1268,16 +1340,16 @@ index bffb62c59e..97cc64991f 100644
 +++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
 @@ -336,6 +336,7 @@ private slots:
      void bareInlineComponent();
- 
+
      void hangOnWarning();
 +    void objectAsBroken();
- 
+
      void ambiguousContainingType();
- 
+
 @@ -5876,6 +5877,21 @@ void tst_qqmllanguage::ambiguousContainingType()
      }
  }
- 
+
 +void tst_qqmllanguage::objectAsBroken()
 +{
 +    QQmlEngine engine;
@@ -1294,7 +1366,7 @@ index bffb62c59e..97cc64991f 100644
 +}
 +
  QTEST_MAIN(tst_qqmllanguage)
- 
+
  #include "tst_qqmllanguage.moc"
 diff --git a/tests/auto/quick/qquickgridview/data/qtbug86255.qml b/tests/auto/quick/qquickgridview/data/qtbug86255.qml
 new file mode 100644
@@ -1366,13 +1438,13 @@ index 94ec4f44d5..7d0d9fa7a7 100644
      void QTBUG_49218();
      void QTBUG_48870_fastModelUpdates();
 +    void QTBUG_86255();
- 
+
      void keyNavigationEnabled();
      void resizeDynamicCellWidthRtL();
 @@ -6814,6 +6815,18 @@ void tst_QQuickGridView::resizeDynamicCellWidthRtL()
      QTRY_COMPARE(gridview->contentX(), 0.f);
  }
- 
+
 +void tst_QQuickGridView::QTBUG_86255()
 +{
 +    QScopedPointer<QQuickView> window(createView());
@@ -1416,13 +1488,13 @@ index c8f251dbe1..c8ef36ee68 100644
      void activeFocusOnTab_infiniteLoop_data();
      void activeFocusOnTab_infiniteLoop();
 +    void activeFocusOnTab_infiniteLoopControls();
- 
+
      void nextItemInFocusChain();
      void nextItemInFocusChain2();
 @@ -1057,6 +1058,17 @@ void tst_QQuickItem::activeFocusOnTab_infiniteLoop()
      QCOMPARE(item, window->rootObject());
  }
- 
+
 +
 +void tst_QQuickItem::activeFocusOnTab_infiniteLoopControls()
 +{
@@ -1476,7 +1548,7 @@ index aa55b42935..26e86672b0 100644
 @@ -1734,6 +1735,16 @@ void tst_qquickstates::trivialWhen()
      QVERIFY(c.create());
  }
- 
+
 +void tst_qquickstates::jsValueWhen()
 +{
 +    QQmlEngine engine;
@@ -1588,7 +1660,7 @@ index beeec88f07..2cb7653d65 100644
 @@ -522,14 +522,7 @@ int main(int argc, char *argv[])
      parser.addPositionalArgument("args",
          QCoreApplication::translate("main", "Arguments after '--' are ignored, but passed through to the application.arguments variable in QML."), "[-- args...]");
- 
+
 -    if (!parser.parse(QCoreApplication::arguments())) {
 -        qWarning() << parser.errorText();
 -        exit(1);
