@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-        -DMZ_PROJECT_SUFFIX='-ng' \
+        -DMZ_LIB_SUFFIX='-ng' \
         -DBUILD_SHARED_LIBS=ON")
 
 def build():
