@@ -21,7 +21,7 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.remove("/usr/include/minizip/zip.h")
-    pisitools.remove("/usr/include/minizip/unzip.h")
+    # pisitools.remove("/usr/include/minizip/zip.h")
+    # pisitools.remove("/usr/include/minizip/unzip.h")
 
     pisitools.dodoc("LICENSE", "README*")
