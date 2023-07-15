@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>hidapi</Name>
+        <Homepage>https://github.com/libusb/hidapi</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>GPL</License>
+        <Icon>hidapi</Icon>
+        <IsA>library</IsA>
+        <Summary>Simple library for communicating with USB and Bluetooth HID devices</Summary>
+        <Description>HIDAPI is a multi-platform library which allows an application to interface with USB and Bluetooth HID-Class devices</Description>
+        <Archive sha1sum="e14d489b29ade5dcb11dfd875f56e1bc0332379f" type="targz">https://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.14.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>libusb-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>hidapi</Name>
+        <RuntimeDependencies>
+            <Dependency>eudev</Dependency>
+            <Dependency>libusb</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libhidapi*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>hidapi-devel</Name>
+        <Summary>Development files for hidapi</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">hidapi</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-07-15</Date>
+            <Version>0.14.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
