@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libnvme</Name>
+        <Homepage>https://github.com/linux-nvme/libnvme/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>C Library for NVM Express on Linux</Summary>
+        <Icon>libnvme</Icon>
+        <Description>Linux'ta NVM Express için C Kitaplığı</Description>
+        <Archive sha1sum="566c9f032a61225bdf14a1a234d53aa66e79e85a" type="targz">https://github.com/linux-nvme/libnvme/archive/refs/tags/v1.5.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>swig</Dependency>
+            <Dependency>asciidoc</Dependency>
+            <Dependency>keyutils</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>libnvme.patch</Patch>
+            <Patch level="1">libnvme.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>libnvme</Name>
+        <RuntimeDependencies>
+            <Dependency>dbus</Dependency>
+            <Dependency>json-c</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>keyutils</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libnvme-devel</Name>
+        <Summary>Development files for libnvme</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libnvme</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>json-c-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-07-12</Date>
+            <Version>1.5</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
