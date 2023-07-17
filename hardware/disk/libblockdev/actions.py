@@ -9,17 +9,19 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-shelltools.export("python2", "/usr/bin/python2.7")
+# shelltools.export("python2", "/usr/bin/python2.7")
 
 def setup():
     # shelltools.system("sed 's/g_memdup/&2/' -i             \
                             # src/lib/plugin_apis/vdo.{c,api} \
                             # src/plugins/vdo.c")
 
-    shelltools.system("sh ./autogen.sh")
-    shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
+    # shelltools.system("sh ./autogen.sh")
+    autotools.autoreconf("-ivf")
+    # shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure("--without-gtk-doc \
                          --without-nvdimm \
+                         --with-python3 \
                          --without-dm")
     
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
