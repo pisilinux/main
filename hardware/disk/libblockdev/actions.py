@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-# shelltools.export("python2", "/usr/bin/python2.7")
+shelltools.export("PYTHON", "/usr/bin/python3")
 
 def setup():
     # shelltools.system("sed 's/g_memdup/&2/' -i             \
