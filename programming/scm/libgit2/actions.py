@@ -24,6 +24,6 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dosym("/usr/lib/libgit2.so.1.1", "/usr/lib/libgit2.so.1.0")
+    # pisitools.dosym("/usr/lib/libgit2.so.1.1", "/usr/lib/libgit2.so.1.0")
 
-    #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
+    pisitools.dodoc("AUTHORS", "README*", "COPYING")
