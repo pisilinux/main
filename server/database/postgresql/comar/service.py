@@ -19,7 +19,7 @@ def check_postgresql():
         fail(MSG_ERR_PGSQLNOTINST)
 
 PIDFILE = "%s/postmaster.pid" % config.get("PGDATA", "/var/lib/postgresql/data")
-
+#pg_ctl
 @synchronized
 def start():
     check_postgresql()

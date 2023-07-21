@@ -13,3 +13,4 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
             os.environ[i] = "en_US.UTF-8"
 
         os.system('/bin/su postgres -s /bin/sh -p -c "/usr/bin/initdb --pgdata /var/lib/postgresql/data"')
+        os.system('/bin/su postgres -s /bin/sh -p -c "/usr/bin/pg_ctl --pgdata -l logfile start"')
