@@ -21,6 +21,7 @@ def setup():
                           -Dpipewire-alsa=enabled \
                           -D compress-offload=disabled \
                           -Djack=disabled \
+                          -Dsession-managers=enabled \
                           -Dlibcamera=disabled")
 
 def build():
