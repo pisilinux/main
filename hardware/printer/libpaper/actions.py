@@ -19,8 +19,13 @@ def setup():
 def build():
     autotools.make()
 
+    shelltools.cd("src")
+    shelltools.system("gcc $CFLAGS $LDFLAGS -I.. -Ilibgnu -o localepaper localepaper.c libgnu/.libs/libgnupaper.a")
+
 def install():
     autotools.install()
+
+    pisitools.dolib("src/localepaper")
 
     for lang in shelltools.ls("debian/po/*.po"):
         pisitools.domo(lang, shelltools.baseName(lang).replace(".po", ""), "libpaper.mo")
