@@ -21,12 +21,9 @@ def setup():
     options = "--with-x \
                --with-ijs \
                --disable-gtk \
-               --without-omni \
                --with-libpaper \
                --with-jbig2dec \
-               --enable-dynamic \
                --enable-freetype \
-               --without-luratech \
                --with-drivers=ALL \
                --enable-fontconfig \
                --with-system-libtiff \
