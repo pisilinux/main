@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("rm -r po/nl/docs/plasma-sdk")
+    # shelltools.system("rm -r po/nl/docs/plasma-sdk")
     kde5.configure()
 
 def build():
