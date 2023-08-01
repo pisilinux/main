@@ -21,8 +21,10 @@ ver = ".".join(get.srcVERSION().split(".")[:3])
 jobs = jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
 
 shelltools.export("SHELL", "/bin/sh")
-shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
-shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
+# shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
+shelltools.system("export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE='system'")
+shelltools.system("export MOZBUILD_STATE_PATH='mozbuild'")
+# shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 
 def setup():
 	
