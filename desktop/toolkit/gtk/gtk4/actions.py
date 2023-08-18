@@ -26,8 +26,8 @@ def setup():
                           -Dintrospection=enabled \
                           -Dcolord=enabled \
                           -Dcloudproviders=enabled \
-                          -Dvulkan=enabled \
-                          -Dgtk_doc=true")
+                          -Ddocumentation=true")
+                            # -Dvulkan=enabled \
 
 def build():
     mesontools.build()
