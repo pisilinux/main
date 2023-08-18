@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
 
 def setup():
-    cmaketools.configure()
+    cmaketools.configure("-DYAML_BUILD_SHARED_LIBS=ON")
     
 def build():
     cmaketools.make()
@@ -17,16 +17,16 @@ def install():
     cmaketools.install()
 
     # srt-devel
-    pisitools.removeDir("/usr/lib/cmake/GTest")
-    pisitools.removeDir("/usr/include/gmock")
-    pisitools.removeDir("/usr/include/gtest")
+    # pisitools.removeDir("/usr/lib/cmake/GTest")
+    # pisitools.removeDir("/usr/include/gmock")
+    # pisitools.removeDir("/usr/include/gtest")
 
-    pisitools.remove("/usr/lib/pkgconfig/gtest_main.pc")
-    pisitools.remove("/usr/lib/libgmock.a")
-    pisitools.remove("/usr/lib/libgtest.a")
-    pisitools.remove("/usr/lib/pkgconfig/gtest.pc")
-    pisitools.remove("/usr/lib/pkgconfig/gmock.pc")
-    pisitools.remove("/usr/lib/pkgconfig/gmock_main.pc")
-    pisitools.remove("/usr/lib/libgtest_main.a")
-    pisitools.remove("/usr/lib/libgmock_main.a")
+    # pisitools.remove("/usr/lib/pkgconfig/gtest_main.pc")
+    # pisitools.remove("/usr/lib/libgmock.a")
+    # pisitools.remove("/usr/lib/libgtest.a")
+    # pisitools.remove("/usr/lib/pkgconfig/gtest.pc")
+    # pisitools.remove("/usr/lib/pkgconfig/gmock.pc")
+    # pisitools.remove("/usr/lib/pkgconfig/gmock_main.pc")
+    # pisitools.remove("/usr/lib/libgtest_main.a")
+    # pisitools.remove("/usr/lib/libgmock_main.a")
 
