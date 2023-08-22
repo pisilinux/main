@@ -20,7 +20,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.removeDir("/usr/share/gnome-control-center")
+    #pisitools.removeDir("/usr/share/gnome-control-center")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*", "THANKS")
 
