@@ -7,24 +7,22 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build") 
-    shelltools.system("meson .. --prefix=/usr -Dstemming=false -Dqt=true -Dvapi=true")
+    mesontools.configure("--libexecdir=lib \
+                                        -Dstemming=false \
+                                        -Dqt=true \
+                                        -Dvapi=true")
     
    
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
     
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
 
 
-    pisitools.insinto("/usr/share/pixmaps/", "../docs/images/src/png/appstream-logo.png")
+    pisitools.insinto("/usr/share/pixmaps/", "docs/images/src/png/appstream-logo.png")
     
-    shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
