@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>esound</Name>
+        <Homepage>http://www.tux.org/~ricdude/EsounD.html</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <License>LGPLv2</License>
+        <Icon>esound</Icon>
+        <IsA>app:console</IsA>
+        <Summary>The Enlightened Sound Daemon</Summary>
+        <Description>esound can mix several audio streams into one sound device. It will mix in pre-loaded samples, too. The requests are transparently handled by PulseAudio so it doesn't need to be launched as a daemon.</Description>
+        <Archive sha1sum="6c343483b3789f439277935eaad7e478bee685ea" type="tarbz2">http://ftp.gnome.org/pub/GNOME/sources/esound/0.2/esound-0.2.41.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>audiofile-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">esound-0.2.38-drain.patch</Patch>
+            <Patch level="1">esound-0.2.38-fix-open-macro.patch</Patch>
+            <Patch level="1">remove-confusing-spew.patch</Patch>
+            <Patch level="1">esound-nospawn.patch</Patch>
+            <Patch level="1">esound-0.2.39-fix-errno.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>esound</Name>
+        <RuntimeDependencies>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>audiofile</Dependency>
+            <Dependency>pulseaudio</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libesd.so*</Path>
+            <Path fileType="library">/usr/lib/libesddsp.so*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>esound-devel</Name>
+        <Summary>Development files for esound</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">esound</Dependency>
+            <Dependency>audiofile-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-08-26</Date>
+            <Version>0.2.41</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
