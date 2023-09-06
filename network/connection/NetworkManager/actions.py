@@ -33,6 +33,7 @@ def setup():
                           -Ddocs=true \
                           -Diwd=true \
                           -Difcfg_rh=true \
+                          -Dconfig_migrate_ifcfg_rh_default=true \
                           --buildtype=release \
                           -Dbluez5_dun=true \
                           -Dnetconfig=no \
@@ -42,7 +43,7 @@ def setup():
                           -Dcrypto=nss \
                           -Ddhcpcd=enabled \
                           -Dpppd=/usr/sbin/pppd \
-                          -Dpppd_plugin_dir=/usr/lib/pppd/2.4.9 \
+                          -Dpppd_plugin_dir=/usr/lib/pppd/2.5.0 \
                           -Ddbus_conf_dir=/usr/share/dbus-1/system.d \
                           -Ddhclient=enabled \
                           -D config_dns_rc_manager_default=symlink \
