@@ -46,6 +46,10 @@ def install():
 
     shelltools.system("cp -r misc  %s/usr/lib/go" % get.installDIR())
 
+    pisitools.insinto("/usr/lib/go", "go.env")
+    pisitools.insinto("/usr/lib/go", "VERSION")
+    pisitools.dosed("%s/usr/lib/go/go.env" % get.installDIR() , "auto", "local")
+
     #pisitools.removeDir("/usr/lib/go/pkg/bootstrap")
 
     # remove testdata, which hit cave fix-linkage
