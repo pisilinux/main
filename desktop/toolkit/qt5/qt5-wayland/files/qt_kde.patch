@@ -85,6 +85,19 @@ index 69cc46a0..9091efbe 100644
  };
  
  class Q_WAYLAND_CLIENT_EXPORT QWaylandClientExtensionTemplatePrivate : public QWaylandClientExtensionPrivate
+diff --git a/src/client/qwaylandabstractdecoration.cpp b/src/client/qwaylandabstractdecoration.cpp
+index b6ee43c9..be0a31df 100644
+--- a/src/client/qwaylandabstractdecoration.cpp
++++ b/src/client/qwaylandabstractdecoration.cpp
+@@ -122,7 +122,7 @@ const QImage &QWaylandAbstractDecoration::contentImage()
+     if (d->m_isDirty) {
+         // Update the decoration backingstore
+ 
+-        const int bufferScale = waylandWindow()->scale();
++        const qreal bufferScale = waylandWindow()->scale();
+         const QSize imageSize = waylandWindow()->surfaceSize() * bufferScale;
+         d->m_decorationContentImage = QImage(imageSize, QImage::Format_ARGB32_Premultiplied);
+         // Only scale by buffer scale, not QT_SCALE_FACTOR etc.
 diff --git a/src/client/qwaylandclipboard.cpp b/src/client/qwaylandclipboard.cpp
 index 81f48e05..14561c77 100644
 --- a/src/client/qwaylandclipboard.cpp
@@ -169,8 +182,49 @@ index ce14e124..bb52683d 100644
  };
  
  }
+diff --git a/src/client/qwaylandcursor.cpp b/src/client/qwaylandcursor.cpp
+index e4eca9d4..ba76ba2d 100644
+--- a/src/client/qwaylandcursor.cpp
++++ b/src/client/qwaylandcursor.cpp
+@@ -44,6 +44,7 @@
+ #include "qwaylandshmbackingstore_p.h"
+ 
+ #include <QtGui/QImageReader>
++#include <QBitmap>
+ #include <QDebug>
+ 
+ #include <wayland-cursor.h>
+@@ -250,7 +251,27 @@ QWaylandCursor::QWaylandCursor(QWaylandDisplay *display)
+ QSharedPointer<QWaylandBuffer> QWaylandCursor::cursorBitmapBuffer(QWaylandDisplay *display, const QCursor *cursor)
+ {
+     Q_ASSERT(cursor->shape() == Qt::BitmapCursor);
+-    const QImage &img = cursor->pixmap().toImage();
++
++    const QBitmap mask = cursor->mask(Qt::ReturnByValue);
++    QImage img;
++    if (cursor->pixmap().isNull())
++        img = cursor->bitmap(Qt::ReturnByValue).toImage();
++    else
++        img = cursor->pixmap().toImage();
++
++    // convert to supported format if necessary
++    if (!display->shm()->formatSupported(img.format())) {
++        if (mask.isNull()) {
++            img.convertTo(QImage::Format_RGB32);
++        } else {
++            // preserve mask
++            img.convertTo(QImage::Format_ARGB32);
++            QPixmap pixmap = QPixmap::fromImage(img);
++            pixmap.setMask(mask);
++            img = pixmap.toImage();
++        }
++    }
++
+     QSharedPointer<QWaylandShmBuffer> buffer(new QWaylandShmBuffer(display, img.size(), img.format()));
+     memcpy(buffer->image()->bits(), img.bits(), size_t(img.sizeInBytes()));
+     return buffer;
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index 7e2e3308..e3e60ed5 100644
+index 7e2e3308..e66ae880 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -72,6 +72,8 @@ QWaylandDataDevice::QWaylandDataDevice(QWaylandDataDeviceManager *manager, QWayl
@@ -191,7 +245,7 @@ index 7e2e3308..e3e60ed5 100644
  {
      auto *seat = m_display->currentInputDevice();
      auto *origin = seat->pointerFocus();
-@@ -123,7 +125,28 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
+@@ -123,7 +125,31 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
      }
  
      m_dragSource.reset(new QWaylandDataSource(m_display->dndSelectionHandler(), mimeData));
@@ -202,6 +256,9 @@ index 7e2e3308..e3e60ed5 100644
      connect(m_dragSource.data(), &QWaylandDataSource::cancelled, this, &QWaylandDataDevice::dragSourceCancelled);
 +    connect(m_dragSource.data(), &QWaylandDataSource::dndResponseUpdated, this, [this](bool accepted, Qt::DropAction action) {
 +            auto drag = static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag());
++            if (!drag->currentDrag()) {
++                return;
++            }
 +            // in old versions drop action is not set, so we guess
 +            if (wl_data_source_get_version(m_dragSource->object()) < 3) {
 +                drag->setResponse(accepted);
@@ -220,7 +277,7 @@ index 7e2e3308..e3e60ed5 100644
  
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
-@@ -152,7 +175,7 @@ void QWaylandDataDevice::data_device_drop()
+@@ -152,7 +178,7 @@ void QWaylandDataDevice::data_device_drop()
          supportedActions = drag->supportedActions();
      } else if (m_dragOffer) {
          dragData = m_dragOffer->mimeData();
@@ -229,7 +286,7 @@ index 7e2e3308..e3e60ed5 100644
      } else {
          return;
      }
-@@ -162,7 +185,11 @@ void QWaylandDataDevice::data_device_drop()
+@@ -162,7 +188,11 @@ void QWaylandDataDevice::data_device_drop()
                                                                            QGuiApplication::keyboardModifiers());
  
      if (drag) {
@@ -242,7 +299,7 @@ index 7e2e3308..e3e60ed5 100644
      }
  }
  
-@@ -186,7 +213,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
+@@ -186,7 +216,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
          supportedActions = drag->supportedActions();
      } else if (m_dragOffer) {
          dragData = m_dragOffer->mimeData();
@@ -251,7 +308,7 @@ index 7e2e3308..e3e60ed5 100644
      }
  
      const QPlatformDragQtResponse &response = QWindowSystemInterface::handleDrag(m_dragWindow, dragData, m_dragPoint, supportedActions,
-@@ -197,11 +224,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
+@@ -197,11 +227,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
          static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag())->setResponse(response);
      }
  
@@ -264,7 +321,7 @@ index 7e2e3308..e3e60ed5 100644
  }
  
  void QWaylandDataDevice::data_device_leave()
-@@ -235,10 +258,10 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
+@@ -235,10 +261,10 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
          supportedActions = drag->supportedActions();
      } else {
          dragData = m_dragOffer->mimeData();
@@ -277,7 +334,7 @@ index 7e2e3308..e3e60ed5 100644
                                                                            QGuiApplication::mouseButtons(),
                                                                            QGuiApplication::keyboardModifiers());
  
-@@ -246,11 +269,7 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
+@@ -246,11 +272,7 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
          static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag())->setResponse(response);
      }
  
@@ -290,7 +347,7 @@ index 7e2e3308..e3e60ed5 100644
  }
  #endif // QT_CONFIG(draganddrop)
  
-@@ -277,14 +296,10 @@ void QWaylandDataDevice::selectionSourceCancelled()
+@@ -277,14 +299,10 @@ void QWaylandDataDevice::selectionSourceCancelled()
  #if QT_CONFIG(draganddrop)
  void QWaylandDataDevice::dragSourceCancelled()
  {
@@ -306,7 +363,7 @@ index 7e2e3308..e3e60ed5 100644
  QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) const
  {
      QPoint pnt(wl_fixed_to_int(x), wl_fixed_to_int(y));
-@@ -297,6 +312,33 @@ QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) con
+@@ -297,6 +315,33 @@ QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) con
      }
      return pnt;
  }
@@ -587,7 +644,7 @@ index 25afff79..14d1542d 100644
  
  }
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 78e387bc..27f55965 100644
+index 78e387bc..ff9a0500 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -87,10 +87,203 @@
@@ -818,15 +875,18 @@ index 78e387bc..27f55965 100644
      if (mSyncCallback)
          wl_callback_destroy(mSyncCallback);
  
-@@ -189,6 +381,21 @@ QWaylandDisplay::~QWaylandDisplay(void)
+@@ -187,10 +379,26 @@ QWaylandDisplay::~QWaylandDisplay(void)
+ #if QT_CONFIG(cursor)
+     qDeleteAll(mCursorThemes);
  #endif
-     if (mDisplay)
-         wl_display_disconnect(mDisplay);
 +
 +    if (m_frameEventQueue)
 +        wl_event_queue_destroy(m_frameEventQueue);
-+}
 +
+     if (mDisplay)
+         wl_display_disconnect(mDisplay);
+ }
+ 
 +// Steps which is called just after constructor. This separates registry_global() out of the constructor
 +// so that factory functions in integration can be overridden.
 +void QWaylandDisplay::initialize()
@@ -837,10 +897,12 @@ index 78e387bc..27f55965 100644
 +        // Give wl_output.done and zxdg_output_v1.done events a chance to arrive
 +        forceRoundTrip();
 +    }
- }
- 
++}
++
  void QWaylandDisplay::ensureScreen()
-@@ -205,98 +412,37 @@ void QWaylandDisplay::ensureScreen()
+ {
+     if (!mScreens.empty() || mPlaceholderScreen)
+@@ -205,98 +413,37 @@ void QWaylandDisplay::ensureScreen()
  
  void QWaylandDisplay::checkError() const
  {
@@ -959,7 +1021,7 @@ index 78e387bc..27f55965 100644
  }
  
  QWaylandScreen *QWaylandDisplay::screenForOutput(struct wl_output *output) const
-@@ -347,7 +493,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
+@@ -347,7 +494,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
      if (interface == QStringLiteral("wl_output")) {
          mWaitingScreens << new QWaylandScreen(this, version, id);
      } else if (interface == QStringLiteral("wl_compositor")) {
@@ -968,7 +1030,7 @@ index 78e387bc..27f55965 100644
          mCompositor.init(registry, id, mCompositorVersion);
      } else if (interface == QStringLiteral("wl_shm")) {
          mShm.reset(new QWaylandShm(this, version, id));
-@@ -356,7 +502,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
+@@ -356,7 +503,7 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
          mInputDevices.append(inputDevice);
  #if QT_CONFIG(wayland_datadevice)
      } else if (interface == QStringLiteral("wl_data_device_manager")) {
@@ -977,7 +1039,7 @@ index 78e387bc..27f55965 100644
  #endif
      } else if (interface == QStringLiteral("qt_surface_extension")) {
          mWindowExtension.reset(new QtWayland::qt_surface_extension(registry, id, 1));
-@@ -373,6 +519,8 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
+@@ -373,6 +520,8 @@ void QWaylandDisplay::registry_global(uint32_t id, const QString &interface, uin
  #if QT_CONFIG(wayland_client_primary_selection)
      } else if (interface == QStringLiteral("zwp_primary_selection_device_manager_v1")) {
          mPrimarySelectionManager.reset(new QWaylandPrimarySelectionDeviceManagerV1(this, id, 1));
@@ -986,7 +1048,7 @@ index 78e387bc..27f55965 100644
  #endif
      } else if (interface == QStringLiteral("zwp_text_input_manager_v2") && !mClientSideInputContextRequested) {
          mTextInputManager.reset(new QtWayland::zwp_text_input_manager_v2(registry, id, 1));
-@@ -431,6 +579,13 @@ void QWaylandDisplay::registry_global_remove(uint32_t id)
+@@ -431,6 +580,13 @@ void QWaylandDisplay::registry_global_remove(uint32_t id)
                      inputDevice->setTextInput(nullptr);
                  mWaylandIntegration->reconfigureInputContext();
              }
@@ -1000,7 +1062,7 @@ index 78e387bc..27f55965 100644
              mGlobals.removeAt(i);
              break;
          }
-@@ -456,9 +611,10 @@ void QWaylandDisplay::addRegistryListener(RegistryListener listener, void *data)
+@@ -456,9 +612,10 @@ void QWaylandDisplay::addRegistryListener(RegistryListener listener, void *data)
  
  void QWaylandDisplay::removeListener(RegistryListener listener, void *data)
  {
@@ -1012,7 +1074,7 @@ index 78e387bc..27f55965 100644
  }
  
  uint32_t QWaylandDisplay::currentTimeMillisec()
-@@ -471,50 +627,9 @@ uint32_t QWaylandDisplay::currentTimeMillisec()
+@@ -471,50 +628,9 @@ uint32_t QWaylandDisplay::currentTimeMillisec()
      return 0;
  }
  
@@ -1064,7 +1126,7 @@ index 78e387bc..27f55965 100644
  }
  
  bool QWaylandDisplay::supportsWindowDecoration() const
-@@ -578,14 +693,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
+@@ -578,14 +694,10 @@ void QWaylandDisplay::handleKeyboardFocusChanged(QWaylandInputDevice *inputDevic
      if (mLastKeyboardFocus == keyboardFocus)
          return;
  
@@ -1083,7 +1145,7 @@ index 78e387bc..27f55965 100644
  
      mLastKeyboardFocus = keyboardFocus;
  }
-@@ -604,6 +715,19 @@ void QWaylandDisplay::handleWaylandSync()
+@@ -604,6 +716,19 @@ void QWaylandDisplay::handleWaylandSync()
      QWindow *activeWindow = mActiveWindows.empty() ? nullptr : mActiveWindows.last()->window();
      if (activeWindow != QGuiApplication::focusWindow())
          QWindowSystemInterface::handleWindowActivated(activeWindow);
@@ -1103,7 +1165,7 @@ index 78e387bc..27f55965 100644
  }
  
  const wl_callback_listener QWaylandDisplay::syncCallbackListener = {
-@@ -630,6 +754,13 @@ QWaylandInputDevice *QWaylandDisplay::defaultInputDevice() const
+@@ -630,6 +755,13 @@ QWaylandInputDevice *QWaylandDisplay::defaultInputDevice() const
      return mInputDevices.isEmpty() ? 0 : mInputDevices.first();
  }
  
@@ -1117,7 +1179,7 @@ index 78e387bc..27f55965 100644
  #if QT_CONFIG(cursor)
  
  QWaylandCursor *QWaylandDisplay::waylandCursor()
-@@ -656,4 +787,6 @@ QWaylandCursorTheme *QWaylandDisplay::loadCursorTheme(const QString &name, int p
+@@ -656,4 +788,6 @@ QWaylandCursorTheme *QWaylandDisplay::loadCursorTheme(const QString &name, int p
  
  } // namespace QtWaylandClient
  
@@ -1295,6 +1357,28 @@ index 474fe2ab..46f629ac 100644
  
  private:
      QWaylandDisplay *m_display = nullptr;
+diff --git a/src/client/qwaylandinputcontext.cpp b/src/client/qwaylandinputcontext.cpp
+index 84a34674..920a4222 100644
+--- a/src/client/qwaylandinputcontext.cpp
++++ b/src/client/qwaylandinputcontext.cpp
+@@ -93,9 +93,14 @@ void QWaylandTextInput::reset()
+ void QWaylandTextInput::commit()
+ {
+     if (QObject *o = QGuiApplication::focusObject()) {
+-        QInputMethodEvent event;
+-        event.setCommitString(m_preeditCommit);
+-        QCoreApplication::sendEvent(o, &event);
++        if (!m_preeditCommit.isEmpty()) {
++
++            QInputMethodEvent event;
++            event.setCommitString(m_preeditCommit);
++            m_preeditCommit = QString();
++
++            QCoreApplication::sendEvent(o, &event);
++        }
+     }
+ 
+     reset();
 diff --git a/src/client/qwaylandinputdevice.cpp b/src/client/qwaylandinputdevice.cpp
 index e931d1f5..9a0fe49d 100644
 --- a/src/client/qwaylandinputdevice.cpp
@@ -1544,7 +1628,7 @@ index df1c94f2..050cfdc0 100644
  
  #if QT_CONFIG(cursor)
 diff --git a/src/client/qwaylandshmbackingstore.cpp b/src/client/qwaylandshmbackingstore.cpp
-index dc7ff670..41cffdf7 100644
+index dc7ff670..90e37e95 100644
 --- a/src/client/qwaylandshmbackingstore.cpp
 +++ b/src/client/qwaylandshmbackingstore.cpp
 @@ -52,6 +52,7 @@
@@ -1565,7 +1649,14 @@ index dc7ff670..41cffdf7 100644
  #endif
  
  QT_BEGIN_NAMESPACE
-@@ -74,8 +78,10 @@ QWaylandShmBuffer::QWaylandShmBuffer(QWaylandDisplay *display,
+@@ -68,14 +72,16 @@ QT_BEGIN_NAMESPACE
+ namespace QtWaylandClient {
+ 
+ QWaylandShmBuffer::QWaylandShmBuffer(QWaylandDisplay *display,
+-                     const QSize &size, QImage::Format format, int scale)
++                     const QSize &size, QImage::Format format, qreal scale)
+ {
+     int stride = size.width() * 4;
      int alloc = stride * size.height();
      int fd = -1;
  
@@ -1578,8 +1669,39 @@ index dc7ff670..41cffdf7 100644
  #endif
  
      QScopedPointer<QFile> filePointer;
+@@ -108,7 +114,7 @@ QWaylandShmBuffer::QWaylandShmBuffer(QWaylandDisplay *display,
+     QWaylandShm* shm = display->shm();
+     wl_shm_format wl_format = shm->formatFrom(format);
+     mImage = QImage(data, size.width(), size.height(), stride, format);
+-    mImage.setDevicePixelRatio(qreal(scale));
++    mImage.setDevicePixelRatio(scale);
+ 
+     mShmPool = wl_shm_create_pool(shm->object(), fd, alloc);
+     init(wl_shm_pool_create_buffer(mShmPool,0, size.width(), size.height(),
+@@ -271,7 +277,7 @@ QWaylandShmBuffer *QWaylandShmBackingStore::getBuffer(const QSize &size)
+ void QWaylandShmBackingStore::resize(const QSize &size)
+ {
+     QMargins margins = windowDecorationMargins();
+-    int scale = waylandWindow()->scale();
++    qreal scale = waylandWindow()->scale();
+     QSize sizeWithMargins = (size + QSize(margins.left()+margins.right(),margins.top()+margins.bottom())) * scale;
+ 
+     // We look for a free buffer to draw into. If the buffer is not the last buffer we used,
+diff --git a/src/client/qwaylandshmbackingstore_p.h b/src/client/qwaylandshmbackingstore_p.h
+index e01632da..f3fae438 100644
+--- a/src/client/qwaylandshmbackingstore_p.h
++++ b/src/client/qwaylandshmbackingstore_p.h
+@@ -71,7 +71,7 @@ class QWaylandWindow;
+ class Q_WAYLAND_CLIENT_EXPORT QWaylandShmBuffer : public QWaylandBuffer {
+ public:
+     QWaylandShmBuffer(QWaylandDisplay *display,
+-           const QSize &size, QImage::Format format, int scale = 1);
++           const QSize &size, QImage::Format format, qreal scale = 1);
+     ~QWaylandShmBuffer() override;
+     QSize size() const override { return mImage.size(); }
+     int scale() const override { return int(mImage.devicePixelRatio()); }
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index df2dcdaa..3b700002 100644
+index df2dcdaa..07d8f8f1 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -76,7 +76,6 @@ QWaylandWindow *QWaylandWindow::mMouseGrab = nullptr;
@@ -1600,6 +1722,15 @@ index df2dcdaa..3b700002 100644
      delete mWindowDecoration;
  
      if (mSurface)
+@@ -189,7 +185,7 @@ void QWaylandWindow::initWindow()
+     // typically be integer 1 (normal-dpi) or 2 (high-dpi). Call set_buffer_scale()
+     // to inform the compositor that high-resolution buffers will be provided.
+     if (mDisplay->compositorVersion() >= 3)
+-        mSurface->set_buffer_scale(scale());
++        mSurface->set_buffer_scale(mScale);
+ 
+     if (QScreen *s = window()->screen())
+         setOrientationMask(s->orientationUpdateMask());
 @@ -243,6 +239,7 @@ bool QWaylandWindow::shouldCreateSubSurface() const
  
  void QWaylandWindow::reset()
@@ -1731,29 +1862,39 @@ index df2dcdaa..3b700002 100644
          handleUpdate();
          buffer->setBusy();
  
-@@ -583,7 +572,11 @@ void QWaylandWindow::damage(const QRect &rect)
+@@ -583,7 +572,16 @@ void QWaylandWindow::damage(const QRect &rect)
      if (mSurface == nullptr)
          return;
  
 -    mSurface->damage(rect.x(), rect.y(), rect.width(), rect.height());
-+    const int s = scale();
-+    if (mDisplay->compositorVersion() >= 4)
-+        mSurface->damage_buffer(s * rect.x(), s * rect.y(), s * rect.width(), s * rect.height());
-+    else
++    const qreal s = scale();
++    if (mDisplay->compositorVersion() >= 4) {
++        const QRect bufferRect =
++                QRectF(s * rect.x(), s * rect.y(), s * rect.width(), s * rect.height())
++                        .toAlignedRect();
++        mSurface->damage_buffer(bufferRect.x(), bufferRect.y(), bufferRect.width(),
++                                bufferRect.height());
++    } else {
 +        mSurface->damage(rect.x(), rect.y(), rect.width(), rect.height());
++    }
  }
  
  void QWaylandWindow::safeCommit(QWaylandBuffer *buffer, const QRegion &damage)
-@@ -619,8 +612,14 @@ void QWaylandWindow::commit(QWaylandBuffer *buffer, const QRegion &damage)
+@@ -619,8 +617,19 @@ void QWaylandWindow::commit(QWaylandBuffer *buffer, const QRegion &damage)
          return;
  
      attachOffset(buffer);
 -    for (const QRect &rect: damage)
 -        mSurface->damage(rect.x(), rect.y(), rect.width(), rect.height());
 +    if (mDisplay->compositorVersion() >= 4) {
-+        const int s = scale();
-+        for (const QRect &rect: damage)
-+            mSurface->damage_buffer(s * rect.x(), s * rect.y(), s * rect.width(), s * rect.height());
++        const qreal s = scale();
++        for (const QRect &rect : damage) {
++            const QRect bufferRect =
++                    QRectF(s * rect.x(), s * rect.y(), s * rect.width(), s * rect.height())
++                            .toAlignedRect();
++            mSurface->damage_buffer(bufferRect.x(), bufferRect.y(), bufferRect.width(),
++                                    bufferRect.height());
++        }
 +    } else {
 +        for (const QRect &rect: damage)
 +            mSurface->damage(rect.x(), rect.y(), rect.width(), rect.height());
@@ -1761,7 +1902,7 @@ index df2dcdaa..3b700002 100644
      Q_ASSERT(!buffer->committed());
      buffer->setCommitted();
      mSurface->commit();
-@@ -635,42 +634,53 @@ void QWaylandWindow::commit()
+@@ -635,42 +644,53 @@ void QWaylandWindow::commit()
  
  const wl_callback_listener QWaylandWindow::callbackListener = {
      [](void *data, wl_callback *callback, uint32_t time) {
@@ -1832,7 +1973,7 @@ index df2dcdaa..3b700002 100644
  
      if (mWaitingForFrameCallback) {
          qCDebug(lcWaylandBackingstore) << "Didn't receive frame callback in time, window should now be inexposed";
-@@ -874,7 +884,11 @@ bool QWaylandWindow::createDecoration()
+@@ -874,7 +894,11 @@ bool QWaylandWindow::createDecoration()
          // size and are not redrawn, leaving the new buffer empty. As a simple
          // work-around, we trigger a full extra update whenever the client-side
          // window decorations are toggled while the window is showing.
@@ -1845,7 +1986,7 @@ index df2dcdaa..3b700002 100644
      }
  
      return mWindowDecoration;
-@@ -1028,8 +1042,17 @@ void QWaylandWindow::handleScreensChanged()
+@@ -1028,8 +1052,17 @@ void QWaylandWindow::handleScreensChanged()
      if (newScreen == mLastReportedScreen)
          return;
  
@@ -1863,7 +2004,25 @@ index df2dcdaa..3b700002 100644
  
      int scale = newScreen->isPlaceholder() ? 1 : static_cast<QWaylandScreen *>(newScreen)->scale();
      if (scale != mScale) {
-@@ -1101,10 +1124,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
+@@ -1080,14 +1113,14 @@ bool QWaylandWindow::isActive() const
+     return mDisplay->isWindowActivated(this);
+ }
+ 
+-int QWaylandWindow::scale() const
++qreal QWaylandWindow::scale() const
+ {
+-    return mScale;
++    return devicePixelRatio();
+ }
+ 
+ qreal QWaylandWindow::devicePixelRatio() const
+ {
+-    return mScale;
++    return qreal(mScale);
+ }
+ 
+ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
+@@ -1101,10 +1134,18 @@ bool QWaylandWindow::setMouseGrabEnabled(bool grab)
      return true;
  }
  
@@ -1883,7 +2042,7 @@ index df2dcdaa..3b700002 100644
      mLastReportedWindowStates = states;
  }
  
-@@ -1146,19 +1177,24 @@ void QWaylandWindow::timerEvent(QTimerEvent *event)
+@@ -1146,19 +1187,24 @@ void QWaylandWindow::timerEvent(QTimerEvent *event)
      if (event->timerId() != mFrameCallbackCheckIntervalTimerId)
          return;
  
@@ -1919,7 +2078,7 @@ index df2dcdaa..3b700002 100644
  }
  
  void QWaylandWindow::requestUpdate()
-@@ -1167,8 +1203,11 @@ void QWaylandWindow::requestUpdate()
+@@ -1167,8 +1213,11 @@ void QWaylandWindow::requestUpdate()
      Q_ASSERT(hasPendingUpdateRequest()); // should be set by QPA
  
      // If we have a frame callback all is good and will be taken care of there
@@ -1933,7 +2092,7 @@ index df2dcdaa..3b700002 100644
  
      // If we've already called deliverUpdateRequest(), but haven't seen any attach+commit/swap yet
      // This is a somewhat redundant behavior and might indicate a bug in the calling code, so log
-@@ -1181,7 +1220,12 @@ void QWaylandWindow::requestUpdate()
+@@ -1181,7 +1230,12 @@ void QWaylandWindow::requestUpdate()
      // so use invokeMethod to delay the delivery a bit.
      QMetaObject::invokeMethod(this, [this] {
          // Things might have changed in the meantime
@@ -1947,7 +2106,7 @@ index df2dcdaa..3b700002 100644
              deliverUpdateRequest();
      }, Qt::QueuedConnection);
  }
-@@ -1192,19 +1236,18 @@ void QWaylandWindow::requestUpdate()
+@@ -1192,19 +1246,18 @@ void QWaylandWindow::requestUpdate()
  void QWaylandWindow::handleUpdate()
  {
      qCDebug(lcWaylandBackingstore) << "handleUpdate" << QThread::currentThread();
@@ -1972,7 +2131,7 @@ index df2dcdaa..3b700002 100644
      mFrameCallback = wl_surface_frame(wrappedSurface);
      wl_proxy_wrapper_destroy(wrappedSurface);
      wl_callback_add_listener(mFrameCallback, &QWaylandWindow::callbackListener, this);
-@@ -1214,6 +1257,8 @@ void QWaylandWindow::handleUpdate()
+@@ -1214,6 +1267,8 @@ void QWaylandWindow::handleUpdate()
      // Start a timer for handling the case when the compositor stops sending frame callbacks.
      if (mFrameCallbackTimeout > 0) {
          QMetaObject::invokeMethod(this, [this] {
@@ -1981,7 +2140,7 @@ index df2dcdaa..3b700002 100644
              if (mWaitingForFrameCallback) {
                  if (mFrameCallbackCheckIntervalTimerId < 0)
                      mFrameCallbackCheckIntervalTimerId = startTimer(mFrameCallbackTimeout);
-@@ -1274,6 +1319,20 @@ void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
+@@ -1274,6 +1329,20 @@ void QWaylandWindow::setOpaqueArea(const QRegion &opaqueArea)
      wl_region_destroy(region);
  }
  
@@ -2003,7 +2162,7 @@ index df2dcdaa..3b700002 100644
  
  QT_END_NAMESPACE
 diff --git a/src/client/qwaylandwindow_p.h b/src/client/qwaylandwindow_p.h
-index 01337cff..2f219d8c 100644
+index 01337cff..741f9e5c 100644
 --- a/src/client/qwaylandwindow_p.h
 +++ b/src/client/qwaylandwindow_p.h
 @@ -98,6 +98,9 @@ public:
@@ -2016,7 +2175,7 @@ index 01337cff..2f219d8c 100644
      virtual WindowType windowType() const = 0;
      virtual void ensureSize();
      WId winId() const override;
-@@ -148,6 +151,7 @@ public:
+@@ -148,13 +151,14 @@ public:
      void setWindowState(Qt::WindowStates states) override;
      void setWindowFlags(Qt::WindowFlags flags) override;
      void handleWindowStatesChanged(Qt::WindowStates states);
@@ -2024,6 +2183,14 @@ index 01337cff..2f219d8c 100644
  
      void raise() override;
      void lower() override;
+ 
+     void setMask(const QRegion &region) override;
+ 
+-    int scale() const;
++    qreal scale() const;
+     qreal devicePixelRatio() const override;
+ 
+     void requestActivateWindow() override;
 @@ -206,6 +210,10 @@ public:
      void handleUpdate();
      void deliverUpdateRequest() override;
@@ -2227,6 +2394,19 @@ index 6c8f04ec..94c56325 100644
  };
  
  }
+diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
+index c1f45fa6..bbc63444 100644
+--- a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
++++ b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
+@@ -195,7 +195,7 @@ public:
+         QOpenGLTextureCache *cache = QOpenGLTextureCache::cacheForContext(m_context->context());
+ 
+         QSize surfaceSize = window->surfaceSize();
+-        int scale = window->scale() ;
++        qreal scale = window->scale() ;
+         glViewport(0, 0, surfaceSize.width() * scale, surfaceSize.height() * scale);
+ 
+         //Draw Decoration
 diff --git a/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linuxdmabuf.h b/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linuxdmabuf.h
 index 56a710c3..c6a8b6c6 100644
 --- a/src/hardwareintegration/compositor/linux-dmabuf-unstable-v1/linuxdmabuf.h
