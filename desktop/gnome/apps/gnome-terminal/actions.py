@@ -7,9 +7,11 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import mesontools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system(""" sed -i -r 's:"(/system):"/org/gnome\1:g' src/external.gschema.xml""")
     mesontools.configure()
 
 def build():
@@ -17,5 +19,7 @@ def build():
 
 def install():
     mesontools.install()
+
+    pisitools.removeDir("/usr/lib/systemd")
 
     pisitools.dodoc("COPYING*", "README*")

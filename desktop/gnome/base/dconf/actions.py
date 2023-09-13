@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i 's/install_dir: systemd_userunitdir,//' service/meson.build")
     mesontools.configure("-Dgtk_doc=true")
 
 def build():
