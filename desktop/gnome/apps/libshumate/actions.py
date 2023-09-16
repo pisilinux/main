@@ -11,12 +11,14 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("--prefix=/usr \
+                          --buildtype=release \
+                          -Dgtk_doc=false")
 
 def build():
     mesontools.build()
 
 def install():
     mesontools.install()
-    
+
     pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
