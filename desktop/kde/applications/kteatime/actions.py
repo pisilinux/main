@@ -10,6 +10,7 @@ from pisi.actionsapi import kde5
 NoStrip=["/usr/share/icons"]
 
 def setup():
+    pisitools.dosed("CMakeLists.txt", "5.92.0", "5.110.0")
     kde5.configure()
 
 def build():
