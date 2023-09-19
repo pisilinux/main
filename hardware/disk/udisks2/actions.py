@@ -7,10 +7,16 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+
 
 def setup():
+    # Fedora: default to ntfs-3g
+    shelltools.system("sed -i data/builtin_mount_options.conf -e 's/ntfs_drivers=ntfs3,ntfs/ntfs_drivers=ntfs,ntfs3/'")
     autotools.configure("--disable-static \
                          --enable-fhs-media \
+                         --enable-btrfs \
+                         --enable-lvm2 \
                          --with-systemdsystemunitdir=no \
                          --disable-gtk-doc")
 
