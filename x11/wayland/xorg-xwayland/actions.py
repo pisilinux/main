@@ -14,6 +14,8 @@ def setup():
     mesontools.configure("-Dipv6=true \
                           -Dxcsecurity=true \
                           -Ddri3=true \
+                          -D xvfb=false \
+                          -D xdmcp=false \
                           -Dxwayland_eglstream=true \
                           -Dglamor=true \
                           -Dxkb_dir=/usr/share/X11/xkb \
