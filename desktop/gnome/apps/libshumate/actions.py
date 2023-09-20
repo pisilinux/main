@@ -12,8 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("--prefix=/usr \
-                          --buildtype=release \
-                          -Dgtk_doc=false")
+                          --buildtype=release")
 
 def build():
     mesontools.build()
