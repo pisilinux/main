@@ -8,24 +8,24 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.autoreconf("-fi")
-    autotools.configure("--with-systemd=no \
-                         --disable-geoclue \
-                         --disable-docbook-docs \
-                         --disable-libportal \
-                         --with-systemduserunitdir=no \
-                         --enable-pipewire")
-#--with-systemduserunitdir=none \
+    mesontools.configure("-Dsystemd=disabled \
+                                        -Ddocbook-docs=disabled \
+                                        -Dlibportal=disabled \
+                                        -Dsystemd-user-unit-dir=/tmp \
+                                        -Dgeoclue=disabled")
+
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dosed("%s/usr/share/dbus-1/services/*.service" % get.installDIR(), "SystemdService", deleteLine=True )
+
+    pisitools.removeDir("/tmp")
 
     pisitools.dodoc("COPYING", "README*", "NEWS")
