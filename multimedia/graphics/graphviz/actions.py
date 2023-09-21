@@ -9,6 +9,9 @@ from pisi.actionsapi import shelltools, autotools, pisitools, get
 j = ''.join([
     ' --disable-static',
     ' --without-webp',
+    ' --enable-lefty',
+    ' --enable-ocaml=no',
+    ' --with-rsvg=yes',
     ' --disable-dependency-tracking '
     ])
 
