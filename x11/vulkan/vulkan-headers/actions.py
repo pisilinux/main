@@ -25,4 +25,4 @@ def install():
 	autotools.rawInstall("DESTDIR=%s" %get.installDIR())
 
     
-	pisitools.dodoc("README.md", "CODE_OF_CONDUCT.md")
+	pisitools.dodoc("README.md")
