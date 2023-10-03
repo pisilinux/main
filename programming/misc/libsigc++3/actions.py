@@ -31,4 +31,4 @@ def install():
     #pisitools.domove("/usr/share/doc/libsigc++-3.0/*", "/usr/share/doc/%s/html" % get.srcNAME())
     #pisitools.removeDir("/usr/share/doc/libsigc++-3.0")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
+    pisitools.dodoc("ChangeLog", "README*", "NEWS")
