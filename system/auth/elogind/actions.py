@@ -19,6 +19,7 @@ def setup():
 
     mesontools.configure("--prefix=/usr \
                           -Drootlibdir=/usr/lib \
+                          -Dudevrulesdir=/lib/udev/rules.d \
                           -Dpolkit=true \
                           -Dsplit-bin=true \
                           -Dsplit-usr=false \
