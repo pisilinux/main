@@ -70,7 +70,7 @@ index 45150cfffd..5ad53faf95 100644
  
  void BaselineJIT::generate_PushCatchContext(int index, int name) { as->pushCatchContext(index, name); }
 diff --git a/src/qml/jsruntime/qv4function.cpp b/src/qml/jsruntime/qv4function.cpp
-index aeb4835c40..9082628a1a 100644
+index cf8a53cf9f..223e64271e 100644
 --- a/src/qml/jsruntime/qv4function.cpp
 +++ b/src/qml/jsruntime/qv4function.cpp
 @@ -136,7 +136,7 @@ void Function::updateInternalClass(ExecutionEngine *engine, const QList<QByteArr
@@ -269,7 +269,7 @@ index ee31cb38d9..187339169b 100644
  
  bool QQmlData::hasBindingBit(int coreIndex) const
 diff --git a/src/qml/qml/qqmlengine.cpp b/src/qml/qml/qqmlengine.cpp
-index 826a1a5ab4..fce8fe987f 100644
+index 852a673ebd..d6b2711c2d 100644
 --- a/src/qml/qml/qqmlengine.cpp
 +++ b/src/qml/qml/qqmlengine.cpp
 @@ -718,18 +718,15 @@ void QQmlPrivate::qdeclarativeelement_destructor(QObject *o)
@@ -416,10 +416,10 @@ index 826a1a5ab4..fce8fe987f 100644
      if (extendedData)
          delete extendedData;
 diff --git a/src/qml/qml/qqmlimport.cpp b/src/qml/qml/qqmlimport.cpp
-index 10c6c41338..39bfcdc999 100644
+index e7263d1850..289f11d006 100644
 --- a/src/qml/qml/qqmlimport.cpp
 +++ b/src/qml/qml/qqmlimport.cpp
-@@ -2120,9 +2120,12 @@ void QQmlImportDatabase::addImportPath(const QString& path)
+@@ -2119,9 +2119,12 @@ void QQmlImportDatabase::addImportPath(const QString& path)
          cPath.replace(Backslash, Slash);
      }
  
@@ -453,10 +453,10 @@ index 175de8b936..a6ba4b8cb3 100644
          myQmlType = qenginepriv->metaObjectForType(myTypeId);
      }
 diff --git a/src/qml/qml/qqmlvmemetaobject.cpp b/src/qml/qml/qqmlvmemetaobject.cpp
-index aa9f4bc1bd..09503a7e99 100644
+index 1e0e4e419f..a0532d1794 100644
 --- a/src/qml/qml/qqmlvmemetaobject.cpp
 +++ b/src/qml/qml/qqmlvmemetaobject.cpp
-@@ -254,7 +254,7 @@ void QQmlVMEMetaObjectEndpoint::tryConnect()
+@@ -251,7 +251,7 @@ void QQmlVMEMetaObjectEndpoint::tryConnect()
              if (!pd)
                  return;
  
@@ -466,10 +466,10 @@ index aa9f4bc1bd..09503a7e99 100644
          }
  
 diff --git a/src/qml/types/qqmlconnections.cpp b/src/qml/types/qqmlconnections.cpp
-index 29ed62cd39..aba930dfe1 100644
+index 4a4e6ce12c..a5889b7396 100644
 --- a/src/qml/types/qqmlconnections.cpp
 +++ b/src/qml/types/qqmlconnections.cpp
-@@ -338,7 +338,7 @@ void QQmlConnections::connectSignalsToMethods()
+@@ -341,7 +341,7 @@ void QQmlConnections::connectSignalsToMethods()
                     && propName.at(2).isUpper()) {
              qmlWarning(this) << tr("Detected function \"%1\" in Connections element. "
                                     "This is probably intended to be a signal handler but no "
@@ -738,6 +738,48 @@ index 8321fcfeed..383078b3b9 100644
  
      drag->setMimeData(mimeData);
      if (pixmapLoader.isReady()) {
+diff --git a/src/quick/items/qquickflickable.cpp b/src/quick/items/qquickflickable.cpp
+index ea357d819d..2634b68248 100644
+--- a/src/quick/items/qquickflickable.cpp
++++ b/src/quick/items/qquickflickable.cpp
+@@ -2120,11 +2120,9 @@ void QQuickFlickable::setContentWidth(qreal w)
+         d->contentItem->setWidth(w);
+     d->hData.markExtentsDirty();
+     // Make sure that we're entirely in view.
+-    if ((!d->pressed && !d->hData.moving && !d->vData.moving) || d->hData.dragging) {
+-        d->hData.contentPositionChangedExternallyDuringDrag = d->hData.dragging;
++    if (!d->pressed && !d->hData.moving && !d->vData.moving) {
+         d->fixupMode = QQuickFlickablePrivate::Immediate;
+         d->fixupX();
+-        d->hData.contentPositionChangedExternallyDuringDrag = false;
+     } else if (!d->pressed && d->hData.fixingUp) {
+         d->fixupMode = QQuickFlickablePrivate::ExtentChanged;
+         d->fixupX();
+@@ -2151,11 +2149,9 @@ void QQuickFlickable::setContentHeight(qreal h)
+         d->contentItem->setHeight(h);
+     d->vData.markExtentsDirty();
+     // Make sure that we're entirely in view.
+-    if ((!d->pressed && !d->hData.moving && !d->vData.moving) || d->vData.dragging) {
+-        d->vData.contentPositionChangedExternallyDuringDrag = d->vData.dragging;
++    if (!d->pressed && !d->hData.moving && !d->vData.moving) {
+         d->fixupMode = QQuickFlickablePrivate::Immediate;
+         d->fixupY();
+-        d->vData.contentPositionChangedExternallyDuringDrag = false;
+     } else if (!d->pressed && d->vData.fixingUp) {
+         d->fixupMode = QQuickFlickablePrivate::ExtentChanged;
+         d->fixupY();
+diff --git a/src/quick/items/qquickflickable_p_p.h b/src/quick/items/qquickflickable_p_p.h
+index d5d838eaea..aef15e150a 100644
+--- a/src/quick/items/qquickflickable_p_p.h
++++ b/src/quick/items/qquickflickable_p_p.h
+@@ -120,6 +120,7 @@ public:
+             dragStartOffset = 0;
+             fixingUp = false;
+             inOvershoot = false;
++            contentPositionChangedExternallyDuringDrag = false;
+         }
+ 
+         void markExtentsDirty() {
 diff --git a/src/quick/items/qquickitem.cpp b/src/quick/items/qquickitem.cpp
 index 33da9762d3..9e8b289376 100644
 --- a/src/quick/items/qquickitem.cpp
@@ -1318,7 +1360,7 @@ index 0000000000..8c63b09f81
 +
 +#endif
 diff --git a/src/quickwidgets/qquickwidget.cpp b/src/quickwidgets/qquickwidget.cpp
-index 39780f8de3..9c97b43518 100644
+index cf021d9a7c..b0117683f7 100644
 --- a/src/quickwidgets/qquickwidget.cpp
 +++ b/src/quickwidgets/qquickwidget.cpp
 @@ -39,6 +39,7 @@
@@ -1381,7 +1423,7 @@ index 39780f8de3..9c97b43518 100644
          QOpenGLContext *shareContext = qt_gl_global_share_context();
          if (!shareContext)
              shareContext = QWidgetPrivate::get(q->window())->shareContext();
-@@ -1520,19 +1529,16 @@ bool QQuickWidget::event(QEvent *e)
+@@ -1527,19 +1536,16 @@ bool QQuickWidget::event(QEvent *e)
          d->handleWindowChange();
          break;
  
@@ -1409,7 +1451,7 @@ index 39780f8de3..9c97b43518 100644
  
          if (d->useSoftwareRenderer
  #if QT_CONFIG(opengl)
-@@ -1545,7 +1551,7 @@ bool QQuickWidget::event(QEvent *e)
+@@ -1552,7 +1558,7 @@ bool QQuickWidget::event(QEvent *e)
              d->render(true);
          }
          break;
@@ -1634,18 +1676,18 @@ index 0000000000..bd88d14c76
 +    property var selfAsBroken: self as Broken
 +}
 diff --git a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
-index bffb62c59e..97cc64991f 100644
+index 1be1533b63..dfc82011c6 100644
 --- a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
 +++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
-@@ -336,6 +336,7 @@ private slots:
+@@ -337,6 +337,7 @@ private slots:
      void bareInlineComponent();
  
      void hangOnWarning();
 +    void objectAsBroken();
  
      void ambiguousContainingType();
- 
-@@ -5876,6 +5877,21 @@ void tst_qqmllanguage::ambiguousContainingType()
+     void staticConstexprMembers();
+@@ -5939,6 +5940,21 @@ void tst_qqmllanguage::bindingAliasToComponentUrl()
      }
  }
  
@@ -1667,6 +1709,32 @@ index bffb62c59e..97cc64991f 100644
  QTEST_MAIN(tst_qqmllanguage)
  
  #include "tst_qqmllanguage.moc"
+diff --git a/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp b/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp
+index d092cd0170..62f7c67dd4 100644
+--- a/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp
++++ b/tests/auto/quick/qquickflickable/tst_qquickflickable.cpp
+@@ -2642,7 +2642,12 @@ void tst_qquickflickable::setContentPositionWhileDragging() // QTBUG-104966
+     } else if (newExtent >= 0) {
+         // ...or reduce the content size be be less than current (contentX, contentY) position
+         // This forces the content item to move.
+-        expectedContentPos = moveDelta;
++        // contentY: 150
++        // 320 - 150 = 170 pixels down to bottom
++        // Now reduce contentHeight to 200
++        // since we are at the bottom, and the flickable is 100 pixels tall, contentY must land
++        // at newExtent - 100.
++
+         if (isHorizontal) {
+             flickable->setContentWidth(newExtent);
+         } else {
+@@ -2652,6 +2657,7 @@ void tst_qquickflickable::setContentPositionWhileDragging() // QTBUG-104966
+         // We therefore cannot scroll/flick it further down. Drag it up towards the top instead
+         // (by moving mouse down).
+         pos += moveDelta;
++        expectedContentPos = unitDelta * (newExtent - (isHorizontal ? flickable->width() : flickable->height()));
+     }
+ 
+     QTest::mouseMove(window.data(), pos);
 diff --git a/tests/auto/quick/qquickgridview/data/qtbug86255.qml b/tests/auto/quick/qquickgridview/data/qtbug86255.qml
 new file mode 100644
 index 0000000000..20688b1967
