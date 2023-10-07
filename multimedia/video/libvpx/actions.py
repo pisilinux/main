@@ -38,4 +38,6 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     pisitools.remove("/usr/%s/*.a" % libdir)
 
+    pisitools.dosym("/usr/lib/libvpx.so.8.0.1", "/usr/lib/libvpx.so.7")
+
     pisitools.dodoc("AUTHORS", "CHANGELOG", "LICENSE", "PATENTS")
