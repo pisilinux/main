@@ -22,4 +22,4 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     shelltools.cd("..")
-    pisitools.dodoc("Artistic-2.0", "ChangeLog", "README*", "TODO")
+    pisitools.dodoc("Artistic-2.0", "ChangeLog", "README*")
