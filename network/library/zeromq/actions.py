@@ -24,4 +24,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.insinto("/usr/include", "cppzmq-4.8.0/*.hpp")
+    pisitools.insinto("/usr/include", "cppzmq-4.10.0/*.hpp")
