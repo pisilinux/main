@@ -21,13 +21,14 @@ def build():
 
 def install():
     pisitools.dobin("unix/librecad")
+    pisitools.dobin("unix/ttf2lff")
      
     pisitools.insinto("/usr/share/librecad/fonts/", "unix/resources/fonts/*")
     pisitools.insinto("/usr/share/librecad/library/", "unix/resources/library/*")
     pisitools.insinto("/usr/share/librecad/patterns/", "unix/resources/patterns/*")
     pisitools.insinto("/usr/share/librecad/qm/", "unix/resources/qm")
     pisitools.insinto("/usr/share/librecad/plugins/", "unix/resources/plugins/*")
-    pisitools.dodoc("README.md", "gpl-2.0.txt")
+    pisitools.dodoc("README.md", "LICENSE")
      
      
 
