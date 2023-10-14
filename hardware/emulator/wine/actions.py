@@ -29,11 +29,6 @@ def setup():
     #pisitools.flags.add("-fno-omit-frame-pointer")
     #shelltools.system("sed -i 's|OpenCL/opencl.h|CL/opencl.h|g'  configure*")
     
-    shelltools.cd("wine-staging-%s" %get.srcVERSION())
-    shelltools.system("./patches/patchinstall.sh DESTDIR=.. --all")
-    shelltools.cd("..")
-		
-    
     autotools.autoreconf("-vif")
     options = "--without-capi \
                --without-oss \
@@ -78,9 +73,9 @@ def install():
     shelltools.cd("build-wine")
 
     if get.buildTYPE() == "emul32":
-        autotools.install("UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib32 dlldir=%s/usr/lib32/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
+        autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib32 dlldir=%s/usr/lib32/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
     else:
-        autotools.install("UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
+        autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
         
     shelltools.cd("..")
 

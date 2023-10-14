@@ -2,7 +2,7 @@
 <!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>wine-staging</Name>
+        <Name>wine</Name>
         <Homepage>http://www.winehq.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
@@ -10,19 +10,19 @@
         </Packager>
         <License>LGPLv2.1</License>
         <IsA>app:console</IsA>
-        <Summary>WINE Is Not An Emulator, which lets you run Microsoft Windows applications - staging version.</Summary>
+        <Icon>wine</Icon>
+        <Summary>WINE Is Not An Emulator, which lets you run Microsoft Windows applications</Summary>
         <Description>Wine allows running Windows 3.*, Windows 95/98 and Windows NT programs on a i386 (or compatible) machine running X11. It is still alpha level code; don't expect everything to work.</Description>
         <Archive sha1sum="216615aea4f88afdb5ac9df0af156296482e03c8" type="tarxz">https://dl.winehq.org/wine/source/8.x/wine-8.18.tar.xz</Archive>
-		<Archive sha1sum="b420ae8e917304ada21372e2746da158a450341c" type="targz" target="wine-8.18">https://github.com/wine-staging/wine-staging/archive/refs/tags/v8.17.1.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>mit-kerberos-devel</Dependency>
+            <Dependency>mit-kerberos</Dependency>
             <Dependency>lcms2-devel</Dependency>
             <Dependency>libao-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
             <Dependency>mpg123-devel</Dependency>
             <Dependency>openal-devel</Dependency>
-            <Dependency>openssl-devel</Dependency>
             <Dependency>libusb-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
             <Dependency>libsdl2-devel</Dependency>
             <Dependency>libv4l-devel</Dependency>
             <Dependency>libXext-devel</Dependency>
@@ -34,6 +34,7 @@
             <Dependency>gstreamer-devel</Dependency>
             <Dependency>openldap-client</Dependency>
             <Dependency>libgphoto2-devel</Dependency>
+            <Dependency>libunwind-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
             <Dependency>gst-plugins-base-devel</Dependency>
 
@@ -61,7 +62,7 @@
             <Dependency>gettext-devel</Dependency>
             <Dependency>giflib-devel</Dependency>
             <Dependency>v4l-utils</Dependency>
-            <Dependency>libpng-devel</Dependency>
+            <Dependency>libpng</Dependency>
             <Dependency>libtevent-devel</Dependency>
 
             <!-- Audio servers are not necessary for runtime -->
@@ -81,21 +82,21 @@
 <!--             <Patch level="1">wine-1.9.3-gcc-5_3_0-disable-force-alignment.patch</Patch> -->
 <!--             <Patch level="1">gcc_erorr.patch</Patch> -->
             <Patch level="1">0001-programs-winhlp32-Use-noyywrap-for-macro.lex.l-and-p.patch</Patch>
-<!-- 			<Patch level="1">blit-ddraw-surface-hack.patch</Patch> -->
             <!-- Use XDG_DOCUMENTS_DIR for "My Documents" -->
         </Patches>
         
     </Source>
 
     <Package>
-        <Name>wine-staging</Name>
+        <Name>wine</Name>
         <IsA>app:gui</IsA>
         <RuntimeDependencies>
-            <Dependency version="current">wine-staging-32bit</Dependency>
+            <Dependency version="current">wine-32bit</Dependency>
+            <Dependency version="current">winetricks</Dependency>
             <Dependency>lcms2</Dependency>
-            <Dependency>vkd3d</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>libSM</Dependency>
+            <Dependency>vkd3d</Dependency>
             <Dependency>mpg123</Dependency>
             <Dependency>openal</Dependency>
             <Dependency>libusb</Dependency>
@@ -131,12 +132,6 @@
             <Dependency>libpcap</Dependency>
             <Dependency>libunwind</Dependency>
         </RuntimeDependencies>
-		<Replaces>
-<!--             <Package>wine</Package> -->
-        </Replaces>
-        <Conflicts>
-            <Package>wine</Package>
-        </Conflicts>
         <Files>
             <Path fileType="data">/etc/xdg</Path>
             <Path fileType="executable">/usr/bin</Path>
@@ -149,6 +144,8 @@
             <Path fileType="man">/usr/share/man</Path>
         </Files>
         <AdditionalFiles>
+            <!-- winetricks script from http://kegel.com/wine/winetricks -->
+            <AdditionalFile target="/usr/bin/winetricks" permission="0755">winetricks</AdditionalFile>
             <!-- wisotool script from http://kegel.com/wine/wisotool -->
             <AdditionalFile target="/usr/bin/wisotool" permission="0755">wisotool</AdditionalFile>
 
@@ -164,20 +161,17 @@
             <AdditionalFile target="/usr/share/applications/wine/wine-oleview.desktop" permission="0644">menu/wine-oleview.desktop</AdditionalFile>
             <AdditionalFile target="/usr/share/applications/wine/wine-winemine.desktop" permission="0644">menu/wine-winemine.desktop</AdditionalFile>
         </AdditionalFiles>
+        <Conflicts>
+            <Package>wine-staging</Package>
+        </Conflicts>
     </Package>
 
     <Package>
-        <Name>wine-staging-devel</Name>
+        <Name>wine-devel</Name>
         <Summary>Wine development environment</Summary>
         <RuntimeDependencies>
-            <Dependency version="current">wine-staging</Dependency>
+            <Dependency version="current">wine</Dependency>
         </RuntimeDependencies>
-		<Replaces>
-<!--             <Package>wine-devel</Package> -->
-        </Replaces>
-        <Conflicts>
-            <Package>wine-devel</Package>
-        </Conflicts>
         <Files>
             <Path fileType="executable">/usr/bin/function_grep.pl</Path>
             <Path fileType="executable">/usr/bin/widl</Path>
@@ -199,19 +193,34 @@
             <Path fileType="man">/usr/share/man/man1/wmc.1</Path>
             <Path fileType="man">/usr/share/man/man1/wrc.1</Path>
         </Files>
+        <Conflicts>
+            <Package>wine-staging-devel</Package>
+        </Conflicts>
     </Package>
 
-     <Package>
-        <Name>wine-staging-32bit</Name>
+
+    <Package>
+        <Name>winetricks</Name>
+        <Summary>winetricks is a helper script to download and install various redistributable runtime libraries needed to run some programs in Wine.</Summary>
+        <RuntimeDependencies>
+            <Dependency>zenity</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/winetricks</Path>
+            <Path fileType="data">/usr/share/applications/winetricks.desktop</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>wine-32bit</Name>
         <PartOf>emul32</PartOf>
         <Summary>32-bit shared libraries for wine</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>glib2-32bit</Dependency>
-            <Dependency>lcms2-32bit</Dependency>
             <Dependency>vkd3d-32bit</Dependency>
-            <Dependency>libusb-32bit</Dependency>
+            <Dependency>lcms2-32bit</Dependency>
             <Dependency>libSM-32bit</Dependency>
             <Dependency>p11-kit-32bit</Dependency>
             <Dependency>giflib-32bit</Dependency>
@@ -227,6 +236,7 @@
             <Dependency>mesa-glu-32bit</Dependency>
             <Dependency>openldap-32bit</Dependency>
             <Dependency>ncurses-32bit</Dependency>
+            <Dependency>libunwind-32bit</Dependency>
             <Dependency>libXrandr-32bit</Dependency>
             <Dependency>libXdamage-32bit</Dependency>
             <Dependency>libXxf86vm-32bit</Dependency>
@@ -240,10 +250,8 @@
         </BuildDependencies>
         <RuntimeDependencies>
             <Dependency>zlib-32bit</Dependency>
-            <Dependency>eudev-32bit</Dependency>
-            <Dependency>lcms2-32bit</Dependency>
             <Dependency>vkd3d-32bit</Dependency>
-            <Dependency>libusb-32bit</Dependency>
+            <Dependency>lcms2-32bit</Dependency>
             <Dependency>libSM-32bit</Dependency>
             <Dependency>libX11-32bit</Dependency>
             <Dependency>mpg123-32bit</Dependency>
@@ -254,6 +262,7 @@
             <Dependency>mesa-glu-32bit</Dependency>
             <Dependency>openldap-32bit</Dependency>
             <Dependency>gsm-32bit</Dependency>
+            <Dependency>eudev-32bit</Dependency>
             <Dependency>cups-32bit</Dependency>
             <Dependency>tiff-32bit</Dependency>
             <Dependency>libXi-32bit</Dependency>
@@ -276,46 +285,205 @@
             <Dependency>libjpeg-turbo-32bit</Dependency>
             <Dependency>pulseaudio-libs-32bit</Dependency>
         </RuntimeDependencies>
-		<Replaces>
-<!--             <Package>wine-32bit</Package> -->
-        </Replaces>
-        <Conflicts>
-            <Package>wine-32bit</Package>
-        </Conflicts>
         <Files>
             <Path fileType="library">/usr/lib32/libwine.so*</Path>
             <Path fileType="library">/usr/lib32/wine</Path>
         </Files>
+        <Conflicts>
+            <Package>wine-staging-32bit</Package>
+        </Conflicts>
     </Package>
 
     <History>
-        <Update release="4">
+        <Update release="23">
             <Date>2023-10-14</Date>
             <Version>8.18</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
-        <Update release="3">
+        <Update release="22">
             <Date>2022-09-25</Date>
             <Version>7.18</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="21">
+            <Date>2022-09-23</Date>
+            <Version>7.17</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="20">
+            <Date>2020-06-03</Date>
+            <Version>5.9</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
+        <Update release="19">
+            <Date>2019-09-30</Date>
+            <Version>4.17</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="18">
+            <Date>2019-03-03</Date>
+            <Version>4.3</Version>
             <Comment>Version bump</Comment>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="17">
+            <Date>2019-01-23</Date>
+            <Version>4.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="16">
+            <Date>2018-11-25</Date>
+            <Version>3.21</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="15">
+            <Date>2018-08-29</Date>
+            <Version>3.14</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="14">
+            <Date>2018-07-11</Date>
+            <Version>3.12</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="13">
+            <Date>2018-05-23</Date>
+            <Version>3.8</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="12">
+            <Date>2018-04-23</Date>
+            <Version>3.6</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="11">
+            <Date>2017-12-24</Date>
+            <Version>2.22</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="10">
+            <Date>2017-05-28</Date>
+            <Version>2.9</Version>
+            <Comment>Version bump</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="9">
+            <Date>2017-01-29</Date>
+            <Version>2.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Stefan Gronewold</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Update>
+        <Update release="8">
+            <Date>2016-09-13</Date>
+            <Version>1.9.18</Version>
+            <Comment>
+            - Support for multiple kernel drivers in a single process.
+            - More WebServices reader support.
+            - Various improvements in joystick support.
+            - Some more work towards the Direct3D command stream.
+            - GDI performance improvements.
+            - Improved IME window handling.
+            - Compatibility fixes in the clipboard support.
+            - Various bug fixes.
+            </Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="7">
+            <Date>2016-08-22</Date>
+            <Version>1.9.17</Version>
+            <Comment>
+            -Better exception handling on 64-bit.
+            -Various improvements in joystick support.
+            -Some more stream support in the C++ runtime.
+            -Font embedding improvements.
+            -More metafile support in GDI+.
+            -Various bug fixes.
+            </Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="6">
+            <Date>2016-08-15</Date>
+            <Version>1.9.16</Version>
+            <Comment>
+            -Better 64-bit binary compatibility on macOS.
+            -Performance improvements in JavaScript.
+            -More progress towards the Direct3D command stream.
+            -More shader instructions in Direct3D.
+            -Performance improvements in GDI.
+            -Various bug fixes.
+            </Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="5">
+            <Date>2016-07-23</Date>
+            <Version>1.9.15</Version>
+            <Comment>Bugs fixed in 1.9.15 (total 22).</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2016-07-11</Date>
+            <Version>1.9.14</Version>
+            <Comment>
+            -Pisilinux Fixed Options.
+            -More Shader Model 5 support in Direct3D.
+            -Some more write support in WebServices.
+            -Performance improvements in GDI.
+            -Some more progress towards the Direct3D command stream.
+            -Various bug fixes.</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2016-07-11</Date>
+            <Version>1.9.14</Version>
+            <Comment>Version bump</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
         </Update>
         <Update release="2">
-            <Date>2022-04-02</Date>
-            <Version>7.5</Version>
-            <Comment>Version bump</Comment>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
+            <Date>2016-07-09</Date>
+            <Version>1.9.13</Version>
+            <Comment>missing fixes release</Comment>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
         </Update>
         <Update release="1">
-            <Date>2020-06-04</Date>
-            <Version>5.9</Version>
+            <Date>2016-07-02</Date>
+            <Version>1.9.13</Version>
             <Comment>First release</Comment>
-            <Name>Idris Kalp</Name>
-            <Email>idriskalp@gmail.com</Email>
+            <Name>Ergün Salman</Name>
+            <Email>poyraz76@pisilinux.org</Email>
         </Update>
     </History>
 </PISI>
