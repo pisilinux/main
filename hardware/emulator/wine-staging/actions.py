@@ -30,7 +30,8 @@ def setup():
     #shelltools.system("sed -i 's|OpenCL/opencl.h|CL/opencl.h|g'  configure*")
     
     shelltools.cd("wine-staging-%s" %get.srcVERSION())
-    shelltools.system("./patches/patchinstall.sh DESTDIR=.. --all")
+    # shelltools.system("./patches/patchinstall.sh DESTDIR=.. --all")
+    shelltools.system("./staging/patchinstall.py DESTDIR=.. --all")
     shelltools.cd("..")
 		
     
