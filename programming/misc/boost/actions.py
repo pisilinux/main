@@ -42,7 +42,8 @@ def build():
 
 def install():
     pisitools.dobin("b2")
-    pisitools.dobin("tools/build/src/engine/bjam")
+    # pisitools.dobin("tools/build/src/engine/bjam")
+    pisitools.dosym("/usr/bin/b2", "/usr/bin/bjam")
     shelltools.copytree("tools/boostbook/xsl", "%s/usr/share/boostbook/xsl" % get.installDIR())
     shelltools.copytree("tools/boostbook/dtd", "%s/usr/share/boostbook" % get.installDIR())
 
