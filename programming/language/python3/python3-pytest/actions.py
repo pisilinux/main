@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pythonmodules
 
-shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","6.0.2")
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","6.2.4")
 
 def build():
     pythonmodules.compile(pyVer="3")
