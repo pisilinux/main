@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 
 
 def build():
-    shelltools.system("python3 -m build -wn")
+    shelltools.system("python3 -m build -wn --skip-dependency-check")
 
 def install():
     shelltools.system("PIP_CONFIG_FILE=/dev/null pip3 install --isolated --root=%s --ignore-installed --no-deps dist/*.whl" % get.installDIR())
