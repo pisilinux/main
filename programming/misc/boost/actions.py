@@ -34,7 +34,7 @@ def build():
                        runtime-link=shared \
                        link=shared,static \
                        toolset=gcc \
-                       python=3.9 \
+                       python=3.11 \
                        cflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
                        cxxflags='-fno-strict-aliasing -Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wno-deprecated-declarations' \
                        --layout=system \
@@ -54,11 +54,11 @@ def install():
     shelltools.cd("..")
     
     # some packages need this library as : libboost_python3.so
-    pisitools.dosym("/usr/lib/libboost_python39.so.1.77.0", "/usr/lib/libboost_python3.so")
+    pisitools.dosym("/usr/lib/libboost_python311.so.1.83.0", "/usr/lib/libboost_python3.so")
 
     shelltools.touch("__init__.py")
-    pisitools.insinto("/usr/lib/python3.9/site-packages/openmpi/boost", "__init__.py")
+    pisitools.insinto("/usr/lib/python3.11/site-packages/openmpi/boost", "__init__.py")
 
-    pisitools.domove("/usr/lib/boost-python3.9/mpi.so", "/usr/lib/python3.9/site-packages/boost/")
+    pisitools.domove("/usr/lib/boost-python3.11/mpi.so", "/usr/lib/python3.11/site-packages/boost/")
 
-    pisitools.removeDir("/usr/lib/boost-python3.9")
+    pisitools.removeDir("/usr/lib/boost-python3.11")
