@@ -1,0 +1,54 @@
+From 5cfd42c386d3adae6d211fbb4011179c3c141b04 Mon Sep 17 00:00:00 2001
+From: Uli Schlachter <psychon@znc.in>
+Date: Sun, 2 Aug 2020 16:14:27 +0200
+Subject: [PATCH 1/2] Fix the build with Lua 5.4
+
+Lua 5.4 changed the API to lua_resume(). This commit changes the code to
+cope with that.
+
+Signed-off-by: Uli Schlachter <psychon@znc.in>
+---
+ lgi/callable.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lgi/callable.c b/lgi/callable.c
+index e96d3af4..3234b64f 100644
+--- a/lgi/callable.c
++++ b/lgi/callable.c
+@@ -1355,7 +1355,10 @@ closure_callback (ffi_cif *cif, void *ret, void **args, void *closure_arg)
+     }
+   else
+     {
+-#if LUA_VERSION_NUM >= 502
++#if LUA_VERSION_NUM >= 504
++      int nresults;
++      res = lua_resume (L, NULL, npos, &nresults);
++#elif LUA_VERSION_NUM >= 502
+       res = lua_resume (L, NULL, npos);
+ #else
+       res = lua_resume (L, npos);
+
+From a2f834c2ebf5c4f523d5ed909b83e2a805237c0a Mon Sep 17 00:00:00 2001
+From: Uli Schlachter <psychon@znc.in>
+Date: Sun, 2 Aug 2020 16:16:03 +0200
+Subject: [PATCH 2/2] Mention Lua 5.4 as "experimentally supported"
+
+Signed-off-by: Uli Schlachter <psychon@znc.in>
+---
+ README.md | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/README.md b/README.md
+index bf11cbec..26a11bd9 100644
+--- a/README.md
++++ b/README.md
+@@ -14,6 +14,9 @@ LGI is tested and compatible with standard Lua 5.1, Lua 5.2, Lua 5.3 and
+ LuaJIT2.  Compatibility with other Lua implementations is not tested
+ yet.
+ 
++Lua 5.4 is only supported experimentally. It builds, but does not pass the
++test suite. See [#247](https://github.com/pavouk/lgi/issues/247) for details.
++
+ If you need to support pre-gobject-introspection GTK (ancient GTK+ 2.x
+ releases), use [Lua-Gnome](http://sourceforge.net/projects/lua-gnome/).
+ 
