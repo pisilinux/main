@@ -20,7 +20,7 @@ def install():
     shelltools.cd("flowblade-trunk")
     pythonmodules.install(pyVer="3")
 
-    shelltools.chmod(get.installDIR() + "/usr/lib/python3.9/site-packages/Flowblade/launch/*")
-    shelltools.chmod(get.installDIR() + "/usr/lib/python3.9/site-packages/Flowblade/tools/clapperless.py")
+    shelltools.chmod(get.installDIR() + "/usr/lib/python3.11/site-packages/Flowblade/launch/*")
+    shelltools.chmod(get.installDIR() + "/usr/lib/python3.11/site-packages/Flowblade/tools/clapperless.py")
 
     pisitools.dodoc("AUTHORS", "COPYING", "README*")
