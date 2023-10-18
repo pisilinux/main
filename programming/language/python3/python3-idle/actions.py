@@ -39,10 +39,10 @@ def install():
     shelltools.makedirs("%s/usr" % get.installDIR())
     folders = ("tkinter", "turtledemo", "idlelib")
     for i in folders:
-    	pisitools.domove("/temp/lib/python3.9/%s" % i, "/usr/lib/python3.9")
-    pisitools.domove("/temp/lib/python3.9/lib-dynload/_tkinter.cpython-39-x86_64-linux-gnu.so", "/usr/lib/python3.9/lib-dynload")
+    	pisitools.domove("/temp/lib/python3.11/%s" % i, "/usr/lib/python3.11")
+    pisitools.domove("/temp/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.so", "/usr/lib/python3.11/lib-dynload")
     pisitools.domove("/temp/bin/idle3*", "/usr/bin/")
     
-    shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.9" % get.installDIR())
+    shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.11" % get.installDIR())
     
     pisitools.removeDir("/temp")
