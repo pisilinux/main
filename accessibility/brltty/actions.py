@@ -9,6 +9,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
+pisitools.cxxflags.add("-std=gnu++11")
+
 def setup():
     pisitools.flags.add(" -lspeechd")
     shelltools.export("PYTHON","/usr/bin/python3")
@@ -19,12 +21,15 @@ def setup():
                 --with-espeak \
                 --with-install-root='%s'  \
                 --with-writable-directory='/run/brltty' \
+                --disable-stripping \
+                --disable-ocaml-bindings \
                 --disable-java-bindings" % get.installDIR())
 
 def build():
-    autotools.make()
+    autotools.make(" -j1")
 
 def install():
+    autotools.rawInstall("INSTALL_ROOT=%s install" % get.installDIR())
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     autotools.rawInstall("DESTDIR=%s install-udev" % get.installDIR())
     autotools.rawInstall("DESTDIR=%s install-polkit" % get.installDIR())
