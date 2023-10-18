@@ -20,13 +20,13 @@ def build():
     pythonmodules.compile(pyVer="3")
     
     # build documentation
-    shelltools.export("PYTHONPATH", "%s/Pillow-%s/build/lib.linux-x86_64-3.9" % (get.workDIR(), get.srcVERSION()))
+    shelltools.export("PYTHONPATH", "%s/Pillow-%s/build/lib.linux-x86_64-cpython-311" % (get.workDIR(), get.srcVERSION()))
     autotools.make("-C docs html")
 
 def install():
     pythonmodules.install(pyVer="3")
     # install header files
-    pisitools.insinto("/usr/include/python3.9/Imaging/", "src/libImaging/*.h")
+    pisitools.insinto("/usr/include/python3.11/Imaging/", "src/libImaging/*.h")
     # install documentation
     pisitools.dohtml("docs/_build/html/*")
     
