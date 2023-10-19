@@ -15,7 +15,7 @@ def setup():
     # install process needs some header files from
     # http-parser github repo. so we add that repo
     # and copy the header files to the corresponding path
-    for files in ["../http-parser-2.9.3/*"]:
+    for files in ["../http-parser-2.9.4/*"]:
         shelltools.copy("%s" % files,"vendor/http-parser")
 
 def build():
