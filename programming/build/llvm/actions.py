@@ -111,4 +111,4 @@ def install():
    
     shelltools.cd ("..")
     
-    pisitools.dodoc("LICENSE.TXT", "README.txt")
+    pisitools.dodoc("LICENSE.TXT", "README.*")
