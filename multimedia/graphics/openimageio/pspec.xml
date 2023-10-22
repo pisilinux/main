@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>openimageio</Name>
-        <Homepage>https://sites.google.com/site/openimageio/home</Homepage>
+        <Homepage>https://openimageio.readthedocs.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>Library for reading and writing images</Summary>
         <Description>OpenImageIO is a library for reading and writing images, and a bunch of related classes, utilities, and applications.</Description>
-        <Archive sha1sum="5b67a70e32887af80b62c0a109e6e51b1ee64bee" type="targz">https://github.com/OpenImageIO/oiio/archive/Release-2.2.18.0.tar.gz</Archive>
+        <Archive sha1sum="35839850bc3fb149ddf68ce49222114a36dd06d8" type="targz">https://github.com/AcademySoftwareFoundation/OpenImageIO/archive/refs/tags/v2.5.4.0.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>git</Dependency>
             <Dependency>cmake</Dependency>
@@ -38,10 +38,10 @@
             <Dependency>libraw-devel</Dependency>
             <Dependency>hdf5-devel</Dependency>
             <Dependency>qt5-base-devel</Dependency>
-            <Dependency>intel-tbb-devel</Dependency>
+            <Dependency>onetbb-devel</Dependency>
             <Dependency>openjpeg2-devel</Dependency>
 <!--             <Dependency>OpenColorIO1-devel</Dependency> -->
-            <Dependency>opencolorio-devel</Dependency>
+<!--             <Dependency>opencolorio-devel</Dependency> -->
             <Dependency>libjpeg-turbo-devel</Dependency>
         </BuildDependencies>
         <Patches>
@@ -73,10 +73,12 @@
             <Dependency>libgcc</Dependency>
             <Dependency>libglvnd</Dependency>
             <Dependency>qt5-base</Dependency>
+            <Dependency>onetbb</Dependency>
             <!--<Dependency>opencolorio</Dependency> --> <!--çember-->
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libOpenImageIO*</Path>
+            <Path fileType="library">/usr/lib/python3.11/site-packages</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="doc">/usr/share</Path>
         </Files>
@@ -106,10 +108,19 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib/cmake</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="18">
+            <Date>2023-10-22</Date>
+            <Version>2.5.4.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="17">
             <Date>2022-01-18</Date>
             <Version>2.2.18.0</Version>
