@@ -8,6 +8,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import get
+
 
 def build():
     # suppress compiler warnings
@@ -16,6 +18,7 @@ def build():
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread -Wl,-O1 -Wl,-z,relro -Wl,--hash-style=gnu -Wl,--as-needed -Wl,--sort-common")
     pythonmodules.compile(pyVer="3")
     # build documentation
+    shelltools.export("PYTHONPATH", "%s/cryptography-%s/build/lib.linux-x86_64-cpython-311" % (get.workDIR(), get.srcVERSION()))
     shelltools.cd("docs")
     autotools.make("html")
 
