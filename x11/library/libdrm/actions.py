@@ -11,12 +11,13 @@ from pisi.actionsapi import shelltools
 
 def setup():
     if not get.buildTYPE() == "emul32":
-        options = "-Dudev=true \
+        options = "-Dudev=true -Dintel=enabled \
                   "
     
     if get.buildTYPE() == "emul32":
         options = " --libdir=lib32 \
                     -Dudev=false \
+                    -Dintel=enabled \
                     -Dvalgrind=disabled"
 
 
