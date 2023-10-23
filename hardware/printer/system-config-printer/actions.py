@@ -33,7 +33,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s udevrulesdir=/lib/udev/rules.d udevhelperdir=/lib/udev" % get.installDIR())
 
-    pisitools.insinto("/usr/lib/python3.9/site-packages/cupshelpers", "build/lib/cupshelpers/*.py")
+    pisitools.insinto("/usr/lib/python3.11/site-packages/cupshelpers", "build/lib/cupshelpers/*.py")
 
     pisitools.dodir("/run/udev-configure-printer")
 
