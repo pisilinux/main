@@ -15,6 +15,7 @@ def setup():
     shelltools.system("sed -i '/adwaita_icon_theme_dep/d' meson.build shell/meson.build || die")
     mesontools.configure("-Dps=enabled -Ddvi=disabled \
                           -Dsystemduserunitdir=no \
+                          -Dgtk_doc=true \
                           -Dplatform=gnome")
 
 def build():
