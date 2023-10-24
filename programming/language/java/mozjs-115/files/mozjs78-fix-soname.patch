@@ -1,0 +1,38 @@
+"Carried over from mozjs68"
+--- a/js/src/build/Makefile.in
++++ b/js/src/build/Makefile.in
+@@ -78,6 +78,8 @@
+ endif
+ ifneq (,$(SHARED_LIBRARY))
+ 	$(SYSINSTALL) $(SHARED_LIBRARY) $(DESTDIR)$(libdir)
++	mv -f $(DESTDIR)$(libdir)/$(SHARED_LIBRARY) $(DESTDIR)$(libdir)/$(SHARED_LIBRARY).0
++	ln -s $(SHARED_LIBRARY).0 $(DESTDIR)$(libdir)/$(SHARED_LIBRARY)
+ ifeq ($(OS_ARCH),Darwin)
+ 	install_name_tool -id $(abspath $(libdir)/$(SHARED_LIBRARY)) $(DESTDIR)$(libdir)/$(SHARED_LIBRARY)
+ endif
+--- a/js/src/build/moz.build	2022-03-13 17:31:39.000000000 +0300
++++ b/js/src/build/moz.build	2022-03-21 23:32:34.252893769 +0300
+@@ -26,6 +26,7 @@
+ if CONFIG["JS_SHARED_LIBRARY"]:
+     GeckoSharedLibrary("js", linkage=None)
+     SHARED_LIBRARY_NAME = CONFIG["JS_LIBRARY_NAME"]
++    LDFLAGS += ['-Wl,-soname,lib{}.so.0'.format(SHARED_LIBRARY_NAME)]
+
+     # Ensure symbol versions of shared library on Linux do not conflict
+     # with those in libxul.
+diff --git a/config/rules.mk b/config/rules.mk
+index 0f9b2ac..f6b4efe 100644
+--- a/config/rules.mk
++++ b/config/rules.mk
+@@ -285,6 +285,8 @@ ifeq ($(OS_ARCH),GNU)
+ OS_CPPFLAGS += -DPATH_MAX=1024 -DMAXPATHLEN=1024
+ endif
+
++EXTRA_DSO_LDOPTS += -Wl,-soname,lib$(JS_LIBRARY_NAME).so.0
++
+ #
+ # MINGW32
+ #
+--
+2.31.1
+

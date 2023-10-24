@@ -1,14 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+#
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
+
+
+libdir = "/usr/lib"
 
 def setup():
     mesontools.configure()
@@ -18,8 +21,8 @@ def build():
 
 def install():
     mesontools.install()
-    
-    shelltools.copytree("%s/usr/share/pkgconfig" % get.installDIR(), "%s/usr/lib/pkgconfig" % get.installDIR())
+
+    pisitools.domove("/usr/share/pkgconfig/*.pc", "%s/pkgconfig" % libdir)
     pisitools.removeDir("/usr/share/pkgconfig")
     
-    pisitools.dodoc("AUTHORS", "NEWS", "COPYING*")
+    pisitools.dodoc("LICENSE", "NEWS", "README*")
