@@ -10,9 +10,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Ddemos=false \
-                          -Dvapi=true \
+    mesontools.configure("-Dvapi=true \
                           -Dpython3=true \
+                          -Dlua51=false \
                           -Dgtk_doc=true")
 
 def build():
@@ -24,4 +24,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "README*")

@@ -24,6 +24,7 @@ def setup():
                           -Dsystemdsystemunitdir=no \
                           -Dsystemduserunitdir=no \
                           -Dlogind-provider=elogind \
+                          -Dselinux=disabled \
                           -Dscreenshot-dir=/var/lib/gdm/greeter")
 
 def build():
