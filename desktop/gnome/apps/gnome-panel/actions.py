@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
+    autotools.configure("--enable-documentation")
 
 def build():
     autotools.make()
@@ -17,4 +17,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    #pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*")
