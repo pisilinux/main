@@ -29,4 +29,4 @@ def install():
     #pisitools.domove("/usr/share/doc/%s-1.16/*" % get.srcNAME(), "/usr/share/doc/%s/html" % get.srcNAME())
     #pisitools.removeDir("/usr/share/doc/%s-1.16" % get.srcNAME())
 
-    pisitools.dodoc("AUTHORS", "README", "COPYING", "ChangeLog", "NEWS")
+    pisitools.dodoc("README*", "COPYING", "ChangeLog", "NEWS")
