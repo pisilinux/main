@@ -23,7 +23,7 @@ def setup():
    shelltools.cd("build-js")
 
    shelltools.system("sh ../js/src/configure \
-                        prefix=/usr \
+                      --prefix=/usr \
                       --enable-readline \
                       --with-intl-api \
                       --disable-debug \
