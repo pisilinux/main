@@ -11,8 +11,8 @@ from pisi.actionsapi import get
 
 
 def setup():
+    autotools.autoreconf("-fiv")
     shelltools.system("""find . -name ".pyc" -delete""")
-    #autotools.autoreconf("-fiv")
     pisitools.dosed("configure", "python2-config", "python2.7-config")
     
     autotools.configure()
