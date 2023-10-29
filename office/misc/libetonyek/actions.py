@@ -16,7 +16,7 @@ def setup():
                          --disable-werror \
                          --without-docs \
                          --enable-static=no \
-                         --with-mdds=2.0")
+                         --with-mdds=2.1")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
