@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org.tr/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org.tr/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>lumina-desktop</Name>
@@ -14,7 +14,7 @@
         <IsA>app:gui</IsA>
         <Summary>The Lumina Desktop Environment is a lightweight system interface designed for use on any Unix-like operating system.</Summary>
         <Description>The Lumina Desktop Environment is a lightweight system interface designed for use on any Unix-like operating system.</Description>
-        <Archive sha1sum="26fa7726aff964777464de5cd658b34d9c25a871" type="targz">https://github.com/lumina-desktop/lumina/archive/v1.6.0.tar.gz</Archive>
+        <Archive sha1sum="13004c7d9d60725c8d5583d9c95473a121a310b6" type="targz">https://github.com/lumina-desktop/lumina/archive/v1.6.2.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>git</Dependency>
             <Dependency>libxcb-devel</Dependency>
@@ -28,14 +28,13 @@
             <Dependency>xcb-util-image-devel</Dependency>
             <Dependency versionFrom="5.7.1">qt5-linguist</Dependency>
             <Dependency versionFrom="5.7.1">qt5-svg-devel</Dependency>
-            <Dependency versionFrom="5.7.1">qt5-base-devel</Dependency>         
+            <Dependency versionFrom="5.7.1">qt5-base-devel</Dependency>
             <Dependency versionFrom="5.7.1">qt5-x11extras-devel</Dependency>
             <Dependency versionFrom="5.7.1">qt5-multimedia-devel</Dependency>
             <Dependency versionFrom="5.7.1">qt5-declarative-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch>show_only_lumina.patch</Patch><!--Show applications icons only lumina-desktop's menu-->
-            <Patch>lumina_default_settings_for_Pisi.patch</Patch>
+            <Patch>custom_settings_for_pisi.patch</Patch>
         </Patches>
     </Source>
 
@@ -43,10 +42,8 @@
         <Name>lumina-desktop</Name>
         <Summary>A Lightweight QT5 Desktop for FreeBSD</Summary>
         <RuntimeDependencies>
-            <Dependency>libgcc</Dependency>
+            <Dependency>libX11</Dependency>
             <Dependency>libxcb</Dependency>
-            <Dependency>qt5-svg</Dependency>
-            <Dependency>qt5-base</Dependency>
             <Dependency>xcb-util</Dependency>
             <Dependency>libXcursor</Dependency>
             <Dependency>libXdamage</Dependency>
@@ -54,34 +51,35 @@
             <Dependency>qt5-x11extras</Dependency>
             <Dependency>qt5-multimedia</Dependency>
             <Dependency>xcb-util-image</Dependency>
-<!--             <Dependency>oxygen</Dependency> -->
+            <Dependency>qt5-declarative</Dependency>
             <Dependency>fluxbox</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/qt5/plugins/styles/liblthemeengine-style.so</Path>
-            <Path fileType="library">/usr/lib/qt5/plugins/platformthemes/liblthemeengine.so</Path>
-            <Path fileType="data">/usr/share/icons/hicolor/scalable/apps/Lumina-DE.png</Path>
-            <Path fileType="data">/usr/share/icons/hicolor/scalable/apps/lumina-desktop.png</Path>
-            <Path fileType="data">/usr/share/icons/hicolor/scalable/apps/Insight-FileManager.png</Path>
-            <Path fileType="data">/usr/share/lumina-desktop/syntax_rules/*.syntax</Path>
-            <Path fileType="data">/usr/share/lumina-desktop/syntax_rules/README.md</Path>
+            <Path fileType="executable">/usr/bin/lumina-pingcursor</Path>
+            <Path fileType="executable">/usr/bin/lumina-sudo</Path>
             <Path fileType="executable">/usr/bin/lumina-desktop</Path>
             <Path fileType="executable">/usr/bin/start-lumina-desktop</Path>
             <Path fileType="executable">/usr/bin/lte</Path>
+            <Path fileType="config">/etc/luminaDesktop.conf.dist</Path>
+            <Path fileType="data">/usr/share/icons/hicolor/scalable/apps</Path>
+            <Path fileType="data">/usr/share/icons/lumina-icons</Path>
+            <Path fileType="data">/usr/share/lumina-desktop/syntax_rules/*.syntax</Path>
+            <Path fileType="data">/usr/share/lumina-desktop/syntax_rules/README.md</Path>
             <Path fileType="data">/usr/share/lumina-desktop/*.ogg</Path>
             <Path fileType="data">/usr/share/lumina-desktop/colors</Path>
-            <Path fileType="config">/etc/luminaDesktop.conf.dist</Path>
-            <Path fileType="doc">/usr/share/doc/lumina-desktop</Path>
             <Path fileType="data">/usr/share/lumina-desktop/*.conf</Path>
-            <Path fileType="data">/usr/share/lumina-desktop/themes</Path>
             <Path fileType="data">/usr/share/lumina-desktop/menu-scripts</Path>
-            <Path fileType="data">/usr/share/applications/lumina-support.desktop</Path>
-            <Path fileType="data">/usr/share/xsessions/Lumina-DE.desktop</Path>
-            <Path fileType="localdata">/usr/share/lumina-desktop/i18n/lumina-desktop*</Path>
             <Path fileType="data">/usr/share/lumina-desktop/fluxbox*</Path>
             <Path fileType="data">/usr/share/lumina-desktop/globs2</Path>
             <Path fileType="data">/usr/share/lumina-desktop/*.jpg</Path>
+            <Path fileType="data">/usr/share/lumina-desktop/*.png</Path>
+            <Path fileType="data">/usr/share/applications/lumina-support.desktop</Path>
+            <Path fileType="data">/usr/share/xsessions/Lumina-DE.desktop</Path>
             <Path fileType="data">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc/lumina-desktop</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/styles/liblthemeengine-style.so</Path>
+            <Path fileType="library">/usr/lib/qt5/plugins/platformthemes/liblthemeengine.so</Path>
+            <Path fileType="localdata">/usr/share/lumina-desktop/i18n/lumina-desktop*</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile target="/usr/share/lumina-desktop/Crocus-Ancyrensis.jpg">Crocus-Ancyrensis.jpg</AdditionalFile>
@@ -144,6 +142,8 @@
             <Path fileType="data">/usr/share/lthemeengine/qss/</Path>
             <Path fileType="data">/usr/share/lthemeengine/desktop_qss/*</Path>
             <Path fileType="data">/usr/share/lthemeengine/desktop_qss/*.gss</Path>
+            <Path fileType="data">/usr/share/lumina-desktop/theme.cfg</Path>
+            <Path fileType="data">/usr/share/lumina-desktop/themes</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile permission="0644" owner="root" target="/usr/share/icons/material-design-light/scalable/applications/linux.svg">pisi_black.svg</AdditionalFile>
@@ -292,20 +292,25 @@
         </Files>
     </Package>
     
-    <!--Package>
-        <Name>lumina-calculator</Name>
+    <Package>
+        <Name>lumina-screensaver</Name>
         <RuntimeDependencies>
             <Dependency>qt5-base</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/lumina-calculator</Path>
-            <Path fileType="data">/usr/share/applications/lumina-calculator.desktop</Path>
-            <Path fileType="localdata">/usr/share/lumina-desktop/i18n/l-calc*</Path>
+            <Path fileType="data">/usr/share/lumina-desktop/screensavers</Path>
         </Files>
-    </Package-->
+    </Package>
     
     <History>
-    	<Update release="3">
+       <Update release="3">
+            <Date>2023-10-26</Date>
+            <Version>1.6.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+       <Update release="3">
             <Date>2021-05-01</Date>
             <Version>1.6.0</Version>
             <Comment>Version bump.</Comment>

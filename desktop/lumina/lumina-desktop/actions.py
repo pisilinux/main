@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 2.
-# See the file http://www.gnu.org/copyleft/gpl.txt.
+# See the file https://www.gnu.org/copyleft/gpl.txt.
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
@@ -24,7 +24,5 @@ def build():
 
 def install():
     qt5.install()
-    #keep original lumina icon
-    pisitools.rename("/usr/share/icons/hicolor/scalable/apps/Lumina-DE.png", "lumina-desktop.png")
 
     pisitools.dodoc("LICENSE", "README*")
