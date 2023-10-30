@@ -1,0 +1,80 @@
+From 0b81a53752dcf17a0b2b8cfe4c106f03edd2fe0e Mon Sep 17 00:00:00 2001
+From: David Mohammed <fossfreedom@ubuntu.com>
+Date: Tue, 15 Aug 2023 19:56:55 +0100
+Subject: [PATCH] meson: add back default_driver option n autotools it was
+ possible to pass the --with-default-driver option to force the usage of a
+ specific cogl driver at build time.
+
+Expose this functionality in meson as well
+
+Origin: https://gitlab.gnome.org/GNOME/mutter/merge_requests/392
+Forwarded: yes
+---
+ cogl/cogl-config.h.meson | 3 +++
+ cogl/meson.build         | 4 ++++
+ meson.build              | 3 +++
+ meson_options.txt        | 6 ++++++
+ 4 files changed, 16 insertions(+)
+
+diff --git a/cogl/cogl-config.h.meson b/cogl/cogl-config.h.meson
+index 29ca42981f..85fd0c64f3 100644
+--- a/cogl/cogl-config.h.meson
++++ b/cogl/cogl-config.h.meson
+@@ -10,4 +10,7 @@
+ /* Enable unit tests */
+ #mesondefine ENABLE_UNIT_TESTS
+ 
++/* Default COGL driver */
++#mesondefine COGL_DEFAULT_DRIVER
++
+ #define COGL_CONFIG_H_INCLUDED 1
+diff --git a/cogl/meson.build b/cogl/meson.build
+index a87cd18235..6a606482f9 100644
+--- a/cogl/meson.build
++++ b/cogl/meson.build
+@@ -10,6 +10,10 @@ cdata.set('HAVE_COGL_GLES2', have_gles2)
+ cdata.set('HAVE_TRACING', have_profiler)
+ cdata.set('ENABLE_UNIT_TESTS', have_cogl_tests)
+ 
++if default_driver != 'auto'
++  cdata.set_quoted('COGL_DEFAULT_DRIVER', default_driver)
++endif
++
+ cogl_config_h = configure_file(
+   input: 'cogl-config.h.meson',
+   output: 'cogl-config.h',
+diff --git a/meson.build b/meson.build
+index 2e568d36df..015599d84d 100644
+--- a/meson.build
++++ b/meson.build
+@@ -273,6 +273,8 @@ if have_wayland_eglstream
+   endif
+ endif
+ 
++default_driver = get_option('default_driver')
++
+ have_sm = get_option('sm')
+ if have_sm
+   sm_dep = dependency('sm')
+@@ -671,6 +673,7 @@ summary('X11', have_x11, section: 'Options')
+ #summary('XWayland', have_xwayland, section: 'Options')
+ summary('Native Backend', have_native_backend, section: 'Options')
+ summary('EGL Device', have_egl_device, section: 'Options')
++summary('Default driver', default_driver, section: 'Options')
+ summary('Remote desktop', have_remote_desktop, section: 'Options')
+ summary('libgnome-desktop', have_gnome_desktop, section: 'Options')
+ summary('Sound player', have_sound_player, section: 'Options')
+diff --git a/meson_options.txt b/meson_options.txt
+index f7290f1565..b18f409582 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -230,3 +230,9 @@ option('with_example_wm',
+   value: false,
+   description: 'Build example window manager'
+ )
++
++option('default_driver',
++  type: 'combo',
++  choices: ['auto', 'gl', 'gl3', 'gles2', 'nop'],
++  value: 'auto'
++)
