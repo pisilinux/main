@@ -1,11 +1,12 @@
 diff -Nuar a/src/modules/initcpiocfg/main.py b/src/modules/initcpiocfg/main.py
---- a/src/modules/initcpiocfg/main.py	2020-02-28 01:26:29.000000000 +0300
-+++ b/src/modules/initcpiocfg/main.py	2020-03-21 14:33:22.179730271 +0300
-@@ -185,8 +185,6 @@
-     elif (btrfs == "yes"
-           and cpu['proc0']['vendor_id'].lower() == "genuineintel"):
-         modules.append("crc32c-intel")
+--- a/src/modules/initcpiocfg/main.py	2023-04-24 23:33:41.000000000 +0300
++++ b/src/modules/initcpiocfg/main.py	2023-10-29 17:18:07.247748772 +0300
+@@ -215,8 +215,6 @@
+
+     if uses_btrfs:
+         modules.append("crc32c-intel" if cpuinfo().is_intel else "crc32c")
 -    else:
 -        hooks.append("fsck")
- 
-     write_mkinitcpio_lines(hooks, modules, files, root_mount_point)
+
+     return (hooks, modules, files)
+
