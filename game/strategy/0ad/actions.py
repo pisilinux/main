@@ -9,7 +9,11 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 
-def setup():    
+def setup():
+    shelltools.cd("libraries/source/spidermonkey")
+    shelltools.system("mkdir -p mozjs-78.6.0/.git")
+    shelltools.cd("../../..")
+
     shelltools.cd("build/workspaces/")
     shelltools.chmod("update-workspaces.sh", 0755)
     shelltools.export("WX_CONFIG", "/usr/bin/wxconfig")
