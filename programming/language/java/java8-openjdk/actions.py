@@ -11,7 +11,9 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+# jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+jobs = subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+
 
 shelltools.export("ALT_PARALLEL_COMPILE_JOBS", jobs)
 shelltools.export("HOTSPOT_BUILD_JOBS", jobs)
@@ -37,12 +39,13 @@ def setup():
                             --enable-bootstrap \
                             --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
-                            --with-pkgversion='PisiLinux build 8.u352_3.25.0' \
+                            --with-pkgversion='PisiLinux build 8.u382_3.28.0' \
                            " % jobs.replace("-j", ""))
     
 
 def build():
-    autotools.make()
+    shelltools.system("make JOBS=%s" % jobs)
+    # autotools.make()
 
 def check():
     autotools.make("check -k")
