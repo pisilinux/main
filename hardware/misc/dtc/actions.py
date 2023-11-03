@@ -6,21 +6,20 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","1.7.0")
+
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    shelltools.system("meson --prefix=/usr ..")
+    mesontools.configure("-Dstatic-build=false")
 
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
 
-    shelltools.cd("..")
     pisitools.dodoc("GPL", "README*")
