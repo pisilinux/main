@@ -17,8 +17,12 @@ def setup():
     #shelltools.export("CFLAGS", get.CFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
     #pisitools.dosed("runtime/tools/mve.awk", "#!/usr/bin/nawk -f", "#!/usr/bin/awk -f")
 
+    # shelltools.system("""sed -E 's|^.*(#define SYS_.*VIMRC_FILE.*").*$|\1|g' -i src/feature.h""")
+    # shelltools.system("""sed -E 's|^.*(#define VIMRC_FILE.*").*$|\1|g' -i src/feature.h""")
+
     # define the place for the global (g)vimrc file (set to /etc/vim/vimrc)
     shelltools.echo("src/feature.h", "#define SYS_VIMRC_FILE \"/etc/vim/vimrc\"")
+    shelltools.echo("src/feature.h", "#define VIMRC_FILE \"/etc/vim/vimrc\"")
 
     # our binary ctags file is names as exuberant-ctags
     pisitools.dosed("runtime/doc/syntax.txt", "(ctags(\"| [-*.]|\\s+/))", "exuberant-\\1")
@@ -77,3 +81,4 @@ def install():
     # Vi != Vim, it's hard to break habbits
     pisitools.dosym("vim", "/usr/bin/vi")
     pisitools.dosym("/usr/bin/vim", "/bin/ex")
+    pisitools.remove("/usr/bin/ex")
