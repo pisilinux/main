@@ -68,7 +68,7 @@ def build():
     autotools.make()
 
 def install():
-    autotools.rawInstall("VIMRCLOC=/etc/vim DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("-j1 VIMRCLOC=/etc/vim DESTDIR=%s" % get.installDIR())
 
     # enough for gui building, quit here
     if get.buildTYPE() == "gui":
