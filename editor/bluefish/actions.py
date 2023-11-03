@@ -8,7 +8,8 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-def setup():    
+def setup():
+    autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
                          --disable-update-databases \
                          --disable-xml-catalog-update")
