@@ -22,7 +22,7 @@ def setup():
     shelltools.system("./autogen.sh")
     autotools.autoreconf("-vif")
     autotools.configure("--disable-static")
-    
+
     # fix unused direct dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
