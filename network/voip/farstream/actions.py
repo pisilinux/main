@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-fi")
+    autotools.autoreconf("-fi")
     autotools.configure("--prefix=/usr \
                          --with-html-dir=/%s/%s/html \
                          --with-package-name='PisiLinux farstream package' \
