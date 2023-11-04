@@ -14,12 +14,12 @@ def setup():
 def build():
 	autotools.make()
 	# doc compilation.
-	shelltools.cd("doc")
-	autotools.make("man")
+	# shelltools.cd("doc")
+	# autotools.make("man")
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
 	# doc installation.
-	pisitools.doman("doc/_build/man/*")
+	# pisitools.doman("doc/_build/man/*")
 	#shelltools.copytree("doc/_build/html", "%s/usr/share/vapoursynth/html" % get.installDIR())
