@@ -17,6 +17,10 @@ j = ''.join([
     ' -DBUILD_VST=OFF',
     ' -DBUILD_BROWSER=OFF',
     ' -DOpenGL_GL_PREFERENCE=GLVND',
+    ' -DENABLE_VLC=OFF',
+    ' -DENABLE_LIBFDK=ON',
+    ' -DENABLE_AJA=OFF',
+    ' -DENABLE_NEW_MPEGTS_OUTPUT=OFF',
     ' -B_build -G Ninja -L '
     ])
 
