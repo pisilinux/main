@@ -18,14 +18,23 @@ def setup():
 
 	autotools.configure()
 
-	shelltools.cd("OpenCL-Headers-2021.06.30")
-	cmaketools.configure("-DCMAKE_BUILD_TYPE=Release")
+	shelltools.cd("OpenCL-Headers-2023.04.17")
+	cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
+										-DCMAKE_INSTALL_DATADIR=/usr/lib")
 
-	shelltools.cd("../OpenCL-CLHPP-2.0.15")
-	cmaketools.configure("-DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF")
+	shelltools.cd("../OpenCL-CLHPP-2023.04.17")
+	cmaketools.configure("-DBUILD_EXAMPLES=OFF \
+										-DCMAKE_INSTALL_DATADIR=/usr/lib \
+										-DBUILD_TESTING=OFF")
 
 def build():
 	autotools.make()
+
+	shelltools.cd("OpenCL-Headers-2023.04.17")
+	cmaketools.make()
+
+	shelltools.cd("../OpenCL-CLHPP-2023.04.17")
+	cmaketools.make()
 
 def check():
 	autotools.make("check")
@@ -34,8 +43,8 @@ def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 	pisitools.dodoc("NEWS")
 
-	shelltools.cd("OpenCL-Headers-2021.06.30")
+	shelltools.cd("OpenCL-Headers-2023.04.17")
 	cmaketools.install()
 
-	shelltools.cd("../OpenCL-CLHPP-2.0.15")
+	shelltools.cd("../OpenCL-CLHPP-2023.04.17")
 	cmaketools.install()
