@@ -25,7 +25,8 @@ def setup():
 	shelltools.cd("../OpenCL-CLHPP-2023.04.17")
 	cmaketools.configure("-DBUILD_EXAMPLES=OFF \
 										-DCMAKE_INSTALL_DATADIR=/usr/lib \
-										-DBUILD_TESTING=OFF")
+										-DOpenCLHeaders_DIR=%s/ocl-icd-2.3.2/OpenCL-Headers-2023.04.17/OpenCLHeaders \
+										-DBUILD_TESTING=OFF" % get.workDIR())
 
 def build():
 	autotools.make()
