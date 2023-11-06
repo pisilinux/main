@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 def setup():
     kde5.configure("-DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_SKIP_RPATH=ON \
+                    -DPHONON_BUILD_QT6=OFF \
                     -DCMAKE_INSTALL_PREFIX=/usr \
                     -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON \
                     -DPHONON_BUILD_PHONON4QT5=ON \
