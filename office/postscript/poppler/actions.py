@@ -20,18 +20,18 @@ def setup():
                -DCMAKE_INSTALL_LIBDIR=lib \
                -DENABLE_UNSTABLE_API_ABI_HEADERS=ON \
                -DENABLE_XPDF_HEADERS=ON \
-               -DENABLE_QT6:BOOL=OFF \
+               -DENABLE_QT6:BOOL=ON \
               "
 
-    if get.buildTYPE() == "emul32":
-        options = " -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
-                    -DCMAKE_INSTALL_PREFIX=/emul32 \
-                    -DENABLE_QT5=OFF \
-                    -DENABLE_LIBCURL=OFF \
-                    -DWITH_NSS3=OFF \
-                    -DWITH_GTK=OFF \
-                    -DENABLE_BOOST=OFF \
-                    -DWITH_GObjectIntrospection=OFF"
+    # if get.buildTYPE() == "emul32":
+        # options = " -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
+                    # -DCMAKE_INSTALL_PREFIX=/emul32 \
+                    # -DENABLE_QT5=OFF \
+                    # -DENABLE_LIBCURL=OFF \
+                    # -DWITH_NSS3=OFF \
+                    # -DWITH_GTK=OFF \
+                    # -DENABLE_BOOST=OFF \
+                    # -DWITH_GObjectIntrospection=OFF"
 
     cmaketools.configure(options, sourceDir="..")
 
@@ -42,13 +42,13 @@ def build():
 def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    if get.buildTYPE() == "emul32":
-        pisitools.removeDir("/emul32")
+    # if get.buildTYPE() == "emul32":
+        # pisitools.removeDir("/emul32")
         #pisitools.insinto("/usr/lib32", "poppler/.libs/libpoppler.so*")
         #pisitools.insinto("/usr/lib32", "glib/.libs/libpoppler-glib.so*")
-        for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
-            pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), get.emul32prefixDIR(), get.defaultprefixDIR())
-        return
-    
-        pisitools.removeDir("/usr/share/gtk-doc")
-        pisitools.dodoc("README", "AUTHORS", "ChangeLog", "NEWS", "README-XPDF", "TODO")
+        # for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
+            # pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), get.emul32prefixDIR(), get.defaultprefixDIR())
+        # return
+    # pisitools.removeDir("/usr/share/gtk-doc")
+    shelltools.cd("..")
+    pisitools.dodoc("README*", "AUTHORS", "ChangeLog", "NEWS")
