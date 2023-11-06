@@ -12,6 +12,7 @@
         <Description>A library that allows developers to access PolicyKit API with a nice Qt-style API</Description>
         <Archive sha1sum="37b0d497581e529489cfbf154731f0be88528498" type="tarxz">https://download.kde.org/stable/polkit-qt-1/polkit-qt-1-0.114.0.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency versionFrom="6.5.3">qt6-base-devel</Dependency>
             <Dependency versionFrom="5.15.11">qt5-base-devel</Dependency>
             <Dependency versionFrom="2.50.2">glib2-devel</Dependency>
             <Dependency versionFrom="0.118">polkit-devel</Dependency>
@@ -19,7 +20,7 @@
             <Dependency>cmake</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch>systembus-usage.patch</Patch> -->
+            <Patch>fd1bc295.patch</Patch>
         </Patches>
     </Source>
     <Package>
@@ -46,7 +47,36 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/cmake/PolkitQt5-1</Path>
             <Path fileType="header">/usr/include/polkit-qt5-1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>polkit-qt6</Name>
+        <RuntimeDependencies>
+            <Dependency versionFrom="6.5.3">qt6-base</Dependency>
+            <Dependency versionFrom="2.50.2">glib2</Dependency>
+            <Dependency>polkit</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libpolkit-qt6*</Path>
+        </Files>
+    </Package>
+
+     <Package>
+        <Name>polkit-qt6-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">polkit-qt6</Dependency>
+            <Dependency versionFrom="6.5.3">qt6-base-devel</Dependency>
+            <Dependency versionFrom="2.50.2">glib2-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/pkgconfig/polkit-qt6*</Path>
+            <Path fileType="data">/usr/lib/cmake/PolkitQt6-1</Path>
+            <Path fileType="header">/usr/include/polkit-qt6-1</Path>
         </Files>
     </Package>
 

@@ -9,18 +9,28 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
+    cmaketools.configure("-B build5 -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DLIB_DESTINATION=/usr/lib", sourceDir="..")
+                          -DLIB_DESTINATION=/usr/lib")
+
+    cmaketools.configure("-B build6 -DCMAKE_BUILD_TYPE=Release \
+                          -DCMAKE_INSTALL_PREFIX=/usr \
+                          -DQT_MAJOR_VERSION=6 \
+                          -DLIB_DESTINATION=/usr/lib")
 
 def build():
-    shelltools.cd("build")
+    shelltools.cd("build5")
+    cmaketools.make()
+
+    shelltools.cd("../build6")
     cmaketools.make()
 
 def install():
-    shelltools.cd("build")
+    shelltools.cd("build5")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    shelltools.cd("../build6")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+
     shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "TODO", "README*")

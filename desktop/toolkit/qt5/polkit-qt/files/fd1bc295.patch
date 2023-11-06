@@ -1,0 +1,367 @@
+From fd1bc29594c6dee8b65c294c1c8595349f5cfdb2 Mon Sep 17 00:00:00 2001
+From: Ahmad Samir <a.samirh78@gmail.com>
+Date: Sun, 5 Dec 2021 20:41:08 +0200
+Subject: [PATCH] Change CMake code to enable building against Qt 5 or 6
+
+- forward declaring QStringList doesn't work with Qt6, instead #include it
+  (for Qt6 we could use 'using QStringList = QList<QString>' but that wouldn't
+  work with Qt5, and it's not worth an #ifdef, QStringList is common in Qt
+  and KDE code anyway)
+- Add a copy constructor to PolkitQt1::Details, required because of QMetaType
+  and the QESDP d-pointer
+
+By default this builds with Qt5, to build with Qt6 pass -DQT_MAJOR_VERSION=6
+to cmake.
+---
+ CMakeLists.txt                | 28 ++++++++++++++++------------
+ agent/CMakeLists.txt          |  4 ++--
+ core/CMakeLists.txt           |  4 ++--
+ core/polkitqt1-authority.h    |  2 +-
+ core/polkitqt1-details.cpp    |  2 ++
+ core/polkitqt1-details.h      |  5 +++++
+ examples/CMakeLists.txt       | 14 +++++++-------
+ examples/agent/CMakeLists.txt |  4 ++--
+ gui/CMakeLists.txt            |  6 +++---
+ polkit-qt5-agent-1.pc.cmake   |  2 +-
+ polkit-qt5-core-1.pc.cmake    |  2 +-
+ polkit-qt5-gui-1.pc.cmake     |  2 +-
+ polkit-qt6-1.pc.cmake         | 11 +++++++++++
+ polkit-qt6-agent-1.pc.cmake   | 11 +++++++++++
+ polkit-qt6-core-1.pc.cmake    | 11 +++++++++++
+ polkit-qt6-gui-1.pc.cmake     | 11 +++++++++++
+ test/CMakeLists.txt           |  8 ++++----
+ 17 files changed, 91 insertions(+), 36 deletions(-)
+ create mode 100644 polkit-qt6-1.pc.cmake
+ create mode 100644 polkit-qt6-agent-1.pc.cmake
+ create mode 100644 polkit-qt6-core-1.pc.cmake
+ create mode 100644 polkit-qt6-gui-1.pc.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dd0977e..166c177 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,19 +24,23 @@ include(FeatureSummary)
+ set(REQUIRED_QT_VERSION 5.5.0)
+ set(CMAKE_CXX_STANDARD 11)
+ 
+-find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core DBus Widgets)
++if (NOT QT_MAJOR_VERSION)
++    set(QT_MAJOR_VERSION "5")
++endif()
++
++find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core DBus Widgets)
+ 
+ find_package(PkgConfig REQUIRED)
+ 
+-set(POLKITQT-1_PCNAME "polkit-qt5-1")
+-set(POLKITQT-1_CORE_PCNAME "polkit-qt5-core-1")
+-set(POLKITQT-1_GUI_PCNAME "polkit-qt5-gui-1")
+-set(POLKITQT-1_AGENT_PCNAME "polkit-qt5-agent-1")
+-set(POLKITQT-1_CAMEL_NAME "PolkitQt5-1")
+-set(POLKITQT-1_EXAMPLE "polkit-example-qt5")
+-set(POLKITQT-1_EXAMPLE_HELPER "polkit-example-helper-qt5")
+-set(POLKITQT-1_AGENT_EXAMPLE "polkit-agent-example-qt5")
+-set(POLKITQT-1_INCLUDE_PATH "polkit-qt5-1")
++set(POLKITQT-1_PCNAME "polkit-qt${QT_MAJOR_VERSION}-1")
++set(POLKITQT-1_CORE_PCNAME "polkit-qt${QT_MAJOR_VERSION}-core-1")
++set(POLKITQT-1_GUI_PCNAME "polkit-qt${QT_MAJOR_VERSION}-gui-1")
++set(POLKITQT-1_AGENT_PCNAME "polkit-qt${QT_MAJOR_VERSION}-agent-1")
++set(POLKITQT-1_CAMEL_NAME "PolkitQt${QT_MAJOR_VERSION}-1")
++set(POLKITQT-1_EXAMPLE "polkit-example-qt${QT_MAJOR_VERSION}")
++set(POLKITQT-1_EXAMPLE_HELPER "polkit-example-helper-qt${QT_MAJOR_VERSION}")
++set(POLKITQT-1_AGENT_EXAMPLE "polkit-agent-example-qt${QT_MAJOR_VERSION}")
++set(POLKITQT-1_INCLUDE_PATH "polkit-qt${QT_MAJOR_VERSION}-1")
+ 
+ pkg_check_modules(POLKIT_GOBJECT polkit-gobject-1 REQUIRED IMPORTED_TARGET)
+ pkg_check_modules(POLKIT_AGENT polkit-agent-1 REQUIRED IMPORTED_TARGET)
+@@ -168,13 +172,13 @@ install(EXPORT ${POLKITQT-1_CAMEL_NAME}Export FILE ${POLKITQT-1_CAMEL_NAME}Targe
+ 
+ option(BUILD_EXAMPLES "Builds a set of examples for polkit-qt-1" OFF)
+ if (BUILD_EXAMPLES)
+-    find_package(Qt5Xml ${REQUIRED_QT_VERSION} REQUIRED)
++    find_package(Qt${QT_MAJOR_VERSION}Xml ${REQUIRED_QT_VERSION} REQUIRED)
+     add_subdirectory(examples)
+ endif (BUILD_EXAMPLES)
+ 
+ option(BUILD_TEST "Builds unit tests for polkit-qt-1" OFF)
+ if (BUILD_TEST)
+-    find_package(Qt5Test ${REQUIRED_QT_VERSION} REQUIRED)
++    find_package(Qt${QT_MAJOR_VERSION}Test ${REQUIRED_QT_VERSION} REQUIRED)
+     add_subdirectory(test)
+ endif (BUILD_TEST)
+ 
+diff --git a/agent/CMakeLists.txt b/agent/CMakeLists.txt
+index 1a86cd8..ba95bfe 100644
+--- a/agent/CMakeLists.txt
++++ b/agent/CMakeLists.txt
+@@ -14,10 +14,10 @@ generate_export_header(${POLKITQT-1_AGENT_PCNAME}
+ 
+ target_link_libraries(${POLKITQT-1_AGENT_PCNAME}
+     PUBLIC
+-    Qt5::Core
++    Qt${QT_MAJOR_VERSION}::Core
+     ${POLKITQT-1_CORE_PCNAME}
+     PRIVATE
+-    Qt5::Core
++    Qt${QT_MAJOR_VERSION}::Core
+     PkgConfig::POLKIT_AGENT
+     PkgConfig::GOBJECT
+ )
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 8225871..29bccc7 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -17,9 +17,9 @@ generate_export_header(${POLKITQT-1_CORE_PCNAME}
+ 
+ target_link_libraries(${POLKITQT-1_CORE_PCNAME}
+     PUBLIC
+-    Qt5::Core
++    Qt${QT_MAJOR_VERSION}::Core
+     PRIVATE
+-    Qt5::DBus
++    Qt${QT_MAJOR_VERSION}::DBus
+     PkgConfig::POLKIT_GOBJECT
+     PkgConfig::GLIB2
+     PkgConfig::GOBJECT
+diff --git a/core/polkitqt1-authority.h b/core/polkitqt1-authority.h
+index 43527b0..d2d66ba 100644
+--- a/core/polkitqt1-authority.h
++++ b/core/polkitqt1-authority.h
+@@ -19,9 +19,9 @@
+ 
+ #include <QObject>
+ #include <QMetaType>
++#include <QStringList>
+ 
+ typedef struct _PolkitAuthority PolkitAuthority;
+-class QStringList;
+ 
+ /**
+  * \namespace PolkitQt1 PolkitQt
+diff --git a/core/polkitqt1-details.cpp b/core/polkitqt1-details.cpp
+index 50568ff..b5be7ee 100644
+--- a/core/polkitqt1-details.cpp
++++ b/core/polkitqt1-details.cpp
+@@ -56,6 +56,8 @@ Details::~Details()
+ {
+ }
+ 
++Details::Details(const Details &other) = default;
++
+ Details& Details::operator=(const PolkitQt1::Details& other)
+ {
+     d = other.d;
+diff --git a/core/polkitqt1-details.h b/core/polkitqt1-details.h
+index 7fb8448..59dfcb6 100644
+--- a/core/polkitqt1-details.h
++++ b/core/polkitqt1-details.h
+@@ -48,6 +48,11 @@ public:
+      */
+     explicit Details(PolkitDetails *pkDetails);
+ 
++    /**
++     * Copy constructor.
++     */
++    Details(const Details &other);
++
+     ~Details();
+ 
+     Details &operator=(const Details &other);
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 229e97a..32577af 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -11,9 +11,9 @@ target_sources(${POLKITQT-1_EXAMPLE} PRIVATE
+ )
+ 
+ target_link_libraries(${POLKITQT-1_EXAMPLE}
+-    Qt5::Core
+-    Qt5::DBus
+-    Qt5::Widgets
++    Qt${QT_MAJOR_VERSION}::Core
++    Qt${QT_MAJOR_VERSION}::DBus
++    Qt${QT_MAJOR_VERSION}::Widgets
+     ${POLKITQT-1_GUI_PCNAME}
+     ${POLKITQT-1_CORE_PCNAME}
+ )
+@@ -34,7 +34,7 @@ endmacro(dbus_add_activation_system_service _sources)
+ 
+ add_executable(${POLKITQT-1_EXAMPLE_HELPER})
+ 
+-qt5_add_dbus_adaptor(polkit_example_helper_dbus_SRCS
++qt_add_dbus_adaptor(polkit_example_helper_dbus_SRCS
+     org.qt.policykit.examples.xml
+     PkExampleHelper.h
+     PkExampleHelper
+@@ -48,9 +48,9 @@ target_sources(${POLKITQT-1_EXAMPLE_HELPER} PRIVATE
+ 
+ # see our helper is pretty small :D
+ target_link_libraries(${POLKITQT-1_EXAMPLE_HELPER}
+-    Qt5::Core
+-    Qt5::Xml
+-    Qt5::DBus
++    Qt${QT_MAJOR_VERSION}::Core
++    Qt${QT_MAJOR_VERSION}::Xml
++    Qt${QT_MAJOR_VERSION}::DBus
+     ${POLKITQT-1_GUI_PCNAME}
+ )
+ 
+diff --git a/examples/agent/CMakeLists.txt b/examples/agent/CMakeLists.txt
+index 020c686..130ac4e 100644
+--- a/examples/agent/CMakeLists.txt
++++ b/examples/agent/CMakeLists.txt
+@@ -7,8 +7,8 @@ target_sources(${POLKITQT-1_AGENT_EXAMPLE} PRIVATE
+ )
+ 
+ target_link_libraries(${POLKITQT-1_AGENT_EXAMPLE}
+-    Qt5::Core
+-    Qt5::Widgets
++    Qt${QT_MAJOR_VERSION}::Core
++    Qt${QT_MAJOR_VERSION}::Widgets
+     ${POLKITQT-1_AGENT_PCNAME}
+     ${POLKITQT-1_CORE_PCNAME}
+     PkgConfig::POLKIT_AGENT
+diff --git a/gui/CMakeLists.txt b/gui/CMakeLists.txt
+index c22deba..69ec1f6 100644
+--- a/gui/CMakeLists.txt
++++ b/gui/CMakeLists.txt
+@@ -15,10 +15,10 @@ generate_export_header(${POLKITQT-1_CORE_PCNAME}
+ target_link_libraries(${POLKITQT-1_GUI_PCNAME}
+     PUBLIC
+     ${POLKITQT-1_CORE_PCNAME}
+-    Qt5::Widgets
++    Qt${QT_MAJOR_VERSION}::Widgets
+     PRIVATE
+-    Qt5::Core
+-    Qt5::DBus
++    Qt${QT_MAJOR_VERSION}::Core
++    Qt${QT_MAJOR_VERSION}::DBus
+ )
+ 
+ set_target_properties(${POLKITQT-1_GUI_PCNAME} PROPERTIES VERSION ${POLKITQT-1_LIBRARY_VERSION}
+diff --git a/polkit-qt5-agent-1.pc.cmake b/polkit-qt5-agent-1.pc.cmake
+index 709a24e..60b22d5 100644
+--- a/polkit-qt5-agent-1.pc.cmake
++++ b/polkit-qt5-agent-1.pc.cmake
+@@ -6,6 +6,6 @@ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
+ Name: @POLKITQT-1_AGENT_PCNAME@
+ Description: Convenience library for using polkit Agent with a Qt-styled API
+ Version: @POLKITQT-1_VERSION_STRING@
+-Requires: Qt5Core Qt5Gui
++Requires: Qt@QT_MAJOR_VERSION@Core Qt@QT_MAJOR_VERSION@Gui
+ Libs: -L${libdir} -l@POLKITQT-1_AGENT_PCNAME@
+ Cflags: -I${includedir}
+diff --git a/polkit-qt5-core-1.pc.cmake b/polkit-qt5-core-1.pc.cmake
+index 588f267..2f5d562 100644
+--- a/polkit-qt5-core-1.pc.cmake
++++ b/polkit-qt5-core-1.pc.cmake
+@@ -6,6 +6,6 @@ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
+ Name: @POLKITQT-1_CORE_PCNAME@
+ Description: Convenience library for using polkit with a Qt-styled API, non-GUI classes
+ Version: @POLKITQT-1_VERSION_STRING@
+-Requires: Qt5Core
++Requires: Qt@QT_MAJOR_VERSION@Core
+ Libs: -L${libdir} -l@POLKITQT-1_CORE_PCNAME@
+ Cflags: -I${includedir}
+diff --git a/polkit-qt5-gui-1.pc.cmake b/polkit-qt5-gui-1.pc.cmake
+index 1c012dd..1d208fb 100644
+--- a/polkit-qt5-gui-1.pc.cmake
++++ b/polkit-qt5-gui-1.pc.cmake
+@@ -6,6 +6,6 @@ includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
+ Name: @POLKITQT-1_GUI_PCNAME@
+ Description: Convenience library for using polkit with a Qt-styled API, GUI classes
+ Version: @POLKITQT-1_VERSION_STRING@
+-Requires: Qt5Core Qt5Gui @POLKITQT-1_CORE_PCNAME@
++Requires: Qt@QT_MAJOR_VERSION@Core Qt@QT_MAJOR_VERSION@Gui @POLKITQT-1_CORE_PCNAME@
+ Libs: -L${libdir} -l@POLKITQT-1_GUI_PCNAME@
+ Cflags: -I${includedir}
+diff --git a/polkit-qt6-1.pc.cmake b/polkit-qt6-1.pc.cmake
+new file mode 100644
+index 0000000..ba8e46e
+--- /dev/null
++++ b/polkit-qt6-1.pc.cmake
+@@ -0,0 +1,11 @@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=@CMAKE_INSTALL_PREFIX@
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
++
++Name: @POLKITQT-1_PCNAME@
++Description: Convenience library for using polkit with a Qt-styled API
++Version: @POLKITQT-1_VERSION_STRING@
++Requires: @POLKITQT-1_CORE_PCNAME@ @POLKITQT-1_GUI_PCNAME@ @POLKITQT-1_AGENT_PCNAME@
++Libs: -L${libdir} -l@POLKITQT-1_CORE_PCNAME@ -l@POLKITQT-1_GUI_PCNAME@ -l@POLKITQT-1_AGENT_PCNAME@
++Cflags: -I${includedir}
+diff --git a/polkit-qt6-agent-1.pc.cmake b/polkit-qt6-agent-1.pc.cmake
+new file mode 100644
+index 0000000..60b22d5
+--- /dev/null
++++ b/polkit-qt6-agent-1.pc.cmake
+@@ -0,0 +1,11 @@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=@CMAKE_INSTALL_PREFIX@
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
++
++Name: @POLKITQT-1_AGENT_PCNAME@
++Description: Convenience library for using polkit Agent with a Qt-styled API
++Version: @POLKITQT-1_VERSION_STRING@
++Requires: Qt@QT_MAJOR_VERSION@Core Qt@QT_MAJOR_VERSION@Gui
++Libs: -L${libdir} -l@POLKITQT-1_AGENT_PCNAME@
++Cflags: -I${includedir}
+diff --git a/polkit-qt6-core-1.pc.cmake b/polkit-qt6-core-1.pc.cmake
+new file mode 100644
+index 0000000..2f5d562
+--- /dev/null
++++ b/polkit-qt6-core-1.pc.cmake
+@@ -0,0 +1,11 @@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=@CMAKE_INSTALL_PREFIX@
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
++
++Name: @POLKITQT-1_CORE_PCNAME@
++Description: Convenience library for using polkit with a Qt-styled API, non-GUI classes
++Version: @POLKITQT-1_VERSION_STRING@
++Requires: Qt@QT_MAJOR_VERSION@Core
++Libs: -L${libdir} -l@POLKITQT-1_CORE_PCNAME@
++Cflags: -I${includedir}
+diff --git a/polkit-qt6-gui-1.pc.cmake b/polkit-qt6-gui-1.pc.cmake
+new file mode 100644
+index 0000000..1d208fb
+--- /dev/null
++++ b/polkit-qt6-gui-1.pc.cmake
+@@ -0,0 +1,11 @@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=@CMAKE_INSTALL_PREFIX@
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@/@POLKITQT-1_INCLUDE_PATH@
++
++Name: @POLKITQT-1_GUI_PCNAME@
++Description: Convenience library for using polkit with a Qt-styled API, GUI classes
++Version: @POLKITQT-1_VERSION_STRING@
++Requires: Qt@QT_MAJOR_VERSION@Core Qt@QT_MAJOR_VERSION@Gui @POLKITQT-1_CORE_PCNAME@
++Libs: -L${libdir} -l@POLKITQT-1_GUI_PCNAME@
++Cflags: -I${includedir}
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 8403d7b..d587034 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -5,10 +5,10 @@ add_executable(polkit-qt-test
+ )
+ 
+ target_link_libraries(polkit-qt-test
+-    Qt5::Core
+-    Qt5::DBus
+-    Qt5::Test
+-    Qt5::Widgets
++    Qt${QT_MAJOR_VERSION}::Core
++    Qt${QT_MAJOR_VERSION}::DBus
++    Qt${QT_MAJOR_VERSION}::Test
++    Qt${QT_MAJOR_VERSION}::Widgets
+     ${POLKITQT-1_CORE_PCNAME}
+     ${POLKITQT-1_AGENT_PCNAME}
+ )
+-- 
+GitLab
+
