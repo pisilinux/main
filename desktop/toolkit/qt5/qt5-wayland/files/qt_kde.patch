@@ -224,7 +224,7 @@ index e4eca9d4..ba76ba2d 100644
      memcpy(buffer->image()->bits(), img.bits(), size_t(img.sizeInBytes()));
      return buffer;
 diff --git a/src/client/qwaylanddatadevice.cpp b/src/client/qwaylanddatadevice.cpp
-index 1e2db786..9c3308d5 100644
+index 1e2db786..07b18ab0 100644
 --- a/src/client/qwaylanddatadevice.cpp
 +++ b/src/client/qwaylanddatadevice.cpp
 @@ -72,6 +72,8 @@ QWaylandDataDevice::QWaylandDataDevice(QWaylandDataDeviceManager *manager, QWayl
@@ -245,9 +245,16 @@ index 1e2db786..9c3308d5 100644
  {
      auto *seat = m_display->currentInputDevice();
      auto *origin = seat->pointerFocus();
-@@ -123,7 +125,31 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
+@@ -122,8 +124,38 @@ bool QWaylandDataDevice::startDrag(QMimeData *mimeData, QWaylandWindow *icon)
+         return false;
      }
  
++    // dragging data without mimetypes is a legal operation in Qt terms
++    // but Wayland uses a mimetype to determine if a drag is accepted or not
++    // In this rare case, insert a placeholder
++    if (mimeData->formats().isEmpty())
++        mimeData->setData(QString::fromLatin1("application/x-qt-avoid-empty-placeholder"), QByteArray("1"));
++
      m_dragSource.reset(new QWaylandDataSource(m_display->dndSelectionHandler(), mimeData));
 +
 +    if (wl_data_device_get_version(object()) >= 3)
@@ -277,7 +284,7 @@ index 1e2db786..9c3308d5 100644
  
      start_drag(m_dragSource->object(), origin->wlSurface(), icon->wlSurface(), m_display->currentInputDevice()->serial());
      return true;
-@@ -152,7 +178,7 @@ void QWaylandDataDevice::data_device_drop()
+@@ -152,7 +184,7 @@ void QWaylandDataDevice::data_device_drop()
          supportedActions = drag->supportedActions();
      } else if (m_dragOffer) {
          dragData = m_dragOffer->mimeData();
@@ -286,7 +293,7 @@ index 1e2db786..9c3308d5 100644
      } else {
          return;
      }
-@@ -162,7 +188,11 @@ void QWaylandDataDevice::data_device_drop()
+@@ -162,7 +194,11 @@ void QWaylandDataDevice::data_device_drop()
                                                                            QGuiApplication::keyboardModifiers());
  
      if (drag) {
@@ -299,7 +306,7 @@ index 1e2db786..9c3308d5 100644
      }
  }
  
-@@ -186,7 +216,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
+@@ -186,7 +222,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
          supportedActions = drag->supportedActions();
      } else if (m_dragOffer) {
          dragData = m_dragOffer->mimeData();
@@ -308,7 +315,7 @@ index 1e2db786..9c3308d5 100644
      }
  
      const QPlatformDragQtResponse &response = QWindowSystemInterface::handleDrag(m_dragWindow, dragData, m_dragPoint, supportedActions,
-@@ -197,11 +227,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
+@@ -197,11 +233,7 @@ void QWaylandDataDevice::data_device_enter(uint32_t serial, wl_surface *surface,
          static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag())->setResponse(response);
      }
  
@@ -321,7 +328,7 @@ index 1e2db786..9c3308d5 100644
  }
  
  void QWaylandDataDevice::data_device_leave()
-@@ -235,10 +261,10 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
+@@ -235,10 +267,10 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
          supportedActions = drag->supportedActions();
      } else {
          dragData = m_dragOffer->mimeData();
@@ -334,7 +341,7 @@ index 1e2db786..9c3308d5 100644
                                                                            QGuiApplication::mouseButtons(),
                                                                            QGuiApplication::keyboardModifiers());
  
-@@ -246,11 +272,7 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
+@@ -246,11 +278,7 @@ void QWaylandDataDevice::data_device_motion(uint32_t time, wl_fixed_t x, wl_fixe
          static_cast<QWaylandDrag *>(QGuiApplicationPrivate::platformIntegration()->drag())->setResponse(response);
      }
  
@@ -347,7 +354,7 @@ index 1e2db786..9c3308d5 100644
  }
  #endif // QT_CONFIG(draganddrop)
  
-@@ -277,14 +299,10 @@ void QWaylandDataDevice::selectionSourceCancelled()
+@@ -277,14 +305,10 @@ void QWaylandDataDevice::selectionSourceCancelled()
  #if QT_CONFIG(draganddrop)
  void QWaylandDataDevice::dragSourceCancelled()
  {
@@ -363,7 +370,7 @@ index 1e2db786..9c3308d5 100644
  QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) const
  {
      QPoint pnt(wl_fixed_to_int(x), wl_fixed_to_int(y));
-@@ -297,6 +315,33 @@ QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) con
+@@ -297,6 +321,33 @@ QPoint QWaylandDataDevice::calculateDragPosition(int x, int y, QWindow *wnd) con
      }
      return pnt;
  }
