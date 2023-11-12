@@ -8,7 +8,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DBINARY_ICONS_RESOURCE=ON)
+    kde5.configure("-DBINARY_ICONS_RESOURCE=ON")
 
 def build():
     kde5.make()
