@@ -13,13 +13,14 @@
         <Icon>appstream-logo </Icon>
         <Summary>Provides a standard for creating app stores across distributions</Summary>
         <Description>Provides a standard for creating app stores across distributions</Description>
-        <Archive sha1sum="c68177efb925a971ca150096bb4c378179c7d270" type="tarxz">https://www.freedesktop.org/software/appstream/releases/AppStream-0.16.3.tar.xz</Archive>
+        <Archive sha1sum="e319e85723996ef985b6511a1c5fdf0cce9229af" type="tarxz">https://www.freedesktop.org/software/appstream/releases/AppStream-1.0.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
             <Dependency>meson</Dependency>
             <Dependency>xmlto</Dependency>
             <Dependency>gtk-doc</Dependency>
             <Dependency>vala-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
             <Dependency>itstool</Dependency>
             <Dependency>docbook-xsl</Dependency>
             <Dependency>docbook-xml</Dependency>
@@ -38,7 +39,12 @@
             <Dependency>gperf</Dependency>
             <Dependency>curl-devel</Dependency>
             <Dependency versionFrom="1.54.1">gobject-introspection-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency>qt6-linguist</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch level="1">fix-qt5-link-target.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
@@ -48,6 +54,7 @@
             <Dependency>libxml2</Dependency>
             <Dependency>libyaml</Dependency>
             <Dependency>glib2</Dependency>
+             <Dependency>zstd</Dependency>
             <Dependency>libsoup</Dependency>
             <Dependency>lmdb</Dependency>
             <Dependency>libxmlb</Dependency>
@@ -65,6 +72,7 @@
             <Path fileType="data">/usr/share/gir-1.0</Path>
             <Path fileType="data">/usr/share/libalpm</Path>
             <Path fileType="data">/usr/share/pixmaps</Path>
+            <Path fileType="data">/usr/share/appstream/appstream.conf</Path>
             <Path fileType="data">/usr/share/installed-tests/appstream/metainfo-validate.test</Path>
         </Files>
         <Provides>
@@ -81,7 +89,7 @@
             <Dependency>glib2</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/libAppStreamQt.*</Path>
+            <Path fileType="library">/usr/lib/libAppStreamQt5.*</Path>
         </Files>
     </Package>
     
@@ -92,8 +100,33 @@
             <Dependency release="current">appstream-qt5</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="header">/usr/include/AppStreamQt</Path>
-            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="header">/usr/include/AppStreamQt5</Path>
+            <Path fileType="data">/usr/lib/cmake/AppStreamQt5</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>appstream-qt6</Name>
+        <RuntimeDependencies>
+            <Dependency>qt6-base</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>appstream</Dependency>
+            <Dependency>glib2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libAppStreamQt.*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>appstream-qt6-devel</Name>
+        <Summary>Development files for appstream</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">appstream-qt6</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/AppStreamQt6</Path>
+            <Path fileType="data">/usr/lib/cmake/AppStreamQt</Path>
         </Files>
     </Package>
     
@@ -111,6 +144,13 @@
     </Package>
     
     <History>
+        <Update release="15">
+            <Date>2023-11-14</Date>
+            <Version>1.0.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="14">
             <Date>2023-11-04</Date>
             <Version>0.16.3</Version>
