@@ -9,6 +9,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+shelltools.export("CYTHON", "/usr/bin/cython3")
+
 def setup():
    shelltools.system("cargo fetch --locked --target x86_64-unknown-linux-gnu")
 
