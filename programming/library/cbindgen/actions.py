@@ -9,14 +9,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-#def setup():
-    #autotools.configure()
+def setup():
+   shelltools.system("cargo fetch --locked --target x86_64-unknown-linux-gnu")
 
 def build():
-    shelltools.system("cargo build --release")
+    shelltools.system("cargo build --release --frozen --all-targets")
     
 def check():
-    shelltools.system("cargo test --release || :")
+    # shelltools.system("cargo test --release || :")
+    shelltools.system("RUSTC_BOOTSTRAP=1 cargo test --release --frozen")
 
 def install():
     pisitools.dobin("target/release/cbindgen")
