@@ -78,7 +78,7 @@ def install():
 
     # Remove not needed files
     #pisitools.removeDir("/usr/data")
-    pisitools.removeDir("/usr/mysql-test")
+    pisitools.removeDir("/usr/mariadb-test")
     pisitools.removeDir("/usr/sql-bench")
     #pisitools.remove("/usr/share/man/man1/mysql-test-run.pl.1")
 
