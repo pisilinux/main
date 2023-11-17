@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
@@ -6,23 +6,23 @@
 
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools, shelltools
+from pisi.actionsapi import pisitools, shelltools, cmaketools
 
-# WorkDir="xxHash-%s" % get.srcVERSION()
 
 def setup():
-    shelltools.system("export CFLAGS='$CFLAGS -DXXH_FORCE_MEMORY_ACCESS=1 -flto=auto -O2'")
-    # shelltools.cd("%s" % get.workDIR())
-    # shelltools.move("xxHash-*", "xxhash-%s" % get.srcVERSION())
-
-    # shelltools.cd("boost-%s" % get.srcVERSION())
+    shelltools.system("cmake -B build -S cmake_unofficial \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib")
 
 def build():
-    autotools.make("PREFIX=/usr DISPATCH=1")
-
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
-    # shelltools.system("make PREFIX=/usr DISPATCH=1 DESTDIR=%s install" % get.installDIR())
-    autotools.install("PREFIX=/usr DISPATCH=1 DESTDIR=%s" % get.installDIR()), 0755
-    pisitools.remove('/usr/lib/libxxhash.a')
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # pisitools.remove('/usr/lib/libxxhash.a')
+
+    shelltools.cd("..")
     pisitools.dodoc("LICENSE", "doc/*")
