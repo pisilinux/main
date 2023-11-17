@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
@@ -6,14 +6,23 @@
 
 from pisi.actionsapi import get
 from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import pisitools, shelltools, cmaketools
 
+
+def setup():
+    shelltools.system("cmake -B build -S cmake_unofficial \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib")
 
 def build():
-    autotools.make()
-
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
-    autotools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
-    pisitools.remove('/usr/lib/libxxhash.a')
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # pisitools.remove('/usr/lib/libxxhash.a')
+
+    shelltools.cd("..")
     pisitools.dodoc("LICENSE", "doc/*")
