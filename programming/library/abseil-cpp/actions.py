@@ -16,6 +16,9 @@ def setup():
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_CXX_STANDARD:STRING=17 \
                           -DBUILD_SHARED_LIBS=ON \
+                          -DABSL_FIND_GOOGLETEST:BOOL=ON \
+                          -DABSL_BUILD_TEST_HELPERS:BOOL=ON \
+                          -DABSL_USE_EXTERNAL_GOOGLETEST=ON \
                           -DABSL_PROPAGATE_CXX_STD=ON")
 
 def build():
