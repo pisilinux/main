@@ -61,6 +61,7 @@ def setup():
                     -DQT_FEATURE_webengine_system_libevent=ON \
                     -DQT_FEATURE_webengine_proprietary_codecs=ON \
                     -DQT_FEATURE_webengine_kerberos=ON \
+                    -DQT_FEATURE_webengine_system_re2=OFF \
                     -DQT_FEATURE_webengine_webrtc_pipewire=ON")
     
 def build():
