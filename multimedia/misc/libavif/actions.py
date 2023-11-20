@@ -22,4 +22,6 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    pisitools.dosym("libavif.so.16.0.2", "/usr/lib/libavif.so.13")
+
     pisitools.dodoc("LICENSE", "README*")
