@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libplacebo</Name>
+        <Homepage>https://github.com/haasn/libplacebo/</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Core rendering algorithms and ideas of mpv rewritten as an independent library</Summary>
+        <Icon>libplacebo</Icon>
+        <Description>Bağımsız bir kitaplık olarak yeniden yazılan çekirdek oluşturma algoritmaları ve mpv fikirleri</Description>
+        <Archive sha1sum="69585bc16a752612c128b9db44d488c19fc74b30" type="targz">https://github.com/haasn/libplacebo/archive/refs/tags/v6.338.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>vulkan-devel</Dependency>
+            <Dependency>xxhash-devel</Dependency>
+            <Dependency>glslang-devel</Dependency>
+            <Dependency>vulkan-headers</Dependency>
+            <Dependency>libunwind-devel</Dependency>
+            <Dependency>python3-Jinja2</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>libplacebo.patch</Patch>
+            <Patch level="1">libplacebo.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>libplacebo</Name>
+        <RuntimeDependencies>
+            <Dependency>lcms2</Dependency>
+            <Dependency>vulkan</Dependency>
+            <Dependency>libunwind</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libplacebo-devel</Name>
+        <Summary>Development files for libplacebo</Summary>
+        <RuntimeDependencies>
+             <Dependency>lcms2-devel</Dependency>
+             <Dependency>vulkan-devel</Dependency>
+             <Dependency>libunwind-devel</Dependency>
+            <Dependency release="current">libplacebo</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-11-22</Date>
+            <Version>6.338.1</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
