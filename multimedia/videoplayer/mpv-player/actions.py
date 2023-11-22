@@ -8,26 +8,24 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import mesontools
 
-shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
-shelltools.export("LDFLAGS", "%s -Wl,--as-needed" % get.LDFLAGS())
+# shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
+# shelltools.export("LDFLAGS", "%s -Wl,--as-needed" % get.LDFLAGS())
 
 def setup():
-    shelltools.system("./bootstrap.py")
-    shelltools.system("python3 waf configure --prefix=/usr \
-                                            --confdir=/etc/mpv \
-                                            --enable-dvb \
-                                            --enable-cdda \
-                                            --enable-dvdnav \
-                                            --enable-libarchive \
-                                            --enable-libmpv-shared")
+    mesontools.configure("-Dlibmpv=true \
+                                        -Dcdda=enabled \
+                                        -Ddvdnav=enabled \
+                                        -Dsdl2=enabled \
+                                        -Ddvbin=enabled \
+                                        -Dlibarchive=enabled")
 
 def build():
-    shelltools.system("python3 waf build -v")
+    mesontools.build()
 
 def install():
-    shelltools.system("DESTDIR=%s python3 waf install" % get.installDIR())
+    mesontools.install()
     pisitools.insinto("/usr/share/mpv/scripts", "TOOLS/lua/*")
 
     pisitools.dodoc("Copyright", "RELEASE_NOTES", "README.md")
