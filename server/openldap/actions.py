@@ -19,7 +19,7 @@ def setup():
     )
     pisitools.dosed("servers/slapd/Makefile.in", "(\$\(DESTDIR\))\$\(localstatedir\)(\/run)", r"\1\2")
 
-    pisitools.flags.add("-D_REENTRANT -D_GNU_SOURCE -fPIC -Wl,--as-needed -DLDAP_CONNECTIONLESS")
+    # pisitools.flags.add("-D_REENTRANT -D_GNU_SOURCE -fPIC -Wl,--as-needed -DLDAP_CONNECTIONLESS")
 
     # shelltools.system("sed -i 's|%LOCALSTATEDIR%/run|/run/openldap|' servers/slapd/slapd.{conf,ldif}")
     shelltools.system("sed -i 's|-m 644 $(LIBRARY)|-m 755 $(LIBRARY)|' libraries/{liblber,libldap}/Makefile.in")
@@ -59,7 +59,7 @@ def setup():
     if get.buildTYPE() == "emul32":
         options +=  " --prefix=/emul32 \
                      --libdir=/usr/lib32 \
-                     --libexecdir=/emul32/libexec \
+                     --libexecdir=/usr/lib32 \
                      --disable-bdb \
                      --disable-hdb \
                      --disable-wrappers \
@@ -73,6 +73,8 @@ def setup():
     else: options += " --enable-wrappers \
                                   --enable-spasswd \
                                   --enable-perl \
+                                  --libdir=/usr/lib \
+                                  --libexecdir=/usr/lib \
                                   --enable-mdb=yes \
                                   --with-cyrus-sasl \
                                   --enable-bdb=yes \
@@ -96,6 +98,10 @@ def install():
         pisitools.dosym("/usr/lib/libslapi.so.2.0.200", "/usr/lib/libldap-2.4.so.2")
         pisitools.dosym("/usr/lib/liblber.so.2.0.200", "/usr/lib/liblber-2.4.so.2")
         pisitools.dosym("/usr/lib/libslapi.so.2.0.200", "/usr/lib/libslapi-2.4.so.2")
+        # pisitools.dosym("/usr/lib/slapd", "/usr/libexec/slapd")
+        pisitools.dosym("/usr/lib/slapd", "/usr/bin/slapd")
+        pisitools.remove("/usr/lib32/*.la")
+        pisitools.remove("/usr/lib32/openldap/*.la")
         return
 
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
@@ -107,4 +113,4 @@ def install():
     pisitools.dodoc("ANNOUNCEMENT", "CHANGES", "COPYRIGHT", "README", "LICENSE")
 
     pisitools.remove("/usr/lib/*.la")
-    pisitools.remove("/usr/libexec/openldap/*.la")
+    pisitools.remove("/usr/lib/openldap/*.la")

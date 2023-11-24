@@ -10,7 +10,7 @@ def start():
     os.environ["LC_ALL"] = "C"
     os.environ["LANG"] = "C"
 
-    startService(command="/usr/bin/slapd",
+    startService(command="/usr/libexec/slapd",
                  args="-u ldap -g ldap %s" % config.get("OPTS", ""),
                  pidfile="/run/openldap/slapd.pid",
                  donotify=True)
