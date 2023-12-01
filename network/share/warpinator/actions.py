@@ -11,6 +11,10 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i 's|libexec/warpinator|lib/warpinator|' \
+                                              bin/warpinator.in \
+                                              data/org.x.warpinator.policy.in.in")
+
     mesontools.configure("--libexecdir=/usr/lib")
 
 def build():
