@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>openpgl</Name>
+        <Homepage>https://github.com/openpathguidinglibrary/openpgl</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>Apache</License>
+        <Icon>openpgl</Icon>
+        <IsA>library</IsA>
+        <Summary>Intel(R) Open Path Guiding Library</Summary>
+        <Description>The Intel® Open Path Guiding Library (Intel® Open PGL) implements a set of representations and training algorithms needed to integrate path guiding into a renderer. Open PGL offers implementations of current state-of-the-art path guiding methods, which increase the sampling quality and, therefore, the efficiency of a renderer. The goal of Open PGL is to provide implementations that are well tested and robust enough to be used in a production environment.</Description>
+        <Archive sha1sum="7041af0cc1e7f0cb4f43e87a2f55e179ab7571ad" type="targz">https://github.com/OpenPathGuidingLibrary/openpgl/archive/refs/tags/v0.5.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>gcc</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>onetbb-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>openpgl</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>onetbb</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc/openpgl</Path>
+            <Path fileType="library">/usr/lib/libopenpgl.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>openpgl-devel</Name>
+        <Summary>Development headers for libaacs</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">openpgl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/cmake</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2023-12-05</Date>
+            <Version>0.5.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
