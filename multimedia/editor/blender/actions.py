@@ -22,6 +22,8 @@ def setup():
                       -DCMAKE_BUILD_TYPE=Release \
                       -DCMAKE_SKIP_RPATH=ON \
                       -DWITH_JACK=ON \
+                      -DUSD_ROOT_DIR=/usr \
+                      -DLLVM_VERSION=16 \
                       -DWITH_JACK_DYNLOAD=ON \
                       -DWITH_IMAGE_OPENEXR=ON \
                       -DWITH_OPENCOLORIO=ON \
