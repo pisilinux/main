@@ -18,4 +18,4 @@ def build():
 def install():
     kde5.install()
     pisitools.dosym("/usr/share/icons/hicolor/48x48/apps/krusader_user.png", "/usr/share/icons/hicolor/48x48/apps/krusader.png")
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README", "FAQ")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "LICENSES/*", "README*")
