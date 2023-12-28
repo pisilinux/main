@@ -11,19 +11,17 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	mesontools.configure("-DBUILD_RARPD=true \
-		                  -DBUILD_MANS=false \
-		                  -DBUILD_HTML_MANS=false \
-		                  -DBUILD_TRACEROUTE6=true")
+	mesontools.configure("-DBUILD_MANS=false \
+		                  -DBUILD_HTML_MANS=false")
 
 def build():
     mesontools.build()
 
 def install():
     shelltools.cd("build")
-    pisitools.dobin("ping")
+    pisitools.dobin("ping/ping")
 
-    for app in ["clockdiff", "rarpd", "tftpd", "arping", "rdisc", "tracepath", "traceroute6"]:
+    for app in ["clockdiff", "arping", "tracepath"]:
         pisitools.dosbin(app)
 
     # We will not need these if we set cap on postInstall like Fedora
