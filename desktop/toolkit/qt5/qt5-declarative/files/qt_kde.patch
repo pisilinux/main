@@ -1,16 +1,3 @@
-diff --git a/src/3rdparty/masm/wtf/OSAllocatorPosix.cpp b/src/3rdparty/masm/wtf/OSAllocatorPosix.cpp
-index d54b7e9492..b5c5f6a2b0 100644
---- a/src/3rdparty/masm/wtf/OSAllocatorPosix.cpp
-+++ b/src/3rdparty/masm/wtf/OSAllocatorPosix.cpp
-@@ -225,7 +225,7 @@ void OSAllocator::commit(void* address, size_t bytes, bool writable, bool execut
- 
-     while (madvise(address, bytes, MADV_WILLNEED)) {
-         if (errno != EAGAIN)
--            CRASH();
-+            break; // We don't have to crash here. MADV_WILLNEED is only advisory
-     }
- 
- #elif HAVE(MADV_FREE_REUSE)
 diff --git a/src/qml/animations/qcontinuinganimationgroupjob.cpp b/src/qml/animations/qcontinuinganimationgroupjob.cpp
 index 88c0e9e60e..61a9dc36f8 100644
 --- a/src/qml/animations/qcontinuinganimationgroupjob.cpp
@@ -1720,7 +1707,7 @@ index 0000000000..bd88d14c76
 +    property var selfAsBroken: self as Broken
 +}
 diff --git a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
-index 1be1533b63..dfc82011c6 100644
+index ac6634290a..d16d117d65 100644
 --- a/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
 +++ b/tests/auto/qml/qqmllanguage/tst_qqmllanguage.cpp
 @@ -337,6 +337,7 @@ private slots:
@@ -1731,8 +1718,8 @@ index 1be1533b63..dfc82011c6 100644
  
      void ambiguousContainingType();
      void staticConstexprMembers();
-@@ -5939,6 +5940,21 @@ void tst_qqmllanguage::bindingAliasToComponentUrl()
-     }
+@@ -5951,6 +5952,21 @@ void tst_qqmllanguage::badGroupedProperty()
+              .arg(url.toString()));
  }
  
 +void tst_qqmllanguage::objectAsBroken()
