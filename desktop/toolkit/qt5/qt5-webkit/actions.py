@@ -18,6 +18,7 @@ def setup():
                           -DCMAKE_BUILD_TYPE=Release \
                           -DUSE_LIBHYPHEN=OFF \
                           -DPORT=Qt \
+                          -DENABLE_XSLT=OFF \
                           -DENABLE_TOOLS=OFF", sourceDir="..")
 
 def build():
