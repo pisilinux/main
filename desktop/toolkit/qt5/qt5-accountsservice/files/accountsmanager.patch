@@ -1,0 +1,30 @@
+diff -Nuar a/src/accountsservice/accountsmanager.cpp b/src/accountsservice/accountsmanager.cpp
+--- a/src/accountsservice/accountsmanager.cpp	2023-12-02 19:43:15.000000000 +0300
++++ b/src/accountsservice/accountsmanager.cpp	2023-12-30 17:26:14.667003659 +0300
+@@ -125,7 +125,7 @@
+ 
+     QDBusPendingCall call = d->interface->CacheUser(userName);
+     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [=](QDBusPendingCallWatcher *w) {
++    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+         QDBusPendingReply<QDBusObjectPath> reply = *w;
+         w->deleteLater();
+         if (reply.isError()) {
+@@ -162,7 +162,7 @@
+ 
+     QDBusPendingCall call = d->interface->UncacheUser(userName);
+     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [=](QDBusPendingCallWatcher *w) {
++    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+         QDBusPendingReply<QDBusObjectPath> reply = *w;
+         w->deleteLater();
+         if (reply.isError()) {
+@@ -195,7 +195,7 @@
+ 
+     QDBusPendingCall call = d->interface->ListCachedUsers();
+     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [=](QDBusPendingCallWatcher *w) {
++    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *w) {
+         QDBusPendingReply<QList<QDBusObjectPath>> reply = *w;
+         w->deleteLater();
+         if (reply.isError()) {
