@@ -25,8 +25,8 @@ def setup():
     shelltools.system("./autogen.sh")
     autotools.autoreconf("-fiv")
     autotools.configure("--with-flac \
-                         --enable-qt5 \
-                         --disable-qt6 \
+                         --enable-qt6 \
+                         --disable-qt5 \
                          --disable-update-check \
                          --with-boost-libdir=/usr/lib ")
 
