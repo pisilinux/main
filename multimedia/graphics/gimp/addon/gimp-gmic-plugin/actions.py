@@ -29,7 +29,7 @@ def install():
     shelltools.cd("..")
     shelltools.cd("src")
     pisitools.insinto("/usr/include", "gmic.h")
-    pisitools.dolib("libgmic.so")
+    # pisitools.dolib("libgmic.so")
     ver = ".%s" % get.srcVERSION()
     while ver:
         pisitools.dosym("libgmic.so", "/usr/lib/libgmic.so%s" % ver)
