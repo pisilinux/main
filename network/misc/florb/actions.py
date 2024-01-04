@@ -14,7 +14,7 @@ j = "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
     "
 
 def setup():
-	pisitools.flags.add("-pthread -lXpm")
+	pisitools.flags.add("-pthread -fpermissive -lXpm")
 	pisitools.unlinkDir("src/i18n/de_DE")
 	shelltools.makedirs("build")
 	shelltools.cd("build")
