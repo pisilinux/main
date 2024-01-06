@@ -15,6 +15,7 @@ j = ''.join([
     ' -DRAWSPEED_ENABLE_LTO=ON',
     ' -DBINARY_PACKAGE_BUILD=1',
     ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
     ' -DCMAKE_INSTALL_LIBDIR=/usr/lib',
     ' -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib',
     ' -B_build -G Ninja -L '
