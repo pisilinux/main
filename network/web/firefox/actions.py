@@ -21,6 +21,7 @@ ver = ".".join(get.srcVERSION().split(".")[:3])
 jobs = jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
 
 shelltools.export("SHELL", "/bin/sh")
+shelltools.export("PYTHON", "/usr/bin/python3")
 # shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
 shelltools.system("export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE='system'")
 shelltools.system("export MOZBUILD_STATE_PATH='mozbuild'")
@@ -66,7 +67,7 @@ def build():
     shelltools.system("LLVM_PROFDATA=llvm-profdata \
                        JARLOG_FILE='%s/jarlog' \
                        xvfb-run -s '-screen 0 1920x1080x24 -nolisten local' \
-                       ./mach python build/pgo/profileserver.py" %get.curDIR())
+                       ./mach python3 build/pgo/profileserver.py" %get.curDIR())
     
     shelltools.system("echo 'Removing instrumented browser...'")    
     shelltools.system("./mach clobber")
