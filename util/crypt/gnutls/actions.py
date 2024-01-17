@@ -34,10 +34,10 @@ def setup():
 def build():
     autotools.make()
 
-#def check():
+def check():
     #some tests fail in emul32
-    #if not get.buildTYPE() == "emul32":
-        #autotools.make("check")
+    if not get.buildTYPE() == "emul32":
+        autotools.make("check")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
