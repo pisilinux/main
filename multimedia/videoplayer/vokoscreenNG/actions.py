@@ -7,7 +7,7 @@
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
-from pisi.actionsapi import qt5
+from pisi.actionsapi import qt6
 from pisi.actionsapi import get
 
 #WorkDir = "vokoscreenNG-%s/src" % get.srcVERSION()
@@ -17,15 +17,18 @@ def setup():
     shelltools.cd("vokoscreenNG")
     #shelltools.cd("cd src")
     pisitools.cxxflags.add("-Wno-deprecated-declarations")
-    qt5.configure("../src/vokoscreenNG.pro")
+    # qt6.configure("../src/vokoscreenNG.pro")
+    shelltools.system("qmake-qt6 PREFIX=/usr ../src/vokoscreenNG.pro")
 
 def build():
     shelltools.cd("vokoscreenNG")
-    qt5.make("PREFIX=/usr")
+    # qt6.make("PREFIX=/usr")
+    shelltools.system("make")
 
 def install():
     shelltools.cd("vokoscreenNG")
-    qt5.install("INSTALL_ROOT=%s" % get.installDIR())
+    # qt6.install("INSTALL_ROOT=%s" % get.installDIR())
+    shelltools.system("make install INSTALL_ROOT=%s" % get.installDIR())
     #pisitools.dobin("vokoscreenNG")
     #pisitools.insinto("/usr/share/applications", "src/applications/vokoscreenNG.desktop", "vokoscreenNG.desktop")
     #pisitools.insinto("/usr/share/pixmaps", "src/applications/vokoscreenNG.png", "vokoscreenNG.png")
