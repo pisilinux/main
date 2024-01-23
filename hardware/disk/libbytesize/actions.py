@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("sed -i 's|python2|python|g' configure")
-    autotools.configure()
+    # shelltools.export("PYTHON", "/usr/bin/python3")
+    autotools.configure("--with-python3=yes")
 
 def build():
     autotools.make()
