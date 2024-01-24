@@ -20,5 +20,5 @@ def install():
 
     #pisitools.dohtml("docs/build/*")
     #pisitools.insinto("/usr/share/doc/%s/src/" % get.srcNAME(),"docs/src/*")
-    pisitools.insinto("/usr/share/man/man1", "doc/pygmentize.1", "pygmentize.1")
+    pisitools.insinto("/usr/share/man/man1", "doc/pygmentize.1", "py3gmentize.1")
     
