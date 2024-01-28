@@ -44,4 +44,4 @@ def install():
     if get.buildTYPE() == "_emul32":
         return
 
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "README")
