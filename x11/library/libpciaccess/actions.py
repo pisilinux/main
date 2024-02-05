@@ -6,16 +6,16 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.autoreconf("-vif")
-    autotools.configure("--disable-static --with-pciids-path=/usr/share/hwdata/")
+    mesontools.configure("-Dpci-ids=/usr/share/hwdata/")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING", "README*")
