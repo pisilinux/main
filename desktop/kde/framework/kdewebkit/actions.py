@@ -8,6 +8,8 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
+    pisitools.dosed("CMakeLists.txt", "ECMFeatureSummary", deleteLine=True)
+    pisitools.dosed("CMakeLists.txt", "ecm_feature_summary", "feature_summary")
     kde5.configure()
 
 def build():
