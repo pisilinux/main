@@ -12,16 +12,19 @@
         <IsA>app:console</IsA>
         <Summary>Proxy configuration library</Summary>
         <Description>libproxy is a library that provides automatic proxy configuration management.</Description>
-        <Archive sha1sum="bbd709a204b943df0e317e37efa7c3365880ca7b" type="targz">https://github.com/libproxy/libproxy/archive/0.4.18.tar.gz</Archive>
+        <Archive sha1sum="0c19d6eb29d3b81fcd12e76e23692940391aa517" type="targz">https://github.com/libproxy/libproxy/archive/refs/tags/0.5.4.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>gconf-devel</Dependency>
             <Dependency>libXmu-devel</Dependency>
             <Dependency>NetworkManager-devel</Dependency>
             <Dependency>webkit2gtk-devel</Dependency>
             <Dependency>spidermonkey-devel</Dependency>
-            <Dependency>cmake</Dependency>
+            <Dependency>meson</Dependency>
             <Dependency>intltool</Dependency>
             <Dependency>python3-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>duktape-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
         </BuildDependencies>
         <Patches>
 <!--             <Patch>libproxy-pac-modules.patch</Patch> -->
@@ -40,7 +43,8 @@
             <Dependency>dbus</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>libgcc</Dependency>
-            <!--Dependency>webkit2gtk</Dependency-->
+            <Dependency>curl</Dependency>
+            <Dependency>duktape</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -48,23 +52,25 @@
             <Path fileType="executable">/usr/libexec/</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share/vala</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
 
-    <Package>
+    <!--Package>
         <Name>libproxy-gnome3</Name>
         <RuntimeDependencies>
             <Dependency>libproxy</Dependency>
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/libproxy/*/modules/config_gnome3.*</Path>
+            <Path fileType="library">/usr/lib/libproxy/*/modules/config_gnome3.*</Path-->
             <!-- add gconf helper to gnome package -->
-            <Path fileType="executable">/usr/libexec/pxgconf</Path>
+            <!--Path fileType="executable">/usr/libexec/pxgconf</Path>
         </Files>
-    </Package>
+    </Package-->
 
-    <Package>
+    <!--Package>
         <Name>libproxy-networkmanager</Name>
         <RuntimeDependencies>
             <Dependency>libproxy</Dependency>
@@ -74,9 +80,9 @@
         <Files>
             <Path fileType="library">/usr/lib/libproxy/*/modules/network_networkmanager.*</Path>
         </Files>
-    </Package>
+    </Package-->
 
-    <Package>
+    <!--Package>
         <Name>libproxy-webkit-gtk2</Name>
         <RuntimeDependencies>
             <Dependency>libproxy</Dependency>
@@ -86,9 +92,9 @@
         <Files>
             <Path fileType="library">/usr/lib/libproxy/*/modules/pacrunner_webkit*</Path>
         </Files>
-    </Package>
+    </Package-->
 
-    <Package>
+    <!--Package>
         <Name>libproxy-mozjs</Name>
         <RuntimeDependencies>
             <Dependency>libproxy</Dependency>
@@ -96,12 +102,13 @@
         <Files>
             <Path fileType="library">/usr/lib/libproxy/*/modules/pacrunner_mozjs*</Path>
         </Files>
-    </Package>
+    </Package-->
 
     <Package>
         <Name>libproxy-devel</Name>
         <Summary>Development files for libproxy</Summary>
         <RuntimeDependencies>
+            <Dependency>glib2-devel</Dependency>
             <Dependency release="current">libproxy</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -112,6 +119,13 @@
     </Package>
 
     <History>
+        <Update release="12">
+            <Date>2024-02-11</Date>
+            <Version>0.5.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="11">
             <Date>2023-10-17</Date>
             <Version>0.4.18</Version>
