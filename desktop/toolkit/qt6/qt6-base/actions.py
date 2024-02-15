@@ -22,7 +22,7 @@ absoluteWorkDir = "%s/%s" % (get.workDIR(), WorkDir)
 bindirQt6="/usr/lib/qt6/bin"
 
 def setup():
-    #shelltools.system("patch -Rp1 < qt6-base-nouveau-freeze.patch")
+    shelltools.system("patch -Rp1 < fb92bb07.patch")
     
     checkdeletepath="%s/qtbase/src/3rdparty"  % absoluteWorkDir
     for dir in ('libjpeg', 'freetype', 'libpng', 'zlib', "xcb", "sqlite"):
