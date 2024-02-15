@@ -1,0 +1,72 @@
+From fb92bb073e6e1dd327b9ee94bb1e5726e96396bf Mon Sep 17 00:00:00 2001
+From: Axel Spoerl <axel.spoerl@qt.io>
+Date: Thu, 25 Jan 2024 17:27:45 +0100
+Subject: API Review Widgets: Remove QDockWidget debug operators
+
+Adding specific debug operators for QDockWidget has introduced new
+symbols in 6.6.1. Remove them again, we maintain forward binary
+compatibility within a patch cycle.
+
+[ChangeLog][QtWidgets][QDockWidget] Removed debug streaming operator
+incorrectly introduced as a new symbol in Qt 6.6.1.
+
+Task-number: QTBUG-119952
+Pick-to: 6.6.2
+Change-Id: I1d5b96b442dc910d1782dbede6119708d8336991
+Reviewed-by: Volker Hilsheimer <volker.hilsheimer@qt.io>
+---
+ src/widgets/widgets/qdockwidget.cpp | 21 ---------------------
+ src/widgets/widgets/qdockwidget.h   |  5 -----
+ 2 files changed, 26 deletions(-)
+
+diff --git a/src/widgets/widgets/qdockwidget.cpp b/src/widgets/widgets/qdockwidget.cpp
+index da8882d13c..7792bea118 100644
+--- a/src/widgets/widgets/qdockwidget.cpp
++++ b/src/widgets/widgets/qdockwidget.cpp
+@@ -1836,27 +1836,6 @@ QWidget *QDockWidget::titleBarWidget() const
+     return layout->widgetForRole(QDockWidgetLayout::TitleBar);
+ }
+ 
+-#ifndef QT_NO_DEBUG_STREAM
+-QDebug operator<<(QDebug dbg, const QDockWidget *dockWidget)
+-{
+-    QDebugStateSaver saver(dbg);
+-    dbg.nospace();
+-    return dockWidget ? dbg << *dockWidget : dbg << "QDockWidget(0x0)";
+-}
+-
+-QDebug operator<<(QDebug dbg, const QDockWidget &dockWidget)
+-{
+-    QDebugStateSaver saver(dbg);
+-    dbg.nospace();
+-    dbg << "QDockWidget(" << static_cast<const void *>(&dockWidget);
+-    dbg << "->(ObjectName=" << dockWidget.objectName();
+-    dbg << "; floating=" << dockWidget.isFloating();
+-    dbg << "; features=" << dockWidget.features();
+-    dbg << ";))";
+-    return dbg;
+-}
+-#endif // QT_NO_DEBUG_STREAM
+-
+ QT_END_NAMESPACE
+ 
+ #include "qdockwidget.moc"
+diff --git a/src/widgets/widgets/qdockwidget.h b/src/widgets/widgets/qdockwidget.h
+index 211b703e03..92b7663acd 100644
+--- a/src/widgets/widgets/qdockwidget.h
++++ b/src/widgets/widgets/qdockwidget.h
+@@ -64,11 +64,6 @@ public:
+     inline bool isAreaAllowed(Qt::DockWidgetArea area) const
+     { return (allowedAreas() & area) == area; }
+ 
+-#ifndef QT_NO_DEBUG_STREAM
+-    friend Q_WIDGETS_EXPORT QDebug operator<<(QDebug dbg, const QDockWidget &dockWidget);
+-    friend Q_WIDGETS_EXPORT QDebug operator<<(QDebug dbg, const QDockWidget *dockWidget);
+-#endif
+-
+ #ifndef QT_NO_ACTION
+     QAction *toggleViewAction() const;
+ #endif
+-- 
+cgit v1.2.3
+
