@@ -12,11 +12,13 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    pisitools.dosed("configure.ac", "systemd", deleteLine=True)
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--disable-static \
                          --libexecdir=/usr/bin/mate-control-center \
                          --sbindir=/usr/bin \
                          --with-gnu-ld \
+                         --disable-systemd \
                          --disable-update-mimedb \
                          --disable-schemas-compile")
 
