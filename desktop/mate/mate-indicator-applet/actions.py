@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 
 
 def setup():
-    autotools.configure("--libexecdir=/usr/lib")
+    autotools.autoreconf("-fiv")
+    autotools.configure("--libexecdir=/usr/lib --with-ayatana-indicators=yes")
 
 def build():
     autotools.make()
