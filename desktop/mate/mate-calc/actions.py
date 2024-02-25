@@ -14,6 +14,7 @@ def setup():
     #package name change
     pisitools.dosed("data/mate-calc.desktop.in", "_Name=MATE Calculator", "_Name=Calculator")
     autotools.configure("--prefix=/usr \
+                         --disable-schemas-compile \
                          --disable-schemas-install")
 
 def build():
