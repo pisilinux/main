@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pythonmodules
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
+from pisi.actionsapi import get, pythonmodules, pisitools, shelltools
 
 
 def build():
@@ -22,6 +20,6 @@ def check():
 
 def install():
     pythonmodules.install(pyVer="3")
-    pisitools.dosym("/usr/lib/python3.9/site-packages/gufw/gufw.py", "/usr/share/gufw/gufw/gufw.py")
+    pisitools.dosed("%s/usr/bin/gufw-pkexec" % get.installDIR(), "/usr/share/gufw/gufw/gufw.py","/usr/lib/python3.*/site-packages/gufw/gufw.py")
 
     pisitools.dodoc("COPYING*", "README*")
