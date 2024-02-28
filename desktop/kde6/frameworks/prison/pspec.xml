@@ -1,0 +1,80 @@
+
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>prison-kf6</Name>
+        <Homepage>https://www.kde.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>A barcode API to produce QRCode barcodes and DataMatrix barcode</Summary>
+        <Description>A barcode API to produce QRCode barcodes and DataMatrix barcode.</Description>
+        <Archive sha1sum="6143f9d440529cbb89fa49f70c507570d38af653" type="tarxz">mirrors://kde/stable/frameworks/6.0/prison-6.0.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>libdmtx-devel</Dependency>
+            <Dependency>qrencode-devel</Dependency>
+            <Dependency>zxing-cpp-devel</Dependency>
+            <Dependency versionFrom="5.10.1">qt6-base-devel</Dependency>
+            <Dependency versionFrom="6.0.0">extra-cmake-modules-kf6</Dependency>
+            <Dependency versionFrom="5.10.1">qt6-multimedia-devel</Dependency>
+            <Dependency versionFrom="5.10.1">qt6-declarative-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>prison-kf6</Name>
+        <RuntimeDependencies>
+<!--             <Dependency>libgcc</Dependency> -->
+            <Dependency>libdmtx</Dependency>
+            <Dependency>qrencode</Dependency>
+            <Dependency>zxing-cpp</Dependency>
+            <Dependency versionFrom="5.10.1">qt6-base</Dependency>
+            <Dependency versionFrom="5.10.1">qt6-multimedia</Dependency>
+            <Dependency versionFrom="5.10.1">qt6-declarative</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/xdg</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/qt5</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/qlogging-categories6/prison.categories</Path>
+            <Path fileType="data">/usr/share/qlogging-categories6/prison.renamecategories</Path>
+        </Files>
+        <Replaces>
+            <Package>prison-kf6-qt5</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>prison-kf6-qt5</Package>
+        </Conflicts>
+    </Package>
+
+    <Package>
+        <Name>prison-kf6-devel</Name>
+        <Summary>Development files for libepoxy</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">prison-kf6</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+        <Replaces>
+            <Package>prison-kf6-qt6-devel</Package>
+        </Replaces>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-02-28</Date>
+            <Version>6.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
