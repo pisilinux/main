@@ -86,7 +86,7 @@ def install():
         pisitools.domove(
             '/usr/share/man/man1/%s' % man_file,
             '/usr/share/man/man1',
-            '%s-openjdk15.1' % man_file.replace('.1', '')
+            '%s-openjdk21.0' % man_file.replace('.1', '')
         )
 
     # Documentations
