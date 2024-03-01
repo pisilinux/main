@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     #shelltools.system("sed -i 's|5.11.0|5.10.0|g' CMakeLists.txt")
-    kde6.configure()
+    kde6.configure("-DWITH_PYTHON_VENDORING=OFF")
 
 def build():
     kde6.make()
