@@ -12,34 +12,35 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    shelltools.cd("%s" % get.workDIR())
-    shelltools.copytree("AppStream-%s" % get.srcVERSION(), "AppStream-qt6")
+    # shelltools.cd("%s" % get.workDIR())
+    # shelltools.copytree("AppStream-%s" % get.srcVERSION(), "AppStream-qt6")
 
-    shelltools.cd("AppStream-%s" % get.srcVERSION())
-    mesontools.configure("--libexecdir=lib \
-                                        -Dstemming=false \
-                                        -Dqt5=true \
-                                        -Dapidocs=false \
-                                        -Dvapi=true")
-    
-    shelltools.cd("../AppStream-qt6")
+    # shelltools.cd("AppStream-%s" % get.srcVERSION())
     mesontools.configure("--libexecdir=lib \
                                         -Dstemming=false \
                                         -Dqt=true \
+                                        -Dqt-versions=5,6 \
                                         -Dapidocs=false \
                                         -Dvapi=true")
+    
+    # shelltools.cd("../AppStream-qt6")
+    # mesontools.configure("--libexecdir=lib \
+                                        # -Dstemming=false \
+                                        # -Dqt=true \
+                                        # -Dapidocs=false \
+                                        # -Dvapi=true")
    
 def build():
     mesontools.build()
 
-    shelltools.cd("../AppStream-qt6")
-    mesontools.build()
+    # shelltools.cd("../AppStream-qt6")
+    # mesontools.build()
     
 def install():
     mesontools.install()
 
-    shelltools.cd("../AppStream-qt6")
-    mesontools.install()
+    # shelltools.cd("../AppStream-qt6")
+    # mesontools.install()
 
     pisitools.insinto("/usr/share/pixmaps/", "docs/images/src/png/appstream-logo.png")
     
