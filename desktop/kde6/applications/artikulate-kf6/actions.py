@@ -5,10 +5,13 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import kde6
 
 def setup():
-    kde6.configure()
+    cmaketools.configure("-B build -DBUILD_TESTING=OFF \
+                                        -DKDE_INSTALL_LIBDIR=lib \
+                                        -DCMAKE_INSTALL_PREFIX=/usr")
 
 def build():
     kde6.make()
