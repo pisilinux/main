@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>signond</Name>
+        <Homepage>https://gitlab.com/accounts-sso/signond</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Signon daemon for libaccounts-glib</Summary>
+        <Icon>signond</Icon>
+        <Description>Libaccounts-glib için oturum açma arka plan programı</Description>
+        <Archive sha1sum="65b664e5d5236046c801d32d2b9be422fb632e71" type="tarbz2">https://gitlab.com/accounts-sso/signond/-/archive/5b34c5bbc45eedf55bf553675595b3fcb5c156a8/signond-5b34c5bbc45eedf55bf553675595b3fcb5c156a8.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>libproxy-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency>qt6-assistant-devel</Dependency>
+            <Dependency>qt6-sql-sqlite</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">gentoo/0001-Don-t-forward-declare-QStringList.patch</Patch>
+            <Patch level="1">gentoo/0002-Remove-usage-of-Q_EXTERN_C.patch</Patch>
+            <Patch level="1">gentoo/0003-Port-from-QProcess-pid-to-processId.patch</Patch>
+            <Patch level="1">gentoo/0004-Port-away-from-deprecated-QString-SplitBehavior.patch</Patch>
+            <Patch level="1">gentoo/0005-Port-away-from-QtContainer-toSet.patch</Patch>
+            <Patch level="1">gentoo/0006-Port-away-from-deprecated-QMap-unite.patch</Patch>
+            <Patch level="1">gentoo/0007-Add-Qt6-CI.patch</Patch>
+            <Patch level="1">gentoo/0008-Use-return-instead-of-reference-for-DBus-output-para.patch</Patch>
+            <Patch level="1">gentoo/0009-Adjust-buildsystem-to-include-correct-Qt-Major-versi.patch</Patch>
+            <Patch level="1">gentoo/0010-Fix-plugin-datastream-in-Qt6.patch</Patch>
+            <Patch level="1">gentoo/0011-Port-away-from-deprecated-QProcess-signal.patch</Patch>
+            <Patch level="1">gentoo/signond-8.60-buildsystem.patch</Patch>
+            <Patch level="1">gentoo/signond-8.60-unused-dep.patch</Patch>
+            <Patch level="1">gentoo/signond-8.61-consistent-paths.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>signond</Name>
+        <RuntimeDependencies>
+            <Dependency>qt6-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>signond-devel</Name>
+        <Summary>Development files for signond</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">signond</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-03-03</Date>
+            <Version>8.61</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
