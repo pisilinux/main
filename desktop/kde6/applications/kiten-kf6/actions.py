@@ -16,4 +16,4 @@ def build():
 def install():
     kde6.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING*", "README", "TODO")
+    pisitools.dodoc("AUTHORS", "COPYING*", "README*")
