@@ -23,7 +23,7 @@ def setup():
                -Dgallium-nine=true \
                -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio \
                -Dvulkan-layers=device-select,intel-nullhw,overlay \
-               -Dvideo-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc \
+               -Dvideo-codecs=all \
                -Dshared-glapi=enabled \
                -Dgles1=enabled \
                -Dgles2=enabled \
