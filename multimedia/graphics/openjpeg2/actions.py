@@ -14,10 +14,9 @@ libdir = "lib32" if get.buildTYPE() == "emul32" else "lib"
 
 def setup():
     options = "-B build -DCMAKE_BUILD_TYPE=Release \
-               -DOPENJPEG_INSTALL_LIB_DIR=lib \
                -DCMAKE_INSTALL_PREFIX=/usr \
                -DBUILD_SHARED_LIBS=ON \
-               -DOPENJPEG_INSTALL_LIB_DIR=%s \
+               -DCMAKE_INSTALL_LIBDIR:PATH=%s \
                -DBUILD_STATIC_LIBS=OFF" % libdir
                
     if get.buildTYPE() == "emul32":
@@ -26,6 +25,7 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         
         options += " -DOPENJPEG_INSTALL_BIN_DIR=emul32 \
+                             -DCMAKE_INSTALL_BINDIR:PATH=emul32 \
                              -DBUILD_DOC=OFF"
 
     else:
@@ -46,7 +46,7 @@ def install():
         pisitools.insinto("/usr/bin/","%s/usr/emul32/opj_decompress" % get.installDIR(),"opj_decompress_32")
         pisitools.insinto("/usr/bin/","%s/usr/emul32/opj_dump" % get.installDIR(),"opj_dump_32")
         pisitools.dosed("%s/usr/lib32/pkgconfig/libopenjp2.pc" % get.installDIR(), "emul32", "bin")
-        pisitools.dosed("%s/usr/lib32/openjpeg-2.5/OpenJPEGTargets-release.cmake" % get.installDIR(), "emul32", "bin")
+        pisitools.dosed("%s/usr/lib32/cmake/openjpeg-2.5/OpenJPEGTargets-release.cmake" % get.installDIR(), "emul32", "bin")
         pisitools.removeDir("/usr/emul32")
         return
         
