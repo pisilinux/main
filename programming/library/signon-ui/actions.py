@@ -5,15 +5,19 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import qt5
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import qt6, get
 
 def setup():
-    qt5.configure()
+    shelltools.system("qmake6-qt6 PREFIX=/usr LIBDIR=/usr/lib")
+    # qt6.configure()
 
 def build():
-    qt5.make()
+    # shelltools.cd("build")
+    shelltools.system("make")
 
 def install():
-    qt5.install()
+    # qt6.install()
+    shelltools.system("make INSTALL_ROOT=%s install" % get.installDIR())
 
     pisitools.dodoc("COPYING", "TODO", "README*")
