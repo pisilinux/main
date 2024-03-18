@@ -7,16 +7,20 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sh ./autogen.sh")
-    autotools.configure()
+    # shelltools.system("sh ./autogen.sh")
+    # autotools.configure()
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    # autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README")
