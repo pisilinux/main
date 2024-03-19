@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>shaderc</Name>
+        <Homepage>https://github.com/google/shaderc</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>Apache</License>
+        <IsA>library</IsA>
+        <Summary>Collection of tools, libraries and tests for shader compilation</Summary>
+        <Icon>shaderc</Icon>
+        <Description>Gölgelendirici derlemesi için araçlar, kütüphaneler ve testlerden oluşan koleksiyon</Description>
+        <Archive sha1sum="1b5229f5aebcd7afa49d3a399d0162f15821e7b8" type="targz">https://github.com/google/shaderc/archive/refs/tags/v2023.8.tar.gz</Archive>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="glslc/src/build-version.inc">build-version.inc</AdditionalFile>
+        </AdditionalFiles>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>asciidoctor</Dependency>
+            <Dependency>glslang-devel</Dependency>
+            <Dependency>spirv-headers</Dependency>
+            <Dependency>spirv-tools-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1">shaderc-2022.1-cmakelists.patch</Patch> -->
+<!--             <Patch level="1">shaderc-2020.4-system-glslang.patch</Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>shaderc</Name>
+        <RuntimeDependencies>
+            <Dependency>glslang</Dependency>
+            <Dependency>spirv-tools</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>shaderc-devel</Name>
+        <Summary>Development files for shaderc</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">shaderc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-03-18</Date>
+            <Version>2023.8</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
