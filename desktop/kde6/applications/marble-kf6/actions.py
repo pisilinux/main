@@ -6,9 +6,10 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde6
+from pisi.actionsapi import kde5
 
 def setup():
-    kde6.configure("-DWITH_libshp=OFF \
+    kde5.configure("-DWITH_libshp=OFF \
                     -DWITH_libgps=OFF \
                     -DWITH_QextSerialPort=OFF \
                     -DWITH_liblocation=OFF \
