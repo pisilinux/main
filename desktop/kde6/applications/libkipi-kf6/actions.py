@@ -5,9 +5,12 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import kde6
+from pisi.actionsapi import kde5
+
 
 def setup():
-    kde6.configure("-DBUILD_TESTING=OFF")
+    # kde6.configure("-DBUILD_TESTING=OFF")
+    kde5.configure("-DBUILD_TESTING=OFF")
 
 def build():
     kde6.make()
