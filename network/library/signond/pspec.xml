@@ -17,6 +17,7 @@
         <BuildDependencies>
             <Dependency>doxygen</Dependency>
             <Dependency>libproxy-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
             <Dependency>qt6-base-devel</Dependency>
             <Dependency>qt6-assistant-devel</Dependency>
             <Dependency>qt6-sql-sqlite</Dependency>
@@ -57,6 +58,34 @@
     </Package>
 
     <Package>
+        <Name>signond-qt5</Name>
+        <RuntimeDependencies>
+            <Dependency>signond</Dependency>
+            <Dependency>qt5-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libsignon-qt5.so*</Path>
+        </Files>
+        <Replaces>
+            <Package>signon</Package>
+        </Replaces>
+    </Package>
+
+    <Package>
+        <Name>signond-qt6</Name>
+        <RuntimeDependencies>
+            <Dependency>signond</Dependency>
+            <Dependency>qt6-base</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libsignon-qt6.so*</Path>
+        </Files>
+        <Replaces>
+            <Package>signon</Package>
+        </Replaces>
+    </Package>
+
+    <Package>
         <Name>signond-devel</Name>
         <Summary>Development files for signond</Summary>
         <RuntimeDependencies>
@@ -65,7 +94,6 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/lib/cmake</Path>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
         </Files>
         <Replaces>
@@ -73,7 +101,50 @@
         </Replaces>
     </Package>
 
+    <Package>
+        <Name>signond-qt5-devel</Name>
+        <Summary>Development files for signond</Summary>
+        <RuntimeDependencies>
+            <Dependency>signond-devel</Dependency>
+            <Dependency release="current">signond</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/signon-qt5</Path>
+            <Path fileType="data">/usr/lib/cmake/SignOnQt5</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/libsignon-qt5.pc</Path>
+        </Files>
+        <Replaces>
+            <Package>signon-devel</Package>
+        </Replaces>
+    </Package>
+
+    <Package>
+        <Name>signond-qt6-devel</Name>
+        <Summary>Development files for signond</Summary>
+        <RuntimeDependencies>
+            <Dependency>signond-devel</Dependency>
+            <Dependency release="current">signond</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/signon-qt6</Path>
+            <Path fileType="data">/usr/lib/cmake/SignOnQt6</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/libsignon-qt6.pc</Path>
+        </Files>
+        <Replaces>
+            <Package>signon-devel</Package>
+        </Replaces>
+    </Package>
+
     <History>
+        <Update release="2">
+            <Date>2024-03-27</Date>
+            <Version>8.61</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2024-03-03</Date>
             <Version>8.61</Version>
