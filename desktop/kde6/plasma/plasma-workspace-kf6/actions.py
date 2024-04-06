@@ -29,4 +29,6 @@ def install():
     #pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breeze-kf6dark.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
     #pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breeze-kf6twilight.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
 
+    pisitools.removeDir("/usr/lib/systemd")
+
     pisitools.dodoc("LICENSES/*")

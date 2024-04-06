@@ -18,4 +18,6 @@ def build():
 def install():
     kde6.install()
 
+    pisitools.removeDir("/usr/lib/systemd")
+
     #pisitools.dodoc("COPYING")
