@@ -34,7 +34,7 @@ def setup():
                -Dglvnd=true \
                -Dllvm=enabled \
                -Dvalgrind=enabled \
-               -Dlibunwind=enabled \
+               -Dlibunwind=disabled \
                -Dbuild-tests=false \
                -Dosmesa=true \
                -Dgallium-opencl=icd \
