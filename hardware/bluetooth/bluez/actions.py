@@ -13,7 +13,7 @@ def setup():
     # pisitools.dosed("configure.ac", "rst2man", "rst2man_3")
     #shelltools.system("sed -i -e '/SystemdService/d' obexd/src/org.bluez.obex.service.in")
     pisitools.dosed("obexd/src/org.bluez.obex.service.in", "SystemdService", deleteLine=True)
-    autotools.autoreconf("-fi")
+    autotools.autoreconf("-fiv")
     autotools.configure("--localstatedir=/var \
                          --enable-sixaxis \
                          --enable-experimental \
@@ -29,11 +29,10 @@ def setup():
                          --enable-btpclient \
                          --enable-midi \
                          --enable-udev \
-                         --enable-test \
-                         --enable-testing \
                          --enable-mesh \
                          --enable-hid2hci \
                          --enable-nfc \
+                         --enable-test \
                          --enable-deprecated \
                          --disable-systemd")
                          
