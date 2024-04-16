@@ -33,6 +33,7 @@ def setup():
                          --enable-hid2hci \
                          --enable-nfc \
                          --enable-test \
+                         --enable-testing \
                          --enable-deprecated \
                          --disable-systemd")
                          
