@@ -7,25 +7,22 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure("--enable-selinux-module=no \
-                         --with-system-bubblewrap \
-                         --with-priv-mode=none \
-                         --with-system-dbus-proxy \
-                         --without-systemd")
+    mesontools.configure("-Dselinux_module=disabled \
+                          -Dtests=false \
+                          -Dsystem_dbus_proxy=xdg-dbus-proxy \
+                          -Dsystemd=disabled")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    # shelltools.system('install -d -o root -g 102 -m 750 "%s/usr/share/polkit-1/rules.d"' % get.installDIR())
+    mesontools.install()
 
     pisitools.removeDir("/usr/lib/systemd")
 
