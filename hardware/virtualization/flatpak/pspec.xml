@@ -11,15 +11,20 @@
         <License>LGPLv2.1</License>
         <Summary>Application distribution framework</Summary>
         <Description>Linux application sandboxing and distribution framework, formerly xdg-app</Description>
-        <Archive sha1sum="64118fe2288b1062b9933547484b4aed83069316" type="tarxz">https://github.com/flatpak/flatpak/releases/download/1.15.6/flatpak-1.15.6.tar.xz</Archive>
+        <Archive sha1sum="b72524c06a83314b975ef618f63ee33506989e39" type="tarxz">https://github.com/flatpak/flatpak/releases/download/1.15.8/flatpak-1.15.8.tar.xz</Archive>
+<!--         <Archive sha1sum="1bbd5ad66ebdf9da1536e42b45f3546735e525a2" type="binary" target="flatpak-1.15.8/tests">https://dl.flathub.org/repo/flathub.flatpakrepo</Archive> -->
         <BuildDependencies>
+            <Dependency>meson</Dependency>
             <Dependency>xmlto</Dependency>
+            <Dependency>socat</Dependency>
             <Dependency>zstd-devel</Dependency>
             <Dependency>util-linux</Dependency>
             <Dependency>gtk-doc</Dependency>
             <Dependency>eudev-devel</Dependency>
+            <Dependency>gpgme-devel</Dependency>
             <Dependency>libcap-devel</Dependency>
             <Dependency>gettext-devel</Dependency>
+            <Dependency>malcontent-devel</Dependency>
             <Dependency versionFrom="1.2.12">zlib-devel</Dependency>
             <Dependency versionFrom="0.4.0">bubblewrap</Dependency>
             <Dependency>polkit-devel</Dependency>
@@ -34,14 +39,16 @@
             <Dependency>python3-pyparsing</Dependency>
             <Dependency>xdg-dbus-proxy</Dependency>
             <Dependency>elogind-devel</Dependency>
-            <Dependency versionFrom="2.9.9">fuse-devel</Dependency>
             <Dependency>curl-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>fuse3-devel</Dependency>
             <Dependency>appstream-devel</Dependency>
+            <Dependency>wayland-client</Dependency>
+            <Dependency>wayland-devel</Dependency>
+            <Dependency>wayland-protocols-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">gentoo/flatpak-1.14.4-fuse-3-slotted.patch</Patch>
+<!--             <Patch level="1">gentoo/flatpak-1.14.4-fuse-3-slotted.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -50,11 +57,12 @@
         <RuntimeDependencies>
             <Dependency>zstd</Dependency>
             <Dependency>xorg-app</Dependency>
-            <Dependency versionFrom="0.4.0">bubblewrap</Dependency>
+            <Dependency>bubblewrap</Dependency>
             <Dependency>fuse</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>gpgme</Dependency>
             <Dependency>gnupg</Dependency>
+            <Dependency>libcap</Dependency>
             <Dependency>libXau</Dependency>
             <Dependency>libxml2</Dependency>
             <Dependency>libsoup</Dependency>
@@ -63,7 +71,8 @@
             <Dependency>libseccomp</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
             <Dependency>dconf</Dependency>
-            <Dependency versionFrom="2019.2">ostree</Dependency>
+            <Dependency>malcontent</Dependency>
+            <Dependency>ostree</Dependency>
             <Dependency>polkit</Dependency>
             <Dependency>appstream-glib</Dependency>
             <Dependency>python3-pyparsing</Dependency>
@@ -73,6 +82,7 @@
             <Dependency>curl</Dependency>
             <Dependency>fuse3</Dependency>
             <Dependency>appstream</Dependency>
+            <Dependency>wayland-client</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -107,6 +117,18 @@
             <Dependency release="current">flatpak</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>ostree-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
+            <Dependency>dconf-devel</Dependency>
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency>libXau-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
+            <Dependency>json-glib-devel</Dependency>
+            <Dependency>libarchive-devel</Dependency>
+            <Dependency>libseccomp-devel</Dependency>
+            <Dependency>malcontent-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -116,6 +138,13 @@
     </Package>
 
     <History>
+        <Update release="21">
+            <Date>2024-04-19</Date>
+            <Version>1.15.8</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="20">
             <Date>2023-11-15</Date>
             <Version>1.15.6</Version>
