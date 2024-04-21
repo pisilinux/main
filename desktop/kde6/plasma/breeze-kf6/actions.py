@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     #shelltools.system("sed -i 's|5.23.0|5.23.1|g' CMakeLists.txt")
-    kde6.configure()
+    kde6.configure("-DBUILD_QT5=OFF")
 
 def build():
     kde6.make()
