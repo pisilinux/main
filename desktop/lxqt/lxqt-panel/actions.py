@@ -12,7 +12,6 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_INSTALL_LIBDIR=/usr/lib \
                           -DNETWORKMONITOR_PLUGIN=yes \
                           -DCMAKE_BUILD_TYPE=release", sourceDir="..")
 
