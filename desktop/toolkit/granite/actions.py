@@ -16,7 +16,7 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dosym("/usr/bin/granite-7-demo", "/usr/bin/granite-demo")
-    pisitools.dosym("/usr/lib/pkgconfig/granite-7.pc", "/usr/lib/pkgconfig/granite.pc")
+    # pisitools.dosym("/usr/bin/granite-7-demo", "/usr/bin/granite-demo")
+    # pisitools.dosym("/usr/lib/pkgconfig/granite-7.pc", "/usr/lib/pkgconfig/granite.pc")
 
     pisitools.dodoc("COPYING", "README.md")
