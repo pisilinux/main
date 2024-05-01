@@ -12,14 +12,22 @@ from pisi.actionsapi import get
 def setup():
     shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
 
-    autotools.autoreconf("-vfi")
-    autotools.configure("--disable-static \
+
+    options = "--disable-static \
                          --disable-rpath \
                          --without-x \
                          --enable-cxx \
                          --enable-ld-version-script \
-                         --with-pic")
-    
+                         --with-pic"
+
+    if get.buildTYPE() == "emul32":
+        options += " --prefix=/_emul32 \
+                     --libdir=/usr/lib32 \
+                   "
+
+    autotools.autoreconf("-vfi")
+    autotools.configure(options)
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -29,10 +37,12 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     if get.buildTYPE() == "emul32":
-        pisitools.dosym("/usr/lib/libtiff.so.6.0.1", "/usr/lib/libtiff.so.5")
-        pisitools.dosym("/usr/lib32/libtiff.so.6.0.1", "/usr/lib32/libtiff.so.5")
-        pisitools.dosym("/usr/lib/libtiffxx.so.6.0.1", "/usr/lib/libtiffxx.so.5")
-        pisitools.dosym("/usr/lib32/libtiffxx.so.6.0.1", "/usr/lib32/libtiffxx.so.5")
+        pisitools.dosym("/usr/lib/libtiff.so.6.0.2", "/usr/lib/libtiff.so.5")
+        pisitools.dosym("/usr/lib32/libtiff.so.6.0.2", "/usr/lib32/libtiff.so.5")
+        pisitools.dosym("/usr/lib/libtiffxx.so.6.0.2", "/usr/lib/libtiffxx.so.5")
+        pisitools.dosym("/usr/lib32/libtiffxx.so.6.0.2", "/usr/lib32/libtiffxx.so.5")
+        pisitools.dosed("%s/usr/lib32/pkgconfig/libtiff-4.pc" % get.installDIR(), "_usr", "usr")
+        pisitools.removeDir("/_emul32")
         return
 
     pisitools.rename("/%s/tiff-%s" % (get.docDIR(), get.srcVERSION()), get.srcNAME())
