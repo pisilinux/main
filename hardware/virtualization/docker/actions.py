@@ -11,9 +11,9 @@ from pisi.actionsapi import get
 
 shelltools.export("DISABLE_WARN_OUTSIDE_CONTAINER", "1")
 shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT","659604f")
+shelltools.export("DOCKER_GITCOMMIT","ac2de55")
 shelltools.export("IAMSTATIC", "false")
-shelltools.export("VERSION", "24.0.2")
+shelltools.export("VERSION", "26.1.1")
 shelltools.export("GOROOT","/usr/lib/go")
 shelltools.export("GO111MODULE","off")
 
