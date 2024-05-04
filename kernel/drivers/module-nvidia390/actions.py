@@ -30,6 +30,7 @@ def setup():
     #shelltools.move("tmp/.manifest", ".")
     #shelltools.system("patch -p1 < kernel-5.14-pdev.patch")
     #shelltools.system("patch -p1 < kernel-5.14-state.patch")
+
     
     #if get.buildTYPE() != 'emul32':
         #shelltools.system("patch -p1 < linux-5.1.patch")
@@ -59,8 +60,13 @@ def build():
     
         
     #kernel 5.6.4 32 bit patch hatası
-    #elif get.ARCH() == "x86_64":
-        #shelltools.system("patch -p1 < kernel-5.6-uvm.patch")
+    elif get.ARCH() == "x86_64":
+        shelltools.system("patch -p1 < kernel-6.2.patch")
+        shelltools.system("patch -p1 < kernel-6.3.patch")
+        shelltools.system("patch -p1 < kernel-6.4.patch")
+        shelltools.system("patch -p1 < kernel-6.5.patch")
+        shelltools.system("patch -p1 < kernel-6.6.patch")
+        shelltools.system("patch -p1 < kernel-6.8.patch")
         
     shelltools.export("SYSSRC", "/lib/modules/%s/build" % KDIR)
     shelltools.cd("kernel")
