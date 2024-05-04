@@ -111,9 +111,9 @@ def install():
         pisitools.dolib("32/libGLESv1_CM_nvidia.so.%s" % version, libdir)
         pisitools.dolib("32/libGLESv2_nvidia.so.%s" % version, libdir)
 
-        pisitools.dolib("32/libnvidia-compiler.so.%s" % version, libdir)
-        pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
-        pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
+        # pisitools.dolib("32/libnvidia-compiler.so.%s" % version, libdir)
+        # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
+        # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
 
         #pisitools.dolib("32/libOpenCL.so.1.0.0", libdir)
         #pisitools.dosym("libOpenCL.so.1.0", "%s/libOpenCL.so.1" % libdir)
@@ -178,9 +178,9 @@ def install():
 
         # OpenCL
         pisitools.insinto("/etc/OpenCL/vendors", "nvidia.icd")
-        pisitools.dolib("libnvidia-compiler.so.%s" % version, libdir)
-        pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
-        pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
+        # pisitools.dolib("libnvidia-compiler.so.%s" % version, libdir)
+        # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
+        # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
 
         #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
         #pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
@@ -213,21 +213,21 @@ def install():
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so" % libdir)
         
-        pisitools.dolib("libnvidia-nvvm.so.4.0.0", libdir)
-        pisitools.dosym("libnvidia-nvvm.so.4.0.0", "%s/libnvidia-nvvm.so.4" % libdir)
-        pisitools.dosym("libnvidia-nvvm.so.4.0.0", "%s/libnvidia-nvvm.so" % libdir)
+        pisitools.dolib("libnvidia-nvvm.so.%s" % version, libdir)
+        pisitools.dosym("libnvidia-nvvm.so.%s" % version, "%s/libnvidia-nvvm.so.1" % libdir)
+        pisitools.dosym("libnvidia-nvvm.so.%s" % version, "%s/libnvidia-nvvm.so" % libdir)
 
-        pisitools.dolib("libnvidia-egl-wayland.so.1.1.9", libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.9", "%s/libnvidia-egl-wayland.so" % libdir)
+        pisitools.dolib("libnvidia-egl-wayland.so.1.1.13", libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.13", "%s/libnvidia-egl-wayland.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.13", "%s/libnvidia-egl-wayland.so" % libdir)
         
-        pisitools.dolib("libnvidia-egl-gbm.so.1.1.0", libdir)
-        pisitools.dosym("libnvidia-egl-gbm.so.1.1.0", "%s/libnvidia-egl-gbm.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-gbm.so.1.1.0", "%s/libnvidia-egl-gbm.so" % libdir)
+        pisitools.dolib("libnvidia-egl-gbm.so.1.1.1", libdir)
+        pisitools.dosym("libnvidia-egl-gbm.so.1.1.1", "%s/libnvidia-egl-gbm.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-gbm.so.1.1.1", "%s/libnvidia-egl-gbm.so" % libdir)
         
-        pisitools.dolib("libnvidia-vulkan-producer.so.%s" % version, libdir)
-        pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so.1" % libdir)
-        pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so" % libdir)
+        # pisitools.dolib("libnvidia-vulkan-producer.so.%s" % version, libdir)
+        # pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so.1" % libdir)
+        # pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so" % libdir)
 
         # OpenGL core library and others
         for lib in ("allocator", "eglcore", "encode", "ngx", "fbc", "glcore", "glsi", \
