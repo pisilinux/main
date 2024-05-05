@@ -29,8 +29,11 @@ def setup():
     shelltools.export("LO_PREFIX", "/usr")
     shelltools.export("PYTHON", "python3.11")
 
+    pisitools.cflags.add("-g2")
+    pisitools.cxxflags.add("-g2")
+    
     # http://site.icu-project.org/download/61#TOC-Migration-Issues
-    shelltools.export("CPPFLAGS", "-DU_USING_ICU_NAMESPACE=1")
+    pisitools.cxxflags.add("-DU_USING_ICU_NAMESPACE=1")
     shelltools.cd(OurWorkDir)
 
     #set toolbars default icon theme as colibre
@@ -38,6 +41,8 @@ def setup():
 
     shelltools.touch("autogen.lastrun")
     shelltools.system('sed -e "/distro-install-file-lists/d" -i Makefile.in')
+
+
     shelltools.system('./autogen.sh                       \
                         --prefix=/usr                     \
                         --sysconfdir=/etc                 \
@@ -45,9 +50,11 @@ def setup():
                         --with-lang="%s"                  \
                         --disable-odk                     \
                         --enable-qt5                      \
+                        --enable-qt6                      \
                         --enable-gtk3                     \
-                        --enable-gtk4 \
+                        --enable-gtk4                     \
                         --enable-kf5                      \
+                        --enable-kf6                      \
                         --enable-release-build=yes        \
                         --enable-python=system            \
                         --enable-scripting-beanshell      \
@@ -55,10 +62,46 @@ def setup():
                         --enable-ext-wiki-publisher       \
                         --enable-ext-numbertext           \
                         --enable-ext-nlpsolver            \
+                        --enable-option-checking=fatal    \
                         --disable-fetch-external          \
                         --with-help                       \
                         --with-myspell-dicts              \
                         --with-java                       \
+                        --with-system-libs                \
+                        --without-system-dicts            \
+                        --without-fonts                   \
+                        --without-system-altlinuxhyph     \
+                        --without-system-beanshell        \
+                        --without-system-box2d            \
+                        --without-system-dragonbox        \
+                        --without-system-firebird         \
+                        --without-system-frozen           \
+                        --without-system-hsqldb           \
+                        --without-system-jfreereport      \
+                        --without-system-libstaroffice    \
+                        --without-system-coinmp           \
+                        --without-system-libabw           \
+                        --without-system-argon2           \
+                        --without-system-libcmis          \
+                        --without-system-libebook         \
+                        --without-system-libepubgen       \
+                        --without-system-libexttextcat    \
+                        --without-system-libfixmath       \
+                        --without-system-libmwaw          \
+                        --without-system-libnumbertext    \
+                        --without-system-lpsolve          \
+                        --without-system-mythes           \
+                        --without-system-orcus            \
+                        --without-system-jfreereport      \
+                        --without-system-zxcvbn           \
+                        --with-jdk-home=/usr/lib/jvm/java-openjdk \
+                        --with-external-tar=external/tarballs       \
+                        --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
+                        --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4            \
+                        --with-parallelism=%s' % (langall, jobs.replace("-j","")))
+
+"""
+                        --enable-kf6                      \
                         --with-system-cairo               \
                         --with-system-clucene             \
                         --with-system-cppunit             \
@@ -91,27 +134,14 @@ def setup():
                         --with-system-odbc                \
                         --with-system-openldap            \
                         --with-system-openssl             \
-                        --without-system-poppler          \
                         --with-system-postgresql          \
                         --with-system-redland             \
                         --with-system-zlib                \
                         --with-system-libetonyek          \
                         --with-system-zxing               \
-                        --without-system-dicts            \
-                        --without-fonts                   \
-                        --without-system-hsqldb           \
-                        --without-system-libstaroffice    \
                         --without-system-libzmf           \
-                        --without-system-coinmp           \
-                        --without-system-firebird         \
-                        --without-system-libcmis          \
-                        --without-system-orcus            \
-                        --with-jdk-home=/usr/lib/jvm/java-openjdk \
-                        --with-external-tar=external/tarballs       \
-                        --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
-                        --with-gdrive-client-secret=0ZChLK6AxeA3Isu96MkwqDR4            \
-                        --with-parallelism=%s' % (langall, jobs.replace("-j","")))
-
+                        --without-system-poppler          \
+"""
 def build():
     shelltools.system("sed -i 's/.PHONY : check-if-root/.PHONY : /g' Makefile")
     shelltools.system("sed -i 's/bootstrap: check-if-root/bootstrap: /g' Makefile")
