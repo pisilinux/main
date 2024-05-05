@@ -109,7 +109,12 @@ def install():
         pisitools.dosym("libEGL_nvidia.so.%s" % version, "%s/libEGL_nvidia.so" %libdir)
 
         pisitools.dolib("32/libGLESv1_CM_nvidia.so.%s" % version, libdir)
+        pisitools.dosym("libGLESv1_CM_nvidia.so.%s" % version, "%s/libGLESv1_CM_nvidia.so.1" % libdir)
+        pisitools.dosym("libGLESv1_CM_nvidia.so.%s" % version, "%s/libGLESv1_CM_nvidia.so" % libdir)
+
         pisitools.dolib("32/libGLESv2_nvidia.so.%s" % version, libdir)
+        pisitools.dosym("libGLESv2_nvidia.so.%s" % version, "%s/libGLESv2_nvidia.so.2" % libdir)
+        pisitools.dosym("libGLESv2_nvidia.so.%s" % version, "%s/libGLESv2_nvidia.so" % libdir)
 
         # pisitools.dolib("32/libnvidia-compiler.so.%s" % version, libdir)
         # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
@@ -174,13 +179,27 @@ def install():
         pisitools.dolib("libEGL.so.%s" % version, libdir)
 
         pisitools.dolib("libGLESv1_CM_nvidia.so.%s" % version, libdir)
+
         pisitools.dolib("libGLESv2_nvidia.so.%s" % version, libdir)
+        pisitools.dosym("libGLESv2_nvidia.so.%s" % version, "%s/libGLESv2_nvidia.so.2" % libdir)
+        pisitools.dosym("libGLESv2_nvidia.so.%s" % version, "%s/libGLESv2_nvidia.so" % libdir)
+
+        pisitools.dolib("libnvidia-gpucomp.so.%s" % version, libdir)
+        pisitools.dosym("libnvidia-gpucomp.so.%s" % version, "%s/libnvidia-gpucomp.so" % libdir)
+
+        pisitools.dolib("libnvidia-pkcs11.so.%s" % version, libdir)
+        pisitools.dosym("libnvidia-pkcs11.so.%s" % version, "%s/libnvidia-pkcs11.so" % libdir)
+
+        pisitools.dolib("libnvidia-pkcs11-openssl3.so.%s" % version, libdir)
+        pisitools.dosym("libnvidia-pkcs11-openssl3.so.%s" % version, "%s/libnvidia-pkcs11-openssl3.so" % libdir)
 
         # OpenCL
         pisitools.insinto("/etc/OpenCL/vendors", "nvidia.icd")
         # pisitools.dolib("libnvidia-compiler.so.%s" % version, libdir)
         # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so.1" % libdir)
         # pisitools.dosym("libnvidia-compiler.so.%s" % version, "%s/libnvidia-compiler.so" % libdir)
+
+        pisitools.dolib("libnvidia-api.so.1", libdir)
 
         #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
         #pisitools.dosym("libOpenCL.so.1.0.0", "%s/libOpenCL.so.1.0" % libdir)
@@ -195,6 +214,10 @@ def install():
         pisitools.dolib("libcuda.so.%s" % version, libdir)
         pisitools.dosym("libcuda.so.%s" % version, "%s/libcuda.so.1" % libdir)
         pisitools.dosym("libcuda.so.1", "%s/libcuda.so" % libdir)
+
+        pisitools.dolib("libcudadebugger.so.%s" % version, libdir)
+        pisitools.dosym("libcudadebugger.so.%s" % version, "%s/libcudadebugger.so.1" % libdir)
+        pisitools.dosym("libcudadebugger.so.%s" % version, "%s/libcudadebugger.so" % libdir)
 
         pisitools.dolib("libnvcuvid.so.%s" % version, libdir)
         pisitools.dosym("libnvcuvid.so.%s" % version, "%s/libnvcuvid.so.1" % libdir)
@@ -224,6 +247,8 @@ def install():
         pisitools.dolib("libnvidia-egl-gbm.so.1.1.1", libdir)
         pisitools.dosym("libnvidia-egl-gbm.so.1.1.1", "%s/libnvidia-egl-gbm.so.1" % libdir)
         pisitools.dosym("libnvidia-egl-gbm.so.1.1.1", "%s/libnvidia-egl-gbm.so" % libdir)
+
+        pisitools.dolib("libnvidia-wayland-client.so.%s" % version, libdir)
         
         # pisitools.dolib("libnvidia-vulkan-producer.so.%s" % version, libdir)
         # pisitools.dosym("libnvidia-vulkan-producer.so.%s" % version, "%s/libnvidia-vulkan-producer.so.1" % libdir)
@@ -274,6 +299,7 @@ def install():
 
     pisitools.insinto(datadir, "ld.so.conf")
     pisitools.insinto(datadir, "XvMCConfig")
+    pisitools.insinto("/usr/share/dbus-1/system.d", "nvidia-dbus.conf")
 
     # Documentation
     docdir = "xorg-video-%s" % driver_dir_name
