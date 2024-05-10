@@ -26,8 +26,8 @@ def install():
     pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breeze.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
 
     #set pisi-crocus-ancyrensis photos as default wallpapers
-    #pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breeze-kf6dark.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
-    #pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breeze-kf6twilight.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
+    pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breezedark.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
+    pisitools.dosed("%s/usr/share/plasma/look-and-feel/org.kde.breezetwilight.desktop/contents/defaults" % get.installDIR(), "Next", "pisi-crocus-ancyrensis")
 
     pisitools.removeDir("/usr/lib/systemd")
 
