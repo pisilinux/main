@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>cups-browsed</Name>
+        <Homepage>https://github.com/OpenPrinting/cups-browsed</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>Apache</License>
+        <IsA>library</IsA>
+        <Summary>helper daemon to browse for remote CUPS queues and IPP network printers</Summary>
+        <Icon>cups-browsed</Icon>
+        <Description>Uzak CUPS kuyruklarına ve IPP ağ yazıcılarına göz atmak için yardımcı arka plan programı</Description>
+        <Archive sha1sum="240b45a43bcc0a01a373ffb7c9bbff005b1fe3c1" type="tarxz">https://github.com/OpenPrinting/cups-browsed/releases/download/2.0.0/cups-browsed-2.0.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>cups-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libppd-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>avahi-glib-devel</Dependency>
+            <Dependency>avahi-libs</Dependency>
+            <Dependency>libcupsfilters-devel</Dependency>
+            <Dependency>openldap-client</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="1">0001-Better-handle-damage-of-queues-created-by-cups-browsed.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>cups-browsed</Name>
+        <RuntimeDependencies>
+            <Dependency>cups</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>libppd</Dependency>
+            <Dependency>avahi-glib</Dependency>
+            <Dependency>avahi-libs</Dependency>
+            <Dependency>libcupsfilters</Dependency>
+            <Dependency>openldap-client</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="config">/etc</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-05-16</Date>
+            <Version>2.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
