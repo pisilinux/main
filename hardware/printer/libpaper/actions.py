@@ -30,4 +30,4 @@ def install():
     for lang in shelltools.ls("debian/po/*.po"):
         pisitools.domo(lang, shelltools.baseName(lang).replace(".po", ""), "libpaper.mo")
 
-    pisitools.dodoc("README", "ChangeLog")
+    pisitools.dodoc("README*", "ChangeLog")
