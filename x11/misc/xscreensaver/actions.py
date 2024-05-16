@@ -21,7 +21,6 @@ j = ''.join([
     ' --enable-pam-check-account-type',
     ' --without-systemd '
     ])
-shelltools.export("LC_ALL", "en_US.UTF-8")
 
 def setup():
 	pisitools.dosed("driver/Makefile.in", "UPDATE_ICON_CACHE", deleteLine = True)
