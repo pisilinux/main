@@ -11,10 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure("--disable-mutool \
-                         --disable-rpath \
-                         --disable-silent-rules \
-                         --disable-static \
+    autotools.configure("--disable-static \
                          --enable-dbus")
 
 

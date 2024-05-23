@@ -11,9 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure("--disable-mutool \
-                         --disable-static \
-                         --disable-rpath")
+    autotools.configure("--disable-static")
 
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
