@@ -15,6 +15,8 @@ def setup():
 
     shelltools.system("sed '/build-version/d' -i glslc/CMakeLists.txt")
 
+    # shelltools.system("cat <<- EOF > glslc/src/build-version.inc")
+
 
     cmaketools.configure("-B build \
                              -GNinja \
