@@ -11,6 +11,7 @@ from pisi.actionsapi import mesontools
 
 def setup():
   options = "-Dbuiltin_loaders=png \
+             -Dothers=enabled \
             "
   if get.buildTYPE()=="emul32":
       options += "-Dintrospection=disabled \
