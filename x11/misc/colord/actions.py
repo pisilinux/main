@@ -12,11 +12,12 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-    shelltools.system("""sed -i -e "/find_program('vapigen')/d" meson.build""")
+    #shelltools.system("""sed -i -e "/find_program('vapigen')/d" meson.build""")
     mesontools.configure("-Ddaemon_user=colord \
                           -Dsystemd=false \
                           -Ddocs=false \
                           -Dlibcolordcompat=true \
+                          -D vapi=true \
                           -Dman=false")
 
     
