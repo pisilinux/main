@@ -7,7 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    mesontools.configure("-Dpackagekit=false")
+    mesontools.configure()
 
 def build():
     mesontools.build()
