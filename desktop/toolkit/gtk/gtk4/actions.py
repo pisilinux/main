@@ -21,7 +21,6 @@ def setup():
                           -Dbroadway-backend=true \
                           -Dman-pages=true \
                           -Dbuild-tests=false \
-                          -Dmedia-ffmpeg=enabled \
                           -Dmedia-gstreamer=enabled \
                           -Dintrospection=enabled \
                           -Dcolord=enabled \
