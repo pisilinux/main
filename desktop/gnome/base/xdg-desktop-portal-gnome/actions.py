@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Ddbus_service_dir=/usr/share/dbus-1/services \
+                          --buildtype=release \
                           -Dsystemduserunitdir=no \
                          ")
                         #-Dsystemduserunitdir=/usr/lib/systemd/user

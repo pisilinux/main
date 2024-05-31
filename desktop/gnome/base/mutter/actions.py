@@ -13,6 +13,7 @@ def setup():
                           -Dudev=true \
                           -Dnative_backend=true \
                           -Dintrospection=true \
+                          -Dlibdisplay_info=enabled \
                           -Dinstalled_tests=false")
 
 def build():
