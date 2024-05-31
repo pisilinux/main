@@ -8,31 +8,25 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+
 
 def setup():
-    shelltools.copy("po/fur.po", "po/ur.po")
-    shelltools.system("sed -i 's/fur/ur/' po/LINGUAS")
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    shelltools.system("meson .. --prefix=/usr \
-                                --sysconfdir=/etc \
-                                -Ddaemon_user=colord \
-                                -Dsystemd=false \
-                                -Ddocs=false \
-                                -Dlibcolordcompat=true \
-                                -Dman=false")
+    shelltools.system("""sed -i -e "/find_program('vapigen')/d" meson.build""")
+    mesontools.configure("-Ddaemon_user=colord \
+                          -Dsystemd=false \
+                          -Ddocs=false \
+                          -Dlibcolordcompat=true \
+                          -Dman=false")
 
     
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
     
     pisitools.insinto("/etc/dbus-1/system.d/","%s/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf" % get.installDIR())
     pisitools.removeDir("/usr/share/dbus-1/system.d")
 
-    shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "MAINTAINERS", "COPYING", "RELEASE", "NEWS", "README.md")

@@ -26,6 +26,7 @@ def setup():
                           -Dxml=enabled \
                           -Dxmp=enabled \
                           -Dxps=enabled \
+                          -Dlandlock=enabled \
                           -Dminer_rss=false \
                           -Dbattery_detection=upower \
                           -Dcharset_detection=icu \
