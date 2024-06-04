@@ -39,7 +39,7 @@ def setup():
                           -Dnetconfig=no \
                           -Dsession_tracking=elogind \
                           -Dsession_tracking_consolekit=false \
-                          -Dsuspend_resume=upower \
+                          -Dsuspend_resume=elogind \
                           -Dcrypto=nss \
                           -Ddhcpcd=enabled \
                           -Dpppd=/usr/sbin/pppd \
