@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>freetds</Name>
+        <Homepage>https://www.freetds.org/</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <PartOf>server.database</PartOf>
+        <Icon>freetds</Icon>
+        <IsA>library</IsA>
+        <Summary>Library for accessing Sybase and MS SQL Server databases</Summary>
+        <Description>FreeTDS is a set of libraries for Unix and Linux that allows your programs to natively talk to Microsoft SQL Server and Sybase databases.</Description>
+        <Archive sha1sum="f13f4d7c278ab2ce916e0f1714e2fa2c1e6cd86a" type="targz">https://www.freetds.org/files/stable/freetds-1.4.17.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>glibc-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
+            <Dependency>unixODBC-devel</Dependency>
+            <Dependency>mit-kerberos-devel</Dependency>
+        </BuildDependencies>        
+    </Source>
+    
+    <Package>
+        <Name>freetds</Name>
+        <RuntimeDependencies>
+            <Dependency>openssl</Dependency>
+            <Dependency>readline</Dependency>
+            <Dependency>unixODBC</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/freetds</Path>
+            <Path fileType="library">/usr/lib/libct*</Path>
+            <Path fileType="library">/usr/lib/libsybdb*</Path>
+            <Path fileType="library">/usr/lib/libtdsodbc*</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="data">/usr/share/freetds</Path>
+        </Files>
+    </Package>
+    
+    <Package>
+        <Name>freetds-devel</Name>
+        <Summary>Development files for freetds</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">freetds</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2024-06-03</Date>
+            <Version>1.4.17</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

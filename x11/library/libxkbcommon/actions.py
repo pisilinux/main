@@ -13,6 +13,7 @@ from pisi.actionsapi import mesontools
 def setup():
     
     options = "-Denable-docs=false"
+
     
     
     if get.buildTYPE() == "emul32":
@@ -22,7 +23,6 @@ def setup():
     mesontools.configure(options)
 
 def build():
-	
     mesontools.build()
 
 def install():
@@ -33,4 +33,4 @@ def install():
         pisitools.removeDir("/usr/bin32")
         return
     
-    pisitools.dodoc("README*", "NEWS", "LICENSE")
+    pisitools.dodoc("README*", "LICENSE")
