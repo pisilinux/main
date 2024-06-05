@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>python3-shiboken2</Name>
@@ -12,9 +12,9 @@
         <License>LGPLv2</License>
         <IsA>library</IsA>
         <IsA>app:console</IsA>
-        <Summary>Shiboken the Binding Generator</Summary>
-        <Description>Shiboken is the CPython-based binding code generator for C or C++ libraries. It uses an ApiExtractor library to parse the C or C++ headers and get the type information, using Clang.</Description>
-        <Archive sha1sum="f8c2091eab9f9a3d72acaabf0f66ff5a11f8edd3" type="tarxz">https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.12-src/pyside-setup-opensource-src-5.15.12.tar.xz</Archive>
+        <Summary>shiboken2 Python module</Summary>
+        <Description>The purpose of the shiboken2 Python module is to access information related to the binding generation that could be used to integrate C++ programs to Python, or even to get useful information to debug an application.</Description>
+        <Archive sha1sum="9e07d0825092af3fa9faca94f618f356000307e7" type="tarxz">https://download.qt.io/official_releases/QtForPython/shiboken2/PySide2-5.15.14-src/pyside-setup-opensource-src-5.15.14.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>llvm</Dependency>
             <Dependency>cmake</Dependency>
@@ -36,6 +36,8 @@
         <Name>shiboken2</Name>
         <Summary>Shiboken2 is the binding generator used to create the PySide2 bindings.</Summary>
         <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libxml2</Dependency>
             <Dependency>libxslt</Dependency>
             <Dependency>qt5-base</Dependency>
             <Dependency>llvm-clang</Dependency>
@@ -43,7 +45,7 @@
         <Files>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="executable">/usr/bin/shiboken2</Path>
-			<Path fileType="library">/usr/lib/libshiboken2*</Path>
+            <Path fileType="library">/usr/lib/libshiboken2*</Path>
             <Path fileType="man">/usr/share/man/man1/shiboken2.1</Path>
             <Path fileType="executable">/usr/bin/shiboken_tool.py</Path>
             <!--<Path fileType="man">/usr/share/man/shiboken2.1.gz</Path>-->
@@ -68,7 +70,7 @@
         <Name>python3-shiboken2-devel</Name>
         <Summary>Development headers for the shiboken2 library.</Summary>
         <RuntimeDependencies>
-		<Dependency>llvm-clang-devel</Dependency>
+            <Dependency>llvm-clang-devel</Dependency>
             <Dependency release="current">python3-shiboken2</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -79,6 +81,13 @@
     </Package>
 
     <History>
+        <Update release="10">
+            <Date>2024-06-05</Date>
+            <Version>5.15.14</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="9">
             <Date>2023-12-30</Date>
             <Version>5.15.12</Version>
