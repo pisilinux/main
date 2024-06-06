@@ -21,5 +21,5 @@ def install():
 
     pisitools.insinto("/usr/share/pixmaps/", "icons/scalable/org.xfce.screenshooter.svg")
 
-    pisitools.dodoc("AUTHORS", "COPYING", "INSTALL", "NEWS", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING", "README*")
 
