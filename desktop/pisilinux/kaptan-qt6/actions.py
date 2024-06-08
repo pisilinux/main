@@ -9,7 +9,7 @@ from pisi.actionsapi import shelltools
 import glob
 
 def build():
-    pisitools.dosed("setup.py", "lrelease", "lrelease-qt6")
+    #pisitools.dosed("setup.py", "lrelease", "lrelease-qt6")
     pythonmodules.compile(pyVer="3")
 
 def install():
