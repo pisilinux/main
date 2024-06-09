@@ -5,7 +5,8 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import python3modules
-from pisi.actionsapi import pisitools, get
+from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 
 WorkDir="pyqt_builder-%s" % get.srcVERSION()
@@ -16,4 +17,4 @@ def build():
 def install():
     python3modules.install()
 
-    pisitools.dodoc("ChangeLog", "LICENSE*", "README*")
+    pisitools.dodoc("LICENSE*", "README*")
