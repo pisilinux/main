@@ -30,4 +30,4 @@ def install():
     autotools.rawInstall("-C build DESTDIR=%(DESTDIR)s INSTALL_ROOT=%(DESTDIR)s" % {'DESTDIR':get.installDIR()})
 
     
-    pisitools.dodoc("NEWS", "README","LICENSE*")
+    pisitools.dodoc("NEWS", "README*","LICENSE*")
