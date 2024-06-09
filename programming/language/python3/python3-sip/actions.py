@@ -7,7 +7,7 @@
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 from pisi.actionsapi import get
 
 #WorkDir = "sip-%s" % get.srcVERSION()
@@ -19,22 +19,22 @@ def setup():
     
     # shelltools.system("find . -type f -exec sed -i 's/Python.h/python3.9\/Python.h/g' {} \;")
     
-    # pythonmodules.compile(pyVer="3")
+    # python3modules.compile()
     
     # shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
-    # pythonmodules.compile(pyVer="3")
+    # python3modules.compile()
                         
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
     
-    shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
-    pythonmodules.compile(pyVer="3")
+    # shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
+    # python3modules.compile()
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install()
     # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
-    pythonmodules.install(pyVer="3")
+    # shelltools.cd("../sip-%s-pyqt6" % get.srcVERSION())
+    # python3modules.install()
     # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
