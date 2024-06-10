@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "splix"
+# WorkDir = "splix"
 
 def build():
     shelltools.export("OS_CFLAGS", get.CFLAGS())
@@ -19,12 +19,15 @@ def build():
     shelltools.makedirs("ppd")
     autotools.make("-C ppd")
 
-    autotools.make("V=1")
+    autotools.make("drv")
+
+    autotools.make("all DRV_ONLY=1")
 
 def install():
-    autotools.install("DESTDIR=%s CUPSPPD=/usr/share/cups/model/splix" % get.installDIR())
+    autotools.install("DESTDIR=%s DRV_ONLY=1" % get.installDIR())
+    autotools.install("DESTDIR=%s -C ppd CUPSPPD=/usr/share/cups/model/splix" % get.installDIR())
 
     # Install color profiles
-    pisitools.insinto("/usr/share/cups/model/samsung/cms", "cms/*")
+    # pisitools.insinto("/usr/share/cups/model/samsung/cms", "cms/*")
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README", "THANKS", "TODO")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README*", "THANKS", "TODO")
