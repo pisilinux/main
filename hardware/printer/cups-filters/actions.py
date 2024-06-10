@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
+    pisitools.cxxflags.add("-std=c++17")
     pisitools.dosed("configure", "localstatedir/run/cups", "localstatedir/cups")
     shelltools.system("./autogen.sh")
     autotools.configure("--sbindir=/usr/bin \

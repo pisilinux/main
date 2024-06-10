@@ -19,7 +19,7 @@
         <IsA>app:console</IsA>
         <Summary>OpenPrinting CUPS filters and backends</Summary>
         <Description>Contains backends, filters, and other software that was once part of the core CUPS distribution but is no longer maintained by Apple Inc. In addition it contains additional filters developed independently of Apple, especially filters for the PDF-centric printing workflow introduced by OpenPrinting.</Description>
-       <Archive type="tarxz" sha1sum="790b160ec1f7db2ba2148a1f90525f9205957960">https://github.com/OpenPrinting/cups-filters/releases/download/2.0.0/cups-filters-2.0.0.tar.xz</Archive>
+       <Archive type="tarxz" sha1sum="aff6b20c4bf0a4f80e400f8174c5aa7ffdb7d9a7">https://github.com/OpenPrinting/cups-filters/releases/download/1.28.17/cups-filters-1.28.17.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>python3-devel</Dependency>
             <Dependency>cups-devel</Dependency>
@@ -41,13 +41,15 @@
             <Dependency>openldap-client</Dependency>
             <Dependency>avahi-devel</Dependency>
             <Dependency>avahi-glib-devel</Dependency>
-            <Dependency>libppd-devel</Dependency>
-            <Dependency>libcupsfilters-devel</Dependency>
-            <Dependency versionFrom="11.2.0">qpdf-devel</Dependency>
+            <Dependency versionFrom="11.9.1">qpdf-devel</Dependency>
             <Dependency versionFrom="9.53">ghostscript-devel</Dependency>
             <Dependency versionFrom="22.07.0">poppler-devel</Dependency>
             <Dependency>mupdf-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+            <Patch level="1">cups-filters-1.28.17-c++17.patch</Patch>
+            <Patch level="1">93e60d3df358c0ae6f3dba79e1c9684657683d89.patch</Patch>
+        </Patches>
     </Source>
 
     <Package>
@@ -73,8 +75,6 @@
             <Dependency>avahi-glib</Dependency>
             <Dependency>avahi-libs</Dependency>
 <!--             <Dependency>mupdf</Dependency> -->
-            <Dependency>libppd</Dependency>
-            <Dependency>libcupsfilters</Dependency>
             <Dependency>openldap-client</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -84,13 +84,15 @@
             <Path fileType="data">/usr/share/ppd</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="data">/usr/share/cups</Path>
-            <Path fileType="data">/usr/share/ppdc</Path>
             <Path fileType="config">/etc/cups/cups-browsed.conf</Path>
             <Path fileType="config">/etc/fonts/conf.d/99pdftoopvp.conf</Path>
         </Files>
+        <Replaces>
+            <Package>libcupsfilters</Package>
+        </Replaces>
     </Package>
 
-    <!--Package>
+    <Package>
         <Name>cups-filters-devel</Name>
         <Summary>Cups-filters için geliştirme dosyaları</Summary>
         <RuntimeDependencies>
@@ -100,9 +102,19 @@
             <Path fileType="header">/usr/include</Path>
             <Path fileType="library">/usr/lib/pkgconfig</Path>
         </Files>
-    </Package-->
+        <Replaces>
+            <Package>libcupsfilters-devel</Package>
+        </Replaces>
+    </Package>
 
     <History>
+        <Update release="29">
+            <Date>2024-06-10</Date>
+            <Version>1.28.17</Version>
+            <Comment>Revert.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="28">
             <Date>2024-05-23</Date>
             <Version>2.0.0</Version>
