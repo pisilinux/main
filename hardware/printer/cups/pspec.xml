@@ -12,7 +12,7 @@
         <IsA>service</IsA>
         <Summary>Common Unix Printing System</Summary>
         <Description>cups provides a portable printing layer for *nix-based operating systems.</Description>
-        <Archive sha1sum="9c6155dfa367eee9a88ad08cf83b1dc6c446309f" type="targz">https://github.com/OpenPrinting/cups/releases/download/v2.4.7/cups-2.4.7-source.tar.gz</Archive>
+        <Archive sha1sum="a53749591c6a5d3c24f0382cccef844f3612e13c" type="targz">https://github.com/OpenPrinting/cups/releases/download/v2.4.9/cups-2.4.9-source.tar.gz</Archive>
 <!--         <Archive sha1sum="062beea95c6f8dda0a5e7eed51604e22806ffad3" type="tar" target="cups-2.2.10">http://source.pisilinux.org/1.0/cups-tr.tar</Archive> -->
         <BuildDependencies>
             <Dependency>acl-devel</Dependency>
@@ -34,21 +34,28 @@
         </BuildDependencies>
         <Patches>
             <!-- ARCH Linux patches -->
-<!--             <Patch level="1">archlinux/cups-no-export-ssllibs.patch</Patch> -->
+<!--             <Patch level="1">archlinux/cups-freebind.patch</Patch> -->
 <!--             <Patch level="1">archlinux/cups-no-gzip-man.patch</Patch> -->
 <!--             <Patch level="1">archlinux/auth-workaround-for-certain-web-browsers.patch</Patch> -->
 <!--             <Patch level="1">archlinux/guid.patch</Patch> -->
 
             <!-- Fedora patches -->
-            <Patch level="1">fedora/cups-final-content-type.patch</Patch>
-            <Patch level="1">fedora/cups-res_init.patch</Patch>
-<!--             <Patch level="1">fedora/cups-hp-deviceid-oid.patch</Patch> -->
-<!--             <Patch level="1">fedora/cups-logrotate.patch</Patch> -->
-<!--             <Patch level="1">fedora/cups-avahi-no-threaded.patch</Patch> -->
+            <Patch level="1">fedora/cups-banners.patch</Patch>
+            <Patch level="1">fedora/cups-direct-usb.patch</Patch>
+            <Patch level="1">fedora/cups-driverd-timeout.patch</Patch>
+            <Patch level="1">fedora/cups-dymo-deviceid.patch</Patch>
+            <Patch level="1">fedora/cups-failover-backend.patch</Patch>
+            <Patch level="1">fedora/cups-freebind.patch</Patch>
+            <Patch level="1">fedora/cups-ipp-multifile.patch</Patch>
+            <Patch level="1">fedora/cups-lspp.patch</Patch>
+            <Patch level="1">fedora/cups-multilib.patch</Patch>
+            <Patch level="1">fedora/cups-no-export-ssllibs.patch</Patch>
+            <Patch level="1">fedora/cups-uri-compat.patch</Patch>
+            <Patch level="1">fedora/cups-usb-paperout.patch</Patch>
             <Patch level="1">fedora/cups-web-devices-timeout.patch</Patch>
 
             <!-- Gentoo patches -->
-            <Patch>gentoo/cups-2.2.6-fix-install-perms.patch</Patch>
+<!--             <Patch>gentoo/cups-2.2.6-fix-install-perms.patch</Patch> -->
 <!--             <Patch >gentoo/cups-2.0.2-rename-systemd-service-files.patch</Patch> -->
 
             <!-- Pisi Linux patches -->
@@ -56,11 +63,11 @@
             <Patch level="1">pisilinux/cups-run.patch</Patch>
 <!--             <Patch level="1">pisilinux/lib64.patch</Patch> -->
             <Patch level="1">pisilinux/statedir.patch</Patch>
-<!--             <Patch level="1">pisilinux/desktop.patch</Patch> -->
+<!--             <Patch level="1">pisilinux/pam.patch</Patch> -->
 <!--             <Patch level="1">pisilinux/auth.patch</Patch> -->
 
             <!-- Pld-linux patches -->
-            <Patch>pld-linux/cups-avahi-address.patch</Patch>
+<!--             <Patch>pld-linux/cups-avahi-address.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -108,6 +115,7 @@
 
             <!-- Generic textonly ppd from Fedora which is also used by Ubuntu -->
             <AdditionalFile owner="root" permission="0644" target="/usr/share/cups/model/textonly.ppd">fedora/textonly.ppd</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/etc/pam.d/cups">cups.pam</AdditionalFile>
         </AdditionalFiles>
         <Provides>
             <COMAR script="service.py">System.Service</COMAR>
@@ -155,6 +163,13 @@
     </Package>
 
     <History>
+        <Update release="30">
+            <Date>2024-06-13</Date>
+            <Version>2.4.9</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="29">
             <Date>2024-05-23</Date>
             <Version>2.4.7</Version>
