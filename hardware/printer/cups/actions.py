@@ -17,7 +17,7 @@ def setup():
 
     # For --enable-avahi
     autotools.aclocal("-I config-scripts")
-    autotools.autoconf("-I config-scripts")
+    autotools.autoconf("-f -I config-scripts")
 
     options = '--with-cups-user=daemon \
                --with-cups-group=lp \
@@ -41,6 +41,7 @@ def setup():
                --disable-libusb \
                --with-rcdir=no \
                --libdir=%s \
+               --disable-systemd \
                --with-pkgconfpath=%s/pkgconfig \
                --with-logdir=/var/log/cups \
                KRB5CONFIG=/usr/bin/krb5-config \
