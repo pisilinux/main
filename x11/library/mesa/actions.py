@@ -21,7 +21,6 @@ def setup():
                -Dgallium-va=enabled \
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
-               -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio \
                -Dvulkan-layers=device-select,intel-nullhw,overlay \
                -Dvideo-codecs=all \
                -Dshared-glapi=enabled \
@@ -31,7 +30,7 @@ def setup():
                -Dgbm=enabled \
                -Dglx=dri \
                -Degl=enabled \
-               -Dglvnd=true \
+               -Dglvnd=enabled \
                -Dllvm=enabled \
                -Dvalgrind=enabled \
                -Dlibunwind=disabled \
@@ -42,6 +41,7 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled \
+                     -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio \
                      -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink \
                    "
         #shelltools.export("CC", "clang -m32")
@@ -60,6 +60,7 @@ def setup():
         options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
+                             -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,nouveau \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
