@@ -18,6 +18,6 @@ def build():
 
 def install():
 	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-	pisitools.remove("/usr/sbin/sg_write_buffer")
+	# pisitools.remove("/usr/sbin/sg_write_buffer")
 
 	pisitools.dodoc("COPYING", "README")
