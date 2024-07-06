@@ -1,0 +1,130 @@
+diff --git a/Make.defaults b/Make.defaults
+index 0068e31..775e287 100755
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -199,7 +199,7 @@ endif
+ ARFLAGS := rDv
+ ASFLAGS += $(ARCH3264)
+ LDFLAGS	+= -nostdlib --warn-common --no-undefined --fatal-warnings \
+-	   --build-id=sha1 -z nocombreloc
++	   --build-id=sha1 -z nocombreloc -z norelro
+ 
+ ifneq ($(ARCH),arm)
+ export LIBGCC=$(shell $(CC) $(CFLAGS) $(ARCH3264) -print-libgcc-file-name)
+diff --git a/inc/efirtlib.h b/inc/efirtlib.h
+index 518859e..68320bc 100644
+--- a/inc/efirtlib.h
++++ b/inc/efirtlib.h
+@@ -45,6 +45,7 @@ RtZeroMem (
+     );
+ 
+ VOID
++EFIAPI
+ RUNTIMEFUNCTION
+ RtSetMem (
+     IN VOID     *Buffer,
+@@ -53,10 +54,11 @@ RtSetMem (
+     );
+ 
+ VOID
++EFIAPI
+ RUNTIMEFUNCTION
+ RtCopyMem (
+     IN VOID     *Dest,
+-    IN CONST VOID     *Src,
++    IN VOID     *Src,
+     IN UINTN    len
+     );
+ 
+diff --git a/lib/runtime/efirtlib.c b/lib/runtime/efirtlib.c
+index 434db91..f7b6fba 100644
+--- a/lib/runtime/efirtlib.c
++++ b/lib/runtime/efirtlib.c
+@@ -42,6 +42,7 @@ RtZeroMem (
+ #pragma RUNTIME_CODE(RtSetMem)
+ #endif
+ VOID
++EFIAPI
+ RUNTIMEFUNCTION
+ RtSetMem (
+     IN VOID     *Buffer,
+@@ -61,10 +62,11 @@ RtSetMem (
+ #pragma RUNTIME_CODE(RtCopyMem)
+ #endif
+ VOID
++EFIAPI
+ RUNTIMEFUNCTION
+ RtCopyMem (
+     IN VOID        *Dest,
+-    IN CONST VOID  *Src,
++    IN VOID  *Src,
+     IN UINTN       len
+     )
+ {
+diff --git a/lib/runtime/rtstr.c b/lib/runtime/rtstr.c
+index 802e7f4..902e075 100644
+--- a/lib/runtime/rtstr.c
++++ b/lib/runtime/rtstr.c
+@@ -69,10 +69,13 @@ RtStrnCpy (
+     )
+ // copy strings
+ {
++    CHAR16 CopySrc = *Src;
++    CHAR16 *PCopySrc = &CopySrc;
++    
+     UINTN Size = RtStrnLen(Src, Len);
+     if (Size != Len)
+         RtSetMem(Dest + Size, (Len - Size) * sizeof(CHAR16), '\0');
+-    RtCopyMem(Dest, Src, Size * sizeof(CHAR16));
++    RtCopyMem(Dest, PCopySrc, Size * sizeof(CHAR16));
+ }
+ 
+ #ifndef __GNUC__
+@@ -105,10 +108,13 @@ RtStpnCpy (
+     )
+ // copy strings
+ {
++    CHAR16 CopySrc = *Src;
++    CHAR16 *PCopySrc = &CopySrc;
++    
+     UINTN Size = RtStrnLen(Src, Len);
+     if (Size != Len)
+         RtSetMem(Dest + Size, (Len - Size) * sizeof(CHAR16), '\0');
+-    RtCopyMem(Dest, Src, Size * sizeof(CHAR16));
++    RtCopyMem(Dest, PCopySrc, Size * sizeof(CHAR16));
+     return Dest + Size;
+ }
+ 
+@@ -137,10 +143,12 @@ RtStrnCat (
+     )
+ {
+     UINTN DestSize, Size;
++    CHAR16 CopySrc = *Src;
++    CHAR16 *PCopySrc = &CopySrc;
+ 
+     DestSize = RtStrLen(Dest);
+     Size = RtStrnLen(Src, Len);
+-    RtCopyMem(Dest + DestSize, Src, Size * sizeof(CHAR16));
++    RtCopyMem(Dest + DestSize, PCopySrc, Size * sizeof(CHAR16));
+     Dest[DestSize + Size] = '\0';
+ }
+ 
+diff --git a/lib/str.c b/lib/str.c
+index a2f8750..0752e06 100644
+--- a/lib/str.c
++++ b/lib/str.c
+@@ -201,11 +201,13 @@ StrDuplicate (
+ {
+     CHAR16      *Dest;
+     UINTN       Size;
++    CHAR16      CopySrc = *Src;
++    CHAR16      *PCopySrc = &CopySrc;
+ 
+     Size = StrSize(Src);
+     Dest = AllocatePool (Size);
+     if (Dest) {
+-        CopyMem (Dest, (void *)Src, Size);
++        CopyMem (Dest, PCopySrc, Size);
+     }
+     return Dest;
+ }
