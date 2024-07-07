@@ -22,6 +22,9 @@ def setup():
                           -DCMAKE_INSTALL_LIBDIR=lib \
                           -DWITH_PYTHONQT=OFF \
                           -DINSTALL_CONFIG=ON \
+                          -DWITH_QT6=ON \
+                          -DWITH_QT5=OFF \
+                          -DWITH_KF5DBus=OFF \
                           -DWITH_CRASHREPORTER=ON", \
                           sourceDir=".." )
     
