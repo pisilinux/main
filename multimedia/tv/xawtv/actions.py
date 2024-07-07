@@ -10,6 +10,10 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system('sed -i "s/sys_siglist\[termsig\]/strsignal(termsig)/" "x11/rootv.c"')
+    shelltools.system('sed -i "s/sys_siglist\[signal\]/strsignal(signal)/" "console/record.c"')
+    shelltools.system('sed -i "s/sys_siglist\[termsig\]/strsignal(termsig)/" "console/fbtools.c"')
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     shelltools.export("CFLAGS", "%s -Wno-pointer-sign %s" % (get.CFLAGS(), get.LDFLAGS()))
 
     autotools.autoreconf("-vfi")
