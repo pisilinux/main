@@ -13,12 +13,15 @@
         <IsA>library</IsA>
         <Summary>Graphical Boot Animation and Logger</Summary>
         <Description>plymouth provides an attractive graphical boot animation in place of the text messages that normally get shown. Text messages are instead redirected to a log file for viewing after boot.</Description>
-        <Archive sha1sum="2a68a69b674b643cd50c48685669bb0523aeb68b" type="tarxz">http://freedesktop.org/software/plymouth/releases/plymouth-22.02.122.tar.xz</Archive>
-        <Archive sha1sum="f12d053f015708646d0871332b4b9465e7b11cef" type="tarxz" target="plymouth-22.02.122/themes">https://sourceforge.net/projects/pisilinux/files/source/plymouth-theme-pisilinux-0.4.tar.xz</Archive>
+        <Archive sha1sum="3ea1d5b1f755122dc78b82a60c2f3d096668d92e" type="tarxz">https://freedesktop.org/software/plymouth/releases/plymouth-24.004.60.tar.xz</Archive>
+        <Archive sha1sum="f12d053f015708646d0871332b4b9465e7b11cef" type="tarxz" target="plymouth-24.004.60/themes">https://sourceforge.net/projects/pisilinux/files/source/plymouth-theme-pisilinux-0.4.tar.xz</Archive>
         <AdditionalFiles>
             <AdditionalFile permission="0755" target="generate-flist">pisilinux/generate-flist.py</AdditionalFile>
+            <AdditionalFile target="plymouth-pisilinux.png">pisilinux/images/white-head.png</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>xkeyboard-config</Dependency>
             <Dependency>docbook-xsl</Dependency>
             <Dependency>kernel-headers</Dependency>
             <Dependency>libdrm-devel</Dependency>
@@ -32,6 +35,7 @@
             <Dependency>gtk3-devel</Dependency>
             <Dependency>eudev-devel</Dependency>
             <Dependency>libxslt-devel</Dependency>
+            <Dependency>libevdev-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <!-- Pisi Linux patches-->
@@ -47,7 +51,7 @@
 <!--             <Patch level="1">fedora/fix-crash.patch</Patch> -->
 <!--             <Patch level="1">mageia/1001-device_manager-ignore-drm-devices-when-kernel-modese.patch</Patch> -->
             <Patch level="1">mageia/1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch</Patch>
-            <Patch level="1">pisilinux/pisilinux.patch</Patch>
+            <Patch level="1">pisilinux/pisilinux-meson.patch</Patch>
         </Patches>
     </Source>
 
@@ -56,7 +60,7 @@
         <RuntimeDependencies>
             <Dependency>eudev</Dependency>
             <Dependency>libdrm</Dependency>
-            <Dependency>plymouth-core-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
             <Dependency>plymouth-theme-pisilinux</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -102,9 +106,14 @@
         <Name>plymouth-core-libs</Name>
         <Summary>Plymouth core libraries</Summary>
         <Description>plymouth-core-libs contains the libply and libply-splash-core libraries used by Plymouth.</Description>
+        <RuntimeDependencies>
+            <Dependency>eudev</Dependency>
+            <Dependency>libevdev</Dependency>
+            <Dependency>libxkbcommon</Dependency>
+        </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/lib/libply-splash-core.so*</Path>
-            <Path fileType="library">/lib/libply.so*</Path>
+            <Path fileType="library">/usr/lib/libply-splash-core.so*</Path>
+            <Path fileType="library">/usr/lib/libply.so*</Path>
         </Files>
     </Package>
 
@@ -115,6 +124,7 @@
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
             <Dependency>libpng</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libply-splash-graphics.so*</Path>
@@ -125,6 +135,11 @@
         <Name>plymouth-devel</Name>
         <Summary>Development headers and files for plymouth</Summary>
         <RuntimeDependencies>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>libevdev-devel</Dependency>
+            <Dependency>xkeyboard-config</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
             <Dependency release="current">plymouth</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -138,12 +153,14 @@
         <Summary>An X11 renderer for debugging purposes</Summary>
         <RuntimeDependencies>
             <Dependency>cairo</Dependency>
-            <Dependency>gtk2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>glib2</Dependency>
             <Dependency>atk</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>pango</Dependency>
             <Dependency>gdk-pixbuf</Dependency>
             <Dependency>fontconfig</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/plymouth/renderers/x11*</Path>
@@ -173,10 +190,13 @@
             <Dependency>pango</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>harfbuzz</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency release="current">plymouth-graphics-libs</Dependency>
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/plymouth/label.so</Path>
+            <Path fileType="library">/usr/lib/plymouth/label-pango.so</Path>
+            <Path fileType="library">/usr/lib/plymouth/label-freetype.so</Path>
         </Files>
     </Package>
 
@@ -186,7 +206,7 @@
         <Description>plymouth-plugin-fade-throbber contains the "Fade-In" boot splash plugin for Plymouth. It features a centered image that fades in and out while other images pulsate around during system boot up.</Description>
         <RuntimeDependencies>
             <Dependency release="current">plymouth-graphics-libs</Dependency>
-<!--             <Dependency release="current">plymouth-core-libs</Dependency> -->
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/plymouth/fade-throbber.so</Path>
@@ -249,7 +269,7 @@
         <RuntimeDependencies>
             <Dependency release="current">plymouth-plugin-label</Dependency>
             <Dependency release="current">plymouth-graphics-libs</Dependency>
-<!--             <Dependency release="current">plymouth-core-libs</Dependency> -->
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/plymouth/space-flares.so</Path>
@@ -273,9 +293,9 @@
         <Summary>Plymouth Two-Step plugin</Summary>
         <Description>plymouth-plugin-two-step contains the "two-step" boot splash plugin for Plymouth. It features a two phased boot process that starts with a progressing animation synced to boot time and finishes with a short, fast one-shot animation.</Description>
         <RuntimeDependencies>
-            <Dependency release="current">plymouth-plugin-label</Dependency>
+<!--             <Dependency release="current">plymouth-plugin-label</Dependency> -->
             <Dependency release="current">plymouth-graphics-libs</Dependency>
-<!--             <Dependency release="current">plymouth-core-libs</Dependency> -->
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/plymouth/two-step.so</Path>
@@ -300,7 +320,7 @@
         <Description>plymouth-plugin-script contains "script" boot splash plugin for Plymouth. It features an extensible, scriptable boot splash language that simplifies the process of designing custom boot splash themes.</Description>
         <RuntimeDependencies>
             <Dependency release="current">plymouth-graphics-libs</Dependency>
-<!--             <Dependency release="current">plymouth-core-libs</Dependency> -->
+            <Dependency release="current">plymouth-core-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/plymouth/script.so</Path>
@@ -332,6 +352,13 @@
     </Package>
 
     <History>
+        <Update release="13">
+            <Date>2024-07-07</Date>
+            <Version>24.004.60</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="12">
             <Date>2022-08-07</Date>
             <Version>22.02.122</Version>
