@@ -20,7 +20,7 @@ def setup():
                        --disable-nls \
                        --with-system-readline \
                        --enable-source-highlight \
-                       --with-python=/usr/bin/python \
+                       --with-python=/usr/bin/python3 \
                        --with-gdb-datadir=/usr/share/gdb \
                        --with-system-gdbinit=/etc/gdb/gdbinit \
                        --with-separate-debug-dir=/usr/lib/debug")
@@ -34,14 +34,15 @@ def install():
     autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
 
     # to prevent conflict with binutils delete these files:
-    for libdel in ["libbfd.a", "libopcodes.a", "libctf.a", "libctf-nobfd.a"]:
+    for libdel in ["libbfd.a", "libopcodes.a", "libctf.a", "libctf-nobfd.a", "libsframe.a"]:
         pisitools.remove("/usr/lib/%s" % libdel)
 
-    for hea in ["ansidecl", "bfd", "bfdlink", "diagnostics", "dis-asm", "plugin-api", "symcat", "ctf", "ctf-api"]:
+    for hea in ["ansidecl", "bfd", "bfdlink", "diagnostics", "dis-asm", "plugin-api", "symcat", "ctf", "ctf-api", "sframe-api", "sframe"]:
         pisitools.remove("/usr/include/%s.h" % hea)
 
     pisitools.remove("/usr/share/info/bfd.info")
     pisitools.remove("/usr/share/info/ctf-spec.info")
+    pisitools.remove("/usr/share/info/sframe-spec.info")
 
     shelltools.cd("..")
     pisitools.dodoc("README*", "COPYING*", "ChangeLog*")
