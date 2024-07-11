@@ -10,16 +10,17 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
+    pisitools.dosed("Make.defaults", "grub.efi", "grubx64.efi")
     shelltools.system("sed -e '/extern int efi_set_verbose/d' -i src/efibootmgr.c")
 
     shelltools.export("CFLAGS", "-Os")
-    autotools.make("EFIDIR=pisilinux EFI_LOADER=grubx64.efi")
+    autotools.make("EFIDIR=pisilinux sbindir=/usr/sbin EFI_LOADER=grubx64.efi")
 
 def install():
-    shelltools.makedirs("%s/usr/sbin" % get.installDIR())
-    shelltools.makedirs("%s/usr/share/man" % get.installDIR())
-    shelltools.makedirs("%s/usr/include" % get.installDIR())
+    # shelltools.makedirs("%s/usr/sbin" % get.installDIR())
+    # shelltools.makedirs("%s/usr/share/man" % get.installDIR())
+    # shelltools.makedirs("%s/usr/include" % get.installDIR())
     
-    autotools.rawInstall("EFIDIR=pisilinux DESTDIR=%s" % get.installDIR())
-    pisitools.insinto("/usr/share/man", "src/*.8")
+    autotools.rawInstall("EFIDIR=pisilinux sbindir=/usr/sbin DESTDIR=%s" % get.installDIR())
+    # pisitools.insinto("/usr/share/man", "src/*.8")
     pisitools.insinto("/usr/include", "src/include/*.h")
