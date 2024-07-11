@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
+    pisitools.dosed("Make.defaults", "lib64", "lib")
     pisitools.dosed("Make.defaults", "grub.efi", "grubx64.efi")
     shelltools.system("sed -e '/extern int efi_set_verbose/d' -i src/efibootmgr.c")
 
