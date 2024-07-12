@@ -30,7 +30,7 @@ def config_layout():
     htdocsdir:       /var/www/localhost/htdocs
     cgidir:          /var/www/localhost/cgi-bin
     manualdir:       /usr/share/doc/version/manual
-    sysconfdir:      /etc/apache2
+    sysconfdir:      /etc/httpd/conf
     localstatedir:   /var
     runtimedir:      /run
     logfiledir:      /var/log/apache2
@@ -125,7 +125,7 @@ def install():
                     "my $envvars = \"$installbuilddir/envvars\";")
 
     # Clean-up
-    pisitools.remove("/etc/apache2/*")
+    # pisitools.remove("/etc/apache2/*")
     pisitools.remove("/var/www/localhost/htdocs/*")
 
     # Add conf.d for 3rd party configuration files
