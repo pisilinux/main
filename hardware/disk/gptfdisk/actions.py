@@ -13,14 +13,17 @@ def build():
     autotools.make()
 
 def install():
-    pisitools.dobin("cgdisk")
-    pisitools.dobin("fixparts")
-    pisitools.dobin("gdisk")
-    pisitools.dobin("sgdisk")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # pisitools.dobin("cgdisk")
+    # pisitools.dobin("fixparts")
+    # pisitools.dobin("gdisk")
+    # pisitools.dobin("sgdisk")
 
-    pisitools.doman("cgdisk.8")
-    pisitools.doman("fixparts.8")
-    pisitools.doman("gdisk.8")
-    pisitools.doman("sgdisk.8")
+    # pisitools.doman("cgdisk.8")
+    # pisitools.doman("fixparts.8")
+    # pisitools.doman("gdisk.8")
+    # pisitools.doman("sgdisk.8")
+    for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
+        pisitools.dosym("/usr/bin/%s" % bin, "/usr/sbin/%s" % bin)
 
     pisitools.dodoc("COPYING", "NEWS", "README")
