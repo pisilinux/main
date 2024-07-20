@@ -19,10 +19,10 @@ def build():
     shelltools.cd("containerd")
     shelltools.move("vendor", "src")
     
-    shelltools.makedirs("src/github.com/containerd")
-    shelltools.system("ln -rsf %s/containerd*  src/github.com/containerd" % get.workDIR())
+    # shelltools.makedirs("src/github.com/containerd")
+    # shelltools.system("ln -rsf %s/containerd*  src/github.com/containerd" % get.workDIR())
 
-    shelltools.cd("src/github.com/containerd/containerd")
+    # shelltools.cd("src/github.com/containerd/containerd")
     
     #shelltools.system("LDFLAGS= GOPATH=%s make GIT_COMMIT=72cec4b" % get.curDIR())
 
