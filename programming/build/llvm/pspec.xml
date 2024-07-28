@@ -11,9 +11,13 @@
         <License>NCSA</License>
         <Summary>The Low Level Virtual Machine</Summary>
         <Description>The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines, though it does provide helpful libraries that can be used to build them.</Description>
-       <Archive sha1sum="92eaedd6f1dde08751441afcd0a3d0fbfdf95d42" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.6/llvm-project-16.0.6.src.tar.xz</Archive>
+       <Archive sha1sum="6ae58ac6b089c4d2f6110b7d31c5e2168e5226d4" type="tarxz">https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/llvm-project-18.1.8.src.tar.xz</Archive>
+       <AdditionalFiles>
+           <AdditionalFile target="46505b3cbfc5.patch">46505b3cbfc5.patch</AdditionalFile>
+       </AdditionalFiles>
        <BuildDependencies>
             <Dependency>ninja</Dependency>
+            <Dependency>zstd-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
@@ -36,7 +40,7 @@
             <AdditionalFile owner="root" permission="0644" target="../support-linking-ScopPassManager-against-LLVM-dylib.patch">support-linking-ScopPassManager-against-LLVM-dylib.patch</AdditionalFile>
         </AdditionalFiles>-->
         <Patches>
-<!--             <Patch level="2">don-t-move-DBG_VALUE-instructions.patch</Patch> -->
+<!--             <Patch level="2">46505b3cbfc5.patch</Patch> -->
 <!--             <Patch level="2">0001-XFAIL-missing-abstract-variable.ll-test-on-ppc64le.patch</Patch> -->
         </Patches>
     </Source>
@@ -48,6 +52,7 @@
         <RuntimeDependencies>
             <Dependency release="current">llvm-libs</Dependency>
             <Dependency>zlib</Dependency>
+            <Dependency>zstd</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>llvm-polly</Dependency>
@@ -146,7 +151,7 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/libLLVM*.so</Path>
-            <Path fileType="library">/usr/lib/libLLVM*.so.16*</Path>
+            <Path fileType="library">/usr/lib/libLLVM*.so.18*</Path>
             <Path fileType="library">/usr/lib/LLVMgold.*</Path>
             <Path fileType="library">/usr/lib/libLTO.*</Path>
             <Path fileType="library">/usr/lib/libRemarks.so*</Path>
@@ -266,11 +271,11 @@
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/clang/16/lib/linux/*.so</Path>
-            <Path fileType="library">/usr/lib/clang/16/lib/i386-pc-linux-gnu/*.so</Path>
-            <Path fileType="library">/usr/lib/clang/16/lib/i386-pc-linux-gnu/*.a</Path>
-            <Path fileType="library">/usr/lib/clang/16/lib/x86_64-pc-linux-gnu/*.so</Path>
-            <Path fileType="library">/usr/lib/clang/16/lib/x86_64-pc-linux-gnu/*.a</Path>
+            <Path fileType="library">/usr/lib/clang/18/lib/linux/*.so</Path>
+            <Path fileType="library">/usr/lib/clang/18/lib/i386-pc-linux-gnu/*.so</Path>
+            <Path fileType="library">/usr/lib/clang/18/lib/i386-pc-linux-gnu/*.a</Path>
+            <Path fileType="library">/usr/lib/clang/18/lib/x86_64-pc-linux-gnu/*.so</Path>
+            <Path fileType="library">/usr/lib/clang/18/lib/x86_64-pc-linux-gnu/*.a</Path>
         </Files>
     </Package>
 
@@ -334,7 +339,7 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/clang</Path>
-            <Path fileType="header">/usr/lib/clang/16.0.6/include</Path>
+            <Path fileType="header">/usr/lib/clang/18.1.8/include</Path>
             <Path fileType="header">/usr/include/clang-c</Path>
             <Path fileType="header">/usr/include/clang-tidy</Path>
         </Files>
@@ -413,6 +418,13 @@
     </Package>
 
     <History>
+        <Update release="25">
+            <Date>2024-07-27</Date>
+            <Version>18.1.8</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="24">
             <Date>2023-10-20</Date>
             <Version>16.0.6</Version>

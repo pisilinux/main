@@ -57,6 +57,7 @@ def setup():
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
+        shelltools.system("sed '/^diff.*inline-asm-memop.ll/,$d' 46505b3cbfc5.patch | patch -Np2")
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
@@ -72,6 +73,7 @@ def setup():
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
+                     -DLLVM_ENABLE_ZSTD:STRING=OFF \
                      -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu'"
     
     
@@ -102,7 +104,7 @@ def install():
     #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
-    if get.buildTYPE() == "emul32":        
+    if get.buildTYPE() == "emul32":
         pisitools.domove("/emul32/lib32/", "/usr/")
         pisitools.insinto("/usr/include/llvm/Config/","%s/emul32/include/llvm/Config/llvm-config.h" % get.installDIR(),"llvm-config-32.h")
         pisitools.insinto("/usr/bin/","%s/emul32/bin/llvm-config" % get.installDIR(),"llvm-config-32")
