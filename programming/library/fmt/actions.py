@@ -8,7 +8,7 @@ from pisi.actionsapi import cmaketools, pisitools, get
 
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib -L \
-                                        -DBUILD_SHARED_LIBS=ON")
+                          -DBUILD_SHARED_LIBS=ON")
 
 def build():
     cmaketools.make()
@@ -16,4 +16,4 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog.rst")
+    # pisitools.dodoc("ChangeLog.rst")
