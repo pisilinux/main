@@ -13,13 +13,15 @@
         <IsA>library</IsA>
         <Summary>Google's data interchange format</Summary>
         <Description>Protocol Buffers are a way of encoding structured data in an efficient yet extensible format. Google uses Protocol Buffers for almost all of its internal RPC protocols and file formats.</Description>
-        <Archive sha1sum="7aec582dff3ab784ca7d2a2c99e59c64e8866fb5" type="targz" name="protobuf-3.21.12.tar.gz">https://github.com/protocolbuffers/protobuf/archive/v3.21.12.tar.gz</Archive>
+        <Archive sha1sum="45804be54bbc5716e99df20d0b53f5cca626977f" type="targz" name="protobuf-3.25.4.tar.gz">https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.25.4.tar.gz</Archive>
         <BuildDependencies>
+            <Dependency>cmake</Dependency>
             <Dependency>python-wheel</Dependency>
             <Dependency>python-devel</Dependency>
             <Dependency>python3-devel</Dependency>
             <Dependency>python-setuptools</Dependency>
             <Dependency>python3-setuptools</Dependency>
+            <Dependency>abseil-cpp-devel</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -29,6 +31,7 @@
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>abseil-cpp</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="doc">/usr/share/doc</Path>
@@ -36,6 +39,8 @@
             <Path fileType="data">/usr/share/vim</Path>
             <Path fileType="data">/usr/share/emacs</Path>
             <Path fileType="library">/usr/lib/libproto*</Path>
+            <Path fileType="library">/usr/lib/libutf8_range.a</Path>
+            <Path fileType="library">/usr/lib/libutf8_validity.a</Path>
         </Files>
     </Package>
 
@@ -44,14 +49,17 @@
         <Summary>Development files for protobuf</Summary>
         <RuntimeDependencies>
             <Dependency release="current">protobuf</Dependency>
+            <Dependency>abseil-cpp-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="library">/usr/lib/cmake</Path>
+            <Path fileType="header">/usr/include</Path>
             <Path fileType="header">/usr/include/google/protobuf</Path>
         </Files>
     </Package>
 
-    <Package>
+    <!--Package>
         <Name>python-protobuf</Name>
         <Summary>Python 2 bindings for Google Protocol Buffers</Summary>
         <RuntimeDependencies>
@@ -61,7 +69,7 @@
         <Files>
             <Path fileType="library">/usr/lib/python2*</Path>
         </Files>
-    </Package>
+    </Package-->
 
     <Package>
         <Name>python3-protobuf</Name>
@@ -77,6 +85,13 @@
     </Package>
 
     <History>
+        <Update release="20">
+            <Date>2024-07-27</Date>
+            <Version>3.25.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="19">
             <Date>2023-11-04</Date>
             <Version>3.21.12</Version>
