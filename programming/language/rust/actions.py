@@ -36,21 +36,21 @@ def build():
     pisitools.dosed("config.toml", "/usr/bin/cargo", RustcDir+"/bin/cargo")
     pisitools.dosed("config.toml", "/usr/bin/rustc", RustcDir+"/bin/rustc")
     ####################################################
-    
+
     shelltools.export("LC_ALL", "en_US.UTF-8")
     shelltools.export("RUST_BACKTRACE", "1")
     shelltools.system("python3 ./x.py build")
-    
+
 
 def install():
     # shelltools.export("RUST_BACKTRACE", "1")
     shelltools.system("DESTDIR=%s python3 ./x.py install" % get.installDIR())
-    
+
     # pisitools.remove("/usr/bin/*.old")
     #pisitools.insinto("/", "build/x86_64-unknown-linux-gnu/stage0/etc")
     #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/bin")
     #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/lib")
     #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/share")
     #pisitools.insinto("/usr", "build/x86_64-unknown-linux-gnu/stage0/manifest.in")
-        
+
     #pisitools.dodoc("LICENSE","AUTHORS","README*")
