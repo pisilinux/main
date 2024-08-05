@@ -23,7 +23,7 @@ def install():
     mesontools.install()
 
     # lfs
-    shelltools.system("sed -e 's@^Exec=@&/usr/bin/dbus-run-session @' \
-        -i %s/usr/share/wayland-sessions/gnome-wayland.desktop" % get.installDIR())
+    # shelltools.system("sed -e 's@^Exec=@&/usr/bin/dbus-run-session @' \
+        # -i %s/usr/share/wayland-sessions/gnome-wayland.desktop" % get.installDIR())
     pisitools.removeDir("/tmp")
     #shelltools.system("rm -rv %s/tmp/{*.d,*.target,*.service}" % get.installDIR())
