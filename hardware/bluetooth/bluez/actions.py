@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def setup():
     # pisitools.dosed("configure.ac", "rst2man", "rst2man_3")
     #shelltools.system("sed -i -e '/SystemdService/d' obexd/src/org.bluez.obex.service.in")
-    pisitools.dosed("obexd/src/org.bluez.obex.service.in", "SystemdService", deleteLine=True)
+    # pisitools.dosed("obexd/src/org.bluez.obex.service.in", "SystemdService", deleteLine=True)
+    # pisitools.dosed("obexd/src/dbus-org.bluez.service.in", "SystemdService", deleteLine=True)
     autotools.autoreconf("-fiv")
     autotools.configure("--localstatedir=/var \
                          --enable-sixaxis \
