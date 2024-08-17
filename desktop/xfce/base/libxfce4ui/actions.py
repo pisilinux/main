@@ -12,6 +12,7 @@ i = "--with-vendor-info='Pisi Linux' \
      --enable-vala=yes \
      --enable-introspection \
      --enable-startup-notification \
+     --enable-wayland \
      --disable-static \
     "
 
