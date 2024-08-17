@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 i = "--disable-dependency-tracking \
      --disable-clutter \
+     --enable-wayland \
      --enable-tray-plugin \
      --enable-notify-plugin \
      --enable-mpris2-plugin \
