@@ -12,8 +12,9 @@ pisitools.cflags.add("-Wno-deprecated-declarations")
 
 def setup():
     autotools.configure("--enable-dbus-start-daemon \
-    --enable-old-get-server-information-signature \
-    --enable-old-notification-closed-signature")
+                         --enable-wayland \
+                         --enable-old-get-server-information-signature \
+                         --enable-old-notification-closed-signature")
 
 def build():
     autotools.make()

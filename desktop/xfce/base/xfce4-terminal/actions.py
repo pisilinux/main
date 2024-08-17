@@ -13,7 +13,7 @@ def setup():
     pisitools.cflags.add("-Wno-deprecated-declarations")
     #autotools.autoreconf("-fiv")
     # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure("--disable-static")
+    autotools.configure("--enable-wayland --disable-static")
 
 def build():
     autotools.make()
