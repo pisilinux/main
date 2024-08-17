@@ -9,7 +9,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-static --enable-notifications")
+    autotools.configure("--disable-static \
+                         --enable-wayland \
+                         --enable-notifications")
 
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
 
