@@ -9,7 +9,11 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--prefix=/usr --disable-dependency-tracking")
+    autotools.configure("--prefix=/usr \
+                         --enable-wayland \
+                         --disable-dependency-tracking")
+
+
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
