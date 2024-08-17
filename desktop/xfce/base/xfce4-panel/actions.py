@@ -13,6 +13,7 @@ i = "--enable-introspection  \
      --enable-gio-unix  \
      --enable-vala=yes \
      --disable-debug  \
+     --enable-wayland \
      --disable-static \
     "
 
