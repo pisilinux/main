@@ -18,6 +18,7 @@ i = "--enable-xorg-libinput \
      --enable-xrandr \
      --disable-pluggable-dialogs \
      --disable-sound-settings \
+     --enable-wayland \
      --disable-static \
     "
 
