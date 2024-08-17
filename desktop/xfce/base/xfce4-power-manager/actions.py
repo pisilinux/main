@@ -9,7 +9,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--enable-network-manager --enable-polkit")
+    autotools.configure("--enable-network-manager \
+                         --enable-wayland \
+                         --enable-polkit")
 
 def build():
     autotools.make()
