@@ -1,29 +1,28 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools, shelltools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
+l = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCATCH_ENABLE_WERROR=ON',
+    ' -DEXPECTED_BUILD_PACKAGE_DEB=OFF '
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    cmaketools.configure('-B build')
-
+    cmaketools.configure(l)
 
 def build():
-    shelltools.cd('build')
-    cmaketools.make()
-
+    mesontools.build()
 
 def check():
-    shelltools.cd('build')
-    shelltools.system('./tests')
-
+    mesontools.build("test")
 
 def install():
-    shelltools.cd('build')
-    cmaketools.install()
+    mesontools.install()
 
-    pisitools.dodoc('../COPYING')
+    pisitools.dodoc("COPYING")
