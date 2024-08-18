@@ -1,37 +1,26 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools, cmaketools, shelltools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools
 
+l = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DBUILD_SHARED_LIBS=1',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    parameters = ' '.join([
-        '-B build',
-        '-DCMAKE_INSTALL_LIBDIR=lib',
-        '-DCATCH_USE_VALGRIND=OFF',
-        '-DCATCH_BUILD_EXAMPLES=OFF',
-        '-DCATCH_ENABLE_COVERAGE=OFF',
-        '-DCATCH_ENABLE_WERROR=OFF',
-        '-DBUILD_TESTING=ON'
-    ])
-    cmaketools.configure(parameters)
-
+    cmaketools.configure(l)
 
 def build():
-    shelltools.cd('build')
-    autotools.make()
-
+    mesontools.build()
 
 def check():
-    shelltools.cd('build')
-    autotools.make('test')
-
+    pass
 
 def install():
-    shelltools.cd('build')
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
