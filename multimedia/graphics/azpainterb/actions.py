@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+	pisitools.ldflags.add(" -lz")
 	autotools.rawConfigure("--prefix=/usr")
 
 def build():
