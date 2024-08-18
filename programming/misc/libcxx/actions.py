@@ -50,13 +50,17 @@ def setup():
                              -DLIBCXX_HAS_PTHREAD_API=ON \
                              -DLIBUNWIND_ENABLE_SHARED=ON \
                              -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON \
-                             -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
                              -DLIBCXX_ENABLE_SHARED=ON \
                              -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=TRUE \
                              -DCXX_SUPPORTS_CXX11=TRUE \
                              -DLIBCXX_ENABLE_STATIC=ON \
                              -DLIBUNWIND_TARGET_TRIPLE=%s \
                             " % triple
+    if get.buildTYPE() == "emul32":
+        options += " -DLIBCXXABI_USE_LLVM_UNWINDER=OFF"
+
+    else:
+        options += " -DLIBCXXABI_USE_LLVM_UNWINDER=ON"
        
     # shelltools.system("ln -s %s/%s/libcxx llvm/projects/libcxx" %(get.workDIR(), WorkDir))
     # shelltools.system("ln -s %s/%s/libcxxabi llvm/projects/libcxxabi" %(get.workDIR(), WorkDir))
