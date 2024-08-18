@@ -74,6 +74,7 @@ def setup():
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
                      -DLLVM_ENABLE_ZSTD:STRING=OFF \
+                     -DCLANG_DEFAULT_PIE_ON_LINUX=ON \
                      -DLLVM_DEFAULT_TARGET_TRIPLE='i686-pc-linux-gnu'"
     
     
