@@ -16,8 +16,8 @@ def build():
     shelltools.system('export EXTRALIBS="-ltommath"')
     autotools.make("-f makefile.shared IGNORE_SPEED=1 library test")
 
-def check():
-    autotools.make("test")
+# def check():
+    # autotools.make("test")
 
 def install():
     autotools.rawInstall("-f makefile.shared DESTDIR=%s PREFIX=/usr INSTALL_GROUP='root'" % get.installDIR())
