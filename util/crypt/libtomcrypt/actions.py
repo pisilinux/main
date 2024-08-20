@@ -12,10 +12,14 @@ from pisi.actionsapi import get
 
 def build():
     shelltools.export("CXXFLAGS", "%s -fPIC" % get.CXXFLAGS())
-    shelltools.export("CFLAGS", "%s -fPIC" % get.CFLAGS())
-    autotools.make()
+    shelltools.export("CFLAGS", "%s -DLTM_DESC -DUSE_LTM  -fPIC" % get.CFLAGS())
+    shelltools.system('export EXTRALIBS="-ltommath"')
+    autotools.make("-f makefile.shared IGNORE_SPEED=1 library test")
+
+def check():
+    autotools.make("test")
 
 def install():
-    autotools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("-f makefile.shared DESTDIR=%s PREFIX=/usr INSTALL_GROUP='root'" % get.installDIR())
     pisitools.dodoc("LICENSE", "README.md")
 
