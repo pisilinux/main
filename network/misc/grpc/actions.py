@@ -10,8 +10,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("ln -rsf googletest-release-1.12.1/googlemock  third_party/googletest/googlemock")
-    shelltools.system("ln -rsf googletest-release-1.12.1/googletest  third_party/googletest/googletest")
+    shelltools.system("ln -rsf googletest-release-1.15.2/googlemock  third_party/googletest/googlemock")
+    shelltools.system("ln -rsf googletest-release-1.15.2/googletest  third_party/googletest/googletest")
 
     shelltools.makedirs("build")
     shelltools.cd("build")
