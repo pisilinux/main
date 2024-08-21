@@ -6,8 +6,8 @@
 
 from pisi.actionsapi import pythonmodules as py3, shelltools, get
 
-t = "dist/importlib_metadata-5.0.0-py3-none-any.whl"
-shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION", "5.0.0")
+t = "dist/importlib_metadata-7.2.1-py3-none-any.whl"
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION", "7.2.1")
 
 def build():
     py3.run("-m build", pyVer = '3')
