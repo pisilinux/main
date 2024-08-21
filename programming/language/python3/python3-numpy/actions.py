@@ -7,20 +7,21 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 
 WorkDir = "numpy-%s" % get.srcVERSION()
 
 shelltools.export("ATLAS", "None")
 shelltools.export("PTATLAS", "None")
+shelltools.export("Cython", "/usr/bin/cython3")
 # fix unused direct dependency analysis
 shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install()
     pisitools.dodoc("LICENSE.txt")
 
     for dirs in ["doc"]:
