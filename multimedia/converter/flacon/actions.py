@@ -7,7 +7,7 @@
 from pisi.actionsapi import cmaketools, pisitools, get
 
 def setup():
-    cmaketools.configure()
+    cmaketools.configure("-DUSE_QT6=1")
 
 def build():
     cmaketools.make()
