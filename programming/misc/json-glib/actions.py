@@ -12,7 +12,7 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-    options = "-Dgtk_doc=disabled \
+    options = "-Dgtk_doc=disabled -Dinstalled_tests=false \
               "
                
     if get.buildTYPE() == "_emul32":
@@ -43,7 +43,7 @@ def install():
     
     if get.buildTYPE() == "_emul32":
         pisitools.removeDir("usr/lib32/bin")
-        pisitools.removeDir("usr/lib32/libexec")
+        # pisitools.removeDir("usr/lib32/libexec")
         pisitools.removeDir("usr/lib32/share")
         #pisitools.removeDir("usr/libexec")
         
