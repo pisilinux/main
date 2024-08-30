@@ -36,13 +36,14 @@ def setup():
                -Dlibunwind=disabled \
                -Dbuild-tests=false \
                -Dosmesa=true \
-               -Dgallium-opencl=icd \
               " % (libdir)
 
     if get.buildTYPE() == "emul32":
+        # shelltools.export("LDFLAGS", "%s -L/usr/lib32"  % get.LDFLAGS())
+        # shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
         options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled \
                      -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio \
-                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink \
+                     -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink \
                    "
         #shelltools.export("CC", "clang -m32")
         #shelltools.export("CXX", "clang++ -m32")
@@ -57,11 +58,11 @@ def setup():
         #shelltools.export("CXX", "clang++")
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
-        options += " -Dgallium-omx=bellagio -Dlmsensors=enabled -Dzstd=enabled \
+        options += " -Dgallium-omx=bellagio -Dgallium-opencl=icd -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
-                             -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio,nouveau \
-                             -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,swrast,virgl,crocus,zink,d3d12"
+                             -Dvulkan-drivers=amd,intel,intel_hasvk,nouveau,swrast,virtio \
+                             -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
     mesontools.configure(options)
