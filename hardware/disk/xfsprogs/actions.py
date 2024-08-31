@@ -36,4 +36,4 @@ def install():
     #pisitools.dosym("/lib/libhandle.so.1", "/usr/lib/libhandle.so")
 
     # Set +x bit for the library
-    shelltools.chmod("%s/lib/libhandle.so.*.*.*" % get.installDIR(), 0755)
+    shelltools.chmod("%s/usr/lib/libhandle.so.*.*.*" % get.installDIR(), 0755)
