@@ -11,6 +11,8 @@ j = ''.join([
     ' -DCMAKE_BUILD_TYPE=RelWithDebInfo',
     ' -DUSE_SYSTEM_TAGLIB=ON',
     ' -DUSE_SYSTEM_PROJECTM=ON',
+    ' -DCMAKE_CXX_FLAGS="-fpermissive"',
+    ' -DCMAKE_CXX_STANDARD=17',
     ' -B_build -G Ninja -L '
     ])
 
