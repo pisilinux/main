@@ -10,11 +10,12 @@ from pisi.actionsapi import get
 
 i = ''.join([
     ' -DBUILD_SHARED_LIBS=ON',
-    ' -DWITH_ZLIB=ON -L '
+    ' -DWITH_ZLIB=ON -L ' ,
+    ' -DCMAKE_CXX_FLAGS="%s -DNDEBUG"'
     ])
 
 def setup():
-    cmaketools.configure(i)
+    cmaketools.configure(i % get.CXXFLAGS())
 
 def build():
     cmaketools.make()
