@@ -27,3 +27,24 @@ Section "InputClass"
     ${COMMENT_OPTIONS}Option          "xkb_options"   "$OPTIONS"
 EndSection
 EOF
+
+# We have KDE by default so we should set up the
+# layout for that during installation from YALI.
+#
+# Other desktops can be configured by the user
+# themselves (considering they would have enough
+# knowledge to browse through repos by then and
+# find the package for the DE they need) or by
+# those who want to make their own forks based
+# on Pisi.
+#
+# TODO: Track changes on GNOME and Wayland to
+# see if they come up with a global configuration
+# system like Xorg and tweak this up accordingly.
+#
+# FIXME: This is way too basic and prone to errors
+# pretty much all the time!
+cat << EOF > $ROOT/etc/skel/.config/kxkbrc
+[Layout]
+LayoutList=$LAYOUT
+EOF
