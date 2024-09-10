@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>GIO-style async APIs for most Flatpak portals.</Summary>
         <Description>GIO-style async APIs for most Flatpak portals.</Description>
-        <Archive sha1sum="fd9003fcbf8747d08c62e74ae213ba547d60d64e" >https://github.com/flatpak/libportal/releases/download/0.7.1/libportal-0.7.1.tar.xz</Archive>
+        <Archive sha1sum="3ecf21ee87d980d36bcb6df1893caf864571b8e3" >https://github.com/flatpak/libportal/releases/download/0.8.1/libportal-0.8.1.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>glib2-devel</Dependency>
             <Dependency>git</Dependency>
@@ -21,6 +21,7 @@
             <Dependency>vala</Dependency>
             <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk4-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
             <Dependency>qt5-base-devel</Dependency>
             <Dependency>qt5-x11extras-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
@@ -38,6 +39,7 @@
             <Dependency>gtk3</Dependency>
             <Dependency>gtk4</Dependency>
             <Dependency>qt5-base</Dependency>
+            <Dependency>qt6-base</Dependency>
             <Dependency>qt5-x11extras</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -54,11 +56,36 @@
     </Package>
 
     <Package>
+        <Name>libportal-qt6</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>qt6-base</Dependency>
+            <Dependency>libportal</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libportal-qt6.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
         <Name>libportal-docs</Name>
         <IsA>data:doc</IsA>
         <Summary>libportal reference documents</Summary>
         <Files>
             <Path fileType="doc">/usr/share/doc/libportal-1</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libportal-qt5</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>qt5-base</Dependency>
+            <Dependency>libportal</Dependency>
+            <Dependency>qt5-x11extras</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libportal-qt5.so*</Path>
         </Files>
     </Package>
 
@@ -70,6 +97,7 @@
             <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk4-devel</Dependency>
             <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
             <Dependency>qt5-x11extras-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
         </RuntimeDependencies>
@@ -80,7 +108,45 @@
         </Files>
     </Package>
 
+    <Package>
+        <Name>libportal-qt6-devel</Name>
+        <Summary>Development files for libportal</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libportal-qt6</Dependency>
+            <Dependency>libportal-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/libportal-qt6</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/libportal-qt6.pc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libportal-qt5-devel</Name>
+        <Summary>Development files for libportal</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libportal-qt5</Dependency>
+            <Dependency>libportal-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt5-x11extras-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/libportal-qt5</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/libportal-qt5.pc</Path>
+        </Files>
+    </Package>
+
     <History>
+        <Update release="4">
+            <Date>2024-09-05</Date>
+            <Version>0.8.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2024-05-06</Date>
             <Version>0.7.1</Version>
