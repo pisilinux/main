@@ -6,8 +6,11 @@
 
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
+
 
 def setup():
+    pisitools.dosed("meson.build", "47.beta", "47")
     mesontools.configure("-Degl_device=true \
                           -Dwayland_eglstream=true \
                           -Dudev=true \
