@@ -24,6 +24,7 @@ def setup():
     shelltools.export("CFLAGS", "-I/usr/include/samba-4.0")
     shelltools.export("CPPFLAGS", "-I/usr/include/samba-4.0")
     shelltools.export("CXXFLAGS", "-I/usr/include/samba-4.0 -std=c++11")
+    shelltools.export("PKG_CONFIG_PATH", "/usr/lib/ffmpeg4.4/pkgconfig")
     shelltools.export("LUAC", "/usr/bin/luac")
     shelltools.export("LUA_LIBS", "$(pkg-config --libs lua)")
     shelltools.export("RCC", "/usr/bin/rcc")
@@ -127,9 +128,11 @@ def setup():
                             --enable-x264 \
                             --enable-x265 \
                             --enable-aribsub \
-                            --enable-freerdp \
                             --enable-xvideo \
                            ")
+                            # --enable-freerdp \
+
+
     #enable-skins2 \ --disable-qt4 \
     #shelltools.export("CFLAGS", "%s -fPIC -O2 -Wall -Wextra -DLUA_COMPAT_5_1" % get.CFLAGS())
     
