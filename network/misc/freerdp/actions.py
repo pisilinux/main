@@ -6,9 +6,16 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
+
+
+WorkDir="FreeRDP-%s" % get.srcVERSION()
 
 def setup():
-    cmaketools.configure("-DCMAKE_SKIP_RPATH=ON \
+    # shelltools.system("mkdir build")
+    # shelltools.system("cd build")
+    cmaketools.configure("-B build -DCMAKE_SKIP_RPATH=ON \
                           -DWITH_LIBSYSTEMD=OFF \
                           -DCMAKE_INSTALL_LIBDIR=lib \
                           -DWITH_DSP_FFMPEG=ON \
@@ -25,13 +32,16 @@ def setup():
                           -DCHANNEL_URBDRC_CLIENT=ON")
 
 def build():
+    shelltools.cd("build")
     cmaketools.make()
 
 def check():
     pass
 
 def install():
-    #cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    cmaketools.install()
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # cmaketools.install()
     
+    shelltools.cd("..")
     pisitools.dodoc("LICENSE", "README*", )
