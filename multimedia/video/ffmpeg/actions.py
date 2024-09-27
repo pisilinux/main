@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
 	shelltools.system("./configure --prefix=/usr \
-                            --mandir=//usr/share/man \
+                            --mandir=/usr/share/man \
                             --disable-debug \
                             --disable-static \
                             --disable-stripping \
