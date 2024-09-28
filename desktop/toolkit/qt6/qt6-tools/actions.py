@@ -14,7 +14,7 @@ from pisi.actionsapi import get
 # bindirQt6="/usr/lib/qt6/bin"
 
 def setup():
-    qt6.configure("-DQT_FEATURE_printsupport=OFF")
+    qt6.configure()
 
 def build():
      qt6.make()
