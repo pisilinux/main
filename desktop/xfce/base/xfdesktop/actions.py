@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 def setup():
     autotools.configure("--disable-static \
                          --enable-wayland \
+                         --enable-file-icons \
                          --enable-notifications")
 
     pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
@@ -21,5 +22,5 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*", "TODO")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
 
