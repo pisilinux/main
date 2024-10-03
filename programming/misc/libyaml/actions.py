@@ -22,4 +22,4 @@ def install():
     autotools.install()
 
     pisitools.dohtml("doc/html/*")
-    pisitools.dodoc("LICENSE", "README")
+    pisitools.dodoc("License", "ReadMe.md")
