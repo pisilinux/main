@@ -1,0 +1,231 @@
+diff --git a/src/linguist/CMakeLists.txt b/src/linguist/CMakeLists.txt
+index ee11963039feecbdce7ed2ea4ef18cdcc40babce..933f882b11a5db06f3db454cfbf8045a8236f6de 100644
+--- a/src/linguist/CMakeLists.txt
++++ b/src/linguist/CMakeLists.txt
+@@ -15,7 +15,7 @@ add_subdirectory(lrelease-pro)
+ add_subdirectory(lupdate)
+ add_subdirectory(lupdate-pro)
+ if(QT_FEATURE_process AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
+-    AND QT_FEATURE_png AND QT_FEATURE_printsupport AND TARGET Qt::Widgets)
++    AND QT_FEATURE_png AND TARGET Qt::Widgets)
+     add_subdirectory(linguist)
+ endif()
+ 
+diff --git a/src/linguist/linguist/CMakeLists.txt b/src/linguist/linguist/CMakeLists.txt
+index 45477df77604f71cc32d42871b0c5081e2577870..6e8c2bf7dab24ec3c350b5eee5632144c9442817 100644
+--- a/src/linguist/linguist/CMakeLists.txt
++++ b/src/linguist/linguist/CMakeLists.txt
+@@ -33,7 +33,6 @@ qt_internal_add_app(linguist
+         phrasebookbox.cpp phrasebookbox.h phrasebookbox.ui
+         phrasemodel.cpp phrasemodel.h
+         phraseview.cpp phraseview.h
+-        printout.cpp printout.h
+         recentfiles.cpp recentfiles.h
+         sourcecodeview.cpp sourcecodeview.h
+         statistics.cpp statistics.h statistics.ui
+@@ -51,13 +50,19 @@ qt_internal_add_app(linguist
+         Qt::CorePrivate
+         Qt::Gui
+         Qt::GuiPrivate
+-        Qt::PrintSupport
+         Qt::UiToolsPrivate
+         Qt::Widgets
+     ENABLE_AUTOGEN_TOOLS
+         uic
+ )
+ 
++qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
++    SOURCES
++        printout.cpp printout.h
++    LIBRARIES
++        Qt::PrintSupport
++)
++
+ # Resources:
+ set(linguist_resource_files
+     "images/appicon.png"
+diff --git a/src/linguist/linguist/mainwindow.cpp b/src/linguist/linguist/mainwindow.cpp
+index ce3c80f9ff0f7597b7936a923d34da7f3923f8f1..a07d3c4934663c95454f7dea3aea3b29c7ba5a96 100644
+--- a/src/linguist/linguist/mainwindow.cpp
++++ b/src/linguist/linguist/mainwindow.cpp
+@@ -43,8 +43,6 @@
+ #include <QMenuBar>
+ #include <QMessageBox>
+ #include <QMimeData>
+-#include <QPrintDialog>
+-#include <QPrinter>
+ #include <QProcess>
+ #include <QRegularExpression>
+ #include <QScreen>
+@@ -58,6 +56,11 @@
+ #include <QUrl>
+ #include <QWhatsThis>
+ 
++#if QT_CONFIG(printsupport)
++#include <QPrintDialog>
++#include <QPrinter>
++#endif
++
+ #include <ctype.h>
+ 
+ QT_BEGIN_NAMESPACE
+@@ -249,7 +252,6 @@ bool FocusWatcher::eventFilter(QObject *, QEvent *event)
+ MainWindow::MainWindow()
+     : QMainWindow(0, Qt::Window),
+       m_assistantProcess(0),
+-      m_printer(0),
+       m_findWhere(DataModel::NoLocation),
+       m_translationSettingsDialog(0),
+       m_settingCurrentMessage(false),
+@@ -491,7 +493,9 @@ MainWindow::~MainWindow()
+     qDeleteAll(m_phraseBooks);
+     delete m_dataModel;
+     delete m_statistics;
++#if QT_CONFIG(printsupport)
+     delete m_printer;
++#endif
+ }
+ 
+ void MainWindow::initViewHeaders()
+@@ -855,6 +859,7 @@ void MainWindow::releaseAll()
+             releaseInternal(i);
+ }
+ 
++#if QT_CONFIG(printsupport)
+ QPrinter *MainWindow::printer()
+ {
+     if (!m_printer)
+@@ -944,6 +949,8 @@ void MainWindow::print()
+     }
+ }
+ 
++#endif // QT_CONFIG(printsupport)
++
+ bool MainWindow::searchItem(DataModel::FindLocation where, const QString &searchWhat)
+ {
+     if ((m_findWhere & where) == 0)
+@@ -1220,6 +1227,8 @@ void MainWindow::editPhraseBook(QAction *action)
+     updatePhraseDicts();
+ }
+ 
++#if QT_CONFIG(printsupport)
++
+ void MainWindow::printPhraseBook(QAction *action)
+ {
+     PhraseBook *phraseBook = m_phraseBookMenu[PhrasePrintMenu].value(action);
+@@ -1256,6 +1265,8 @@ void MainWindow::printPhraseBook(QAction *action)
+     }
+ }
+ 
++#endif // QT_CONFIG(printsupport)
++
+ void MainWindow::addToPhraseBook()
+ {
+     QStringList phraseBookList;
+@@ -1365,7 +1376,9 @@ void MainWindow::setupPhrase()
+     bool enabled = !m_phraseBooks.isEmpty();
+     m_ui.menuClosePhraseBook->setEnabled(enabled);
+     m_ui.menuEditPhraseBook->setEnabled(enabled);
++#if QT_CONFIG(printsupport)
+     m_ui.menuPrintPhraseBook->setEnabled(enabled);
++#endif
+ }
+ 
+ void MainWindow::closeEvent(QCloseEvent *e)
+@@ -1431,7 +1444,9 @@ void MainWindow::updateCaption()
+     m_ui.actionSaveAll->setEnabled(enableRw);
+     m_ui.actionReleaseAll->setEnabled(enableRw);
+     m_ui.actionCloseAll->setEnabled(enable);
++#if QT_CONFIG(printsupport)
+     m_ui.actionPrint->setEnabled(enable);
++#endif
+     m_ui.actionAccelerators->setEnabled(enable);
+     m_ui.actionSurroundingWhitespace->setEnabled(enable);
+     m_ui.actionEndingPunctuation->setEnabled(enable);
+@@ -1851,7 +1866,11 @@ void MainWindow::setupMenuBar()
+     connect(m_ui.actionReleaseAll, &QAction::triggered, this, &MainWindow::releaseAll);
+     connect(m_ui.actionRelease, &QAction::triggered, this, &MainWindow::release);
+     connect(m_ui.actionReleaseAs, &QAction::triggered, this, &MainWindow::releaseAs);
++#if QT_CONFIG(printsupport)
+     connect(m_ui.actionPrint, &QAction::triggered, this, &MainWindow::print);
++#else
++    m_ui.actionPrint->setEnabled(false);
++#endif
+     connect(m_ui.actionClose, &QAction::triggered, this, &MainWindow::closeFile);
+     connect(m_ui.actionCloseAll, &QAction::triggered, this, &MainWindow::closeAll);
+     connect(m_ui.actionExit, &QAction::triggered, this, &MainWindow::close);
+@@ -1913,8 +1932,12 @@ void MainWindow::setupMenuBar()
+             this, &MainWindow::closePhraseBook);
+     connect(m_ui.menuEditPhraseBook, &QMenu::triggered,
+             this, &MainWindow::editPhraseBook);
++#if QT_CONFIG(printsupport)
+     connect(m_ui.menuPrintPhraseBook, &QMenu::triggered,
+             this, &MainWindow::printPhraseBook);
++#else
++    m_ui.menuPrintPhraseBook->setEnabled(false);
++#endif
+     connect(m_ui.actionAddToPhraseBook, &QAction::triggered,
+             this, &MainWindow::addToPhraseBook);
+ 
+diff --git a/src/linguist/linguist/mainwindow.h b/src/linguist/linguist/mainwindow.h
+index f46b666568f8e2350c558e13736fdc1316096f0d..4f5e2bd54890f6aef1f16f0098983f31b6bf1ceb 100644
+--- a/src/linguist/linguist/mainwindow.h
++++ b/src/linguist/linguist/mainwindow.h
+@@ -10,6 +10,8 @@
+ #include "messagemodel.h"
+ #include "finddialog.h"
+ 
++#include <QtCore/private/qconfig_p.h>
++
+ #include <QtCore/QHash>
+ #include <QtCore/QMap>
+ #include <QtCore/QLocale>
+@@ -80,7 +82,6 @@ private slots:
+     void releaseAll();
+     void release();
+     void releaseAs();
+-    void print();
+     void closeFile();
+     bool closeAll();
+     void showTranslateDialog();
+@@ -92,7 +93,6 @@ private slots:
+     void openPhraseBook();
+     void closePhraseBook(QAction *action);
+     void editPhraseBook(QAction *action);
+-    void printPhraseBook(QAction *action);
+     void addToPhraseBook();
+     void manual();
+     void resetSorting();
+@@ -138,6 +138,11 @@ private slots:
+     void updatePhraseDicts();
+     void updatePhraseDict(int model);
+ 
++#if QT_CONFIG(printsupport)
++    void print();
++    void printPhraseBook(QAction *action);
++#endif
++
+ private:
+     QModelIndex nextContext(const QModelIndex &index) const;
+     QModelIndex prevContext(const QModelIndex &index) const;
+@@ -171,7 +176,9 @@ private:
+     void releaseInternal(int model);
+     void saveInternal(int model);
+ 
++#if QT_CONFIG(printsupport)
+     QPrinter *printer();
++#endif
+ 
+     // FIXME: move to DataModel
+     void updateDanger(const MultiDataIndex &index, bool verbose);
+@@ -199,7 +206,9 @@ private:
+     QList<QHash<QString, QList<Phrase *> > > m_phraseDict;
+     QList<PhraseBook *> m_phraseBooks;
+     QMap<QAction *, PhraseBook *> m_phraseBookMenu[3];
+-    QPrinter *m_printer;
++#if QT_CONFIG(printsupport)
++    QPrinter *m_printer = nullptr;
++#endif
+ 
+     FindDialog *m_findDialog;
+     QString m_findText;

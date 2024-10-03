@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!//usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
@@ -18,7 +18,6 @@ def setup():
                             --enable-version3 \
                             --enable-nonfree \
                             --enable-avfilter \
-                            --enable-avresample \
                             --enable-frei0r \
                             --enable-gpl \
                             --enable-ladspa \
@@ -84,6 +83,7 @@ def setup():
                             --enable-libsvtav1 \
                             --enable-swresample \
                             --enable-vdpau \
+                            --enable-openal \
                             --enable-opencl \
                             --enable-openssl \
                             --enable-libdrm \
@@ -95,7 +95,6 @@ def setup():
                             --enable-omx \
                             --enable-libsrt \
                             --extra-ldflags='-lasound -lm'")
-                            # --enable-openal \
 
 def build():
     autotools.make()
@@ -105,5 +104,14 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s install-man" % get.installDIR())
     pisitools.dobin("tools/qt-faststart")
+
+    # pisitools.dosym("/usr/lib/libavcodec.so.60", "/usr/lib/libavcodec.so.58")
+    # pisitools.dosym("/usr/lib/libswscale.so.7", "/usr/lib/libswscale.so.5")
+    # pisitools.dosym("/usr/lib/libavutil.so.58", "/usr/lib/libavutil.so.56")
+    # pisitools.dosym("/usr/lib/libswresample.so.4", "/usr/lib/libswresample.so.3")
+    # pisitools.dosym("/usr/lib/libavfilter.so.9", "/usr/lib/libavfilter.so.7")
+    # pisitools.dosym("/usr/lib/libavdevice.so.60", "/usr/lib/libavdevice.so.58")
+    # pisitools.dosym("/usr/lib/libavformat.so.60", "/usr/lib/libavformat.so.58")
+    # pisitools.dosym("/usr/lib/libpostproc.so.57", "/usr/lib/libpostproc.so.55")
     
     pisitools.dodoc("Changelog", "README.md", "LICENSE.md", "COPYING*")

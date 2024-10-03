@@ -1,0 +1,37 @@
+Description: use fresh X11 timestamps when displaying authentication dialog
+ to circumvent focus-stealing prevention.
+Author: Jeffrey Knockel <jeff250@gmail.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/policykit-gnome/+bug/946171
+Bug: https://bugzilla.gnome.org/show_bug.cgi?id=676076
+
+Index: policykit-1-gnome-0.105/src/polkitgnomeauthenticator.c
+===================================================================
+--- policykit-1-gnome-0.105.orig/src/polkitgnomeauthenticator.c	2012-07-27 00:39:09.000000000 -0600
++++ policykit-1-gnome-0.105/src/polkitgnomeauthenticator.c	2012-07-27 00:40:27.185547436 -0600
+@@ -26,6 +26,7 @@
+ #include <sys/types.h>
+ #include <pwd.h>
+ #include <glib/gi18n.h>
++#include <gdk/gdkx.h>
+ 
+ #include <polkit/polkit.h>
+ #include <polkitagent/polkitagent.h>
+@@ -307,7 +308,17 @@
+     }
+ 
+   gtk_widget_show_all (GTK_WIDGET (authenticator->dialog));
+-  gtk_window_present (GTK_WINDOW (authenticator->dialog));
++  GdkWindow *window = gtk_widget_get_window (GTK_WIDGET (authenticator->dialog));
++
++  if (GDK_IS_X11_WINDOW (window))
++  {
++    gtk_window_present_with_time (GTK_WINDOW (authenticator->dialog), gdk_x11_get_server_time (window));
++  }
++  else
++  {
++    gtk_window_present (GTK_WINDOW (authenticator->dialog));
++  }
++
+   password = polkit_gnome_authentication_dialog_run_until_response_for_prompt (POLKIT_GNOME_AUTHENTICATION_DIALOG (authenticator->dialog),
+                                                                                modified_request,
+                                                                                echo_on,
