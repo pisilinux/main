@@ -12,6 +12,9 @@ def setup():
     shelltools.system("sed -i 's@systemd@elogind@' data/pam-lfs/gdm-launch-environment.pam")
     shelltools.system("sed -i 's@-session@session @' data/pam-lfs/gdm-launch-environment.pam")
     shelltools.system("sed -i 's@uid >= 1000@uid >= 0@g' data/pam-lfs/*.pam")
+    shelltools.system("sed -e 's@systemd@elogind@'                                \
+                           -e '/elogind/isession  required       pam_loginuid.so' \
+                           -i data/pam-lfs/gdm-launch-environment.pam")
 
     mesontools.configure("--prefix=/usr \
                           --localstatedir=/var \

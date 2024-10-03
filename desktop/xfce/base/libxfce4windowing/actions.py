@@ -14,6 +14,7 @@ def setup():
     # autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
                                      --enable-wayland \
+                                     --enable-x11 \
                                      --enable-gtk-doc \
                                      --disable-debug")
 
