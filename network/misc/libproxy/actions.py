@@ -37,4 +37,4 @@ def install():
     mesontools.install()
 
     # shelltools.cd("..")
-    pisitools.dodoc("README*", "CHANGELOG*", "COPYING")
+    pisitools.dodoc("README*", "COPYING")
