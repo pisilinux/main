@@ -19,4 +19,4 @@ def build():
 def install():
     kde6.install()
 
-    pisitools.dodoc( "README")
+    pisitools.dodoc("LICENSES/*", "README*")
