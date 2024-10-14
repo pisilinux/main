@@ -11,7 +11,7 @@ from pisi.actionsapi import pisitools
 KDIR = kerneltools.getKernelVersion()
 
 def build():
-    autotools.make()
+    autotools.make("KERNEL_DIR=/lib/modules/%s/build" % KDIR)
 
 def install():
     pisitools.insinto("/lib/modules/%s/extra" % KDIR, "*.ko")
