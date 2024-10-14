@@ -24,7 +24,7 @@ def build():
 def install():
     autotools.rawInstall("INSTALL_TOP=%s/usr INSTALL_MAN=%s/usr/share/man/ INSTALL_LIB=%s/usr/lib/ TO_LIB='liblua.so liblua.so.%s liblua.so.%s'" % (get.installDIR(), get.installDIR(), get.installDIR(), major, get.srcVERSION()))
     
-    pisitools.dosym("/usr/lib/liblua.so.5.4.4", "/usr/lib/liblua.so.5.3")
+    pisitools.dosym("/usr/lib/liblua.so.5.4.7", "/usr/lib/liblua.so.5.3")
 
     #pisitools.insinto("/usr/lib", "src/liblua.so*")
     
