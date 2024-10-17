@@ -20,6 +20,8 @@ def setup():
                           -DMOD_OPENCV=ON \
                           -DMOD_GLAXNIMATE=ON \
                           -DSWIG_PERL=ON \
+                          -DMOD_GLAXNIMATE_QT6=ON \
+                          -DMOD_QT6=ON \
                           -DCMAKE_INSTALL_MANDIR=/usr/share/man/man1 \
                           -DSWIG_PYTHON=ON", sourceDir="..")
 
