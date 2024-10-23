@@ -33,6 +33,7 @@ def setup():
                           -DUSE_SOUP2=OFF \
                           -DUSE_WOFF2=OFF \
                           -DUSE_SYSTEMD=OFF \
+                          -DUSE_GTK4=OFF \
                           -DUSE_LIBBACKTRACE=OFF \
                           -DPYTHON_EXECUTABLE=/usr/bin/python3 \
                           -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.5 \
