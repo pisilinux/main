@@ -1,29 +1,37 @@
-<?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>aalib</Name>
         <Homepage>https://aa-project.sourceforge.net/aalib/</Homepage>
         <Packager>
-            <Name>PisiLinux Community</Name>
+            <Name>Pisilinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
         <License>GPLv2</License>
         <IsA>library</IsA>
         <Summary>An ASCII-graphics Library</Summary>
         <Description>Aalib is an ASCII-graphics library generating ASCII character outputs.</Description>
-        <Archive sha1sum="a23269e950a249d2ef93625837cace45ddbce03b" type="targz">mirrors://sourceforge/aa-project/aalib-1.4rc5.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>gpm</Dependency>
             <Dependency>ncurses-devel</Dependency>
         </BuildDependencies>
+        <Archive type="targz" sha1sum="a23269e950a249d2ef93625837cace45ddbce03b">mirrors://sourceforge/aa-project/aalib-1.4rc5.tar.gz</Archive>
         <Patches>
+            <Patch level="1">fedora/aalib-1.4_rc5-fix-aarender.patch</Patch>
+            <Patch level="1">fedora/aalib-1.4_rc5-free-offset-pointer.patch</Patch>
+            <Patch level="1">fedora/aalib-1.4rc5-bug149361.patch</Patch>
+            <Patch level="1">fedora/aalib-1.4rc5-libflag.patch</Patch>
+            <Patch level="1">fedora/aalib-1.4rc5-opaque-ncurses-fix.patch</Patch>
+            <Patch level="1">fedora/aalib-1.4rc5-rpath.patch</Patch>
+            <Patch level="1">fedora/aalib-1.4rc5-x_libs.patch</Patch>
+            <Patch level="1">fedora/aalib-c99.patch</Patch>
+            <Patch level="1">fedora/aalib-config-rpath.patch</Patch>
+            <Patch level="1">fedora/aalib-ppc.patch</Patch>
             <Patch level="1">m4.patch</Patch>
         </Patches>
     </Source>
-
     <Package>
         <Name>aalib</Name>
+        <Summary>Development files for aalib</Summary>
         <RuntimeDependencies>
             <Dependency>gpm</Dependency>
             <Dependency>ncurses</Dependency>
@@ -36,7 +44,6 @@
             <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
-
     <Package>
         <Name>aalib-devel</Name>
         <Summary>Development files for aalib</Summary>
@@ -44,12 +51,11 @@
             <Dependency release="current">aalib</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/usr/share/aclocal</Path>
             <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
             <Path fileType="man">/usr/share/man/man3</Path>
         </Files>
     </Package>
-
     <History>
         <Update release="6">
             <Date>2022-01-17</Date>
