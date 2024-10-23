@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 paths = ["JavaScriptCore", "WebCore", "WebKit", "WebKit2"]
-docs = ["AUTHORS", "COPYING.LIB", "THANKS", \
+docs = ["AUTHORS", "COPYING.LIB", \
         "LICENSE-LGPL-2", "LICENSE-LGPL-2.1", "LICENSE"]
 
 def setup():
@@ -31,6 +31,8 @@ def setup():
                           -DUSE_SOUP2=ON \
                           -DUSE_WOFF2=OFF \
                           -DUSE_SYSTEMD=OFF \
+                          -DUSE_GTK4=OFF \
+                          -DUSE_LIBBACKTRACE=OFF \
                           -DPYTHON_EXECUTABLE=/usr/bin/python3 \
                           -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.5 \
                           -DSHOULD_INSTALL_JS_SHELL=ON \
