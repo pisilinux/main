@@ -9,13 +9,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 j = ''.join([
-    ' --enable-outputs',.
+    ' --enable-outputs',
     ' --disable-clock',
     ' --disable-static',
     ' --with-taglib '
     ])
 
 def setup():
+	autotools.autoreconf("-vif")
 	autotools.configure(j)
 
 def build():
