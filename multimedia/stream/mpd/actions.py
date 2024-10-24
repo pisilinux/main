@@ -9,8 +9,8 @@ from pisi.actionsapi import pisitools
 
 j = ''.join([
     ' -Ddocumentation=enabled',
-    ' -Dfifo=false',
     '',
+    ' -Dfifo=true',
     ' -Dtcp=true',
     ' -Ddsd=true',
     ' -Dcue=true',
