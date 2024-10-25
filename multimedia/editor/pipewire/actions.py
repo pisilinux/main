@@ -20,6 +20,8 @@ def setup():
                           -Dpipewire-alsa=enabled \
                           -D compress-offload=disabled \
                           -Djack=disabled \
+                          -Dudevrulesdir=/lib/udev/rules.d \
+                          -Dsystemd-user-service=disabled \
                           -Dsession-managers=enabled \
                           -Dlibcamera=disabled")
 
