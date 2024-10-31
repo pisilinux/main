@@ -8,19 +8,21 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 
 def setup():
-    shelltools.system("env NOCONFIGURE=1 ./autogen.sh")
+    # shelltools.system("env NOCONFIGURE=1 ./autogen.sh")
     
-    autotools.configure("--disable-silent-rules \
-                         --with-priv-mode=setuid")
+    mesontools.configure("--buildtype=release \
+                          -Dtests=false \
+                          -Dselinux=disabled")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("README*", "COPYING")
