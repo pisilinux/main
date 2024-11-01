@@ -240,13 +240,13 @@ def install():
         pisitools.dosym("libnvidia-nvvm.so.%s" % version, "%s/libnvidia-nvvm.so.1" % libdir)
         pisitools.dosym("libnvidia-nvvm.so.%s" % version, "%s/libnvidia-nvvm.so" % libdir)
 
-        pisitools.dolib("libnvidia-egl-wayland.so.1.1.13", libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.13", "%s/libnvidia-egl-wayland.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.13", "%s/libnvidia-egl-wayland.so" % libdir)
+        pisitools.dolib("libnvidia-egl-wayland.so.1.1.17", libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.17", "%s/libnvidia-egl-wayland.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-wayland.so.1.1.17", "%s/libnvidia-egl-wayland.so" % libdir)
         
-        pisitools.dolib("libnvidia-egl-gbm.so.1.1.1", libdir)
-        pisitools.dosym("libnvidia-egl-gbm.so.1.1.1", "%s/libnvidia-egl-gbm.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-gbm.so.1.1.1", "%s/libnvidia-egl-gbm.so" % libdir)
+        pisitools.dolib("libnvidia-egl-gbm.so.1.1.2", libdir)
+        pisitools.dosym("libnvidia-egl-gbm.so.1.1.2", "%s/libnvidia-egl-gbm.so.1" % libdir)
+        pisitools.dosym("libnvidia-egl-gbm.so.1.1.2", "%s/libnvidia-egl-gbm.so" % libdir)
 
         pisitools.dolib("libnvidia-wayland-client.so.%s" % version, libdir)
         
