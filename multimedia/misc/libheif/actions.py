@@ -12,10 +12,10 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-B build \
-                                        -DCMAKE_INSTALL_PREFIX=/usr \
-                                        -DWITH_DAV1D=ON \
-                                        -DWITH_RAV1E=ON \
-                                        -DWITH_SvtEnc=ON")
+                            -DCMAKE_INSTALL_PREFIX=/usr \
+                            -DWITH_DAV1D=ON \
+                            -DWITH_RAV1E=ON \
+                            -DWITH_SvtEnc=ON")
 
 def build():
     shelltools.cd("build")
