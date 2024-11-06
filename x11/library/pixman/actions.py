@@ -19,7 +19,7 @@ def setup():
                           -Dvmx=disabled \
                           -Darm-simd=disabled \
                           -Dneon=disabled \
-                          -Diwmmxt=disabled \
+                          -Drvv=disabled \
                           -Dmips-dspr2=disabled \
                           -Dgtk=disabled"
 
@@ -27,7 +27,7 @@ def setup():
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-        options += " --libdir=lib32 \
+        options += " -Ddemos=disabled --libdir=lib32 \
                    "
 
     mesontools.configure(options)
