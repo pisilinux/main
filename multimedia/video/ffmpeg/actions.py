@@ -83,7 +83,6 @@ def setup():
                             --enable-libsvtav1 \
                             --enable-swresample \
                             --enable-vdpau \
-                            --enable-openal \
                             --enable-opencl \
                             --enable-openssl \
                             --enable-libdrm \
@@ -95,6 +94,7 @@ def setup():
                             --enable-omx \
                             --enable-libsrt \
                             --extra-ldflags='-lasound -lm'")
+                            # --enable-openal \
 
 def build():
     autotools.make()
