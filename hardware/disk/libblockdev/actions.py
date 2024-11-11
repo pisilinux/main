@@ -16,7 +16,7 @@ def setup():
                             # src/lib/plugin_apis/vdo.{c,api} \
                             # src/plugins/vdo.c")
 
-    shelltools.system("sh ./autogen.sh")
+    # shelltools.system("sh ./autogen.sh")
     shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure("--without-gtk-doc \
                          --without-nvdimm \
