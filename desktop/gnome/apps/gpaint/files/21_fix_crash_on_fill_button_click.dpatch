@@ -1,0 +1,24 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 21_fix_crash_on_fill_button_click.dpatch by Goedson Teixeira Paixao <goedson@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Check that tool->canvas->drawing_area is not null when casting it to a
+## DP: GtkWidget.
+
+@DPATCH@
+Index: pkg-gpaint/src/text.c
+===================================================================
+--- pkg-gpaint.orig/src/text.c	2009-12-22 21:03:29.000000000 -0200
++++ pkg-gpaint/src/text.c	2009-12-23 13:01:33.000000000 -0200
+@@ -156,7 +156,10 @@
+ {
+     debug_fn();
+     GtkStyle *style;
+-    GtkWidget *widget = GTK_WIDGET(tool->canvas->drawing_area);
++    GtkWidget *widget = NULL;
++
++    if ((tool->canvas == NULL) || (tool->canvas->drawing_area == NULL)) return FALSE;
++    widget = GTK_WIDGET(tool->canvas->drawing_area);
+     style = gtk_widget_get_style(widget);
+     g_assert(style);
+       
