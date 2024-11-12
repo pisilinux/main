@@ -27,6 +27,9 @@ def setup():
                           -DWITH_SERVER=ON \
                           -DWITH_SWSCALE=ON \
                           -DWITH_CHANNELS=ON \
+                          -D UWAC_FORCE_STATIC_BUILD=ON  \
+                          -D RDTK_FORCE_STATIC_BUILD=ON \
+                          -DWITH_BINARY_VERSIONING=ON \
                           -DWITH_CLIENT_CHANNELS=ON \
                           -DWITH_SERVER_CHANNELS=ON \
                           -DCHANNEL_URBDRC_CLIENT=ON")
