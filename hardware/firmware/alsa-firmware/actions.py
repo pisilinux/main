@@ -29,6 +29,7 @@ def install():
 
     #Remove conflicted file, it is in linux-firmware package
     pisitools.remove("lib/firmware/ctefx.bin")
+    shelltools.system("rm -rf %s/lib/firmware/{ct{efx,speq}.bin,ess,korg,sb16,yamaha}" % get.installDIR())
 
     # Install additional readme files
     for d in ["hdsploader", "mixartloader", "pcxhrloader", "usx2yloader", "vxloader"]:
