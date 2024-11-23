@@ -1,0 +1,204 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 384cb65..6181a06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@ SET(PROJECT_VERSION 5.1.0)
+ # 2. If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
+ # 3. If any interfaces have been added since the last public release, then increment age.
+ # 4. If any interfaces have been removed since the last public release, then set age to 0.
+-SET(musicbrainz5_SOVERSION_CURRENT  1)
++SET(musicbrainz5_SOVERSION_CURRENT  2)
+ SET(musicbrainz5_SOVERSION_REVISION 0)
+ SET(musicbrainz5_SOVERSION_AGE      0)
+ 
+@@ -18,6 +18,17 @@ MATH(EXPR musicbrainz5_SOVERSION_PATCH "${musicbrainz5_SOVERSION_REVISION}")
+ SET(musicbrainz5_VERSION ${musicbrainz5_SOVERSION_MAJOR}.${musicbrainz5_SOVERSION_MINOR}.${musicbrainz5_SOVERSION_PATCH})
+ SET(musicbrainz5_SOVERSION ${musicbrainz5_SOVERSION_MAJOR})
+ 
++SET(musicbrainz5c_SOVERSION_CURRENT  2)
++SET(musicbrainz5c_SOVERSION_REVISION 0)
++SET(musicbrainz5c_SOVERSION_AGE      0)
++
++MATH(EXPR musicbrainz5c_SOVERSION_MAJOR "${musicbrainz5c_SOVERSION_CURRENT} - ${musicbrainz5c_SOVERSION_AGE}")
++MATH(EXPR musicbrainz5c_SOVERSION_MINOR "${musicbrainz5c_SOVERSION_AGE}")
++MATH(EXPR musicbrainz5c_SOVERSION_PATCH "${musicbrainz5c_SOVERSION_REVISION}")
++
++SET(musicbrainz5c_VERSION ${musicbrainz5c_SOVERSION_MAJOR}.${musicbrainz5c_SOVERSION_MINOR}.${musicbrainz5c_SOVERSION_PATCH})
++SET(musicbrainz5c_SOVERSION ${musicbrainz5c_SOVERSION_MAJOR})
++
+ SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+ FIND_PACKAGE(Neon REQUIRED)
+ FIND_PACKAGE(LibXml2 REQUIRED)
+@@ -29,12 +40,13 @@ SET(LIB_INSTALL_DIR ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX} CACHE PATH  "Install
+ SET(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include CACHE PATH "Installation prefix for C header files" FORCE)
+ 
+ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libmusicbrainz5.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libmusicbrainz5.pc)
+-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
++CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libmusicbrainz5cc.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libmusicbrainz5cc.pc)
++CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
++CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
+ 
+ FILE(GLOB headers ${CMAKE_CURRENT_SOURCE_DIR}/include/musicbrainz5/*.h)
+ INSTALL(FILES ${headers} ${CMAKE_CURRENT_BINARY_DIR}/include/musicbrainz5/mb5_c.h DESTINATION ${INCLUDE_INSTALL_DIR}/musicbrainz5)
+-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmusicbrainz5.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
++INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmusicbrainz5.pc ${CMAKE_CURRENT_BINARY_DIR}/libmusicbrainz5cc.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+ 
+ ADD_SUBDIRECTORY(src)
+ ADD_SUBDIRECTORY(tests)
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index bdcc991..71ca411 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -3,7 +3,6 @@ INCLUDE_DIRECTORIES(
+ 	${CMAKE_CURRENT_BINARY_DIR}/../include
+ 	${LIBXML2_INCLUDE_DIR}
+ )
+-LINK_LIBRARIES(musicbrainz5 ${NEON_LIBRARIES} ${LIBXML2_LIBRARIES})
+ 
+ ADD_EXECUTABLE(cdlookup cdlookup.cc)
+ ADD_EXECUTABLE(cdlookup_c cdlookup_c.c)
+@@ -11,6 +10,13 @@ ADD_EXECUTABLE(search search.cc)
+ ADD_EXECUTABLE(search_c search_c.c)
+ ADD_EXECUTABLE(collections collections.cc)
+ 
++TARGET_LINK_LIBRARIES(cdlookup musicbrainz5cc)
++TARGET_LINK_LIBRARIES(cdlookup_c musicbrainz5)
++TARGET_LINK_LIBRARIES(search musicbrainz5cc)
++TARGET_LINK_LIBRARIES(search_c musicbrainz5)
++TARGET_LINK_LIBRARIES(cdlookup musicbrainz5cc)
++TARGET_LINK_LIBRARIES(collections musicbrainz5)
++
+ IF(CMAKE_COMPILER_IS_GNUCXX)
+ 		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic-errors")
+ 		IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../.git)
+diff --git a/libmusicbrainz5.pc.cmake b/libmusicbrainz5.pc.cmake
+index b9cb903..633e231 100644
+--- a/libmusicbrainz5.pc.cmake
++++ b/libmusicbrainz5.pc.cmake
+@@ -7,7 +7,7 @@ Name: ${PROJECT_NAME}
+ Description: The Musicbrainz Client Library.
+ URL: http://musicbrainz.org/doc/libmusicbrainz
+ Version: ${PROJECT_VERSION}
+-Requires.private: neon >= 0.25 libxml-2.0
++Requires.private: ${PROJECT_NAME}cc
+ Libs: -L${LIB_INSTALL_DIR} -lmusicbrainz5
+ Cflags: -I${INCLUDE_INSTALL_DIR}
+ 
+diff --git a/libmusicbrainz5cc.pc.cmake b/libmusicbrainz5cc.pc.cmake
+new file mode 100644
+index 0000000..224fa7a
+--- /dev/null
++++ b/libmusicbrainz5cc.pc.cmake
+@@ -0,0 +1,13 @@
++prefix=${CMAKE_INSTALL_PREFIX}
++exec_prefix=${EXEC_INSTALL_PREFIX}
++libdir=${LIB_INSTALL_DIR}
++includedir=${INCLUDE_INSTALL_DIR}
++
++Name: ${PROJECT_NAME}cc
++Description: The Musicbrainz Client Library.
++URL: http://musicbrainz.org/doc/libmusicbrainz
++Version: ${PROJECT_VERSION}
++Requires.private: neon >= 0.25 libxml-2.0
++Libs: -L${LIB_INSTALL_DIR} -lmusicbrainz5cc
++Cflags: -I${INCLUDE_INSTALL_DIR}
++
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c91a565..9492920 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -7,12 +7,13 @@ INCLUDE_DIRECTORIES(
+ 	${LIBXML2_INCLUDE_DIR}
+ )
+ 
+-SET(_sources Alias.cc Annotation.cc Artist.cc ArtistCredit.cc Attribute.cc CDStub.cc Collection.cc
++SET(_sources_cc Alias.cc Annotation.cc Artist.cc ArtistCredit.cc Attribute.cc CDStub.cc Collection.cc
+ 	Disc.cc Entity.cc FreeDBDisc.cc HTTPFetch.cc ISRC.cc Label.cc LabelInfo.cc Lifespan.cc List.cc
+-	mb5_c.cc Medium.cc MediumList.cc Message.cc Metadata.cc NameCredit.cc NonMBTrack.cc PUID.cc
++	Medium.cc MediumList.cc Message.cc Metadata.cc NameCredit.cc NonMBTrack.cc PUID.cc
+ 	Query.cc Rating.cc Recording.cc Relation.cc RelationList.cc Release.cc ReleaseGroup.cc Tag.cc
+ 	TextRepresentation.cc Track.cc UserRating.cc UserTag.cc Work.cc xmlParser.cc
+ 	RelationListList.cc ISWCList.cc ISWC.cc SecondaryType.cc SecondaryTypeList.cc IPI.cc)
++SET(_sources_c mb5_c.cc)
+ 
+ # when crosscompiling import the executable targets from a file
+ IF(CMAKE_CROSSCOMPILING)
+@@ -41,14 +42,21 @@ ADD_CUSTOM_COMMAND(
+ 
+ ADD_CUSTOM_TARGET(src_gen DEPENDS mb5_c.h)
+ 
+-ADD_LIBRARY(musicbrainz5 SHARED ${_sources})
++ADD_LIBRARY(musicbrainz5cc SHARED ${_sources_cc})
++ADD_LIBRARY(musicbrainz5 SHARED ${_sources_c})
+ 
+-SET_TARGET_PROPERTIES(musicbrainz5 PROPERTIES
++SET_TARGET_PROPERTIES(musicbrainz5cc PROPERTIES
+     VERSION ${musicbrainz5_VERSION}
+     SOVERSION ${musicbrainz5_SOVERSION}
+     DEFINE_SYMBOL MB_API_EXPORTS
+ )
+ 
++SET_TARGET_PROPERTIES(musicbrainz5 PROPERTIES
++    VERSION ${musicbrainz5c_VERSION}
++    SOVERSION ${musicbrainz5c_SOVERSION}
++    DEFINE_SYMBOL MB_API_EXPORTS
++)
++
+ if(CMAKE_BUILD_TYPE STREQUAL Debug)
+ 	SET_TARGET_PROPERTIES(musicbrainz5 PROPERTIES
+ 		DEFINE_SYMBOL _MB5_DEBUG_
+@@ -58,7 +66,8 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
+ 	ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ endif(CMAKE_BUILD_TYPE STREQUAL Debug)
+ 
+-TARGET_LINK_LIBRARIES(musicbrainz5 ${NEON_LIBRARIES} ${LIBXML2_LIBRARIES})
++TARGET_LINK_LIBRARIES(musicbrainz5cc ${NEON_LIBRARIES} ${LIBXML2_LIBRARIES})
++TARGET_LINK_LIBRARIES(musicbrainz5 musicbrainz5cc)
+ 
+ IF(WIN32)
+     TARGET_LINK_LIBRARIES(musicbrainz5 wsock32 winmm ws2_32)
+@@ -72,4 +81,4 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
+ 		#set_source_files_properties(mb5_c.cc PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+ ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ 
+-INSTALL(TARGETS musicbrainz5 DESTINATION ${LIB_INSTALL_DIR})
++INSTALL(TARGETS musicbrainz5cc musicbrainz5 DESTINATION ${LIB_INSTALL_DIR})
+diff --git a/src/c-int-source-funcs.inc b/src/c-int-source-funcs.inc
+index fdf2d56..2e3834a 100644
+--- a/src/c-int-source-funcs.inc
++++ b/src/c-int-source-funcs.inc
+@@ -90,7 +90,7 @@
+ #include "musicbrainz5/Work.h"
+ #include "musicbrainz5/WorkList.h"
+ 
+-std::string GetMapName(std::map<std::string,std::string> Map, int Item)
++static std::string GetMapName(std::map<std::string,std::string> Map, int Item)
+ {
+ 	std::string Ret;
+ 
+@@ -112,7 +112,7 @@ std::string GetMapName(std::map<std::string,std::string> Map, int Item)
+ 	return Ret;
+ }
+ 
+-std::string GetMapValue(std::map<std::string,std::string> Map, int Item)
++static std::string GetMapValue(std::map<std::string,std::string> Map, int Item)
+ {
+ 	std::string Ret;
+ 
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 9d87908..3fba4e8 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -3,9 +3,10 @@ INCLUDE_DIRECTORIES(
+ 	${CMAKE_CURRENT_BINARY_DIR}/../include
+ 	${LIBXML2_INCLUDE_DIR}
+ )
+-LINK_LIBRARIES(musicbrainz5 ${NEON_LIBRARIES} ${LIBXML2_LIBRARIES})
+ ADD_EXECUTABLE(mbtest mbtest.cc)
+ ADD_EXECUTABLE(ctest ctest.c)
++TARGET_LINK_LIBRARIES(mbtest musicbrainz5cc)
++TARGET_LINK_LIBRARIES(ctest musicbrainz5)
+ 
+ IF(CMAKE_COMPILER_IS_GNUCXX)
+ 		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic-errors")
