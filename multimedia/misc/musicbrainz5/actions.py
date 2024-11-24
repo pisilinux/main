@@ -2,20 +2,17 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
-
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
 def setup():
-    cmaketools.configure()
+    cmaketools.configure("-Bbuild -G Ninja -L")
 
 def build():
-    cmaketools.make()
+    mesontools.build()
 
 def install():
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS*", "COPYING*", "NEWS*", "README*")
+    pisitools.dodoc("AUTHORS.txt", "COPYING.txt", "NEWS.txt")

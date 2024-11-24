@@ -1,0 +1,41 @@
+From 1ced66aaf82dad2137c01e887a88c10a4269467e Mon Sep 17 00:00:00 2001
+From: "Jason E. Hale" <jhale@FreeBSD.org>
+Date: Mon, 18 Nov 2024 00:54:12 -0500
+Subject: [PATCH] build: Link to libmusicbrainzcc, not libmusicbrainz
+
+Fix linking when the ENABLE_MUSICBRAINZ option is true. This was
+regressed in 8e7f8ef, by linking to the libmusicbrainz (C) library
+instead of the libmusicbrainzcc (C++) library causing undefined symbols.
+---
+ cmake/FindMusicBrainz5.cmake | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/FindMusicBrainz5.cmake b/cmake/FindMusicBrainz5.cmake
+index bca0954e..1d69f607 100644
+--- a/cmake/FindMusicBrainz5.cmake
++++ b/cmake/FindMusicBrainz5.cmake
+@@ -40,7 +40,7 @@ The following cache variables may also be set:
+ # First use PKG-Config as a starting point.
+ find_package(PkgConfig)
+ if(PKG_CONFIG_FOUND)
+-    pkg_check_modules(PC_MusicBrainz5 QUIET libmusicbrainz5)
++    pkg_check_modules(PC_MusicBrainz5 QUIET libmusicbrainz5cc)
+ endif(PKG_CONFIG_FOUND)
+ 
+ find_path(MusicBrainz5_INCLUDE_DIR
+@@ -50,7 +50,7 @@ find_path(MusicBrainz5_INCLUDE_DIR
+ )
+ 
+ find_library(MusicBrainz5_LIBRARY
+-    NAMES musicbrainz5
++    NAMES musicbrainz5cc
+     PATHS ${PC_MusicBrainz5_LIBRARY_DIRS}
+ )
+ 
+@@ -83,4 +83,4 @@ endif()
+ mark_as_advanced(
+         MusicBrainz5_INCLUDE_DIR
+         MusicBrainz5_LIBRARY
+-)
+\ No newline at end of file
++)
