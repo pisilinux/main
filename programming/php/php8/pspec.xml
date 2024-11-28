@@ -1,0 +1,298 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>php8</Name>
+        <Homepage>http://www.php.net</Homepage>
+        <Packager>
+            <Name>Fatih Turgel</Name>
+            <Email>turgelfatih@gmail.com</Email>
+        </Packager>
+        <License>PHP</License>
+        <IsA>library</IsA>
+        <Summary>PHP7 is an HTML-embedded scripting language. The goal of the language is to allow web developers to write dynamically generated pages quickly</Summary>
+        <Description>PHP7 is an HTML-embedded scripting language. Much of its syntax is borrowed from C, Java and Perl with a couple of unique PHP-specific features thrown in. The goal of the language is to allow web developers to write dynamically generated pages quickly.</Description>
+        <Archive sha1sum="09db5d7be818f6f126c14be8ee9b1ffc811cb8ba" type="tarxz">https://www.php.net/distributions/php-8.3.13.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>gd-devel</Dependency>
+            <Dependency>re2c</Dependency>
+            <Dependency>libzip-devel</Dependency>
+            <Dependency>harfbuzz-devel</Dependency>
+            <Dependency>apr-devel</Dependency>
+            <Dependency>apr-util-devel</Dependency>
+            <Dependency>apache</Dependency>
+            <Dependency>postfix</Dependency>
+            <Dependency>libxslt-devel</Dependency>
+            <Dependency>db-devel</Dependency>
+            <Dependency>mariadb-lib</Dependency>
+            <Dependency>libmcrypt-devel</Dependency>
+            <Dependency>mit-kerberos-devel</Dependency>
+            <Dependency>libc-client</Dependency>
+            <Dependency>postgresql-server</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>gdbm-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
+            <Dependency>oniguruma-devel</Dependency>
+            <Dependency>keyutils</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch level="0">db6.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>php8-cli</Name>
+        <Conflicts>
+            <Package>php-cli</Package>
+        </Conflicts>
+        <RuntimeDependencies>
+            <Dependency version="current">php-common</Dependency>
+            <Dependency>gd</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>mariadb-lib</Dependency>
+            <Dependency>libmcrypt</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>oniguruma</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>openssl</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/php/cli</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="man">/usr/share/man</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/usr/bin/go-pear" permission="0755" owner="root">go-pear</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>php8-common</Name>
+        <Conflicts>
+            <Package>php-common</Package>
+        </Conflicts>
+        <Summary>Common config files for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency>db</Dependency>
+		<Dependency>gd</Dependency>
+            <Dependency>pam</Dependency>
+            <Dependency>gdbm</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+        </RuntimeDependencies>
+
+        <Files>
+            <Path fileType="library">/usr/lib/php/modules</Path>
+            <Path fileType="data">/usr/share/php7</Path>
+            <Path fileType="data">/etc/php/ext</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>php8-devel</Name>
+        <Conflicts>
+            <Package>php-devel</Package>
+        </Conflicts>
+        <Summary>Development files for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">php-common</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/php-config</Path>
+            <Path fileType="executable">/usr/bin/phpize</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/php/build</Path>
+            <Path fileType="man">/usr/share/man/man1/php-config*</Path>
+            <Path fileType="man">/usr/share/man/man1/phpize*</Path>
+        </Files>
+    </Package>
+
+     <Package>
+        <Name>php8-pear</Name>
+        <Conflicts>
+            <Package>php-pear</Package>
+        </Conflicts>
+        <Summary>Development files for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency version="current">php-common</Dependency>
+        </RuntimeDependencies>
+        <Files>
+	    <Path fileType="config">/etc/pear.conf</Path>
+            <Path fileType="executable">/usr/bin/pear</Path>
+            <Path fileType="executable">/usr/bin/go-pear</Path>
+            <Path fileType="library">/usr/lib/php/PEAR/</Path>
+	    <Path fileType="library">/usr/lib/php/Structures</Path>
+	    <Path fileType="library">/usr/lib/php/.lock</Path>
+	    <Path fileType="library">/usr/lib/php/peclcmd.php</Path>
+	    <Path fileType="library">/usr/lib/php/pearcmd.php</Path>
+	    <Path fileType="library">/usr/lib/php/System.php</Path>
+	    <Path fileType="library">/usr/lib/php/PEAR.php</Path>
+	    <Path fileType="library">/usr/lib/php/.filemap</Path>
+	    <Path fileType="library">/usr/lib/php/.registry/</Path>
+	    <Path fileType="library">/usr/lib/php/Console/Getopt.php</Path>
+	    <Path fileType="library">/usr/lib/php/XML/Util.php</Path>
+	    <Path fileType="library">/usr/lib/php/Archive/Tar.php</Path>
+	    <Path fileType="library">/usr/lib/php/test/XML_Util</Path>
+	    <Path fileType="library">/usr/lib/php/test/Structures_Graph</Path>
+	    <Path fileType="library">/usr/lib/php/test/Console_Getopt</Path>
+	    <Path fileType="library">/usr/lib/php/.channels</Path>
+	    <Path fileType="library">/usr/lib/php/doc/</Path>
+	    <Path fileType="library">/usr/lib/php/data/PEAR/</Path>
+	    <Path fileType="library">/usr/lib/php/OS/Guess.php</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>mod_php8</Name>
+        <Conflicts>
+            <Package>mod_php</Package>
+        </Conflicts>
+        <PartOf>server.web</PartOf>
+        <RuntimeDependencies>
+            <Dependency>xz</Dependency>
+            <Dependency>pam</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>libnsl</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>apache</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency>libtool-ltdl</Dependency>
+            <Dependency>mariadb-lib</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>gd</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>cyrus-sasl</Dependency>
+            <Dependency>harfbuzz</Dependency>
+            <Dependency>php-common</Dependency>
+            <Dependency>libmcrypt</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+
+            <Dependency>sqlite</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>e2fsprogs</Dependency>
+            <Dependency>oniguruma</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/apache2/modules/libphp.so</Path>
+            <Path fileType="config">/etc/apache2</Path>
+            <Path fileType="config">/etc/php/apache2</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/apache2/modules.d/70_mod_php.conf" permission="0644" owner="root">70_mod_php8.conf</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>php8-zip</Name>
+        <Conflicts>
+            <Package>php-zip</Package>
+        </Conflicts>
+        <Summary>Zip extension for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency>php-common</Dependency>
+            <Dependency>pam</Dependency>
+            <Dependency>libzip</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/php/modules/zip.so</Path>
+            <Path fileType="config">/etc/php/cli/ext/10-php-zip.ini</Path>
+            <Path fileType="config">/etc/php/ext/10-php-zip.ini</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/php/ext/10-php-zip.ini" permission="0644" owner="root">10-php-zip.ini</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>php8-imap</Name>
+        <Conflicts>
+            <Package>php-imap</Package>
+        </Conflicts>
+        <Summary>Module for PHP to enable IMAP support</Summary>
+        <RuntimeDependencies>
+            <Dependency>pam</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>e2fsprogs</Dependency>
+            <Dependency>php-common</Dependency>
+            <Dependency>libc-client</Dependency>
+            <Dependency>mit-kerberos</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/php/modules/imap.so</Path>
+            <Path fileType="config">/etc/php/ext/11-php-imap.ini</Path>
+            <Path fileType="config">/etc/php/cli/ext/11-php-imap.ini</Path>
+            <Path fileType="config">/etc/php/apache2/ext/11-php-imap.ini</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/php/ext/11-php-imap.ini" permission="0644" owner="root">11-php-imap.ini</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+    <Package>
+        <Name>php8-fpm</Name>
+        <Conflicts>
+            <Package>php-fpm</Package>
+        </Conflicts>
+        <Summary>FPM for PHP</Summary>
+        <RuntimeDependencies>
+            <Dependency>libxslt</Dependency>
+            <Dependency>libmcrypt</Dependency>
+            <Dependency>php-common</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>postgresql-lib</Dependency>
+            <Dependency>openldap-client</Dependency>
+
+            <Dependency>curl</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>openssl</Dependency>
+            <Dependency>oniguruma</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/sbin/php-fpm</Path>
+            <Path fileType="man">/usr/share/man/man8/php-fpm.8</Path>
+            <Path fileType="config">/etc/php/ext/php-fpm.conf</Path>
+            <Path fileType="config">/etc/php-fpm.d/www.conf.default</Path>
+            <Path fileType="data">/usr/share/fpm</Path>
+            <Path fileType="data">/run</Path>
+            <Path fileType="data">/var/log</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile target="/etc/php/ext/php-fpm.conf" permission="0644" owner="root">php-fpm.conf</AdditionalFile>
+        </AdditionalFiles>
+        <Provides>
+            <COMAR script="service.py">System.Service</COMAR>
+        </Provides>
+    </Package>
+
+
+    <History>
+        <Update release="1">
+            <Date>2024-10-25</Date>
+            <Version>8.3.13</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
