@@ -58,7 +58,7 @@ def install():
     autotools.rawInstall("prefix=/usr DESTDIR=%s" % get.installDIR())
     shelltools.system("pwd")
     #install biber
-    pisitools.dobin("../../biber-2.18/bin/biber")
+    pisitools.dobin("../../biber-2.20/bin/biber")
 
     #pisitools.dodir("/usr/share/tlpkg/TeXLive")
     #shelltools.move("%s/source/utils/biber/TeXLive/*.pm" % get.workDIR(), "%s/usr/share/tlpkg/TeXLive" % get.installDIR())
