@@ -14,4 +14,4 @@ def install():
     pythonmodules.install()
     pisitools.insinto("/usr/share/emacs/site-lisp", "pymacs.el.in", "pymacs.el")
 
-    pisitools.dodoc("THANKS", "README", "TODO")
+    pisitools.dodoc("THANKS", "README*", "TODO")
