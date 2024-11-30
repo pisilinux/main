@@ -76,8 +76,8 @@ def install():
 #    pisitools.remove("/usr/share/texmf-dist/updmap.cfg")
 
     # remove unneeded dir
-    pisitools.removeDir("/usr/share/texmf-dist/scripts/context/stubs/mswin")
-    pisitools.removeDir("/usr/share/texmf-dist/scripts/context/stubs/win64")
+    # pisitools.removeDir("/usr/share/texmf-dist/scripts/context/stubs/mswin")
+    # pisitools.removeDir("/usr/share/texmf-dist/scripts/context/stubs/win64")
 
     # link programs from /usr/share/texmf-dist/scripts
     linked_scripts ="""
