@@ -13,7 +13,7 @@
         <IsA>app:gui</IsA>
         <Summary>3D modeling, animation, rendering and post-production application</Summary>
         <Description>blender is the essential software solution you need for 3D, from modeling, animation, rendering and post-production to interactive creation and playback.</Description>
-        <Archive sha1sum="c47dfde7e85b8d1f580dfd69654c4d875dc4db09" type="tarxz">https://download.blender.org/source/blender-4.0.2.tar.xz</Archive>
+        <Archive sha1sum="38addb2fab4d9d2b92a495f504cff1ffd5b8ae16" type="tarxz">https://download.blender.org/source/blender-4.3.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>git</Dependency>
             <Dependency>cmake</Dependency>
@@ -24,6 +24,7 @@
             <Dependency>ffmpeg-devel</Dependency>
             <Dependency>fftw3-devel</Dependency>
             <Dependency>boost-devel</Dependency>
+            <Dependency>vulkan-devel</Dependency>
             <Dependency>libepoxy-devel</Dependency>
             <Dependency>freetype-devel</Dependency>
             <Dependency versionFrom="2.0.0">glew-devel</Dependency>
@@ -55,7 +56,7 @@
             <Dependency>python3-requests</Dependency>
             <Dependency>python3-numpy</Dependency>
             <Dependency>onetbb-devel</Dependency>
-            <Dependency>OpenCOLLADA-devel</Dependency>
+<!--             <Dependency>OpenCOLLADA-devel</Dependency> -->
 <!--             <Dependency>OpenColorIO1-devel</Dependency> -->
             <Dependency>opencolorio-devel</Dependency>
             <Dependency>python3-idna</Dependency>
@@ -64,10 +65,13 @@
             <Dependency>zstd-devel</Dependency>
             <Dependency>brotli-devel</Dependency>
             <Dependency>openpgl-devel</Dependency>
+            <Dependency>shaderc-devel</Dependency>
+            <Dependency>vulkan-headers</Dependency>
+            <Dependency>wayland-protocols-devel</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch level="1">blender-openexr.patch</Patch> -->
-<!--             <Patch level="1">blender-3.0.0-intern-ghost-fix-typo-in-finding-XF86VMODE.patch</Patch> -->
+            <Patch level="1">ffmpeg-7-1.patch</Patch>
+            <Patch level="1">ffmpeg-7-2.patch</Patch>
         </Patches>
     </Source>
 
@@ -113,10 +117,12 @@
             <Dependency>tiff</Dependency>
             <Dependency>openimageio</Dependency>
             <Dependency>zlib</Dependency>
-            <Dependency>OpenCOLLADA</Dependency>
+<!--             <Dependency>OpenCOLLADA</Dependency> -->
             <Dependency>opencolorio</Dependency>
             <Dependency>jemalloc</Dependency>
             <Dependency>openpgl</Dependency>
+            <Dependency>shaderc</Dependency>
+            <Dependency>vulkan</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -139,6 +145,13 @@
     </Package>
 
     <History>
+        <Update release="12">
+            <Date>2024-11-28</Date>
+            <Version>4.3.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Ümit Solmaz</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
         <Update release="25">
             <Date>2023-12-06</Date>
             <Version>4.0.2</Version>

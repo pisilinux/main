@@ -17,6 +17,8 @@
         <Archive sha1sum="9e0869f132c985763f08b9805b6d514917192a31" type="targz">https://github.com/stachenov/quazip/archive/v1.4.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency>qt6-5compat-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>bzip2</Dependency>
             <Dependency>cmake</Dependency>
@@ -32,9 +34,23 @@
             <Dependency>libgcc</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libquazip1-qt5.so*</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/cmake/Modules/FindQuaZip5.cmake</Path>            
+<!--             <Path fileType="data">/usr/share/cmake/Modules/FindQuaZip5.cmake</Path>             -->
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>quazip-qt6</Name>
+        <RuntimeDependencies>
+            <Dependency>qt6-base</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>qt6-5compat</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libquazip1-qt6.so*</Path>
+<!--             <Path fileType="doc">/usr/share/doc</Path> -->
         </Files>
     </Package>
 
@@ -47,13 +63,35 @@
             <Dependency>zlib-devel</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/lib/cmake</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include/QuaZip-Qt5-*/</Path>
+            <Path fileType="data">/usr/lib/cmake/QuaZip-Qt5-*</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/quazip1-qt5.pc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>quazip-qt6-devel</Name>
+        <Summary>Development files for quazip</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">quazip-qt6</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/QuaZip-Qt6-*/</Path>
+            <Path fileType="data">/usr/lib/cmake/QuaZip-Qt6-*</Path>
+            <Path fileType="library">/usr/lib/pkgconfig/quazip1-qt6.pc</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="8">
+            <Date>2024-11-30</Date>
+            <Version>1.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="7">
             <Date>2023-01-25</Date>
             <Version>1.4</Version>

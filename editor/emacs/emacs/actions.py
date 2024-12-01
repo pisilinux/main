@@ -32,4 +32,4 @@ def install():
     #pisitools.remove("/usr/bin/emacs-*")
     #removeCruft()
 
-    pisitools.dodoc("ChangeLog", "BUGS", "README", "COPYING")
+    pisitools.dodoc("ChangeLog", "BUGS", "README*", "COPYING")
