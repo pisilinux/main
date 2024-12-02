@@ -13,7 +13,10 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
 
-    cmaketools.configure(sourceDir="..")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_BUILD_TYPE=Release \
+                          -DANDROID_TOOLS_LIBUSB_ENABLE_UDEV=ON \
+                          -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON", sourceDir="..")
 
 def build():
     cmaketools.make("-C build")
