@@ -35,7 +35,7 @@ def install():
     pisitools.insinto("/etc", "contrib/lircd.conf", "lircd.conf")
     pisitools.insinto("/etc", "contrib/lircmd.conf", "lircmd.conf")
 
-    pisitools.dohtml("doc/html/*.html")
+    pisitools.dohtml("doc/api-docs/html/*.html")
     pisitools.rename("/%s/%s" % (get.docDIR(), get.srcNAME()), "lirc")
 
     pisitools.insinto("/%s/lirc/contrib" % get.docDIR(), "contrib/*")
