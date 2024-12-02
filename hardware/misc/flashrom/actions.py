@@ -11,7 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure()
+    mesontools.configure("--default-library=both")
 
 def build():
     mesontools.build()
@@ -20,4 +20,4 @@ def install():
     mesontools.install()
     
     #shelltools.cd("..")
-    pisitools.dodoc("COPYING", "README")
+    pisitools.dodoc("COPYING", "README*")
