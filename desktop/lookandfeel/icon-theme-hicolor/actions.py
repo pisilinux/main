@@ -6,17 +6,18 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 WorkDir = "hicolor-icon-theme-%s" % get.srcVERSION()
 
 def setup():
-    autotools.configure()
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.install()
+    mesontools.install()
 
-    pisitools.dodoc("README", "ChangeLog")
+    pisitools.dodoc("README*", "COPYING")
