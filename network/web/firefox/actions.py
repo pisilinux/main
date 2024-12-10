@@ -99,6 +99,10 @@ def install():
 
     for s in (16, 22, 24, 32, 48, 64, 128, 256):
         pisitools.insinto("/usr/share/icons/hicolor/%dx%d/apps" % (s,s), "browser/branding/official/default%d.png" % s, "firefox.png")
+
+    pisitools.insinto("/usr/share/icons/hicolor/192x192/apps", "browser/branding/official/content/about-logo.png", "firefox.png")
+    pisitools.insinto("/usr/share/icons/hicolor/384x384/apps", "browser/branding/official/content/about-logo@2x.png", "firefox.png")
+    pisitools.insinto("/usr/share/icons/hicolor/scalable/apps", "browser/branding/official/content/about-logo.svg", "firefox.svg")
     
     # Install docs
     pisitools.dodoc("README*", "LICENSE")
