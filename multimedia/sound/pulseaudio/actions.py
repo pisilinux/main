@@ -33,6 +33,11 @@ j = ''.join([
     ])
 
 def setup():
+	shelltools.cd("%s" % get.workDIR())
+	shelltools.move("pulseaudio-*", "pulseaudio-%s" % get.srcVERSION())
+	shelltools.cd("pulseaudio-%s" % get.srcVERSION())
+	shelltools.echo(".tarball-version", get.srcVERSION())
+
 	options = "%s" % i
 
 	if get.buildTYPE() == "emul32":
