@@ -13,7 +13,7 @@ WorkDir = "numpy-%s" % get.srcVERSION()
 
 shelltools.export("ATLAS", "None")
 shelltools.export("PTATLAS", "None")
-shelltools.export("Cython", "/usr/bin/cython3")
+shelltools.export("CYTHON", "/usr/bin/cython3")
 # fix unused direct dependency analysis
 shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
 
