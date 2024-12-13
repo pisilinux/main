@@ -6,17 +6,21 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-#def setup():
+def setup():
+    pisitools.dosed("meson.build", "datadir", "libdir")
     #autotools.configure()
 
-#def build():
-    #autotools.make()
+def build():
+    shelltools.system("meson build --libdir=/usr/lib --includedir=/usr/include/EGL")
 
 def install():
-    pisitools.insinto("/usr/include/EGL", "interface/*")
-    pisitools.insinto("/usr/lib/pkgconfig", "*.pc")
+    mesontools.install()
+    # pisitools.insinto("/usr/include/EGL", "interface/*")
+    # pisitools.insinto("/usr/lib/pkgconfig", "*.pc")
     #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("COPYING", "README*")
