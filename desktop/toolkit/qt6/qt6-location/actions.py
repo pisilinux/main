@@ -16,4 +16,4 @@ def build():
 def install():
     qt6.install()
 
-    pisitools.dodoc("LICENSE.*")
+    pisitools.dodoc("LICENSES/*")
