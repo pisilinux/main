@@ -9,8 +9,7 @@ from pisi.actionsapi import pisitools
 
 
 def setup():
-    # kde6.configure()
-    kde5.configure()
+    kde6.configure()
 
 def build():
     kde6.make()
@@ -18,5 +17,5 @@ def build():
 def install():
     kde6.install()
 
-    pisitools.dodoc("AUTHORS", "CHANGES", "LICENSES", "GNU-LICENSE", "README")
+    pisitools.dodoc("AUTHORS", "CHANGES", "LICENSES", "GNU-LICENSE", "README*")
 
