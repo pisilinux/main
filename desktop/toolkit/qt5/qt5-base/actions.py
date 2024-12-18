@@ -24,7 +24,7 @@ bindirQt5="/usr/bin"
 
 def setup():
     shelltools.system("mkdir .git")
-    pisitools.dosed(".qmake.conf", "5.15.12", "5.15.12")
+    pisitools.dosed(".qmake.conf", "5.15.16", "5.15.12")
 
     #shelltools.system("patch -Rp1 < qt5-base-nouveau-freeze.patch")
     
