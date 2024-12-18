@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.cflags.add("-fPIC")
-    autotools.autoreconf("-fiv")
+    #autotools.autoreconf("-fiv")
     autotools.configure("--enable-openssl \
                          --enable-nss")
 
