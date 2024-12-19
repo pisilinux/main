@@ -7,16 +7,21 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.rawConfigure("--prefix=/usr")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
 
 def build():
-    #shelltools.system("lrelease src/lang/qbittorrent_tr.ts")
-    autotools.make()
+    shelltools.cd("build")
+    cmaketools.make()
 
 def install():
-    autotools.rawInstall("INSTALL_ROOT=%s" % get.installDIR())
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
+    shelltools.cd("..")
     pisitools.dodoc("AUTHORS", "Changelog", "COPYING*", "README.md")
