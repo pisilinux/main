@@ -15,7 +15,7 @@ VBoxDataDir = "/usr/share/virtualbox"
 KDIR = kerneltools.getKernelVersion()
 
 def setup():
-    shelltools.system("sed -i -e 's|pkg-config Qt5Core Qt5Gui|pkg-config Qt5Core|' configure")
+    # shelltools.system("sed -i -e 's|pkg-config Qt6Core Qt6Gui|pkg-config Qt6Core|' configure")
 
     pisitools.dosed("LocalConfig.kmk", "__VBOXLIBDIR__", VBoxLibDir)
     pisitools.dosed("LocalConfig.kmk", "__VBOXDATADIR__", VBoxDataDir)
@@ -108,9 +108,11 @@ def install():
     pisitools.dobin("additions/VBoxControl")
     
     pisitools.dobin("additions/VBoxDRMClient")
+    pisitools.dobin("additions/vboxwl")
 
     pisitools.dosbin("additions/VBoxService")
     pisitools.dosbin("additions/mount.vboxsf", "/sbin")
+
 
     pisitools.insinto("/lib/security", "additions/pam_vbox.so")
     
@@ -123,12 +125,12 @@ def install():
     # Python bindings
     pisitools.insinto("%s/sdk/bindings/xpcom" % VBoxLibDir, "sdk/bindings/xpcom/python")
 
-    shelltools.cd("sdk/installer")
-    shelltools.copy("vboxapisetup.py", "setup.py")
+    shelltools.cd("sdk/installer/python/vboxapi")
+    # shelltools.copy("vboxapisetup.py", "setup.py")
     shelltools.export("VBOX_INSTALL_PATH", VBoxLibDir)
     pythonmodules.install()
 
-    shelltools.cd("../..")
+    shelltools.cd("../../../..")
     mvb_name = "module-virtualbox-%s" % get.srcVERSION()
     mvbg_name = "module-virtualbox-guest-%s" % get.srcVERSION()
 
