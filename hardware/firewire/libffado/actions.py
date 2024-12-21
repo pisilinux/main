@@ -23,6 +23,6 @@ def install():
     pisitools.dodir("/usr/share/applications")
     pisitools.dosym("/usr/share/libffado/icons/hi64-apps-ffado.png", "/usr/share/pixmaps/ffado-mixer.png")
 
-    pisitools.domove("/usr/man/", "/usr/share")
+    # pisitools.domove("/usr/man/", "/usr/share")
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "LICENSE*", "TODO", "README")
