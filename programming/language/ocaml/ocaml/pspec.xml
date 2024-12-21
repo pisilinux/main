@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>ocaml</Name>
@@ -9,32 +9,19 @@
             <Email>kaptan@pisilinux.org</Email>
         </Packager>
         <License>OPL</License>
+        <License>LGPLv2.1</License>
         <IsA>app:console</IsA>
         <Summary>Fast modern type-inferring functional programming language</Summary>
         <Description>A fast modern type-inferring functional programming language descended from the ML (Meta Language) family.</Description>
-        <!-- Caution! Updating this package to a new version, may break ocaml modules like facile. Modules need to be recompiled to resolve this. Also, errors like below are indications of this situation:
-
-        File "_none_", line 1, characters 0-1:
-        Error: Files /usr/lib/ocaml/facile/facile.cmxa and /usr/lib/ocaml/stdlib.cmxa
-               make inconsistent assumptions over implementation Printf
-        -->
-        <Archive sha1sum="8f8083caa0b56bc9f6809f9f2a7996d2b84e768e" type="tarxz">https://caml.inria.fr/distrib/ocaml-4.14/ocaml-4.14.0.tar.xz</Archive>
+        <Archive sha1sum="f2ea89957729a54c773bdff0ffd0444644927292" type="tarxz">https://caml.inria.fr/distrib/ocaml-4.14/ocaml-4.14.2.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency>parallel</Dependency>
             <Dependency>zlib-devel</Dependency>
+            <Dependency>gdbm-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
-            <Dependency>libX11-devel</Dependency>
-            <Dependency>chrpath</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch level="1">fedora/0012-Stop-calling-ranlib-on-created-installed-libraries-1.patch</Patch> -->
-<!--             <Patch level="1">fedora/0001-Don-t-add-rpaths-to-libraries.patch</Patch> -->
-            <Patch level="1">fedora/0003-configure-Allow-user-defined-C-compiler-flags.patch</Patch>
-<!--             <Patch level="1">fedora/0003-configure-Remove-incorrect-assumption-about-cross-co.patch</Patch> -->
-<!--             <Patch level="1">fedora/0004-Remove-configure-from-.gitattributes.patch</Patch> -->
-<!--             <Patch level="1">fedora/0005-Fix-type-mismatches-between-definition-and-declarati.patch</Patch> -->
-<!--             <Patch level="1">fedora/0006-fix-caml_c_call-reload-caml_young_limit.patch</Patch> -->
-<!--             <Patch level="1">fedora/0007-Adapt-to-4.07.patch</Patch> -->
-<!--             <Patch level="1">fedora/0008-riscv-Emit-debug-info.patch</Patch> -->
+            <!-- <Patch level="1"></Patch> -->
         </Patches>
     </Source>
 
@@ -43,36 +30,23 @@
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
             <Dependency>ncurses</Dependency>
-            <Dependency>libX11</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin/</Path>
-            <Path fileType="library">/usr/lib/</Path>
-            <Path fileType="doc">/usr/share/doc/</Path>
-            <Path fileType="man">/usr/share/man/</Path>
-        </Files>
-    </Package>
-    
-    <Package>
-        <Name>ocaml-compiler-libs</Name>
-        <RuntimeDependencies>
-            <Dependency>ocaml</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.mli</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmi</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmo</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cma</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.a</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmxa</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmx</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.o</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmt</Path>
-            <Path fileType="library">/usr/lib/ocaml/compiler-libs/*.cmti</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="11">
+            <Date>2024-12-22</Date>
+            <Version>4.14.2</Version>
+            <Comment>Safety bugfix update.</Comment>
+            <Name>Abdallah Abdallah</Name>
+            <Email>pisiqueek@gmail.com</Email>
+        </Update>
         <Update release="10">
             <Date>2022-09-23</Date>
             <Version>4.14.0</Version>
