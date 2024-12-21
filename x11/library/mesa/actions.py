@@ -61,7 +61,7 @@ def setup():
         options += " -Dgallium-omx=bellagio -Dgallium-opencl=icd -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
-                             -Dvulkan-drivers=amd,intel,intel_hasvk,nouveau,swrast,virtio \
+                             -Dvulkan-drivers=amd,intel,intel_hasvk,nouveau,swrast,virtio,screenshot \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
