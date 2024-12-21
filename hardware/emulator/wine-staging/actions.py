@@ -85,4 +85,4 @@ def install():
         
     shelltools.cd("..")
 
-    pisitools.dodoc("ANNOUNCE", "AUTHORS", "COPYING.LIB", "LICENSE*", "README", "documentation/README.*")
+    pisitools.dodoc("ANNOUNCE*", "AUTHORS", "COPYING.*", "LICENSE*", "README*", "documentation/README.*")
