@@ -2,44 +2,43 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
+import os
+
+i = ''.join([
+    ' -prefix /usr',
+    ' -bindir /usr/bin',
+    ' -libdir /usr/lib/ocaml',
+    ' -mandir /usr/share/man',
+    ' --disable-installing-bytecode-programs '
+    ])
 
 def setup():
-    #shelltools.export("CFLAGS", get.CFLAGS().replace("-fomit-frame-pointer", ""))
-    #shelltools.export("LDFLAGS", get.LDFLAGS())
-
-    autotools.rawConfigure("-prefix /usr \
-                            -bindir /usr/bin \
-                            -libdir /usr/lib/ocaml \
-                            -mandir /usr/share/man \
-                            --with-pthread")
+	autotools.rawConfigure(i)
 
 def build():
-    autotools.make("-j1 world")
-    autotools.make("-j1 opt")
-    autotools.make("-j1 opt.opt")
-    #autotools.make("-C emacs ocamltags")
+	autotools.make("world.opt")
+
+def check():
+	autotools.make("ocamltest")
+	autotools.make("-C testsuite parallel")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #autotools.rawInstall("BINDIR=%(install)s/usr/bin \
-                          #LIBDIR=%(install)s/usr/lib/ocaml \
-                          #MANDIR=%(install)s/usr/share/man" \
-                          #% { "install": get.installDIR()})
+	destdir = get.installDIR()
+	autotools.rawInstall("DESTDIR=%s" % destdir)
 
-    pisitools.dodoc("Changes", "LICENSE", "README*")
+	pisitools.remove("/usr/bin/ocamldoc")
+	pisitools.dosym("ocamldoc.opt", "/usr/bin/ocamldoc")
 
+	dir__t = "%s/usr/lib/ocaml" % destdir
+	for dir__t, dirs, files in os.walk(dir__t):
+		for l in files:
+			if l.endswith((".cmt", ".cmti", ".ml")):
+				shelltools.unlink(os.path.join(dir__t, l))
 
-    ''' autotools.rawInstall("-C emacs \
-                        BINDIR=%(install)s/usr/bin \
-                        EMACSDIR=%(install)s/usr/share/emacs/site-lisp"
-                        % { "install": get.installDIR()})
-    '''
-    # Remove rpaths from stublibs .so files
-    shelltools.system("chrpath --delete %s/usr/lib/ocaml/stublibs/*.so"
-                    % get.installDIR())
+	pisitools.dodoc("LICENSE")
