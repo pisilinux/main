@@ -1,0 +1,56 @@
+From e8295730fd2b6fce9b7366277f5f7560e5d44768 Mon Sep 17 00:00:00 2001
+From: Bud Davis <jimmie.davis@uta.edu>
+Date: Thu, 19 Dec 2024 11:34:37 -0600
+Subject: [PATCH] Merged in pending pull requests, and cleared up a curl
+ deprecation warning.
+
+---
+ src/dlg_settings_ex.cpp | 4 +++-
+ src/downloader.cpp      | 6 ++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/dlg_settings_ex.cpp b/src/dlg_settings_ex.cpp
+index 5dca6ce..1d5279b 100644
+--- a/src/dlg_settings_ex.cpp
++++ b/src/dlg_settings_ex.cpp
+@@ -194,7 +194,9 @@ void dlg_settings::tab_ui_setup_ex()
+     m_box_trackcolor->color(fl_rgb_color(m_cfgui.trackcolor().r(), m_cfgui.trackcolor().g(), m_cfgui.trackcolor().b()));
+     m_box_selectioncolor->color(fl_rgb_color(m_cfgui.selectioncolor().r(), m_cfgui.selectioncolor().g(), m_cfgui.selectioncolor().b()));
+     m_box_gpscursorcolor->color(fl_rgb_color(m_cfgui.gpscursorcolor().r(), m_cfgui.gpscursorcolor().g(), m_cfgui.gpscursorcolor().b()));
+-    m_input_trackwidth->value(static_cast<std::ostringstream*>( &(std::ostringstream() << m_cfgui.tracklinewidth()) )->str().c_str());
++    std::ostringstream oss;
++    oss << m_cfgui.tracklinewidth();
++    m_input_trackwidth->value(oss.str().c_str());
+ }
+ 
+ void dlg_settings::tab_cache_setup_ex()
+diff --git a/src/downloader.cpp b/src/downloader.cpp
+index 840c848..3039766 100644
+--- a/src/downloader.cpp
++++ b/src/downloader.cpp
+@@ -1,6 +1,6 @@
+ #include <curl/curl.h>
+ #include <curl/easy.h>
+-#include <boost/bind.hpp>
++#include <boost/bind/bind.hpp>
+ #include <boost/date_time/posix_time/posix_time.hpp>
+ #include <FL/Fl.H>
+ 
+@@ -8,6 +8,8 @@
+ #include "version.hpp"
+ #include "downloader.hpp"
+ 
++using namespace boost::placeholders;
++
+ florb::downloader::downloader(int nthreads) : 
+     m_timeout(10),
+     m_nice(0),
+@@ -221,7 +223,7 @@ void florb::downloader::worker()
+     curl_easy_setopt(curl_handle, CURLOPT_HEADERFUNCTION, cb_header);
+ 
+     curl_easy_setopt(curl_handle, CURLOPT_NOSIGNAL, 1);
+-    curl_easy_setopt(curl_handle, CURLOPT_DNS_USE_GLOBAL_CACHE, 0);
++    curl_easy_setopt(curl_handle, CURLOPT_SHARE, 0);
+ 
+     curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, timeout());
+     curl_easy_setopt(curl_handle, CURLOPT_CONNECTTIMEOUT, timeout()); 
