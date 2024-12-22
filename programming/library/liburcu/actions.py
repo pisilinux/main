@@ -17,4 +17,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog", "LICENSE", "README*")
+    pisitools.dodoc("ChangeLog", "README*")
