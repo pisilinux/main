@@ -6,16 +6,16 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 from pisi.actionsapi import get
 
 def setup():
-    kde5.configure()
+    kde6.configure()
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
     pisitools.dosym("/usr/share/icons/hicolor/48x48/apps/krusader_user.png", "/usr/share/icons/hicolor/48x48/apps/krusader.png")
     pisitools.dodoc("AUTHORS", "ChangeLog", "LICENSES/*", "README*")
