@@ -1,0 +1,37 @@
+From fc7f5eaf4446feeec3e58caadc6bad4133b9e626 Mon Sep 17 00:00:00 2001
+From: amidevous <amidevous@users.noreply.github.com>
+Date: Mon, 6 Nov 2023 11:08:20 +0100
+Subject: [PATCH] Update openssl.c
+
+---
+ ext/openssl/openssl.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
+index aa819be422..65a3500b49 100644
+--- a/ext/openssl/openssl.c
++++ b/ext/openssl/openssl.c
+@@ -55,6 +55,10 @@
+ #include <openssl/rand.h>
+ #include <openssl/ssl.h>
+ #include <openssl/pkcs12.h>
++#if PHP_OPENSSL_API_VERSION >= 0x30000
++#include <openssl/core_names.h>
++#include <openssl/param_build.h>
++#endif
+ 
+ /* Common */
+ #include <time.h>
+@@ -1515,9 +1519,11 @@ PHP_MINIT_FUNCTION(openssl)
+ 	REGISTER_LONG_CONSTANT("PKCS7_NOATTR", PKCS7_NOATTR, CONST_CS|CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("PKCS7_BINARY", PKCS7_BINARY, CONST_CS|CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("PKCS7_NOSIGS", PKCS7_NOSIGS, CONST_CS|CONST_PERSISTENT);
+-
++#ifdef RSA_SSLV23_PADDING
+ 	REGISTER_LONG_CONSTANT("OPENSSL_PKCS1_PADDING", RSA_PKCS1_PADDING, CONST_CS|CONST_PERSISTENT);
++#endif
+ 	REGISTER_LONG_CONSTANT("OPENSSL_SSLV23_PADDING", RSA_SSLV23_PADDING, CONST_CS|CONST_PERSISTENT);
++
+ 	REGISTER_LONG_CONSTANT("OPENSSL_NO_PADDING", RSA_NO_PADDING, CONST_CS|CONST_PERSISTENT);
+ 	REGISTER_LONG_CONSTANT("OPENSSL_PKCS1_OAEP_PADDING", RSA_PKCS1_OAEP_PADDING, CONST_CS|CONST_PERSISTENT);
+ 
