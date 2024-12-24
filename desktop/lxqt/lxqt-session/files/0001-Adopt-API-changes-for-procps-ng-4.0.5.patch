@@ -1,0 +1,53 @@
+From c80cf37c5dcc6af2dc505ce8b319ce1915893107 Mon Sep 17 00:00:00 2001
+From: Christian Hesse <mail@eworm.de>
+Date: Thu, 19 Dec 2024 10:19:11 +0100
+Subject: [PATCH 1/1] Adopt API changes for procps-ng 4.0.5
+
+The 'info' parameter was dropped in 'VAL' macros.
+
+https://gitlab.com/procps-ng/procps/-/commit/967fdcfb06e20aad0f31073474cb94545c9bdea5
+---
+ CMakeLists.txt                  | 3 +++
+ lxqt-session/src/procreaper.cpp | 8 ++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 932f789..855a35f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,6 +40,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+     message(STATUS "Using PROCPS -> ${PROCPS_MODULE_NAME} v${PROCPS_VERSION}")
+     if (PROCPS_VERSION VERSION_GREATER_EQUAL 4.0.0)
+         add_definitions("-DUSING_LIBPROC2")
++        if (PROCPS_VERSION VERSION_GREATER_EQUAL 4.0.5)
++            add_definitions("-DUSING_LIBPROC2_1")
++        endif()
+     endif()
+ endif()
+ 
+diff --git a/lxqt-session/src/procreaper.cpp b/lxqt-session/src/procreaper.cpp
+index ea61453..8069c60 100644
+--- a/lxqt-session/src/procreaper.cpp
++++ b/lxqt-session/src/procreaper.cpp
+@@ -121,10 +121,18 @@ void ProcReaper::stop(const std::set<int64_t> & excludedPids)
+     pids_stack * stack = nullptr;
+     while ((stack = procps_pids_get(info, PIDS_FETCH_TASKS_ONLY)))
+     {
++# if defined(USING_LIBPROC2_1)
++        const int ppid = PIDS_VAL(rel_ppid, s_int, stack);
++# else
+         const int ppid = PIDS_VAL(rel_ppid, s_int, stack, info);
++# endif
+         if (ppid == my_pid)
+         {
++# if defined(USING_LIBPROC2_1)
++            const int tgid = PIDS_VAL(rel_tgid, s_int, stack);
++# else
+             const int tgid = PIDS_VAL(rel_tgid, s_int, stack, info);
++# endif
+             children.push_back(tgid);
+         }
+     }
+-- 
+false
+
