@@ -7,14 +7,21 @@
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+
+
+
+def setup():
+    shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
+    mesontools.configure()
+
 
 def build():
-    shelltools.system("grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'")
-    pythonmodules.compile(pyVer="3")
+    mesontools.build()
 
 def install():
-    pythonmodules.install(pyVer="3")
+    mesontools.install()
     
     pisitools.dosym("/usr/share/icons/hicolor/scalable/apps/org.xfce.catfish.svg", "/usr/share/pixmaps/org.xfce.catfish.svg")
 
-    #pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
