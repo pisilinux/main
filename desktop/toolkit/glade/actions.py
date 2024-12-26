@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
+    shelltools.system("sed -i 's/webkit2gtk-4.0/webkit2gtk-4.1/' meson.build")
     mesontools.configure("--prefix=/usr -Dgtk_doc=true -Dgladeui=true -Dgjs=auto")
 
 def build():
