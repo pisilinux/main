@@ -50,4 +50,4 @@ def install():
     
     # provide jpegint.h as it is required by various software
     #pisitools.insinto("/usr/lib/include", "jpegint.h")
-    pisitools.insinto("/usr/include", "jpegint.h")
+    pisitools.insinto("/usr/include", "src/jpegint.h")
