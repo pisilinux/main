@@ -24,4 +24,4 @@ def install():
     for comp in blacklist:
        pisitools.remove("/usr/share/bash-completion/completions/%s" % comp)
 
-    pisitools.dodoc("AUTHORS", "CHANGES", "COPYING", "README.md")
+    pisitools.dodoc("AUTHORS", "COPYING", "README.md")
