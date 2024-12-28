@@ -23,7 +23,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s STRIP=true" % get.installDIR())
-    for i in ["uninstall_zenmap", "nmapfe", "xnmap"]:
+    for i in ["nmapfe", "xnmap"]:
         pisitools.remove("/usr/bin/%s" % i)
 
     pisitools.dodoc("LICENSE", "HACKING", "README.md")
