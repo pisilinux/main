@@ -13,7 +13,7 @@ def setup():
     pisitools.dosed("src/osdep/unix/Makefile","SSLCERTS=$(SSLDIR)/certs","SSLCERTS=/etc/pki/tls/certs/")
 
 def build():
-    autotools.make("lnp EXTRAAUTHENTICATORS=gss SSLTYPE=unix.nopwd  \
+    autotools.make("-j1 lnp EXTRAAUTHENTICATORS=gss SSLTYPE=unix.nopwd  \
             EXTRACFLAGS=\"%s\" " %get.CFLAGS())
 
 def install():
