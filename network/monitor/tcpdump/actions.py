@@ -30,7 +30,7 @@ def check():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.remove("/usr/bin/tcpdump.4.99.1")
+    pisitools.remove("/usr/bin/tcpdump.%s" % get.srcVERSION())
     #pisitools.dosbin("tcpdump")
     #pisitools.doman("tcpdump.1")
     #pisitools.dodoc("CHANGES", "LICENSE", "README", "CREDITS", "PLATFORMS", "VERSION", "*.awk")
