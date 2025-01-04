@@ -48,6 +48,7 @@ def setup():
                         --sysconfdir=/etc                 \
                         --with-vendor="Pisi GNU/Linux"    \
                         --with-lang="%s"                  \
+                        --with-system-rhino               \
                         --disable-odk                     \
                         --enable-qt5                      \
                         --enable-qt6                      \
