@@ -53,7 +53,7 @@ def install():
     # shelltools.cd("..")
 
     # Install fix language packs
-    pisitools.insinto("/usr/lib/thunderbird/extensions", "langpack-tb/*")
+    pisitools.insinto("/usr/lib/thunderbird/extensions", "./langpack-tb/*")
 
     pisitools.insinto("/usr/share/metainfo", "comm/mail/branding/thunderbird/net.thunderbird.Thunderbird.appdata.xml")
 
