@@ -10,13 +10,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 
-ObjDir = "build"
+# ObjDir = "build"
 MOZAPPDIR= "/usr/lib/thunderbird"
 shelltools.export("SHELL", "/bin/sh")
-shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
+shelltools.export("PYTHON", "/usr/bin/python3")
+# shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
+shelltools.system("export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=none")
 shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 
-locales = "ca  da  de  el  en-GB en-US  es-AR  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
+locales = "be ca  da  de  el  en-GB en-US  es-AR  es-ES  fi  fr  hr  hu  it  lt nl  pl  pt-BR  pt-PT  ro  ru  sr  sv-SE  tr  uk".split()
 xpidir = "%s/xpi" % get.workDIR()
 arch = get.ARCH()
 ver = ".".join(get.srcVERSION().split(".")[:3])
@@ -28,27 +30,27 @@ def setup():
     shelltools.system("rm -rf langpack-tb/*/browser/defaults")
     if not shelltools.isDirectory(xpidir): shelltools.makedirs(xpidir)
     for locale in locales:
-        shelltools.system("wget -c -P %s http://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/%s/linux-%s/xpi/%s.xpi" % (xpidir, ver, arch, locale))
+        shelltools.system("wget -c -P %s http://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/%sesr/linux-%s/xpi/%s.xpi" % (xpidir, ver, arch, locale))
 
         shelltools.makedirs("langpack-tb")
         shelltools.system("cp %s/%s.xpi langpack-tb/langpack-%s@thunderbird.mozilla.org.xpi" % (xpidir, locale, locale))
         #shelltools.makedirs("langpack-tb/langpack-%s@thunderbird.mozilla.org" % locale)
         #shelltools.system("unzip -uo %s/%s.xpi -d langpack-tb/langpack-%s@thunderbird.mozilla.org" % (xpidir, locale, locale))
 
-    shelltools.makedirs(ObjDir)
-    shelltools.cd(ObjDir)
-    shelltools.system("../mach configure")
+    # shelltools.makedirs(ObjDir)
+    # shelltools.cd(ObjDir)
+    shelltools.system("./mach configure")
 
 def build():
-    shelltools.cd(ObjDir)
-    shelltools.system("../mach build")
-    shelltools.system("../mach buildsymbols")
+    # shelltools.cd(ObjDir)
+    shelltools.system("./mach build")
+    shelltools.system("./mach buildsymbols")
 
 def install():
-    shelltools.cd(ObjDir)
-    shelltools.system("DESTDIR=%s ../mach install " % get.installDIR())
+    # shelltools.cd(ObjDir)
+    shelltools.system("DESTDIR=%s ./mach install " % get.installDIR())
 
-    shelltools.cd("..")
+    # shelltools.cd("..")
 
     # Install fix language packs
     pisitools.insinto("/usr/lib/thunderbird/extensions", "langpack-tb/*")
