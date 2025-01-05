@@ -14,7 +14,6 @@ from pisi.actionsapi import shelltools
 MOZAPPDIR= "/usr/lib/thunderbird"
 shelltools.export("SHELL", "/bin/sh")
 shelltools.export("PYTHON", "/usr/bin/python3")
-# shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
 shelltools.system("export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=none")
 shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 
@@ -37,20 +36,14 @@ def setup():
         #shelltools.makedirs("langpack-tb/langpack-%s@thunderbird.mozilla.org" % locale)
         #shelltools.system("unzip -uo %s/%s.xpi -d langpack-tb/langpack-%s@thunderbird.mozilla.org" % (xpidir, locale, locale))
 
-    # shelltools.makedirs(ObjDir)
-    # shelltools.cd(ObjDir)
     shelltools.system("./mach configure")
 
 def build():
-    # shelltools.cd(ObjDir)
     shelltools.system("./mach build")
     shelltools.system("./mach buildsymbols")
 
 def install():
-    # shelltools.cd(ObjDir)
     shelltools.system("DESTDIR=%s ./mach install " % get.installDIR())
-
-    # shelltools.cd("..")
 
     # Install fix language packs
     pisitools.insinto("/usr/lib/thunderbird/extensions", "./langpack-tb/*")
