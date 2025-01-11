@@ -48,4 +48,4 @@ def install():
 
     pisitools.doman("doc/*.3")
 
-    pisitools.dodoc("AUTHORS", "COPYING", "README", "doc/*.txt")
+    pisitools.dodoc("AUTHORS", "COPYING", "README*", "doc/*.txt")
