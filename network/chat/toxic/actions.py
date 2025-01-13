@@ -8,11 +8,9 @@ from pisi.actionsapi import autotools, get
 
 j = ''.join([
     ' PREFIX=/usr',
-    ' DISABLE_DESKTOP_NOTIFY=0',
-    ' DISABLE_SOUND_NOTIFY=1',
-    ' DISABLE_AV=0',
-    ' DISABLE_X11=0',
-    ' DISABLE_GAMES=0 '
+    ' DISABLE_{SOUND,DESKTOP}_NOTIFY=0',
+    ' DISABLE_{AV,VI,X11}=0',
+    ' DISABLE_GAMES=1 '
     ])
 
 def build():

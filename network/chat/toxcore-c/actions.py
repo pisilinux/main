@@ -4,28 +4,25 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools, cmaketools, pisitools, get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
 j = ''.join([
     ' -DCMAKE_BUILD_TYPE=Release',
     ' -DMUST_BUILD_TOXAV=ON',
+    ' -DEXPERIMENTAL_API=ON',
     ' -DDHT_BOOTSTRAP=OFF',
     ' -DENABLE_STATIC=OFF',
-    ' -B_build -L '
+    ' -Bbuild -G Ninja -L '
     ])
 
 def setup():
-	pisitools.dosed("CMakeLists.txt", "RPATH", deleteLine = True)
-	pisitools.unlinkDir("third_party/cmp")
-	shelltools.system("ln -s cmp-e836703291392aba9db92b46fb47929521fac71f ./third_party/cmp")
 	cmaketools.configure(j)
 
 def build():
-	shelltools.cd("_build")
-	cmaketools.make()
+	mesontools.build()
 
 def install():
-	pisitools.insinto("/etc", "other/bootstrap_daemon/tox-bootstrapd.conf")
+	mesontools.install()
 
-	shelltools.cd("_build")
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+	pisitools.insinto("/etc", "other/bootstrap_daemon/tox-bootstrapd.conf")
+	pisitools.dodoc("LICENSE")
