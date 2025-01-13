@@ -1,0 +1,430 @@
+From 819aa2b26182f703855b09ad3dd618786a64c6cb Mon Sep 17 00:00:00 2001
+From: iphydf <iphydf@users.noreply.github.com>
+Date: Sat, 17 Feb 2024 20:10:04 +0000
+Subject: [PATCH] feat: Add option to disable DNS lookups in toxcore.
+
+Allows clients to prevent leaking IP addresses through DNS lookups. This
+option, together with disabling Tox UDP, entirely prevents any UDP
+packets being sent by toxcore.
+---
+ auto_tests/network_test.c           |  8 ++++----
+ other/DHT_bootstrap.c               |  5 ++++-
+ other/bootstrap_daemon/src/config.c |  5 ++++-
+ testing/Messenger_test.c            |  5 ++++-
+ toxcore/DHT.c                       |  4 ++--
+ toxcore/DHT.h                       |  3 ++-
+ toxcore/Messenger.h                 |  2 ++
+ toxcore/network.c                   | 28 +++++++++++++++-------------
+ toxcore/network.h                   | 27 +++++++++++++++++----------
+ toxcore/tox.c                       |  7 +++++--
+ toxcore/tox.h                       | 22 ++++++++++++++++++++++
+ toxcore/tox_api.c                   |  9 +++++++++
+ toxcore/tox_private.c               |  2 +-
+ 13 files changed, 91 insertions(+), 36 deletions(-)
+
+diff --git a/auto_tests/network_test.c b/auto_tests/network_test.c
+index 76cb94a17f..ebf3982708 100644
+--- a/auto_tests/network_test.c
++++ b/auto_tests/network_test.c
+@@ -28,7 +28,7 @@ static void test_addr_resolv_localhost(void)
+     IP ip;
+     ip_init(&ip, 0); // ipv6enabled = 0
+ 
+-    bool res = addr_resolve_or_parse_ip(ns, localhost, &ip, nullptr);
++    bool res = addr_resolve_or_parse_ip(ns, localhost, &ip, nullptr, true);
+ 
+     int error = net_error();
+     char *strerror = net_new_strerror(error);
+@@ -42,14 +42,14 @@ static void test_addr_resolv_localhost(void)
+                   net_ip_ntoa(&ip, &ip_str));
+ 
+     ip_init(&ip, 1); // ipv6enabled = 1
+-    res = addr_resolve_or_parse_ip(ns, localhost, &ip, nullptr);
++    res = addr_resolve_or_parse_ip(ns, localhost, &ip, nullptr, true);
+ 
+ #if USE_IPV6
+ 
+     int localhost_split = 0;
+ 
+     if (!net_family_is_ipv6(ip.family)) {
+-        res = addr_resolve_or_parse_ip(ns, "ip6-localhost", &ip, nullptr);
++        res = addr_resolve_or_parse_ip(ns, "ip6-localhost", &ip, nullptr, true);
+         localhost_split = 1;
+     }
+ 
+@@ -75,7 +75,7 @@ static void test_addr_resolv_localhost(void)
+     ip.family = net_family_unspec();
+     IP extra;
+     ip_reset(&extra);
+-    res = addr_resolve_or_parse_ip(ns, localhost, &ip, &extra);
++    res = addr_resolve_or_parse_ip(ns, localhost, &ip, &extra, true);
+     error = net_error();
+     strerror = net_new_strerror(error);
+     ck_assert_msg(res, "Resolver failed: %d, %s", error, strerror);
+diff --git a/other/DHT_bootstrap.c b/other/DHT_bootstrap.c
+index 3b22ad688c..c4511aa1f2 100644
+--- a/other/DHT_bootstrap.c
++++ b/other/DHT_bootstrap.c
+@@ -228,9 +228,12 @@ int main(int argc, char *argv[])
+ 
+         const uint16_t port = net_htons((uint16_t)port_conv);
+ 
++        // TODO(iphydf): Maybe disable and only use IP addresses?
++        const bool dns_enabled = true;
++
+         uint8_t *bootstrap_key = hex_string_to_bin(argv[argvoffset + 3]);
+         const bool res = dht_bootstrap_from_address(dht, argv[argvoffset + 1],
+-                         ipv6enabled, port, bootstrap_key);
++                         ipv6enabled, dns_enabled, port, bootstrap_key);
+         free(bootstrap_key);
+ 
+         if (!res) {
+diff --git a/other/bootstrap_daemon/src/config.c b/other/bootstrap_daemon/src/config.c
+index ba9efa2ad7..19779c5f76 100644
+--- a/other/bootstrap_daemon/src/config.c
++++ b/other/bootstrap_daemon/src/config.c
+@@ -390,6 +390,9 @@ bool bootstrap_from_config(const char *cfg_file_path, DHT *dht, bool enable_ipv6
+         bool address_resolved;
+         uint8_t *bs_public_key_bin;
+ 
++        // TODO(iphydf): Maybe disable it and only use IP addresses?
++        const bool dns_enabled = true;
++
+         node = config_setting_get_elem(node_list, 0);
+ 
+         if (node == nullptr) {
+@@ -429,7 +432,7 @@ bool bootstrap_from_config(const char *cfg_file_path, DHT *dht, bool enable_ipv6
+         }
+ 
+         bs_public_key_bin = bootstrap_hex_string_to_bin(bs_public_key);
+-        address_resolved = dht_bootstrap_from_address(dht, bs_address, enable_ipv6, net_htons(bs_port),
++        address_resolved = dht_bootstrap_from_address(dht, bs_address, enable_ipv6, dns_enabled, net_htons(bs_port),
+                            bs_public_key_bin);
+         free(bs_public_key_bin);
+ 
+diff --git a/testing/Messenger_test.c b/testing/Messenger_test.c
+index 65ea8a9d2e..18d7347e66 100644
+--- a/testing/Messenger_test.c
++++ b/testing/Messenger_test.c
+@@ -118,10 +118,13 @@ int main(int argc, char *argv[])
+             exit(1);
+         }
+ 
++        // TODO(iphydf): Maybe disable.
++        const bool dns_enabled = true;
++
+         const uint16_t port = net_htons((uint16_t)port_conv);
+         uint8_t *bootstrap_key = hex_string_to_bin(argv[argvoffset + 3]);
+         bool res = dht_bootstrap_from_address(m->dht, argv[argvoffset + 1],
+-                                              ipv6enabled, port, bootstrap_key);
++                                              ipv6enabled, dns_enabled, port, bootstrap_key);
+         free(bootstrap_key);
+ 
+         if (!res) {
+diff --git a/toxcore/DHT.c b/toxcore/DHT.c
+index 89c85c3463..a9bbca4b3f 100644
+--- a/toxcore/DHT.c
++++ b/toxcore/DHT.c
+@@ -1840,7 +1840,7 @@ bool dht_bootstrap(DHT *dht, const IP_Port *ip_port, const uint8_t *public_key)
+     return dht_getnodes(dht, ip_port, public_key, dht->self_public_key);
+ }
+ 
+-bool dht_bootstrap_from_address(DHT *dht, const char *address, bool ipv6enabled,
++bool dht_bootstrap_from_address(DHT *dht, const char *address, bool ipv6enabled, bool dns_enabled,
+                                 uint16_t port, const uint8_t *public_key)
+ {
+     IP_Port ip_port_v64;
+@@ -1855,7 +1855,7 @@ bool dht_bootstrap_from_address(DHT *dht, const char *address, bool ipv6enabled,
+         ip_extra = &ip_port_v4.ip;
+     }
+ 
+-    if (addr_resolve_or_parse_ip(dht->ns, address, &ip_port_v64.ip, ip_extra)) {
++    if (addr_resolve_or_parse_ip(dht->ns, address, &ip_port_v64.ip, ip_extra, dns_enabled)) {
+         ip_port_v64.port = port;
+         dht_bootstrap(dht, &ip_port_v64, public_key);
+ 
+diff --git a/toxcore/DHT.h b/toxcore/DHT.h
+index 19a9e1d937..38e98ba64f 100644
+--- a/toxcore/DHT.h
++++ b/toxcore/DHT.h
+@@ -404,12 +404,13 @@ bool dht_bootstrap(DHT *dht, const IP_Port *ip_port, const uint8_t *public_key);
+  * @param address can be a hostname or an IP address (IPv4 or IPv6).
+  * @param ipv6enabled if false, the resolving sticks STRICTLY to IPv4 addresses.
+  *   Otherwise, the resolving looks for IPv6 addresses first, then IPv4 addresses.
++ * @param dns_enabled if false, the resolving does not use DNS, only IP addresses are supported.
+  *
+  * @retval true if the address could be converted into an IP address
+  * @retval false otherwise
+  */
+ non_null()
+-bool dht_bootstrap_from_address(DHT *dht, const char *address, bool ipv6enabled,
++bool dht_bootstrap_from_address(DHT *dht, const char *address, bool ipv6enabled, bool dns_enabled,
+                                 uint16_t port, const uint8_t *public_key);
+ 
+ /** @brief Start sending packets after DHT loaded_friends_list and loaded_clients_list are set.
+diff --git a/toxcore/Messenger.h b/toxcore/Messenger.h
+index 998a009f15..be6fb5f804 100644
+--- a/toxcore/Messenger.h
++++ b/toxcore/Messenger.h
+@@ -86,6 +86,8 @@ typedef struct Messenger_Options {
+ 
+     Messenger_State_Plugin *state_plugins;
+     uint8_t state_plugins_length;
++
++    bool dns_enabled;
+ } Messenger_Options;
+ 
+ struct Receipts {
+diff --git a/toxcore/network.c b/toxcore/network.c
+index 08c61a2ce2..74d0dcba71 100644
+--- a/toxcore/network.c
++++ b/toxcore/network.c
+@@ -1826,19 +1826,19 @@ bool addr_parse_ip(const char *address, IP *to)
+  * prefers v6 if `ip.family` was TOX_AF_UNSPEC and both available
+  * Returns in `*extra` an IPv4 address, if family was TOX_AF_UNSPEC and `*to` is TOX_AF_INET6
+  *
+- * @return 0 on failure, `TOX_ADDR_RESOLVE_*` on success.
++ * @return false on failure, true on success.
+  */
+ non_null(1, 2, 3) nullable(4)
+-static int addr_resolve(const Network *ns, const char *address, IP *to, IP *extra)
++static bool addr_resolve(const Network *ns, const char *address, IP *to, IP *extra)
+ {
+ #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+     if ((true)) {
+-        return 0;
++        return false;
+     }
+ #endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+ 
+     if (address == nullptr || to == nullptr) {
+-        return 0;
++        return false;
+     }
+ 
+     const Family tox_family = to->family;
+@@ -1854,7 +1854,7 @@ static int addr_resolve(const Network *ns, const char *address, IP *to, IP *extr
+ 
+     // Lookup failed.
+     if (rc != 0) {
+-        return 0;
++        return false;
+     }
+ 
+     IP ip4;
+@@ -1918,18 +1918,16 @@ static int addr_resolve(const Network *ns, const char *address, IP *to, IP *extr
+     }
+ 
+     freeaddrinfo(server);
+-    return result;
++    return result != 0;
+ }
+ 
+-bool addr_resolve_or_parse_ip(const Network *ns, const char *address, IP *to, IP *extra)
++bool addr_resolve_or_parse_ip(const Network *ns, const char *address, IP *to, IP *extra, bool dns_enabled)
+ {
+-    if (addr_resolve(ns, address, to, extra) == 0) {
+-        if (!addr_parse_ip(address, to)) {
+-            return false;
+-        }
++    if (dns_enabled && addr_resolve(ns, address, to, extra)) {
++        return true;
+     }
+ 
+-    return true;
++    return addr_parse_ip(address, to);
+ }
+ 
+ bool net_connect(const Network *ns, const Memory *mem, const Logger *log, Socket sock, const IP_Port *ip_port)
+@@ -1984,7 +1982,7 @@ bool net_connect(const Network *ns, const Memory *mem, const Logger *log, Socket
+     return true;
+ }
+ 
+-int32_t net_getipport(const Memory *mem, const char *node, IP_Port **res, int tox_type)
++int32_t net_getipport(const Memory *mem, const char *node, IP_Port **res, int tox_type, bool dns_enabled)
+ {
+     assert(node != nullptr);
+ 
+@@ -2006,6 +2004,10 @@ int32_t net_getipport(const Memory *mem, const char *node, IP_Port **res, int to
+         return 1;
+     }
+ 
++    if (!dns_enabled) {
++        return -1;
++    }
++
+ #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+     if ((true)) {
+         IP_Port *ip_port = (IP_Port *)mem_alloc(mem, sizeof(IP_Port));
+diff --git a/toxcore/network.h b/toxcore/network.h
+index 8c6cc5de2e..3e191e13a8 100644
+--- a/toxcore/network.h
++++ b/toxcore/network.h
+@@ -398,21 +398,22 @@ non_null()
+ void ipport_copy(IP_Port *target, const IP_Port *source);
+ 
+ /**
+- * Resolves string into an IP address
++ * @brief Resolves string into an IP address.
+  *
+- * @param address a hostname (or something parseable to an IP address)
+- * @param to to.family MUST be initialized, either set to a specific IP version
++ * @param[in] address a hostname (or something parseable to an IP address).
++ * @param[in,out] to to.family MUST be initialized, either set to a specific IP version
+  *   (TOX_AF_INET/TOX_AF_INET6) or to the unspecified TOX_AF_UNSPEC (0), if both
+- *   IP versions are acceptable
+- * @param extra can be NULL and is only set in special circumstances, see returns
++ *   IP versions are acceptable.
++ * @param[out] extra can be NULL and is only set in special circumstances, see returns.
++ * @param[in] dns_enabled if false, DNS resolution is skipped.
+  *
+- * Returns in `*to` a matching address (IPv6 or IPv4)
+- * Returns in `*extra`, if not NULL, an IPv4 address, if `to->family` was TOX_AF_UNSPEC
++ * Returns in `*to` a matching address (IPv6 or IPv4).
++ * Returns in `*extra`, if not NULL, an IPv4 address, if `to->family` was `TOX_AF_UNSPEC`.
+  *
+  * @return true on success, false on failure
+  */
+ non_null(1, 2, 3) nullable(4)
+-bool addr_resolve_or_parse_ip(const Network *ns, const char *address, IP *to, IP *extra);
++bool addr_resolve_or_parse_ip(const Network *ns, const char *address, IP *to, IP *extra, bool dns_enabled);
+ 
+ /** @brief Function to receive data, ip and port of sender is put into ip_port.
+  * Packet data is put into data.
+@@ -512,14 +513,20 @@ bool net_connect(const Network *ns, const Memory *mem, const Logger *log, Socket
+  * address that can be specified by calling `net_connect()`, the port is ignored.
+  *
+  * Skip all addresses with socktype != type (use type = -1 to get all addresses)
+- * To correctly deallocate array memory use `net_freeipport()`
++ * To correctly deallocate array memory use `net_freeipport()`.
++ *
++ * @param mem Memory allocator.
++ * @param node The node parameter identifies the host or service on which to connect.
++ * @param[out] res An array of IP_Port structures will be allocated into this pointer.
++ * @param tox_type The type of socket to use (stream or datagram), only relevant for DNS lookups.
++ * @param dns_enabled If false, DNS resolution is skipped, when passed a hostname, this function will return an error.
+  *
+  * @return number of elements in res array.
+  * @retval 0 if res array empty.
+  * @retval -1 on error.
+  */
+ non_null()
+-int32_t net_getipport(const Memory *mem, const char *node, IP_Port **res, int tox_type);
++int32_t net_getipport(const Memory *mem, const char *node, IP_Port **res, int tox_type, bool dns_enabled);
+ 
+ /** Deallocates memory allocated by net_getipport */
+ non_null(1) nullable(2)
+diff --git a/toxcore/tox.c b/toxcore/tox.c
+index b02eb4e98b..eb12d07181 100644
+--- a/toxcore/tox.c
++++ b/toxcore/tox.c
+@@ -752,6 +752,8 @@ static Tox *tox_new_system(const struct Tox_Options *options, Tox_Err_New *error
+ 
+     Messenger_Options m_options = {false};
+ 
++    m_options.dns_enabled = !tox_options_get_experimental_disable_dns(opts);
++
+     bool load_savedata_sk = false;
+     bool load_savedata_tox = false;
+ 
+@@ -855,9 +857,10 @@ static Tox *tox_new_system(const struct Tox_Options *options, Tox_Err_New *error
+         }
+ 
+         const char *const proxy_host = tox_options_get_proxy_host(opts);
++        const bool dns_enabled = !tox_options_get_experimental_disable_dns(opts);
+ 
+         if (proxy_host == nullptr
+-                || !addr_resolve_or_parse_ip(tox->sys.ns, proxy_host, &m_options.proxy_info.ip_port.ip, nullptr)) {
++                || !addr_resolve_or_parse_ip(tox->sys.ns, proxy_host, &m_options.proxy_info.ip_port.ip, nullptr, dns_enabled)) {
+             SET_ERROR_PARAMETER(error, TOX_ERR_NEW_PROXY_BAD_HOST);
+             // TODO(irungentoo): TOX_ERR_NEW_PROXY_NOT_FOUND if domain.
+             mem_delete(sys->mem, tox);
+@@ -1139,7 +1142,7 @@ static int32_t resolve_bootstrap_node(Tox *tox, const char *host, uint16_t port,
+         return -1;
+     }
+ 
+-    const int32_t count = net_getipport(tox->sys.mem, host, root, TOX_SOCK_DGRAM);
++    const int32_t count = net_getipport(tox->sys.mem, host, root, TOX_SOCK_DGRAM, tox->m->options.dns_enabled);
+ 
+     if (count < 1) {
+         LOGGER_DEBUG(tox->m->log, "could not resolve bootstrap node '%s'", host);
+diff --git a/toxcore/tox.h b/toxcore/tox.h
+index ebeed3b1f5..d866e9a5a0 100644
+--- a/toxcore/tox.h
++++ b/toxcore/tox.h
+@@ -668,6 +668,24 @@ struct Tox_Options {
+      * Default: false.
+      */
+     bool experimental_groups_persistence;
++
++    /**
++     * @brief Disable DNS hostname resolution.
++     *
++     * Hostnames or IP addresses are passed to the bootstrap/add_tcp_relay
++     * function and proxy host options. If disabled (this flag is true), only
++     * IP addresses are allowed.
++     *
++     * If this is set to true, the library will not attempt to resolve
++     * hostnames. This is useful for clients that want to resolve hostnames
++     * themselves and pass the resolved IP addresses to the library (e.g. in
++     * case it wants to use Tor).
++     * Passing hostnames will result in a TOX_ERR_BOOTSTRAP_BAD_HOST error if
++     * this is set to true.
++     *
++     * Default: false. May become true in the future (0.3.0).
++     */
++    bool experimental_disable_dns;
+ };
+ 
+ bool tox_options_get_ipv6_enabled(const Tox_Options *options);
+@@ -742,6 +760,10 @@ bool tox_options_get_experimental_groups_persistence(const Tox_Options *options)
+ 
+ void tox_options_set_experimental_groups_persistence(Tox_Options *options, bool experimental_groups_persistence);
+ 
++bool tox_options_get_experimental_disable_dns(const Tox_Options *options);
++
++void tox_options_set_experimental_disable_dns(Tox_Options *options, bool experimental_disable_dns);
++
+ /**
+  * @brief Initialises a Tox_Options object with the default options.
+  *
+diff --git a/toxcore/tox_api.c b/toxcore/tox_api.c
+index 18d861c18e..b979e4e1e2 100644
+--- a/toxcore/tox_api.c
++++ b/toxcore/tox_api.c
+@@ -274,6 +274,14 @@ void tox_options_set_experimental_groups_persistence(
+ {
+     options->experimental_groups_persistence = experimental_groups_persistence;
+ }
++bool tox_options_get_experimental_disable_dns(const Tox_Options *options)
++{
++    return options->experimental_disable_dns;
++}
++void tox_options_set_experimental_disable_dns(Tox_Options *options, bool experimental_disable_dns)
++{
++    options->experimental_disable_dns = experimental_disable_dns;
++}
+ 
+ const uint8_t *tox_options_get_savedata_data(const Tox_Options *options)
+ {
+@@ -299,6 +307,7 @@ void tox_options_default(Tox_Options *options)
+         tox_options_set_dht_announcements_enabled(options, true);
+         tox_options_set_experimental_thread_safety(options, false);
+         tox_options_set_experimental_groups_persistence(options, false);
++        tox_options_set_experimental_disable_dns(options, false);
+     }
+ }
+ 
+diff --git a/toxcore/tox_private.c b/toxcore/tox_private.c
+index 7b6050a9f8..8c141ff9d2 100644
+--- a/toxcore/tox_private.c
++++ b/toxcore/tox_private.c
+@@ -124,7 +124,7 @@ bool tox_dht_get_nodes(const Tox *tox, const uint8_t *public_key, const char *ip
+ 
+     IP_Port *root;
+ 
+-    const int32_t count = net_getipport(tox->sys.mem, ip, &root, TOX_SOCK_DGRAM);
++    const int32_t count = net_getipport(tox->sys.mem, ip, &root, TOX_SOCK_DGRAM, tox->m->options.dns_enabled);
+ 
+     if (count < 1) {
+         SET_ERROR_PARAMETER(error, TOX_ERR_DHT_GET_NODES_BAD_IP);

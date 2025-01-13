@@ -3,7 +3,7 @@
 <PISI>
 	<Source>
 		<Name>toxcore-c</Name>
-		<Homepage>https://tox.chat/</Homepage>
+		<Homepage>https://github.com/TokTok/c-toxcore</Homepage>
 		<Packager>
 			<Name>PisiLinux Community</Name>
 			<Email>admins@pisilinux.org</Email>
@@ -13,21 +13,20 @@
 		<PartOf>network.chat</PartOf>
 		<Summary>This is an experimental cryptographic network library.</Summary>
 		<Description>Tox is a peer to peer (serverless) instant messenger aimed at making security and privacy easy to obtain for regular users. It uses NaCl for its encryption and authentication.</Description>
-		<Archive sha1sum="30d45793394c6815a074c77b653058b8df1f81ff" type="zip">
-			https://github.com/TokTok/c-toxcore/archive/0c05566e5857ea730d47a151626bec082267578a.zip
-		</Archive>
-		<Archive sha1sum="3a59ff65bbbb624248a3f273eef23f4f68167481" target="c-toxcore-0c05566e5857ea730d47a151626bec082267578a/third_party" type="zip">
-			https://github.com/camgunz/cmp/archive/e836703291392aba9db92b46fb47929521fac71f.zip
-		</Archive>
+		<Archive sha1sum="3f7b896f121aedfc6834d83eadc7789c6ca568eb" type="targz">https://github.com/TokTok/c-toxcore/releases/download/v0.2.20/c-toxcore-0.2.20.tar.gz</Archive>
 		<BuildDependencies>
 			<Dependency>cmake</Dependency>
+			<Dependency>ninja</Dependency>
 			<Dependency>libvpx-devel</Dependency>
 			<Dependency>libopus-devel</Dependency>
 			<Dependency>libsocket-devel</Dependency>
 			<Dependency>libconfig-devel</Dependency>
 			<Dependency>libsodium-devel</Dependency>
-			<!-- <Dependency>msgpack-c-devel</Dependency> -->
 		</BuildDependencies>
+		<Patches>
+			<!-- <Patch level="1"></Patch> -->
+			<Patch level="1">Add_option_to_disable_DNS_lookups.patch</Patch>
+		</Patches>
 	</Source>
 
 	<Package>
@@ -37,13 +36,12 @@
 			<Dependency>libopus</Dependency>
 			<Dependency>libconfig</Dependency>
 			<Dependency>libsodium</Dependency>
-			<!-- <Dependency>msgpack-c</Dependency> -->
 		</RuntimeDependencies>
 		<Files>
-			<Path fileType="config">/etc/tox-bootstrapd.conf</Path>
+			<Path fileType="config">/etc</Path>
 			<Path fileType="executable">/usr/bin</Path>
 			<Path fileType="library">/usr/lib</Path>
-			<Path fileType="data">/usr/share/bash-completion/completions</Path>
+			<Path fileType="data">/usr/share</Path>
 		</Files>
 		<Provides>
 			<COMAR script="package.py">System.Package</COMAR>
@@ -59,7 +57,6 @@
 			<Dependency>libopus-devel</Dependency>
 			<Dependency>libsocket-devel</Dependency>
 			<Dependency>libsodium-devel</Dependency>
-			<!-- <Dependency>msgpack-c-devel</Dependency> -->
 		</RuntimeDependencies>
 		<Files>
 			<Path fileType="data">/usr/lib/pkgconfig</Path>
@@ -68,6 +65,13 @@
 	</Package>
 
 	<History>
+		<Update release="5">
+			<Date>2025-01-13</Date>
+			<Version>0.2.20</Version>
+			<Comment>New upstream.</Comment>
+			<Name>fury</Name>
+			<Email>uglyside@yandex.ru</Email>
+		</Update>
 		<Update release="4">
 			<Date>2024-02-02</Date>
 			<Version>0.2.18</Version>
