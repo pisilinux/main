@@ -6,15 +6,18 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure()
+    pisitools.dosed("meson_custom_install_desktop_file.sh", "data", "share")
+    pisitools.dosed("user-dirs-update-gtk.desktop.in", "Unity;", "Unity;MATE;XFCE;")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
