@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-# pisitools.cxxflags.add("-std=gnu++11")
+pisitools.cxxflags.add("-std=gnu++11")
 
 ver = get.srcVERSION()
 
