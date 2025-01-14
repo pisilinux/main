@@ -1,3 +1,3 @@
-"shaderc 2023.4\n"
-"spirv-tools 2023.6\n"
-"glslang 14.0.1\n"
+"shaderc 2024.4\n"
+"spirv-tools 2024.4\n"
+"glslang 15.1.0\n"
