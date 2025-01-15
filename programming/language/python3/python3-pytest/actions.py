@@ -6,12 +6,12 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 
-shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","6.2.4")
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","8.3.4")
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install()
