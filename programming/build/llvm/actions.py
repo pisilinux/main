@@ -57,7 +57,7 @@ def setup():
     shelltools.cd("build")
     
     if get.buildTYPE() != "emul32":
-        shelltools.system("sed '/^diff.*inline-asm-memop.ll/,$d' 46505b3cbfc5.patch | patch -Np2")
+        # shelltools.system("sed '/^diff.*inline-asm-memop.ll/,$d' 46505b3cbfc5.patch | patch -Np2")
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
         options = "-DLLVM_TARGET_ARCH:STRING=x86_64 \
