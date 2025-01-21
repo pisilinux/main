@@ -5,15 +5,20 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 
 def setup():
-    kde5.configure()
+    kde6.configure("-DENABLE_CONSOLE=OFF \
+                    -DENABLE_CLI=OFF \
+                    -DENABLE_DOCS=OFF")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
+
+    #  Conflicts with kf5
+    pisitools.removeDir("/usr/share/locale")
 
     pisitools.dodoc("COPYING*", "README*")

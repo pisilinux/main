@@ -1,0 +1,93 @@
+diff --git a/src/protocols/kde-output-device-v2.xml b/src/protocols/kde-output-device-v2.xml
+index 34b3970a2f34075771411adc5538e875ae67a128..a70d41ac3b418a57477c4a8f665b4c856c2b3009 100644
+--- a/src/protocols/kde-output-device-v2.xml
++++ b/src/protocols/kde-output-device-v2.xml
+@@ -11,7 +11,7 @@
+     ]]></copyright>
+ 
+ 
+-  <interface name="kde_output_device_v2" version="5">
++  <interface name="kde_output_device_v2" version="6">
+     <description summary="output configuration representation">
+       An output device describes a display device available to the compositor.
+       output_device is similar to wl_output, but focuses on output
+@@ -321,7 +321,28 @@
+       <description summary="describes when auto rotate is used"/>
+       <arg name="profile_path" type="string"/>
+     </event>
+-  
++
++    <event name="brightness_metadata" since="6">
++      <description summary="metadata about the screen's brightness limits"/>
++      <arg name="max_peak_brightness" type="uint" summary="in nits"/>
++      <arg name="max_frame_average_brightness" type="uint" summary="in nits"/>
++      <arg name="min_brightness" type="uint" summary="in 0.0001 nits"/>
++    </event>
++
++    <event name="brightness_overrides" since="6">
++      <description summary="overrides for the screen's brightness limits"/>
++      <arg name="max_peak_brightness" type="int" summary="-1 for no override, positive values are the brightness in nits"/>
++      <arg name="max_average_brightness" type="int" summary="-1 for no override, positive values are the brightness in nits"/>
++      <arg name="min_brightness" type="int" summary="-1 for no override, positive values are the brightness in 0.0001 nits"/>
++    </event>
++
++    <event name="sdr_gamut_wideness" since="6">
++      <description summary="describes which gamut is assumed for sRGB applications">
++          This can be used to provide the colors users assume sRGB applications should have based on the
++          default experience on many modern sRGB screens.
++      </description>
++      <arg name="gamut_wideness" type="uint" summary="0 means rec.709 primaries, 10000 means rec.2020 primaries"/>
++    </event>
+   </interface>
+ 
+   <interface name="kde_output_device_mode_v2" version="1">
+diff --git a/src/protocols/kde-output-management-v2.xml b/src/protocols/kde-output-management-v2.xml
+index 312b6613a9c24c8bac5c35b69df79d024c597f14..7154c9031a4c2f4dc1b2d9f7a08604083b37b0c8 100644
+--- a/src/protocols/kde-output-management-v2.xml
++++ b/src/protocols/kde-output-management-v2.xml
+@@ -6,11 +6,12 @@
+     SPDX-FileCopyrightText: 2012-2013 Collabora, Ltd.
+     SPDX-FileCopyrightText: 2015 Sebastian Kügler <sebas@kde.org>
+     SPDX-FileCopyrightText: 2021 Méven Car <meven.car@enioka.com>
++    SPDX-FileCopyrightText: 2023 Xaver Hugl <xaver.hugl@kde.org>
+ 
+     SPDX-License-Identifier: MIT-CMU
+     ]]></copyright>
+ 
+-<interface name="kde_output_management_v2" version="6">
++<interface name="kde_output_management_v2" version="7">
+   <description summary="configuration of server outputs through clients">
+     This interface enables clients to set properties of output devices for screen
+     configuration purposes via the server. To this end output devices are referenced
+@@ -62,7 +63,7 @@
+ 
+ </interface>
+ 
+-<interface name="kde_output_configuration_v2" version="6">
++<interface name="kde_output_configuration_v2" version="7">
+   <description summary="configure single output devices">
+     outputconfiguration is a client-specific resource that can be used to ask
+     the server to apply changes to available output devices.
+@@ -260,5 +261,22 @@
+     <arg name="outputdevice" type="object" interface="kde_output_device_v2" summary="outputdevice this setting applies to"/>
+     <arg name="profile_path" type="string"/>
+   </request>
++
++  <request name="set_brightness_overrides" since="7">
++    <description summary="override metadata about the screen's brightness limits"/>
++    <arg name="outputdevice" type="object" interface="kde_output_device_v2" summary="outputdevice this setting applies to"/>
++    <arg name="max_peak_brightness" type="int" summary="-1 for not overriding, or positive values in nits"/>
++    <arg name="max_frame_average_brightness" type="int" summary="-1 for not overriding, or positive values in nits"/>
++    <arg name="min_brightness" type="int" summary="-1 for not overriding, or positive values in 0.0001 nits"/>
++  </request>
++
++  <request name="set_sdr_gamut_wideness" since="7">
++    <description summary="describes which gamut is assumed for sRGB applications">
++      This can be used to provide the colors users assume sRGB applications should have based on the
++      default experience on many modern sRGB screens.
++    </description>
++    <arg name="outputdevice" type="object" interface="kde_output_device_v2" summary="outputdevice this setting applies to"/>
++    <arg name="gamut_wideness" type="uint" summary="0 means rec.709 primaries, 10000 means rec.2020 primaries"/>
++  </request>
+ </interface>
+ </protocol>

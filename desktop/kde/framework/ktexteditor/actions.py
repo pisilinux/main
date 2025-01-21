@@ -4,16 +4,19 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde6.configure()
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
+
+    pisitools.removeDir("/usr/share/dbus-1")
+    pisitools.removeDir("/usr/share/polkit-1")
 
     pisitools.dodoc("README.md")
