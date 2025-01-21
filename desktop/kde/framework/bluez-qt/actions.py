@@ -4,14 +4,14 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure("-DUDEV_RULES_INSTALL_DIR=/lib/udev/rules.d")
+    kde6.configure("-DUDEV_RULES_INSTALL_DIR=/lib/udev/rules.d")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
