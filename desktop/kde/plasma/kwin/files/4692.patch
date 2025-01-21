@@ -1,0 +1,206 @@
+From f3e6d3ca196aaef28478c27fd6a3caaed3cdbdff Mon Sep 17 00:00:00 2001
+From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+Date: Wed, 22 Nov 2023 15:05:52 +0200
+Subject: [PATCH 1/4] Ignore decoration changes of closed windows
+
+Ideally the decoration of a closed window should not change. However,
+it seems like it can happen when resuming the session.
+
+When switching to another VT, the touchpad input device is removed, but
+the touch input device is still kept on my machine. This results in
+the tablet mode changing temporarily and triggering recalculation of new
+borders in breeze decoration. It's a no-no thing to do if the window is
+closed. We need to guard against this case. But in long term, we need to
+reroute all decoration state updates through kwin so it can block state
+updates when the window is closed. It's also needed for double buffered
+state.
+
+How to improve handling of tablet mode detection when switching between
+VTs needs a separate investigation.
+
+CCBUG: 477166
+---
+ src/window.cpp    | 30 +++++++++++++++++++++++-------
+ src/x11window.cpp | 18 +++++++++++++++---
+ 2 files changed, 38 insertions(+), 10 deletions(-)
+
+diff --git a/src/window.cpp b/src/window.cpp
+index d60ff3db325..be9ca43b2f1 100644
+--- a/src/window.cpp
++++ b/src/window.cpp
+@@ -2625,20 +2625,32 @@ void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
+     }
+     if (decoration) {
+         QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
+-        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, &Window::updateShadow);
+-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged,
+-                this, &Window::updateDecorationInputShape);
+-        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged,
+-                this, &Window::updateDecorationInputShape);
++        connect(decoration.get(), &KDecoration2::Decoration::shadowChanged, this, [this]() {
++            if (!isDeleted()) {
++                updateShadow();
++            }
++        });
+         connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
++            if (isDeleted()) {
++                return;
++            }
+             GeometryUpdatesBlocker blocker(this);
+             const QRectF oldGeometry = moveResizeGeometry();
+             if (!isShade()) {
+                 checkWorkspacePosition(oldGeometry);
+             }
++            updateDecorationInputShape();
++        });
++        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
++            if (!isDeleted()) {
++                updateDecorationInputShape();
++            }
++        });
++        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
++            if (!isDeleted()) {
++                updateDecorationInputShape();
++            }
+         });
+-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
+-                this, &Window::updateDecorationInputShape);
+     }
+     m_decoration.decoration = decoration;
+     updateDecorationInputShape();
+@@ -3658,6 +3670,10 @@ void Window::sendToOutput(Output *newOutput)
+ 
+ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *oldDesktop)
+ {
++    if (isDeleted()) {
++        qCWarning(KWIN_CORE) << "Window::checkWorkspacePosition: called for a closed window. Consider this a bug";
++        return;
++    }
+     if (isDock() || isDesktop() || !isPlaceable()) {
+         return;
+     }
+diff --git a/src/x11window.cpp b/src/x11window.cpp
+index 724f49e0964..8b2fce35f43 100644
+--- a/src/x11window.cpp
++++ b/src/x11window.cpp
+@@ -1340,9 +1340,21 @@ void X11Window::createDecoration()
+ {
+     std::shared_ptr<KDecoration2::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
+     if (decoration) {
+-        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Window::updateInputWindow);
+-        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, &X11Window::updateFrameExtents);
+-        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, &X11Window::updateInputWindow);
++        connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
++            if (!isDeleted()) {
++                updateInputWindow();
++            }
++        });
++        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
++            if (!isDeleted()) {
++                updateFrameExtents();
++            }
++        });
++        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
++            if (!isDeleted()) {
++                updateInputWindow();
++            }
++        });
+     }
+     setDecoration(decoration);
+ 
+-- 
+GitLab
+
+
+From 4d0d153a579ed3b0bd74b7f4d95539d9e926a271 Mon Sep 17 00:00:00 2001
+From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+Date: Wed, 22 Nov 2023 16:23:53 +0200
+Subject: [PATCH 2/4] Always reset tabbox ClientModel if a window is added or
+ removed
+
+Otherwise dangling pointers can end up in TabBox::ClientModel. Tabbox is
+written with hard model resets in mind. In order to fix it, the client
+model has to be rewritten.
+
+BUG: 477166
+---
+ src/workspace.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/workspace.cpp b/src/workspace.cpp
+index db37ade6eea..664fc76d975 100644
+--- a/src/workspace.cpp
++++ b/src/workspace.cpp
+@@ -2002,9 +2002,9 @@ void Workspace::setWasUserInteraction()
+ void Workspace::updateTabbox()
+ {
+ #if KWIN_BUILD_TABBOX
+-    if (m_tabbox->isDisplayed()) {
+-        m_tabbox->reset(true);
+-    }
++    // Need to reset the client model even if the task switcher is hidden otherwise there
++    // might be dangling pointers. Consider rewriting client model logic!
++    m_tabbox->reset(true);
+ #endif
+ }
+ 
+-- 
+GitLab
+
+
+From b40b13b661c44199633d58b43ba571ca92cf30f1 Mon Sep 17 00:00:00 2001
+From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+Date: Wed, 22 Nov 2023 18:03:02 +0200
+Subject: [PATCH 3/4] tabbox: Fix ClientModel::createClientList() reinserting
+ closed windows
+
+---
+ src/tabbox/clientmodel.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/tabbox/clientmodel.cpp b/src/tabbox/clientmodel.cpp
+index af3fe4273bf..29f968d5be4 100644
+--- a/src/tabbox/clientmodel.cpp
++++ b/src/tabbox/clientmodel.cpp
+@@ -198,7 +198,7 @@ void ClientModel::createClientList(bool partialReset)
+     // TODO: new clients are not added at correct position
+     if (partialReset && !m_mutableClientList.isEmpty()) {
+         Window *firstClient = m_mutableClientList.constFirst();
+-        if (firstClient) {
++        if (!firstClient->isDeleted()) {
+             start = firstClient;
+         }
+     }
+-- 
+GitLab
+
+
+From 3ffa3ed0d8ab5da79a0d4e2546c157ed317d6aa8 Mon Sep 17 00:00:00 2001
+From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+Date: Wed, 22 Nov 2023 18:41:49 +0200
+Subject: [PATCH 4/4] tabbox: Guard against including closed windows when using
+ stacking order
+
+Closed windows are present in the stack. If user has selected
+"Stacking order" sort order in task switcher KCM, we need to guard
+against closed windows in the stack.
+---
+ src/tabbox/tabbox.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/tabbox/tabbox.cpp b/src/tabbox/tabbox.cpp
+index 809c60e682d..2c16009ac42 100644
+--- a/src/tabbox/tabbox.cpp
++++ b/src/tabbox/tabbox.cpp
+@@ -171,7 +171,7 @@ bool TabBoxHandlerImpl::checkMultiScreen(Window *client) const
+ 
+ Window *TabBoxHandlerImpl::clientToAddToList(Window *client) const
+ {
+-    if (!client) {
++    if (!client || client->isDeleted()) {
+         return nullptr;
+     }
+     Window *ret = nullptr;
+-- 
+GitLab
+
