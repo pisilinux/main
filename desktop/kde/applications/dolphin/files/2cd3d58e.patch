@@ -1,0 +1,310 @@
+From 2cd3d58eec5695899c26ca66a631fb79867b6584 Mon Sep 17 00:00:00 2001
+From: Nicolas Fella <nicolas.fella@gmx.de>
+Date: Tue, 7 Nov 2023 15:45:01 +0100
+Subject: [PATCH] Port away from KMoreTools
+
+The idea behind KMoreTools was to point the user at external tools for a given job.
+
+It provides a rather complex framework for that, including suggesting not-yet-installed tools.
+
+The UX behind that isn't great though, which somewhat deep menu hierarchies and a somewhat arbitrary list of tools.
+
+Most KDE apps have moved away from it, with only Dolphin remaining.
+
+Instead provide direct integration with relevant KDE tools (Filelight, KDiskFree, KFind)
+---
+ .kde-ci.yml                          |  1 -
+ CMakeLists.txt                       |  1 -
+ src/CMakeLists.txt                   |  2 -
+ src/dolphinmainwindow.cpp            | 20 +++++----
+ src/dolphinpart.cpp                  | 16 ++-----
+ src/search/dolphinsearchbox.cpp      | 37 ++++++++++------
+ src/search/dolphinsearchbox.h        |  2 -
+ src/statusbar/statusbarspaceinfo.cpp | 66 +++++++++++++++++++++++++---
+ 8 files changed, 98 insertions(+), 47 deletions(-)
+
+diff --git a/.kde-ci.yml b/.kde-ci.yml
+index 28fcaac569..500b80c569 100644
+--- a/.kde-ci.yml
++++ b/.kde-ci.yml
+@@ -28,7 +28,6 @@ Dependencies:
+     'frameworks/kuserfeedback': '@latest'
+     'plasma/kactivities': '@latest'
+     'libraries/phonon': '@latest'
+-    'libraries/kmoretools': '@latest'
+ 
+ - 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
+   'require':
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d9e574f2cb..a14d6895b7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,7 +75,6 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+     WindowSystem
+     WidgetsAddons
+     Codecs
+-    MoreTools
+ )
+ 
+ find_package(KUserFeedbackQt6 1.2.1)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0792af0c0b..8eb5a0e9f0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -212,8 +212,6 @@ target_link_libraries(
+     KF6::Codecs
+     KF6::KCMUtils
+ 
+-    KF6::MoreTools
+-
+     ${FTS_LIB}
+ )
+ 
+diff --git a/src/dolphinmainwindow.cpp b/src/dolphinmainwindow.cpp
+index 0d31df2da0..635121062a 100644
+--- a/src/dolphinmainwindow.cpp
++++ b/src/dolphinmainwindow.cpp
+@@ -48,7 +48,6 @@
+ #include <KJobWidgets>
+ #include <KLocalizedString>
+ #include <KMessageBox>
+-#include <KMoreToolsMenuFactory>
+ #include <KProtocolInfo>
+ #include <KProtocolManager>
+ #include <KShell>
+@@ -1127,15 +1126,20 @@ void DolphinMainWindow::toggleShowMenuBar()
+ QPointer<QAction> DolphinMainWindow::preferredSearchTool()
+ {
+     m_searchTools.clear();
+-    KMoreToolsMenuFactory("dolphin/search-tools").fillMenuFromGroupingNames(&m_searchTools, {"files-find"}, m_activeViewContainer->url());
+-    QList<QAction *> actions = m_searchTools.actions();
+-    if (actions.isEmpty()) {
+-        return nullptr;
+-    }
+-    QAction *action = actions.first();
+-    if (action->isSeparator()) {
++
++    KService::Ptr kfind = KService::serviceByDesktopName(QStringLiteral("org.kde.kfind"));
++
++    if (!kfind) {
+         return nullptr;
+     }
++
++    auto *action = new QAction(QIcon::fromTheme(kfind->icon()), kfind->name(), this);
++
++    connect(action, &QAction::triggered, this, [kfind] {
++        auto *job = new KIO::ApplicationLauncherJob(kfind);
++        job->start();
++    });
++
+     return action;
+ }
+ 
+diff --git a/src/dolphinpart.cpp b/src/dolphinpart.cpp
+index 4ba1f07420..bb27e0a5e4 100644
+--- a/src/dolphinpart.cpp
++++ b/src/dolphinpart.cpp
+@@ -28,7 +28,6 @@
+ #include <KLocalizedString>
+ #include <KMessageBox>
+ #include <KMimeTypeEditor>
+-#include <KMoreToolsMenuFactory>
+ #include <KPluginFactory>
+ #include <KPluginMetaData>
+ #include <KSharedConfig>
+@@ -527,17 +526,10 @@ void DolphinPart::slotOpenTerminal()
+ 
+ void DolphinPart::slotFindFile()
+ {
+-    QMenu searchTools;
+-    KMoreToolsMenuFactory("dolphin/search-tools").fillMenuFromGroupingNames(&searchTools, {"files-find"}, QUrl::fromLocalFile(localFilePathOrHome()));
+-    QList<QAction *> actions = searchTools.actions();
+-    if (!(actions.isEmpty())) {
+-        actions.first()->trigger();
+-    } else {
+-        KIO::CommandLauncherJob *job = new KIO::CommandLauncherJob(QStringLiteral("kfind"), {url().toString()}, this);
+-        job->setDesktopName(QStringLiteral("org.kde.kfind"));
+-        job->setUiDelegate(new KDialogJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, widget()));
+-        job->start();
+-    }
++    KIO::CommandLauncherJob *job = new KIO::CommandLauncherJob(QStringLiteral("kfind"), {url().toString()}, this);
++    job->setDesktopName(QStringLiteral("org.kde.kfind"));
++    job->setUiDelegate(new KDialogJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, widget()));
++    job->start();
+ }
+ 
+ void DolphinPart::updateNewMenu()
+diff --git a/src/search/dolphinsearchbox.cpp b/src/search/dolphinsearchbox.cpp
+index a3cec6fe7e..dfd733e5da 100644
+--- a/src/search/dolphinsearchbox.cpp
++++ b/src/search/dolphinsearchbox.cpp
+@@ -13,9 +13,10 @@
+ #include "dolphinquery.h"
+ 
+ #include "config-dolphin.h"
++#include <KIO/ApplicationLauncherJob>
+ #include <KLocalizedString>
+-#include <KMoreToolsMenuFactory>
+ #include <KSeparator>
++#include <KService>
+ #if HAVE_BALOO
+ #include <Baloo/IndexerConfig>
+ #include <Baloo/Query>
+@@ -395,18 +396,24 @@ void DolphinSearchBox::init()
+     searchLocationGroup->addButton(m_fromHereButton);
+     searchLocationGroup->addButton(m_everywhereButton);
+ 
+-    auto moreSearchToolsButton = new QToolButton(this);
+-    moreSearchToolsButton->setAutoRaise(true);
+-    moreSearchToolsButton->setPopupMode(QToolButton::InstantPopup);
+-    moreSearchToolsButton->setIcon(QIcon::fromTheme("arrow-down-double"));
+-    moreSearchToolsButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+-    moreSearchToolsButton->setText(i18n("More Search Tools"));
+-    moreSearchToolsButton->setMenu(new QMenu(this));
+-    connect(moreSearchToolsButton->menu(), &QMenu::aboutToShow, moreSearchToolsButton->menu(), [this, moreSearchToolsButton]() {
+-        m_menuFactory.reset(new KMoreToolsMenuFactory("dolphin/search-tools"));
+-        moreSearchToolsButton->menu()->clear();
+-        m_menuFactory->fillMenuFromGroupingNames(moreSearchToolsButton->menu(), {"files-find"}, this->m_searchPath);
+-    });
++    KService::Ptr kfind = KService::serviceByDesktopName(QStringLiteral("org.kde.kfind"));
++
++    QToolButton *kfindToolsButton = nullptr;
++    if (kfind) {
++        kfindToolsButton = new QToolButton(this);
++        kfindToolsButton->setAutoRaise(true);
++        kfindToolsButton->setPopupMode(QToolButton::InstantPopup);
++        kfindToolsButton->setIcon(QIcon::fromTheme("arrow-down-double"));
++        kfindToolsButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
++        kfindToolsButton->setText(i18n("Open %1", kfind->name()));
++        kfindToolsButton->setIcon(QIcon::fromTheme(kfind->icon()));
++
++        connect(kfindToolsButton, &QToolButton::clicked, this, [this, kfind] {
++            auto *job = new KIO::ApplicationLauncherJob(kfind);
++            job->setUrls({m_searchPath});
++            job->start();
++        });
++    }
+ 
+     // Create "Facets" widget
+     m_facetsWidget = new DolphinFacetsWidget(this);
+@@ -429,7 +436,9 @@ void DolphinSearchBox::init()
+     optionsLayout->addWidget(m_fromHereButton);
+     optionsLayout->addWidget(m_everywhereButton);
+     optionsLayout->addWidget(new KSeparator(Qt::Vertical, this));
+-    optionsLayout->addWidget(moreSearchToolsButton);
++    if (kfindToolsButton) {
++        optionsLayout->addWidget(kfindToolsButton);
++    }
+     optionsLayout->addStretch(1);
+ 
+     m_optionsScrollArea = new QScrollArea(this);
+diff --git a/src/search/dolphinsearchbox.h b/src/search/dolphinsearchbox.h
+index b73c2899ff..9f1ad29525 100644
+--- a/src/search/dolphinsearchbox.h
++++ b/src/search/dolphinsearchbox.h
+@@ -18,7 +18,6 @@ class QToolButton;
+ class QScrollArea;
+ class QLabel;
+ class QVBoxLayout;
+-class KMoreToolsMenuFactory;
+ 
+ /**
+  * @brief Input box for searching files with or without Baloo.
+@@ -172,7 +171,6 @@ private:
+     DolphinFacetsWidget *m_facetsWidget;
+ 
+     QUrl m_searchPath;
+-    QScopedPointer<KMoreToolsMenuFactory> m_menuFactory;
+ 
+     QTimer *m_startSearchTimer;
+ };
+diff --git a/src/statusbar/statusbarspaceinfo.cpp b/src/statusbar/statusbarspaceinfo.cpp
+index 4eef8497df..546c217a7a 100644
+--- a/src/statusbar/statusbarspaceinfo.cpp
++++ b/src/statusbar/statusbarspaceinfo.cpp
+@@ -8,11 +8,14 @@
+ 
+ #include "spaceinfoobserver.h"
+ 
++#include <KIO/ApplicationLauncherJob>
++#include <KIO/Global>
+ #include <KLocalizedString>
+-#include <KMoreToolsMenuFactory>
++#include <KService>
+ 
+-#include <KIO/Global>
++#include <QMenu>
+ #include <QMouseEvent>
++#include <QStorageInfo>
+ 
+ StatusBarSpaceInfo::StatusBarSpaceInfo(QWidget *parent)
+     : KCapacityBar(KCapacityBar::DrawTextInline, parent)
+@@ -87,11 +90,60 @@ void StatusBarSpaceInfo::mousePressEvent(QMouseEvent *event)
+         // Creates a menu with tools that help to find out more about free
+         // disk space for the given url.
+ 
+-        // Note that this object must live long enough in case the user opens
+-        // the "Configure..." dialog
+-        KMoreToolsMenuFactory menuFactory(QStringLiteral("dolphin/statusbar-diskspace-menu"));
+-        menuFactory.setParentWidget(this);
+-        auto menu = menuFactory.createMenuFromGroupingNames({"disk-usage", "more:", "disk-partitions"}, m_url);
++        const KService::Ptr filelight = KService::serviceByDesktopName(QStringLiteral("org.kde.filelight"));
++        const KService::Ptr kdiskfree = KService::serviceByDesktopName(QStringLiteral("org.kde.kdf"));
++
++        if (!filelight && !kdiskfree) {
++            // nothing to show
++            return;
++        }
++
++        QMenu *menu = new QMenu(this);
++
++        if (filelight) {
++            QAction *filelightFolderAction = menu->addAction(QIcon::fromTheme(QStringLiteral("filelight")), i18n("Disk Usage Statistics - current folder"));
++
++            menu->connect(filelightFolderAction, &QAction::triggered, menu, [this, filelight](bool) {
++                auto *job = new KIO::ApplicationLauncherJob(filelight);
++                job->setUrls({m_url});
++                job->start();
++            });
++
++            // For remote URLs like FTP analyzing the device makes no sense
++            if (m_url.isLocalFile()) {
++                QAction *filelightDiskAction = menu->addAction(QIcon::fromTheme(QStringLiteral("filelight")), i18n("Disk Usage Statistics - current device"));
++
++                menu->connect(filelightDiskAction, &QAction::triggered, menu, [this, filelight](bool) {
++                    const QStorageInfo info(m_url.toLocalFile());
++
++                    if (info.isValid() && info.isReady()) {
++                        auto *job = new KIO::ApplicationLauncherJob(filelight);
++                        job->setUrls({QUrl::fromLocalFile(info.rootPath())});
++                        job->start();
++                    }
++                });
++            }
++
++            QAction *filelightAllAction = menu->addAction(QIcon::fromTheme(QStringLiteral("filelight")), i18n("Disk Usage Statistics - all devices"));
++
++            menu->connect(filelightAllAction, &QAction::triggered, menu, [this, filelight](bool) {
++                const QStorageInfo info(m_url.toLocalFile());
++
++                if (info.isValid() && info.isReady()) {
++                    auto *job = new KIO::ApplicationLauncherJob(filelight);
++                    job->start();
++                }
++            });
++        }
++
++        if (kdiskfree) {
++            QAction *kdiskfreeAction = menu->addAction(QIcon::fromTheme(QStringLiteral("kdf")), i18n("KDiskFree"));
++
++            connect(kdiskfreeAction, &QAction::triggered, this, [kdiskfree] {
++                auto *job = new KIO::ApplicationLauncherJob(kdiskfree);
++                job->start();
++            });
++        }
+ 
+         menu->exec(QCursor::pos());
+     }
+-- 
+GitLab
+
