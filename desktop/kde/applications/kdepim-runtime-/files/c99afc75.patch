@@ -1,0 +1,120 @@
+From c99afc75a503fff6ca83df2f47a5d5d951579524 Mon Sep 17 00:00:00 2001
+From: Carl Schwan <carl@carlschwan.eu>
+Date: Tue, 19 Sep 2023 18:58:54 +0200
+Subject: [PATCH] Actually start job to read secret key
+
+BUG: 470820
+(cherry picked from commit 8393e92d56ecb31b2dd65d15d046f8e02565f5e3)
+---
+ resources/google-groupware/googleconfig.cpp       |  8 +++++++-
+ resources/google-groupware/googlesettings.cpp     | 15 +++++++++------
+ .../google-groupware/googlesettingswidget.cpp     |  3 +--
+ 3 files changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/resources/google-groupware/googleconfig.cpp b/resources/google-groupware/googleconfig.cpp
+index 2eb6ab2efa..1af177c81f 100644
+--- a/resources/google-groupware/googleconfig.cpp
++++ b/resources/google-groupware/googleconfig.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include <Akonadi/AgentConfigurationBase>
+ 
++#include "googleresource_debug.h"
+ #include "googlesettings.h"
+ #include "googlesettingswidget.h"
+ 
+@@ -25,7 +26,12 @@ public:
+     void load() override
+     {
+         Akonadi::AgentConfigurationBase::load();
+-        mWidget.loadSettings();
++        mSettings.init();
++        connect(&mSettings, &GoogleSettings::accountReady, this, [this](bool ready) {
++            if (ready) {
++                mWidget.loadSettings();
++            }
++        });
+     }
+ 
+     Q_REQUIRED_RESULT bool save() const override
+diff --git a/resources/google-groupware/googlesettings.cpp b/resources/google-groupware/googlesettings.cpp
+index aa94cad1ab..23a9979895 100644
+--- a/resources/google-groupware/googlesettings.cpp
++++ b/resources/google-groupware/googlesettings.cpp
+@@ -32,7 +32,6 @@ static const QString googleWalletFolder = QStringLiteral("Akonadi Google");
+ GoogleSettings::GoogleSettings(const KSharedConfigPtr &config, Options options)
+     : SettingsBase(config)
+ {
+-    qDebug() << config;
+     if (options & Option::ExportToDBus) {
+         new SettingsAdaptor(this);
+         QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"),
+@@ -44,9 +43,11 @@ GoogleSettings::GoogleSettings(const KSharedConfigPtr &config, Options options)
+ void GoogleSettings::init()
+ {
+     // First read from QtKeyChain
+-    auto job = new QKeychain::ReadPasswordJob(googleWalletFolder);
++    auto job = new QKeychain::ReadPasswordJob(googleWalletFolder, this);
++    job->setKey(account());
+     connect(job, &QKeychain::Job::finished, this, [this, job]() {
+         if (job->error() != QKeychain::Error::NoError) {
++            qCWarning(GOOGLE_LOG) << "Unable to read password" << job->error();
+             Q_EMIT accountReady(false);
+             return;
+         }
+@@ -54,18 +55,19 @@ void GoogleSettings::init()
+         // Found something with QtKeyChain
+         if (!account().isEmpty()) {
+             m_account = fetchAccountFromKeychain(account(), job);
++            m_isReady = true;
++            Q_EMIT accountReady(true);
+         }
+-        m_isReady = true;
+-        Q_EMIT accountReady(true);
+     });
++    job->start();
+ }
+ 
+ KGAPI2::AccountPtr GoogleSettings::fetchAccountFromKeychain(const QString &accountName, QKeychain::ReadPasswordJob *job)
+ {
+     QMap<QString, QString> map;
+     auto value = job->binaryData();
+-    if (!value.isEmpty()) {
+-        qCDebug(GOOGLE_LOG) << "Account" << accountName << "not found in kwallet";
++    if (value.isEmpty()) {
++        qCWarning(GOOGLE_LOG) << "Account" << accountName << "not found in kwallet";
+         return {};
+     }
+ 
+@@ -116,6 +118,7 @@ WritePasswordJob *GoogleSettings::storeAccount(AccountPtr account)
+ 
+     connect(writeJob, &WritePasswordJob::finished, this, [this, writeJob]() {
+         if (writeJob->error()) {
++            qCWarning(GOOGLE_LOG) << "Unable to write password" << writeJob->error();
+             return;
+         }
+         SettingsBase::setAccount(m_account->accountName());
+diff --git a/resources/google-groupware/googlesettingswidget.cpp b/resources/google-groupware/googlesettingswidget.cpp
+index 2543c4c6b8..8e84cfbabd 100644
+--- a/resources/google-groupware/googlesettingswidget.cpp
++++ b/resources/google-groupware/googlesettingswidget.cpp
+@@ -36,7 +36,6 @@ GoogleSettingsWidget::GoogleSettingsWidget(GoogleSettings &settings, const QStri
+     , m_settings(settings)
+     , m_identifier(identifier)
+ {
+-    qDebug() << m_settings.account();
+     auto mainLayout = new QVBoxLayout(this);
+ 
+     auto mainWidget = new QWidget(this);
+@@ -83,7 +82,7 @@ bool GoogleSettingsWidget::handleError(KGAPI2::Job *job)
+     }
+ 
+     if (job->error() == KGAPI2::Unauthorized) {
+-        qCDebug(GOOGLE_LOG) << job << job->errorString();
++        qWarning() << job << job->errorString();
+         const QList<QUrl> resourceScopes = googleScopes();
+         for (const QUrl &scope : resourceScopes) {
+             if (!m_account->scopes().contains(scope)) {
+-- 
+GitLab
+
