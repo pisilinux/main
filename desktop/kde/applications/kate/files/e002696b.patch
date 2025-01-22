@@ -5,7 +5,7 @@ Subject: [PATCH] Revert "fix crash on file browser activation"
 
 This reverts commit a28624c877cfe6db6ae6ab257f95af36213b25e0.
 
-=> this fix is not enough, the KConfigGroup is just not valid anymore here
+=> this fix is not enough, the kconfigGroup is just not valid anymore here
 in some cases
 
 BUG: 453795
@@ -17,10 +17,10 @@ diff --git a/addons/filebrowser/katefilebrowserplugin.cpp b/addons/filebrowser/k
 index 6df25239a..f03c78698 100644
 --- a/addons/filebrowser/katefilebrowserplugin.cpp
 +++ b/addons/filebrowser/katefilebrowserplugin.cpp
-@@ -100,12 +100,9 @@ void KateFileBrowserPluginView::createFileBrowser(bool visible)
+@@ -100,12 +100,9 @@ void kateFileBrowserPluginView::createFileBrowser(bool visible)
  
      disconnect(m_toolView.get(), SIGNAL(toolVisibleChanged(bool)), this, SLOT(createFileBrowser(bool)));
-     m_fileBrowser = std::make_unique<KateFileBrowser>(m_mainWindow, m_toolView.get());
+     m_fileBrowser = std::make_unique<kateFileBrowser>(m_mainWindow, m_toolView.get());
 -
 -    // read config only if there yet, see bug 453234
 -    if (cg) {
@@ -32,7 +32,7 @@ index 6df25239a..f03c78698 100644
 +    cg.reset();
  }
  
- bool KateFileBrowserPluginView::eventFilter(QObject *obj, QEvent *event)
+ bool kateFileBrowserPluginView::eventFilter(QObject *obj, QEvent *event)
 -- 
 GitLab
 
