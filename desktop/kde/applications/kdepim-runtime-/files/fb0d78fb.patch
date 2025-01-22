@@ -1,0 +1,1302 @@
+From fb0d78fb3bcfce5bd4ff7f51e4cd1405693e0275 Mon Sep 17 00:00:00 2001
+From: Carl Schwan <carl@carlschwan.eu>
+Date: Tue, 19 Sep 2023 17:04:13 +0200
+Subject: [PATCH] Revert "Revert "Use config plugin instead of out of process
+ config dialog""
+
+This reverts commit f33496a346f49e95caaf7f664ef2f91e4b7f3ddb.
+
+(cherry picked from commit a17ef55dbe31e2020e96f66cd7021578ed8b5444)
+---
+ resources/google-groupware/CMakeLists.txt     |  93 ++++--
+ resources/google-groupware/googleconfig.cpp   |  43 +++
+ resources/google-groupware/googleconfig.json  |   5 +
+ resources/google-groupware/googleresource.cpp |  95 ++----
+ resources/google-groupware/googleresource.h   |   4 +-
+ resources/google-groupware/googlescopes.cpp   |  19 ++
+ resources/google-groupware/googlescopes.h     |  10 +
+ resources/google-groupware/googlesettings.cpp |  22 +-
+ resources/google-groupware/googlesettings.h   |  11 +-
+ .../google-groupware/googlesettingsdialog.cpp | 305 ------------------
+ .../google-groupware/googlesettingswidget.cpp | 288 +++++++++++++++++
+ ...ettingsdialog.h => googlesettingswidget.h} |  29 +-
+ ...tingsdialog.ui => googlesettingswidget.ui} |   2 +-
+ resources/google-groupware/settingsbase.kcfg  |   2 +-
+ 14 files changed, 505 insertions(+), 423 deletions(-)
+ create mode 100644 resources/google-groupware/googleconfig.cpp
+ create mode 100644 resources/google-groupware/googleconfig.json
+ create mode 100644 resources/google-groupware/googlescopes.cpp
+ create mode 100644 resources/google-groupware/googlescopes.h
+ delete mode 100644 resources/google-groupware/googlesettingsdialog.cpp
+ create mode 100644 resources/google-groupware/googlesettingswidget.cpp
+ rename resources/google-groupware/{googlesettingsdialog.h => googlesettingswidget.h} (53%)
+ rename resources/google-groupware/{googlesettingsdialog.ui => googlesettingswidget.ui} (99%)
+
+diff --git a/resources/google-groupware/CMakeLists.txt b/resources/google-groupware/CMakeLists.txt
+index babf58a953..2f2b46aded 100644
+--- a/resources/google-groupware/CMakeLists.txt
++++ b/resources/google-groupware/CMakeLists.txt
+@@ -1,67 +1,75 @@
+ add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_google_resource\")
+ 
+-set(googleresource_SRCS
+-    googleresource.cpp
++set(googleresource_common_SRCS
+     googlesettings.cpp
+-    googlesettingsdialog.cpp
+-    defaultreminderattribute.cpp
+-    googleresourcestate.cpp
+-    generichandler.cpp
+-    calendarhandler.cpp
+-    taskhandler.cpp
+-    peopleconversionjob.cpp
+-    personhandler.cpp
+-    googleresource.h
+     googlesettings.h
+-    googlesettingsdialog.h
+-    defaultreminderattribute.h
+-    googleresourcestate.h
+-    generichandler.h
+-    calendarhandler.h
+-    taskhandler.h
+-    peopleconversionjob.h
+-    personhandler.h
+-    )
++    googlescopes.h
++    googlescopes.cpp
++)
+ 
+-ecm_qt_declare_logging_category(googleresource_SRCS
++ecm_qt_declare_logging_category(googleresource_common_SRCS
+     HEADER googleresource_debug.h
+     IDENTIFIER GOOGLE_LOG
+     CATEGORY_NAME org.kde.pim.google
+     DESCRIPTION "resource google (kdepim-runtime)"
+     EXPORT KDEPIMRUNTIME)
+-ecm_qt_declare_logging_category(googleresource_SRCS
++ecm_qt_declare_logging_category(googleresource_common_SRCS
+     HEADER googlecalendar_debug.h
+     IDENTIFIER GOOGLE_CALENDAR_LOG
+     CATEGORY_NAME org.kde.pim.google.calendar
+     DESCRIPTION "resource google calendar (kdepim-runtime)"
+     EXPORT KDEPIMRUNTIME)
+-ecm_qt_declare_logging_category(googleresource_SRCS
++ecm_qt_declare_logging_category(googleresource_common_SRCS
+     HEADER googletasks_debug.h
+     IDENTIFIER GOOGLE_TASKS_LOG
+     CATEGORY_NAME org.kde.pim.google.tasks
+     DESCRIPTION "resource google tasks (kdepim-runtime)"
+     EXPORT KDEPIMRUNTIME)
+-ecm_qt_declare_logging_category(googleresource_SRCS
++ecm_qt_declare_logging_category(googleresource_common_SRCS
+     HEADER googlepeople_debug.h
+     IDENTIFIER GOOGLE_PEOPLE_LOG
+     CATEGORY_NAME org.kde.pim.google.people
+     DESCRIPTION "resource google people (kdepim-runtime)"
+     EXPORT KDEPIMRUNTIME)
+ 
+-ki18n_wrap_ui(googleresource_SRCS googlesettingsdialog.ui)
+ 
+-kconfig_add_kcfg_files(googleresource_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/settingsbase.kcfgc)
++kconfig_add_kcfg_files(googleresource_common_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/settingsbase.kcfgc)
+ 
+ kcfg_generate_dbus_interface(
+   ${CMAKE_CURRENT_SOURCE_DIR}/settingsbase.kcfg
+   org.kde.Akonadi.Google.Settings
+ )
+ 
+-qt_add_dbus_adaptor(googleresource_SRCS
++qt_add_dbus_adaptor(googleresource_common_SRCS
+   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Google.Settings.xml
+   ${CMAKE_CURRENT_SOURCE_DIR}/googlesettings.h GoogleSettings
+ )
+ 
++############################# Resource #################################
++set(googleresource_SRCS
++    googleresource.cpp
++    defaultreminderattribute.cpp
++    googleresourcestate.cpp
++    generichandler.cpp
++    calendarhandler.cpp
++    taskhandler.cpp
++    peopleconversionjob.cpp
++    personhandler.cpp
++    googleresource.h
++    googlesettings.h
++    defaultreminderattribute.h
++    googleresourcestate.h
++    generichandler.h
++    calendarhandler.h
++    taskhandler.h
++    peopleconversionjob.h
++    personhandler.h
++    ${googleresource_common_SRCS}
++)
++
++ki18n_wrap_ui(googleresource_SRCS googlesettingswidget.ui)
++
++
+ add_executable(akonadi_google_resource ${googleresource_SRCS})
+ if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
+     set_target_properties(akonadi_google_resource PROPERTIES UNITY_BUILD ON)
+@@ -112,3 +120,34 @@ install(
+   FILES akonadi_google_resource.notifyrc
+   DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR}
+ )
++
++################################ Config plugin ###############################
++
++kcoreaddons_add_plugin(googleconfig
++    INSTALL_NAMESPACE "pim${QT_MAJOR_VERSION}/akonadi/config"
++)
++target_sources(googleconfig
++PRIVATE
++    googleconfig.cpp
++    googlesettingswidget.cpp
++    googlesettingswidget.h
++    ${googleresource_common_SRCS}
++)
++target_link_libraries(googleconfig
++    KPim${KF_MAJOR_VERSION}::AkonadiCore
++    KPim${KF_MAJOR_VERSION}::AkonadiCalendar
++    KPim${KF_MAJOR_VERSION}::AkonadiCore
++    KPim${KF_MAJOR_VERSION}::AkonadiAgentBase
++    KF${KF_MAJOR_VERSION}::CalendarCore
++    KF${KF_MAJOR_VERSION}::Contacts
++    KF${KF_MAJOR_VERSION}::Wallet
++    KF${KF_MAJOR_VERSION}::I18n
++    KF${KF_MAJOR_VERSION}::WindowSystem
++    KF${KF_MAJOR_VERSION}::TextWidgets
++    KF${KF_MAJOR_VERSION}::Notifications
++    KPim${KF_MAJOR_VERSION}::GAPICalendar
++    KPim${KF_MAJOR_VERSION}::GAPIPeople
++    KPim${KF_MAJOR_VERSION}::GAPICore
++    KPim${KF_MAJOR_VERSION}::GAPITasks
++    qt${KF_MAJOR_VERSION}keychain
++)
+diff --git a/resources/google-groupware/googleconfig.cpp b/resources/google-groupware/googleconfig.cpp
+new file mode 100644
+index 0000000000..2eb6ab2efa
+--- /dev/null
++++ b/resources/google-groupware/googleconfig.cpp
+@@ -0,0 +1,43 @@
++/*
++    SPDX-FileCopyrightText: 2018 Daniel Vrátil <dvratil@kde.org>
++
++    SPDX-License-Identifier: LGPL-2.0-or-later
++*/
++
++#include <Akonadi/AgentConfigurationBase>
++
++#include "googlesettings.h"
++#include "googlesettingswidget.h"
++
++class GoogleConfig : public Akonadi::AgentConfigurationBase
++{
++    Q_OBJECT
++
++public:
++    explicit GoogleConfig(const KSharedConfigPtr &config, QWidget *parent, const QVariantList &list)
++        : Akonadi::AgentConfigurationBase(config, parent, list)
++        , mSettings(config, GoogleSettings::Option::NoOption)
++        , mWidget(mSettings, identifier(), parent)
++    {
++        connect(&mWidget, &GoogleSettingsWidget::okEnabled, this, &Akonadi::AgentConfigurationBase::enableOkButton);
++    }
++
++    void load() override
++    {
++        Akonadi::AgentConfigurationBase::load();
++        mWidget.loadSettings();
++    }
++
++    Q_REQUIRED_RESULT bool save() const override
++    {
++        const_cast<GoogleConfig *>(this)->mWidget.saveSettings();
++        return Akonadi::AgentConfigurationBase::save();
++    }
++
++    GoogleSettings mSettings;
++    GoogleSettingsWidget mWidget;
++};
++
++AKONADI_AGENTCONFIG_FACTORY(GoogleConfigFactory, "googleconfig.json", GoogleConfig)
++
++#include "googleconfig.moc"
+diff --git a/resources/google-groupware/googleconfig.json b/resources/google-groupware/googleconfig.json
+new file mode 100644
+index 0000000000..69c76f583f
+--- /dev/null
++++ b/resources/google-groupware/googleconfig.json
+@@ -0,0 +1,5 @@
++{
++    "X-Akonadi-PluginType": "AgentConfig",
++    "X-Akonadi-Library": "googleconfig",
++    "X-Akonadi-AgentConfig-Type": "akonadi_google_resource"
++}
+\ No newline at end of file
+diff --git a/resources/google-groupware/googleresource.cpp b/resources/google-groupware/googleresource.cpp
+index b40f093dde..47a7e0c8d5 100644
+--- a/resources/google-groupware/googleresource.cpp
++++ b/resources/google-groupware/googleresource.cpp
+@@ -9,8 +9,9 @@
+ #include "googleresource.h"
+ #include "googleresource_debug.h"
+ #include "googleresourcestate.h"
++#include "googlescopes.h"
+ #include "googlesettings.h"
+-#include "googlesettingsdialog.h"
++#include "googlesettingswidget.h"
+ #include "settingsadaptor.h"
+ 
+ #include "personhandler.h"
+@@ -67,8 +68,11 @@ bool accountIsValid(const KGAPI2::AccountPtr &account)
+ GoogleResource::GoogleResource(const QString &id)
+     : ResourceBase(id)
+     , AgentBase::ObserverV3()
++    , m_settings(KSharedConfig::openConfig())
+     , m_iface(new GoogleResourceState(this))
+ {
++    m_settings.setResourceId(identifier());
++
+     AttributeFactory::registerAttribute<DefaultReminderAttribute>();
+ 
+     connect(this, &GoogleResource::reloadConfiguration, this, &GoogleResource::reloadConfig);
+@@ -83,9 +87,7 @@ GoogleResource::GoogleResource(const QString &id)
+ 
+     Q_EMIT status(NotConfigured, i18n("Fetching password..."));
+ 
+-    m_settings = new GoogleSettings();
+-    m_settings->setWindowId(winIdForDialogs());
+-    connect(m_settings, &GoogleSettings::accountReady, this, [this](bool ready) {
++    connect(&m_settings, &GoogleSettings::accountReady, this, [this](bool ready) {
+         if (accountId() > 0) {
+             return;
+         }
+@@ -94,7 +96,7 @@ GoogleResource::GoogleResource(const QString &id)
+             return;
+         }
+ 
+-        const auto account = m_settings->accountPtr();
++        const auto account = m_settings.accountPtr();
+         if (account.isNull()) {
+             Q_EMIT status(NotConfigured);
+             return;
+@@ -107,18 +109,15 @@ GoogleResource::GoogleResource(const QString &id)
+             synchronize();
+         }
+     });
+-    m_settings->init();
++    m_settings.init();
+ 
+     updateResourceName();
+ 
+-    m_freeBusyHandler = std::make_unique<FreeBusyHandler>(m_iface, m_settings);
++    m_freeBusyHandler = std::make_unique<FreeBusyHandler>(m_iface, &m_settings);
+     m_handlers.clear();
+-    m_handlers.push_back(GenericHandler::Ptr(new CalendarHandler(m_iface, m_settings)));
+-    m_handlers.push_back(GenericHandler::Ptr(new PersonHandler(m_iface, m_settings)));
+-    m_handlers.push_back(GenericHandler::Ptr(new TaskHandler(m_iface, m_settings)));
+-
+-    new SettingsAdaptor(m_settings);
+-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"), m_settings, QDBusConnection::ExportAdaptors);
++    m_handlers.push_back(GenericHandler::Ptr(new CalendarHandler(m_iface, &m_settings)));
++    m_handlers.push_back(GenericHandler::Ptr(new PersonHandler(m_iface, &m_settings)));
++    m_handlers.push_back(GenericHandler::Ptr(new TaskHandler(m_iface, &m_settings)));
+ }
+ 
+ GoogleResource::~GoogleResource()
+@@ -128,7 +127,7 @@ GoogleResource::~GoogleResource()
+ 
+ void GoogleResource::cleanup()
+ {
+-    m_settings->cleanup();
++    m_settings.cleanup();
+     ResourceBase::cleanup();
+ }
+ 
+@@ -137,65 +136,30 @@ void GoogleResource::emitReadyStatus()
+     Q_EMIT status(Idle, i18nc("@info:status", "Ready"));
+ }
+ 
+-void GoogleResource::configure(WId windowId)
+-{
+-    if (!m_settings->isReady() || m_isConfiguring) {
+-        Q_EMIT configurationDialogAccepted();
+-        return;
+-    }
+-
+-    m_isConfiguring = true;
+-
+-    QScopedPointer<GoogleSettingsDialog> settingsDialog(new GoogleSettingsDialog(this, m_settings, windowId));
+-    settingsDialog->setWindowIcon(QIcon::fromTheme(QStringLiteral("im-google")));
+-    if (settingsDialog->exec() == QDialog::Accepted) {
+-        updateResourceName();
+-
+-        Q_EMIT configurationDialogAccepted();
+-
+-        if (m_settings->accountPtr().isNull()) {
+-            Q_EMIT status(NotConfigured, i18n("Configured account does not exist"));
+-            m_isConfiguring = false;
+-            return;
+-        }
+-
+-        emitReadyStatus();
+-        synchronize();
+-    } else {
+-        updateResourceName();
+-
+-        Q_EMIT configurationDialogRejected();
+-    }
+-
+-    m_isConfiguring = false;
+-}
+-
+ QList<QUrl> GoogleResource::scopes() const
+ {
+     // TODO: determine it based on what user wants?
+-    const QList<QUrl> scopes = {
+-        Account::accountInfoScopeUrl(),
+-        Account::calendarScopeUrl(),
+-        Account::peopleScopeUrl(),
+-        Account::tasksScopeUrl(),
+-    };
+-    return scopes;
++    return googleScopes();
+ }
+ 
+ void GoogleResource::updateResourceName()
+ {
+-    const QString accountName = m_settings->account();
++    const QString accountName = m_settings.account();
+     setName(i18nc("%1 is account name (user@gmail.com)", "Google Groupware (%1)", accountName.isEmpty() ? i18n("not configured") : accountName));
+ }
+ 
+ void GoogleResource::reloadConfig()
+ {
+-    const AccountPtr account = m_settings->accountPtr();
++    updateResourceName();
++
++    const AccountPtr account = m_settings.accountPtr();
+     if (account.isNull() || account->accountName().isEmpty()) {
+         Q_EMIT status(NotConfigured, i18n("Configured account does not exist"));
+-    } else {
+-        emitReadyStatus();
++        return;
+     }
++
++    emitReadyStatus();
++    synchronize();
+ }
+ 
+ bool GoogleResource::handleError(KGAPI2::Job *job, bool _cancelTask)
+@@ -231,7 +195,7 @@ bool GoogleResource::handleError(KGAPI2::Job *job, bool _cancelTask)
+ 
+ void GoogleResource::runAuthJob(const KGAPI2::AccountPtr &account, const QVariant &args)
+ {
+-    auto authJob = new AuthJob(account, m_settings->clientId(), m_settings->clientSecret(), this);
++    auto authJob = new AuthJob(account, m_settings.clientId(), m_settings.clientSecret(), this);
+     authJob->setProperty(JOB_PROPERTY, args);
+     connect(authJob, &AuthJob::finished, this, &GoogleResource::slotAuthJobFinished);
+ }
+@@ -264,7 +228,7 @@ void GoogleResource::requestAuthenticationFromUser(const KGAPI2::AccountPtr &acc
+ 
+ bool GoogleResource::canPerformTask()
+ {
+-    if (!m_settings->accountPtr() && accountId() == 0) {
++    if (!m_settings.accountPtr() && accountId() == 0) {
+         cancelTask(i18nc("@info:status", "Resource is not configured"));
+         Q_EMIT status(NotConfigured, i18nc("@info:status", "Resource is not configured"));
+         return false;
+@@ -289,10 +253,11 @@ void GoogleResource::slotAuthJobFinished(KGAPI2::Job *job)
+ 
+     auto authJob = qobject_cast<AuthJob *>(job);
+     AccountPtr account = authJob->account();
+-    auto writeJob = m_settings->storeAccount(account);
++    auto writeJob = m_settings.storeAccount(account);
+     connect(writeJob, &WritePasswordJob::finished, this, [job, account, writeJob]() {
+         if (writeJob->error()) {
+             qCWarning(GOOGLE_LOG) << "Failed to store account's password in secret storage" << writeJob->errorString();
++            return;
+         }
+ 
+         auto otherJob = job->property(JOB_PROPERTY).value<KGAPI2::Job *>();
+@@ -375,22 +340,22 @@ void GoogleResource::retrieveCollections()
+ 
+     setCollectionStreamingEnabled(true);
+     CachePolicy cachePolicy;
+-    if (m_settings->enableIntervalCheck()) {
++    if (m_settings.enableIntervalCheck()) {
+         cachePolicy.setInheritFromParent(false);
+-        cachePolicy.setIntervalCheckTime(m_settings->intervalCheckTime());
++        cachePolicy.setIntervalCheckTime(m_settings.intervalCheckTime());
+     }
+ 
+     // Setting up root collection
+     m_rootCollection = Collection();
+     m_rootCollection.setContentMimeTypes({Collection::mimeType(), Collection::virtualMimeType()});
+     m_rootCollection.setRemoteId(ROOT_COLLECTION_REMOTEID);
+-    m_rootCollection.setName(m_settings->accountPtr()->accountName());
++    m_rootCollection.setName(m_settings.accountPtr()->accountName());
+     m_rootCollection.setParentCollection(Collection::root());
+     m_rootCollection.setRights(Collection::CanCreateCollection);
+     m_rootCollection.setCachePolicy(cachePolicy);
+ 
+     auto attr = m_rootCollection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
+-    attr->setDisplayName(m_settings->accountPtr()->accountName());
++    attr->setDisplayName(m_settings.accountPtr()->accountName());
+     attr->setIconName(QStringLiteral("im-google"));
+ 
+     collectionsRetrieved({m_rootCollection});
+diff --git a/resources/google-groupware/googleresource.h b/resources/google-groupware/googleresource.h
+index 4609572756..75708afca4 100644
+--- a/resources/google-groupware/googleresource.h
++++ b/resources/google-groupware/googleresource.h
+@@ -14,6 +14,7 @@
+ 
+ #include "calendarhandler.h"
+ #include "generichandler.h"
++#include "googlesettings.h"
+ 
+ #define JOB_PROPERTY "_KGAPI2Job"
+ 
+@@ -37,7 +38,6 @@ public:
+ 
+     void cleanup() override;
+ public Q_SLOTS:
+-    void configure(WId windowId) override;
+     void reloadConfig();
+ 
+ protected:
+@@ -83,7 +83,7 @@ protected Q_SLOTS:
+ 
+ private:
+     bool m_isConfiguring = false;
+-    GoogleSettings *m_settings = nullptr;
++    GoogleSettings m_settings;
+     Akonadi::Collection m_rootCollection;
+ 
+     GoogleResourceState *const m_iface;
+diff --git a/resources/google-groupware/googlescopes.cpp b/resources/google-groupware/googlescopes.cpp
+new file mode 100644
+index 0000000000..9e565f7e33
+--- /dev/null
++++ b/resources/google-groupware/googlescopes.cpp
+@@ -0,0 +1,19 @@
++// SPDX-FileCopyrightText: 2011 Daniel Vrátil <dvratil@redhat.com>
++// SPDX-FileCopyrightText: 2023 Carl Schwan <carl@carlschwan.eu>
++// SPDX-License-Identifier: GPL-3.0-or-later
++
++#include "googlescopes.h"
++#include <KGAPI/Account>
++
++using namespace KGAPI2;
++
++QList<QUrl> googleScopes()
++{
++    // TODO: determine it based on what user wants?
++    return {
++        Account::accountInfoScopeUrl(),
++        Account::calendarScopeUrl(),
++        Account::peopleScopeUrl(),
++        Account::tasksScopeUrl(),
++    };
++}
+diff --git a/resources/google-groupware/googlescopes.h b/resources/google-groupware/googlescopes.h
+new file mode 100644
+index 0000000000..33bf579a89
+--- /dev/null
++++ b/resources/google-groupware/googlescopes.h
+@@ -0,0 +1,10 @@
++/*
++   SPDX-FileCopyrightText: 2011 Daniel Vrátil <dvratil@redhat.com>
++   SPDX-FileCopyrightText: 2023 Carl Schwan <carl@carlschwan.eu>
++   SPDX-License-Identifier: GPL-3.0-or-later
++*/
++
++#include <QList>
++#include <QUrl>
++
++QList<QUrl> googleScopes();
+diff --git a/resources/google-groupware/googlesettings.cpp b/resources/google-groupware/googlesettings.cpp
+index 6a1785fcf9..aa94cad1ab 100644
+--- a/resources/google-groupware/googlesettings.cpp
++++ b/resources/google-groupware/googlesettings.cpp
+@@ -8,6 +8,8 @@
+ 
+ #include "googlesettings.h"
+ #include "googleresource_debug.h"
++#include "googlescopes.h"
++#include "settingsadaptor.h"
+ 
+ #include <KGAPI/Account>
+ #include <KLocalizedString>
+@@ -27,8 +29,16 @@ using namespace KGAPI2;
+ 
+ static const QString googleWalletFolder = QStringLiteral("Akonadi Google");
+ 
+-GoogleSettings::GoogleSettings()
++GoogleSettings::GoogleSettings(const KSharedConfigPtr &config, Options options)
++    : SettingsBase(config)
+ {
++    qDebug() << config;
++    if (options & Option::ExportToDBus) {
++        new SettingsAdaptor(this);
++        QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"),
++                                                     this,
++                                                     QDBusConnection::ExportAdaptors | QDBusConnection::ExportScriptableContents);
++    }
+ }
+ 
+ void GoogleSettings::init()
+@@ -82,15 +92,17 @@ WritePasswordJob *GoogleSettings::storeAccount(AccountPtr account)
+     m_account = account;
+ 
+     QStringList scopes;
+-    const QList<QUrl> urlScopes = m_account->scopes();
++    const QList<QUrl> urlScopes = googleScopes();
+     scopes.reserve(urlScopes.count());
+     for (const QUrl &url : urlScopes) {
+         scopes << url.toString();
+     }
+ 
+-    const QMap<QString, QString> map = {{QStringLiteral("accessToken"), m_account->accessToken()},
+-                                        {QStringLiteral("refreshToken"), m_account->refreshToken()},
+-                                        {QStringLiteral("scopes"), scopes.join(QLatin1Char(','))}};
++    const QMap<QString, QString> map = {
++        {QStringLiteral("accessToken"), m_account->accessToken()},
++        {QStringLiteral("refreshToken"), m_account->refreshToken()},
++        {QStringLiteral("scopes"), scopes.join(QLatin1Char(','))},
++    };
+ 
+     // Legacy: store the map exactly like kwallet is doing it
+     QByteArray mapData;
+diff --git a/resources/google-groupware/googlesettings.h b/resources/google-groupware/googlesettings.h
+index f689dc7748..0ec4c3c34e 100644
+--- a/resources/google-groupware/googlesettings.h
++++ b/resources/google-groupware/googlesettings.h
+@@ -33,7 +33,14 @@ class GoogleSettings : public SettingsBase
+     Q_CLASSINFO("D-Bus Interface", "org.kde.Akonadi.Google.ExtendedSettings")
+ 
+ public:
+-    GoogleSettings();
++    enum class Option {
++        NoOption = 0,
++        ExportToDBus = 1,
++    };
++    Q_DECLARE_FLAGS(Options, Option)
++
++    explicit GoogleSettings(const KSharedConfigPtr &config, Options options = Option::ExportToDBus);
++
+     void init();
+     void setWindowId(WId id);
+     void setResourceId(const QString &resourceIdentifier);
+@@ -50,9 +57,11 @@ public:
+     bool isReady() const;
+     QKeychain::WritePasswordJob *storeAccount(KGAPI2::AccountPtr account);
+     void cleanup();
++
+ Q_SIGNALS:
+     void accountReady(bool ready);
+     void accountChanged();
++    void okEnabled(bool enabled);
+ 
+ private:
+     void slotWalletOpened(bool success);
+diff --git a/resources/google-groupware/googlesettingsdialog.cpp b/resources/google-groupware/googlesettingsdialog.cpp
+deleted file mode 100644
+index d418652d6f..0000000000
+--- a/resources/google-groupware/googlesettingsdialog.cpp
++++ /dev/null
+@@ -1,305 +0,0 @@
+-/*
+-    SPDX-FileCopyrightText: 2013 Daniel Vrátil <dvratil@redhat.com>
+-    SPDX-FileCopyrightText: 2020 Igor Poboiko <igor.poboiko@gmail.com>
+-
+-    SPDX-License-Identifier: GPL-3.0-or-later
+-*/
+-
+-#include "googlesettingsdialog.h"
+-#include "googleresource.h"
+-#include "googleresource_debug.h"
+-#include "googlesettings.h"
+-#include "ui_googlesettingsdialog.h"
+-
+-#include <QDialogButtonBox>
+-
+-#include <KGAPI/Account>
+-#include <KGAPI/AuthJob>
+-#include <KGAPI/Calendar/Calendar>
+-#include <KGAPI/Calendar/CalendarFetchJob>
+-#include <KGAPI/Tasks/TaskList>
+-#include <KGAPI/Tasks/TaskListFetchJob>
+-#include <KMessageBox>
+-#include <kwindowsystem>
+-
+-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+-#include <qt5keychain/keychain.h>
+-#else
+-#include <qt6keychain/keychain.h>
+-#endif
+-
+-using namespace QKeychain;
+-using namespace KGAPI2;
+-
+-GoogleSettingsDialog::GoogleSettingsDialog(GoogleResource *resource, GoogleSettings *settings, WId wId)
+-    : QDialog()
+-    , m_resource(resource)
+-    , m_settings(settings)
+-    , m_ui(new Ui::GoogleSettingsDialog)
+-{
+-    if (wId) {
+-        setAttribute(Qt::WA_NativeWindow, true);
+-        kwindowsystem::setMainWindow(windowHandle(), wId);
+-    }
+-    auto mainLayout = new QVBoxLayout(this);
+-
+-    auto mainWidget = new QWidget(this);
+-    mainLayout->addWidget(mainWidget);
+-
+-    auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+-    okButton->setDefault(true);
+-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+-    mainLayout->addWidget(buttonBox);
+-
+-    m_ui->setupUi(mainWidget);
+-
+-    m_ui->refreshSpinBox->setSuffix(ki18np(" minute", " minutes"));
+-    m_ui->enableRefresh->setChecked(m_settings->enableIntervalCheck());
+-    m_ui->refreshSpinBox->setEnabled(m_settings->enableIntervalCheck());
+-    m_ui->refreshSpinBox->setValue(m_settings->intervalCheckTime());
+-
+-    m_ui->eventsLimitCombo->setMaximumDate(QDate::currentDate());
+-    m_ui->eventsLimitCombo->setMinimumDate(QDate::fromString(QStringLiteral("2000-01-01"), Qt::ISODate));
+-    m_ui->eventsLimitCombo->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::WarnOnInvalid);
+-    if (m_settings->eventsSince().isEmpty()) {
+-        const QString ds = QStringLiteral("%1-01-01").arg(QString::number(QDate::currentDate().year() - 3));
+-        m_ui->eventsLimitCombo->setDate(QDate::fromString(ds, Qt::ISODate));
+-    } else {
+-        m_ui->eventsLimitCombo->setDate(QDate::fromString(m_settings->eventsSince(), Qt::ISODate));
+-    }
+-
+-    connect(buttonBox, &QDialogButtonBox::accepted, this, &GoogleSettingsDialog::slotSaveSettings);
+-    connect(buttonBox, &QDialogButtonBox::rejected, this, &GoogleSettingsDialog::reject);
+-    connect(m_ui->reloadCalendarsBtn, &QPushButton::clicked, this, &GoogleSettingsDialog::slotReloadCalendars);
+-    connect(m_ui->reloadTaskListsBtn, &QPushButton::clicked, this, &GoogleSettingsDialog::slotReloadTaskLists);
+-    connect(m_ui->configureBtn, &QPushButton::clicked, this, &GoogleSettingsDialog::slotConfigure);
+-    if (m_settings->isReady()) {
+-        m_account = m_settings->accountPtr();
+-    }
+-    connect(m_settings, &GoogleSettings::accountReady, this, [this](bool ready) {
+-        if (ready) {
+-            m_account = m_settings->accountPtr();
+-            accountChanged();
+-        }
+-    });
+-    QMetaObject::invokeMethod(this, &GoogleSettingsDialog::accountChanged, Qt::QueuedConnection);
+-}
+-
+-GoogleSettingsDialog::~GoogleSettingsDialog()
+-{
+-    delete m_ui;
+-}
+-
+-bool GoogleSettingsDialog::handleError(KGAPI2::Job *job)
+-{
+-    if ((job->error() == KGAPI2::NoError) || (job->error() == KGAPI2::OK)) {
+-        return true;
+-    }
+-
+-    if (job->error() == KGAPI2::Unauthorized) {
+-        qCDebug(GOOGLE_LOG) << job << job->errorString();
+-        const QList<QUrl> resourceScopes = m_resource->scopes();
+-        for (const QUrl &scope : resourceScopes) {
+-            if (!m_account->scopes().contains(scope)) {
+-                m_account->addScope(scope);
+-            }
+-        }
+-
+-        auto authJob = new AuthJob(m_account, m_settings->clientId(), m_settings->clientSecret(), this);
+-        authJob->setProperty(JOB_PROPERTY, QVariant::fromValue(job));
+-        connect(authJob, &AuthJob::finished, this, &GoogleSettingsDialog::slotAuthJobFinished);
+-
+-        return false;
+-    }
+-
+-    KMessageBox::error(this, job->errorString());
+-    return false;
+-}
+-
+-void GoogleSettingsDialog::accountChanged()
+-{
+-    if (!m_account) {
+-        m_ui->accountLabel->setText(i18n("<b>not configured</b>"));
+-        m_ui->calendarsList->setDisabled(true);
+-        m_ui->reloadCalendarsBtn->setDisabled(true);
+-        m_ui->calendarsList->clear();
+-        m_ui->taskListsList->setDisabled(true);
+-        m_ui->reloadTaskListsBtn->setDisabled(true);
+-        m_ui->taskListsList->clear();
+-        return;
+-    }
+-    m_ui->accountLabel->setText(QStringLiteral("<b>%1</b>").arg(m_account->accountName()));
+-    slotReloadCalendars();
+-    slotReloadTaskLists();
+-}
+-
+-void GoogleSettingsDialog::slotConfigure()
+-{
+-    const QString username = m_account && !m_account->accountName().isEmpty() ? m_account->accountName() : QString();
+-    m_account = AccountPtr(new Account());
+-    const QList<QUrl> resourceScopes = m_resource->scopes();
+-    for (const QUrl &scope : resourceScopes) {
+-        if (!m_account->scopes().contains(scope)) {
+-            m_account->addScope(scope);
+-        }
+-    }
+-    auto authJob = new AuthJob(m_account, m_settings->clientId(), m_settings->clientSecret());
+-    authJob->setUsername(username);
+-    connect(authJob, &AuthJob::finished, this, &GoogleSettingsDialog::slotAuthJobFinished);
+-}
+-
+-void GoogleSettingsDialog::slotAuthJobFinished(KGAPI2::Job *job)
+-{
+-    auto authJob = qobject_cast<AuthJob *>(job);
+-    m_account = authJob->account();
+-    if (authJob->error() != KGAPI2::NoError) {
+-        KMessageBox::error(this, authJob->errorString());
+-        return;
+-    }
+-    accountChanged();
+-
+-    auto otherJob = job->property(JOB_PROPERTY).value<KGAPI2::Job *>();
+-    if (otherJob) {
+-        otherJob->setAccount(m_account);
+-        otherJob->restart();
+-    }
+-}
+-
+-void GoogleSettingsDialog::slotSaveSettings()
+-{
+-    auto reset = [this] {
+-        m_settings->setAccount({});
+-        m_settings->setEnableIntervalCheck(m_ui->enableRefresh->isChecked());
+-        m_settings->setIntervalCheckTime(m_ui->refreshSpinBox->value());
+-        m_settings->setCalendars({});
+-        m_settings->setTaskLists({});
+-        m_settings->setEventsSince({});
+-        m_settings->save();
+-    };
+-
+-    if (!m_account) {
+-        reset();
+-        return;
+-    }
+-
+-    auto writeJob = m_settings->storeAccount(m_account);
+-    connect(writeJob, &WritePasswordJob::finished, this, [this, reset, writeJob]() {
+-        if (writeJob->error()) {
+-            qCWarning(GOOGLE_LOG) << "Failed to store account's password in secret storage" << writeJob->errorString();
+-            reset();
+-            return;
+-        }
+-
+-        m_settings->setAccount(m_account->accountName());
+-        m_settings->setEnableIntervalCheck(m_ui->enableRefresh->isChecked());
+-        m_settings->setIntervalCheckTime(m_ui->refreshSpinBox->value());
+-
+-        QStringList calendars;
+-        for (int i = 0; i < m_ui->calendarsList->count(); i++) {
+-            QListWidgetItem *item = m_ui->calendarsList->item(i);
+-
+-            if (item->checkState() == Qt::Checked) {
+-                calendars.append(item->data(Qt::UserRole).toString());
+-            }
+-        }
+-        m_settings->setCalendars(calendars);
+-
+-        if (m_ui->eventsLimitCombo->isValid()) {
+-            m_settings->setEventsSince(m_ui->eventsLimitCombo->date().toString(Qt::ISODate));
+-        }
+-
+-        QStringList taskLists;
+-        for (int i = 0; i < m_ui->taskListsList->count(); i++) {
+-            QListWidgetItem *item = m_ui->taskListsList->item(i);
+-
+-            if (item->checkState() == Qt::Checked) {
+-                taskLists.append(item->data(Qt::UserRole).toString());
+-            }
+-        }
+-        m_settings->setTaskLists(taskLists);
+-        m_settings->save();
+-
+-        accept();
+-    });
+-}
+-
+-void GoogleSettingsDialog::slotReloadCalendars()
+-{
+-    m_ui->calendarsList->setDisabled(true);
+-    m_ui->reloadCalendarsBtn->setDisabled(true);
+-    m_ui->calendarsList->clear();
+-
+-    if (!m_account) {
+-        return;
+-    }
+-
+-    auto fetchJob = new CalendarFetchJob(m_account, this);
+-    connect(fetchJob, &CalendarFetchJob::finished, this, [this](KGAPI2::Job *job) {
+-        if (!handleError(job) || !m_account) {
+-            m_ui->calendarsList->setEnabled(false);
+-            m_ui->reloadCalendarsBtn->setEnabled(false);
+-            return;
+-        }
+-
+-        const ObjectsList objects = qobject_cast<FetchJob *>(job)->items();
+-
+-        QStringList activeCalendars;
+-        if (m_account->accountName() == m_settings->account()) {
+-            activeCalendars = m_settings->calendars();
+-        }
+-        m_ui->calendarsList->clear();
+-        for (const ObjectPtr &object : objects) {
+-            const CalendarPtr calendar = object.dynamicCast<Calendar>();
+-
+-            auto item = new QListWidgetItem(calendar->title());
+-            item->setData(Qt::UserRole, calendar->uid());
+-            item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+-            item->setCheckState((activeCalendars.isEmpty() || activeCalendars.contains(calendar->uid())) ? Qt::Checked : Qt::Unchecked);
+-            m_ui->calendarsList->addItem(item);
+-        }
+-
+-        m_ui->calendarsList->setEnabled(true);
+-        m_ui->reloadCalendarsBtn->setEnabled(true);
+-    });
+-}
+-
+-void GoogleSettingsDialog::slotReloadTaskLists()
+-{
+-    if (!m_account) {
+-        return;
+-    }
+-
+-    m_ui->taskListsList->setDisabled(true);
+-    m_ui->reloadTaskListsBtn->setDisabled(true);
+-    m_ui->taskListsList->clear();
+-
+-    auto job = new TaskListFetchJob(m_account, this);
+-    connect(job, &TaskListFetchJob::finished, this, [this](KGAPI2::Job *job) {
+-        if (!handleError(job) || !m_account) {
+-            m_ui->taskListsList->setDisabled(true);
+-            m_ui->reloadTaskListsBtn->setDisabled(true);
+-            return;
+-        }
+-
+-        const ObjectsList objects = qobject_cast<FetchJob *>(job)->items();
+-
+-        QStringList activeTaskLists;
+-        if (m_account->accountName() == m_settings->account()) {
+-            activeTaskLists = m_settings->taskLists();
+-        }
+-        m_ui->taskListsList->clear();
+-        for (const ObjectPtr &object : objects) {
+-            const TaskListPtr taskList = object.dynamicCast<TaskList>();
+-
+-            auto item = new QListWidgetItem(taskList->title());
+-            item->setData(Qt::UserRole, taskList->uid());
+-            item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+-            item->setCheckState((activeTaskLists.isEmpty() || activeTaskLists.contains(taskList->uid())) ? Qt::Checked : Qt::Unchecked);
+-            m_ui->taskListsList->addItem(item);
+-        }
+-
+-        m_ui->taskListsList->setEnabled(true);
+-        m_ui->reloadTaskListsBtn->setEnabled(true);
+-    });
+-}
+diff --git a/resources/google-groupware/googlesettingswidget.cpp b/resources/google-groupware/googlesettingswidget.cpp
+new file mode 100644
+index 0000000000..2543c4c6b8
+--- /dev/null
++++ b/resources/google-groupware/googlesettingswidget.cpp
+@@ -0,0 +1,288 @@
++/*
++    SPDX-FileCopyrightText: 2013 Daniel Vrátil <dvratil@redhat.com>
++    SPDX-FileCopyrightText: 2020 Igor Poboiko <igor.poboiko@gmail.com>
++
++    SPDX-License-Identifier: GPL-3.0-or-later
++*/
++
++#include "googlesettingswidget.h"
++#include "googleresource.h"
++#include "googleresource_debug.h"
++#include "googlescopes.h"
++#include "googlesettings.h"
++
++#include <QDialogButtonBox>
++
++#include <KGAPI/Account>
++#include <KGAPI/AuthJob>
++#include <KGAPI/Calendar/Calendar>
++#include <KGAPI/Calendar/CalendarFetchJob>
++#include <KGAPI/Tasks/TaskList>
++#include <KGAPI/Tasks/TaskListFetchJob>
++#include <KMessageBox>
++#include <kwindowsystem>
++
++#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
++#include <qt5keychain/keychain.h>
++#else
++#include <qt6keychain/keychain.h>
++#endif
++
++using namespace QKeychain;
++using namespace KGAPI2;
++
++GoogleSettingsWidget::GoogleSettingsWidget(GoogleSettings &settings, const QString &identifier, QWidget *parent)
++    : QWidget(parent)
++    , m_settings(settings)
++    , m_identifier(identifier)
++{
++    qDebug() << m_settings.account();
++    auto mainLayout = new QVBoxLayout(this);
++
++    auto mainWidget = new QWidget(this);
++    mainLayout->addWidget(mainWidget);
++    setupUi(mainWidget);
++
++    refreshSpinBox->setSuffix(ki18np(" minute", " minutes"));
++    enableRefresh->setChecked(m_settings.enableIntervalCheck());
++    refreshSpinBox->setEnabled(m_settings.enableIntervalCheck());
++    refreshSpinBox->setValue(m_settings.intervalCheckTime());
++
++    eventsLimitCombo->setMaximumDate(QDate::currentDate());
++    eventsLimitCombo->setMinimumDate(QDate::fromString(QStringLiteral("2000-01-01"), Qt::ISODate));
++    eventsLimitCombo->setOptions(KDateComboBox::EditDate | KDateComboBox::SelectDate | KDateComboBox::DatePicker | KDateComboBox::WarnOnInvalid);
++    if (m_settings.eventsSince().isEmpty()) {
++        const QString ds = QStringLiteral("%1-01-01").arg(QString::number(QDate::currentDate().year() - 3));
++        eventsLimitCombo->setDate(QDate::fromString(ds, Qt::ISODate));
++    } else {
++        eventsLimitCombo->setDate(QDate::fromString(m_settings.eventsSince(), Qt::ISODate));
++    }
++    connect(reloadCalendarsBtn, &QPushButton::clicked, this, &GoogleSettingsWidget::slotReloadCalendars);
++    connect(reloadTaskListsBtn, &QPushButton::clicked, this, &GoogleSettingsWidget::slotReloadTaskLists);
++    connect(configureBtn, &QPushButton::clicked, this, &GoogleSettingsWidget::loadSettings);
++    if (m_settings.isReady()) {
++        m_account = m_settings.accountPtr();
++    }
++    connect(&m_settings, &GoogleSettings::accountReady, this, [this](bool ready) {
++        if (ready) {
++            m_account = m_settings.accountPtr();
++            accountChanged();
++        }
++    });
++    QMetaObject::invokeMethod(this, &GoogleSettingsWidget::accountChanged, Qt::QueuedConnection);
++}
++
++GoogleSettingsWidget::~GoogleSettingsWidget()
++{
++}
++
++bool GoogleSettingsWidget::handleError(KGAPI2::Job *job)
++{
++    if ((job->error() == KGAPI2::NoError) || (job->error() == KGAPI2::OK)) {
++        return true;
++    }
++
++    if (job->error() == KGAPI2::Unauthorized) {
++        qCDebug(GOOGLE_LOG) << job << job->errorString();
++        const QList<QUrl> resourceScopes = googleScopes();
++        for (const QUrl &scope : resourceScopes) {
++            if (!m_account->scopes().contains(scope)) {
++                m_account->addScope(scope);
++            }
++        }
++
++        auto authJob = new AuthJob(m_account, m_settings.clientId(), m_settings.clientSecret(), this);
++        authJob->setProperty(JOB_PROPERTY, QVariant::fromValue(job));
++        connect(authJob, &AuthJob::finished, this, &GoogleSettingsWidget::slotAuthJobFinished);
++
++        return false;
++    }
++
++    KMessageBox::error(this, job->errorString());
++    return false;
++}
++
++void GoogleSettingsWidget::accountChanged()
++{
++    if (!m_account) {
++        accountLabel->setText(i18n("<b>not configured</b>"));
++        calendarsList->setDisabled(true);
++        reloadCalendarsBtn->setDisabled(true);
++        calendarsList->clear();
++        taskListsList->setDisabled(true);
++        reloadTaskListsBtn->setDisabled(true);
++        taskListsList->clear();
++        return;
++    }
++    accountLabel->setText(QStringLiteral("<b>%1</b>").arg(m_account->accountName()));
++    slotReloadCalendars();
++    slotReloadTaskLists();
++}
++
++void GoogleSettingsWidget::loadSettings()
++{
++    const QString username = m_account && !m_account->accountName().isEmpty() ? m_account->accountName() : QString();
++    m_account = AccountPtr(new Account());
++    const QList<QUrl> resourceScopes = googleScopes();
++    for (const QUrl &scope : resourceScopes) {
++        if (!m_account->scopes().contains(scope)) {
++            m_account->addScope(scope);
++        }
++    }
++    auto authJob = new AuthJob(m_account, m_settings.clientId(), m_settings.clientSecret());
++    authJob->setUsername(username);
++    connect(authJob, &AuthJob::finished, this, &GoogleSettingsWidget::slotAuthJobFinished);
++}
++
++void GoogleSettingsWidget::slotAuthJobFinished(KGAPI2::Job *job)
++{
++    auto authJob = qobject_cast<AuthJob *>(job);
++    m_account = authJob->account();
++    if (authJob->error() != KGAPI2::NoError) {
++        KMessageBox::error(this, authJob->errorString());
++        return;
++    }
++    accountChanged();
++
++    auto otherJob = job->property(JOB_PROPERTY).value<KGAPI2::Job *>();
++    if (otherJob) {
++        otherJob->setAccount(m_account);
++        otherJob->restart();
++    }
++}
++
++void GoogleSettingsWidget::saveSettings()
++{
++    auto reset = [this] {
++        m_settings.setAccount({});
++        m_settings.setEnableIntervalCheck(enableRefresh->isChecked());
++        m_settings.setIntervalCheckTime(refreshSpinBox->value());
++        m_settings.setCalendars({});
++        m_settings.setTaskLists({});
++        m_settings.setEventsSince({});
++        m_settings.save();
++    };
++
++    if (!m_account) {
++        reset();
++        return;
++    }
++
++    auto writeJob = m_settings.storeAccount(m_account);
++    connect(writeJob, &WritePasswordJob::finished, this, [this, reset, writeJob]() {
++        if (writeJob->error()) {
++            qCWarning(GOOGLE_LOG) << "Failed to store account's password in secret storage" << writeJob->errorString();
++            reset();
++            return;
++        }
++
++        m_settings.setAccount(m_account->accountName());
++        m_settings.setEnableIntervalCheck(enableRefresh->isChecked());
++        m_settings.setIntervalCheckTime(refreshSpinBox->value());
++
++        QStringList calendars;
++        for (int i = 0; i < calendarsList->count(); i++) {
++            QListWidgetItem *item = calendarsList->item(i);
++
++            if (item->checkState() == Qt::Checked) {
++                calendars.append(item->data(Qt::UserRole).toString());
++            }
++        }
++        m_settings.setCalendars(calendars);
++
++        if (eventsLimitCombo->isValid()) {
++            m_settings.setEventsSince(eventsLimitCombo->date().toString(Qt::ISODate));
++        }
++
++        QStringList taskLists;
++        for (int i = 0; i < taskListsList->count(); i++) {
++            QListWidgetItem *item = taskListsList->item(i);
++
++            if (item->checkState() == Qt::Checked) {
++                taskLists.append(item->data(Qt::UserRole).toString());
++            }
++        }
++        m_settings.setTaskLists(taskLists);
++        m_settings.save();
++    });
++}
++
++void GoogleSettingsWidget::slotReloadCalendars()
++{
++    calendarsList->setDisabled(true);
++    reloadCalendarsBtn->setDisabled(true);
++    calendarsList->clear();
++
++    if (!m_account) {
++        return;
++    }
++
++    auto fetchJob = new CalendarFetchJob(m_account, this);
++    connect(fetchJob, &CalendarFetchJob::finished, this, [this](KGAPI2::Job *job) {
++        if (!handleError(job) || !m_account) {
++            calendarsList->setEnabled(false);
++            reloadCalendarsBtn->setEnabled(false);
++            return;
++        }
++
++        const ObjectsList objects = qobject_cast<FetchJob *>(job)->items();
++
++        QStringList activeCalendars;
++        if (m_account->accountName() == m_settings.account()) {
++            activeCalendars = m_settings.calendars();
++        }
++        calendarsList->clear();
++        for (const ObjectPtr &object : objects) {
++            const CalendarPtr calendar = object.dynamicCast<Calendar>();
++
++            auto item = new QListWidgetItem(calendar->title());
++            item->setData(Qt::UserRole, calendar->uid());
++            item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
++            item->setCheckState((activeCalendars.isEmpty() || activeCalendars.contains(calendar->uid())) ? Qt::Checked : Qt::Unchecked);
++            calendarsList->addItem(item);
++        }
++
++        calendarsList->setEnabled(true);
++        reloadCalendarsBtn->setEnabled(true);
++    });
++}
++
++void GoogleSettingsWidget::slotReloadTaskLists()
++{
++    if (!m_account) {
++        return;
++    }
++
++    taskListsList->setDisabled(true);
++    reloadTaskListsBtn->setDisabled(true);
++    taskListsList->clear();
++
++    auto job = new TaskListFetchJob(m_account, this);
++    connect(job, &TaskListFetchJob::finished, this, [this](KGAPI2::Job *job) {
++        if (!handleError(job) || !m_account) {
++            taskListsList->setDisabled(true);
++            reloadTaskListsBtn->setDisabled(true);
++            return;
++        }
++
++        const ObjectsList objects = qobject_cast<FetchJob *>(job)->items();
++
++        QStringList activeTaskLists;
++        if (m_account->accountName() == m_settings.account()) {
++            activeTaskLists = m_settings.taskLists();
++        }
++        taskListsList->clear();
++        for (const ObjectPtr &object : objects) {
++            const TaskListPtr taskList = object.dynamicCast<TaskList>();
++
++            auto item = new QListWidgetItem(taskList->title());
++            item->setData(Qt::UserRole, taskList->uid());
++            item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
++            item->setCheckState((activeTaskLists.isEmpty() || activeTaskLists.contains(taskList->uid())) ? Qt::Checked : Qt::Unchecked);
++            taskListsList->addItem(item);
++        }
++
++        taskListsList->setEnabled(true);
++        reloadTaskListsBtn->setEnabled(true);
++    });
++}
+diff --git a/resources/google-groupware/googlesettingsdialog.h b/resources/google-groupware/googlesettingswidget.h
+similarity index 53%
+rename from resources/google-groupware/googlesettingsdialog.h
+rename to resources/google-groupware/googlesettingswidget.h
+index a7d6ca0c92..4226a39d2d 100644
+--- a/resources/google-groupware/googlesettingsdialog.h
++++ b/resources/google-groupware/googlesettingswidget.h
+@@ -7,40 +7,37 @@
+ 
+ #pragma once
+ 
++#include "googlesettings.h"
++#include "ui_googlesettingswidget.h"
+ #include <KGAPI/Types>
+-#include <QDialog>
+ 
+-namespace Ui
+-{
+-class GoogleSettingsDialog;
+-}
+ namespace KGAPI2
+ {
+ class Job;
+ }
+-class GoogleResource;
+-class GoogleSettings;
+-
+-class GoogleSettingsDialog : public QDialog
++class GoogleSettingsWidget : public QWidget, private Ui::GoogleSettingsWidget
+ {
+     Q_OBJECT
+ public:
+-    explicit GoogleSettingsDialog(GoogleResource *resource, GoogleSettings *settings, WId wId);
+-    ~GoogleSettingsDialog() override;
++    explicit GoogleSettingsWidget(GoogleSettings &settings, const QString &identifier, QWidget *parent);
++    ~GoogleSettingsWidget() override;
++
++    void loadSettings();
++    void saveSettings();
++
++Q_SIGNALS:
++    void okEnabled(bool enabled);
+ 
+ protected:
+     bool handleError(KGAPI2::Job *job);
+     void accountChanged();
+ 
+ private:
+-    void slotConfigure();
+     void slotAuthJobFinished(KGAPI2::Job *job);
+-    void slotSaveSettings();
+     void slotReloadCalendars();
+     void slotReloadTaskLists();
+ 
+-    GoogleResource *const m_resource;
+-    GoogleSettings *const m_settings;
+-    Ui::GoogleSettingsDialog *const m_ui;
++    GoogleSettings &m_settings;
+     KGAPI2::AccountPtr m_account;
++    const QString m_identifier;
+ };
+diff --git a/resources/google-groupware/googlesettingsdialog.ui b/resources/google-groupware/googlesettingswidget.ui
+similarity index 99%
+rename from resources/google-groupware/googlesettingsdialog.ui
+rename to resources/google-groupware/googlesettingswidget.ui
+index 9ff9bc93b4..75fdfd24f1 100644
+--- a/resources/google-groupware/googlesettingsdialog.ui
++++ b/resources/google-groupware/googlesettingswidget.ui
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <ui version="4.0">
+- <class>GoogleSettingsDialog</class>
++ <class>GoogleSettingsWidget</class>
+  <widget class="QWidget" name="GoogleSettingsDialog">
+   <property name="geometry">
+    <rect>
+diff --git a/resources/google-groupware/settingsbase.kcfg b/resources/google-groupware/settingsbase.kcfg
+index ac58395d71..7dfe8dfe92 100644
+--- a/resources/google-groupware/settingsbase.kcfg
++++ b/resources/google-groupware/settingsbase.kcfg
+@@ -4,7 +4,7 @@
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+ 			  http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+-  <kcfgfile/>
++  <kcfgfile arg="true"/>
+   <group name="General">
+     <entry name="Account" type="String">
+     </entry>
+-- 
+GitLab
+
