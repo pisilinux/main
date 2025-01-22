@@ -5,15 +5,17 @@
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import kde6
 from pisi.actionsapi import kde5
 
 NoStrip=["/usr/share"]
 
 def setup():
-    kde5.configure("-DKMIX_KF5_BUILD=ON")
+    # kde6.configure("-Dkmix_KF5_BUILD=ON")
+    kde5.configure("-Dkmix_KF5_BUILD=ON")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
