@@ -18,56 +18,56 @@ diff --git a/addons/filebrowser/katefilebrowser.cpp b/addons/filebrowser/katefil
 index 54c1fa1fb..a1e5e4eba 100644
 --- a/addons/filebrowser/katefilebrowser.cpp
 +++ b/addons/filebrowser/katefilebrowser.cpp
-@@ -115,8 +115,6 @@ KateFileBrowser::KateFileBrowser(KTextEditor::MainWindow *mainWindow, QWidget *p
-     connect(m_mainWindow, &KTextEditor::MainWindow::viewChanged, this, &KateFileBrowser::autoSyncFolder);
+@@ -115,8 +115,6 @@ kateFileBrowser::kateFileBrowser(ktexteditor::MainWindow *mainWindow, QWidget *p
+     connect(m_mainWindow, &ktexteditor::MainWindow::viewChanged, this, &kateFileBrowser::autoSyncFolder);
  
-     connect(m_dirOperator, &KDirOperator::contextMenuAboutToShow, this, &KateFileBrowser::contextMenuAboutToShow);
+     connect(m_dirOperator, &KDirOperator::contextMenuAboutToShow, this, &kateFileBrowser::contextMenuAboutToShow);
 -
 -    autoSyncFolder();
  }
  
- KateFileBrowser::~KateFileBrowser()
+ kateFileBrowser::~kateFileBrowser()
 diff --git a/addons/filebrowser/katefilebrowserplugin.cpp b/addons/filebrowser/katefilebrowserplugin.cpp
 index f03c78698..3e415b025 100644
 --- a/addons/filebrowser/katefilebrowserplugin.cpp
 +++ b/addons/filebrowser/katefilebrowserplugin.cpp
-@@ -52,10 +52,7 @@ KTextEditor::ConfigPage *KateFileBrowserPlugin::configPage(int number, QWidget *
+@@ -52,10 +52,7 @@ ktexteditor::ConfigPage *kateFileBrowserPlugin::configPage(int number, QWidget *
      if (number != 0) {
          return nullptr;
      }
 -    if (!m_views[0]->m_fileBrowser) {
 -        m_views[0]->createFileBrowser(true);
 -    }
--    return new KateFileBrowserConfigPage(parent, m_views[0]->m_fileBrowser.get());
-+    return new KateFileBrowserConfigPage(parent, m_views[0]->m_fileBrowser);
+-    return new kateFileBrowserConfigPage(parent, m_views[0]->m_fileBrowser.get());
++    return new kateFileBrowserConfigPage(parent, m_views[0]->m_fileBrowser);
  }
- // END KateFileBrowserPlugin
+ // END kateFileBrowserPlugin
  
-@@ -67,50 +64,34 @@ KateFileBrowserPluginView::KateFileBrowserPluginView(KTextEditor::Plugin *plugin
-                                             KTextEditor::MainWindow::Left,
+@@ -67,50 +64,34 @@ kateFileBrowserPluginView::kateFileBrowserPluginView(ktexteditor::Plugin *plugin
+                                             ktexteditor::MainWindow::Left,
                                              QIcon::fromTheme(QStringLiteral("document-open")),
                                              i18n("Filesystem")))
-+    , m_fileBrowser(new KateFileBrowser(mainWindow, m_toolView))
++    , m_fileBrowser(new kateFileBrowser(mainWindow, m_toolView))
      , m_mainWindow(mainWindow)
  {
      m_toolView->installEventFilter(this);
 -    connect(m_toolView.get(), SIGNAL(toolVisibleChanged(bool)), this, SLOT(createFileBrowser(bool)));
  }
  
--void KateFileBrowserPluginView::readSessionConfig(const KConfigGroup &config)
-+KateFileBrowserPluginView::~KateFileBrowserPluginView()
+-void kateFileBrowserPluginView::readSessionConfig(const kconfigGroup &config)
++kateFileBrowserPluginView::~kateFileBrowserPluginView()
  {
 -    if (m_fileBrowser) {
 -        m_fileBrowser->readSessionConfig(config);
 -    } else {
--        cg.reset(new KConfigGroup(config));
+-        cg.reset(new kconfigGroup(config));
 -    }
 +    // cleanup, kill toolview + console
 +    delete m_fileBrowser->parentWidget();
  }
  
--void KateFileBrowserPluginView::writeSessionConfig(KConfigGroup &config)
-+void KateFileBrowserPluginView::readSessionConfig(const KConfigGroup &config)
+-void kateFileBrowserPluginView::writeSessionConfig(kconfigGroup &config)
++void kateFileBrowserPluginView::readSessionConfig(const kconfigGroup &config)
  {
 -    if (m_fileBrowser) {
 -        m_fileBrowser->writeSessionConfig(config);
@@ -75,8 +75,8 @@ index f03c78698..3e415b025 100644
 +    m_fileBrowser->readSessionConfig(config);
  }
  
--void KateFileBrowserPluginView::createFileBrowser(bool visible)
-+void KateFileBrowserPluginView::writeSessionConfig(KConfigGroup &config)
+-void kateFileBrowserPluginView::createFileBrowser(bool visible)
++void kateFileBrowserPluginView::writeSessionConfig(kconfigGroup &config)
  {
 -    if (!visible) {
 -        return;
@@ -86,14 +86,14 @@ index f03c78698..3e415b025 100644
 -    Q_ASSERT(!m_fileBrowser);
 -
 -    disconnect(m_toolView.get(), SIGNAL(toolVisibleChanged(bool)), this, SLOT(createFileBrowser(bool)));
--    m_fileBrowser = std::make_unique<KateFileBrowser>(m_mainWindow, m_toolView.get());
+-    m_fileBrowser = std::make_unique<kateFileBrowser>(m_mainWindow, m_toolView.get());
 -    m_fileBrowser->readSessionConfig(*cg);
 -    // delete the config now
 -    cg.reset();
 +    m_fileBrowser->writeSessionConfig(config);
  }
  
- bool KateFileBrowserPluginView::eventFilter(QObject *obj, QEvent *event)
+ bool kateFileBrowserPluginView::eventFilter(QObject *obj, QEvent *event)
  {
      if (event->type() == QEvent::KeyPress) {
          QKeyEvent *ke = static_cast<QKeyEvent *>(event);
@@ -109,11 +109,11 @@ index 2517d3453..9fb6610c4 100644
 --- a/addons/filebrowser/katefilebrowserplugin.h
 +++ b/addons/filebrowser/katefilebrowserplugin.h
 @@ -11,15 +11,12 @@
- #ifndef KATE_FILEBROWSER_PLUGIN_H
- #define KATE_FILEBROWSER_PLUGIN_H
+ #ifndef kate_FILEBROWSER_PLUGIN_H
+ #define kate_FILEBROWSER_PLUGIN_H
  
--#include <KConfigGroup>
- #include <KTextEditor/SessionConfigInterface>
+-#include <kconfigGroup>
+ #include <ktexteditor/SessionConfigInterface>
  #include <ktexteditor/configpage.h>
  #include <ktexteditor/document.h>
  #include <ktexteditor/mainwindow.h>
@@ -121,32 +121,32 @@ index 2517d3453..9fb6610c4 100644
  
 -#include <memory>
 -
- class KateFileBrowser;
- class KateFileBrowserPluginView;
+ class kateFileBrowser;
+ class kateFileBrowserPluginView;
  
 @@ -56,16 +53,19 @@ public:
       */
-     KateFileBrowserPluginView(KTextEditor::Plugin *plugin, KTextEditor::MainWindow *mainWindow);
+     kateFileBrowserPluginView(ktexteditor::Plugin *plugin, ktexteditor::MainWindow *mainWindow);
  
 +    /**
 +     * Virtual destructor.
 +     */
-+    ~KateFileBrowserPluginView() override;
++    ~kateFileBrowserPluginView() override;
 +
-     void readSessionConfig(const KConfigGroup &config) override;
-     void writeSessionConfig(KConfigGroup &config) override;
+     void readSessionConfig(const kconfigGroup &config) override;
+     void writeSessionConfig(kconfigGroup &config) override;
  
  private:
      bool eventFilter(QObject *, QEvent *) override;
 -    Q_SLOT void createFileBrowser(bool visible);
  
 -    std::unique_ptr<QWidget> m_toolView;
--    std::unique_ptr<KateFileBrowser> m_fileBrowser = nullptr;
--    std::unique_ptr<KConfigGroup> cg;
+-    std::unique_ptr<kateFileBrowser> m_fileBrowser = nullptr;
+-    std::unique_ptr<kconfigGroup> cg;
 +    QWidget *m_toolView;
-+    KateFileBrowser *m_fileBrowser;
-     KTextEditor::MainWindow *m_mainWindow;
-     friend class KateFileBrowserPlugin;
++    kateFileBrowser *m_fileBrowser;
+     ktexteditor::MainWindow *m_mainWindow;
+     friend class kateFileBrowserPlugin;
  };
 -- 
 GitLab
