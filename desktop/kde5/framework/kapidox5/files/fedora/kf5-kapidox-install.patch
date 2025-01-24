@@ -1,0 +1,51 @@
+diff -Nur kapidox5-5.93.0/CMakeLists.txt kapidox5-5.91.0/CMakeLists.txt
+--- kapidox5-5.93.0/CMakeLists.txt	2022-03-13 13:10:03.000000000 +0100
++++ kapidox5-5.91.0/CMakeLists.txt	2022-01-25 08:43:21.000000000 +0100
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 3.16)
+ project(kapidox5 NONE)
+ 
+-include(FindUnixCommands)
++find_package(Python3 COMPONENTS Interpreter)
+ 
+ if(WIN32)
+     # Needs native path and extra escaping of spaces
+@@ -11,7 +11,26 @@
+ endif()
+ 
+ add_custom_target(build ALL
+-    COMMAND ${BASH} bootstrap-devenv.sh
++    COMMAND ${Python3_EXECUTABLE} setup.py build --build-base ${BINARY_DIR}
+     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+-)
++    )
+ 
++# DESTDIR may be set at install time (eg: `make DESTDIR=/tmp/package install`)
++# so we need to check for it when the install code is run and pass the appropriate
++# argument to distutils.
++#
++# Note that if(\$ENV{DESTDIR}) always fails, regardless of the value of the DESTDIR
++# environment variable, hence the STREQUAL test.
++# See https://public.kitware.com/Bug/view.php?id=14737
++install(CODE
++    "set(_root_arg)
++     if (NOT \$ENV{DESTDIR} STREQUAL \"\")
++         file(TO_NATIVE_PATH \$ENV{DESTDIR} DESTDIR)
++         set(_root_arg --root \"\${DESTDIR}\")
++     endif()
++    file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX} INSTALL_PREFIX)
++     execute_process(
++        COMMAND ${Python3_EXECUTABLE} setup.py install --prefix \"\${INSTALL_PREFIX}\" \${_root_arg}
++        WORKING_DIRECTORY \"${CMAKE_SOURCE_DIR}\"
++        )"
++    )
+diff -up kapidox5-5.93.0/setup.py.me kapidox5-5.93.0/setup.py
+--- kapidox5-5.93.0/setup.py.me	2022-04-28 14:13:13.168061970 +0200
++++ kapidox5-5.93.0/setup.py	2022-04-28 14:14:00.170175582 +0200
+@@ -17,5 +17,5 @@ setup(
+                 "kapidox5-depdiagram-generate = kapidox5.depdiagram_generate:main",
+             ],
+         },
+-        install_requires=["doxypypy", "doxyqml", "requests", "jinja2", "pyyaml"]
++        install_requires=["requests", "jinja2", "pyyaml"]
+     )

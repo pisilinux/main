@@ -1,0 +1,76 @@
+
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>kwayland5</Name>
+        <Homepage>https://www.kde.org</Homepage>
+        <Packager>
+            <Name>Stefan Gronewold(groni)</Name>
+            <Email>groni@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv3</License>
+        <IsA>library</IsA>
+        <Summary>Qt-style Client and Server library wrapper for the Wayland libraries</Summary>
+        <Description>Qt-style Client and Server library wrapper for the Wayland libraries</Description>
+        <Archive sha1sum="c0a10ea444cae3ba74d1795682a6053e8149d3e6" type="tarxz">mirrors://kde/stable/frameworks/5.116/kwayland-5.116.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency versionFrom="5.15.2">qt5-base-devel</Dependency>
+            <Dependency versionFrom="5.15.2">qt5-wayland-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
+            <Dependency>wayland-protocols-devel</Dependency>
+            <Dependency versionFrom="13.0.4">mesa-devel</Dependency>
+            <Dependency>extra-cmake-modules</Dependency>
+	    <Dependency versionFrom="1.0">plasma-wayland-protocols</Dependency>		
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>kwayland5</Name>
+        <RuntimeDependencies>
+<!--             <Dependency>libgcc</Dependency> -->
+            <Dependency versionFrom="5.15.2">qt5-base</Dependency>
+<!--             <Dependency versionFrom="5.7.1">qt5-wayland</Dependency> -->
+<!--             <Dependency versionFrom="13.0.4">mesa</Dependency> -->
+            <Dependency>libglvnd</Dependency>
+            <Dependency>wayland-client</Dependency>
+            <Dependency>wayland-server</Dependency>
+<!-- 	    <Dependency versionFrom="1.0">plasma-wayland-protocols</Dependency>	 -->
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/xdg</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/config</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/qlogging-categories5</Path>
+            <Path fileType="data">/usr/share/qlogging-categories5/org_kde_kwayland5.categories</Path>
+        </Files>
+    </Package>
+    <Package>
+        <Name>kwayland5-devel</Name>
+        <RuntimeDependencies>
+            <Dependency versionFrom="5.15.2">qt5-base-devel</Dependency>
+		<Dependency versionFrom="5.15.2">qt5-wayland</Dependency>
+<!--             <Dependency>wayland-devel</Dependency> -->
+<!--             <Dependency>libglvnd-devel</Dependency> -->
+<!--             <Dependency versionFrom="13.0.4">mesa-devel</Dependency> -->
+	    <Dependency release="current">kwayland5</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/cmake</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-05-19</Date>
+            <Version>5.116.0</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
