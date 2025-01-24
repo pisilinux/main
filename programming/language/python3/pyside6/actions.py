@@ -12,7 +12,7 @@ def setup():
     shelltools.cd("sources/pyside6")
     shelltools.makedirs("build2")
     shelltools.cd("build2")
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+    cmaketools.configure("-G Ninja -DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_TESTS=OFF \
                           -DPYTHON_EXECUTABLE=/usr/bin/python3", sourceDir="..")
@@ -20,9 +20,11 @@ def setup():
 
 def build():
     shelltools.cd("sources/pyside6/build2")
-    cmaketools.make()
+    shelltools.system("ninja")
+    # cmaketools.make()
 
 
 def install():
     shelltools.cd("sources/pyside6/build2")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
