@@ -1,0 +1,68 @@
+
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>bluez-qt5</Name>
+        <Homepage>https://www.kde.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>library</IsA>
+        <Summary>Qt wrapper for KDE 5 Bluez DBus API</Summary>
+        <Description>Qt wrapper for KDE 5 DBus API.</Description>
+        <Archive sha1sum="b3922f0efc281f47d524eb32eaa2c6878863c9c1" type="tarxz">mirrors://kde/stable/frameworks/5.116/bluez-qt-5.116.0.tar.xz</Archive>
+        <BuildDependencies>
+             <Dependency>bluez</Dependency>
+             <Dependency>bluez-libs-devel</Dependency>
+             <Dependency versionFrom="5.15.1">qt5-base-devel</Dependency>
+             <Dependency versionFrom="5.15.1">qt5-declarative-devel</Dependency>
+             <Dependency versionFrom="5.116.0">extra-cmake-modules</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>bluez-qt5</Name>
+        <RuntimeDependencies>
+<!--             <Dependency>bluez</Dependency>  -->
+            <Dependency versionFrom="5.15.1">qt5-base</Dependency>
+            <Dependency versionFrom="5.15.1">qt5-declarative</Dependency>
+	    <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/qt5</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="config">/etc/xdg</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/lib/udev</Path>
+            <Path fileType="data">/usr/share/qlogging-categories5</Path>
+            <Path fileType="data">/usr/share/qlogging-categories5/bluez.categories</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>bluez-qt5-devel</Name>
+        <Summary>Development files for bluez-qt5</Summary>
+        <RuntimeDependencies>
+<!--             <Dependency versionFrom="5.15.1">qt5-base-devel</Dependency> -->
+<!--             <Dependency versionFrom="5.15.1">qt5-declarative-devel</Dependency> -->
+            <Dependency release="current">bluez-qt5</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-05-19</Date>
+            <Version>5.116.0</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>

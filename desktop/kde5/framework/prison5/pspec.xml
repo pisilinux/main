@@ -1,0 +1,80 @@
+
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>prison5</Name>
+        <Homepage>https://www.kde.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <IsA>library</IsA>
+        <Summary>A barcode API to produce QRCode barcodes and DataMatrix barcode</Summary>
+        <Description>A barcode API to produce QRCode barcodes and DataMatrix barcode.</Description>
+        <Archive sha1sum="b0ce4ea54d6a2b43e1dc8949de8fbde72061b310" type="tarxz">mirrors://kde/stable/frameworks/5.116/prison-5.116.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>libdmtx-devel</Dependency>
+            <Dependency>qrencode-devel</Dependency>
+            <Dependency>zxing-cpp-devel</Dependency>
+            <Dependency versionFrom="5.10.1">qt5-base-devel</Dependency>
+            <Dependency versionFrom="5.116.0">extra-cmake-modules</Dependency>
+            <Dependency versionFrom="5.10.1">qt5-multimedia-devel</Dependency>
+            <Dependency versionFrom="5.10.1">qt5-declarative-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>prison5</Name>
+        <RuntimeDependencies>
+<!--             <Dependency>libgcc</Dependency> -->
+            <Dependency>libdmtx</Dependency>
+            <Dependency>qrencode</Dependency>
+            <Dependency>zxing-cpp</Dependency>
+            <Dependency versionFrom="5.10.1">qt5-base</Dependency>
+            <Dependency versionFrom="5.10.1">qt5-multimedia</Dependency>
+            <Dependency versionFrom="5.10.1">qt5-declarative</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="config">/etc/xdg</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/qt5</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share/qlogging-categories5/prison5.categories</Path>
+            <Path fileType="data">/usr/share/qlogging-categories5/prison5.renamecategories</Path>
+        </Files>
+        <Replaces>
+            <Package>prison-qt5</Package>
+        </Replaces>
+        <Conflicts>
+            <Package>prison-qt5</Package>
+        </Conflicts>
+    </Package>
+
+    <Package>
+        <Name>prison5-devel</Name>
+        <Summary>Development files for libepoxy</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">prison5</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+        <Replaces>
+            <Package>prison-qt5-devel</Package>
+        </Replaces>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2024-05-19</Date>
+            <Version>5.116.0</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
