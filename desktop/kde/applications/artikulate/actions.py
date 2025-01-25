@@ -5,15 +5,18 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import kde5
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import kde6
 
 def setup():
-    kde5.configure()
+    cmaketools.configure("-B build -DBUILD_TESTING=OFF \
+                                        -DKDE_INSTALL_LIBDIR=lib \
+                                        -DCMAKE_INSTALL_PREFIX=/usr")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
 
     pisitools.dodoc("COPYING*")
