@@ -21,7 +21,7 @@ def install():
     pisitools.dodir("/usr/lib/R/library")
 
     kde6.install()
-    pisitools.dodoc("README.md", "LICENSES/*")
+    pisitools.dodoc("LICENSES/*")
 
     # TODO: this one seems better than the one in kdelibs
     #pisitools.remove("/usr/share/kde4/apps/katepart/syntax/r.xml")
