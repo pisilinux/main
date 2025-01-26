@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     autotools.autoreconf("-vif")
-    autotools.configure()
+    autotools.configure("--prefix=/usr --with-xinitdir=/etc/X11/xinit")
 
 def build():
     autotools.make()
