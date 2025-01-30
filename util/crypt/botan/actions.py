@@ -27,5 +27,3 @@ def check():
 
 def install():
     mesontools.install("-C .")
-
-    pisitools.dodoc("license.txt", "doc/authors.txt", "doc/credits.rst")
