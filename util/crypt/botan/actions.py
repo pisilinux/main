@@ -9,7 +9,7 @@ from pisi.actionsapi import pythonmodules, mesontools, pisitools
 i = ''.join([
     ' --prefix=/usr',
     ' --with-{boost,bzip2,lzma,sqlite3,zlib}',
-    ' --with-python-versions=3.12',
+    ' --with-python-versions=3.11',
     ' --with-os-feature=getrandom',
     ' --disable-static-library',
     ' --build-tool=ninja',
