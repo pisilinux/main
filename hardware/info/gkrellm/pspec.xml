@@ -1,61 +1,42 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>gkrellm</Name>
-        <Homepage>https://www.gkrellm.net/</Homepage>
+        <Homepage>https://gkrellm.srcbox.net/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>GPLv2</License>
+        <License>GPLv3</License>
         <Icon>gkrellm</Icon>
         <IsA>app:gui</IsA>
         <IsA>service</IsA>
-        <Summary>A compact and clean system monitoring tool</Summary>
+        <Summary>A compact and clean system monitoring tool.</Summary>
         <Description>A program to monitor system status, and to collect system information such as memory usage, cpu temperature etc.</Description>
-        <Archive sha1sum="3d19729843f0bc6f5fbe67518ff5349d2f07d512" type="tarbz2">https://gkrellm.srcbox.net/releases/gkrellm-2.3.11.tar.bz2</Archive>
+        <Archive sha1sum="f50a24cc6b24a2042aaad30e6e36c0b0146d871f" type="tarbz2">https://gkrellm.srcbox.net/releases/gkrellm-2.4.0.tar.bz2</Archive>
         <BuildDependencies>
-            <Dependency>gnutls-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
-            <Dependency>pango-devel</Dependency>
-            <Dependency>libX11-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency>libgcrypt-devel</Dependency>
-            <Dependency>libICE-devel</Dependency>
             <Dependency>libSM-devel</Dependency>
+            <Dependency>gnutls-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">drop_privileges.patch</Patch>
-            <Patch level="1">gkrellmd-conf.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
         </Patches>
     </Source>
 
     <Package>
         <Name>gkrellm</Name>
         <RuntimeDependencies>
-            <Dependency>gnutls</Dependency>
             <Dependency>gtk2</Dependency>
-            <Dependency>pango</Dependency>
-            <Dependency>glib2</Dependency>
-            <Dependency>libX11</Dependency>
-            <Dependency>libgcrypt</Dependency>
-            <Dependency>libICE</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
             <Dependency>libSM</Dependency>
+            <Dependency>gnutls</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/share</Path>
-            <Path fileType="man">/usr/share/man</Path>                        
         </Files>
-        <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/gkrellm.desktop">gkrellm.desktop</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/gkrellm.png">gkrellm.png</AdditionalFile>            
-        </AdditionalFiles>
         <Provides>
             <COMAR script="service.py">System.Service</COMAR>
         </Provides>
@@ -65,8 +46,8 @@
         <Name>gkrellm-devel</Name>
         <Summary>Development files for gkrellm</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">gkrellm</Dependency>
             <Dependency>gtk2-devel</Dependency>
+            <Dependency release="current">gkrellm</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -75,6 +56,13 @@
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2025-01-29</Date>
+            <Version>2.4.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
         <Update release="8">
             <Date>2024-11-29</Date>
             <Version>2.3.11</Version>
