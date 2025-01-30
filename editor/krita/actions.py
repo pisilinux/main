@@ -22,4 +22,4 @@ def build():
 def install():
     kde5.install("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("COPYING*", "README.md")
+    pisitools.dodoc("COPYING*", "README.md", "LICENSES/*")
