@@ -2,23 +2,23 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
+i = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    shelltools.export("CXXFLAGS", get.CXXFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
-    shelltools.export("CFLAGS", get.CFLAGS().replace("-D_FORTIFY_SOURCE=2", ""))
-    cmaketools.configure()
+    cmaketools.configure(i)
 
 def build():
-    cmaketools.make()
+    mesontools.build()
 
 def install():
-    cmaketools.install()
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "README*", "NEWS", "CHANGES", "RELEASE-NOTES", "LICENSE.md")
+    pisitools.dodoc("AUTHORS", "LICENSE.md")
