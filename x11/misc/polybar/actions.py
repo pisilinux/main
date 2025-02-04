@@ -2,33 +2,25 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
+
+k = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DPYTHON_EXECUTABLE=/usr/bin/python3',
+    ' -DBUILD_DOC_HTML=OFF',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-
-    cmaketools.configure("-D CMAKE_BUILD_TYPE=Release \
-                          -DENABLE_ALSA=ON \
-                          -DENABLE_CURL=ON \
-                          -DENABLE_I3=ON \
-                          -DBUILD_IPC_MSG=ON \
-                          -DENABLE_NETWORK=ON \
-                          -DENABLE_PULSEAUDIO=ON", sourceDir="..")
-    
+    cmaketools.configure(k)
 
 def build():
-    
-    shelltools.cd("build")
-    
-    cmaketools.make()
-    #cmaketools.make("doc")
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
+
+    pisitools.dodoc("LICENSE")
