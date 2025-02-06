@@ -2,23 +2,27 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import mesontools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools, pisitools
+
+y = ''.join([
+    ' --prefix=/usr',
+    ' --buildtype=release',
+    ' -D{docs,mans}=true '
+    ])
 
 def setup():
-    mesontools.configure()
+    mesontools.configure(y)
 
 def build():
     mesontools.build()
 
-#def check():
-    #mesontools.build("test")
+def check():
+#    mesontools.build("test") # required X display environment.
+    pass
 
 def install():
     mesontools.install()
 
     pisitools.dodoc("LICENSE")
-
-    #pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "NEWS")
