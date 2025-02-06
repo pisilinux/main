@@ -4,7 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools, mesontools, pisitools
+from pisi.actionsapi import shelltools, cmaketools, mesontools, pisitools
 
 j = ''.join([
     ' -DCMAKE_BUILD_TYPE=Release',
@@ -13,18 +13,18 @@ j = ''.join([
     ' -DCMAKE_C_COMPILER=gcc',
     ' -DCMAKE_CXX_COMPILER=g++',
     ' -DUNIX_STRUCTURE=ON',
-    ' -DENABLE_JACK=ON',
-    ' -DBUILD_VST=OFF',
-    ' -DBUILD_BROWSER=OFF',
     ' -DOpenGL_GL_PREFERENCE=GLVND',
-    ' -DENABLE_VLC=OFF',
+    ' -DBUILD_VST=ON',
+    ' -DENABLE_{AJA,VLC,BROWSER}=OFF',
+    ' -DENABLE_JACK=ON',
     ' -DENABLE_LIBFDK=ON',
-    ' -DENABLE_AJA=OFF',
-    ' -DENABLE_NEW_MPEGTS_OUTPUT=OFF',
+    ' -DENABLE_NEW_MPEGTS_OUTPUT=ON',
     ' -B_build -G Ninja -L '
     ])
 
 def setup():
+    for b in ["browser", "websocket"]:
+        shelltools.touch("plugins/obs-%s/CMakeLists.txt" % b)
     cmaketools.configure(j)
 
 def build():
@@ -33,4 +33,4 @@ def build():
 def install():
     mesontools.install("-C _build")
 
-    pisitools.dodoc("CONTRIBUTING*", "COPYING*", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING")
