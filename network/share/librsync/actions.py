@@ -1,30 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Licensed under the GNU General Public License, version 2
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# Licensed under the GNU General Public License, version 3.
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
+
+i = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DCMAKE_INSTALL_LIBDIR=lib',
+    ' -DENABLE_{COMPRESSION,TRACE}=ON',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_INSTALL_LIBDIR=lib", sourceDir="..")
-                         
+    cmaketools.configure(i)
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make()
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    
-    shelltools.cd("..")
-    pisitools.dodoc("README*", "TODO*", "NEWS*", "COPYING")
+    mesontools.install()
 
+    pisitools.dodoc("AUTHORS", "COPYING")
