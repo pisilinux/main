@@ -2,34 +2,24 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
-WorkDir = "libvncserver-LibVNCServer-%s" % get.srcVERSION()
+i = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DWITH_{QT,WEBSOCKETS,GTK,XCB,SASL,SDL,SYSTEMD,FFMPEG}=OFF',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    #autotools.autoreconf("-vif")
-    #autotools.configure("--disable-static \
-                         #--disable-dependency-tracking \
-                         #--with-24bpp \
-                         #--with-zlib \
-                         #--with-jpeg")
-
-    #pisitools.dosed("libtool", " -shared ", " -shared -Wl,--as-needed")
-    
-    cmaketools.configure("-DWITH_FFMPEG=OFF \
-                          -DWITH_SASL=OFF \
-                          -DWITH_SDL=OFF \
-                          -DWITH_SYSTEMD=OFF \
-                          ")
+    cmaketools.configure(i)
 
 def build():
-    cmaketools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #pisitools.remove("/usr/bin/linuxvnc")
+    mesontools.install()
+
+    pisitools.dodoc("AUTHORS", "COPYING")
