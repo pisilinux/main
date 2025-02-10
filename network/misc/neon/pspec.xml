@@ -1,27 +1,25 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>neon</Name>
-        <Homepage>http://www.webdav.org/neon/</Homepage>
+        <Homepage>https://notroj.github.io/neon/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
         <License>GPLv2</License>
         <IsA>library</IsA>
-        <Summary>HTTP and WebDAV client library</Summary>
-        <Description>neon is an HTTP and WebDAV client library with a C interface; providing a high-level interface to HTTP and WebDAV methods along with a low-level interface for HTTP request handling.</Description>
-        <Archive sha1sum="ca4df4d726d7adef70dff1a32766ca54519a0958" type="targz">https://notroj.github.io/neon/neon-0.31.2.tar.gz</Archive>
+        <Summary>HTTP and WebDAV client library.</Summary>
+        <Description>neon is an HTTP/1.1 and WebDAV client library, with a C interface.</Description>
+        <Archive sha1sum="b0b371ff82d72a82ad5a282971d9246033df93fe" type="targz">https://notroj.github.io/neon/neon-0.34.0.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>openssl-devel</Dependency>
-            <Dependency>expat-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
-            <Dependency>mit-kerberos</Dependency>
+            <Dependency>expat-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch>fixdocdir.patch</Patch>
-            <Patch level="1">multilib.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
         </Patches>
     </Source>
 
@@ -33,11 +31,8 @@
             <Dependency>openssl</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share</Path>
         </Files>
     </Package>
 
@@ -45,15 +40,27 @@
         <Name>neon-devel</Name>
         <Summary>Development files for neon</Summary>
         <RuntimeDependencies>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>expat-devel</Dependency>
+            <Dependency>openssl-devel</Dependency>
             <Dependency release="current">neon</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="executable">/usr/bin/neon-config</Path>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/man/man1</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="8">
+            <Date>2025-02-10</Date>
+            <Version>0.34.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>İdris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
+        </Update>
         <Update release="7">
             <Date>2024-12-18</Date>
             <Version>0.31.2</Version>
