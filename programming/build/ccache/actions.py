@@ -2,31 +2,32 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools, get
+
+i = ''.join([
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DREDIS_STORAGE_BACKEND=OFF',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    if shelltools.isDirectory("zlib"):
-        shelltools.unlinkDir("zlib")
-
-    autotools.configure("--prefix=/usr")
+    cmaketools.configure(i)
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def check():
-    autotools.make("check")
+#    mesontools.build("test")
+    pass
 
 def install():
-    autotools.install()
+    mesontools.install()
 
     # Create symlinks
     for cc in ("gcc", "g++", "cc", "c++"): # , "clang" , "clang++"
-        pisitools.dosym("../../../bin/ccache", "/usr/lib/ccache/bin/%s" % cc)
-        pisitools.dosym("../../../bin/ccache", "/usr/lib/ccache/bin/%s-%s" % (get.HOST(), cc))
+        pisitools.dosym("/usr/bin/ccache", "/usr/lib/ccache/bin/%s" % cc)
+        pisitools.dosym("/usr/bin/ccache", "/usr/lib/ccache/bin/%s-%s" % (get.HOST(), cc))
 
-    #pisitools.dodoc("LICENSE.txt", "README.txt")
+    pisitools.dodoc("GPL-3.0.txt", "LGPL-3.0.txt")
