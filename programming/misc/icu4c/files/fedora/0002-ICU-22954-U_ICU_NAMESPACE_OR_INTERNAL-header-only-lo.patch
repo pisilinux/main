@@ -1,0 +1,336 @@
+From 8655718531e478428151162313f67432ed28cd9d Mon Sep 17 00:00:00 2001
+From: Markus Scherer <markus.icu@gmail.com>
+Date: Mon, 9 Dec 2024 18:42:23 -0800
+Subject: [PATCH] ICU-22954 U_ICU_NAMESPACE_OR_INTERNAL, header-only
+ localpointer header-only parts of char16ptr.h
+
+---
+ icu4c/source/common/unicode/char16ptr.h    | 51 ++++++++++++++++++++--
+ icu4c/source/common/unicode/localpointer.h | 10 ++---
+ icu4c/source/common/unicode/normlzr.h      |  4 +-
+ icu4c/source/common/unicode/unistr.h       |  8 ++--
+ icu4c/source/common/unicode/uset.h         | 14 +++---
+ icu4c/source/common/unicode/uversion.h     | 19 +++++++-
+ icu4c/source/i18n/unicode/ucol.h           |  4 +-
+ 7 files changed, 84 insertions(+), 26 deletions(-)
+
+diff --git a/icu4c/source/common/unicode/char16ptr.h b/icu4c/source/common/unicode/char16ptr.h
+index daf35cd43ba..a2722d9f463 100644
+--- icu4c/source/common/unicode/char16ptr.h
++++ icu4c/source/common/unicode/char16ptr.h
+@@ -9,10 +9,13 @@
+ 
+ #include "unicode/utypes.h"
+ 
+-#if U_SHOW_CPLUSPLUS_API
++#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+ 
+ #include <cstddef>
+ #include <string_view>
++#include <type_traits>
++
++#endif
+ 
+ /**
+  * \file
+@@ -21,8 +24,6 @@
+  *        Also conversion functions from char16_t * to UChar * and OldUChar *.
+  */
+ 
+-U_NAMESPACE_BEGIN
+-
+ /**
+  * \def U_ALIASING_BARRIER
+  * Barrier for pointer anti-aliasing optimizations even across function boundaries.
+@@ -36,6 +37,11 @@ U_NAMESPACE_BEGIN
+ #   define U_ALIASING_BARRIER(ptr)
+ #endif
+ 
++// ICU DLL-exported
++#if U_SHOW_CPLUSPLUS_API
++
++U_NAMESPACE_BEGIN
++
+ /**
+  * char16_t * wrapper with implicit conversion from distinct but bit-compatible pointer types.
+  * @stable ICU 59
+@@ -251,6 +257,34 @@ const char16_t *ConstChar16Ptr::get() const { return u_.cp; }
+ #endif
+ /// \endcond
+ 
++U_NAMESPACE_END
++
++#endif  // U_SHOW_CPLUSPLUS_API
++
++// Usable in header-only definitions
++#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
++
++namespace U_ICU_NAMESPACE_OR_INTERNAL {
++
++#ifndef U_FORCE_HIDE_INTERNAL_API
++/** @internal */
++template<typename T, typename = std::enable_if_t<std::is_same_v<T, UChar>>>
++inline const char16_t *uprv_char16PtrFromUChar(const T *p) {
++    if constexpr (std::is_same_v<UChar, char16_t>) {
++        return p;
++    } else {
++#if U_SHOW_CPLUSPLUS_API
++        return ConstChar16Ptr(p).get();
++#else
++#ifdef U_ALIASING_BARRIER
++        U_ALIASING_BARRIER(p);
++#endif
++        return reinterpret_cast<const char16_t *>(p);
++#endif
++    }
++}
++#endif
++
+ /**
+  * Converts from const char16_t * to const UChar *.
+  * Includes an aliasing barrier if available.
+@@ -307,6 +341,15 @@ inline OldUChar *toOldUCharPtr(char16_t *p) {
+     return reinterpret_cast<OldUChar *>(p);
+ }
+ 
++}  // U_ICU_NAMESPACE_OR_INTERNAL
++
++#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
++
++// ICU DLL-exported
++#if U_SHOW_CPLUSPLUS_API
++
++U_NAMESPACE_BEGIN
++
+ #ifndef U_FORCE_HIDE_INTERNAL_API
+ /**
+  * Is T convertible to a std::u16string_view or some other 16-bit string view?
+@@ -379,6 +422,6 @@ inline std::u16string_view toU16StringViewNullable(const T& text) {
+ 
+ U_NAMESPACE_END
+ 
+-#endif /* U_SHOW_CPLUSPLUS_API */
++#endif  // U_SHOW_CPLUSPLUS_API
+ 
+ #endif  // __CHAR16PTR_H__
+diff --git a/icu4c/source/common/unicode/localpointer.h b/icu4c/source/common/unicode/localpointer.h
+index 9c891bf3088..487ddb48b78 100644
+--- icu4c/source/common/unicode/localpointer.h
++++ icu4c/source/common/unicode/localpointer.h
+@@ -21,7 +21,7 @@
+ 
+ /**
+  * \file
+- * \brief C++ API: "Smart pointers" for use with and in ICU4C C++ code.
++ * \brief C++ header-only API: "Smart pointers" for use with and in ICU4C C++ code.
+  *
+  * These classes are inspired by
+  * - std::auto_ptr
+@@ -40,11 +40,11 @@
+ 
+ #include "unicode/utypes.h"
+ 
+-#if U_SHOW_CPLUSPLUS_API
++#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+ 
+ #include <memory>
+ 
+-U_NAMESPACE_BEGIN
++namespace U_ICU_NAMESPACE_OR_INTERNAL {
+ 
+ /**
+  * "Smart pointer" base class; do not use directly: use LocalPointer etc.
+@@ -603,7 +603,7 @@ class LocalOpenPointer : public LocalPointerBase<Type> {
+ }  // namespace internal
+ #endif
+ 
+-U_NAMESPACE_END
++}  // U_ICU_NAMESPACE_OR_INTERNAL
+ 
+-#endif  /* U_SHOW_CPLUSPLUS_API */
++#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+ #endif  /* __LOCALPOINTER_H__ */
+diff --git a/icu4c/source/common/unicode/normlzr.h b/icu4c/source/common/unicode/normlzr.h
+index 0309bce5382..40848bf00ca 100644
+--- icu4c/source/common/unicode/normlzr.h
++++ icu4c/source/common/unicode/normlzr.h
+@@ -801,8 +801,8 @@ Normalizer::compare(const UnicodeString &s1, const UnicodeString &s2,
+                     uint32_t options,
+                     UErrorCode &errorCode) {
+   // all argument checking is done in unorm_compare
+-  return unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
+-                       toUCharPtr(s2.getBuffer()), s2.length(),
++  return unorm_compare(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(s1.getBuffer()), s1.length(),
++                       U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(s2.getBuffer()), s2.length(),
+                        options,
+                        &errorCode);
+ }
+diff --git a/icu4c/source/common/unicode/unistr.h b/icu4c/source/common/unicode/unistr.h
+index 39d789fd6ef..a1901c91504 100644
+--- icu4c/source/common/unicode/unistr.h
++++ icu4c/source/common/unicode/unistr.h
+@@ -4676,7 +4676,7 @@ UnicodeString::startsWith(const UnicodeString& srcText,
+ inline UBool
+ UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(toUCharPtr(srcChars));
++    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars));
+   }
+   return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+ }
+@@ -4684,7 +4684,7 @@ UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
+ inline UBool
+ UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(toUCharPtr(srcChars));
++    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars));
+   }
+   return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+ }
+@@ -4707,7 +4707,7 @@ inline UBool
+ UnicodeString::endsWith(ConstChar16Ptr srcChars,
+             int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(toUCharPtr(srcChars));
++    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars));
+   }
+   return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+ }
+@@ -4717,7 +4717,7 @@ UnicodeString::endsWith(const char16_t *srcChars,
+             int32_t srcStart,
+             int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
++    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars + srcStart));
+   }
+   return doEqualsSubstring(length() - srcLength, srcLength,
+                    srcChars, srcStart, srcLength);
+diff --git a/icu4c/source/common/unicode/uset.h b/icu4c/source/common/unicode/uset.h
+index 914c4c4e5de..345d6244544 100644
+--- icu4c/source/common/unicode/uset.h
++++ icu4c/source/common/unicode/uset.h
+@@ -32,13 +32,13 @@
+ #include "unicode/utypes.h"
+ #include "unicode/uchar.h"
+ 
+-#if U_SHOW_CPLUSPLUS_API
++#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+ #include <string>
+ #include <string_view>
+ #include "unicode/char16ptr.h"
+ #include "unicode/localpointer.h"
+ #include "unicode/utf16.h"
+-#endif   // U_SHOW_CPLUSPLUS_API
++#endif
+ 
+ #ifndef USET_DEFINED
+ 
+@@ -346,9 +346,9 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
+ U_CAPI void U_EXPORT2
+ uset_close(USet* set);
+ 
+-#if U_SHOW_CPLUSPLUS_API
++#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+ 
+-U_NAMESPACE_BEGIN
++namespace U_ICU_NAMESPACE_OR_INTERNAL {
+ 
+ /**
+  * \class LocalUSetPointer
+@@ -361,7 +361,7 @@ U_NAMESPACE_BEGIN
+  */
+ U_DEFINE_LOCAL_OPEN_POINTER(LocalUSetPointer, USet, uset_close);
+ 
+-U_NAMESPACE_END
++}  // U_ICU_NAMESPACE_OR_INTERNAL
+ 
+ #endif
+ 
+@@ -1658,7 +1658,7 @@ class USetStringIterator {
+             int32_t length;
+             const UChar *uchars = uset_getString(uset, index, &length);
+             // assert uchars != nullptr;
+-            return {ConstChar16Ptr(uchars), static_cast<uint32_t>(length)};
++            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+         }
+         return {};
+     }
+@@ -1772,7 +1772,7 @@ class USetElementIterator {
+             int32_t length;
+             const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
+             // assert uchars != nullptr;
+-            return {ConstChar16Ptr(uchars), static_cast<uint32_t>(length)};
++            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+         } else {
+             return {};
+         }
+diff --git a/icu4c/source/common/unicode/uversion.h b/icu4c/source/common/unicode/uversion.h
+index 25d73a3aeb5..a29bf21efda 100644
+--- icu4c/source/common/unicode/uversion.h
++++ icu4c/source/common/unicode/uversion.h
+@@ -125,7 +125,7 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
+         U_NAMESPACE_USE
+ #   endif
+ 
+-#ifndef U_HIDE_DRAFT_API
++#ifndef U_FORCE_HIDE_DRAFT_API
+ /**
+  * \def U_HEADER_NESTED_NAMESPACE
+  * Nested namespace used inside U_ICU_NAMESPACE for header-only APIs.
+@@ -150,22 +150,37 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
+  * @draft ICU 76
+  */
+ 
++/**
++ * \def U_ICU_NAMESPACE_OR_INTERNAL
++ * Namespace used for header-only APIs that used to be regular C++ APIs.
++ * Different when used inside ICU to prevent public use of internal instantiations.
++ * Similar to U_HEADER_ONLY_NAMESPACE, but the public definition is the same as U_ICU_NAMESPACE.
++ * "U_ICU_NAMESPACE" or "U_ICU_NAMESPACE::internal".
++ *
++ * @draft ICU 77
++ */
++
+ // The first test is the same as for defining U_EXPORT for Windows.
+ #if defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+                           UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
+ #   define U_HEADER_NESTED_NAMESPACE header
++#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
+ #elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+         defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
+         defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
+ #   define U_HEADER_NESTED_NAMESPACE internal
++#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE::internal
++    namespace U_ICU_NAMESPACE_OR_INTERNAL {}
++    using namespace U_ICU_NAMESPACE_OR_INTERNAL;
+ #else
+ #   define U_HEADER_NESTED_NAMESPACE header
++#   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
+ #endif
+ 
+ #define U_HEADER_ONLY_NAMESPACE U_ICU_NAMESPACE::U_HEADER_NESTED_NAMESPACE
+ 
+ namespace U_HEADER_ONLY_NAMESPACE {}
+-#endif  // U_HIDE_DRAFT_API
++#endif  // U_FORCE_HIDE_DRAFT_API
+ 
+ #endif /* __cplusplus */
+ 
+diff --git a/icu4c/source/i18n/unicode/ucol.h b/icu4c/source/i18n/unicode/ucol.h
+index ae4f29c3c6c..8b6dfeaa0a8 100644
+--- icu4c/source/i18n/unicode/ucol.h
++++ icu4c/source/i18n/unicode/ucol.h
+@@ -1572,8 +1572,8 @@ class Predicate {
+         return compare(
+             ucol_strcoll(
+                 collator,
+-                toUCharPtr(lhs.getBuffer()), lhs.length(),
+-                toUCharPtr(rhs.getBuffer()), rhs.length()),
++                U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(lhs.getBuffer()), lhs.length(),
++                U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(rhs.getBuffer()), rhs.length()),
+             result);
+     }
+ 
+-- 
+2.47.1
+

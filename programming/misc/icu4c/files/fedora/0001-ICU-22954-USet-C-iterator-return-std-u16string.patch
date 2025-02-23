@@ -1,0 +1,223 @@
+From d03826cdeec4ad3fd0667f00a551e6a46272897b Mon Sep 17 00:00:00 2001
+From: Markus Scherer <markus.icu@gmail.com>
+Date: Mon, 9 Dec 2024 16:06:39 -0800
+Subject: [PATCH] ICU-22954 USet C++ iterator return std::u16string
+
+---
+ icu4c/source/common/unicode/uniset.h    | 11 ++++---
+ icu4c/source/common/unicode/uset.h      | 44 ++++++++++++++-----------
+ icu4c/source/test/intltest/usettest.cpp |  6 ++--
+ 3 files changed, 36 insertions(+), 25 deletions(-)
+
+diff --git a/icu4c/source/common/unicode/uniset.h b/icu4c/source/common/unicode/uniset.h
+index d070fd631a2..5b32f3ca5d4 100644
+--- icu4c/source/common/unicode/uniset.h
++++ icu4c/source/common/unicode/uniset.h
+@@ -1173,10 +1173,12 @@ class U_COMMON_API UnicodeSet final : public UnicodeFilter {
+     inline U_HEADER_NESTED_NAMESPACE::USetStrings strings() const {
+         return U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
+     }
++#endif  // U_HIDE_DRAFT_API
+ 
++#ifndef U_HIDE_DRAFT_API
+     /**
+      * Returns a C++ iterator for iterating over all of the elements of this set.
+-     * Convenient all-in one iteration, but creates a UnicodeString for each
++     * Convenient all-in one iteration, but creates a std::u16string for each
+      * code point or string.
+      * (Similar to how Java UnicodeSet *is an* Iterable&lt;String&gt;.)
+      *
+@@ -1185,13 +1187,14 @@ class U_COMMON_API UnicodeSet final : public UnicodeFilter {
+      * \code
+      * UnicodeSet set(u"[abcçカ🚴{}{abc}{de}]", errorCode);
+      * for (auto el : set) {
++     *     UnicodeString us(el);
+      *     std::string u8;
+-     *     printf("set.string length %ld \"%s\"\n", (long)el.length(), el.toUTF8String(u8).c_str());
++     *     printf("set.string length %ld \"%s\"\n", (long)us.length(), us.toUTF8String(u8).c_str());
+      * }
+      * \endcode
+      *
+      * @return an all-elements iterator.
+-     * @draft ICU 76
++     * @draft ICU 77
+      * @see end
+      * @see codePoints
+      * @see ranges
+@@ -1203,7 +1206,7 @@ class U_COMMON_API UnicodeSet final : public UnicodeFilter {
+ 
+     /**
+      * @return an exclusive-end sentinel for iterating over all of the elements of this set.
+-     * @draft ICU 76
++     * @draft ICU 77
+      * @see begin
+      * @see codePoints
+      * @see ranges
+diff --git a/icu4c/source/common/unicode/uset.h b/icu4c/source/common/unicode/uset.h
+index c8f9b5592df..914c4c4e5de 100644
+--- icu4c/source/common/unicode/uset.h
++++ icu4c/source/common/unicode/uset.h
+@@ -33,10 +33,11 @@
+ #include "unicode/uchar.h"
+ 
+ #if U_SHOW_CPLUSPLUS_API
++#include <string>
+ #include <string_view>
+ #include "unicode/char16ptr.h"
+ #include "unicode/localpointer.h"
+-#include "unicode/unistr.h"
++#include "unicode/utf16.h"
+ #endif   // U_SHOW_CPLUSPLUS_API
+ 
+ #ifndef USET_DEFINED
+@@ -1737,17 +1738,19 @@ class USetStrings {
+     const USet *uset;
+     int32_t count;
+ };
++#endif  // U_HIDE_DRAFT_API
+ 
++#ifndef U_HIDE_DRAFT_API
+ /**
+  * Iterator returned by USetElements.
+- * @draft ICU 76
++ * @draft ICU 77
+  */
+ class USetElementIterator {
+ public:
+-    /** @draft ICU 76 */
++    /** @draft ICU 77 */
+     USetElementIterator(const USetElementIterator &other) = default;
+ 
+-    /** @draft ICU 76 */
++    /** @draft ICU 77 */
+     bool operator==(const USetElementIterator &other) const {
+         // No need to compare rangeCount & end given private constructor
+         // and assuming we don't compare iterators across the set being modified.
+@@ -1756,26 +1759,28 @@ class USetElementIterator {
+         return uset == other.uset && c == other.c && index == other.index;
+     }
+ 
+-    /** @draft ICU 76 */
++    /** @draft ICU 77 */
+     bool operator!=(const USetElementIterator &other) const { return !operator==(other); }
+ 
+-    /** @draft ICU 76 */
+-    UnicodeString operator*() const {
++    /** @draft ICU 77 */
++    std::u16string operator*() const {
+         if (c >= 0) {
+-            return UnicodeString(c);
++            return c <= 0xffff ?
++                std::u16string({static_cast<char16_t>(c)}) :
++                std::u16string({U16_LEAD(c), U16_TRAIL(c)});
+         } else if (index < totalCount) {
+             int32_t length;
+             const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
+             // assert uchars != nullptr;
+-            return UnicodeString(uchars, length);
++            return {ConstChar16Ptr(uchars), static_cast<uint32_t>(length)};
+         } else {
+-            return UnicodeString();
++            return {};
+         }
+     }
+ 
+     /**
+      * Pre-increment.
+-     * @draft ICU 76
++     * @draft ICU 77
+      */
+     USetElementIterator &operator++() {
+         if (c < end) {
+@@ -1800,7 +1805,7 @@ class USetElementIterator {
+ 
+     /**
+      * Post-increment.
+-     * @draft ICU 76
++     * @draft ICU 77
+      */
+     USetElementIterator operator++(int) {
+         USetElementIterator result(*this);
+@@ -1840,7 +1845,7 @@ class USetElementIterator {
+ 
+ /**
+  * A C++ "range" for iterating over all of the elements of a USet.
+- * Convenient all-in one iteration, but creates a UnicodeString for each
++ * Convenient all-in one iteration, but creates a std::u16string for each
+  * code point or string.
+  *
+  * Code points are returned first, then empty and multi-character strings.
+@@ -1849,15 +1854,16 @@ class USetElementIterator {
+  * using U_HEADER_NESTED_NAMESPACE::USetElements;
+  * LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴{}{abc}{de}]", -1, &errorCode));
+  * for (auto el : USetElements(uset.getAlias())) {
++ *     UnicodeString us(el);
+  *     std::string u8;
+- *     printf("uset.string length %ld \"%s\"\n", (long)el.length(), el.toUTF8String(u8).c_str());
++ *     printf("uset.string length %ld \"%s\"\n", (long)us.length(), us.toUTF8String(u8).c_str());
+  * }
+  * \endcode
+  *
+  * C++ UnicodeSet has member functions for iteration, including begin() and end().
+  *
+  * @return an all-elements iterator.
+- * @draft ICU 76
++ * @draft ICU 77
+  * @see USetCodePoints
+  * @see USetRanges
+  * @see USetStrings
+@@ -1866,21 +1872,21 @@ class USetElements {
+ public:
+     /**
+      * Constructs a C++ "range" object over all of the elements of the USet.
+-     * @draft ICU 76
++     * @draft ICU 77
+      */
+     USetElements(const USet *uset)
+         : uset(uset), rangeCount(uset_getRangeCount(uset)),
+             stringCount(uset_getStringCount(uset)) {}
+ 
+-    /** @draft ICU 76 */
++    /** @draft ICU 77 */
+     USetElements(const USetElements &other) = default;
+ 
+-    /** @draft ICU 76 */
++    /** @draft ICU 77 */
+     USetElementIterator begin() const {
+         return USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
+     }
+ 
+-    /** @draft ICU 76 */
++    /** @draft ICU 77 */
+     USetElementIterator end() const {
+         return USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
+     }
+diff --git a/icu4c/source/test/intltest/usettest.cpp b/icu4c/source/test/intltest/usettest.cpp
+index a53e813ad2f..477639e8659 100644
+--- icu4c/source/test/intltest/usettest.cpp
++++ icu4c/source/test/intltest/usettest.cpp
+@@ -4448,8 +4448,9 @@ void UnicodeSetTest::TestElementIterator() {
+     UnicodeSet set(u"[abcçカ🚴{}{abc}{de}]", errorCode);
+     UnicodeString result;
+     for (auto el : set) {
++        // UnicodeString us(el);
+         // std::string u8;
+-        // printf("set.string length %ld \"%s\"\n", (long)el.length(), el.toUTF8String(u8).c_str());
++        // printf("set.string length %ld \"%s\"\n", (long)us.length(), us.toUTF8String(u8).c_str());
+         result.append(u" \"").append(el).append(u'"');
+     }
+     assertEquals(WHERE, uR"( "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de")", result);
+@@ -4463,8 +4464,9 @@ void UnicodeSetTest::TestUSetElementIterator() {
+     LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴{}{abc}{de}]", -1, errorCode));
+     UnicodeString result;
+     for (auto el : USetElements(uset.getAlias())) {
++        // UnicodeString us(el);
+         // std::string u8;
+-        // printf("uset.string length %ld \"%s\"\n", (long)el.length(), el.toUTF8String(u8).c_str());
++        // printf("uset.string length %ld \"%s\"\n", (long)us.length(), us.toUTF8String(u8).c_str());
+         result.append(u" \"").append(el).append(u'"');
+     }
+     assertEquals(WHERE, uR"( "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de")", result);
+-- 
+2.47.1
+

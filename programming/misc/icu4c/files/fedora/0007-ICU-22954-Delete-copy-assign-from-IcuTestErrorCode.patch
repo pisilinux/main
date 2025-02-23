@@ -1,0 +1,56 @@
+From b2a47f9aa47eeaa400018fec1849b0852ca74451 Mon Sep 17 00:00:00 2001
+From: Fredrik Roubert <roubert@google.com>
+Date: Mon, 30 Dec 2024 17:52:03 +0900
+Subject: [PATCH] ICU-22954 Delete copy & assign from IcuTestErrorCode.
+
+There's no reason to ever make a copy of these objects, existing code
+that does this is doing it by mistake.
+---
+ icu4c/source/test/intltest/listformattertest.cpp | 2 +-
+ icu4c/source/test/intltest/listformattertest.h   | 2 +-
+ icu4c/source/tools/ctestfw/unicode/testlog.h     | 3 +++
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/icu4c/source/test/intltest/listformattertest.cpp b/icu4c/source/test/intltest/listformattertest.cpp
+index 592137e39dd..bd6210266b9 100644
+--- icu4c/source/test/intltest/listformattertest.cpp
++++ icu4c/source/test/intltest/listformattertest.cpp
+@@ -618,7 +618,7 @@ void ListFormatterTest::DoTheRealListStyleTesting(
+         UListFormatterType type,
+         UListFormatterWidth width,
+         const char* expected,
+-        IcuTestErrorCode status) {
++        IcuTestErrorCode& status) {
+ 
+     LocalPointer<ListFormatter> formatter(
+             ListFormatter::createInstance(locale, type, width, status));
+diff --git a/icu4c/source/test/intltest/listformattertest.h b/icu4c/source/test/intltest/listformattertest.h
+index 2c6860c1610..65d8aedfe89 100644
+--- icu4c/source/test/intltest/listformattertest.h
++++ icu4c/source/test/intltest/listformattertest.h
+@@ -115,7 +115,7 @@ class ListFormatterTest : public IntlTestWithFieldPosition {
+         UListFormatterType type,
+         UListFormatterWidth width,
+         const char* expected,
+-        IcuTestErrorCode status);
++        IcuTestErrorCode& status);
+ 
+   private:
+     // Reused test data.
+diff --git a/icu4c/source/tools/ctestfw/unicode/testlog.h b/icu4c/source/tools/ctestfw/unicode/testlog.h
+index 3951e729b74..a5e62e80d73 100644
+--- icu4c/source/tools/ctestfw/unicode/testlog.h
++++ icu4c/source/tools/ctestfw/unicode/testlog.h
+@@ -37,6 +37,9 @@ class T_CTEST_EXPORT_API TestLog {
+ 
+ class T_CTEST_EXPORT_API IcuTestErrorCode {
+ public:
++    IcuTestErrorCode(const IcuTestErrorCode&) = delete;
++    IcuTestErrorCode& operator=(const IcuTestErrorCode&) = delete;
++
+     IcuTestErrorCode(TestLog &callingTestClass, const char *callingTestName)
+             : errorCode(U_ZERO_ERROR),
+               testClass(callingTestClass), testName(callingTestName), scopeMessage() {}
+-- 
+2.47.1
+
