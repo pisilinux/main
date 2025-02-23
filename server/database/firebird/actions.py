@@ -13,19 +13,21 @@ from pisi.actionsapi import get
 #WorkDir="Firebird-%s-0" % get.srcVERSION()
 
 def setup():
+    # pisitools.flags.add(" -lpthread")
     shelltools.export("CFLAGS", "%s -fno-strict-aliasing" % get.CFLAGS())
     #shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
-    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse -Wno-error=narrowing" % get.CXXFLAGS())
-    pisitools.dosed("src/isql/isql.epp", '"isql\s', '"fbsql ')
-    pisitools.dosed("src/msgs/history2.sql", 'isql\s', 'fbsql ')
-    pisitools.dosed("src/msgs/messages2.sql", 'isql\s', 'fbsql ')
-    pisitools.dosed("src/msgs/messages2.sql", 'ISQL\s', 'FBSQL ')
+    shelltools.export("CXXFLAGS", "%s -fno-delete-null-pointer-checks" % get.CXXFLAGS())
+    # pisitools.dosed("src/isql/isql.epp", '"isql\s', '"fbsql ')
+    # pisitools.dosed("src/msgs/history2.sql", 'isql\s', 'fbsql ')
+    # pisitools.dosed("src/msgs/messages2.sql", 'isql\s', 'fbsql ')
+    # pisitools.dosed("src/msgs/messages2.sql", 'ISQL\s', 'FBSQL ')
     shelltools.system("find ./ -name \*.sh -print0 | xargs -0 chmod +x")
     #for d in ("btyacc", "editline", "icu"):
         #shelltools.unlinkDir("extern/%s" % d)
     shelltools.system("sh autogen.sh")
     autotools.autoreconf("-fi")
     autotools.configure("--prefix=/opt/firebird \
+                         --with-fbconf=/etc/firebird \
                          --disable-static \
                          --enable-superserver \
                          --with-editline \
@@ -37,8 +39,8 @@ def setup():
 def build():
     #Parallel build is broken
     #shelltools.export("CXXFLAGS", "%s -std=gnu++98 -fno-lifetime-dse" % get.CXXFLAGS())
-    shelltools.export("CXXFLAGS", "%s -fno-lifetime-dse -Wno-error=narrowing" % get.CXXFLAGS())
-    autotools.make("-j1")
+    shelltools.export("CXXFLAGS", "%s -fno-delete-null-pointer-checks" % get.CXXFLAGS())
+    autotools.make()
     shelltools.cd("gen")
     pisitools.dosed("install/makeInstallImage.sh", "exit 1", "# exit 1")
     pisitools.dosed("install/makeInstallImage.sh", "chown", 'echo ""# chown')
@@ -54,7 +56,7 @@ def install():
     pisitools.domove("/opt/firebird/include", "/usr/include", "firebird")
 
     # Fix client libraries symlinks
-    pisitools.removeDir("/usr/lib*")
+    # pisitools.removeDir("/usr/lib*")
     for libs in os.listdir("%s/opt/firebird/lib" % get.installDIR()):
         pisitools.dosym("/opt/firebird/lib/%s" % libs, "/usr/lib/%s" % libs)
     pisitools.dosym("/opt/firebird/plugins/libfbtrace.so", "/usr/lib/libfbtrace.so")
@@ -66,19 +68,19 @@ def install():
     pisitools.dosym("libfbclient.so", "/opt/firebird/lib/libgds.so.0")
 
     # Move configuration files and security DB to /etc/firebird for painless upgrade
-    pisitools.domove("/opt/firebird/aliases.conf", "/etc/firebird")
-    pisitools.domove("/opt/firebird/firebird.conf", "/etc/firebird")
-    pisitools.domove("/opt/firebird/security2.fdb", "/etc/firebird")
-    pisitools.dosym("/etc/firebird/aliases.conf", "/opt/firebird/aliases.conf")
+    # pisitools.domove("/opt/firebird/aliases.conf", "/etc/firebird") ???????????????????????????????
+    # pisitools.domove("/opt/firebird/firebird.conf", "/etc/firebird")
+    pisitools.domove("/opt/firebird/security4.fdb", "/etc/firebird")
+    # pisitools.dosym("/etc/firebird/aliases.conf", "/opt/firebird/aliases.conf")
     pisitools.dosym("/etc/firebird/firebird.conf", "/opt/firebird/firebird.conf")
-    pisitools.dosym("/etc/firebird/security2.fdb", "/opt/firebird/security2.fdb")
+    pisitools.dosym("/etc/firebird/security4.fdb", "/opt/firebird/security4.fdb")
 
     # Set PID directory
     shelltools.makedirs("%s/run/firebird" % get.installDIR())
     #pisitools.dodir("/opt/firebird/run")
 
     # Set permissions
-    shelltools.chmod("%s/etc/firebird/security2.fdb" % get.installDIR(), 0600)
+    shelltools.chmod("%s/etc/firebird/security4.fdb" % get.installDIR(), 0600)
     shelltools.chmod("%s/run/firebird" % get.installDIR(), 0755)
     #shelltools.chmod("%s/opt/firebird/run" % get.installDIR(), 0755)
 
@@ -89,3 +91,6 @@ def install():
 
     # Prevent to conflict isql with UnixODBC's
     pisitools.domove("/opt/firebird/bin/isql", "/opt/firebird/bin", "fb_isql")
+
+    pisitools.remove("/etc/firebird/*.md")
+    pisitools.remove("/etc/firebird/*.txt")
