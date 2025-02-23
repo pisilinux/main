@@ -22,4 +22,4 @@ def install():
 
     pisitools.dodoc("ChangeLog", "COPYING", "THANKS")
     pisitools.remove("/usr/lib/libedit.la")
-    pisitools.remove("/usr/share/man/man3/history.3")
+    # pisitools.remove("/usr/share/man/man3/history.3")
