@@ -15,11 +15,13 @@
         <IsA>library</IsA>
         <Summary>A relational database offering many ANSI SQL-99 features</Summary>
         <Description>Firebird is an open source relational database management system offering many ANSI SQL-99 features.</Description>
-        <Archive sha1sum="715845c29e391c4f75d090d400f9550095411404" type="targz">https://github.com/FirebirdSQL/firebird/archive/R2_5_9.tar.gz</Archive>
+        <Archive sha1sum="9cfc22f51f9d655b39f5b215b3e2bf17834f0321" type="tarxz">https://github.com/FirebirdSQL/firebird/releases/download/v4.0.4/Firebird-4.0.4.3010-0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>icu4c-devel</Dependency>
             <Dependency>btyacc</Dependency>
             <Dependency>libedit-devel</Dependency>
+            <Dependency>libtommath-devel</Dependency>
+            <Dependency>libtomcrypt-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <!--Patch>hosts_equiv.patch</Patch>
@@ -35,7 +37,15 @@
             <Patch level="1">Make-the-generated-code-compatible-with-gcc-6-in-C-1.patch</Patch>
             <Patch level="1">Firebird-gcc-icu.patch</Patch-->
 <!--             <Patch>006-musl-glibc.patch</Patch> -->
-<!--             <Patch>007-libio.patch</Patch> -->
+
+            <Patch>fedora/no-copy-from-icu.patch</Patch>
+            <Patch>fedora/cloop-honour-build-flags.patch</Patch>
+            <Patch>fedora/c++17.patch</Patch>
+            <Patch>fedora/noexcept.patch</Patch>
+            <Patch>fedora/autoconf.patch</Patch>
+            <Patch>fedora/btyacc-honour-build-flags.patch</Patch>
+            <Patch>fedora/firebird-configure-c99.patch</Patch>
+            <Patch>fedora/examples-honour-build-flags.patch</Patch>
         </Patches>
     </Source>
 
@@ -109,6 +119,27 @@
     </Package>
 
     <History>
+        <Update release="11">
+            <Date>2025-02-12</Date>
+            <Version>4.0.4.3010</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+        <Update release="10">
+            <Date>2025-02-11</Date>
+            <Version>3.0.12.33787</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="9">
+            <Date>2025-02-11</Date>
+            <Version>2.5.9.27139</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="8">
             <Date>2023-10-17</Date>
             <Version>2.5.9.27139</Version>

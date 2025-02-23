@@ -26,7 +26,7 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     os.chmod(log_file, 0644)
 
     # Configure security2.fdb file
-    os.chown("/opt/firebird/security2.fdb", uid, -1)
+    os.chown("/opt/firebird/security4.fdb", uid, -1)
 
     # Create lock files
     for lock_filename in ("isc_guard1", "isc_init1", "isc_lock1"):
