@@ -1,0 +1,546 @@
+From e3bc073737b226f8bd47302f32f83a3993f7792a Mon Sep 17 00:00:00 2001
+From: Markus Scherer <markus.icu@gmail.com>
+Date: Thu, 12 Dec 2024 16:32:34 -0800
+Subject: [PATCH] ICU-22954 header-only-test USet C++ iterators
+
+---
+ icu4c/source/test/intltest/Makefile.in        |   2 +-
+ icu4c/source/test/intltest/intltest.vcxproj   |   1 +
+ .../test/intltest/intltest.vcxproj.filters    |  15 +-
+ icu4c/source/test/intltest/itutil.cpp         |   2 +
+ .../test/intltest/usetheaderonlytest.cpp      | 219 ++++++++++++++++++
+ icu4c/source/test/intltest/usettest.cpp       | 173 +-------------
+ icu4c/source/test/intltest/usettest.h         |   4 -
+ 7 files changed, 243 insertions(+), 173 deletions(-)
+ create mode 100644 icu4c/source/test/intltest/usetheaderonlytest.cpp
+
+diff --git a/icu4c/source/test/intltest/Makefile.in b/icu4c/source/test/intltest/Makefile.in
+index 66956355c84..81ad5557807 100644
+--- icu4c/source/test/intltest/Makefile.in
++++ icu4c/source/test/intltest/Makefile.in
+@@ -75,7 +75,7 @@ numbertest_parse.o numbertest_doubleconversion.o numbertest_skeletons.o \
+ static_unisets_test.o numfmtdatadriventest.o numbertest_range.o erarulestest.o \
+ formattedvaluetest.o formatted_string_builder_test.o numbertest_permutation.o \
+ units_data_test.o units_router_test.o units_test.o displayoptions_test.o \
+-numbertest_simple.o uchar_type_build_test.o
++numbertest_simple.o uchar_type_build_test.o usetheaderonlytest.o
+ 
+ DEPS = $(OBJECTS:.o=.d)
+ 
+diff --git a/icu4c/source/test/intltest/intltest.vcxproj b/icu4c/source/test/intltest/intltest.vcxproj
+index 9e6480aa4e1..b58b29b3d4e 100644
+--- icu4c/source/test/intltest/intltest.vcxproj
++++ icu4c/source/test/intltest/intltest.vcxproj
+@@ -242,6 +242,7 @@
+     <ClCompile Include="units_router_test.cpp" />
+     <ClCompile Include="units_test.cpp" />
+     <ClCompile Include="uchar_type_build_test.cpp" />
++    <ClCompile Include="usetheaderonlytest.cpp" />
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="colldata.h" />
+diff --git a/icu4c/source/test/intltest/intltest.vcxproj.filters b/icu4c/source/test/intltest/intltest.vcxproj.filters
+index f3dca92d191..d5c23d5e4cb 100644
+--- icu4c/source/test/intltest/intltest.vcxproj.filters
++++ icu4c/source/test/intltest/intltest.vcxproj.filters
+@@ -571,9 +571,18 @@
+     <ClCompile Include="uchar_type_build_test.cpp">
+       <Filter>configuration</Filter>
+     </ClCompile>
+-    <ClCompile Include="messageformat2test.cpp" />
+-    <ClCompile Include="messageformat2test_custom.cpp" />
+-    <ClCompile Include="messageformat2test_read_json.cpp" />
++    <ClCompile Include="messageformat2test.cpp">
++      <Filter>formatting</Filter>
++    </ClCompile>
++    <ClCompile Include="messageformat2test_custom.cpp">
++      <Filter>formatting</Filter>
++    </ClCompile>
++    <ClCompile Include="messageformat2test_read_json.cpp">
++      <Filter>formatting</Filter>
++    </ClCompile>
++    <ClCompile Include="usetheaderonlytest.cpp">
++      <Filter>misc</Filter>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="itrbbi.h">
+diff --git a/icu4c/source/test/intltest/itutil.cpp b/icu4c/source/test/intltest/itutil.cpp
+index ec69e20bed0..4585792126d 100644
+--- icu4c/source/test/intltest/itutil.cpp
++++ icu4c/source/test/intltest/itutil.cpp
+@@ -35,6 +35,7 @@
+ #include "usettest.h"
+ 
+ extern IntlTest *createBytesTrieTest();
++extern IntlTest *createUSetHeaderOnlyTest();
+ extern IntlTest *createLocaleMatcherTest();
+ static IntlTest *createLocalPointerTest();
+ extern IntlTest *createUCharsTrieTest();
+@@ -82,6 +83,7 @@ void IntlTestUtilities::runIndexedTest( int32_t index, UBool exec, const char* &
+     TESTCASE_AUTO_CLASS(LocaleBuilderTest);
+     TESTCASE_AUTO_CREATE_CLASS(LocaleMatcherTest);
+     TESTCASE_AUTO_CREATE_CLASS(UHashTest);
++    TESTCASE_AUTO_CREATE_CLASS(USetHeaderOnlyTest);
+     TESTCASE_AUTO_END;
+ }
+ 
+diff --git a/icu4c/source/test/intltest/usetheaderonlytest.cpp b/icu4c/source/test/intltest/usetheaderonlytest.cpp
+new file mode 100644
+index 00000000000..38bc175c174
+--- /dev/null
++++ icu4c/source/test/intltest/usetheaderonlytest.cpp
+@@ -0,0 +1,219 @@
++// © 2024 and later: Unicode, Inc. and others.
++// License & terms of use: http://www.unicode.org/copyright.html
++
++// usetheaderonlytest.cpp
++// created: 2024dec11 Markus W. Scherer
++
++#include <string>
++
++// Test header-only ICU C++ APIs. Do not use other ICU C++ APIs.
++// Non-default configuration:
++#define U_SHOW_CPLUSPLUS_API 0
++// Default configuration:
++// #define U_SHOW_CPLUSPLUS_HEADER_API 1
++
++#include "unicode/utypes.h"
++#include "unicode/uset.h"
++#include "unicode/utf.h"
++#include "unicode/utf16.h"
++#include "intltest.h"
++
++class USetHeaderOnlyTest : public IntlTest {
++public:
++    USetHeaderOnlyTest() = default;
++
++    void runIndexedTest(int32_t index, UBool exec, const char *&name, char *par=nullptr) override;
++
++    void TestUSetCodePointIterator();
++    void TestUSetRangeIterator();
++    void TestUSetStringIterator();
++    void TestUSetElementIterator();
++};
++
++extern IntlTest *createUSetHeaderOnlyTest() {
++    return new USetHeaderOnlyTest();
++}
++
++void USetHeaderOnlyTest::runIndexedTest(int32_t index, UBool exec, const char *&name, char * /*par*/) {
++    if(exec) {
++        logln("TestSuite USetHeaderOnlyTest: ");
++    }
++    TESTCASE_AUTO_BEGIN;
++    TESTCASE_AUTO(TestUSetCodePointIterator);
++    TESTCASE_AUTO(TestUSetRangeIterator);
++    TESTCASE_AUTO(TestUSetStringIterator);
++    TESTCASE_AUTO(TestUSetElementIterator);
++    TESTCASE_AUTO_END;
++}
++
++std::u16string cpString(UChar32 c) {
++    if (U_IS_BMP(c)) {
++        return {static_cast<char16_t>(c)};
++    } else {
++        return {U16_LEAD(c), U16_TRAIL(c)};
++    }
++}
++
++void USetHeaderOnlyTest::TestUSetCodePointIterator() {
++    IcuTestErrorCode errorCode(*this, "TestUSetCodePointIterator");
++    using U_HEADER_NESTED_NAMESPACE::USetCodePoints;
++    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴]", -1, errorCode));
++    std::u16string result;
++    for (UChar32 c : USetCodePoints(uset.getAlias())) {
++        // Commented-out sample code for pasting into the API docs.
++        // printf("uset.codePoint U+%04lx\n", (long)c);
++        result.append(u" ").append(cpString(c));
++    }
++    assertEquals(WHERE, u" a b c ç カ 🚴", result);
++
++    USetCodePoints range1(uset.getAlias());
++    auto range2(range1);  // copy constructor
++    auto iter = range1.begin();
++    auto limit = range2.end();
++    // operator* with pre- and post-increment
++    assertEquals(WHERE, u'a', *iter);
++    ++iter;
++    assertEquals(WHERE, u'b', *iter);
++    assertEquals(WHERE, u'c', *++iter);
++    auto iter2(iter);  // copy constructor
++    assertEquals(WHERE, u'c', *iter2++);
++    assertEquals(WHERE, u'ç', *iter2++);
++    assertEquals(WHERE, u'カ', *iter2);
++    assertTrue(WHERE, ++iter2 != limit);
++    auto iter3(iter2++);
++    assertEquals(WHERE, U'🚴', *iter3);
++    assertTrue(WHERE, iter2 == limit);
++}
++
++void USetHeaderOnlyTest::TestUSetRangeIterator() {
++    IcuTestErrorCode errorCode(*this, "TestUSetRangeIterator");
++    using U_HEADER_NESTED_NAMESPACE::USetRanges;
++    using U_HEADER_NESTED_NAMESPACE::CodePointRange;
++    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴]", -1, errorCode));
++    std::u16string result;
++    for (auto [start, end] : USetRanges(uset.getAlias())) {
++        // Commented-out sample code for pasting into the API docs.
++        // printf("uset.range U+%04lx..U+%04lx\n", (long)start, (long)end);
++        result.append(u" ").append(cpString(start)).append(u"-").append(cpString(end));
++    }
++    assertEquals(WHERE, u" a-c ç-ç カ-カ 🚴-🚴", result);
++    result.clear();
++    for (auto range : USetRanges(uset.getAlias())) {
++        for (UChar32 c : range) {
++            // Commented-out sample code for pasting into the API docs.
++            // printf("uset.range.c U+%04lx\n", (long)c);
++            result.append(u" ").append(cpString(c));
++        }
++        result.append(u" |");
++    }
++    assertEquals(WHERE, u" a b c | ç | カ | 🚴 |", result);
++
++    USetRanges range1(uset.getAlias());
++    auto range2(range1);  // copy constructor
++    auto iter = range1.begin();
++    auto limit = range2.end();
++    // operator* with pre- and post-increment
++    {
++        auto cpRange = *iter;
++        assertEquals(WHERE, u'a', cpRange.rangeStart);
++        assertEquals(WHERE, u'c', cpRange.rangeEnd);
++        assertEquals(WHERE, 3, cpRange.size());
++        auto cpRange2(cpRange);
++        auto cpIter = cpRange.begin();
++        auto cpLimit = cpRange2.end();
++        assertEquals(WHERE, u'a', *cpIter++);
++        assertEquals(WHERE, u'b', *cpIter);
++        assertTrue(WHERE, cpIter != cpLimit);
++        CodePointRange::iterator cpIter2(u'b');  // public constructor
++        assertTrue(WHERE, cpIter == cpIter2);
++        assertEquals(WHERE, u'c', *++cpIter);
++        assertTrue(WHERE, cpIter != cpIter2);
++        assertTrue(WHERE, ++cpIter == cpLimit);
++    }
++    ++iter;
++    auto iter2(iter);  // copy constructor
++    assertEquals(WHERE, u'ç', (*iter2).rangeStart);
++    assertEquals(WHERE, u'ç', (*iter2).rangeEnd);
++    assertEquals(WHERE, 1, (*iter2).size());
++    assertEquals(WHERE, u'ç', (*iter2++).rangeStart);
++    assertEquals(WHERE, u'カ', (*iter2).rangeStart);
++    assertTrue(WHERE, ++iter2 != limit);
++    auto iter3(iter2++);
++    assertEquals(WHERE, U'🚴', (*iter3).rangeStart);
++    assertTrue(WHERE, iter2 == limit);
++
++    {
++        CodePointRange cpRange(u'h', u'k');  // public constructor
++        // FYI: currently no operator==
++        assertEquals(WHERE, u'h', cpRange.rangeStart);
++        assertEquals(WHERE, u'k', cpRange.rangeEnd);
++        assertEquals(WHERE, 4, cpRange.size());
++        assertEquals(WHERE, u'i', *++(cpRange.begin()));
++    }
++}
++
++void USetHeaderOnlyTest::TestUSetStringIterator() {
++    IcuTestErrorCode errorCode(*this, "TestUSetStringIterator");
++    using U_HEADER_NESTED_NAMESPACE::USetStrings;
++    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴{}{abc}{de}]", -1, errorCode));
++    std::u16string result;
++    for (auto s : USetStrings(uset.getAlias())) {
++        // Commented-out sample code for pasting into the API docs.
++        // Needs U_SHOW_CPLUSPLUS_API=1 for UnicodeString.
++        // UnicodeString us(s);
++        // std::string u8;
++        // printf("uset.string length %ld \"%s\"\n", (long)s.length(), us.toUTF8String(u8).c_str());
++        result.append(u" \"").append(s).append(u"\"");
++    }
++    assertEquals(WHERE, uR"( "" "abc" "de")", result);
++
++    USetStrings range1(uset.getAlias());
++    auto range2(range1);  // copy constructor
++    auto iter = range1.begin();
++    auto limit = range2.end();
++    // operator* with pre- and post-increment
++    assertEquals(WHERE, u"", *iter);
++    assertEquals(WHERE, u"abc", *++iter);
++    auto iter2(iter);  // copy constructor
++    assertEquals(WHERE, u"abc", *iter2++);
++    assertTrue(WHERE, iter2 != limit);
++    auto iter3(iter2++);
++    assertEquals(WHERE, u"de", *iter3);
++    assertTrue(WHERE, iter2 == limit);
++}
++
++void USetHeaderOnlyTest::TestUSetElementIterator() {
++    IcuTestErrorCode errorCode(*this, "TestUSetElementIterator");
++    using U_HEADER_NESTED_NAMESPACE::USetElements;
++    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴{}{abc}{de}]", -1, errorCode));
++    std::u16string result;
++    for (auto el : USetElements(uset.getAlias())) {
++        // Commented-out sample code for pasting into the API docs.
++        // Needs U_SHOW_CPLUSPLUS_API=1 for UnicodeString.
++        // UnicodeString us(el);
++        // std::string u8;
++        // printf("uset.string length %ld \"%s\"\n", (long)us.length(), us.toUTF8String(u8).c_str());
++        result.append(u" \"").append(el).append(u"\"");
++    }
++    assertEquals(WHERE, uR"( "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de")", result);
++
++    USetElements range1(uset.getAlias());
++    auto range2(range1);  // copy constructor
++    auto iter = range1.begin();
++    auto limit = range2.end();
++    // operator* with pre- and post-increment
++    assertEquals(WHERE, u"a", *iter);
++    ++iter;
++    assertEquals(WHERE, u"b", *iter);
++    assertEquals(WHERE, u"c", *++iter);
++    auto iter2(iter);  // copy constructor
++    assertEquals(WHERE, u"c", *iter2++);
++    // skip çカ🚴
++    ++++++iter2;
++    assertEquals(WHERE, u"", *iter2++);
++    assertEquals(WHERE, u"abc", *iter2);
++    assertTrue(WHERE, ++iter2 != limit);
++    auto iter3(iter2++);
++    assertEquals(WHERE, u"de", *iter3);
++    assertTrue(WHERE, iter2 == limit);
++}
+diff --git a/icu4c/source/test/intltest/usettest.cpp b/icu4c/source/test/intltest/usettest.cpp
+index 477639e8659..9da0612b148 100644
+--- icu4c/source/test/intltest/usettest.cpp
++++ icu4c/source/test/intltest/usettest.cpp
+@@ -107,13 +107,9 @@ UnicodeSetTest::runIndexedTest(int32_t index, UBool exec,
+     TESTCASE_AUTO(TestSkipToStrings);
+     TESTCASE_AUTO(TestPatternCodePointComplement);
+     TESTCASE_AUTO(TestCodePointIterator);
+-    TESTCASE_AUTO(TestUSetCodePointIterator);
+     TESTCASE_AUTO(TestRangeIterator);
+-    TESTCASE_AUTO(TestUSetRangeIterator);
+     TESTCASE_AUTO(TestStringIterator);
+-    TESTCASE_AUTO(TestUSetStringIterator);
+     TESTCASE_AUTO(TestElementIterator);
+-    TESTCASE_AUTO(TestUSetElementIterator);
+     TESTCASE_AUTO_END;
+ }
+ 
+@@ -4280,37 +4276,8 @@ void UnicodeSetTest::TestCodePointIterator() {
+     }
+     assertEquals(WHERE, u" a b c ç カ 🚴", result);
+ 
+-    // codePoints() returns USetCodePoints for which explicit APIs are tested via USet.
+-}
+-
+-void UnicodeSetTest::TestUSetCodePointIterator() {
+-    IcuTestErrorCode errorCode(*this, "TestUSetCodePointIterator");
+-    using U_HEADER_NESTED_NAMESPACE::USetCodePoints;
+-    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴]", -1, errorCode));
+-    UnicodeString result;
+-    for (UChar32 c : USetCodePoints(uset.getAlias())) {
+-        // printf("uset.codePoint U+%04lx\n", (long)c);
+-        result.append(u' ').append(c);
+-    }
+-    assertEquals(WHERE, u" a b c ç カ 🚴", result);
+-
+-    USetCodePoints range1(uset.getAlias());
+-    auto range2(range1);  // copy constructor
+-    auto iter = range1.begin();
+-    auto limit = range2.end();
+-    // operator* with pre- and post-increment
+-    assertEquals(WHERE, u'a', *iter);
+-    ++iter;
+-    assertEquals(WHERE, u'b', *iter);
+-    assertEquals(WHERE, u'c', *++iter);
+-    auto iter2(iter);  // copy constructor
+-    assertEquals(WHERE, u'c', *iter2++);
+-    assertEquals(WHERE, u'ç', *iter2++);
+-    assertEquals(WHERE, u'カ', *iter2);
+-    assertTrue(WHERE, ++iter2 != limit);
+-    auto iter3(iter2++);
+-    assertEquals(WHERE, U'🚴', *iter3);
+-    assertTrue(WHERE, iter2 == limit);
++    // codePoints() returns USetCodePoints for which explicit APIs are tested via USet
++    // in a header-only unit test file.
+ }
+ 
+ void UnicodeSetTest::TestRangeIterator() {
+@@ -4332,72 +4299,8 @@ void UnicodeSetTest::TestRangeIterator() {
+     }
+     assertEquals(WHERE, u" a b c | ç | カ | 🚴 |", result);
+ 
+-    // ranges() returns USetRanges for which explicit APIs are tested via USet.
+-}
+-
+-void UnicodeSetTest::TestUSetRangeIterator() {
+-    IcuTestErrorCode errorCode(*this, "TestUSetRangeIterator");
+-    using U_HEADER_NESTED_NAMESPACE::USetRanges;
+-    using U_HEADER_NESTED_NAMESPACE::CodePointRange;
+-    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴]", -1, errorCode));
+-    UnicodeString result;
+-    for (auto [start, end] : USetRanges(uset.getAlias())) {
+-        // printf("uset.range U+%04lx..U+%04lx\n", (long)start, (long)end);
+-        result.append(u' ').append(start).append(u'-').append(end);
+-    }
+-    assertEquals(WHERE, u" a-c ç-ç カ-カ 🚴-🚴", result);
+-    result.remove();
+-    for (auto range : USetRanges(uset.getAlias())) {
+-        for (UChar32 c : range) {
+-            // printf("uset.range.c U+%04lx\n", (long)c);
+-            result.append(u' ').append(c);
+-        }
+-        result.append(u" |");
+-    }
+-    assertEquals(WHERE, u" a b c | ç | カ | 🚴 |", result);
+-
+-    USetRanges range1(uset.getAlias());
+-    auto range2(range1);  // copy constructor
+-    auto iter = range1.begin();
+-    auto limit = range2.end();
+-    // operator* with pre- and post-increment
+-    {
+-        auto cpRange = *iter;
+-        assertEquals(WHERE, u'a', cpRange.rangeStart);
+-        assertEquals(WHERE, u'c', cpRange.rangeEnd);
+-        assertEquals(WHERE, 3, cpRange.size());
+-        auto cpRange2(cpRange);
+-        auto cpIter = cpRange.begin();
+-        auto cpLimit = cpRange2.end();
+-        assertEquals(WHERE, u'a', *cpIter++);
+-        assertEquals(WHERE, u'b', *cpIter);
+-        assertTrue(WHERE, cpIter != cpLimit);
+-        CodePointRange::iterator cpIter2(u'b');  // public constructor
+-        assertTrue(WHERE, cpIter == cpIter2);
+-        assertEquals(WHERE, u'c', *++cpIter);
+-        assertTrue(WHERE, cpIter != cpIter2);
+-        assertTrue(WHERE, ++cpIter == cpLimit);
+-    }
+-    ++iter;
+-    auto iter2(iter);  // copy constructor
+-    assertEquals(WHERE, u'ç', (*iter2).rangeStart);
+-    assertEquals(WHERE, u'ç', (*iter2).rangeEnd);
+-    assertEquals(WHERE, 1, (*iter2).size());
+-    assertEquals(WHERE, u'ç', (*iter2++).rangeStart);
+-    assertEquals(WHERE, u'カ', (*iter2).rangeStart);
+-    assertTrue(WHERE, ++iter2 != limit);
+-    auto iter3(iter2++);
+-    assertEquals(WHERE, U'🚴', (*iter3).rangeStart);
+-    assertTrue(WHERE, iter2 == limit);
+-
+-    {
+-        CodePointRange cpRange(u'h', u'k');  // public constructor
+-        // FYI: currently no operator==
+-        assertEquals(WHERE, u'h', cpRange.rangeStart);
+-        assertEquals(WHERE, u'k', cpRange.rangeEnd);
+-        assertEquals(WHERE, 4, cpRange.size());
+-        assertEquals(WHERE, u'i', *++(cpRange.begin()));
+-    }
++    // ranges() returns USetRanges for which explicit APIs are tested via USet
++    // in a header-only unit test file.
+ }
+ 
+ void UnicodeSetTest::TestStringIterator() {
+@@ -4412,35 +4315,8 @@ void UnicodeSetTest::TestStringIterator() {
+     }
+     assertEquals(WHERE, uR"( "" "abc" "de")", result);
+ 
+-    // strings() returns USetStrins for which explicit APIs are tested via USet.
+-}
+-
+-void UnicodeSetTest::TestUSetStringIterator() {
+-    IcuTestErrorCode errorCode(*this, "TestUSetStringIterator");
+-    using U_HEADER_NESTED_NAMESPACE::USetStrings;
+-    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴{}{abc}{de}]", -1, errorCode));
+-    UnicodeString result;
+-    for (auto s : USetStrings(uset.getAlias())) {
+-        // UnicodeString us(s);
+-        // std::string u8;
+-        // printf("uset.string length %ld \"%s\"\n", (long)s.length(), us.toUTF8String(u8).c_str());
+-        result.append(u" \"").append(s).append(u'"');
+-    }
+-    assertEquals(WHERE, uR"( "" "abc" "de")", result);
+-
+-    USetStrings range1(uset.getAlias());
+-    auto range2(range1);  // copy constructor
+-    auto iter = range1.begin();
+-    auto limit = range2.end();
+-    // operator* with pre- and post-increment
+-    assertEquals(WHERE, UnicodeString(), UnicodeString(*iter));
+-    assertEquals(WHERE, u"abc", UnicodeString(*++iter));
+-    auto iter2(iter);  // copy constructor
+-    assertEquals(WHERE, u"abc", UnicodeString(*iter2++));
+-    assertTrue(WHERE, iter2 != limit);
+-    auto iter3(iter2++);
+-    assertEquals(WHERE, u"de", UnicodeString(*iter3));
+-    assertTrue(WHERE, iter2 == limit);
++    // strings() returns USetStrins for which explicit APIs are tested via USet
++    // in a header-only unit test file.
+ }
+ 
+ void UnicodeSetTest::TestElementIterator() {
+@@ -4455,39 +4331,6 @@ void UnicodeSetTest::TestElementIterator() {
+     }
+     assertEquals(WHERE, uR"( "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de")", result);
+ 
+-    // begin() & end() return USetElementIterator for which explicit APIs are tested via USet.
+-}
+-
+-void UnicodeSetTest::TestUSetElementIterator() {
+-    IcuTestErrorCode errorCode(*this, "TestUSetElementIterator");
+-    using U_HEADER_NESTED_NAMESPACE::USetElements;
+-    LocalUSetPointer uset(uset_openPattern(u"[abcçカ🚴{}{abc}{de}]", -1, errorCode));
+-    UnicodeString result;
+-    for (auto el : USetElements(uset.getAlias())) {
+-        // UnicodeString us(el);
+-        // std::string u8;
+-        // printf("uset.string length %ld \"%s\"\n", (long)us.length(), us.toUTF8String(u8).c_str());
+-        result.append(u" \"").append(el).append(u'"');
+-    }
+-    assertEquals(WHERE, uR"( "a" "b" "c" "ç" "カ" "🚴" "" "abc" "de")", result);
+-
+-    USetElements range1(uset.getAlias());
+-    auto range2(range1);  // copy constructor
+-    auto iter = range1.begin();
+-    auto limit = range2.end();
+-    // operator* with pre- and post-increment
+-    assertEquals(WHERE, u"a", *iter);
+-    ++iter;
+-    assertEquals(WHERE, u"b", *iter);
+-    assertEquals(WHERE, u"c", *++iter);
+-    auto iter2(iter);  // copy constructor
+-    assertEquals(WHERE, u"c", *iter2++);
+-    // skip çカ🚴
+-    ++++++iter2;
+-    assertEquals(WHERE, UnicodeString(), *iter2++);
+-    assertEquals(WHERE, u"abc", *iter2);
+-    assertTrue(WHERE, ++iter2 != limit);
+-    auto iter3(iter2++);
+-    assertEquals(WHERE, u"de", *iter3);
+-    assertTrue(WHERE, iter2 == limit);
++    // begin() & end() return USetElementIterator for which explicit APIs are tested via USet
++    // in a header-only unit test file.
+ }
+diff --git a/icu4c/source/test/intltest/usettest.h b/icu4c/source/test/intltest/usettest.h
+index 0127042c736..2ac22ba72e6 100644
+--- icu4c/source/test/intltest/usettest.h
++++ icu4c/source/test/intltest/usettest.h
+@@ -106,13 +106,9 @@ class UnicodeSetTest: public IntlTest {
+     void TestPatternCodePointComplement();
+ 
+     void TestCodePointIterator();
+-    void TestUSetCodePointIterator();
+     void TestRangeIterator();
+-    void TestUSetRangeIterator();
+     void TestStringIterator();
+-    void TestUSetStringIterator();
+     void TestElementIterator();
+-    void TestUSetElementIterator();
+ 
+ private:
+ 
+-- 
+2.47.1
+

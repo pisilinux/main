@@ -39,6 +39,21 @@ def install():
     if get.buildTYPE() == "_emul32":
         pisitools.domove("/_emul32/bin/icu-config", "/usr/bin", "icu-config-32")
         pisitools.removeDir("/_emul32")
+
+        # pisitools.dosym("/usr/lib/libicudata.so.76.1", "/usr/lib/libicudata.so.73")
+        # pisitools.dosym("/usr/lib/libicui18n.so.76.1", "/usr/lib/libicui18n.so.73")
+        # pisitools.dosym("/usr/lib/libicuio.so.76.1", "/usr/lib/libicuio.so.73")
+        # pisitools.dosym("/usr/lib/libicutest.so.76.1", "/usr/lib/libicutest.so.73")
+        # pisitools.dosym("/usr/lib/libicutu.so.76.1", "/usr/lib/libicutu.so.73")
+        # pisitools.dosym("/usr/lib/libicuuc.so.76.1", "/usr/lib/libicuuc.so.73")
+
+        # pisitools.dosym("/usr/lib32/libicudata.so.76.1", "/usr/lib32/libicudata.so.73")
+        # pisitools.dosym("/usr/lib32/libicui18n.so.76.1", "/usr/lib32/libicui18n.so.73")
+        # pisitools.dosym("/usr/lib32/libicuio.so.76.1", "/usr/lib32/libicuio.so.73")
+        # pisitools.dosym("/usr/lib32/libicutest.so.76.1", "/usr/lib32/libicutest.so.73")
+        # pisitools.dosym("/usr/lib32/libicutu.so.76.1", "/usr/lib32/libicutu.so.73")
+        # pisitools.dosym("/usr/lib32/libicuuc.so.76.1", "/usr/lib32/libicuuc.so.73")
+
         for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
             pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), "_emul32", "usr") 
             pisitools.dosed("%s/usr/lib32/icu/%s/Makefile.inc" % ( get.installDIR(), get.srcVERSION()), "_emul32", "usr")

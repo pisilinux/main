@@ -1,0 +1,104 @@
+From 6f93c07a45e7fb1944fa0179591b36413312d16e Mon Sep 17 00:00:00 2001
+From: Fredrik Roubert <roubert@google.com>
+Date: Tue, 7 Jan 2025 19:15:44 +0900
+Subject: [PATCH] ICU-22954 Revert to using std::u16string instead of
+ UnicodeString.
+
+It seems as if icu4c-windows-cygwin-gcc only crashes if the constructor
+is defined inline, so with the exception of the constructor this commit
+reverts the code to commit 320220ef694123393a5c5d6eb6a1c7536fc57aba.
+---
+ icu4c/source/tools/ctestfw/tstdtmod.cpp      |  9 ++++-----
+ icu4c/source/tools/ctestfw/unicode/testlog.h | 14 ++------------
+ 2 files changed, 6 insertions(+), 17 deletions(-)
+
+diff --git a/icu4c/source/tools/ctestfw/tstdtmod.cpp b/icu4c/source/tools/ctestfw/tstdtmod.cpp
+index 15e8913d2b8..66ab79a7db5 100644
+--- icu4c/source/tools/ctestfw/tstdtmod.cpp
++++ icu4c/source/tools/ctestfw/tstdtmod.cpp
+@@ -11,7 +11,6 @@
+ #include <stdarg.h>
+ 
+ #include "unicode/tstdtmod.h"
+-#include "unicode/unistr.h"
+ #include "cmemory.h"
+ #include <stdio.h>
+ #include "cstr.h"
+@@ -21,7 +20,7 @@ TestLog::~TestLog() {}
+ 
+ IcuTestErrorCode::IcuTestErrorCode(TestLog &callingTestClass, const char *callingTestName)
+     : errorCode(U_ZERO_ERROR),
+-      testClass(callingTestClass), testName(callingTestName), scopeMessage(*new UnicodeString) {
++      testClass(callingTestClass), testName(callingTestName), scopeMessage() {
+ }
+ 
+ IcuTestErrorCode::~IcuTestErrorCode() {
+@@ -29,7 +28,6 @@ IcuTestErrorCode::~IcuTestErrorCode() {
+     if(isFailure()) {
+         errlog(false, u"destructor: expected success", nullptr);
+     }
+-    delete &scopeMessage;
+ }
+ 
+ UErrorCode IcuTestErrorCode::reset() {
+@@ -126,7 +124,8 @@ UBool IcuTestErrorCode::expectErrorAndReset(UErrorCode expectedError, const char
+ }
+ 
+ void IcuTestErrorCode::setScope(const char* message) {
+-    scopeMessage.remove().append({ message, -1, US_INV });
++    UnicodeString us(message, -1, US_INV);
++    scopeMessage = us;
+ }
+ 
+ void IcuTestErrorCode::setScope(std::u16string_view message) {
+@@ -142,7 +141,7 @@ void IcuTestErrorCode::errlog(UBool dataErr, std::u16string_view mainMessage, co
+     msg.append(u' ').append(mainMessage);
+     msg.append(u" but got error: ").append(UnicodeString(errorName(), -1, US_INV));
+ 
+-    if (!scopeMessage.isEmpty()) {
++    if (!scopeMessage.empty()) {
+         msg.append(u" scope: ").append(scopeMessage);
+     }
+ 
+diff --git a/icu4c/source/tools/ctestfw/unicode/testlog.h b/icu4c/source/tools/ctestfw/unicode/testlog.h
+index 44e99954f91..1b5494bc3fe 100644
+--- icu4c/source/tools/ctestfw/unicode/testlog.h
++++ icu4c/source/tools/ctestfw/unicode/testlog.h
+@@ -13,6 +13,7 @@
+ #ifndef U_TESTFW_TESTLOG
+ #define U_TESTFW_TESTLOG
+ 
++#include <string>
+ #include <string_view>
+ #include "unicode/utypes.h"
+ #include "unicode/testtype.h"
+@@ -34,10 +35,6 @@ class T_CTEST_EXPORT_API TestLog {
+ // unit tests that work without U_SHOW_CPLUSPLUS_API.
+ // So instead we *copy* the ErrorCode API.
+ 
+-U_NAMESPACE_BEGIN
+-class UnicodeString;
+-U_NAMESPACE_END
+-
+ class T_CTEST_EXPORT_API IcuTestErrorCode {
+ public:
+     IcuTestErrorCode(const IcuTestErrorCode&) = delete;
+@@ -76,14 +73,7 @@ class T_CTEST_EXPORT_API IcuTestErrorCode {
+     UErrorCode errorCode;
+     TestLog &testClass;
+     const char *const testName;
+-
+-    // It's not possible to use a UnicodeString member directly here because
+-    // that won't work without U_SHOW_CPLUSPLUS_API, but it's also not possible
+-    // to use a std::u16string member because for unknown reasons that leads to
+-    // a crash in the icu4c-windows-cygwin-gcc CI job. As a workaround, the
+-    // UnicodeString class is forward declared to make it possible to use a
+-    // reference here and then heap allocate the object in the constructor.
+-    UnicodeString& scopeMessage;
++    std::u16string scopeMessage;
+ 
+     void errlog(UBool dataErr, std::u16string_view mainMessage, const char* extraMessage) const;
+ };
+-- 
+2.47.1
+

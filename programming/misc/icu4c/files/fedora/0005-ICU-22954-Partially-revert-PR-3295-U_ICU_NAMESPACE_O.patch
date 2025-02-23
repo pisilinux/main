@@ -1,0 +1,153 @@
+From c0a3fe15d4420157fbede62470426fcf91299760 Mon Sep 17 00:00:00 2001
+From: Markus Scherer <markus.icu@gmail.com>
+Date: Mon, 23 Dec 2024 10:00:43 -0800
+Subject: [PATCH] ICU-22954 Partially revert PR #3295
+ U_ICU_NAMESPACE_OR_INTERNAL, header-only localpointer
+
+This partially reverts commit 3527b3d320d6ad128fbff247e31f739f6ccb7a5a.
+
+Making LocalPointer header-only, with a different namespace when compiling internally,
+turned out to be problematic.
+---
+ icu4c/source/common/unicode/localpointer.h | 10 +++++-----
+ icu4c/source/common/unicode/normlzr.h      |  4 ++--
+ icu4c/source/common/unicode/unistr.h       |  8 ++++----
+ icu4c/source/common/unicode/uset.h         |  6 +++---
+ icu4c/source/i18n/unicode/ucol.h           |  4 ++--
+ 5 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/icu4c/source/common/unicode/localpointer.h b/icu4c/source/common/unicode/localpointer.h
+index 487ddb48b78..9c891bf3088 100644
+--- icu4c/source/common/unicode/localpointer.h
++++ icu4c/source/common/unicode/localpointer.h
+@@ -21,7 +21,7 @@
+ 
+ /**
+  * \file
+- * \brief C++ header-only API: "Smart pointers" for use with and in ICU4C C++ code.
++ * \brief C++ API: "Smart pointers" for use with and in ICU4C C++ code.
+  *
+  * These classes are inspired by
+  * - std::auto_ptr
+@@ -40,11 +40,11 @@
+ 
+ #include "unicode/utypes.h"
+ 
+-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
++#if U_SHOW_CPLUSPLUS_API
+ 
+ #include <memory>
+ 
+-namespace U_ICU_NAMESPACE_OR_INTERNAL {
++U_NAMESPACE_BEGIN
+ 
+ /**
+  * "Smart pointer" base class; do not use directly: use LocalPointer etc.
+@@ -603,7 +603,7 @@ class LocalOpenPointer : public LocalPointerBase<Type> {
+ }  // namespace internal
+ #endif
+ 
+-}  // U_ICU_NAMESPACE_OR_INTERNAL
++U_NAMESPACE_END
+ 
+-#endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
++#endif  /* U_SHOW_CPLUSPLUS_API */
+ #endif  /* __LOCALPOINTER_H__ */
+diff --git a/icu4c/source/common/unicode/normlzr.h b/icu4c/source/common/unicode/normlzr.h
+index 40848bf00ca..0309bce5382 100644
+--- icu4c/source/common/unicode/normlzr.h
++++ icu4c/source/common/unicode/normlzr.h
+@@ -801,8 +801,8 @@ Normalizer::compare(const UnicodeString &s1, const UnicodeString &s2,
+                     uint32_t options,
+                     UErrorCode &errorCode) {
+   // all argument checking is done in unorm_compare
+-  return unorm_compare(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(s1.getBuffer()), s1.length(),
+-                       U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(s2.getBuffer()), s2.length(),
++  return unorm_compare(toUCharPtr(s1.getBuffer()), s1.length(),
++                       toUCharPtr(s2.getBuffer()), s2.length(),
+                        options,
+                        &errorCode);
+ }
+diff --git a/icu4c/source/common/unicode/unistr.h b/icu4c/source/common/unicode/unistr.h
+index a1901c91504..39d789fd6ef 100644
+--- icu4c/source/common/unicode/unistr.h
++++ icu4c/source/common/unicode/unistr.h
+@@ -4676,7 +4676,7 @@ UnicodeString::startsWith(const UnicodeString& srcText,
+ inline UBool
+ UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars));
++    srcLength = u_strlen(toUCharPtr(srcChars));
+   }
+   return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+ }
+@@ -4684,7 +4684,7 @@ UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
+ inline UBool
+ UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars));
++    srcLength = u_strlen(toUCharPtr(srcChars));
+   }
+   return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+ }
+@@ -4707,7 +4707,7 @@ inline UBool
+ UnicodeString::endsWith(ConstChar16Ptr srcChars,
+             int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars));
++    srcLength = u_strlen(toUCharPtr(srcChars));
+   }
+   return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+ }
+@@ -4717,7 +4717,7 @@ UnicodeString::endsWith(const char16_t *srcChars,
+             int32_t srcStart,
+             int32_t srcLength) const {
+   if(srcLength < 0) {
+-    srcLength = u_strlen(U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(srcChars + srcStart));
++    srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
+   }
+   return doEqualsSubstring(length() - srcLength, srcLength,
+                    srcChars, srcStart, srcLength);
+diff --git a/icu4c/source/common/unicode/uset.h b/icu4c/source/common/unicode/uset.h
+index 345d6244544..b5333a5f5ce 100644
+--- icu4c/source/common/unicode/uset.h
++++ icu4c/source/common/unicode/uset.h
+@@ -346,9 +346,9 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
+ U_CAPI void U_EXPORT2
+ uset_close(USet* set);
+ 
+-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
++#if U_SHOW_CPLUSPLUS_API
+ 
+-namespace U_ICU_NAMESPACE_OR_INTERNAL {
++U_NAMESPACE_BEGIN
+ 
+ /**
+  * \class LocalUSetPointer
+@@ -361,7 +361,7 @@ namespace U_ICU_NAMESPACE_OR_INTERNAL {
+  */
+ U_DEFINE_LOCAL_OPEN_POINTER(LocalUSetPointer, USet, uset_close);
+ 
+-}  // U_ICU_NAMESPACE_OR_INTERNAL
++U_NAMESPACE_END
+ 
+ #endif
+ 
+diff --git a/icu4c/source/i18n/unicode/ucol.h b/icu4c/source/i18n/unicode/ucol.h
+index 8b6dfeaa0a8..ae4f29c3c6c 100644
+--- icu4c/source/i18n/unicode/ucol.h
++++ icu4c/source/i18n/unicode/ucol.h
+@@ -1572,8 +1572,8 @@ class Predicate {
+         return compare(
+             ucol_strcoll(
+                 collator,
+-                U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(lhs.getBuffer()), lhs.length(),
+-                U_ICU_NAMESPACE_OR_INTERNAL::toUCharPtr(rhs.getBuffer()), rhs.length()),
++                toUCharPtr(lhs.getBuffer()), lhs.length(),
++                toUCharPtr(rhs.getBuffer()), rhs.length()),
+             result);
+     }
+ 
+-- 
+2.47.1
+
