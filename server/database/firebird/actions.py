@@ -68,7 +68,7 @@ def install():
     pisitools.dosym("libfbclient.so", "/opt/firebird/lib/libgds.so.0")
 
     # Move configuration files and security DB to /etc/firebird for painless upgrade
-    # pisitools.domove("/opt/firebird/aliases.conf", "/etc/firebird") ???????????????????????????????
+    # pisitools.domove("/opt/firebird/aliases.conf", "/etc/firebird")
     # pisitools.domove("/opt/firebird/firebird.conf", "/etc/firebird")
     pisitools.domove("/opt/firebird/security4.fdb", "/etc/firebird")
     # pisitools.dosym("/etc/firebird/aliases.conf", "/opt/firebird/aliases.conf")
