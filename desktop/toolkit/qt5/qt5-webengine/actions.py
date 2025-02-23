@@ -18,7 +18,7 @@ def setup():
     #shelltools.move("../qtwebengine-chromium-*", "src/3rdparty")
     #shelltools.system("mkdir src/3rdparty/chromium/.git")
     #shelltools.system("patch -p1 < qtwebengine-5.15.7-build_fixes-1.patch")
-    shelltools.system("patch -p1 < qtwebengine-everywhere-src-5.15.5-TRUE.patch")
+    # shelltools.system("patch -p1 < qtwebengine-everywhere-src-5.15.5-TRUE.patch")
 
     shelltools.system("sed -i 's/NINJAJOBS/NINJA_JOBS/' src/core/gn_run.pro")
 
