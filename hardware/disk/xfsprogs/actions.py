@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -r -i 's/\$\(LIBICU_LIBS\)/\0 -licuuc/' scrub/Makefile")
     shelltools.export("OPTIMIZER", "%s" % get.CFLAGS())
     shelltools.export("DEBUG", "-DNDEBUG")
 
