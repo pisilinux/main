@@ -8,15 +8,17 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-def setup():
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX='/usr' \
-        -DBUILD_SHARED_LIBS=On")
+# def setup():
+    # cmaketools.configure("-DCMAKE_INSTALL_PREFIX='/usr' \
+        # -DBUILD_SHARED_LIBS=On")
 
 def build():
-    cmaketools.make("-f makefile.shared")
+    autotools.make("-f makefile.shared IGNORE_SPEED=1")
+    # cmaketools.make("-f makefile.shared IGNORE_SPEED=1")
 
 
 def install():
-    cmaketools.rawInstall("-f makefile.shared PREFIX=/usr DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("-f makefile.shared PREFIX=/usr DESTDIR=%s INSTALL_GROUP=root" % get.installDIR())
+    # cmaketools.rawInstall("-f makefile.shared PREFIX=/usr DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("LICENSE", "README.md")
