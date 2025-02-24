@@ -13,8 +13,7 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Dsystemd=disabled \
-                                        -Ddocbook-docs=disabled \
-                                        -Dlibportal=disabled \
+                                        -Ddocumentation=disabled \
                                         -Dsystemd-user-unit-dir=/tmp \
                                         -Dgeoclue=disabled")
 
@@ -28,4 +27,4 @@ def install():
 
     pisitools.removeDir("/tmp")
 
-    pisitools.dodoc("COPYING", "README*", "NEWS")
+    pisitools.dodoc("COPYING", "README*")
