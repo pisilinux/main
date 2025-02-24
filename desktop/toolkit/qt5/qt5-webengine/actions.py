@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("mkdir .git")
-    # pisitools.dosed(".qmake.conf", "5.15.10", "5.15.7")
+    pisitools.dosed(".qmake.conf", "5.15.18", "5.15.16")
 
     #shelltools.unlinkDir("src/3rdparty")
     #shelltools.move("../qtwebengine-chromium-*", "src/3rdparty")
