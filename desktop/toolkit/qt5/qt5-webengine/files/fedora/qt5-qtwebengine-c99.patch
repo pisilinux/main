@@ -1,0 +1,45 @@
+Avoid calls to the undeclared strlcpy function in libsync.  This
+prevents a build failure with future compilers.
+
+Submitted upstream: <https://bugreports.qt.io/browse/QTBUG-111440>
+
+diff -up qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/BUILD.gn.c99 qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/BUILD.gn
+--- qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/BUILD.gn.c99	2023-02-23 10:54:15.909380015 +0100
++++ qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/BUILD.gn	2023-02-23 11:00:32.019601795 +0100
+@@ -21,24 +21,15 @@ if (!use_system_libsync) {
+     ]
+   }
+ 
+-  config("libsync_private_config") {
+-    # To suppress the warning caused by strlcpy.
+-    cflags = [ "-Wno-implicit-function-declaration" ]
+-  }
+-
+   source_set("libsync") {
+     sources = [
+       "src/include/sync/sync.h",
+       "src/sw_sync.h",
+       "src/sync.c",
+-      "strlcpy.c",
+     ]
+ 
+     configs -= [ "//build/config/compiler:chromium_code" ]
+-    configs += [
+-      "//build/config/compiler:no_chromium_code",
+-      ":libsync_private_config",
+-    ]
++    configs += [ "//build/config/compiler:no_chromium_code" ]
+ 
+     public_configs = [ ":libsync_config" ]
+   }
+diff -up qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/src/sync.c.c99 qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/src/sync.c
+--- qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/src/sync.c.c99	2023-02-23 10:54:30.650231820 +0100
++++ qtwebengine-everywhere-src-5.15.12/src/3rdparty/chromium/third_party/libsync/src/sync.c	2023-02-23 10:54:50.116036131 +0100
+@@ -29,6 +29,7 @@
+ 
+ #include <sync/sync.h>
+ 
++#include "../strlcpy.c"
+ 
+ struct sw_sync_create_fence_data {
+   __u32 value;

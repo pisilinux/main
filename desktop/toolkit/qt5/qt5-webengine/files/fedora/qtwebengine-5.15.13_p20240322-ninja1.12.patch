@@ -1,0 +1,27 @@
+Quoting the description from qtwebengine-6.7.0-ninja1.12.patch:
+"""
+Patch status: pending being looked at upstream
+
+Issue[1][2][3] also exist in chromium itself[4], and unclear
+why this started happening only with ninja-1.12.0 at the moment.
+
+Just a quickfix, likely not fully correct and seems there may
+be further unresolved race issues.
+
+[1] https://bugs.gentoo.org/930107
+[2] https://bugreports.qt.io/browse/QTBUG-124375
+[3] https://github.com/ninja-build/ninja/issues/2417
+[4] https://bugs.gentoo.org/930112
+"""
+
+This has a hunk removed but is otherwise the same.
+--- ./src/3rdparty/chromium/content/browser/BUILD.gn.orig	2024-03-26 14:47:34.000000000 +0000
++++ ./src/3rdparty/chromium/content/browser/BUILD.gn	2024-06-24 04:57:25.108720935 +0100
+@@ -196,6 +196,7 @@ jumbo_static_library("browser") {
+     "//content/common",
+     "//content/common:buildflags",
+     "//content/common:mojo_bindings",
++    "//components/spellcheck:buildflags",
+     "//content/public/browser:proto",
+     "//content/public/common:common_sources",
+     "//content/public/common:content_descriptor_keys",
