@@ -8,7 +8,7 @@ from pisi.actionsapi import kde6
 from pisi.actionsapi import pisitools
 
 def setup():
-    pisitools.dosed("CMakeLists.txt", "find_package(GSettingSchemas REQUIRED)", deleteLine=True)
+    pisitools.dosed("CMakeLists.txt", "GSettingSchemas", deleteLine=True)
     kde6.configure("-DCMAKE_BUILD_TYPE=Release \
                    -DCMAKE_INSTALL_PREFIX=/usr \
                    -DKDE_INSTALL_LIBDIR=lib \
