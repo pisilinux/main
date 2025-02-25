@@ -18,7 +18,7 @@ def setup():
                             -i src/login/logind.c""")
 
     mesontools.configure("--prefix=/usr \
-                          -Drootlibdir=/usr/lib \
+                          --libexecdir=/usr/lib/elogind \
                           -Dudevrulesdir=/lib/udev/rules.d \
                           -Dpamconfdir=/etc/pam.d \
                           -Dpolkit=true \
@@ -31,9 +31,11 @@ def setup():
                           -Ddefault-hierarchy=unified \
                           -Dpoweroff-path=/sbin/poweroff \
                           -Ddocdir=/usr/share/doc/elogind \
-                          -Drootlibexecdir=/usr/lib/elogind \
                           -Ddefault-kill-user-processes=false \
                           -Ddbuspolicydir=/usr/share/dbus-1/system.d")
+                              # -Drootlibdir=/usr/lib \
+                            # -Drootlibexecdir=/usr/lib/elogind \
+
 
 def build():
     mesontools.build()
