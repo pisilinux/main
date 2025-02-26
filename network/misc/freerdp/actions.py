@@ -16,6 +16,7 @@ def setup():
     # shelltools.system("mkdir build")
     # shelltools.system("cd build")
     cmaketools.configure("-B build -DCMAKE_SKIP_RPATH=ON \
+                          -DCMAKE_BUILD_TYPE=Release \
                           -DWITH_LIBSYSTEMD=OFF \
                           -DCMAKE_INSTALL_LIBDIR=lib \
                           -DWITH_DSP_FFMPEG=ON \
