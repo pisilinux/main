@@ -33,4 +33,4 @@ def install():
 
     
     #pisitools.dohtml("doc/html/*")
-    pisitools.dodoc("NEWS", "README","LICENSE*")
+    pisitools.dodoc("NEWS", "LICENSE*")
