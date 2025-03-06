@@ -54,7 +54,7 @@ def setup():
                         --enable-qt6                      \
                         --enable-gtk3                     \
                         --enable-gtk4                     \
-                        --enable-kf5                      \
+                        --disable-kf5                     \
                         --enable-kf6                      \
                         --enable-release-build=yes        \
                         --enable-python=system            \
@@ -69,6 +69,7 @@ def setup():
                         --with-myspell-dicts              \
                         --with-java                       \
                         --with-system-libs                \
+                        --with-system-argon2              \
                         --without-system-dicts            \
                         --without-fonts                   \
                         --without-system-altlinuxhyph     \
@@ -95,6 +96,7 @@ def setup():
                         --without-system-orcus            \
                         --without-system-jfreereport      \
                         --without-system-zxcvbn           \
+                        --without-system-java-websocket   \
                         --with-jdk-home=/usr/lib/jvm/java-openjdk \
                         --with-external-tar=external/tarballs       \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
