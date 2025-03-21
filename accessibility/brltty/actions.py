@@ -12,7 +12,6 @@ from pisi.actionsapi import shelltools
 pisitools.cxxflags.add("-std=gnu++11")
 
 def setup():
-    pisitools.ldflags.remove("-ltinfo")
     pisitools.flags.add(" -lspeechd")
     shelltools.export("PYTHON","/usr/bin/python3")
     autotools.configure(" \
