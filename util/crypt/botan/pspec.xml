@@ -8,23 +8,28 @@
             <Name>Kamil Atlı</Name>
             <Email>suvari@pisilinux.org</Email>
         </Packager>
-        <License>BSD</License>
+        <License>BSD-2-Clause</License>
         <IsA>library</IsA>
         <Icon>botan</Icon>
-        <Summary>Cryptography Toolkit</Summary>
-        <Description>Crypto library written in C++</Description>
-        <Archive sha1sum="4f9383395360898d7a29ed2c1b42e81e52704aa4" type="tarxz">https://botan.randombit.net/releases/Botan-3.2.0.tar.xz</Archive>
+        <Summary>A C++ cryptography library.</Summary>
+        <Description>Crypto and TLS for Modern C++.</Description>
+        <Archive sha1sum="8ec027dab6543b3a0d87fd2c77315ee4edc8a758" type="tarxz">
+            https://botan.randombit.net/releases/Botan-3.7.1.tar.xz
+        </Archive>
         <BuildDependencies>
             <Dependency>bzip2</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>docutils</Dependency>
             <Dependency>xz-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>boost-devel</Dependency>
             <Dependency>sqlite-devel</Dependency>
             <Dependency>python3-devel</Dependency>
+            <Dependency>python3-docutils</Dependency>
         </BuildDependencies>
-        <!--Patches>
-            <Patch></Patch>
-        </Patches-->
+        <Patches>
+            <!-- <Patch level="1"></Patch> -->
+        </Patches>
     </Source>
 
     <Package>
@@ -40,26 +45,35 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="data">/usr/share/doc</Path>
-            <Path fileType="library">/usr/lib/python2.7/site-packages</Path>
-            <Path fileType="library">/usr/lib/python3*/site-packages</Path>
-            <Path fileType="library">/usr/lib/libbotan*</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
         </Files>
     </Package>
 
     <Package>
         <Name>botan-devel</Name>
-        <Summary>Development files for botan</Summary>
         <RuntimeDependencies>
+            <Dependency>xz-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>sqlite-devel</Dependency>
             <Dependency release="current">botan</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2025-02-25</Date>
+            <Version>3.7.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="2">
             <Date>2023-11-01</Date>
             <Version>3.2.0</Version>

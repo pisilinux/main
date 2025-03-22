@@ -2,37 +2,31 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, shelltools, pisitools
 
+i = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DUNIT_TESTING=ON',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
-                          -DCMAKE_BUILD_TYPE=Release \
-                          -DUNIT_TESTING=ON", sourceDir="..")
+    cmaketools.configure(i)
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make()
-    shelltools.cd("../doc")
+    mesontools.build()
+
+    shelltools.cd("doc")
     shelltools.system("doxygen mainpage.dox")
     
 def check():
-    shelltools.cd("build")
-    autotools.make("test")
+    mesontools.build("-C build test")
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dohtml("../doc/html/*")
-
-    shelltools.cd("..")
-    pisitools.dodoc("COPYING", "README*")
+    pisitools.dohtml("doc/html/*")
+    pisitools.dodoc("AUTHORS", "COPYING")

@@ -3,19 +3,20 @@
 <PISI>
     <Source>
         <Name>cairo-dock-plugins</Name>
-        <Homepage>http://glx-dock.org/</Homepage>
+        <Homepage>https://github.com/Cairo-Dock/cairo-dock-plug-ins</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>GPLv2</License>
+        <License>GPLv3</License>
         <IsA>library</IsA>
         <Icon>cairo-dock-plugins</Icon>
         <Summary>Plugins of Cairo-Dock project.</Summary>
         <Description>More options and plugins for glx-dock to enhance functionality.</Description>
-        <Archive sha1sum="b205504e1013d87f378cfbd288ced177868b42bd" type="targz">https://launchpad.net/cairo-dock-plug-ins/3.4/3.4.1/+download/cairo-dock-plug-ins-3.4.1.tar.gz</Archive>
+        <Archive sha1sum="0cf4b670c398ed8af26163a1275ce96dccba57e2" type="targz">https://github.com/Cairo-Dock/cairo-dock-plug-ins/archive/3.5.1/cairo-dock-plug-ins-3.5.1.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
             <Dependency>vte-devel</Dependency>
             <Dependency>ruby-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
@@ -45,20 +46,19 @@
             <Dependency>libXxf86vm-devel</Dependency>
             <Dependency>lm_sensors-devel</Dependency>
             <Dependency>libdbusmenu-gtk3</Dependency>
-            <Dependency>webkit2gtk-devel</Dependency>
             <Dependency>libdbusmenu-devel</Dependency>
             <Dependency>libxklavier-devel</Dependency>
             <Dependency>libXinerama-devel</Dependency>
             <Dependency>gnome-menus-devel</Dependency>
-            <Dependency>libindicator-devel</Dependency>
+            <Dependency>python-setuptools</Dependency>
+            <Dependency>python3-setuptools</Dependency>
             <Dependency>libXcomposite-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
-            <Dependency versionFrom="3.4.1">cairo-dock-devel</Dependency>
+            <Dependency>ayatana-libappindicator-devel</Dependency>
+            <Dependency versionFrom="3.5.1">cairo-dock-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch>cairo-dock-plugins-3.4.1-gcc10-extern.patch</Patch>
-            <Patch>cairo-dock-plugins-3.4.1-time_h-confict.patch</Patch>
-            <Patch>cairo-dock-plugins-3.4.1-0004-weather-update-URL.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
         </Patches>
     </Source>
 
@@ -88,15 +88,14 @@
             <Dependency>libXxf86vm</Dependency>
             <Dependency>libxklavier</Dependency>
             <Dependency>gnome-menus</Dependency>
-            <Dependency>libindicator</Dependency>
-            <Dependency>libdbusmenu-gtk</Dependency>
             <Dependency>pulseaudio-libs</Dependency>
+            <Dependency>libdbusmenu-gtk</Dependency>
             <Dependency>libdbusmenu-glib</Dependency>
             <Dependency>libdbusmenu-gtk3</Dependency>
+            <Dependency>ayatana-libappindicator</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/share/cairo-dock</Path>
-            <Path fileType="data">/usr/share/vala/vapi/</Path>
             <Path fileType="library">/usr/lib/libCDApplet.so*</Path>
             <Path fileType="library">/usr/lib/ruby</Path>
             <Path fileType="library">/usr/lib/python3*/site-packages</Path>
@@ -108,17 +107,24 @@
 
     <Package>
         <Name>cairo-dock-plugins-devel</Name>
-        <Summary>cairo-dock-plugins için geliştirme dosyaları</Summary>
         <RuntimeDependencies>
             <Dependency>glib2-devel</Dependency>
             <Dependency release="current">cairo-dock-plugins</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/vala</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="4">
+            <Date>2025-01-31</Date>
+            <Version>3.5.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="3">
             <Date>2023-10-04</Date>
             <Version>3.4.1</Version>

@@ -4,16 +4,21 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools, pisitools, get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
+
+i = ''.join([
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-	cmaketools.configure("-B_build -DCMAKE_BUILD_TYPE=Release")
+    cmaketools.configure(i)
 
 def build():
-	cmaketools.make("-C _build")
-	cmaketools.make("-C _build translations")
+    mesontools.build()
 
 def install():
-	cmaketools.install("-C _build install")
+    mesontools.install()
 
-	pisitools.dodoc("AUTHORS", "CHANGELOG.md")
+    pisitools.dodoc("AUTHORS", "copyright.txt", "LICENSE")

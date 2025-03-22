@@ -4,28 +4,25 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
-j = "-DCMAKE_BUILD_TYPE=Release \
-     -DCMAKE_INSTALL_DIR=/usr \
-     -DCMAKE_INSTALL_LIBDIR=lib \
-     -DENABLE_THUMBNAILER=ON \
-     -DENABLE_GIO=ON \
-     -DENABLE_TESTS=OFF \
-    "
+j = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_DIR=/usr',
+    ' -DCMAKE_INSTALL_LIBDIR=lib',
+    ' -DENABLE_THUMBNAILER=ON',
+    ' -DENABLE_GIO=ON',
+    ' -DENABLE_TESTS=OFF',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-#	pisitools.dosed("libffmpegthumbnailer/pngwriter.cpp", "#include <cassert>", "#include <cassert>\n#include <cstring>")
-	pisitools.cxxflags.add("-Wno-deprecated-declarations")
 	cmaketools.configure(j)
 
 def build():
-	cmaketools.make()
+	mesontools.build()
 
 def install():
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+	mesontools.install()
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README.md")
-
+	pisitools.dodoc("AUTHORS", "COPYING")

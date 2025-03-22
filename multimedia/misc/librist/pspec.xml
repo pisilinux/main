@@ -1,75 +1,85 @@
 <?xml version="1.0" ?>
 <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-	<Source>
-		<Name>librist</Name>
-		<Homepage>https://code.videolan.org/rist/librist</Homepage>
-		<Packager>
-			<Name>PisiLinux Community</Name>
-			<Email>admins@pisilinux.org</Email>
-		</Packager>
-		<License>BSD-2-Clause</License>
-		<IsA>library</IsA>
-		<PartOf>multimedia.misc</PartOf>
-		<Summary>Reliable internet stream transport.</Summary>
-		<Description>A library that can be used to easily add the RIST protocol to your application.</Description>
-		<Archive sha1sum="142448914af31e812f58fd8443ebcea4f1a8a2f9" type="tarbz2">
-			https://code.videolan.org/rist/librist/-/archive/v0.2.7/librist-v0.2.7.tar.bz2
-		</Archive>
-		<BuildDependencies>
-			<Dependency>meson</Dependency>
-			<Dependency>cmake</Dependency>
-			<Dependency>lz4-devel</Dependency>
-			<Dependency>cmocka-devel</Dependency>
-			<Dependency>mbedtls-devel</Dependency>
-		</BuildDependencies>
-		<Patches>
-			<!-- <Patch level='1'></Patch> -->
-		</Patches>
-	</Source>
+    <Source>
+        <Name>librist</Name>
+        <Homepage>https://code.videolan.org/rist/librist</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>BSD-2-Clause</License>
+        <IsA>library</IsA>
+        <PartOf>multimedia.misc</PartOf>
+        <Summary>Reliable internet stream transport.</Summary>
+        <Description>A library that can be used to easily add the RIST protocol to your application.</Description>
+        <Archive sha1sum="c50ad02c91385fac32b57a48418656a90a73a55f" type="tarbz2">https://code.videolan.org/rist/librist/-/archive/v.0.2.11/librist-v.0.2.11.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>lz4-devel</Dependency>
+            <Dependency>cjson-devel</Dependency>
+            <Dependency>cmocka-devel</Dependency>
+            <Dependency>mbedtls-devel</Dependency>
+            <Dependency>libmicrohttpd-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- <Patch level='1'></Patch> -->
+        </Patches>
+    </Source>
 
-	<Package>
-		<Name>rist-tools</Name>
-		<IsA>app:console</IsA>
-		<RuntimeDependencies>
-			<Dependency>mbedtls</Dependency>
-			<!-- <Dependency release="current">librist</Dependency> -->
-		</RuntimeDependencies>
-		<Files>
-			<Path fileType="executable">/usr/bin</Path>
-		</Files>
-	</Package>
+    <Package>
+        <Name>rist-tools</Name>
+        <IsA>app:console</IsA>
+        <RuntimeDependencies>
+            <Dependency release="current">librist</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+        </Files>
+    </Package>
 
-	<Package>
-		<Name>librist</Name>
-		<RuntimeDependencies>
-			<Dependency>libgcc</Dependency>
-			<Dependency>mbedtls</Dependency>
-		</RuntimeDependencies>
-		<Files>
-			<Path fileType="library">/usr/lib</Path>
-		</Files>
-	</Package>
+    <Package>
+        <Name>librist</Name>
+        <RuntimeDependencies>
+            <Dependency>lz4</Dependency>
+            <Dependency>cjson</Dependency>
+            <Dependency>mbedtls</Dependency>
+            <Dependency>libmicrohttpd</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+        </Files>
+    </Package>
 
-	<Package>
-		<Name>librist-devel</Name>
-		<RuntimeDependencies>
-			<Dependency>mbedtls</Dependency>
-			<Dependency release="current">librist</Dependency>
-		</RuntimeDependencies>
-		<Files>
-			<Path fileType="headers">/usr/include</Path>
-			<Path fileType="data">/usr/lib/pkgconfig</Path>
-		</Files>
-	</Package>
+    <Package>
+        <Name>librist-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>cjson</Dependency>
+            <Dependency>mbedtls</Dependency>
+            <Dependency release="current">librist</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="headers">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
 
-	<History>
-		<Update release="1">
-			<Date>2023-02-06</Date>
-			<Version>0.2.7</Version>
-			<Comment>First build.</Comment>
-			<Name>fury</Name>
-			<Email>uglyside@yandex.ru</Email>
-		</Update>
-	</History>
+    <History>
+        <Update release="2">
+            <Date>2025-02-06</Date>
+            <Version>0.2.11</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Blue Devil</Name>
+            <Email>bluedevil@sctzine.com</Email>
+        </Update>
+        <Update release="1">
+            <Date>2023-02-06</Date>
+            <Version>0.2.7</Version>
+            <Comment>First build.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
+    </History>
 </PISI>

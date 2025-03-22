@@ -2,38 +2,28 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
 
+i = ''.join([
+    ' without-gnutls=no',
+    ' without-ssl=yes',
+    ' without-ntlm=yes',
+    ' without-libsensors=yes',
+    ' INSTALLROOT=/usr',
+    ' INCLUDEDIR=/usr/include/gkrellm2',
+    ' CFLAGS=\'%s\'' % get.CFLAGS(),
+    ' LDFLAGS=\'%s\' ' % get.LDFLAGS()
+    ])
 
 def build():
-    shelltools.export("LDFLAGS", "%s -lgmodule-2.0" % get.LDFLAGS())
-    autotools.make('CC=%s \
-                    INSTALLROOT=/usr \
-                    INCLUDEDIR=/usr/include/gkrellm2 \
-                    LOCALEDIR=/usr/share/locale \
-                    STRIP="" \
-                    LINK_FLAGS="%s -Wl,-E" \
-                    enable_nls=1 \
-                    without-ssl=yes \
-                    without-sensors=no \
-                    without-libsensors=yes' % (get.CC(), get.LDFLAGS()))
-                    # without ssl option enables gnutls
+    autotools.make(i)
 
 def install():
-    autotools.rawInstall("DESTDIR=%s \
-                          PREFIX=/usr" % get.installDIR())
+    a = get.installDIR()
+    b = "DESTDIR=%s PREFIX=/usr CFGDIR=%s/etc" % (a, a)
+    autotools.rawInstall(b)
 
-    pisitools.insinto("/etc", "server/gkrellmd.conf")
-
-    pisitools.doman("gkrellm.1")
-    pisitools.doman("gkrellmd.1")
-
-    pisitools.dodoc("CREDITS", "README", "Changelog", "COPYRIGHT")
-    pisitools.dohtml("*")
-
-
+    pisitools.dodoc("CREDITS", "COPYRIGHT", "COPYING")
+    pisitools.removeDir("/usr/lib/systemd")
