@@ -2,26 +2,26 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import get
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import mesontools
+from pisi.actionsapi import mesontools, pisitools
+
+i = ''.join([
+    ' --prefix=/usr',
+    ' --buildtype=release',
+    ' -Dintrospection=enabled',
+    ' -Dsystemdsystemunitdir=no',
+    ' -Didevice=enabled',
+    ' -Dpolkit=enabled '
+    ])
 
 def setup():
-    shelltools.system("sed '/parse_version/d' -i src/linux/integration-test.py")
-    #pisitools.dosed("configure", "DISABLE_DEPRECATED", deleteLine=True)
-    mesontools.configure("-Dgtk-doc=false \
-                          -Dudevrulesdir=/lib/udev/rules.d \
-                          -Dudevhwdbdir=/etc/udev/hwdb.d \
-                          -Dintrospection=enabled \
-                          -Dsystemdsystemunitdir=no")
+    mesontools.configure(i)
+
 def build():
     mesontools.build()
 
 def install():
     mesontools.install()
 
-    pisitools.dodoc("COPYING", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS")

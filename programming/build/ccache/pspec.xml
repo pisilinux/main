@@ -1,39 +1,53 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>ccache</Name>
-        <Homepage>https://ccache.samba.org/</Homepage>
+        <Homepage>https://ccache.dev/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>GPLv3+</License>
+        <License>GPLv3</License>
         <IsA>app:console</IsA>
-        <Summary>Fast C/C++ compiler cache</Summary>
-        <Description>ccache is a compiler cache. It speeds up recompilation of C/C++ code by caching previous compiles and detecting when the same compile is being done.</Description>
-<!--         <Archive sha1sum="5acfdea35d379cadf192363e21f3e25e0f35b01c" type="tarxz">http://samba.org/ftp/ccache/ccache-3.7.1.tar.xz</Archive> -->
-            <Archive sha1sum="a974ffc4d2328562da9308e508806b3be96975ef" type="tarxz">https://github.com/ccache/ccache/releases/download/v3.7.7/ccache-3.7.7.tar.xz</Archive>
+        <Summary>Fast C/C++ compiler cache.</Summary>
+        <Description>Ccache speeds up recompilation of C/C++ code by caching previous compiles and detecting when the same compile is being done.</Description>
+            <Archive sha1sum="cff97f7592f5042eb43cb54a6d12a1ce7e49da62" type="tarxz">https://github.com/ccache/ccache/releases/download/v4.10.2/ccache-4.10.2.tar.xz</Archive>
         <BuildDependencies>
-            <Dependency>zlib-devel</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>fmt-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
+            <Dependency>asciidoctor</Dependency>
+            <Dependency>blake3-devel</Dependency>
+            <Dependency>xxhash-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>ccache</Name>
         <RuntimeDependencies>
-            <!--Dependency>gcc</Dependency-->
-            <Dependency>zlib</Dependency>
+            <Dependency>fmt</Dependency>
+            <Dependency>zstd</Dependency>
+            <Dependency>blake3</Dependency>
+            <Dependency>xxhash</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="executable">/usr/lib/ccache/bin</Path>
+            <Path fileType="executable">/usr/lib</Path>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="man">/usr/share/man</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2025-02-11</Date>
+            <Version>4.10.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="4">
             <Date>2021-05-18</Date>
             <Version>3.7.7</Version>

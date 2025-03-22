@@ -2,28 +2,31 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
+i = ''.join([
+    ' --prefix=/usr',
+    ' --with-mesa',
+    ' --disable-debug',
+    ' --enable-man',
+    ' --enable-html',
+    ' --enable-shared',
+    ' --enable-threadsafe',
+    ' --enable-exceptions',
+    ' --enable-optimization',
+    ' --enable-system-expat',
+    ' --enable-javascript-api',
+    ' --disable-maintainer-mode',
+    ' --disable-dependency-tracking '
+    ])
+
 def setup():
-    autotools.configure("--prefix=/usr \
-                         --mandir=/usr/share/man \
-                         --enable-optimization \
-                         --enable-javascript-api \
-                         --enable-threadsafe \
-                         --enable-exceptions \
-                         --enable-man \
-                         --with-mesa \
-                         --disable-debug \
-                         --enable-shared \
-                         --enable-html \
-                         --disable-maintainer-mode \
-                         --disable-dependency-tracking \
-                         --enable-system-expat")
-    
+    autotools.configure(i)
+
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
@@ -32,9 +35,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "NEWS", "README*", "RELNOTES", "THANKS")
-
-    # remove conflict man file with openssl
-    pisitools.remove("/usr/share/man/man3/threads.3")
-    # remove conflict man file with libftdi-devel
-    pisitools.remove("/usr/share/man/man3/deprecated.3")
+    pisitools.dodoc("AUTHORS", "COPYING", "THANKS")

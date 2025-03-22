@@ -6,14 +6,31 @@
 
 from pisi.actionsapi import mesontools, pisitools, shelltools
 
+y = ''.join([
+    ' --prefix=/usr',
+    ' --buildtype=release',
+    ' -Darchive=enabled',
+    ' -Dgps-map=enabled',
+    ' -Dgtk4=disabled',
+    ' -Dpdf=disabled',
+    ' -Ddjvu=disabled',
+    ' -Devince=disabled',
+    ' -Dgit=disabled',
+    ' -Dhelp_pdf=disabled',
+    ' -Dpandoc=disabled',
+    ' -Dspell=disabled',
+    ' -Dyelp-build=disabled',
+    ' -Dexecinfo=disabled '
+    ])
+
 def setup():
-	mesontools.configure("-Darchive=enabled")
+    mesontools.configure(y)
 
 def build():
-	mesontools.build()
+    mesontools.build()
 
 def install():
-	mesontools.install()
+    mesontools.install()
 
-	pisitools.dodoc("AUTHORS", "NEWS")
-	pisitools.dosym("/usr/share/doc/geeqie/NEWS", "/usr/share/doc/geeqie/ChangeLog")
+    pisitools.dodoc("COPYING", "NEWS")
+    pisitools.dosym("NEWS", "/usr/share/doc/geeqie/ChangeLog")

@@ -4,29 +4,28 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import cmaketools, mesontools, pisitools
 
-j = "-DCMAKE_BUILD_TYPE=release \
-     -DCMAKE_INSTALL_PREFIX=/usr \
-     -DENABLE_DOCUMENTATION=ON \
-     -DBUILD_SHARED_LIBS=ON \
-     -DENABLE_UTILS=ON -L \
-    "
+y = ''.join([
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DBUILD_SHARED_LIBS=ON',
+    ' -DENABLE_{UTILS,DOCUMENTATION}=ON',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-	shelltools.system("./bootstrap")
-	cmaketools.configure(j)
+    cmaketools.configure(y)
 
 def build():
-	cmaketools.make()
+    mesontools.build()
 
 def install():
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-	for t in ["utils/nfs-cat", "utils/nfs-cp", "utils/nfs-ls"]:
-		pisitools.dobin(t)
+    mesontools.install()
 
-	pisitools.dodoc("COPYING", "README")
+    from pisi.actionsapi import shelltools, get
+    for b in ["nfs-cat", "nfs-cp", "nfs-ls", "nfs-stat"]:
+        shelltools.chmod("%s/usr/bin/%s" % (get.installDIR(), b), mode = 0755)
 
+    for l in ["BSD", "GPL-3", "LGPL-2.1"]:
+        pisitools.dodoc("COPYING", "LICENCE-%s.txt" % l)

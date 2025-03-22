@@ -2,27 +2,28 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import autotools, pisitools, get
+
+i = ''.join([
+    ' --prefix=/usr',
+    ' --with-expat',
+    ' --without-{gssapi,libproxy}',
+    ' --with-ssl=openssl',
+    ' --with-ca-bundle=/etc/pki/tls/certs/ca-bundle.crt',
+    ' --enable-threadsafe-ssl=posix',
+    ' --enable-shared',
+    ' --enable-static=no '
+    ])
 
 def setup():
-    autotools.configure("--with-libxml2 \
-                         --with-expat \
-                         --without-gssapi \
-                         --without-libproxy \
-                         --with-ssl=openssl \
-                         --with-ca-bundle=/etc/pki/tls/certs/ca-bundle.crt \
-                         --enable-threadsafe-ssl=posix \
-                         --enable-shared \
-                         --disable-static")
+    autotools.configure(i)
 
 def build():
     autotools.make()
 
 def install():
-    autotools.install()
+    autotools.rawInstall("DESTDIR=%s docdir=/usr/share/doc/neon" % get.installDIR())
 
-    pisitools.dodoc("THANKS", "TODO", "ChangeLog", "AUTHORS", "BUGS", "NEWS", "README.md", "doc/*.txt")
+    pisitools.dodoc("AUTHORS", "THANKS")

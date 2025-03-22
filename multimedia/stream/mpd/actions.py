@@ -4,8 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import mesontools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools, pisitools
 
 j = ''.join([
     ' -Ddocumentation=enabled',
@@ -94,16 +93,13 @@ j = ''.join([
     ])
 
 def setup():
-#	pisitools.ldflags.add("-lbsd")
-#	pisitools.cxxflags.add("-lbsd")
-	mesontools.configure(j)
+    mesontools.configure(j, build_dir="_mpd_build_")
 
 def build():
-	mesontools.build()
+    mesontools.build("-C _mpd_build_")
 
 def install():
-	mesontools.install()
-	pisitools.insinto("/etc", "doc/mpdconf.example", "mpd.conf")
+    mesontools.install("-C _mpd_build_")
 
-	pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README.md")
-
+    pisitools.insinto("/etc", "doc/mpdconf.example", "mpd.conf")
+    pisitools.dodoc("AUTHORS", "COPYING")

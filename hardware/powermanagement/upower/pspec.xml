@@ -1,76 +1,54 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>upower</Name>
-        <Homepage>http://upower.freedesktop.org</Homepage>
+        <Homepage>https://upower.freedesktop.org/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>GPLv2+</License>
+        <License>GPLv2</License>
         <IsA>library</IsA>
         <IsA>app:console</IsA>
-        <Summary>Power Management Service</Summary>
+        <Summary>Power Management Service.</Summary>
         <Description>upower provides a daemon, API and command line tools for managing power devices attached to the system.</Description>
-        <Archive sha1sum="82b69c2c59c49d75f2e3c81a3d086d5d1ebda1f2" type="tarbz2">https://gitlab.freedesktop.org/upower/upower/-/archive/v1.90.4/upower-v1.90.4.tar.bz2</Archive>
+        <Archive sha1sum="3adc836ddc1558485330dc8d77491689c3c711ee" type="tarbz2">https://gitlab.freedesktop.org/upower/upower/-/archive/v1.90.7/upower-v1.90.7.tar.bz2</Archive>
         <AdditionalFiles>
             <AdditionalFile target="po/tr.po">tr.po</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
             <Dependency>meson</Dependency>
-            <Dependency>python3-devel</Dependency>
-            <Dependency>dbus-devel</Dependency>
+            <Dependency>gtk-doc</Dependency>
+            <Dependency>libxslt</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>polkit-devel</Dependency>
-            <Dependency>dbus-glib-devel</Dependency>
             <Dependency>libgudev-devel</Dependency>
-            <Dependency>libusb-devel</Dependency>
-            <Dependency>libplist-devel</Dependency>
             <Dependency>libimobiledevice-devel</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
-            <Dependency>docbook-xsl</Dependency>
-            <Dependency>intltool</Dependency>
-            <Dependency>gtk-doc</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">add-tr.patch</Patch>
-<!--             <Patch level="1">0.99.18-meson-Allow-unittest-inspector-to-fail.patch</Patch> -->
-<!--             <Patch level="1">0001-build-Use-a-newer-libplist-if-available.patch</Patch> -->
+            <!-- <Patch level="1"></Patch> -->
+            <Patch level="1">LINGUAS.patch</Patch>
         </Patches>
     </Source>
 
     <Package>
         <Name>upower</Name>
         <RuntimeDependencies>
-            <Dependency>dbus</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>polkit</Dependency>
-            <Dependency>dbus-glib</Dependency>
             <Dependency>libgudev</Dependency>
-            <Dependency>libplist</Dependency>
             <Dependency>libimobiledevice</Dependency>
-<!--             <Dependency versionFrom="1.4.1">pm-utils</Dependency> -->
-            <Dependency>libusb</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="config">/etc</Path>
             <Path fileType="data">/lib</Path>
-            <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/etc/dbus-1</Path>
-            <Path fileType="config">/etc/udev/hwdb.d/95-upower-hid.hwdb</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="config">/etc/UPower</Path>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="data">/var/lib/upower</Path>
-            <Path fileType="data">/usr/share/gir-1.0</Path>
-            <Path fileType="data">/usr/share/dbus-1</Path>
             <Path fileType="executable">/usr/libexec</Path>
-            <Path fileType="data">/usr/share/polkit-1</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="data">/usr/share/dbus-1/interfaces/*.xml</Path>
-            <Path fileType="data">/usr/lib/girepository-1.0/*.typelib</Path>
-            <Path fileType="data">/usr/share/installed-tests/upower/upower-integration.test</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/var</Path>
         </Files>
     </Package>
 
@@ -78,22 +56,27 @@
         <Name>upower-devel</Name>
         <Summary>Development files for upower</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">upower</Dependency>
-            <Dependency>dbus-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>polkit-devel</Dependency>
-            <Dependency>dbus-glib-devel</Dependency>
-            <Dependency>libgudev-devel</Dependency>
-            <Dependency>libplist-devel</Dependency>
-            <Dependency>libimobiledevice-devel</Dependency>
+            <Dependency release="current">upower</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="executable">/usr/libexec/upower</Path>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+            <Path fileType="data">/usr/share/installed-tests</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="19">
+            <Date>2025-01-30</Date>
+            <Version>1.90.7</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="18">
             <Date>2024-04-09</Date>
             <Version>1.90.4</Version>

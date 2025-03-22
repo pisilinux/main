@@ -13,6 +13,7 @@ def start():
     startService(command="/usr/bin/gkrellmd",
                  pidfile=PIDFILE,
                  makepid=True,
+                 detach=True,
                  donotify=True)
 
 @synchronized

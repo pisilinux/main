@@ -2,36 +2,28 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import pythonmodules
-from pisi.actionsapi import get
+from pisi.actionsapi import pythonmodules, mesontools
+
+i = ''.join([
+    ' --prefix=/usr',
+    ' --with-{boost,bzip2,lzma,sqlite3,zlib}',
+    ' --with-python-versions=3.11',
+    ' --with-os-feature=getrandom',
+    ' --disable-static-library',
+    ' --build-tool=ninja',
+    ' ',
+    ])
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
+    pythonmodules.run("configure.py %s" % i, pyVer = "3")
 
-    shelltools.system("../configure.py --prefix=/usr \
-        --with-bzip \
-        --with-lzma \
-        --with-zlib \
-        --with-boost \
-        --with-sqlite3 \
-        --with-os-feature=getrandom")
-    
 def build():
-    shelltools.cd("build")
-    autotools.make()
+    mesontools.build("-C .")
 
 def check():
-    shelltools.cd("build")
-    autotools.make("check")
-    #pass
+    mesontools.build("-C . check")
 
 def install():
-    shelltools.cd("build")
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    #pisitools.dodoc("COPYING*", "README")
+    mesontools.install("-C .")
