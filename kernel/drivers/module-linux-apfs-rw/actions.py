@@ -10,8 +10,10 @@ from pisi.actionsapi import pisitools
 
 KDIR = kerneltools.getKernelVersion()
 
+CONFIGS = "-DCONFIG_APFS_RW_ALWAYS"
+
 def build():
-    autotools.make("KERNEL_DIR=/lib/modules/%s/build" % KDIR)
+    autotools.make("KERNEL_DIR=/lib/modules/%(kdir)s/build CONFIG=%(configs)s" % { 'kdir': KDIR, 'configs': CONFIGS })
 
 def install():
     pisitools.insinto("/lib/modules/%s/extra" % KDIR, "*.ko")
