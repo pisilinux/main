@@ -7,7 +7,7 @@
 from pisi.actionsapi import kde5
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DCMAKE_CXX_STANDARD=17")
 
 def build():
     kde5.make()
