@@ -15,7 +15,7 @@ VBoxDataDir = "/usr/share/virtualbox"
 KDIR = kerneltools.getKernelVersion()
 
 def setup():
-    # shelltools.system("sed -i -e 's|pkg-config Qt6Core Qt6Gui|pkg-config Qt6Core|' configure")
+    # shelltools.system("sed '/security-of-remote-vms/d' -i doc/manual/en_US/dita/UserManual.ditamap")
 
     pisitools.dosed("LocalConfig.kmk", "__VBOXLIBDIR__", VBoxLibDir)
     pisitools.dosed("LocalConfig.kmk", "__VBOXDATADIR__", VBoxDataDir)
