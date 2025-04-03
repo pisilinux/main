@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 def setup():
     pisitools.cflags.add("-Wno-deprecated-declarations")
     #autotools.autoreconf("-fiv")
-    # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--enable-wayland --disable-static")
 
 def build():
