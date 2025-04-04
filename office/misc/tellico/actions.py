@@ -7,18 +7,18 @@
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 
 
 def setup():
-    kde5.configure("-DCMAKE_BUILD_TYPE=Release \
+    kde6.configure("-DCMAKE_BUILD_TYPE=Release \
                               -DCMAKE_INSTALL_PREFIX=/usr \
                               -DWITH_Nepomuk=OFF")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING")
+    pisitools.dodoc("README*", "TODO", "COPYING")
