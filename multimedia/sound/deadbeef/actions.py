@@ -7,6 +7,7 @@
 from pisi.actionsapi import shelltools, autotools, pisitools, get
 
 i = ''.join([
+    ' --disable-static',
     ' --disable-oss',
     ' --disable-coreaudio '
     ])
@@ -14,7 +15,6 @@ i = ''.join([
 def setup():
     shelltools.export("CC", "/usr/bin/clang")
     shelltools.export("CXX", "/usr/bin/clang++")
-    #shelltools.export("LDFLAGS", "%s -fuse-ld=lld -ldl " % get.LDFLAGS())
     autotools.configure(i)
 
 def build():
@@ -22,5 +22,3 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
-    pisitools.dodoc("about.txt", "AUTHORS", "ChangeLog")

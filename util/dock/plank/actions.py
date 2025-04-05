@@ -4,16 +4,23 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools, autotools, pisitools, get
+from pisi.actionsapi import mesontools, pisitools
+
+i = ''.join([
+    ' --prefix=/usr',
+    ' -Denable-apport=false',
+    ' -Denable-dbusmenu=yes',
+    ' -Dproduction_release=true',
+    ' -Denable-docs=false '
+    ])
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure("--prefix=/usr --disable-{apport,docs,static}")
+    mesontools.configure(i)
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LGPL2.1", "COPYRIGHT")
+    pisitools.dodoc("AUTHORS", "COPYING", "COPYRIGHT")
