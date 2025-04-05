@@ -14,12 +14,12 @@ j = ''.join([
     ])
 
 def setup():
-	cmaketools.configure(j)
+    cmaketools.configure(j)
 
 def build():
-	mesontools.build()
+    mesontools.build()
 
 def install():
-	mesontools.install()
+    mesontools.install()
 
-	pisitools.dodoc("COPYING")
+    pisitools.dodoc("COPYING")

@@ -15,12 +15,12 @@ i = ''.join([
     ])
 
 def setup():
-	mesontools.configure(i)
+    mesontools.configure(i)
 
 def build():
-	mesontools.build()
+    mesontools.build()
 
 def install():
-	mesontools.install()
+    mesontools.install()
 
-	pisitools.dodoc("AUTHORS", "COPYING", "COPYRIGHT")
+    pisitools.dodoc("AUTHORS", "COPYING", "COPYRIGHT")

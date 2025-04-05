@@ -18,14 +18,14 @@ j = ''.join([
     ])
 
 def setup():
-	shelltools.export("CC", "clang")
-	shelltools.export("CXX", "clang++")
-	cmaketools.configure(j)
+    shelltools.export("CC", "clang")
+    shelltools.export("CXX", "clang++")
+    cmaketools.configure(j)
 
 def build():
-	mesontools.build()
+    mesontools.build()
 
 def install():
-	mesontools.install()
+    mesontools.install()
 
-	pisitools.dodoc("LICENSE")
+    pisitools.dodoc("LICENSE")
