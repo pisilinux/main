@@ -6,17 +6,16 @@
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
 
-j = "-DCMAKE_INSTALL_PREFIX=/usr \
-     -DCMAKE_BUILD_TYPE=RELEASE \
-     -DCMAKE_THREAD_LIBS_INIT='-lpthread' \
-     -DCMAKE_HAVE_THREADS_LIBRARY=ON \
-     -DCMAKE_USE_PTHREADS_INIT=ON \
-     -DBUILD_TESTING=OFF \
-     -B_build -LA \
-    "
+j = ''.join([
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON',
+    ' -DBUILD_TESTING=OFF',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
 	shelltools.export("CC", "clang")
@@ -24,12 +23,9 @@ def setup():
 	cmaketools.configure(j)
 
 def build():
-	shelltools.cd("_build")
-	cmaketools.make()
+	mesontools.build()
 
 def install():
-	shelltools.cd("_build")
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+	mesontools.install()
 
-	pisitools.dodoc("../CONTRIBUTING.md", "../INSTALL.md", "../README.md", "../TESTING.md")
-
+	pisitools.dodoc("LICENSE")
