@@ -10,13 +10,12 @@ from pisi.actionsapi import get
 
 
 def setup():
-    pisitools.dosed("meson.build", "47.beta", "47")
+    # pisitools.dosed("meson.build", "47.beta", "47")
     mesontools.configure("-Degl_device=true \
                           -Dwayland_eglstream=true \
                           -Dudev=true \
                           -Dnative_backend=true \
                           -Dintrospection=true \
-                          -Dlibdisplay_info=enabled \
                           -Dinstalled_tests=false")
 
 def build():

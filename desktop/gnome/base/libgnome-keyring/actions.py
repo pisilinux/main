@@ -6,22 +6,24 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import get
+
 
 def setup():
     shelltools.system("sed -i 's:"'/desktop:'"/org:' " + get.curDIR() + "/schema/*.xml")
 
-    autotools.configure("--prefix=/usr \
-                         --sysconfdir=/etc \
-                         --with-pam-dir=/lib/security \
-                         --enable-valgrind")
+    mesontools.configure("-Dselinux=disabled \
+                          -Dsystemd=disabled")
 
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("NEWS", "README", "COPYING", "AUTHORS", "ChangeLog")
+    pisitools.dosym("/usr/lib/security/pam_gnome_keyring.so", "/lib/security/pam_gnome_keyring.so")
+
+    pisitools.dodoc("NEWS", "README*", "COPYING")
