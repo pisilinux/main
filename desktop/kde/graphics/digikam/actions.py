@@ -4,7 +4,7 @@
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 from pisi.actionsapi import get
 from pisi.actionsapi import cmaketools
 
@@ -15,6 +15,7 @@ def setup():
     shelltools.cd("build")
     cmaketools.configure("-G 'Ninja' \
                           -DBUILD_TESTING=OFF \
+                          -DBUILD_WITH_QT6=ON \
                           -DENABLE_KFILEMETADATASUPPORT=ON \
                           -DENABLE_MEDIAPLAYER=ON \
                           -DENABLE_AKONADICONTACTSUPPORT=ON \

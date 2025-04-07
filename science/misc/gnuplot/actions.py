@@ -10,12 +10,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def setup():
-    # fix default source location; use the GDFONTPATH variable to modify at runtime
-    shelltools.system("sed -i 's|/usr/X11R6/lib/X11/fonts/truetype|/usr/share/fonts/TTF|' src/variable.c")
-    shelltools.system("sed -i -e 's|/usr/X11R6/lib/X11/fonts/Type1|/usr/share/fonts/Type1|' \
-                              -e 's|$(X11ROOT)/X11R6/lib/X11/fonts/Type1|$(X11ROOT)/usr/share/fonts/Type1|' \
-                              src/variable.c")
-    
     # suppress compiler warnings
     pisitools.cflags.add("-Wno-unused-result -Wno-stringop-overflow")
     shelltools.system("MAKEINFO=/usr/bin/makeinfo  WX_CONFIG=/usr/bin/wx-config ./configure --prefix=/usr \
@@ -24,6 +18,7 @@ def setup():
                        --with-readline=gnu \
                        --with-bitmap-terminals \
                        --with-wx-single-threaded \
+                       --with-caca \
                        --with-texdir=/usr/share/texmf/tex/latex/gnuplot")
 
 def build():
