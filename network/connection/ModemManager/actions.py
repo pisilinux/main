@@ -31,4 +31,4 @@ def install():
 
     pisitools.dosed("%s/usr/share/dbus-1/system-services/*.service" % get.installDIR(), "SystemdService", deleteLine=True )
 
-    pisitools.dodoc("README", "COPYING")
+    pisitools.dodoc("README*", "COPYING")
