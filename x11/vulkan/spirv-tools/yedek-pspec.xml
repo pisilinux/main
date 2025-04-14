@@ -2,173 +2,194 @@
 <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>spirv-headers</Name>
-        <Homepage>https://www.khronos.org/registry/spir-v/</Homepage>
+        <Name>spirv-tools</Name>
+        <Homepage>https://www.khronos.org/vulkan/</Homepage>
         <Packager>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
         </Packager>
-        <License>MIT</License>
+        <License>BSD</License>
         <IsA>library</IsA>
         <Icon>vulkan</Icon>
-        <Summary>SPIR-V Headers</Summary>
-        <Description>SPIR-V Headers</Description>
-        <Archive sha1sum="51534dac3713f969d05606bb9f5edf4a4c35137a" type="targz" name="SPIRV-Headers-1.4.309.0.ta.gz">https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/vulkan-sdk-1.4.309.0.tar.gz</Archive>
+        <Summary>API and commands for processing SPIR-V modules</Summary>
+        <Description>API and commands for processing SPIR-V modules</Description>
+<!--         <Archive sha1sum="016cde288a85b40245c0773c640f823f82b06312" type="targz">https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/vulkan-sdk-1.3.296.0.tar.gz</Archive> -->
+        <Archive sha1sum="87fe9581bf8aa856168dac76bfcb6a9d277ac495" type="targz">https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/v2024.4.rc2.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
+            <Dependency versionFrom="1.4.304.0">spirv-headers</Dependency>
+            <Dependency>python3-devel</Dependency>
         </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1">spirv-tools-gcc11.patch</Patch> -->
+        </Patches>
     </Source>
 
+    <Package>
+        <Name>spirv-tools</Name>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libSPIRV-Tools*</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>spirv-tools-32bit</Name>
+        <BuildType>emul32</BuildType>
+        <PartOf>emul32</PartOf>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
      <Package>
-        <Name>spirv-headers</Name>
+        <Name>spirv-tools-devel</Name>
+         <RuntimeDependencies>
+            <Dependency release="current">spirv-tools</Dependency>
+        </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/lib/cmake</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+            <Path fileType="library">/usr/lib/cmake</Path>
         </Files>
     </Package>
 
     <History>
-        <Update release="20">
-            <Date>2025-04-14</Date>
-            <Version>1.4.309.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
         <Update release="19">
             <Date>2025-01-14</Date>
-            <Version>1.4.304.0</Version>
+            <Version>2024.4</Version>
             <Comment>Version bump.</Comment>
             <Name>Pisi Linux Community</Name>
             <Email>admin@pisilinux.org</Email>
         </Update>
         <Update release="18">
-            <Date>2024-12-29</Date>
-            <Version>1.3.296.0</Version>
+            <Date>2024-07-02</Date>
+            <Version>2024.2</Version>
             <Comment>Version bump.</Comment>
             <Name>Pisi Linux Community</Name>
             <Email>admin@pisilinux.org</Email>
         </Update>
         <Update release="17">
-            <Date>2024-07-02</Date>
-            <Version>1.3.283.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="16">
             <Date>2024-03-18</Date>
-            <Version>1.3.275.0</Version>
+            <Version>2023.6</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
-        <Update release="15">
+        <Update release="16">
             <Date>2023-12-04</Date>
             <Version>1.3.268.0</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
-        <Update release="14">
+        <Update release="15">
             <Date>2023-09-26</Date>
             <Version>1.3.261.0</Version>
+            <Comment>Ver. Bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
+        <Update release="14">
+            <Date>2023-04-01</Date>
+            <Version>2023.2</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="13">
-            <Date>2023-04-01</Date>
-            <Version>1.3.243.0</Version>
+            <Date>2023-03-14</Date>
+            <Version>2023.1</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="12">
-            <Date>2023-03-14</Date>
-            <Version>1.3.239.0</Version>
+            <Date>2022-11-27</Date>
+            <Version>2022.4</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="11">
-            <Date>2022-11-27</Date>
-            <Version>1.3.231.1</Version>
+            <Date>2022-09-26</Date>
+            <Version>2022.3</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="10">
-            <Date>2022-09-26</Date>
-            <Version>1.3.224.1</Version>
-            <Comment>Version bump.</Comment>
+            <Date>2022-07-23</Date>
+            <Version>2022.2</Version>
+            <Comment>Rebuild.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="9">
-            <Date>2022-07-23</Date>
-            <Version>1.3.216.0</Version>
+            <Date>2022-06-19</Date>
+            <Version>2022.2</Version>
             <Comment>Rebuild.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="8">
-            <Date>2022-06-19</Date>
-            <Version>1.3.216.0</Version>
+            <Date>2022-04-21</Date>
+            <Version>2022.2</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="7">
-            <Date>2022-04-21</Date>
-            <Version>1.3.211.0</Version>
+            <Date>2021-12-17</Date>
+            <Version>2021.4</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="6">
-            <Date>2021-12-17</Date>
-            <Version>1.5.4</Version>
-            <Comment>Git Version.</Comment>
+            <Date>2021-10-24</Date>
+            <Version>2021.3</Version>
+            <Comment>Rebuild.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="5">
             <Date>2021-08-29</Date>
-            <Version>1.5.4</Version>
-            <Comment>Git Version.</Comment>
+            <Version>2021.3</Version>
+            <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="4">
-            <Date>2021-08-29</Date>
-            <Version>1.5.4</Version>
-            <Comment>Git Version.</Comment>
+            <Date>2021-06-27</Date>
+            <Version>2021.2</Version>
+            <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="3">
-            <Date>2021-06-28</Date>
-            <Version>1.5.4</Version>
-            <Comment>Git Version.</Comment>
+            <Date>2021-02-01</Date>
+            <Version>2020.6</Version>
+            <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="2">
-            <Date>2021-02-01</Date>
-            <Version>1.5.4</Version>
+            <Date>2020-07-06</Date>
+            <Version>2020.3</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="1">
-            <Date>2020-07-06</Date>
-            <Version>1.5.3</Version>
+            <Date>2020-01-11</Date>
+            <Version>2019.4</Version>
             <Comment>First release</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
+            <Name>Idris Kalp</Name>
+            <Email>idriskalp@gmail.com</Email>
         </Update>
     </History>
 </PISI>

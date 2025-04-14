@@ -17,8 +17,8 @@ def setup():
 	if get.buildTYPE() == "emul32":
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib32 \
 			                  -DBUILD_SHARED_LIBS=ON \
-			                  -DALLOW_EXTERNAL_SPIRV_TOOLS=ON \
-			                  -DENABLE_GLSLANG_BINARIES=OFF")
+			                  -DALLOW_EXTERNAL_SPIRV_TOOLS=ON")
+			                  # -DENABLE_GLSLANG_BINARIES=OFF
 	else:
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
 							  -DALLOW_EXTERNAL_SPIRV_TOOLS=ON \
