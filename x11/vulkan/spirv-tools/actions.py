@@ -23,8 +23,8 @@ def setup():
 						      -DSPIRV_TOOLS_BUILD_STATIC=OFF \
 						      -DSPIRV_WERROR=Off \
 						      -DSPIRV-Headers_SOURCE_DIR=/usr \
-						      -DSKIP_SPIRV_TOOLS_INSTALL=OFF \
 						      -DCMAKE_INSTALL_BINDIR=bin32")
+							# -DSKIP_SPIRV_TOOLS_INSTALL=OFF \
 	else:
 		cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
 							  -DCMAKE_BUILD_TYPE=Release \
