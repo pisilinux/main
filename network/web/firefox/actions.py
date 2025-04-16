@@ -24,7 +24,8 @@ shelltools.export("SHELL", "/bin/sh")
 shelltools.export("PYTHON", "/usr/bin/python3")
 # shelltools.export("MACH_USE_SYSTEM_PYTHON", "1")
 shelltools.system("export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE='system'")
-shelltools.system("export MOZBUILD_STATE_PATH='mozbuild'")
+# shelltools.system("export MOZBUILD_STATE_PATH='mozbuild'")
+shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 shelltools.system("export MOZ_NOSPAM=1")
 
 def setup():
