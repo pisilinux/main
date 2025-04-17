@@ -20,7 +20,6 @@ def setup():
                -Dgallium-va=enabled \
                -Dgallium-xa=enabled \
                -Dgallium-nine=true \
-               -Dvulkan-layers=device-select,intel-nullhw,overlay \
                -Dvideo-codecs=all \
                -Dshared-glapi=enabled \
                -Dgles1=enabled \
@@ -42,6 +41,7 @@ def setup():
         # shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
         options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled \
                      -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio \
+                     -Dvulkan-layers=device-select,intel-nullhw,overlay \
                      -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink \
                    "
         #shelltools.export("CC", "clang -m32")
@@ -60,7 +60,7 @@ def setup():
         options += " -Dgallium-opencl=icd -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
-                             -Dvulkan-layers=screenshot,vram-report-limit \
+                             -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
                              -Dvulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
     
