@@ -6,11 +6,16 @@
 
 from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
+
 
 def build():
-    python3modules.compile()
+    shelltools.system("python3 -m build -nw")
+    # python3modules.compile()
 
 def install():
-    python3modules.install()
+    shelltools.system("python3 -m installer --destdir=%s dist/*.whl" % get.installDIR())
+    # python3modules.install()
 
     # pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")

@@ -7,12 +7,14 @@
 from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
+
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
 
 def build():
-    #shelltools.system("""sed -i "s/ '--ignore-installed',//" pep517/envbuild.py""")
-    python3modules.compile(pyVer="3")
+    python3modules.compile()
 
 def install():
-    python3modules.install(pyVer="3")
+    python3modules.install()
 
-    pisitools.dodoc("LICENSE", "README*")
+    # pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")
