@@ -1,24 +1,31 @@
 # -*- coding: utf-8 -*-
-#!/usr/bin/env python
+#!/usr/bin/python
 
 import os
 from comar.service import *
 
-serviceType = "server"
+serviceType = "local"
+serviceDefault = "off"
+serviceConf = "clamd"
 serviceDesc = _({"en": "Clam Anti-Virus Daemon",
                  "tr": "Clam Antivirüs Servisi"})
+
+PIDFILE = "/var/run/clamd.pid"
 
 @synchronized
 def start():
     startService(command="/usr/sbin/clamd",
-                 pidfile="/run/clamd.pid",
-                 donotify=False)
-    time.sleep(4)
+                 args="--config-file=/etc/clamav/clamd.conf %s" % config.get("CLIOPTS"),
+                 pidfile=PIDFILE,
+                 detach=True,
+                 donotify=True)
 
 @synchronized
 def stop():
     stopService(command="/usr/sbin/clamd",
+                pidfile=PIDFILE,
                 donotify=True)
+    if os.path.isfile(PIDFILE): os.unlink(PIDFILE)
 
 def status():
-    return isServiceRunning("/run/clamd.pid")
+    return isServiceRunning(PIDFILE)

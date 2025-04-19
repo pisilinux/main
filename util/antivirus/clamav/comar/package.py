@@ -1,8 +1,17 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#!/usr/bin/python
 
 import os
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
-    os.system("/bin/chown clamav:clamav /var/lib/clamav -R")
-    #os.system("/bin/chown clamav:clamav /run/clamav -R")
-    #os.system("/bin/chown clamav:clamav /var/log/clamav -R")
+    try:
+        os.system("/usr/sbin/useradd -r -k /dev/null -m -b /var/lib -U clamav")
+    except:
+        pass
+
+def postRemove():
+    try:
+        os.system("/usr/sbin/userdel -r clamav")
+        os.system("/usr/sbin/groupdel clamav")
+    except:
+        pass

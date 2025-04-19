@@ -1,0 +1,125 @@
+diff --git a/src/highlighter.cpp b/src/highlighter.cpp
+index 7b8bf23..bdc4732 100644
+--- a/src/highlighter.cpp
++++ b/src/highlighter.cpp
+@@ -29,7 +29,7 @@ highlighter::highlighter(QTextDocument * parent) : QSyntaxHighlighter(parent)
+ 
+      singleLineCommentFormat.setForeground(Qt::blue);
+      singleLineCommentFormat.setBackground(Qt::white);
+-     rule.pattern = QRegExp("^Downloading.*|^ClamInotif:|.-> .*|^/.*|^Database updated.*|^ClamAV update process started.*|^---.*|.Testing database:*|.Database Test passed.");
++     rule.pattern = QRegularExpression("^Downloading.*|^ClamInotif:|.-> .*|^/.*|^Database updated.*|^ClamAV update process started.*|^---.*|.Testing database:*|.Database Test passed.");
+      singleLineCommentFormat.setFontWeight(QFont::Normal);
+      rule.format = singleLineCommentFormat;
+      highlightingRules.append(rule);
+@@ -37,52 +37,55 @@ highlighter::highlighter(QTextDocument * parent) : QSyntaxHighlighter(parent)
+      singleLineCommentFormat.setForeground(QColor(0x4f,0x7e,0x8a,0xff));
+      singleLineCommentFormat.setBackground(Qt::white);
+      singleLineCommentFormat.setFontWeight(QFont::Bold);
+-     rule.pattern = QRegExp("^Known viruses:.|^Engine version:.|^Data scanned:.|^Data read:.|^Time:.|^Start Date:.|^End Date:.");
++     rule.pattern = QRegularExpression("^Known viruses:.|^Engine version:.|^Data scanned:.|^Data read:.|^Time:.|^Start Date:.|^End Date:.");
+      rule.format = singleLineCommentFormat;
+      highlightingRules.append(rule);
+ 
+      singleLineCommentFormat.setForeground(Qt::darkGreen);
+      singleLineCommentFormat.setBackground(Qt::white);
+      singleLineCommentFormat.setFontWeight(QFont::Normal);
+-     rule.pattern = QRegExp("LOCAL:|OLE2:|Phishing:|Heuristic:|Structured:|Local:|Limits:|.enabled|.disabled|.watching .*|^daily.cvd.*|^daily.cld.*|^bytecode.cvd.*|^main.cvd.*|^freshclam deamon.*|. OK|^Scanned directories:.|^Scanned files:.|^Infected files: 0");
++     rule.pattern = QRegularExpression("LOCAL:|OLE2:|Phishing:|Heuristic:|Structured:|Local:|Limits:|.enabled|.disabled|.watching .*|^daily.cvd.*|^daily.cld.*|^bytecode.cvd.*|^main.cvd.*|^freshclam deamon.*|. OK|^Scanned directories:.|^Scanned files:.|^Infected files: 0");
+      rule.format = singleLineCommentFormat;
+      highlightingRules.append(rule);
+ 
+      singleLineCommentFormat.setForeground(Qt::darkYellow);
+      singleLineCommentFormat.setBackground(Qt::white);
+      singleLineCommentFormat.setFontWeight(QFont::Normal);
+-     rule.pattern = QRegExp(".Pid file removed.|. Started at.*|. Stopped at.*|.Socket file removed.");
++     rule.pattern = QRegularExpression(".Pid file removed.|. Started at.*|. Stopped at.*|.Socket file removed.");
+      rule.format = singleLineCommentFormat;
+      highlightingRules.append(rule);
+ 
+      singleLineCommentFormat.setForeground(Qt::red);
+      singleLineCommentFormat.setBackground(Qt::white);
+      singleLineCommentFormat.setFontWeight(QFont::Normal);
+-     rule.pattern = QRegExp("^ERROR: ClamCom:|.Empty file|^WARN.*|.FOUND *|.ERROR:.*|.WARNING:.*|^Can't connect to port.*|.Access denied|^Infected files:.|^Total errors:.*");
++     rule.pattern = QRegularExpression("^ERROR: ClamCom:|.Empty file|^WARN.*|.FOUND *|.ERROR:.*|.WARNING:.*|^Can't connect to port.*|.Access denied|^Infected files:.|^Total errors:.*");
+      rule.format = singleLineCommentFormat;
+      highlightingRules.append(rule);
+ 
+      multiLineCommentFormat.setForeground(Qt::red);
+      singleLineCommentFormat.setBackground(Qt::white);
+      singleLineCommentFormat.setFontWeight(QFont::Normal);
+-     commentStartExpression = QRegExp("START");
+-     commentEndExpression = QRegExp("ENDE");
++     commentStartExpression = QRegularExpression("START");
++     commentEndExpression = QRegularExpression("ENDE");
+ 
+ }
+ 
+ void highlighter::highlightBlock(const QString &text)
+  {
+      foreach (const HighlightingRule &rule, highlightingRules) {
+-         QRegExp expression(rule.pattern);
+-         int index = expression.indexIn(text);
+-         while (index >= 0) {
+-             int length = expression.matchedLength();
++         QRegularExpression expression(rule.pattern);
++         QRegularExpressionMatchIterator iterator = expression.globalMatch(text);
++
++         while (iterator.hasNext()) {
++             QRegularExpressionMatch match = iterator.next();
++             int length = match.capturedLength();
++             int index = match.capturedStart();
+              setFormat(index, length, rule.format);
+-             index = expression.indexIn(text, index + length);
+          }
+      }
+-     
+-     setCurrentBlockState(0);
++
++// Es scheint, als wäre der restliche Block obsolet ....
++/*     setCurrentBlockState(0);
+ 
+      int startIndex = 0;
+      if (previousBlockState() != 1) startIndex = commentStartExpression.indexIn(text);
+@@ -94,10 +97,9 @@ void highlighter::highlightBlock(const QString &text)
+              setCurrentBlockState(1);
+              commentLength = text.length() - startIndex;
+          } else {
+-             commentLength = endIndex - startIndex
+-                             + commentEndExpression.matchedLength();
++             commentLength = endIndex - startIndex + commentEndExpression.matchedLength();
+          }
+          startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
+-    }
++    }*/
+ }
+ //
+diff --git a/src/highlighter.h b/src/highlighter.h
+index 93782c9..b7aa26f 100644
+--- a/src/highlighter.h
++++ b/src/highlighter.h
+@@ -22,6 +22,7 @@
+ #define HIGHLIGHTER_H
+ //
+ #include <QSyntaxHighlighter>
++#include <QRegularExpression>
+ //
+ class highlighter : public QSyntaxHighlighter
+ {
+@@ -34,14 +35,13 @@ public:
+ private:
+      struct HighlightingRule
+      {
+-         QRegExp pattern;
++         QRegularExpression pattern;
+          QTextCharFormat format;
+      };
+-
+      QVector<HighlightingRule> highlightingRules;
+ 
+-     QRegExp commentStartExpression;
+-     QRegExp commentEndExpression;
++     QRegularExpression commentStartExpression;
++     QRegularExpression commentEndExpression;
+ 
+      QTextCharFormat keywordFormat;
+      QTextCharFormat classFormat;

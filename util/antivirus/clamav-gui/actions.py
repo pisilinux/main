@@ -2,22 +2,18 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import qt5
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import autotools
-from pisi.actionsapi import get
-
-
-#WorkDir = "ClamAV-GUI/"
+from pisi.actionsapi import shelltools, autotools, pisitools, get
 
 def setup():
-    shelltools.system("qmake -r PREFIX=/usr clamav-gui.pro")
-    
+    shelltools.system("sed -i '/^documents.*doc/s/ClamAV-GUI/clamav-gui/' clamav-gui.pro")
+    shelltools.system("qmake-qt6 PREFIX=/usr clamav-gui.pro")
+
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("INSTALL_ROOT=%s" % get.installDIR())
+
+    pisitools.dodoc("LICENSE")
