@@ -5,32 +5,33 @@
         <Name>clamav</Name>
         <Homepage>https://www.clamav.net/</Homepage>
         <Packager>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
         </Packager>
-        <License>GPL-2</License>
+        <License>GPLv2</License>
         <IsA>app:console</IsA>
-        <Summary>Clam Antivirus software.</Summary>
+        <PartOf>util.antivirus</PartOf>
+        <Summary>A GPL virus scanner.</Summary>
         <Description>Clam AntiVirus is a GPL anti-virus toolkit for UNIX.</Description>
-        <Archive sha1sum="09781ed9c3d7dcff5ea79783d76d6ee4344b5a48" type="targz">https://www.clamav.net/downloads/production/clamav-1.2.1.tar.gz</Archive>
+        <Archive sha1sum="bb28848206df9014c9e3e5d89219cd953c685629" type="targz">https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.4.2/clamav-1.4.2.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>rust</Dependency>
             <Dependency>cmake</Dependency>
             <Dependency>ninja</Dependency>
-            <!-- <Dependency>libmilter</Dependency> -->
             <Dependency>curl-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>check-devel</Dependency>
             <Dependency>json-c-devel</Dependency>
+            <Dependency>rust-bindgen</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
             <Dependency>python3-devel</Dependency>
             <Dependency>libxml2-devel</Dependency>
             <Dependency>libpcre2-devel</Dependency>
-            <Dependency>libiconv-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">daemon_confs.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
+            <Patch level="1">config.patch</Patch>
         </Patches>
     </Source>
 
@@ -46,45 +47,23 @@
             <Dependency>ncurses</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>libpcre2</Dependency>
-            <Dependency>libiconv</Dependency>
-            <!-- <Dependency>libmilter</Dependency> -->
         </RuntimeDependencies>
         <Files>
-            <Path fileType="config">/etc/clamav</Path>
+            <Path fileType="config">/etc</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/sbin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/run/clamav</Path>
-            <Path fileType="data">/var/lib/clamav</Path>
-            <Path fileType="data">/var/log/clamav</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/var</Path>
         </Files>
         <AdditionalFiles>
-            <!-- <AdditionalFile owner="root" permission="0644" target="."></AdditionalFile> -->
+            <AdditionalFile permission="644" owner="root" target="/etc/conf.d/clamd">clamd.conf</AdditionalFile>
+            <AdditionalFile permission="644" owner="root" target="/etc/conf.d/freshclam">freshclam.conf</AdditionalFile>
         </AdditionalFiles>
         <Provides>
             <COMAR script="package.py">System.Package</COMAR>
-            <COMAR script="clamd.py">System.Service</COMAR>
-        </Provides>
-    </Package>
-
-    <Package>
-        <Name>freshclam</Name>
-        <RuntimeDependencies>
-            <Dependency release="current">clamav</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="config">/etc/clamav/freshclam.conf</Path>
-            <Path fileType="executable">/usr/bin/freshclam</Path>
-            <Path fileType="data">/usr/lib/libfreshclam.so</Path>
-            <Path fileType="data">/usr/lib/libfreshclam.so.2</Path>
-            <Path fileType="data">/usr/lib/libfreshclam.so.2.0.2</Path>
-            <Path fileType="man">/usr/share/man/man1/freshclam.1</Path>
-            <Path fileType="man">/usr/share/man/man5/freshclam.conf.5</Path>
-        </Files>
-        <Provides>
-            <COMAR script="freshclam.py">System.Service</COMAR>
+            <COMAR script="clamd.py" name="clamd">System.Service</COMAR>
+            <COMAR script="freshclam.py" name="freshclam">System.Service</COMAR>
         </Provides>
     </Package>
 
@@ -94,12 +73,20 @@
             <Dependency release="current">clamav</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="executable">/usr/bin/clamav-config</Path>
             <Path fileType="header">/usr/include</Path>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="9">
+            <Date>2025-04-19</Date>
+            <Version>1.4.2</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="8">
             <Date>2023-12-19</Date>
             <Version>1.2.1</Version>
