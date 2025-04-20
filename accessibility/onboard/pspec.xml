@@ -1,7 +1,9 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>onboard</Name>
-        <Homepage>https://launchpad.net/onboard</Homepage>
+        <Homepage>https://github.com/dr-ni/onboard</Homepage>
         <Packager>
             <Name>Berk Çakar</Name>
             <Email>berk2238@hotmail.com</Email>
@@ -9,30 +11,27 @@
         <License>GPLv3</License>
         <Summary>On-screen keyboard useful on tablet PCs or for mobility impaired users</Summary>
         <Description>On-screen keyboard useful on tablet PCs or for mobility impaired users</Description>
+        <Archive sha1sum="e688c37850a91a6c7793421cee69a23fdf44ec28" type="targz">https://github.com/dr-ni/onboard/archive/1.4.2.2/onboard-1.4.2.2.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>intltool</Dependency>
-            <Dependency>eudev-devel</Dependency>
-            <Dependency>python3-devel</Dependency>
-            <Dependency>libXtst-devel</Dependency>
-            <Dependency>dconf-devel</Dependency>
-            <Dependency>dbus-python</Dependency>
             <Dependency>gtk3-devel</Dependency>
+            <Dependency>eudev-devel</Dependency>
+            <Dependency>dconf-devel</Dependency>
+            <Dependency>python3-devel</Dependency>
             <Dependency>hunspell-devel</Dependency>
-            <Dependency>iso-codes-devel</Dependency>
-            <Dependency>libcanberra-devel</Dependency>
             <Dependency>libxkbfile-devel</Dependency>
-            <Dependency>python-cairo-devel</Dependency>
-            <Dependency>python-pygobject-devel</Dependency>
+            <Dependency>libcanberra-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
             <Dependency>python3-distutils-extra</Dependency>
         </BuildDependencies>
-        <Archive sha1sum="5e6780b2bfdfdb651d584161f761325e63ad0448" type="targz">https://launchpad.net/onboard/1.4/1.4.1/+download/onboard-1.4.1.tar.gz</Archive>
         <Patches>
-            <Patch level="1">00-Fix-build-with-musl.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
+            <Patch level="1">00-Fix-build-with-musl.patch</Patch> <!-- What? pisilinux is now musl-based? -->
         </Patches>
     </Source>
+
     <Package>
         <Name>onboard</Name>
-        <Summary>On-screen keyboard useful on tablet PCs or for mobility impaired users</Summary>
         <RuntimeDependencies>
             <Dependency>gtk3</Dependency>
             <Dependency>cairo</Dependency>
@@ -43,28 +42,26 @@
             <Dependency>libX11</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libXtst</Dependency>
+            <Dependency>hunspell</Dependency>
             <Dependency>libxkbfile</Dependency>
             <Dependency>libcanberra</Dependency>
-            <Dependency>hunspell</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/etc</Path>
+            <Path fileType="config">/etc</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/usr/share/applications</Path>
-            <Path fileType="data">/usr/share/dbus-1</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/glib-2.0</Path>
-            <Path fileType="data">/usr/share/gnome-shell</Path>
-            <Path fileType="man">/usr/share/help</Path>
-            <Path fileType="data">/usr/share/icons</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="data">/usr/share/onboard</Path>
-            <Path fileType="data">/usr/share/sounds</Path>
+            <Path fileType="data">/usr/share</Path>
         </Files>
     </Package>
+
     <History>
+        <Update release="4">
+            <Date>2025-04-20</Date>
+            <Version>1.4.2.2</Version>
+            <Comment>New upstream.</Comment>
+            <Name>Berk Çakar</Name>
+            <Email>berk2238@hotmail.com</Email>
+        </Update>
         <Update release="3">
             <Date>2023-11-03</Date>
             <Version>1.4.1</Version>
