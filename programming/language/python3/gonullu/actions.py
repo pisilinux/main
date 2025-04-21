@@ -13,6 +13,6 @@ def build():
 
 def install():
     pythonmodules.install(pyVer="3")
-    pisitools.dosed("%s/usr/bin/gonullu" % get.installDIR(), "#!python", "#!/usr/bin/env python3")
+    # pisitools.dosed("%s/usr/bin/gonullu" % get.installDIR(), "#!python", "#!/usr/bin/env python3")
 
     pisitools.dodoc("LICENSE", "README*")
