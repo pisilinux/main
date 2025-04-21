@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde6
 
 def setup():
-    kde6.configure()
+    kde6.configure("DFETCH_OTIO=OFF")
 
 def build():
     kde6.make()
