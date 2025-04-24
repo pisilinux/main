@@ -21,6 +21,9 @@ def setup():
                           --libexecdir=/usr/lib/elogind \
                           -Dudevrulesdir=/lib/udev/rules.d \
                           -Dpamconfdir=/etc/pam.d \
+                          -Dutmp=true \
+                          -Dpam=true \
+                          -Ddbus=true \
                           -Dpolkit=true \
                           -Dsplit-bin=true \
                           -Dsplit-usr=false \
@@ -32,7 +35,8 @@ def setup():
                           -Dpoweroff-path=/sbin/poweroff \
                           -Ddocdir=/usr/share/doc/elogind \
                           -Ddefault-kill-user-processes=false \
-                          -Ddbuspolicydir=/usr/share/dbus-1/system.d")
+                          -Ddbuspolicydir=/etc/dbus-1/system.d \
+                          -Dnologin-path='/sbin/nologin'")
                               # -Drootlibdir=/usr/lib \
                             # -Drootlibexecdir=/usr/lib/elogind \
 
