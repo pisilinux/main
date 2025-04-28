@@ -1,0 +1,237 @@
+diff --git a/src/backends/drm/drm_commit_thread.cpp b/src/backends/drm/drm_commit_thread.cpp
+index 2b23b59bb35..49a2085ae9e 100644
+--- a/src/backends/drm/drm_commit_thread.cpp
++++ b/src/backends/drm/drm_commit_thread.cpp
+@@ -301,10 +301,10 @@ DrmCommitThread::~DrmCommitThread()
+             m_pong.notify_all();
+         }
+         m_thread->wait();
+-        if (m_committed) {
+-            m_committed->setDefunct();
+-            m_gpu->addDefunctCommit(std::move(m_committed));
+-        }
++    }
++    if (m_committed) {
++        m_committed->setDefunct();
++        m_gpu->addDefunctCommit(std::move(m_committed));
+     }
+ }
+ 
+diff --git a/src/layershellv1window.cpp b/src/layershellv1window.cpp
+index 0e044fcf183..b6e18dedd61 100644
+--- a/src/layershellv1window.cpp
++++ b/src/layershellv1window.cpp
+@@ -55,8 +55,8 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
+     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
+             this, &LayerShellV1Window::destroyWindow);
+ 
+-    connect(output, &Output::enabledChanged,
+-            this, &LayerShellV1Window::handleOutputEnabledChanged);
++    connect(workspace(), &Workspace::outputRemoved,
++            this, &LayerShellV1Window::handleOutputRemoved);
+ 
+     connect(shellSurface->surface(), &SurfaceInterface::sizeChanged,
+             this, &LayerShellV1Window::handleSizeChanged);
+@@ -338,9 +338,9 @@ void LayerShellV1Window::handleAcceptsFocusChanged()
+     }
+ }
+ 
+-void LayerShellV1Window::handleOutputEnabledChanged()
++void LayerShellV1Window::handleOutputRemoved(Output *output)
+ {
+-    if (!m_desiredOutput->isEnabled()) {
++    if (output == m_desiredOutput) {
+         closeWindow();
+         destroyWindow();
+     }
+
+diff --git a/src/layershellv1window.h b/src/layershellv1window.h
+index 923b5a6b4e0..9cdaa1d56a9 100644
+--- a/src/layershellv1window.h
++++ b/src/layershellv1window.h
+@@ -66,7 +66,7 @@ private:
+     void handleUnmapped();
+     void handleCommitted();
+     void handleAcceptsFocusChanged();
+-    void handleOutputEnabledChanged();
++    void handleOutputRemoved(Output *output);
+     void scheduleRearrange();
+     void activateScreenEdge();
+     void deactivateScreenEdge();
+
+diff --git a/src/layershellv1window.cpp b/src/layershellv1window.cpp
+index b6e18dedd61..2282ac147b8 100644
+--- a/src/layershellv1window.cpp
++++ b/src/layershellv1window.cpp
+@@ -204,7 +204,9 @@ void LayerShellV1Window::destroyWindow()
+     }
+     m_shellSurface->disconnect(this);
+     m_shellSurface->surface()->disconnect(this);
+-    m_desiredOutput->disconnect(this);
++
++    disconnect(workspace(), &Workspace::outputRemoved,
++               this, &LayerShellV1Window::handleOutputRemoved);
+ 
+     markAsDeleted();
+     Q_EMIT closed();
+
+diff --git a/src/core/renderloop.cpp b/src/core/renderloop.cpp
+index f2ef3ea213b..d997e2bf737 100644
+--- a/src/core/renderloop.cpp
++++ b/src/core/renderloop.cpp
+@@ -263,7 +263,7 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer, OutputLayer *ou
+     }
+     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
+     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
+-    if ((vrr || tearing) && workspace()->activeWindow() && d->output) {
++    if ((vrr || tearing) && workspace() && workspace()->activeWindow() && d->output) {
+         Window *const activeWindow = workspace()->activeWindow();
+         if ((item || layer || outputLayer) && activeWindowControlsVrrRefreshRate() && item != activeWindow->surfaceItem()) {
+             d->delayedVrrTimer.start();
+diff --git a/src/events.cpp b/src/events.cpp
+index 6f73c712631..b3afa19ead6 100644
+--- a/src/events.cpp
++++ b/src/events.cpp
+@@ -658,7 +658,7 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
+         m_surfaceSerial = (uint64_t(e->data.data32[1]) << 32) | e->data.data32[0];
+         if (auto w = waylandServer()) {
+             if (XwaylandSurfaceV1Interface *xwaylandSurface = w->xwaylandShell()->findSurface(m_surfaceSerial)) {
+-                setSurface(xwaylandSurface->surface());
++                associate(xwaylandSurface);
+             }
+         }
+     }
+
+diff --git a/src/wayland_server.cpp b/src/wayland_server.cpp
+index 1278713b8d1..6bd34758442 100644
+--- a/src/wayland_server.cpp
++++ b/src/wayland_server.cpp
+@@ -350,7 +350,7 @@ bool WaylandServer::init()
+             return window->surfaceSerial() == surface->serial();
+         });
+         if (window) {
+-            window->setSurface(surface->surface());
++            window->associate(surface);
+             return;
+         }
+ 
+@@ -358,7 +358,7 @@ bool WaylandServer::init()
+             return window->surfaceSerial() == surface->serial();
+         });
+         if (unmanaged) {
+-            unmanaged->setSurface(surface->surface());
++            unmanaged->associate(surface);
+             return;
+         }
+     });
+
+diff --git a/src/x11window.cpp b/src/x11window.cpp
+index 1a5c4c16fb2..ab9410bc7a9 100644
+--- a/src/x11window.cpp
++++ b/src/x11window.cpp
+@@ -33,6 +33,7 @@
+ #include "tiles/tilemanager.h"
+ #include "virtualdesktops.h"
+ #include "wayland/surface.h"
++#include "wayland/xwaylandshell_v1.h"
+ #include "wayland_server.h"
+ #include "workspace.h"
+ #include <KDecoration3/DecoratedWindow>
+@@ -588,11 +589,6 @@ bool X11Window::track(xcb_window_t w)
+     switch (kwinApp()->operationMode()) {
+     case Application::OperationModeWayland:
+         // The wayland surface is associated with the override-redirect window asynchronously.
+-        if (surface()) {
+-            associate();
+-        } else {
+-            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
+-        }
+         break;
+     case Application::OperationModeX11:
+         // We have no way knowing whether the override-redirect window can be painted. Mark it
+@@ -1207,11 +1203,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
+     switch (kwinApp()->operationMode()) {
+     case Application::OperationModeWayland:
+         // The wayland surface is associated with the window asynchronously.
+-        if (surface()) {
+-            associate();
+-        } else {
+-            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
+-        }
+         connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
+         break;
+     case Application::OperationModeX11:
+@@ -5027,8 +5018,10 @@ void X11Window::updateWindowPixmap()
+     }
+ }
+ 
+-void X11Window::associate()
++void X11Window::associate(XwaylandSurfaceV1Interface *shellSurface)
+ {
++    setSurface(shellSurface->surface());
++
+     if (surface()->isMapped()) {
+         if (m_syncRequest.acked) {
+             finishSync();
+
+diff --git a/src/x11window.h b/src/x11window.h
+index 797f600d4fb..d97f93764c1 100644
+--- a/src/x11window.h
++++ b/src/x11window.h
+@@ -39,6 +39,7 @@ namespace KWin
+ {
+ 
+ class KillPrompt;
++class XwaylandSurfaceV1Interface;
+ 
+ /**
+  * @brief Defines Predicates on how to search for a Client.
+@@ -82,6 +83,8 @@ public:
+     explicit X11Window();
+     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
+ 
++    void associate(XwaylandSurfaceV1Interface *shellSurface);
++
+     xcb_window_t frameId() const;
+     xcb_window_t window() const;
+     xcb_window_t wrapperId() const;
+@@ -439,7 +442,6 @@ private:
+ 
+     QWindow *findInternalWindow() const;
+     void checkOutput();
+-    void associate();
+     void handleXwaylandScaleChanged();
+     void handleCommitted();
+
+diff --git a/src/x11window.cpp b/src/x11window.cpp
+index ab9410bc7a..218bc76af9 100644
+--- a/src/x11window.cpp
++++ b/src/x11window.cpp
+@@ -5020,6 +5020,10 @@ void X11Window::updateWindowPixmap()
+ 
+ void X11Window::associate(XwaylandSurfaceV1Interface *shellSurface)
+ {
++    if (surface()) {
++        disconnect(surface(), &SurfaceInterface::committed, this, &X11Window::handleCommitted);
++    }
++
+     setSurface(shellSurface->surface());
+ 
+     if (surface()->isMapped()) {
+
+diff --git a/src/opengl/eglcontext.cpp b/src/opengl/eglcontext.cpp
+index 48017391281..f1f9a4e3fa6 100644
+--- a/src/opengl/eglcontext.cpp
++++ b/src/opengl/eglcontext.cpp
+@@ -71,8 +71,8 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
+ 
+ EglContext::~EglContext()
+ {
+-    makeCurrent();
+-    if (m_vao) {
++    const bool current = makeCurrent();
++    if (m_vao && current) {
+         glDeleteVertexArrays(1, &m_vao);
+     }
+     m_shaderManager.reset();
+
