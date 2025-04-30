@@ -37,7 +37,7 @@ def install():
     shelltools.system('sed -i "s@system-local-login@system-login@" ' + get.installDIR() + "/etc/pam.d/sddm-autologin")
 
     # pisitools.insinto("/usr/share/sddm/themes/Sweet-Cat", "../Sweet-Cat-0.1/*")
-    pisitools.insinto("/usr/share/sddm/themes/pisilinux24", "sddm-pisilinux24-1.1/*")
+    pisitools.insinto("/usr/share/sddm/themes/pisilinux24", "sddm-pisilinux24-1.2/*")
     # pisitools.dosym("/usr/bin/sddm-greeter-qt6", "/usr/bin/sddm-greeter")
 
     pisitools.dodoc("LICENSE")
