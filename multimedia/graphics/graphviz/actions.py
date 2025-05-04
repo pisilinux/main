@@ -18,6 +18,7 @@ j = ''.join([
 def setup():
     shelltools.export("LIBPOSTFIX", "/")
     shelltools.export("CONFIG_SHELL", "/bin/bash")
+    shelltools.system("sh ./autogen.sh NOCONFIG")
     autotools.configure(j)
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
