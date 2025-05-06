@@ -12,7 +12,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 # jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
-jobs = subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+# jobs = subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+jobs = subprocess.check_output("nproc 2>/dev/null", shell=True).decode("utf-8").rstrip("\n")
+# jobs = "-j" + subprocess.check_output("nproc 2>/dev/null", shell=True).decode().strip()
 
 
 shelltools.export("ALT_PARALLEL_COMPILE_JOBS", jobs)
@@ -26,8 +28,7 @@ def setup():
     shelltools.export("CXX", "g++")
     #shelltools.system('export DISTRIBUTION_PATCHES="patches/fontconfig-paths.diff \
                                #patches/openjdk7_nonreparenting-wm.diff"')
-                               #patches/giflib_5.1.diff 
-                             
+                               #patches/giflib_5.1.diff
     autotools.rawConfigure("\
                             --disable-tests \
                             --disable-Werror \
@@ -39,9 +40,9 @@ def setup():
                             --enable-bootstrap \
                             --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
-                            --with-pkgversion='PisiLinux build 8.u432_3.33.0' \
+                            --with-vendor-name='PisiLinux' \
+                            --with-pkgversion='PisiLinux build 8u.452_3.35.0' \
                            " % jobs.replace("-j", ""))
-    
 
 def build():
     shelltools.system("make JOBS=%s" % jobs)
