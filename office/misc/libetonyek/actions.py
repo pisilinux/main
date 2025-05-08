@@ -13,7 +13,7 @@ i = ''.join([
     ' --disable-werror',
     ' --disable-static',
     ' --without-docs',
-    ' --with-mdds=2.1 '
+    ' --with-mdds=3.0 '
     ])
 
 def setup():
