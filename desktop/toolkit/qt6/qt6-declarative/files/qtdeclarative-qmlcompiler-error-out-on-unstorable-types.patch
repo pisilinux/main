@@ -1,0 +1,128 @@
+From e5d9bcf70ae704569e091ee0ee93561e01fefe38 Mon Sep 17 00:00:00 2001
+From: Ulf Hermann <ulf.hermann@qt.io>
+Date: Fri, 11 Apr 2025 17:00:52 +0200
+Subject: [PATCH] QmlCompiler: Error out on unstorable types
+
+We already do this for return types, but it's fatal on any type.
+
+Fixes: QTBUG-135342
+Change-Id: I7aee2a19ffcd39d2707eceb34b5073057d8b5ebb
+Reviewed-by: Olivier De Cannière <olivier.decanniere@qt.io>
+(cherry picked from commit 0bd329a0b42b4c8c3bf77c201f3d8b187467ef02)
+---
+
+diff --git a/src/qmlcompiler/qqmljsstorageinitializer.cpp b/src/qmlcompiler/qqmljsstorageinitializer.cpp
+index 4123716..60f46fa 100644
+--- a/src/qmlcompiler/qqmljsstorageinitializer.cpp
++++ b/src/qmlcompiler/qqmljsstorageinitializer.cpp
+@@ -35,17 +35,25 @@
+         if (!content.isValid() || !content.storage().isNull())
+             return;
+ 
+-        const QQmlJSRegisterContent original = m_typeResolver->original(content);
+-        const QQmlJSScope::ConstPtr originalStored
+-                = m_typeResolver->storedType(original.containedType());
+-        m_pool->storeType(content, originalStored);
++        const QQmlJSScope::ConstPtr original = m_typeResolver->originalContainedType(content);
++        if (const QQmlJSScope::ConstPtr originalStored = m_typeResolver->storedType(original)) {
++            m_pool->storeType(content, originalStored);
++        } else {
++            addError(QStringLiteral("Cannot store type %1.").arg(original->internalName()));
++            return;
++        }
+ 
+-        const QQmlJSScope::ConstPtr adjustedStored
+-                = m_typeResolver->storedType(content.containedType());
++        const QQmlJSScope::ConstPtr contentContained = content.containedType();
++        const QQmlJSScope::ConstPtr adjustedStored = m_typeResolver->storedType(contentContained);
++        if (!adjustedStored) {
++            addError(QStringLiteral("Cannot store type %1.")
++                             .arg(contentContained->internalName()));
++            return;
++        }
+ 
+         if (!m_typeResolver->adjustTrackedType(content.storage(), adjustedStored)) {
+-            addError(QStringLiteral("Cannot adjust stored type for %1.")
+-                             .arg(content.containedType()->internalName()));
++            addError(QStringLiteral("Cannot adjust stored type for %1 to %2.")
++                             .arg(contentContained->internalName(), adjustedStored->internalName()));
+         }
+     };
+ 
+diff --git a/tests/auto/qml/qmlcppcodegen/data/CMakeLists.txt b/tests/auto/qml/qmlcppcodegen/data/CMakeLists.txt
+index 4661211..cc92631 100644
+--- a/tests/auto/qml/qmlcppcodegen/data/CMakeLists.txt
++++ b/tests/auto/qml/qmlcppcodegen/data/CMakeLists.txt
+@@ -308,6 +308,7 @@
+     undefinedToDouble.qml
+     unknownAttached.qml
+     unknownParameter.qml
++    unknownUnderlyingType.qml
+     unstoredUndefined.qml
+     unusedAttached.qml
+     urlString.qml
+diff --git a/tests/auto/qml/qmlcppcodegen/data/enumproblems.h b/tests/auto/qml/qmlcppcodegen/data/enumproblems.h
+index 36f97be..9c98789 100644
+--- a/tests/auto/qml/qmlcppcodegen/data/enumproblems.h
++++ b/tests/auto/qml/qmlcppcodegen/data/enumproblems.h
+@@ -116,4 +116,19 @@
+     Q_ENUM(EType)
+ };
+ 
++using uint_myown_t = decltype(75 - 12);
++
++class UnknownUnderlyingType : public QObject
++{
++    Q_OBJECT
++    QML_ELEMENT
++
++public:
++    enum Bla : uint_myown_t {
++        Yo = 11,
++    };
++    Q_ENUM(Bla)
++};
++
++
+ #endif // ENUMPROBLEMS_H
+diff --git a/tests/auto/qml/qmlcppcodegen/data/unknownUnderlyingType.qml b/tests/auto/qml/qmlcppcodegen/data/unknownUnderlyingType.qml
+new file mode 100644
+index 0000000..8e43828
+--- /dev/null
++++ b/tests/auto/qml/qmlcppcodegen/data/unknownUnderlyingType.qml
+@@ -0,0 +1,6 @@
++import QtQml
++import TestTypes as FB
++
++QtObject {
++    property var foo: FB.UnknownUnderlyingType.Yo
++}
+diff --git a/tests/auto/qml/qmlcppcodegen/tst_qmlcppcodegen.cpp b/tests/auto/qml/qmlcppcodegen/tst_qmlcppcodegen.cpp
+index f44cae1..5f701d7 100644
+--- a/tests/auto/qml/qmlcppcodegen/tst_qmlcppcodegen.cpp
++++ b/tests/auto/qml/qmlcppcodegen/tst_qmlcppcodegen.cpp
+@@ -269,6 +269,7 @@
+     void undefinedToDouble();
+     void unknownAttached();
+     void unknownParameter();
++    void unknownUnderlyingType();
+     void unstoredUndefined();
+     void unusedAttached();
+     void urlString();
+@@ -5466,6 +5467,16 @@
+     QCOMPARE(object->property("cppProp").toInt(), 18);
+ }
+ 
++void tst_QmlCppCodegen::unknownUnderlyingType()
++{
++    QQmlEngine engine;
++    QQmlComponent component(&engine, QUrl(u"qrc:/qt/qml/TestTypes/unknownUnderlyingType.qml"_s));
++    QVERIFY2(!component.isError(), component.errorString().toUtf8());
++    QScopedPointer<QObject> object(component.create());
++    QVERIFY(!object.isNull());
++    QCOMPARE(object->property("foo").toInt(), 11);
++}
++
+ void tst_QmlCppCodegen::unstoredUndefined()
+ {
+     QQmlEngine engine;
