@@ -14,7 +14,10 @@ from pisi.actionsapi import get
 # bindirQt6="/usr/lib/qt6/bin"
 
 def setup():
-    qt6.configure()
+    qt6.configure("-DQT_BUILD_DESIGNER_PRIVATE=ON \
+                   -DQT_BUILD_HELP_PRIVATE=ON \
+                   -DFEATURE_assistant=ON \
+                   -DFEATURE_designer=ON")
 
 def build():
      qt6.make()
