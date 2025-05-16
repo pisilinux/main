@@ -8,9 +8,9 @@ from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
 
 def build():
-	pythonmodules.compile(pyVer = "3")
+    pythonmodules.compile(pyVer = "3")
 
 def install():
-	pythonmodules.install(pyVer = "3")
+    pythonmodules.install(pyVer = "3")
 
-	pisitools.dodoc("AUTHORS.md", "NEWS.md", "README.aeidon.md", "README.md")
+    pisitools.dodoc("AUTHORS.md", "NEWS.md")
