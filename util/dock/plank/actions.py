@@ -10,7 +10,7 @@ i = ''.join([
     ' --prefix=/usr',
     ' -Denable-apport=false',
     ' -Denable-dbusmenu=yes',
-    ' -Dproduction_release=true',
+    ' -Dproduction-release=true',
     ' -Denable-docs=false '
     ])
 
