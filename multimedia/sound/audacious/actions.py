@@ -8,7 +8,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dlibarchive=true -Dqt6=true -Dgtk3=true")
+    mesontools.configure("-Dlibarchive=true")
 
 def build():
     mesontools.build()
