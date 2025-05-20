@@ -6,37 +6,32 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
     #pisitools.dosed("app/text/gimpfont.c", "freetype/tttables.h", "freetype2/tttables.h")
     #autotools.autoreconf("-fi")
-    autotools.configure("--disable-gtk-doc \
-                         --disable-altivec \
-                         --disable-alsatest \
-                         --enable-python \
-                         --enable-default-binary \
-                         --enable-mmx \
-                         --enable-sse \
-                         --enable-mp \
-                         --with-linux-input \
-                         --with-libmng \
-                         --with-webkit \
-                         --with-openexr \
-                         --with-alsa \
-                         --with-aa \
-                         --with-x")
+    mesontools.configure("-Denable-default-bin=enabled \
+                         -Dlinux-input=enabled \
+                         -Dmng=enabled \
+                         -Dopenexr=enabled \
+                         -Dalsa=enabled \
+                         -Daa=enabled \
+                         -Dheadless-tests=disabled \
+                         ")
+    # --with-webkit \
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    # pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
     # Add illustrator and other mime types
-    pisitools.dosed("desktop/gimp.desktop.in", "^MimeType=application/postscript;application/pdf;(.*)$",
-                    "MimeType=\\1;image/x-sun-raster;image/x-gray;image/x-pcx;image/jpg;image/x-bmp;image/pjpeg;image/x-png;application/illustrator;")
+    # pisitools.dosed("desktop/gimp.desktop.in", "^MimeType=application/postscript;application/pdf;(.*)$",
+                    # "MimeType=\\1;image/x-sun-raster;image/x-gray;image/x-pcx;image/jpg;image/x-bmp;image/pjpeg;image/x-png;application/illustrator;")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog*", "HACKING", "NEWS", "README", "INSTALL", "LICENSE")
+    pisitools.dodoc("AUTHORS", "ChangeLog*", "NEWS", "README", "INSTALL", "LICENSE")
