@@ -6,26 +6,24 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
-i = "--disable-dependency-tracking \
-     --disable-clutter \
-     --enable-wayland \
-     --enable-tray-plugin \
-     --enable-notify-plugin \
-     --enable-mpris2-plugin \
+i = "-Dwayland=enabled \
+     -Dx11=enabled \
+     -Dtray-plugin=enabled \
+     -Dnotify-plugin=enabled \
+     -Dmpris2-plugin=enabled \
     "
 
 def setup():
-    autotools.configure(i)
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    mesontools.configure(i)
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "NEWS", "README.md", "THANKS", "TODO")
 
