@@ -4,22 +4,22 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get
-from pisi.actionsapi import autotools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-vif")
-    autotools.configure("--prefix=/usr --disable-static --enable-gles --enable-sdl --enable-threading --enable-qt")
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    shelltools.makedirs("build")
+    shelltools.cd("build")
+
+    cmaketools.configure(sourceDir="..")
 
 def build():
-    autotools.make()
-
-#def check():
-    #autotools.make("check")
+    cmaketools.make("-C build")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.dodoc("README*", "COPYING", "LICENSE*")
 
-    pisitools.dodoc("README*")
+    shelltools.cd("build")
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
