@@ -13,10 +13,10 @@ def setup():
     # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     # autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
-                                     --enable-wayland \
-                                     --enable-x11 \
-                                     --enable-gtk-doc \
-                                     --disable-debug")
+                         --enable-wayland \
+                         --enable-x11 \
+                         --enable-gtk-doc \
+                         --disable-debug")
 
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
