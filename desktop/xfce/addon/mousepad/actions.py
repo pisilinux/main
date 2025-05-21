@@ -6,17 +6,19 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
     pisitools.cflags.add("-Wno-deprecated-declarations -Wno-incompatible-pointer-types")
-    autotools.configure("--enable-gtk3 --disable-static")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "NEWS", "README.md")
+    pisitools.dodoc("AUTHORS", "NEWS", "README.md")
 
