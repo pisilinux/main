@@ -18,10 +18,7 @@ def setup():
                -Dgallium-extra-hud=true \
                -Dgallium-vdpau=enabled \
                -Dgallium-va=enabled \
-               -Dgallium-xa=enabled \
-               -Dgallium-nine=true \
                -Dvideo-codecs=all \
-               -Dshared-glapi=enabled \
                -Dgles1=enabled \
                -Dgles2=enabled \
                -Dopengl=true \
@@ -33,7 +30,6 @@ def setup():
                -Dvalgrind=enabled \
                -Dlibunwind=disabled \
                -Dbuild-tests=false \
-               -Dosmesa=true \
               " % (libdir)
 
     if get.buildTYPE() == "emul32":
@@ -57,7 +53,7 @@ def setup():
         #shelltools.export("CXX", "clang++")
         pisitools.cflags.add("-m64 ")
         pisitools.cxxflags.add("-m64")
-        options += " -Dgallium-opencl=icd -Dlmsensors=enabled -Dzstd=enabled \
+        options += " -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
                              -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
