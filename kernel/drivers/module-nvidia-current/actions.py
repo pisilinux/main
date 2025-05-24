@@ -155,7 +155,7 @@ def install():
         pisitools.dosym("libGLX_nvidia.so.%s" % version, "%s/libGLX_nvidia.so" % libdir)
 
         pisitools.dolib("32/libGLdispatch.so.0", libdir)
-        pisitools.dosym("libGLdispatch.so.0", "%s/ibGLdispatch.so" % libdir)
+        pisitools.dosym("libGLdispatch.so.0", "%s/libGLdispatch.so" % libdir)
 
         pisitools.dolib("32/libGLX.so.0", libdir)
         pisitools.dosym("libGLX.so.0", "%s/libGLX.so" % libdir)
