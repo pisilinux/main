@@ -11,10 +11,10 @@ from pisi.actionsapi import get
 def build():
     shelltools.system("go build \
         -trimpath \
-        -ldflags '-extldflags \"%s\" -X github.com/cli/cli/command.Version=v2.70.0 -X github.com/cli/cli/command.BuildDate=2025-04-19' \
+        -ldflags '-extldflags \"%s\" -X github.com/cli/cli/command.Version=v2.73.0 -X github.com/cli/cli/command.BuildDate=2025-05-24' \
         -o 'bin/gh' ./cmd/gh" % get.LDFLAGS())
 
 def install():
-    shelltools.cd("../cli-2.70.0")
+    shelltools.cd("../cli-2.73.0")
     pisitools.insinto("/usr/bin", "bin/gh")
     pisitools.dodoc("LICENSE", "README*")
