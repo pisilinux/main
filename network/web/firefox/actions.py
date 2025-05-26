@@ -18,7 +18,10 @@ xpidir = "%s/xpi" % get.workDIR()
 arch = get.ARCH()
 ver = ".".join(get.srcVERSION().split(".")[:3])
 
-jobs = jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+
+# jobs = jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+jobs_number = subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+
 
 shelltools.export("SHELL", "/bin/sh")
 shelltools.export("PYTHON", "/usr/bin/python3")
@@ -29,7 +32,7 @@ shelltools.export("MOZBUILD_STATE_PATH", "mozbuild")
 shelltools.system("export MOZ_NOSPAM=1")
 
 def setup():
-	
+
     shelltools.system("echo 'Instrumenting Firefox for PGO'")
     shelltools.system("cp mozconfig-inst .mozconfig")
 	
@@ -37,7 +40,7 @@ def setup():
     shelltools.echo("google_api_key", "AIzaSyBINKL31ZYd8W5byPuwTXYK6cEyoceGh6Y")
     pisitools.dosed(".mozconfig", "%%PWD%%", get.curDIR())
     pisitools.dosed(".mozconfig", "%%FILE%%", "google_api_key")
-    pisitools.dosed(".mozconfig", "##JOBCOUNT##", jobs)
+    pisitools.dosed(".mozconfig", "##JOBS##", jobs_number)
 
     # LOCALE
     shelltools.system("rm -rf langpack-ff/*/browser/defaults")
@@ -79,7 +82,7 @@ def build():
     #shelltools.echo("google_api_key", "AIzaSyBINKL31ZYd8W5byPuwTXYK6cEyoceGh6Y")
     pisitools.dosed(".mozconfig", "%%PWD%%", get.curDIR())
     pisitools.dosed(".mozconfig", "%%FILE%%", "google_api_key")
-    pisitools.dosed(".mozconfig", "##JOBCOUNT##", jobs)
+    pisitools.dosed(".mozconfig", "##JOBS##", jobs_number)
     #shelltools.system("../configure --prefix=/usr --libdir=/usr/lib --disable-strip --disable-install-strip")
     shelltools.system("./mach build")
 
