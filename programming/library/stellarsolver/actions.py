@@ -13,7 +13,7 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
 
-    cmaketools.configure(sourceDir="..")
+    cmaketools.configure("-DUSE_QT5=OFF", sourceDir="..")
 
 def build():
     cmaketools.make("-C build")
