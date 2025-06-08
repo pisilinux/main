@@ -1,0 +1,13 @@
+diff -Nuar a/yali/storage/bootloader.py b/yali/storage/bootloader.py
+--- a/yali/storage/bootloader.py	2025-06-07 19:41:37.692732956 +0300
++++ b/yali/storage/bootloader.py	2025-06-07 19:29:59.500461561 +0300
+@@ -441,7 +441,8 @@
+         else:
+             yali.util.chroot(
+                 #"grub2-install --recheck %s" % stage1Devices[0].path)
+-                "grub2-install --force %s" % stage1Devices[0].path)
++                # --target=i386-pc kernel-6.12.x
++                "grub2-install --force %s --target=i386-pc" % stage1Devices[0].path)
+     
+         if os.path.exists("/usr/bin/mkinitcpio"):
+             kver = os.uname()[2]
