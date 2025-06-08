@@ -1,0 +1,44 @@
+From e8d809b183d1f752cd683e1dcad02678cac552f0 Mon Sep 17 00:00:00 2001
+From: Robert Lancaster <rlancaste@gmail.com>
+Date: Fri, 30 May 2025 10:08:45 -0400
+Subject: [PATCH] Update to Fix Fedora and QT6.9 issues
+
+---
+ linux-scripts/installStellarSolverTesterQt6.sh | 2 +-
+ tester/mainwindow.h                            | 9 ---------
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/linux-scripts/installStellarSolverTesterQt6.sh b/linux-scripts/installStellarSolverTesterQt6.sh
+index fe58440..16af335 100755
+--- a/linux-scripts/installStellarSolverTesterQt6.sh
++++ b/linux-scripts/installStellarSolverTesterQt6.sh
+@@ -5,7 +5,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../
+ 
+ #This installs the dependencies
+ if [ -f /usr/lib/fedora-release ]; then
+-  sudo dnf -y install git cmake qt6 cfitsio-devel gsl-devel wcslib-devel
++  sudo dnf -y install git cmake automake gcc gcc-c++ kernel-devel qt6-qtbase-devel cfitsio-devel gsl-devel wcslib-devel
+ else
+   sudo apt -y install g++ git cmake qt6-base-dev libgl1-mesa-dev libcfitsio-dev libgsl-dev wcslib-dev
+ fi
+diff --git a/tester/mainwindow.h b/tester/mainwindow.h
+index 9f16b43..6367d0d 100644
+--- a/tester/mainwindow.h
++++ b/tester/mainwindow.h
+@@ -39,16 +39,7 @@
+ 
+ //Astrometry.net includes
+ extern "C"{
+-#include "ioutils.h"
+-#include "bl.h"
+-#include "an-bool.h"
+-#include "solver.h"
+-#include "astrometry/blind.h"
+-#include "log.h"
+ #include "engine.h"
+-#include "anqfits.h"
+-#include "ioutils.h"
+-#include "fitstable.h"
+ }
+ 
+ namespace Ui {
