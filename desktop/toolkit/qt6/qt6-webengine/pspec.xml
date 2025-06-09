@@ -1,302 +1,296 @@
 <?xml version="1.0" ?>
 <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-    <Source>
-        <Name>qt6-webengine</Name>
-        <Homepage>http://qt.digia.com/</Homepage>
-        <Packager>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
-        </Packager>
-        <Summary>Provides support for web applications using the Chromium browser project</Summary>
-        <Description>Provides support for web applications using the Chromium browser project</Description>
-        <License>LGPLv2.1-linking-exception</License>
-        <Icon>qt-logo</Icon>
-        <Archive sha1sum="b175e92b300ce10e3212b8599158fc59bf21fb27" type="tarxz">https://download.qt.io/official_releases/qt/6.9/6.9.0/submodules/qtwebengine-everywhere-src-6.9.0.tar.xz</Archive>
-        <BuildDependencies>
-            <Dependency>ninja</Dependency>
-            <Dependency>cmake</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-base-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-declarative-devel</Dependency>
-<!--             <Dependency versionFrom="6.9.0">qt6-xmlpatterns-devel</Dependency> -->
-            <Dependency versionFrom="6.9.0">qt6-positioning-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-sensors-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-webchannel-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-designer-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-websockets-devel</Dependency>
-            <Dependency>bison</Dependency>
-            <Dependency>wget</Dependency>
-            <Dependency>tiff-devel</Dependency>
-            <Dependency>cups-devel</Dependency>
-            <Dependency versionFrom="23.8.0">nodejs</Dependency>
-            <Dependency>re2c</Dependency>
-            <Dependency versionFrom="1.7.2">ninja</Dependency>
-            <Dependency>gperf</Dependency>
-            <Dependency>snappy-devel</Dependency>
-            <Dependency>gobject-introspection-devel</Dependency>
-            <Dependency>expat-devel</Dependency>
-            <Dependency versionFrom="2.50.2">glib2-devel</Dependency>
-            <Dependency>fontconfig-devel</Dependency>
-            <Dependency versionFrom="2.7.1">freetype-devel</Dependency>
-            <Dependency versionFrom="13.0.4">mesa-devel</Dependency>
-            <Dependency versionFrom="3.2.1">eudev-devel</Dependency>
-            <Dependency>libpng-devel</Dependency>
-            <Dependency>webp-devel</Dependency>
-            <Dependency>harfbuzz-devel</Dependency>
-            <Dependency>json-c-devel</Dependency>
-            <Dependency>protobuf-devel</Dependency>
-            <Dependency>libdrm-devel</Dependency>
-            <Dependency>libopus-devel</Dependency>
-            <Dependency>libevent-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
-            <Dependency>libxml2-devel</Dependency>
-            <Dependency>libxslt-devel</Dependency>
-            <Dependency>libX11-devel</Dependency>
-            <Dependency>libXi-devel</Dependency>
-            <Dependency>libXcursor-devel</Dependency>
-            <Dependency>libXext-devel</Dependency>
-            <Dependency>libXfixes-devel</Dependency>
-            <Dependency>libXrender-devel</Dependency>
-            <Dependency>libXdamage-devel</Dependency>
-            <Dependency>libXcomposite-devel</Dependency>
-            <Dependency>libXtst-devel</Dependency>
-            <Dependency>libXrandr-devel</Dependency>
-            <Dependency>libXScrnSaver-devel</Dependency>
-            <Dependency>libcap-devel</Dependency>
-            <Dependency>pulseaudio-libs-devel</Dependency>
-            <Dependency>alsa-lib-devel</Dependency>
-            <Dependency>dbus-devel</Dependency>
-            <Dependency>nss-devel</Dependency>  <!--bizim nss ile derlenmiyor kendi içinde var-->
-            <Dependency>perl</Dependency>
-            <Dependency versionFrom="2.7.13">python-devel</Dependency>
-            <Dependency versionFrom="3.8.10">python3-devel</Dependency>
-            <Dependency>libjpeg-turbo-devel</Dependency>
-            <Dependency>x264-devel</Dependency>
-            <Dependency>minizip-devel</Dependency>
-            <Dependency versionFrom="68.2">icu4c-devel</Dependency>
-            <Dependency versionFrom="3.2.4">ffmpeg-devel</Dependency>
-            <Dependency>git</Dependency>
-            <Dependency>lcms2-devel</Dependency>
-            <Dependency>jsoncpp-devel</Dependency>
-            <Dependency>poppler-cpp-devel</Dependency>
-            <Dependency>python-Jinja2</Dependency>
-            <Dependency>libxkbcommon-devel</Dependency>
-            <Dependency>libxkbfile-devel</Dependency>
-<!--             <Dependency>pipewire-0.2-devel</Dependency> -->
-            <Dependency>pipewire-devel</Dependency>
-            <Dependency>mit-kerberos-devel</Dependency>
-            <Dependency>python3-html5lib</Dependency>
-            <Dependency>libepoxy-devel</Dependency>
-
-<!--             <Dependency>re2-devel</Dependency> -->
-<!--             <Dependency>libvpx-devel</Dependency> -->
-<!--             <Dependency>pciutils-devel</Dependency> -->
-        </BuildDependencies>
-        <Patches>
-            <Patch level="1">qtwebengine-link-pipewire.patch</Patch>
-            <Patch level="1">qtwebengine-webrtc-fix-build-with-pipewire.patch</Patch>
-        </Patches>
-    </Source>
-
-    <Package>
-        <Name>qt6-webengine</Name>
-        <Files>
-            <Path fileType="executable">/usr/lib/qt6/bin/</Path>
-            <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib/metatypes/*</Path>
-            <Path fileType="library">/usr/lib/libQt6Pdf*</Path>
-            <Path fileType="library">/usr/lib/libQt6WebEngine*</Path>
-            <Path fileType="library">/usr/lib/libQt6WebEngineWidgets*</Path>
-            <Path fileType="library">/usr/lib/qt6</Path>
-            <Path fileType="data">/usr/share/qt6</Path>
-            <Path fileType="localedata">/usr/share/qt6/translations</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-        </Files>
-        <RuntimeDependencies>
-            <Dependency>tiff</Dependency>
-            <Dependency>nss</Dependency>
-            <Dependency>dbus</Dependency>
-            <Dependency>nspr</Dependency>
-            <Dependency>webp</Dependency>
-            <Dependency>expat</Dependency>
-            <Dependency>mesa</Dependency>
-            <Dependency>icu4c</Dependency>
-            <Dependency>lcms2</Dependency>
-            <Dependency>ffmpeg</Dependency>
-            <Dependency>libxcb</Dependency>
-            <Dependency>glib2</Dependency>
-            <Dependency>libX11</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>libpng</Dependency>
-            <Dependency>snappy</Dependency>
-            <Dependency versionFrom="2.7.1">freetype</Dependency>
-            <Dependency>libXi</Dependency>
-            <Dependency>libXext</Dependency>
-            <Dependency>libXtst</Dependency>
-            <Dependency>libxslt</Dependency>
-            <Dependency>libopus</Dependency>
-            <Dependency>libxml2</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-base</Dependency>
-            <Dependency>alsa-lib</Dependency>
-            <Dependency>harfbuzz</Dependency>
-            <Dependency>libevent</Dependency>
-            <Dependency>libXfixes</Dependency>
-            <Dependency>libXrandr</Dependency>
-            <Dependency>fontconfig</Dependency>
-            <Dependency>libXcursor</Dependency>
-            <Dependency>libXScrnSaver</Dependency>
-            <Dependency>libXdamage</Dependency>
-            <Dependency>libXrender</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-positioning</Dependency>
-            <Dependency>libXcomposite</Dependency>
-            <Dependency>libjpeg-turbo</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-webchannel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-declarative</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>minizip</Dependency>
-            <Dependency>protobuf</Dependency>
-            <Dependency>pulseaudio-libs</Dependency>
-            <Dependency>libxkbcommon</Dependency>
-            <Dependency>libxkbfile</Dependency>
-            <Dependency>pipewire</Dependency>
-            <Dependency>libepoxy</Dependency>
-
-<!--             <Dependency>re2</Dependency> -->
-<!--             <Dependency>libvpx</Dependency> -->
-        </RuntimeDependencies>
-    </Package>
-
-    <Package>
-        <Name>qt6-webengine-devel</Name>
-        <Files>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
-            <Path fileType="library">/usr/lib/cmake</Path>
-            <Path fileType="header">/usr/include/qt6</Path>
-        </Files>
-        <RuntimeDependencies>
-            <Dependency release="current">qt6-webengine</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-base-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-declarative-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-positioning-devel</Dependency>
-            <Dependency versionFrom="6.9.0">qt6-webchannel-devel</Dependency>
-        </RuntimeDependencies>
-    </Package>
-    
-    <!--Package>
+  <Source>
+    <Name>qt6-webengine</Name>
+    <Homepage>http://qt.digia.com/</Homepage>
+    <Packager>
+      <Name>PisiLinux Community</Name>
+      <Email>admins@pisilinux.org</Email>
+    </Packager>
+    <Summary>Provides support for web applications using the Chromium browser project</Summary>
+    <Description>Provides support for web applications using the Chromium browser project</Description>
+    <License>LGPLv2.1-linking-exception</License>
+    <Icon>qt-logo</Icon>
+    <Archive sha1sum="88e0ee4c2e6785ec5b0c01adcd3199a70f830eb8" type="tarxz">https://download.qt.io/official_releases/qt/6.9/6.9.1/submodules/qtwebengine-everywhere-src-6.9.1.tar.xz</Archive>
+    <BuildDependencies>
+      <Dependency>git</Dependency>
+      <Dependency>wget</Dependency>
+      <Dependency>re2c</Dependency>
+      <Dependency>perl</Dependency>
+      <Dependency>ninja</Dependency>
+      <Dependency>cmake</Dependency>
+      <Dependency>bison</Dependency>
+      <Dependency>gperf</Dependency>
+      <Dependency>nss-devel</Dependency>
+      <Dependency>tiff-devel</Dependency>
+      <Dependency>cups-devel</Dependency>
+      <Dependency>webp-devel</Dependency>
+      <Dependency>zlib-devel</Dependency>
+      <Dependency>dbus-devel</Dependency>
+      <Dependency>x264-devel</Dependency>
+      <Dependency>expat-devel</Dependency>
+      <Dependency>libXi-devel</Dependency>
+      <Dependency>lcms2-devel</Dependency>
+      <Dependency>snappy-devel</Dependency>
+      <Dependency>libpng-devel</Dependency>
+      <Dependency>json-c-devel</Dependency>
+      <Dependency>libdrm-devel</Dependency>
+      <Dependency>libX11-devel</Dependency>
+      <Dependency>libcap-devel</Dependency>
+      <Dependency>libopus-devel</Dependency>
+      <Dependency>libxml2-devel</Dependency>
+      <Dependency>libxslt-devel</Dependency>
+      <Dependency>libXext-devel</Dependency>
+      <Dependency>libXtst-devel</Dependency>
+      <Dependency>minizip-devel</Dependency>
+      <Dependency>jsoncpp-devel</Dependency>
+      <Dependency>python-Jinja2</Dependency>
+      <Dependency>harfbuzz-devel</Dependency>
+      <Dependency>protobuf-devel</Dependency>
+      <Dependency>libevent-devel</Dependency>
+      <Dependency>alsa-lib-devel</Dependency>
+      <Dependency>pipewire-devel</Dependency>
+      <Dependency>libepoxy-devel</Dependency>
+      <Dependency>libXfixes-devel</Dependency>
+      <Dependency>libXrandr-devel</Dependency>
+      <Dependency>fontconfig-devel</Dependency>
+      <Dependency>libXcursor-devel</Dependency>
+      <Dependency>libXrender-devel</Dependency>
+      <Dependency>libXdamage-devel</Dependency>
+      <Dependency>libxkbfile-devel</Dependency>
+      <Dependency>python3-html5lib</Dependency>
+      <Dependency>poppler-cpp-devel</Dependency>
+      <Dependency>libxkbcommon-devel</Dependency>
+      <Dependency>mit-kerberos-devel</Dependency>
+      <Dependency>libXcomposite-devel</Dependency>
+      <Dependency>libXScrnSaver-devel</Dependency>
+      <Dependency>libjpeg-turbo-devel</Dependency>
+      <Dependency>pulseaudio-libs-devel</Dependency>
+      <Dependency>gobject-introspection-devel</Dependency>
+      <Dependency versionFrom="1.7.2">ninja</Dependency>
+      <Dependency versionFrom="23.8.0">nodejs</Dependency>
+      <Dependency versionFrom="13.0.4">mesa-devel</Dependency>
+      <Dependency versionFrom="2.50.2">glib2-devel</Dependency>
+      <Dependency versionFrom="3.2.1">eudev-devel</Dependency>
+      <Dependency versionFrom="68.2">icu4c-devel</Dependency>
+      <Dependency versionFrom="2.7.13">python-devel</Dependency>
+      <Dependency versionFrom="3.2.4">ffmpeg-devel</Dependency>
+      <Dependency versionFrom="3.8.10">python3-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-base-devel</Dependency>
+      <Dependency versionFrom="2.7.1">freetype-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-sensors-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-designer-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-webchannel-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-websockets-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-declarative-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-positioning-devel</Dependency>
+    </BuildDependencies>
+    <Patches>
+      <Patch level="1">qtwebengine-link-pipewire.patch</Patch>
+      <Patch level="1">qtwebengine-webrtc-fix-build-with-pipewire.patch</Patch>
+    </Patches>
+  </Source>
+  <Package>
+    <Name>qt6-webengine</Name>
+    <Files>
+      <Path fileType="executable">/usr/lib/qt6/bin/</Path>
+      <Path fileType="executable">/usr/bin</Path>
+      <Path fileType="library">/usr/lib/metatypes/*</Path>
+      <Path fileType="library">/usr/lib/libQt6Pdf*</Path>
+      <Path fileType="library">/usr/lib/libQt6WebEngine*</Path>
+      <Path fileType="library">/usr/lib/libQt6WebEngineWidgets*</Path>
+      <Path fileType="library">/usr/lib/qt6</Path>
+      <Path fileType="data">/usr/share/qt6</Path>
+      <Path fileType="localedata">/usr/share/qt6/translations</Path>
+      <Path fileType="doc">/usr/share/doc</Path>
+    </Files>
+    <RuntimeDependencies>
+      <Dependency>nss</Dependency>
+      <Dependency>tiff</Dependency>
+      <Dependency>dbus</Dependency>
+      <Dependency>nspr</Dependency>
+      <Dependency>webp</Dependency>
+      <Dependency>mesa</Dependency>
+      <Dependency>zlib</Dependency>
+      <Dependency>expat</Dependency>
+      <Dependency>icu4c</Dependency>
+      <Dependency>lcms2</Dependency>
+      <Dependency>glib2</Dependency>
+      <Dependency>libXi</Dependency>
+      <Dependency>ffmpeg</Dependency>
+      <Dependency>libxcb</Dependency>
+      <Dependency>libX11</Dependency>
+      <Dependency>libgcc</Dependency>
+      <Dependency>libpng</Dependency>
+      <Dependency>snappy</Dependency>
+      <Dependency>libXext</Dependency>
+      <Dependency>libXtst</Dependency>
+      <Dependency>libxslt</Dependency>
+      <Dependency>libopus</Dependency>
+      <Dependency>libxml2</Dependency>
+      <Dependency>minizip</Dependency>
+      <Dependency>alsa-lib</Dependency>
+      <Dependency>harfbuzz</Dependency>
+      <Dependency>libevent</Dependency>
+      <Dependency>protobuf</Dependency>
+      <Dependency>pipewire</Dependency>
+      <Dependency>libepoxy</Dependency>
+      <Dependency>libXfixes</Dependency>
+      <Dependency>libXrandr</Dependency>
+      <Dependency>fontconfig</Dependency>
+      <Dependency>libXcursor</Dependency>
+      <Dependency>libXdamage</Dependency>
+      <Dependency>libXrender</Dependency>
+      <Dependency>libxkbfile</Dependency>
+      <Dependency>libxkbcommon</Dependency>
+      <Dependency>libXScrnSaver</Dependency>
+      <Dependency>libXcomposite</Dependency>
+      <Dependency>libjpeg-turbo</Dependency>
+      <Dependency>pulseaudio-libs</Dependency>
+      <Dependency versionFrom="2.7.1">freetype</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-base</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-webchannel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-positioning</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-declarative</Dependency>
+    </RuntimeDependencies>
+  </Package>
+  <Package>
+    <Name>qt6-webengine-devel</Name>
+    <Files>
+      <Path fileType="library">/usr/lib/pkgconfig</Path>
+      <Path fileType="library">/usr/lib/cmake</Path>
+      <Path fileType="header">/usr/include/qt6</Path>
+    </Files>
+    <RuntimeDependencies>
+      <Dependency release="current">qt6-webengine</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-base-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-webchannel-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-declarative-devel</Dependency>
+      <Dependency versionFrom="6.9.1">qt6-positioning-devel</Dependency>
+    </RuntimeDependencies>
+  </Package>
+  <!--Package>
         <Name>qt6-webengine-docs</Name>
         <RuntimeDependencies>
-            <Dependency versionFrom="6.9.0">qt6-base</Dependency>
+            <Dependency versionFrom="6.9.1">qt6-base</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package-->
-
-    <History>
-        <Update release="15">
-            <Date>2025-05-12</Date>
-            <Version>6.9.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="14">
-            <Date>2025-02-01</Date>
-            <Version>6.8.2</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="13">
-            <Date>2024-12-02</Date>
-            <Version>6.8.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="12">
-            <Date>2024-10-08</Date>
-            <Version>6.7.3</Version>
-            <Comment>Rebuild.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="11">
-            <Date>2024-09-27</Date>
-            <Version>6.7.3</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="10">
-            <Date>2024-06-02</Date>
-            <Version>6.7.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="9">
-            <Date>2024-03-30</Date>
-            <Version>6.6.3</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="8">
-            <Date>2024-02-15</Date>
-            <Version>6.6.2</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="7">
-            <Date>2023-11-28</Date>
-            <Version>6.6.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="6">
-            <Date>2023-11-17</Date>
-            <Version>6.6.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="5">
-            <Date>2023-10-09</Date>
-            <Version>6.5.3</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="4">
-            <Date>2023-05-27</Date>
-            <Version>6.5.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="3">
-            <Date>2023-04-13</Date>
-            <Version>6.5.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="2">
-            <Date>2023-01-08</Date>
-            <Version>6.4.2</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="1">
-            <Date>2022-10-12</Date>
-            <Version>6.4.0</Version>
-            <Comment>First release</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-    </History>
+  <History>
+    <Update release="16">
+      <Date>2025-06-09</Date>
+      <Version>6.9.1</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="15">
+      <Date>2025-05-12</Date>
+      <Version>6.9.0</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="14">
+      <Date>2025-02-01</Date>
+      <Version>6.8.2</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="13">
+      <Date>2024-12-02</Date>
+      <Version>6.8.1</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="12">
+      <Date>2024-10-08</Date>
+      <Version>6.7.3</Version>
+      <Comment>Rebuild.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="11">
+      <Date>2024-09-27</Date>
+      <Version>6.7.3</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="10">
+      <Date>2024-06-02</Date>
+      <Version>6.7.1</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Pisi Linux Community</Name>
+      <Email>admin@pisilinux.org</Email>
+    </Update>
+    <Update release="9">
+      <Date>2024-03-30</Date>
+      <Version>6.6.3</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="8">
+      <Date>2024-02-15</Date>
+      <Version>6.6.2</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="7">
+      <Date>2023-11-28</Date>
+      <Version>6.6.1</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="6">
+      <Date>2023-11-17</Date>
+      <Version>6.6.0</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="5">
+      <Date>2023-10-09</Date>
+      <Version>6.5.3</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="4">
+      <Date>2023-05-27</Date>
+      <Version>6.5.1</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="3">
+      <Date>2023-04-13</Date>
+      <Version>6.5.0</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="2">
+      <Date>2023-01-08</Date>
+      <Version>6.4.2</Version>
+      <Comment>Version bump.</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+    <Update release="1">
+      <Date>2022-10-12</Date>
+      <Version>6.4.0</Version>
+      <Comment>First release</Comment>
+      <Name>Mustafa Cinasal</Name>
+      <Email>muscnsl@gmail.com</Email>
+    </Update>
+  </History>
 </PISI>
