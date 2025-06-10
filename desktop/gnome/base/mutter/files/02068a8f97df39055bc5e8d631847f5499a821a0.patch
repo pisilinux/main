@@ -1,0 +1,50 @@
+From 02068a8f97df39055bc5e8d631847f5499a821a0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?R=C3=A9mi=20Bernon?= <rbernon@codeweavers.com>
+Date: Tue, 18 Feb 2025 15:42:58 +0100
+Subject: [PATCH] frames/window-tracker: Handle override-redirect attribute
+ change.
+
+If a client creates windows with override-redirect attribute, but later
+changes it to allow its windows to be managed, the window tracker will
+still not be tracking _MUTTER_NEEDS_FRAME property changes and any
+decoration change will be broken.
+
+This reproduces with Wine, if a window is first created as a popup, to
+later change to a framed window. Wine always creates its windows with
+override-redirect, and only later decides to let them be managed.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4287>
+(cherry picked from commit 4d194b8e1da555c14e1dc092879e9580f25b6986)
+---
+ src/frames/meta-window-tracker.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/src/frames/meta-window-tracker.c b/src/frames/meta-window-tracker.c
+index 490e52c7cf..cfd62b6a58 100644
+--- a/src/frames/meta-window-tracker.c
++++ b/src/frames/meta-window-tracker.c
+@@ -263,6 +263,21 @@ on_xevent (GdkDisplay *display,
+       xwindow = xevent->xcreatewindow.window;
+       listen_set_up_frame (window_tracker, xwindow);
+     }
++  else if (xevent->type == ConfigureNotify &&
++           xevent->xconfigure.event == xroot)
++    {
++      gboolean has_frame;
++
++      xwindow = xevent->xconfigure.window;
++      has_frame =
++        g_hash_table_contains (window_tracker->frames,
++                               GUINT_TO_POINTER (xwindow));
++
++      if (!xevent->xconfigure.override_redirect && !has_frame)
++        listen_set_up_frame (window_tracker, xwindow);
++      else if (xevent->xconfigure.override_redirect && has_frame)
++        remove_frame (window_tracker, xwindow);
++    }
+   else if (xevent->type == DestroyNotify)
+     {
+       xwindow = xevent->xdestroywindow.window;
+-- 
+GitLab
+
