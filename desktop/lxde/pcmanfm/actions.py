@@ -7,14 +7,13 @@
 from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations -Wno-incompatible-pointer-types")
-	autotools.configure("--with-gtk=3")
+    autotools.configure("--with-gtk=3")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "NEWS")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "TODO")
 
