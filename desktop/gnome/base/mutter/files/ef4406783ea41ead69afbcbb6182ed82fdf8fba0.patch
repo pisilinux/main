@@ -1,0 +1,42 @@
+From ef4406783ea41ead69afbcbb6182ed82fdf8fba0 Mon Sep 17 00:00:00 2001
+From: Alessandro Astone <alessandro.astone@canonical.com>
+Date: Wed, 4 Jun 2025 18:20:51 +0200
+Subject: [PATCH] cogl/pipeline: Make foreach_child function safe
+
+The cogl_pipeline_foreach_child function is not safe to callbacks that modify
+the list of children.
+
+Indeed, the reparent_children_cb callback function modifies the list and causes
+unexpected behaviour.
+
+Fixes: 8540362d1d ("cogl/pipeline: Inherit from GObject")
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3970
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4481>
+---
+ cogl/cogl/cogl-pipeline.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/cogl/cogl/cogl-pipeline.c b/cogl/cogl/cogl-pipeline.c
+index 2e7b595b2b..f93aaa8062 100644
+--- a/cogl/cogl/cogl-pipeline.c
++++ b/cogl/cogl/cogl-pipeline.c
+@@ -121,11 +121,14 @@ cogl_pipeline_foreach_child (CoglPipeline              *pipeline,
+ {
+ 
+   for (CoglPipeline *child = pipeline->first_child;
+-       child != NULL;
+-       child = child->next_sibling)
++       child != NULL;)
+     {
++      CoglPipeline *next = child->next_sibling;
++
+       if (!callback (child, user_data))
+         break;
++
++      child = next;
+     }
+ }
+ 
+-- 
+GitLab
+
