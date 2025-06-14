@@ -7,13 +7,13 @@
 from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
-	autotools.configure("--enable-gtk3")
+    autotools.configure("--enable-gtk3")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "README", "COPYING", "ChangeLog", "NEWS")
+    pisitools.dodoc("AUTHORS", "README", "COPYING", "ChangeLog", "NEWS")
 

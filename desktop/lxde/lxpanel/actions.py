@@ -6,30 +6,16 @@
 
 from pisi.actionsapi import autotools, pisitools, get
 
-t = ''.join([
-    'netstatus ',
-    'netstat ',
-    'volume ',
-    'deskno ',
-    'kbled ',
-    'batt ',
-    'xkb ',
-    'cpufreq ',
-    'monitors ',
-    'indicator'
-    ])
-
 def setup():
-	pisitools.cflags.add("-fcommon -Wno-deprecated-declarations")
-	autotools.configure("--enable-gtk3 --with-plugins='%s'" % t)
+    autotools.configure("--enable-gtk3")
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,-O2,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O2,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "README", "TODO")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "TODO")
 
