@@ -10,13 +10,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	shelltools.system("./autogen.sh --prefix=/usr")
+    shelltools.system("NOCONFIGURE=1 sh autogen.sh")
+    autotools.configure()
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "HACKING.md", "README.md", "TODO.md")
+    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*")
 
