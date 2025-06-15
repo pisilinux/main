@@ -1,0 +1,27 @@
+From 33ab4cce74857f928382ba6cfada111a64dafe88 Mon Sep 17 00:00:00 2001
+From: Rico Tzschichholz <ricotz@ubuntu.com>
+Date: Wed, 11 Jan 2023 11:01:45 +0100
+Subject: [PATCH] python: Replace getargspec with getfullargspec
+
+Fixes https://gitlab.freedesktop.org/zeitgeist/zeitgeist/issues/26
+---
+ python/client.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python/client.py b/python/client.py
+index 39b2fb0a..25d81c53 100644
+--- a/python/client.py
++++ b/python/client.py
+@@ -1097,7 +1097,7 @@ class ZeitgeistClient(object):
+ 		if callable(normal_reply_handler):
+ 			normal_reply_handler(normal_reply_data)
+ 
+-_FIND_EVENTS_FOR_TEMPLATES_ARGS = inspect.getargspec(
+-	ZeitgeistClient.find_events_for_templates)[0]
++_FIND_EVENTS_FOR_TEMPLATES_ARGS = inspect.getfullargspec(
++	ZeitgeistClient.find_events_for_templates).args
+ 
+ # vim:noexpandtab:ts=4:sw=4
+-- 
+GitLab
+
