@@ -14,13 +14,14 @@ i = ''.join([
     ])
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations -Wno-incompatible-pointer-types")
-	autotools.configure(i)
+    autotools.configure(i)
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,-O2,--as-needed -shared ")
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O2,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README", "TODO")

@@ -6,14 +6,10 @@
 
 from pisi.actionsapi import autotools, pisitools, get
 
-def setup():
-    autotools.configure("--enable-gtk3")
-
 def build():
     autotools.make()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s prefix=/usr" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS")
-
+    pisitools.dodoc("AUTHORS", "COPYING")
