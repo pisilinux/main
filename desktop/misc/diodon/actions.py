@@ -7,12 +7,12 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-	mesontools.configure()
+    mesontools.configure()
 
 def build():
-	mesontools.build()
+    mesontools.build()
 
 def install():
-	mesontools.install()
+    mesontools.install()
 
-	pisitools.dodoc("AUTHORS")
+    pisitools.dodoc("AUTHORS", "COPYING")
