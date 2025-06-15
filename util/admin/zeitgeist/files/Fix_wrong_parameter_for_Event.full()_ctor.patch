@@ -1,0 +1,39 @@
+From 1be2a5fff77cdf61c843edc8356dfdef3fd2dbfc Mon Sep 17 00:00:00 2001
+From: Rico Tzschichholz <ricotz@ubuntu.com>
+Date: Fri, 9 Sep 2022 14:49:27 +0200
+Subject: [PATCH] datahub: Fix wrong parameter for Event.full() ctor
+
+Thanks to Mamoru TASAKA
+
+Fixes https://gitlab.freedesktop.org/zeitgeist/zeitgeist/issues/19
+---
+ datahub/telepathy-observer.vala | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/datahub/telepathy-observer.vala b/datahub/telepathy-observer.vala
+index cd670d06..bb34581c 100644
+--- a/datahub/telepathy-observer.vala
++++ b/datahub/telepathy-observer.vala
+@@ -96,8 +96,7 @@ public class TelepathyObserver : DataProvider
+                               ZG.ACCESS_EVENT,
+                               "",
+                               actor,
+-                              null,
+-                              obj_path);
++                              null, null);
+ 
+     /*
+      * Whether user initiated the chat or not
+@@ -217,8 +216,7 @@ public class TelepathyObserver : DataProvider
+                               ZG.ACCESS_EVENT,
+                               ZG.USER_ACTIVITY,
+                               actor,
+-                              null,
+-                              obj_path);
++                              null, null);
+     if (!channel.requested)
+       event_template.manifestation = ZG.WORLD_ACTIVITY;
+     /*
+-- 
+GitLab
+
