@@ -9,7 +9,7 @@ from pisi.actionsapi import kde6
 from pisi.actionsapi import shelltools
 
 def setup():
-    shelltools.system("sed -i -e '/find_package.*QGpgme/d' CMakeLists.txt")
+    # shelltools.system("sed -i -e '/find_package.*QGpgme/d' CMakeLists.txt")
     kde6.configure()
 
 def build():
