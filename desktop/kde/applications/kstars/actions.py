@@ -6,17 +6,17 @@
 
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 from pisi.actionsapi import get
 
 def setup():
     shelltools.system("rm -f po/de/docs/kstars/index.docbook")
-    kde5.configure()
+    kde6.configure("-DBUILD_QT5=OFF")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "README*")
+    pisitools.dodoc("LICENSES/*", "ChangeLog", "README*")
