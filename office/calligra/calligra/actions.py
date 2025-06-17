@@ -23,4 +23,4 @@ def build():
 def install():
     kde6.install("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ANNOTATIONS-ODF", "AUTHORS", "COPYING*", "OBSOLETE.TXT", "README*", "TODO-ANNOTATIONS", "doc/status.txt")
+    pisitools.dodoc("ANNOTATIONS-ODF", "AUTHORS", "COPYING*", "OBSOLETE.TXT", "README*", "TODO-ANNOTATIONS", "LICENSES/*", "doc/status.txt")
