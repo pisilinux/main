@@ -1,6 +1,6 @@
 diff -Nuar a/src/crypto/signencrypttask.cpp b/src/crypto/signencrypttask.cpp
 --- a/src/crypto/signencrypttask.cpp	2025-06-03 06:22:18.000000000 +0300
-+++ b/src/crypto/signencrypttask.cpp	2025-06-18 18:21:33.732008467 +0300
++++ b/src/crypto/signencrypttask.cpp	2025-06-18 18:59:41.276410226 +0300
 @@ -27,6 +27,7 @@
  #include <QGpgME/SignEncryptArchiveJob>
  #include <QGpgME/SignEncryptJob>
@@ -25,3 +25,46 @@ diff -Nuar a/src/crypto/signencrypttask.cpp b/src/crypto/signencrypttask.cpp
  }
  
  QString SignEncryptFilesResult::details() const
+diff -Nuar a/src/dialogs/useridswidget.cpp b/src/dialogs/useridswidget.cpp
+--- a/src/dialogs/useridswidget.cpp	2025-06-03 06:22:18.000000000 +0300
++++ b/src/dialogs/useridswidget.cpp	2025-06-18 19:02:24.623368108 +0300
+@@ -33,6 +33,7 @@
+ #include <QPushButton>
+ #include <QVBoxLayout>
+ 
++#include <QGpgME/Debug>
+ #include <QGpgME/KeyListJob>
+ #include <QGpgME/Protocol>
+ 
+diff -Nuar a/src/selftest/gpgagentcheck.cpp b/src/selftest/gpgagentcheck.cpp
+--- a/src/selftest/gpgagentcheck.cpp	2025-06-03 06:22:18.000000000 +0300
++++ b/src/selftest/gpgagentcheck.cpp	2025-06-18 19:06:25.856352281 +0300
+@@ -37,16 +37,7 @@
+     {
+         m_skipped = true;
+ 
+-        if (!hasFeature(AssuanEngineFeature, 0)) {
+-            m_error = i18n("GpgME library too old");
+-            m_explanation = i18nc("@info",
+-                                  "Either the GpgME library itself is too old, "
+-                                  "or the GpgME++ library was compiled against "
+-                                  "an older GpgME that did not support connecting to gpg-agent.");
+-            m_proposedFix = xi18nc("@info",
+-                                   "Upgrade to <application>gpgme</application> 1.2.0 or higher, "
+-                                   "and ensure that gpgme++ was compiled against it.");
+-        } else if (ensureEngineVersion(GpgME::GpgConfEngine, 2, 1, 0)) {
++        if (ensureEngineVersion(GpgME::GpgConfEngine, 2, 1, 0)) {
+             // 2.1 starts the agent on demand and requires it. So for 2.1.0 we can assume
+             // autostart works and we don't need to care about the agent.
+             m_skipped = false;
+diff -Nuar a/src/view/cardkeysview.cpp b/src/view/cardkeysview.cpp
+--- a/src/view/cardkeysview.cpp	2025-06-03 06:22:18.000000000 +0300
++++ b/src/view/cardkeysview.cpp	2025-06-18 19:01:31.922026966 +0300
+@@ -35,6 +35,7 @@
+ #include <KLocalizedString>
+ #include <KSharedConfig>
+ 
++#include <QGpgME/Debug>
+ #include <QGpgME/KeyListJob>
+ #include <QGpgME/Protocol>
+ 
