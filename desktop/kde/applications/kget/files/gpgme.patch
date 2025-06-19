@@ -1,0 +1,23 @@
+diff -Nuar a/ui/signaturedlg.cpp b/ui/signaturedlg.cpp
+--- a/ui/signaturedlg.cpp	2025-06-03 00:25:06.000000000 +0300
++++ b/ui/signaturedlg.cpp	2025-06-19 11:38:35.315557921 +0300
+@@ -30,6 +30,7 @@
+ #ifdef HAVE_QGPGME
+ #include <gpgme++/context.h>
+ #include <gpgme++/key.h>
++#include <gpgme++/gpgmepp_version.h>
+ #endif
+ 
+ #include <QLayoutItem>
+@@ -185,7 +186,11 @@
+             QByteArray fingerprint = fingerprintString.toLatin1();
+             const GpgME::Key key = context->key(fingerprint.constData(), err);
+             if (err || key.isNull() || !key.numUserIDs() || !key.numSubkeys()) {
++#if GPGMEPP_VERSION >= QT_VERSION_CHECK(1, 24, 0)
++                qCDebug(KGET_DEBUG) << "There was an error while loading the key:" << err.asStdString();
++#else
+                 qCDebug(KGET_DEBUG) << "There was an error while loading the key:" << err;
++#endif
+             } else {
+                 static const QStringList OWNERTRUST = QStringList()
+                     << i18nc("trust level", "Unknown") << i18nc("trust level", "Undefined") << i18nc("trust level", "Never") << i18nc("trust level", "Marginal")
