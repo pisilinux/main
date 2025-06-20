@@ -7,16 +7,13 @@
 from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	pisitools.unlink("*.stamp")
-	autotools.autoreconf("-fv")
-	autotools.configure("--enable-gtk3 --disable-buildin-polkit --disable-buildin-clipboard")
+    autotools.configure("--enable-gtk3")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING")
 
