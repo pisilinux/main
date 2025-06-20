@@ -33,7 +33,7 @@ def build():
         shelltools.cd("..")
 
 def install():
-    for subdir in (tuple(subdirs))
+    for subdir in (tuple(subdirs)):
         shelltools.cd(subdir)
-        mesontoold.install()
+        mesontools.install()
         shelltools.cd("..")
