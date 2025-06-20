@@ -8,20 +8,19 @@ from pisi.actionsapi import autotools, pisitools, get
 
 i = ''.join([
     ' --enable-hdr-subdir',
-    ' --with-Xaw3d',
-    ' --with-Xaw3dxft',
+    ' --enable-pc-files',
+    ' --with-Xaw3d{,xft}',
     ' --with-shared '
     ])
 
 def setup():
-#	shelltools.export("CFLAGS", "")
-	autotools.configure(i)
+    autotools.configure(i)
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("CHANGES")
+    pisitools.dodoc("CHANGES")
 
