@@ -7,12 +7,12 @@
 from pisi.actionsapi import cmaketools, pisitools, get
 
 def setup():
-	cmaketools.configure()
+    cmaketools.configure()
 
 def build():
-	cmaketools.make()
+    cmaketools.make()
 
 def install():
-	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-#	pisitools.dodoc("")
+    pisitools.dodoc("AUTHORS", "LICENSE")
