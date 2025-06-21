@@ -9,14 +9,13 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
 
 def setup():
-	shelltools.system("find . -type f -exec sed -i 's/env\ python$/env python3/g' {} \;")
-	pisitools.dosed("setup.py", "gtk-update", "gtk3-update")
+    shelltools.system("find . -type f -exec sed -i '/env.*python/s/$/3/g' {} \;")
 
 def build():
-	pythonmodules.compile(pyVer = '3')
+    pythonmodules.compile(pyVer = '3')
 
 def install():
-	pythonmodules.install(pyVer = '3')
+    pythonmodules.install(pyVer = '3')
 
-#	pisitools.dodoc("README.md")
+    pisitools.dodoc("AUTHORS", "COPYING")
 
