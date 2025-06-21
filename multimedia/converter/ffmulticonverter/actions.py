@@ -13,4 +13,4 @@ def build():
 def install():
     pythonmodules.install(pyVer = "3")
 
-    pisitools.dodoc("ChangeLog", "COPYING", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING", "PKG-INFO", "TRANSLATORS")
