@@ -3,7 +3,7 @@
 <PISI>
     <Source>
         <Name>ffmulticonverter</Name>
-        <Homepage>https://github.com/Ilias95/FF-Multi-Converter</Homepage>
+        <Homepage>https://github.com/l-koehler/FF-converter</Homepage>
         <Packager>
             <Name>Kamil Atlı</Name>
             <Email>suvari@pisilinux.org</Email>
@@ -11,17 +11,18 @@
         <License>GPLv3</License>
         <Icon>ffmulticonverter</Icon>
         <IsA>app:gui</IsA>
-        <Summary>A multi converter.</Summary>
-        <Description>FF Multi Converter is a simple graphical application that enables you to convert audio, video, image and document files between all popular formats, using and combining other programs. It uses ffmpeg for audio/video files, unoconv for document files (which uses the OpenOffice's UNO bindings) and PIL library for image file conversions.</Description>
-        <Archive sha1sum="bae21490cc0cb7c38fccc8b1a4e77dc0c1f31a32" type="targz">mirrors://sourceforge/ffmulticonv/ffmulticonverter-1.8.0.tar.gz</Archive>
+        <Summary>GUI File Format Converter.</Summary>
+        <Description>A simple graphical application which enables you to convert between all popular formats, by utilizing and combining other programs.</Description>
+        <Archive sha1sum="005cfc782d2d8221014d1bfabf01e35f1cf616a5" type="targz">https://github.com/l-koehler/FF-converter/releases/download/v2.4.6/ffconverter-2.4.6.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>ffmpeg-devel</Dependency>
             <Dependency>gettext-devel</Dependency>
             <Dependency>python3-devel</Dependency>
             <Dependency>python3-qt5-devel</Dependency>
+            <Dependency>python3-setuptools</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">QProgressBar_value_replaced_to_int.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
         </Patches>
     </Source>
 
@@ -30,21 +31,26 @@
         <RuntimeDependencies>
             <Dependency>ffmpeg</Dependency>
             <Dependency>unoconv</Dependency>
+            <Dependency>pandoc-bin</Dependency>
             <Dependency>python3-qt5</Dependency>
             <Dependency>imagemagick</Dependency>
+            <Dependency>squashfs-tools</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="data">/usr/share/pixmaps</Path>
-            <Path fileType="data">/usr/share/applications</Path>
-            <Path fileType="data">/usr/share/ffmulticonverter</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/share</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2025-06-21</Date>
+            <Version>2.4.6</Version>
+            <Comment>New maintained upstream.</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="4">
             <Date>2023-11-03</Date>
             <Version>1.8.0</Version>
