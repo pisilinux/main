@@ -31,6 +31,8 @@ def setup():
 
     pisitools.cflags.add("-g2")
     pisitools.cxxflags.add("-g2")
+
+    # shelltools.export("LDFLAGS", "%s" % get.LDFLAGS())
     
     # http://site.icu-project.org/download/61#TOC-Migration-Issues
     pisitools.cxxflags.add("-DU_USING_ICU_NAMESPACE=1")
@@ -70,6 +72,7 @@ def setup():
                         --with-java                       \
                         --with-system-libs                \
                         --with-system-argon2              \
+                        --with-system-gpgmepp             \
                         --without-system-dicts            \
                         --without-fonts                   \
                         --without-system-altlinuxhyph     \

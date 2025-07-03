@@ -1,0 +1,17 @@
+--- libreoffice-25.2.1.2/external/lxml/ExternalProject_lxml.mk.orig	2025-02-23 10:58:03.000000000 -0800
++++ libreoffice-25.2.1.2/external/lxml/ExternalProject_lxml.mk	2025-03-02 13:04:43.873380618 -0800
+@@ -27,11 +27,13 @@
+ 		export PYTHONPATH=$${PYTHONPATH:+$$PYTHONPATH:}$(gb_UnpackedTarball_workdir)/lxml/install && \
+ 		$(if $(PYTHON_FOR_BUILD), \
+ 			unset MACOSX_DEPLOYMENT_TARGET && , \
++			CC="gcc" && \
++			CXX="g++" && \
+ 			CFLAGS="$$CFLAGS -I$(gb_UnpackedTarball_workdir)/python3" && \
+ 			CFLAGS="$$CFLAGS -I$(gb_UnpackedTarball_workdir)/python3/Include" && \
+ 			LDFLAGS="$$LDFLAGS -L$(gb_UnpackedTarball_workdir)/python3" && \
+ 			_PYTHON_PROJECT_BASE=$(gb_UnpackedTarball_workdir)/python3 && \
+-			export CFLAGS LDFLAGS _PYTHON_PROJECT_BASE && ) \
++			export CC CXX CFLAGS LDFLAGS _PYTHON_PROJECT_BASE && ) \
+ 		$(lxml_PYTHON) -Wi setup.py build \
+ 			$(if $(SYSTEM_LIBXML),,--with-xml2-config=$(gb_UnpackedTarball_workdir)/libxml2/xml2-config) \
+ 			$(if $(SYSTEM_LIBXSLT),,--with-xslt-config=$(gb_UnpackedTarball_workdir)/libxslt/xslt-config) && \
