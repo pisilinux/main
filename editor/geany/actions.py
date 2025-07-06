@@ -15,15 +15,15 @@ j = ''.join([
     ' --disable-static '
     ])
 
-def setup():
-	shelltools.export("PYTHON", "/usr/bin/python3")
-	autotools.configure(j)
+shelltools.export("PYTHON", "/usr/bin/python3")
 
-	pisitools.dosed("libtool", " -shared ", " -Wl,-O2,--as-needed -shared ")
+def setup():
+    autotools.configure(j)
+
+    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
