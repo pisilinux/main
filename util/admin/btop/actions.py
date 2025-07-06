@@ -10,15 +10,11 @@ j = ''.join([
     ' VERBOSE=true',
     ' QUIET=true',
     ' STRIP=true',
-    ' ARCH=x86_64',
-    ' PREFIX=/usr '
+    ' ARCH=x86_64 '
     ])
 
-def setup():
-	pass
-
 def build():
-	autotools.make(j)
+    autotools.make(j)
 
 def install():
-	autotools.rawInstall("DESTDIR=%s %s" % (get.installDIR(), j))
+    autotools.rawInstall("DESTDIR=%s PREFIX=/usr" % get.installDIR())
