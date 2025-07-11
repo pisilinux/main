@@ -9,18 +9,15 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	pisitools.cflags.add("-Wno-deprecated-declarations")
-	autotools.configure("--prefix=/usr --libexecdir=/usr/lib")
+    autotools.configure("--prefix=/usr --libexecdir=/usr/lib")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def check():
-	pass
-#	autotools.make("check")
+    pass
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("NEWS", "README")
-
+    pisitools.dodoc("NEWS")
