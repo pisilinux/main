@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+      <Name>plasma-thunderbolt</Name>
+      <Homepage>https://invent.kde.org/plasma/plasma-thunderbolt</Homepage>
+      <Packager>
+          <Name>Kamil Atlı</Name>
+          <Email>suvari@pisilinux.org</Email>
+      </Packager>
+      <License>LGPLv3</License>
+      <Icon>plasma-thunderbolt</Icon>
+      <IsA>app:gui</IsA>
+      <Summary>Plasma integration for controlling Thunderbolt devices</Summary>
+      <Description>A Plasma Sytem Settings module and a KDED module to handle authorization of Thunderbolt devices connected to the computer. There's
+also a shared library (libkbolt) that implements common interface between the
+modules and the system-wide bolt daemon, which does the actual hard work of
+talking to the kernel.</Description>
+      <Archive sha1sum="caf96af38ea532ce830b2795b4f3497f9fb1a012" type="tarxz">mirrors://kde/stable/plasma/6.4.2/plasma-thunderbolt-6.4.2.tar.xz</Archive>
+      <BuildDependencies>
+        <Dependency>ki18n-devel</Dependency>
+        <Dependency>gettext-devel</Dependency>
+        <Dependency>kirigami-devel</Dependency>
+        <Dependency>kcmutils-devel</Dependency>
+        <Dependency>kirigami-addons</Dependency>
+        <Dependency>kdbusaddons-devel</Dependency>
+        <Dependency>kcoreaddons-devel</Dependency>
+        <Dependency>extra-cmake-modules</Dependency>
+        <Dependency>knotifications-devel</Dependency>
+        <Dependency>qt6-declarative-devel</Dependency>
+        <Dependency versionFrom="6.9.1">qt6-base-devel</Dependency>
+      </BuildDependencies>
+    </Source>
+
+    <Package>
+      <Name>plasma-thunderbolt</Name>
+      <RuntimeDependencies>
+        <Dependency>bolt</Dependency>
+        <Dependency>ki18n</Dependency>
+        <Dependency>libgcc</Dependency>
+        <Dependency>kcmutils</Dependency>
+        <Dependency>kcoreaddons</Dependency>
+        <Dependency>kdbusaddons</Dependency>
+        <Dependency>knotifications</Dependency>
+        <Dependency>kirigami-addons</Dependency>
+        <Dependency>qt6-declarative</Dependency>
+        <Dependency versionFrom="6.9.1">qt6-base</Dependency>
+      </RuntimeDependencies>
+      <Files>
+        <Path fileType="library">/usr/lib/libkbolt.so</Path>
+        <Path fileType="library">/usr/lib/qt6/plugins/kf6/kded/kded_bolt.so</Path>
+        <Path fileType="library">/usr/lib/qt6/plugins/plasma/kcms/systemsettings/kcm_bolt.so</Path>
+        <Path fileType="data">/usr/share/knotifications6</Path>
+        <Path fileType="localedata">/usr/share/locale</Path>
+        <Path fileType="data">/usr/share/applications</Path>
+        <Path fileType="doc">/usr/share/doc</Path>
+      </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2025-07-13</Date>
+            <Version>6.4.2</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+  </History>
+</PISI>
