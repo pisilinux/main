@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libphonenumber</Name>
+        <Homepage>https://github.com/googlei18n/libphonenumber</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>Apache</License>
+        <IsA>library</IsA>
+        <Summary>Google's common library for parsing, formatting, and validating international phone numbers</Summary>
+        <Description>Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers. The Java version is optimized for running on smartphones, and is used by the Android framework since 4.0</Description>
+        <Archive sha1sum="ad6c4dc459b9029b3eaad5f4431a756a2a040291" type="targz">https://github.com/google/libphonenumber/archive/refs/tags/v9.0.9.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>git</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>icu4c-devel</Dependency>
+            <Dependency>gtest-devel</Dependency>
+            <Dependency>protobuf-devel</Dependency>
+            <Dependency>abseil-cpp-devel</Dependency>
+            <Dependency>jre8-openjdk-headless</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>0002-Remove-Werror.patch</Patch>
+            <Patch>libphonenumber-8.13.47-cmake.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libphonenumber</Name>
+        <RuntimeDependencies>
+            <Dependency>icu4c</Dependency>
+            <Dependency>boost</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>protobuf</Dependency>
+            <Dependency>abseil-cpp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="library">/usr/lib/libgeocoding.so*</Path>
+            <Path fileType="library">/usr/lib/libphonenumber.so*</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libphonenumber-devel</Name>
+        <RuntimeDependencies>
+
+            <Dependency>abseil-cpp-devel</Dependency>
+            <Dependency release="current">libphonenumber</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/cmake</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+    
+    <History>
+        <Update release="1">
+            <Date>2025-07-03</Date>
+            <Version>9.0.9</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
