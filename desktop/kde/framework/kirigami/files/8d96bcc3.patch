@@ -1,0 +1,111 @@
+From 8d96bcc36a40465007857490376559288b2ebcd9 Mon Sep 17 00:00:00 2001
+From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+Date: Mon, 14 Jul 2025 13:56:59 +0300
+Subject: [PATCH] Revert "Fix ShadowedTexture crashing with software rendering"
+
+This reverts commit 4dc4e78d26701d5babfec6602ac705912d7e8154.
+---
+ .../scenegraph/softwarerectanglenode.cpp      | 56 +++++++++++--------
+ 1 file changed, 33 insertions(+), 23 deletions(-)
+
+diff --git a/src/primitives/scenegraph/softwarerectanglenode.cpp b/src/primitives/scenegraph/softwarerectanglenode.cpp
+index 8c7d900ff..13371029b 100644
+--- a/src/primitives/scenegraph/softwarerectanglenode.cpp
++++ b/src/primitives/scenegraph/softwarerectanglenode.cpp
+@@ -53,6 +53,18 @@ void SoftwareRectangleNode::setImage(const QImage &image)
+         return;
+     }
+ 
++    if (m_imageNode) {
++        removeChildNode(m_imageNode);
++        delete m_imageNode;
++    }
++
++    m_imageNode = m_window->createImageNode();
++    if (!m_imageNode) {
++        return;
++    }
++
++    m_imageNode->setFiltering(QSGTexture::Filtering::Linear);
++
+     m_textureInfo = ShaderNode::TextureInfo{
+         .channel = 0,
+         .options = {},
+@@ -60,6 +72,9 @@ void SoftwareRectangleNode::setImage(const QImage &image)
+         .provider = nullptr,
+         .providerConnection = {},
+     };
++
++    m_imageNode->setTexture(m_textureInfo.texture.get());
++    appendChildNode(m_imageNode);
+ }
+ 
+ void SoftwareRectangleNode::setTextureProvider(QSGTextureProvider *provider)
+@@ -68,6 +83,18 @@ void SoftwareRectangleNode::setTextureProvider(QSGTextureProvider *provider)
+         return;
+     }
+ 
++    if (m_imageNode) {
++        removeChildNode(m_imageNode);
++        delete m_imageNode;
++    }
++
++    m_imageNode = m_window->createImageNode();
++    if (!m_imageNode) {
++        return;
++    }
++
++    m_imageNode->setFiltering(QSGTexture::Filtering::Linear);
++
+     m_textureInfo = ShaderNode::TextureInfo{
+         .channel = 0,
+         .options = {},
+@@ -75,6 +102,9 @@ void SoftwareRectangleNode::setTextureProvider(QSGTextureProvider *provider)
+         .provider = provider,
+         .providerConnection = {},
+     };
++
++    m_imageNode->setTexture(m_textureInfo.provider->texture());
++    appendChildNode(m_imageNode);
+ }
+ 
+ void SoftwareRectangleNode::setRadius(qreal radius)
+@@ -114,32 +144,12 @@ QSGRenderNode::RenderingFlags SoftwareRectangleNode::flags() const
+ 
+ void SoftwareRectangleNode::preprocess()
+ {
+-    QSGTexture *texture = nullptr;
+-    if (QSGTextureProvider *provider = m_textureInfo.provider) {
+-        texture = provider->texture();
++    auto provider = m_textureInfo.provider;
++    if (provider && m_imageNode) {
++        m_imageNode->setTexture(provider->texture());
+         if (QSGDynamicTexture *dynamic_texture = qobject_cast<QSGDynamicTexture *>(provider->texture())) {
+             dynamic_texture->updateTexture();
+         }
+-    } else if (m_textureInfo.texture) {
+-        texture = m_textureInfo.texture.get();
+-    }
+-
+-    if (texture) {
+-        if (!m_imageNode) {
+-            m_imageNode = m_window->createImageNode();
+-        }
+-
+-        // The rect will be set in render().
+-        m_imageNode->setFiltering(QSGTexture::Filtering::Linear);
+-        m_imageNode->setTexture(texture);
+-
+-        if (!m_imageNode->parent()) {
+-            appendChildNode(m_imageNode);
+-        }
+-    } else if (m_imageNode) {
+-        removeChildNode(m_imageNode);
+-        delete m_imageNode;
+-        m_imageNode = nullptr;
+     }
+ }
+ 
+-- 
+GitLab
+

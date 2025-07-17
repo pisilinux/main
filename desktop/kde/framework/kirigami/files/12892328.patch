@@ -1,0 +1,25 @@
+From 1289232891ec190b317015fb73debcea373dab1b Mon Sep 17 00:00:00 2001
+From: Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+Date: Mon, 14 Jul 2025 13:56:54 +0300
+Subject: [PATCH] Revert "Fix SoftwareRectangleNode leaking image nodes"
+
+This reverts commit ab359a4feac3e60e19564b2c6d991417459e08a4.
+---
+ src/primitives/scenegraph/softwarerectanglenode.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/primitives/scenegraph/softwarerectanglenode.cpp b/src/primitives/scenegraph/softwarerectanglenode.cpp
+index 5c0c46637..8c7d900ff 100644
+--- a/src/primitives/scenegraph/softwarerectanglenode.cpp
++++ b/src/primitives/scenegraph/softwarerectanglenode.cpp
+@@ -127,7 +127,6 @@ void SoftwareRectangleNode::preprocess()
+     if (texture) {
+         if (!m_imageNode) {
+             m_imageNode = m_window->createImageNode();
+-            m_imageNode->setFlag(OwnedByParent);
+         }
+ 
+         // The rect will be set in render().
+-- 
+GitLab
+
