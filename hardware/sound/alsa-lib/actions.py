@@ -35,8 +35,8 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     if get.buildTYPE() == "emul32":
-        pisitools.insinto("/usr/share/alsa", "alsa-ucm-conf-1.2.12/ucm2")
-        pisitools.insinto("/usr/share/doc/alsa-ucm-conf", "alsa-ucm-conf-1.2.12/LICENSE")
+        pisitools.insinto("/usr/share/alsa", "alsa-ucm-conf-1.2.14/ucm2")
+        pisitools.insinto("/usr/share/doc/alsa-ucm-conf", "alsa-ucm-conf-1.2.14/LICENSE")
 
         pisitools.insinto("/usr/share/alsa", "alsa-topology-conf-1.2.5.1/topology")
         pisitools.insinto("/usr/share/doc/alsa-topology-conf", "alsa-topology-conf-1.2.5.1/LICENSE")
