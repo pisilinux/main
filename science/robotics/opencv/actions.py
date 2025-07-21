@@ -56,7 +56,7 @@ def setup():
                           -DWITH_VULKAN=ON \
                           -DCMAKE_SKIP_RPATH=1 \
                           -DBUILD_opencv_python3=ON \
-                          -DBUILD_opencv_python2=ON \
+                          -DBUILD_opencv_python2=OFF \
                           -DBUILD_IPP_IW=OFF \
                           -DBUILD_ITT=OFF \
                           -DBUILD_JAVA=OFF \
