@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>PHP7 is an HTML-embedded scripting language. The goal of the language is to allow web developers to write dynamically generated pages quickly</Summary>
         <Description>PHP7 is an HTML-embedded scripting language. Much of its syntax is borrowed from C, Java and Perl with a couple of unique PHP-specific features thrown in. The goal of the language is to allow web developers to write dynamically generated pages quickly.</Description>
-        <Archive sha1sum="31b9124ad74417606334dcf4387812ab68be8aa1" type="tarxz">https://www.php.net/distributions/php-8.3.15.tar.xz</Archive>
+        <Archive sha1sum="d9657bd0feb21daae80fbbf5f4ea5e5415a1cb31" type="tarxz">https://www.php.net/distributions/php-8.4.10.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>gd-devel</Dependency>
             <Dependency>re2c</Dependency>
@@ -88,10 +88,18 @@
         <Summary>Common config files for PHP</Summary>
         <RuntimeDependencies>
             <Dependency>db</Dependency>
-		<Dependency>gd</Dependency>
+            <Dependency>gd</Dependency>
             <Dependency>pam</Dependency>
             <Dependency>gdbm</Dependency>
             <Dependency>mit-kerberos</Dependency>
+
+            <Dependency>gmp</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>bzip2</Dependency>
+            <Dependency>sqlite</Dependency>
+            <Dependency>libxslt</Dependency>
+            <Dependency>openldap-client</Dependency>
+            <Dependency>postgresql-server</Dependency>
         </RuntimeDependencies>
 
         <Files>
@@ -189,10 +197,11 @@
             <Dependency>openssl</Dependency>
             <Dependency>e2fsprogs</Dependency>
             <Dependency>oniguruma</Dependency>
+            <Dependency>libpcre2</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib/apache2/modules/libphp.so</Path>
-            <Path fileType="config">/etc/apache2</Path>
+            <Path fileType="config">/etc/apache2/modules.d/70_mod_php.conf</Path>
             <Path fileType="config">/etc/php/apache2</Path>
         </Files>
         <AdditionalFiles>
@@ -222,7 +231,7 @@
         </AdditionalFiles>
     </Package>
 
-    <Package>
+    <!--Package>
         <Name>php8-imap</Name>
         <Conflicts>
             <Package>php-imap</Package>
@@ -245,7 +254,7 @@
         <AdditionalFiles>
             <AdditionalFile target="/etc/php/ext/11-php-imap.ini" permission="0644" owner="root">11-php-imap.ini</AdditionalFile>
         </AdditionalFiles>
-    </Package>
+    </Package-->
     <Package>
         <Name>php8-fpm</Name>
         <Conflicts>
@@ -287,6 +296,13 @@
 
 
     <History>
+        <Update release="3">
+            <Date>2025-07-18</Date>
+            <Version>8.4.10</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2024-12-24</Date>
             <Version>8.3.15</Version>

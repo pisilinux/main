@@ -13,18 +13,17 @@ def extensions():
     configure_disabled = []
 
     configure_enabled = [
-        'exif', 'ftp', 'soap', 'sockets', 'bcmath',
-        'dom', 'wddx', 'tokenizer', 'simplexml', 'mbstring', 'calendar',
-        'gd-native-ttf', 'gd'
+        'dom', 'wddx', 'tokenizer', 'simplexml', 'mbstring',
+        'gd-native-ttf'
     ]
     configure_shared = [
-        'dba', 'embedded-mysqli', 'zip', 'gd'
+        'calendar', 'bcmath','sockets', 'exif', 'dba', 'gd', 'ftp', 'soap'
     ]
     configure_with = [
-        'bz2', 'curl', 'iconv', 'mysql', 'mysqli', 'kerberos', 'sqlite3',
-        'xsl', 'gdbm', 'db', 'ldap', 'gd', 'gettext',
-        'regex=php', 'pic', 'pcre-regex', 'pgsql', 'pdo-mysql', 'pdo-pgsql',
-        'openssl'
+        'mysql', 'kerberos', 'gdbm', 'db', 'regex=php', 'pic', 'external-pcre', 'pcre-regex', 'openssl'
+    ]
+    configure_with_shared = [
+        'pgsql', 'gettext', 'ldap', 'xsl', 'pdo-pgsql', 'pdo-mysql', 'iconv', 'bz2', 'curl', 'gmp', 'jpeg', 'mysqli', 'sqlite3', 'zip', 'pdo-sqlite'
     ]
     configure_without = []
 
@@ -39,6 +38,8 @@ def extensions():
         conf.append("--with-%s" % i)
     for i in configure_without:
         conf.append("--without-%s" % i)
+    for i in configure_with_shared:
+        conf.append("--with-%s=shared" % i)
 
     return ' '.join(conf)
 
@@ -106,6 +107,7 @@ def setup():
     shelltools.cd("fcgi")
     autotools.configure("--enable-cgi \
                          --disable-cli \
+                         --enable-embed=shared \
                          --with-config-file-path=/etc/php/cli \
                          --with-config-file-scan-dir=/etc/php/cli/ext \
                          %s \
@@ -123,6 +125,7 @@ def setup():
     shelltools.cd("../fpm")
     autotools.configure("--enable-fpm \
                          --disable-cli \
+                         --enable-embed=shared \
                          --with-fpm-user=apache \
                          --with-fpm-group=apache \
                          --with-config-file-path=/etc/php/apache2 \
@@ -134,6 +137,7 @@ def setup():
     shelltools.cd("../common")
     autotools.configure("--enable-cli \
 		                 --enable-phpdbg \
+                         --enable-embed=shared \
                          %s \
                          %s" % (common_options, extensions()))
 
@@ -191,8 +195,8 @@ def install():
     pisitools.dosym("/etc/php/ext/10-php-zip.ini", "/etc/php/cli/ext/10-php-zip.ini")
 
     # Operations for php-imap package
-    pisitools.dosym("/etc/php/ext/11-php-imap.ini", "/etc/php/cli/ext/11-php-imap.ini")
-    pisitools.dosym("/etc/php/ext/11-php-imap.ini", "/etc/php/apache2/ext/11-php-imap.ini")
+    # pisitools.dosym("/etc/php/ext/11-php-imap.ini", "/etc/php/cli/ext/11-php-imap.ini")
+    # pisitools.dosym("/etc/php/ext/11-php-imap.ini", "/etc/php/apache2/ext/11-php-imap.ini")
 
     # Move /var/run to run
     pisitools.domove("/var/run", "/")
@@ -207,4 +211,5 @@ def install():
     pisitools.remove("/.filemap")
     pisitools.removeDir("/.channels")
     pisitools.removeDir("/.registry")
+    pisitools.remove("/usr/lib/libphp.so")
 
