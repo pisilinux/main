@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 #shelltools.export("PYTHONDONTWRITEBYTECODE", "")
+shelltools.export("PYTHON", "/usr/bin/python3")
 
 def setup():
 
