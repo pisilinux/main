@@ -19,8 +19,7 @@ def setup():
     # shelltools.system("sh ./autogen.sh")
     shelltools.system("sed -i 's|python2-config|python2.7-config|g' configure")
     autotools.configure("--without-gtk-doc \
-                         --without-nvdimm \
-                         --without-dm")
+                         --without-nvdimm")
 
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
