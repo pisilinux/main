@@ -31,5 +31,5 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.rename("/usr/share/enchant/enchant.ordering", "enchant.ordering-2")
+    # pisitools.rename("/usr/share/enchant/enchant.ordering", "enchant.ordering-2")
     pisitools.dodoc("AUTHORS", "NEWS")
