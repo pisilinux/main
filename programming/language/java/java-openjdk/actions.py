@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
@@ -11,7 +11,8 @@ from pisi.util import join_path
 
 _, _, _, update = get.srcVERSION().split('.')
 #jobs = "-j"+ subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
-jobs = subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+# jobs = subprocess.check_output("nproc 2>/dev/null", shell=True).rstrip("\n")
+jobs = "-j" + subprocess.check_output("nproc 2>/dev/null", shell=True).decode().strip()
 
 jvm_dir = '/usr/lib/jvm/java-openjdk'
 img_dir = 'build/linux-%s-server-release/images' % get.ARCH()
@@ -86,7 +87,7 @@ def install():
         pisitools.domove(
             '/usr/share/man/man1/%s' % man_file,
             '/usr/share/man/man1',
-            '%s-openjdk21.0' % man_file.replace('.1', '')
+            '%s-openjdk24.0' % man_file.replace('.1', '')
         )
 
     # Documentations

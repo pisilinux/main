@@ -12,22 +12,25 @@
         <Icon>gimp</Icon>
         <Summary>GNU Image Manipulation Program</Summary>
         <Description>GIMP is a mature image editor with many advanced features and plugin support.</Description>
-        <Archive sha1sum="9e799da07a70d54bde414c31af866376e00709e7" type="tarbz2">https://download.gimp.org/gimp/v2.10/gimp-2.10.38.tar.bz2</Archive>
+        <Archive sha1sum="f7c52adcf5c8ab3e858ac776d3b7cedd1f94a891" type="tarxz">https://download.gimp.org/gimp/v3.0/gimp-3.0.4.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>bzip2</Dependency>
+            <Dependency>meson</Dependency>
             <Dependency>xz-devel</Dependency>
             <Dependency>gtk-doc</Dependency>
             <Dependency>atk-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
             <Dependency>xdg-utils</Dependency>
             <Dependency>tiff-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>lcms-devel</Dependency>
+            <Dependency>cfitsio-devel</Dependency>
             <Dependency>libheif-devel</Dependency>
             <Dependency>libunwind-devel</Dependency>
             <Dependency>openjpeg2-devel</Dependency>
-            <Dependency versionFrom="0.4.40">gegl-devel</Dependency>
+            <Dependency versionFrom="0.4.62">gegl-devel</Dependency>
             <Dependency>glib-networking</Dependency>
-            <Dependency versionFrom="0.1.98">babl-devel</Dependency>
+            <Dependency versionFrom="0.1.114">babl-devel</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>aalib-devel</Dependency>
@@ -74,6 +77,9 @@
             <Dependency>shared-mime-info</Dependency>
             <Dependency>webp-devel</Dependency>
             <Dependency>openexr-devel</Dependency>
+            <Dependency>appstream-glib-devel</Dependency>
+            <Dependency>python3-pygobject3-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
         </BuildDependencies>
         <Patches>
 <!--             <Patch>single_window.patch</Patch> -->
@@ -105,6 +111,7 @@
         <IsA>app:gui</IsA>
         <RuntimeDependencies>
             <Dependency>xz</Dependency>
+            <Dependency>gtk3</Dependency>
             <Dependency>dbus</Dependency>
             <Dependency>webp</Dependency>
             <Dependency>babl</Dependency>
@@ -121,6 +128,7 @@
             <Dependency>lcms2</Dependency>
             <Dependency>libgcc</Dependency>
             <Dependency>libwmf</Dependency>
+            <Dependency>cfitsio</Dependency>
             <Dependency>libXpm</Dependency>
             <Dependency>libmng</Dependency>
             <Dependency>libpng</Dependency>
@@ -151,7 +159,9 @@
 <!--             <Dependency>webkit-gtk2</Dependency> -->
             <Dependency>poppler-glib</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>appstream-glib</Dependency>
             <Dependency>mypaint-brushes1</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
@@ -167,11 +177,12 @@
             <Path fileType="data">/usr/share/mime-info</Path>
             <Path fileType="data">/usr/share/applications</Path>
             <Path fileType="data">/usr/share/application-registry</Path>
-            <Path fileType="data">/usr/share/locale/ky/LC_MESSAGES/gimp20.mo</Path>
             <Path fileType="data">/usr/share/locale/kab</Path>
+            <Path fileType="data">/usr/share/vala</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
         </Files>
         <AdditionalFiles>
-            <AdditionalFile target="/usr/share/gimp/2.0/images/gimp-splash.png">gimp-splash-pencils.png</AdditionalFile>
+            <AdditionalFile target="/usr/share/gimp/3.0/images/gimp-splash.png">gimp-splash-pencils.png</AdditionalFile>
         </AdditionalFiles>
     </Package>
 
@@ -1224,7 +1235,51 @@
         </Files>
     </Package>
 
+    <Package>
+        <Name>gimp-i18n-ky</Name>
+        <IsA>locale:mr</IsA>
+        <PartOf>multimedia.graphics.gimp.l10n</PartOf>
+        <Summary>Gimp translation files for Scottish Moritanya</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gimp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="localedata">/usr/share/locale/ky</Path>
+        </Files>
+    </Package>
+    <Package>
+        <Name>gimp-i18n-ckb</Name>
+        <IsA>locale:mr</IsA>
+        <PartOf>multimedia.graphics.gimp.l10n</PartOf>
+        <Summary>Gimp translation files for Scottish Moritanya</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gimp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="localedata">/usr/share/locale/ckb</Path>
+        </Files>
+    </Package>
+    <Package>
+        <Name>gimp-i18n-bn</Name>
+        <IsA>locale:mr</IsA>
+        <PartOf>multimedia.graphics.gimp.l10n</PartOf>
+        <Summary>Gimp translation files for Scottish Moritanya</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">gimp</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="localedata">/usr/share/locale/bn</Path>
+        </Files>
+    </Package>
+
     <History>
+        <Update release="23">
+            <Date>2025-05-19</Date>
+            <Version>3.0.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="22">
             <Date>2024-09-24</Date>
             <Version>2.10.38</Version>

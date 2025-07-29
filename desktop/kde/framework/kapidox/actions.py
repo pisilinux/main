@@ -1,19 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import kde6
+from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
 
-def setup():
-    kde6.configure()
-
 def build():
-    kde6.make()
+    python3modules.compile()
 
 def install():
-    kde6.install()
+    python3modules.install()
 
     pisitools.dodoc("README.md")

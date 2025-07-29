@@ -7,26 +7,24 @@
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 i = "-Wno-incompatible-pointer-types -Wno-implicit-function-declaration -Wno-deprecated-declarations"
 
 def setup():
     pisitools.cflags.add(i)
-    autotools.configure("--libexecdir=/usr/lib \
+    mesontools.configure("--libexecdir=/usr/lib \
                          --localstatedir=/var \
-                         --disable-static \
-                         --disable-dependency-tracking \
-                         --host=%s \
-                         --disable-debug" % get.CHOST())
+                         -Ddebug=false")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
+    # pisitools.dosed("libtool", " -shared ", " -Wl,--as-needed -shared ")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "COPYING", "NEWS", "README*")
 

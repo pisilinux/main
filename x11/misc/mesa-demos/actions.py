@@ -12,20 +12,16 @@ demos_dir = "/usr/lib/mesa/demos"
 demos_dir_emul32 = "/usr/lib32/mesa/demos"
 
 def setup():
-    # autotools.autoreconf("-fvi")
-    options = "-Dwith-system-data-files=true \
+    options = "-Dosmesa=disabled -Dwith-system-data-files=true \
                --bindir=%s" % (demos_dir_emul32 if get.buildTYPE() == "emul32" else demos_dir)
 
     mesontools.configure(options)
-    # pisitools.dosed("libtool","( -shared )", " -Wl,--as-needed\\1")
 
 def build():
     mesontools.build()
-    # autotools.make()
 
 def install():
     mesontools.install()
-    # autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     if get.buildTYPE() == "emul32":
         for util in ("glxgears", "glxinfo"):

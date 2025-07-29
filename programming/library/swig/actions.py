@@ -13,6 +13,7 @@ def setup():
     shelltools.export("PYTHON", "/usr/bin/python3")
     shelltools.system("sed -i 's/\$(PERL5_SCRIPT/-I. &/' Examples/Makefile.in")
     shelltools.system("sed -i 's/\$command 2/-I. &/' Examples/test-suite/perl5/run-perl-test.pl")
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--without-clisp \
                          --with-python3 \
                          --without-maximum-compile-warnings")

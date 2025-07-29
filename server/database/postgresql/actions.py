@@ -80,7 +80,7 @@ def install():
     # No static libs
     pisitools.remove("/usr/lib/*.a")
 
-    pisitools.dodoc("README", "HISTORY", "COPYRIGHT")
+    pisitools.dodoc("README*", "HISTORY", "COPYRIGHT")
     pisitools.dodoc("doc/MISSING_FEATURES", "doc/KNOWN_BUGS", "doc/TODO")
     pisitools.dodir("/var/lib/postgresql")
     pisitools.dodir("/var/lib/postgresql/data")

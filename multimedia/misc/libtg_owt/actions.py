@@ -19,7 +19,7 @@ def setup():
     shelltools.system("git clone https://github.com/google/crc32c")
     shelltools.system("git clone https://chromium.googlesource.com/libyuv/libyuv.git")
     # shelltools.system("git clone https://github.com/cisco/libsrtp")
-    shelltools.system("git clone https://github.com/abseil/abseil-cpp.git")
+    shelltools.system("git clone https://github.com/abseil/abseil-cpp")
 
     # shelltools.system("rm -rf src/third_party/libvpx/source/libvpx")
     # shelltools.move("libvpx/*", "src/third_party/libvpx/source/libvpx")
