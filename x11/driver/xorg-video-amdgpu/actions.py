@@ -7,23 +7,22 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    pisitools.cflags.add("-fcommon -fno-plt")
-    shelltools.export("CXXFLAGS", "-fno-plt")
-    autotools.configure("--enable-glamor")
+    # pisitools.cflags.add("-fcommon -fno-plt")
+    # shelltools.export("CXXFLAGS", "-fno-plt")
+    mesontools.configure()
     
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
 def build():
-    autotools.make()
+    mesontools.build()
     
 def check():
-    autotools.make("check")
+    mesontools.build("test")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.dodoc("COPYING", "README*")
