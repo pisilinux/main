@@ -20,6 +20,8 @@ j = ''.join([
     ])
 
 def setup():
+    pisitools.cxxflags.add("-fpermissive")
+    # autotools.autoreconf("-fi")
     autotools.configure(j)
 
     #fix unused direct dependency analysis
