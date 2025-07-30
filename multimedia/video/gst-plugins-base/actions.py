@@ -15,7 +15,8 @@ def setup():
     shelltools.export("AUTOPOINT", "true")
     options = "-Dpackage-name='PisiLinux gstreamer-plugins-base package' \
                -Dpackage-origin='https://www.pisilinux.org' \
-               -Dtremor=disabled \
+               -Dgst-plugins-base:libvisual=disabled \
+               -Dgst-plugins-base:tremor=disabled \
                -Dexamples=disabled \
               "
     if get.buildTYPE() == "emul32":
