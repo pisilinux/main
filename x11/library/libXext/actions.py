@@ -8,13 +8,21 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
+    options = "--disable-static"
+
+    if get.buildTYPE() == "emul32":
+        options += " --disable-static"
+
     autotools.autoreconf("-vif")
-    autotools.configure("--disable-static")
+    autotools.configure(options)
 
 def build():
     autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    if get.buildTYPE() == "emul32":
+        return
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README*")
