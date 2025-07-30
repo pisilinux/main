@@ -12,7 +12,8 @@ from pisi.actionsapi import pisitools
 def setup():
     mesontools.configure("-Dpackage-name='PisiLinux gstreamer-plugins-good package' \
                           -Dpackage-origin='https://www.pisilinux.org' \
-                          -Dqt5=disabled")
+                          -Dqt5=disabled \
+                          -Dqt6=disabled")
 
 def build():
     mesontools.build()
