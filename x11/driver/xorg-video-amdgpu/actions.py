@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 def setup():
     # pisitools.cflags.add("-fcommon -fno-plt")
     # shelltools.export("CXXFLAGS", "-fno-plt")
-    mesontools.configure()
+    mesontools.configure("-Dglamor=enabled")
     
     
 def build():
