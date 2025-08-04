@@ -29,7 +29,7 @@ def setup():
     shelltools.system("rm -rf langpack-tb/*/browser/defaults")
     if not shelltools.isDirectory(xpidir): shelltools.makedirs(xpidir)
     for locale in locales:
-        shelltools.system("wget -c -P %s http://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/%sesr/linux-%s/xpi/%s.xpi" % (xpidir, ver, arch, locale))
+        shelltools.system("wget -c -P %s http://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/%s/linux-%s/xpi/%s.xpi" % (xpidir, ver, arch, locale))
 
         shelltools.makedirs("langpack-tb")
         shelltools.system("cp %s/%s.xpi langpack-tb/langpack-%s@thunderbird.mozilla.org.xpi" % (xpidir, locale, locale))
