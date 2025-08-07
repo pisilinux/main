@@ -27,6 +27,7 @@ def setup():
                -Degl=enabled \
                -Dglvnd=enabled \
                -Dllvm=enabled \
+               -D gallium-mediafoundation=disabled \
                -Dvalgrind=enabled \
                -Dlibunwind=disabled \
                -Dbuild-tests=false \
@@ -36,7 +37,7 @@ def setup():
         # shelltools.export("LDFLAGS", "%s -L/usr/lib32"  % get.LDFLAGS())
         # shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
         options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled \
-                     -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio \
+                     -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio -D sysprof=false -D intel-rt=disabled \
                      -Dvulkan-layers=device-select,intel-nullhw,overlay \
                      -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink \
                    "
@@ -56,6 +57,8 @@ def setup():
         options += " -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
+                             -D sysprof=true \
+                             -D intel-rt=enabled \
                              -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
                              -Dvulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
