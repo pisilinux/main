@@ -57,7 +57,7 @@ def setup():
         options += " -Dlmsensors=enabled -Dzstd=enabled \
                              -Dgallium-rusticl=true \
                              -Drust_std=2021 \
-                             -D sysprof=true \
+                             -D sysprof=false \
                              -D intel-rt=enabled \
                              -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
                              -Dvulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental \
