@@ -11,6 +11,9 @@ from pisi.actionsapi import get
 
 import os
 
+
+shelltools.export("PYTHON", "/usr/bin/python3")
+
 def setup():
     # Patch compressed PPDs
     for patch in sorted(os.listdir("ppd-patches")):
@@ -30,6 +33,7 @@ def setup():
 
     # Change python shebang
     shelltools.system("find -name '*.py' -print0 | xargs -0 sed -i 's,^#!/usr/bin/env python,#!/usr/bin/python,'")
+    shelltools.system("find -name '*.py' -print0 | xargs -0 sed -i 's,^#!/usr/bin/python,#!/usr/bin/python3,'")
 
     # These are barely the defaults except:
     # --enable-foomatic-drv-install (default=no) (respected by Fedora, enabled by Ubuntu)
