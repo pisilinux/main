@@ -13,7 +13,7 @@
         <Icon>hplip</Icon>
         <Summary>HP Linux Imaging and Printing System</Summary>
         <Description>HP Linux Imaging and Printing (HPLIP) System includes printer and scanner drivers and related service tools.</Description>
-        <Archive sha1sum="7790ac35acb5b703b19715b08b49031f090d2bed" type="targz">mirrors://sourceforge/hplip/hplip-3.24.4.tar.gz</Archive>
+        <Archive sha1sum="3c5933eea8c41ebf2279a440004b6cc9d3cfddb9" type="targz">mirrors://sourceforge/hplip/hplip-3.25.6.tar.gz</Archive>
         <AdditionalFiles>
             <!-- PPD patcher -->
             <AdditionalFile permission="0755" target="patch-ppds">patch-ppds.sh</AdditionalFile>
@@ -32,15 +32,15 @@
             <Dependency>sane-backends-devel</Dependency>
             <Dependency>cups-devel</Dependency>
             <Dependency>python3-devel</Dependency>
-            <Dependency>python-devel</Dependency>
+<!--             <Dependency>python-devel</Dependency> -->
             <Dependency>libusb-devel</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>desktop-file-utils</Dependency>
             <Dependency>avahi-devel</Dependency>
-            <Dependency>python-reportlab</Dependency>
+            <Dependency>python3-reportlab</Dependency>
             <Dependency>libxcrypt-devel</Dependency>
-            <Dependency>python-pillow-devel</Dependency>
+            <Dependency>python3-pillow-devel</Dependency>
 <!--             <Dependency>python-qt5-devel</Dependency> -->
         </BuildDependencies>
         <Patches>
@@ -91,6 +91,9 @@
             <Patch level="1">Re-add-drivers-missing-from-3.19.1.patch</Patch>
             <Patch level="1">reproducible-gzip.patch</Patch>
 <!--             <Patch level="1">fix-Werror-format-security.patch</Patch> -->
+
+            <Patch level="1">hplip-configure-python.patch</Patch>
+            <Patch level="1">python3.diff</Patch>
         </Patches>
     </Source>
 
@@ -115,8 +118,8 @@
             <Dependency>openssl</Dependency>
             <Dependency>avahi</Dependency>
             <Dependency>avahi-libs</Dependency>
-            <Dependency>python-pillow</Dependency>
-            <Dependency>python-reportlab</Dependency>
+            <Dependency>python3-pillow</Dependency>
+            <Dependency>python3-reportlab</Dependency>
 <!--             <Dependency>usb-modeswitch</Dependency> -->
         </RuntimeDependencies>
         <Files>
@@ -154,8 +157,8 @@
         <RuntimeDependencies>
             <Dependency release="current">hplip</Dependency>
 <!--             <Dependency>python-reportlab</Dependency> -->
-            <Dependency>python-pygobject</Dependency>
-            <Dependency>python-qt5</Dependency>
+            <Dependency>python3-pygobject3</Dependency>
+            <Dependency>python3-qt5</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin/hp-toolbox</Path>
@@ -190,6 +193,13 @@
     </Package>
 
     <History>
+        <Update release="20">
+            <Date>2025-08-13</Date>
+            <Version>3.25.6</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="19">
             <Date>2024-12-24</Date>
             <Version>3.24.4</Version>
