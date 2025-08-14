@@ -16,4 +16,4 @@ def build():
 def install():
     kde6.install()
 
-    pisitools.dodoc("COPYING")
+    pisitools.dodoc("LICENSES/*")
