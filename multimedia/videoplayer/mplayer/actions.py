@@ -13,7 +13,7 @@ from pisi.actionsapi import pythonmodules
 pisitools.flags.sub("-O[\ds]+", "-O3")
 
 def setup():
-    shelltools.system("mv ffmpeg-4.4.1 ffmpeg")
+    shelltools.system("mv ffmpeg-7.0.2 ffmpeg")
 	
     autotools.rawConfigure('\
                         --prefix=/usr \
