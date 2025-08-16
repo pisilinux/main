@@ -12,7 +12,6 @@ from pisi.actionsapi import get
 
 j = ''.join([
     '-Dsession-manager=elogind',
-    ' -Dlocking=true',
     ' -Dauthentication-scheme=pam',
     ' -Dshadow=true',
     ' -Dpam-auth-type=system'])
