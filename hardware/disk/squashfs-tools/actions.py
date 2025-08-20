@@ -13,7 +13,7 @@ def build():
     shelltools.cd("squashfs-tools")
     #Chakra features
     #reduce memory requirements of unsquashfs to support installation on systems with 256 MB RAM 
-    cmd1='sed -i -e "s/BUFFER_DEFAULT [0-9]*/BUFFER_DEFAULT 32/" unsquashfs.h'
+    # cmd1='sed -i -e "s/BUFFER_DEFAULT [0-9]*/BUFFER_DEFAULT 32/" unsquashfs.h'
     cmd2="sed -i 's|^#XZ_SUPPORT = 1|XZ_SUPPORT = 1|' Makefile"
     cmd3="sed -i 's|^#LZO_SUPPORT = 1|LZO_SUPPORT = 1|' Makefile"
     cmd4="sed -i 's|^#LZ4_SUPPORT = 1|LZ4_SUPPORT = 1|' Makefile"
@@ -21,7 +21,8 @@ def build():
     cmd6="sed -i 's|^#ZSTD_SUPPORT = 1|ZSTD_SUPPORT = 1|' Makefile"
     cmd7="sed -i 's|^#LZMA_XZ_SUPPORT = 1|LZMA_XZ_SUPPORT = 1|' Makefile"
     cmd8="sed -i 's|^COMP_DEFAULT = gzip|COMP_DEFAULT = xz|' Makefile"
-    cmds=[cmd1,cmd2,cmd3,cmd4,cmd5,cmd6,cmd7,cmd8]
+    cmds=[cmd2,cmd3,cmd4,cmd5,cmd6,cmd7,cmd8]
+    # cmd1
         
     for cmd in cmds:
         shelltools.system(cmd)
