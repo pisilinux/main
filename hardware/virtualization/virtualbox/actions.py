@@ -128,7 +128,7 @@ def install():
     shelltools.cd("sdk/installer/python/vboxapi")
     # shelltools.copy("vboxapisetup.py", "setup.py")
     shelltools.export("VBOX_INSTALL_PATH", VBoxLibDir)
-    pythonmodules.install()
+    pythonmodules.install(pyVer="3")
 
     shelltools.cd("../../../..")
     mvb_name = "module-virtualbox-%s" % get.srcVERSION()
