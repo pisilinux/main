@@ -7,7 +7,7 @@ from pisi.actionsapi import kde5
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
     kde5.make()
