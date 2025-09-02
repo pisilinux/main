@@ -12,8 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("-Dlandlock=enabled \
-                          -Dsystemd_user_services=false \
-                          -Dnetwork_manager=disabled")
+                          -Dsystemd_user_services=false")
 
 def build():
     mesontools.build()
