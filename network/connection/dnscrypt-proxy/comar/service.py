@@ -13,8 +13,8 @@ PIDFILE="/run/dnscrypt-proxy.pid"
 def start():
     # path to executable
     # creates a pid file, sets the working directory and calls the jar file
-    startService(command="/usr/bin/dnscrypt-proxy",
-                 args="--config /etc/dnscrypt-proxy/dnscrypt-proxy.toml",
+    startService(command="/usr/bin/dnscrypt-proxy-comar-compat.sh",
+                 args="",
                  donotify=True)
 
 @synchronized
