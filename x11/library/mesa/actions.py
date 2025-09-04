@@ -60,7 +60,7 @@ def setup():
                              -D sysprof=false \
                              -D intel-rt=enabled \
                              -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
-                             -Dvulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental \
+                             -Dvulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental,asahi,freedreno \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
