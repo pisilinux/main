@@ -7,22 +7,16 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    shelltools.system("meson --prefix=/usr --buildtype=plain")
+     mesontools.configure()
 
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
 
-    shelltools.cd("..")
     pisitools.dodoc("COPYING", "README")
-
-    #pisitools.dodoc("AUTHORS", "NEWS", "README", "ChangeLog", "INSTALL", "COPYING")
