@@ -29,11 +29,10 @@ def setup():
         -Dsanlock=disabled \
         -Dsecdriver_apparmor=disabled \
         -Dsecdriver_selinux=disabled \
-        -Dstorage_sheepdog=disabled \
         -Dstorage_vstorage=disabled \
         -Ddtrace=disabled \
         -Dnumad=disabled \
-        -Ddocs=disabled \
+        -Ddocs=enabled \
         -Dstorage_zfs=enabled")
 
 def build():
