@@ -49,7 +49,7 @@ def install():
     # for f in shelltools.ls("%s/usr/bin" % get.installDIR()):
         # pisitools.domove("/usr/bin/%s" % f, "/usr/bin", f.replace(".py", ""))
     # else:
-        # pisitools.dosym("/usr/bin/rst2man", "/usr/bin/rst2man.py")
+    pisitools.dosym("/usr/bin/rst2man", "/usr/bin/rst2man.py")
         
     # for bin in shelltools.ls("%s/usr/bin" % get.installDIR()):
         # pisitools.rename("/usr/bin/%s" % bin, "%s_3" % bin)
