@@ -34,7 +34,8 @@ def setup():
         -Dstorage_vstorage=disabled \
         -Ddtrace=disabled \
         -Dnumad=disabled \
-        -Dstorage_zfs=enabled ..")
+        -Dstorage_zfs=enabled \
+        -Ddocs=disabled ..")
 
 def build():
     shelltools.cd("build")
