@@ -7,12 +7,11 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.makedirs("build")
-    shelltools.cd("build")
-    shelltools.system("meson --libexecdir=/usr/lib \
+    mesontools.configure("--libexecdir=/usr/lib \
         --prefix=/usr \
         -Drunstatedir=/run \
         -Dqemu_user=libvirt-qemu \
@@ -30,20 +29,16 @@ def setup():
         -Dsanlock=disabled \
         -Dsecdriver_apparmor=disabled \
         -Dsecdriver_selinux=disabled \
-        -Dstorage_sheepdog=disabled \
         -Dstorage_vstorage=disabled \
         -Ddtrace=disabled \
         -Dnumad=disabled \
-        -Dstorage_zfs=enabled \
-        -Ddocs=disabled ..")
+        -Ddocs=enabled \
+        -Dstorage_zfs=enabled")
 
 def build():
-    shelltools.cd("build")
-    shelltools.system("ninja")
+    mesontools.build()
 
 def install():
-    shelltools.cd("build")
-    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    mesontools.install()
 
-    shelltools.cd("..")
     pisitools.dodoc("COPYING*", "NEWS*", "README*")
