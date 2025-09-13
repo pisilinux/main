@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("export SANDBOX_WRITE="/usr/lib/python3.11/site-packages")
+    shelltools.system('export SANDBOX_WRITE="/usr/lib/python3.11/site-packages"')
     kde6.configure("-DBUILD_GEO_SCHEME_HANDLER=OFF")
 
 def build():
