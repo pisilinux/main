@@ -18,6 +18,7 @@ def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_TESTS=OFF \
+                          -DSHIBOKEN_PYTHON_LIBRARIES=`pkgconf python3-embed --libs` \
                           -DPYTHON_EXECUTABLE=/usr/bin/python3", sourceDir="..")
 
 
