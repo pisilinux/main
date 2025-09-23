@@ -22,19 +22,23 @@ WorkDir = "rustc-%s-src" %get.srcVERSION()
 #At phase 2, rust will be built again with this newly built rust.
 #Before phase 2, the lines below will be commented out.
 
-RustBinDir = "rust-%s-x86_64-unknown-linux-gnu" %get.srcVERSION()
-RustcDir = "%s/rustbin" %get.workDIR()
+# Farklı sürüm ile derlenmek isterse aç kendi sürümünü kapat
+# RustBinDir = "rust-1.89.0-x86_64-unknown-linux-gnu"
+
+# Kendi sürümü ile derleme
+# RustBinDir = "rust-%s-x86_64-unknown-linux-gnu" %get.srcVERSION()
+# RustcDir = "%s/rustbin" %get.workDIR()
 
 #################################################################
 
 def build():
     #İkinci aşamada bu satırlar da yoruma çevrilecek.
     #At phase 2, these lines also will be commented out.
-    shelltools.cd(RustBinDir)
-    shelltools.system("./install.sh --prefix=%s" %RustcDir)
-    shelltools.cd("..")
-    pisitools.dosed("config.toml", "/usr/bin/cargo", RustcDir+"/bin/cargo")
-    pisitools.dosed("config.toml", "/usr/bin/rustc", RustcDir+"/bin/rustc")
+    # shelltools.cd(RustBinDir)
+    # shelltools.system("./install.sh --prefix=%s" %RustcDir)
+    # shelltools.cd("..")
+    # pisitools.dosed("config.toml", "/usr/bin/cargo", RustcDir+"/bin/cargo")
+    # pisitools.dosed("config.toml", "/usr/bin/rustc", RustcDir+"/bin/rustc")
     ####################################################
 
     shelltools.export("LC_ALL", "en_US.UTF-8")
