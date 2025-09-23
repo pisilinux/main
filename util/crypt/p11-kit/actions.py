@@ -10,8 +10,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools, mesontools
 
 def setup():
-    options = "-Dmodule_path=/usr/lib/pkcs11 -Dtrust_paths=/etc/ssl/certs/ca-certificates.crt -Dman=true -Dgtk_doc=true\
-                    "
+    options = "-Dmodule_path=/usr/lib/pkcs11 \
+               -Dtrust_paths=/etc/ssl/certs/ca-certificates.crt \
+               -Dman=true -Dgtk_doc=true \
+              "
               
     if get.buildTYPE() == "emul32":
         shelltools.export("CC", "%s -m32" % get.CC())
