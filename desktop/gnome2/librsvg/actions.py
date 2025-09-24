@@ -10,14 +10,15 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
-
 def setup():
-    #shelltools.system("sed -i '/tree_index/d' doc/rsvg-docs.xml")
-    # autotools.autoreconf("-fiv")
+    # shelltools.export("CARGO_PROFILE_RELEASE_DEBUG", "2")
+    # shelltools.export("CARGO_PROFILE_RELEASE_STRIP", "false")
+    # shelltools.export("CARGO_PROFILE_RELEASE_LTO", "true")
+    # shelltools.export("CARGO_PROFILE_RELEASE_CODEGEN_UNITS", "1")
+    # shelltools.system("""cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')" """)
+
     mesontools.configure()
     
-    
-    # pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
     mesontools.build()
