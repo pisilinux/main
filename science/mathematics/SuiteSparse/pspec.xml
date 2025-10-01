@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>SuiteSparse</Name>
@@ -13,7 +13,7 @@
         <IsA>library</IsA>
         <Summary>SuiteSparse, a suite of Sparse matrix software</Summary>
         <Description>SuiteSparse is a single archive that contains sparse matrix libraries.</Description>
-        <Archive sha1sum="71963dec82e46226eb329432069a916144fa4d98" type="targz">https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/refs/tags/v5.13.0.tar.gz</Archive>
+        <Archive sha1sum="877495a86ed9bbd9f38e1de273412949fe43ad9b" type="targz">https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/refs/tags/v7.11.0.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
             <Dependency>gmp-devel</Dependency>
@@ -33,14 +33,18 @@
         <Name>SuiteSparse</Name>
         <Summary>SuiteSparse, a suite of Sparse matrix software</Summary>
         <RuntimeDependencies>
+            <Dependency>gmp</Dependency>
+            <Dependency>mpfr</Dependency>
             <Dependency>blas</Dependency>
             <Dependency>metis</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>lapack</Dependency>
             <Dependency>libgomp</Dependency>
             <Dependency>onetbb</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/lib*</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
@@ -53,10 +57,19 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="6">
+            <Date>2025-09-28</Date>
+            <Version>7.11.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
         <Update release="5">
             <Date>2023-10-26</Date>
             <Version>5.13.0</Version>
