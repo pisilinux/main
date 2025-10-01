@@ -63,7 +63,6 @@ def setup():
                         --enable-scripting-beanshell      \
                         --enable-scripting-javascript     \
                         --enable-ext-wiki-publisher       \
-                        --enable-ext-numbertext           \
                         --enable-ext-nlpsolver            \
                         --enable-option-checking=fatal    \
                         --disable-fetch-external          \
@@ -86,7 +85,6 @@ def setup():
                         --without-system-libstaroffice    \
                         --without-system-coinmp           \
                         --without-system-libabw           \
-                        --without-system-argon2           \
                         --without-system-libcmis          \
                         --without-system-libebook         \
                         --without-system-libepubgen       \
@@ -100,6 +98,7 @@ def setup():
                         --without-system-jfreereport      \
                         --without-system-zxcvbn           \
                         --without-system-java-websocket   \
+                        --without-system-libeot           \
                         --with-jdk-home=/usr/lib/jvm/java-openjdk \
                         --with-external-tar=external/tarballs       \
                         --with-gdrive-client-id=413772536636.apps.googleusercontent.com \
@@ -160,8 +159,8 @@ def install():
     # cleanup gid_Module
     pisitools.remove("gid_Module*")
 
-    pisitools.remove("/usr/lib/libreoffice/share/extensions/numbertext/pythonpath/Makefile")
-    pisitools.removeDir("/usr/lib/libreoffice/share/extensions/numbertext/idl/")
+    # pisitools.remove("/usr/lib/libreoffice/share/extensions/numbertext/pythonpath/Makefile")
+    # pisitools.removeDir("/usr/lib/libreoffice/share/extensions/numbertext/idl/")
 
     # add application descriptions
     pisitools.insinto("/usr/share/appdata/", "sysui/desktop/appstream-appdata/libreoffice-*.xml")
