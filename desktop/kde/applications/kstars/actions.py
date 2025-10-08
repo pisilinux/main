@@ -12,7 +12,8 @@ from pisi.actionsapi import get
 def setup():
     shelltools.system("rm -f po/de/docs/kstars/index.docbook")
     shelltools.system("sed -e 's|DATA_INSTALL_DIR|CMAKE_INSTALL_DATADIR|g' -i kstars/data/*/CMakeLists.txt")
-    kde6.configure("-DBUILD_QT5=OFF")
+    kde6.configure("-DBUILD_WITH_QT6=ON \
+                    -DBUILD_QT5=OFF")
 
 def build():
     kde6.make()
