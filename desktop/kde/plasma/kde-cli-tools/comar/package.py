@@ -4,4 +4,4 @@
 import os
 
 def postInstall(fromVersion, fromRelease, toVersion, toRelease):
-    os.system("ln -s /usr/lib/kf5/kdesu /usr/bin/kdesu")
+    os.system("ln -s /usr/lib/kf6/kdesu /usr/bin/kdesu")
