@@ -37,6 +37,7 @@ def setup():
                           -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.5 \
                           -DSHOULD_INSTALL_JS_SHELL=ON \
                           -DUSE_WPE_RENDERER=OFF \
+                          -DUSE_FLITE=OFF \
                           -DENABLE_MINIBROWSER=ON", sourceDir="..")
 
 def build():
