@@ -8,16 +8,17 @@ from pisi.actionsapi import cmaketools
 
 i = ''.join([
     ' -DCMAKE_BUILD_TYPE=Release',
+    ' -DBUILD_TESTING=OFF',
     ' -DBUILD_SHARED_LIBS=ON',
     ' -DHWY_SYSTEM_GTEST=ON',
-    ' -B_build -L '
+    ' -B build -L '
     ])
 
 def setup():
 	cmaketools.configure(i)
 
 def build():
-	cmaketools.make("-C _build")
+	cmaketools.make("-C build")
 
 def install():
-	cmaketools.install("-C _build")
+	cmaketools.install("-C build")
