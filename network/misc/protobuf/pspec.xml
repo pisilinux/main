@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>protobuf</Name>
@@ -16,16 +16,15 @@
         <Archive sha1sum="45804be54bbc5716e99df20d0b53f5cca626977f" type="targz" name="protobuf-3.25.4.tar.gz">https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.25.4.tar.gz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
-            <Dependency>gtest-devel</Dependency>
             <Dependency>python-wheel</Dependency>
             <Dependency>python-devel</Dependency>
             <Dependency>python3-devel</Dependency>
             <Dependency>python-setuptools</Dependency>
             <Dependency>python3-setuptools</Dependency>
-            <Dependency>abseil-cpp-devel</Dependency>
+            <Dependency versionFrom="1.17.0">gtest-devel</Dependency>
+            <Dependency versionFrom="20250814.1">abseil-cpp-devel</Dependency>
         </BuildDependencies>
     </Source>
-
     <Package>
         <Name>protobuf</Name>
         <Summary>Google's data interchange format</Summary>
@@ -49,8 +48,8 @@
         <Name>protobuf-devel</Name>
         <Summary>Development files for protobuf</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">protobuf</Dependency>
             <Dependency>abseil-cpp-devel</Dependency>
+            <Dependency release="current">protobuf</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/usr/lib/pkgconfig</Path>
@@ -59,19 +58,17 @@
             <Path fileType="header">/usr/include/google/protobuf</Path>
         </Files>
     </Package>
-
     <!--Package>
-        <Name>python-protobuf</Name>
-        <Summary>Python 2 bindings for Google Protocol Buffers</Summary>
-        <RuntimeDependencies>
-            <Dependency>python-setuptools</Dependency>
-            <Dependency release="current">protobuf-devel</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib/python2*</Path>
-        </Files>
-    </Package-->
-
+                <Name>python-protobuf</Name>
+                <Summary>Python 2 bindings for Google Protocol Buffers</Summary>
+                <RuntimeDependencies>
+                        <Dependency>python-setuptools</Dependency>
+                        <Dependency release="current">protobuf-devel</Dependency>
+                </RuntimeDependencies>
+                <Files>
+                        <Path fileType="library">/usr/lib/python2*</Path>
+                </Files>
+        </Package-->
     <Package>
         <Name>python3-protobuf</Name>
         <Summary>Python 3 bindings for Google Protocol Buffers</Summary>
@@ -86,6 +83,13 @@
     </Package>
 
     <History>
+        <Update release="22">
+            <Date>2025-09-25</Date>
+            <Version>3.25.4</Version>
+            <Comment>Rebuild.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="21">
             <Date>2024-08-21</Date>
             <Version>3.25.4</Version>
