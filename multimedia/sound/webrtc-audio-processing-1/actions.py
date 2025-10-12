@@ -10,6 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("patch -p1 < abseil-cpp-202508.patch")
     mesontools.configure()
 
 def build():
