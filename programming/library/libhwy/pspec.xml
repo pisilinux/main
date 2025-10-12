@@ -1,65 +1,69 @@
 <?xml version="1.0" ?>
 <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
-	<Source>
-		<Name>libhwy</Name>
-		<Homepage>https://github.com/google/highway</Homepage>
-		<Packager>
-			<Name>PisiLinux Community</Name>
-			<Email>admins@pisilinux.org</Email>
-		</Packager>
-		<License>Apache-2</License>
-		<IsA>library</IsA>
-		<PartOf>programming.library</PartOf>
-		<Summary>Efficient and performance-portable vector software.</Summary>
-		<Description>Highway is a C++ library that provides portable SIMD/vector intrinsics.</Description>
-		<Archive sha1sum="52dee4092ae9d6639f9b91cd8e808b372a99c7fe" type="targz">
-			https://github.com/google/highway/archive/refs/tags/1.0.3.tar.gz
-		</Archive>
-		<BuildDependencies>
-			<Dependency>cmake</Dependency>
-			<Dependency>gtest-devel</Dependency>
-		</BuildDependencies>
-		<Patches>
-			<!-- <Patch level='1'></Patch> -->
-		</Patches>
-	</Source>
+    <Source>
+        <Name>libhwy</Name>
+        <Homepage>https://github.com/google/highway</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>Apache-2</License>
+        <IsA>library</IsA>
+        <PartOf>programming.library</PartOf>
+        <Summary>Efficient and performance-portable vector software.</Summary>
+        <Description>Highway is a C++ library that provides portable SIMD/vector intrinsics.</Description>
+        <Archive sha1sum="a183bad01931bd6a8a9d969ece80e79c3712e9e3" type="targz">https://github.com/google/highway/archive/refs/tags/1.0.7.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency versionFrom="1.17.0">gtest-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- <Patch level='1'></Patch> -->
+        </Patches>
+    </Source>
+    <Package>
+        <Name>libhwy</Name>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+        </Files>
+    </Package>
 
-	<Package>
-		<Name>libhwy</Name>
-		<RuntimeDependencies>
-			<Dependency>libgcc</Dependency>
-		</RuntimeDependencies>
-		<Files>
-			<Path fileType="library">/usr/lib</Path>
-		</Files>
-	</Package>
+    <Package>
+        <Name>libhwy-devel</Name>
+        <RuntimeDependencies>
+            <Dependency release="current">libhwy</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="headers">/usr/include/hwy</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
 
-	<Package>
-		<Name>libhwy-devel</Name>
-		<RuntimeDependencies>
-			<Dependency release="current">libhwy</Dependency>
-		</RuntimeDependencies>
-		<Files>
-			<Path fileType="headers">/usr/include/hwy</Path>
-			<Path fileType="data">/usr/lib/pkgconfig</Path>
-		</Files>
-	</Package>
-
-	<History>
-		<Update release="2">
-			<Date>2023-01-27</Date>
-			<Version>1.0.3</Version>
-			<Comment>Version bump</Comment>
-			<Name>fury</Name>
-			<Email>uglyside@yandex.ru</Email>
-		</Update>
-		<Update release="1">
-			<Date>2023-01-06</Date>
-			<Version>1.0.2</Version>
-			<Comment>First build.</Comment>
-			<Name>fury</Name>
-			<Email>uglyside@yandex.ru</Email>
-		</Update>
-	</History>
+    <History>
+        <Update release="3">
+            <Date>2025-09-24</Date>
+            <Version>1.0.7</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+        <Update release="2">
+            <Date>2023-01-27</Date>
+            <Version>1.0.3</Version>
+            <Comment>Version bump</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
+        <Update release="1">
+            <Date>2023-01-06</Date>
+            <Version>1.0.2</Version>
+            <Comment>First build.</Comment>
+            <Name>fury</Name>
+            <Email>uglyside@yandex.ru</Email>
+        </Update>
+    </History>
 </PISI>
