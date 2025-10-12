@@ -8,4 +8,4 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     if os.path.exists("/usr/bin/kdesu"):
         os.remove("/usr/bin/kdesu")
     # Yeni link'i oluştur
-    os.system("ln -s /usr/lib/kf6/kdesu /usr/bin/kdesu")
+    os.symlink("/usr/lib/kf6/kdesu", "/usr/bin/kdesu")
