@@ -11,8 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dparental_controls=disabled \
-                          -Dsystemd=false")
+    mesontools.configure("-Dparental_controls=disabled")
 
 def build():
     mesontools.build()

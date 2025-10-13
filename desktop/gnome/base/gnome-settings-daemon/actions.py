@@ -13,8 +13,8 @@ from pisi.actionsapi import mesontools
 def setup():
     shelltools.system("sed -e 's/libsystemd/libelogind/' \
                            -i plugins/power/test.py")
-    shelltools.system("sed -e 's/(backlight->logind_proxy)/(0)/' \
-                           -i plugins/power/gsd-backlight.c")
+    # shelltools.system("sed -e 's/(backlight->logind_proxy)/(0)/' \
+                           # -i plugins/power/gsd-backlight.c")
 
     mesontools.configure("-Dsystemd=false")
 

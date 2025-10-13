@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>gnome-desktop</Name>
@@ -18,10 +18,10 @@
             <Dependency>meson</Dependency>
             <Dependency>itstool</Dependency>
             <Dependency>gtk-doc</Dependency>
-            <Dependency>docbook-xsl</Dependency>
             <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk4-devel</Dependency>
             <Dependency>bubblewrap</Dependency>
+            <Dependency>docbook-xsl</Dependency>
             <Dependency>eudev-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>libX11-devel</Dependency>
@@ -33,24 +33,23 @@
             <Dependency>libseccomp-devel</Dependency>
             <Dependency>libxkbcommon-devel</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
-            <Dependency versionFrom="44.4">gsettings-desktop-schemas-devel</Dependency>
+            <Dependency versionFrom="49.0">gsettings-desktop-schemas-devel</Dependency>
         </BuildDependencies>
         <!--
-        <Patches>
-            <Patch>gnome-desktop.patch</Patch>
-            <Patch level="1">gnome-desktop.patch</Patch>
-        </Patches>
-        -->
+                <Patches>
+                        <Patch>gnome-desktop.patch</Patch>
+                        <Patch level="1">gnome-desktop.patch</Patch>
+                </Patches>
+                -->
     </Source>
-
     <Package>
         <Name>gnome-desktop</Name>
         <RuntimeDependencies>
             <Dependency>gtk3</Dependency>
             <Dependency>gtk4</Dependency>
+            <Dependency>dbus</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>eudev</Dependency>
-            <Dependency>dbus</Dependency>
             <Dependency>glib2</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>iso-codes</Dependency>
@@ -68,32 +67,33 @@
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
         <!--
-        <AdditionalFiles>
-            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/gnome-desktop.desktop">gnome-desktop.desktop</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/gnome-desktop.png">gnome-desktop.png</AdditionalFile>
-        </AdditionalFiles>
-        -->
+                <AdditionalFiles>
+                        <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/gnome-desktop.desktop">gnome-desktop.desktop</AdditionalFile>
+                        <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/gnome-desktop.png">gnome-desktop.png</AdditionalFile>
+                </AdditionalFiles>
+                -->
         <!--
-        <Provides>
-            <COMAR script="package.py">System.Package</COMAR>
-            <COMAR script="service.py">System.Service</COMAR>
-        </Provides>
-        -->
+                <Provides>
+                        <COMAR script="package.py">System.Package</COMAR>
+                        <COMAR script="service.py">System.Service</COMAR>
+                </Provides>
+                -->
     </Package>
+
     <Package>
         <Name>gnome-desktop-devel</Name>
         <Summary>Development files for gnome-desktop</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">gnome-desktop</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk4-devel</Dependency>
-            <Dependency>iso-codes-devel</Dependency>
             <Dependency>eudev-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
+            <Dependency>iso-codes-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
             <Dependency>libseccomp-devel</Dependency>
             <Dependency>libxkbcommon-devel</Dependency>
+            <Dependency release="current">gnome-desktop</Dependency>
             <Dependency versionFrom="41.0">gsettings-desktop-schemas-devel</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -101,7 +101,7 @@
             <Path fileType="library">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
-    
+
     <Package>
         <Name>gnome-desktop-docs</Name>
         <Summary>Development files for gnome-desktop</Summary>
@@ -112,8 +112,15 @@
             <Path fileType="data">/usr/share/gtk-doc</Path>
         </Files>
     </Package>
-    
+
     <History>
+        <Update release="22">
+            <Date>2025-09-26</Date>
+            <Version>44.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="21">
             <Date>2025-09-05</Date>
             <Version>44.4</Version>

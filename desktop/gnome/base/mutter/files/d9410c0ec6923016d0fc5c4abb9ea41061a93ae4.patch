@@ -1,0 +1,49 @@
+From d9410c0ec6923016d0fc5c4abb9ea41061a93ae4 Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Tue, 23 Sep 2025 12:21:21 +0200
+Subject: [PATCH] clutter: Bail out in gesture event handler on sprite-less
+ events
+
+Gestures mandate a pointing presence, thus require sprites for it to
+work. However, this variable could silently be NULL in case of key
+events and other events related to the keyboard focus, this could
+still happen to go through depending on the gesture state (e.g.
+interaction with the actual pointer), causing an assert.
+
+Make it clear that the ClutterSprite getter for the given event
+may return NULL, and make ClutterGesture bail out on it.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/4340
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4676>
+---
+ clutter/clutter/clutter-gesture.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/clutter/clutter/clutter-gesture.c b/clutter/clutter/clutter-gesture.c
+index a52e7fcb27c..8a058889742 100644
+--- a/clutter/clutter/clutter-gesture.c
++++ b/clutter/clutter/clutter-gesture.c
+@@ -829,8 +829,8 @@ clutter_gesture_handle_event (ClutterAction      *action,
+   ClutterStage *stage = CLUTTER_STAGE (clutter_actor_get_stage (actor));
+   ClutterContext *context = clutter_actor_get_context (actor);
+   ClutterBackend *backend = clutter_context_get_backend (context);
+-  ClutterSprite *sprite = clutter_backend_get_sprite (backend, stage, event);
+   ClutterEventType event_type = clutter_event_type (event);
++  ClutterSprite *sprite;
+   GestureSequenceData *seq_data;
+   unsigned int seq_index;
+   gboolean is_first_event;
+@@ -847,6 +847,10 @@ clutter_gesture_handle_event (ClutterAction      *action,
+   if (clutter_event_get_flags (event) & CLUTTER_EVENT_FLAG_SYNTHETIC)
+     return CLUTTER_EVENT_PROPAGATE;
+ 
++  sprite = clutter_backend_get_sprite (backend, stage, event);
++  if (!sprite)
++    return CLUTTER_EVENT_PROPAGATE;
++
+   if ((seq_data = get_sequence_data (self, sprite, &seq_index)) == NULL)
+     return CLUTTER_EVENT_PROPAGATE;
+ 
+-- 
+GitLab
+

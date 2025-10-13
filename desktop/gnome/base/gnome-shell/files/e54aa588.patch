@@ -1,0 +1,40 @@
+From e54aa588c1604b63e2f051e20c1ecb3e601beb5c Mon Sep 17 00:00:00 2001
+From: Daniel van Vugt <daniel.van.vugt@canonical.com>
+Date: Tue, 23 Sep 2025 14:12:56 +0800
+Subject: [PATCH] slider: Use the sprite of the touch event, not the pointer
+
+startDragging() starts with:
+
+  const sprite = backend.get_sprite(global.stage, event);
+  this._sprite = sprite;
+
+but then vfunc_touch_event() would only compare this._sprite to:
+
+  sprite = backend.get_pointer_sprite(global.stage);
+
+which never matched. And so _endDragging() was never called and
+the grab was never dismissed, effectively freezing the shell.
+
+Closes: https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8660
+Fixes: c206ec693 ("slider: Use Clutter.Sprite for pointing focus accounting")
+Part-of: <https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3887>
+---
+ js/ui/slider.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/js/ui/slider.js b/js/ui/slider.js
+index 2cf5f145b..05861b56f 100644
+--- a/js/ui/slider.js
++++ b/js/ui/slider.js
+@@ -132,7 +132,7 @@ export const Slider = GObject.registerClass({
+ 
+     vfunc_touch_event(event) {
+         const backend = global.stage.get_context().get_backend();
+-        const sprite = backend.get_pointer_sprite(global.stage);
++        const sprite = backend.get_sprite(global.stage, event);
+ 
+         if (!this._dragging &&
+             event.type() === Clutter.EventType.TOUCH_BEGIN) {
+-- 
+GitLab
+

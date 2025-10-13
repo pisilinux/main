@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>phosh</Name>
@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>A pure Wayland shell prototype for GNOME on mobile devices</Summary>
         <Description>Mobil cihazlarda GNOME için saf bir Wayland kabuk prototipi</Description>
-        <Archive sha1sum="baf2e2562ab137307e479bc12f166f7567f2c03a" type="tarbz2">https://gitlab.gnome.org/World/Phosh/phosh/-/archive/v0.48.0/phosh-v0.48.0.tar.bz2</Archive>
+        <Archive sha1sum="f5663cbbba2d81ac82c74fafb401006d7be03d91" type="tarbz2">https://gitlab.gnome.org/World/Phosh/phosh/-/archive/v0.49.0/phosh-v0.49.0.tar.bz2</Archive>
         <BuildDependencies>
             <Dependency>meson</Dependency>
             <Dependency>docutils</Dependency>
@@ -21,7 +21,6 @@
             <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk4-devel</Dependency>
             <Dependency>cairo-devel</Dependency>
-            <Dependency>dconf-devel</Dependency>
             <Dependency>glib2-devel</Dependency>
             <Dependency>pango-devel</Dependency>
             <Dependency>evince-devel</Dependency>
@@ -30,35 +29,35 @@
             <Dependency>elogind-devel</Dependency>
             <Dependency>fribidi-devel</Dependency>
             <Dependency>libical-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
             <Dependency>libgudev-devel</Dependency>
             <Dependency>libhandy-devel</Dependency>
             <Dependency>libsoup3-devel</Dependency>
-            <Dependency versionFrom="0.8.3">feedbackd-devel</Dependency>
+            <Dependency>wayland-client</Dependency>
             <Dependency>libsecret-devel</Dependency>
             <Dependency>callaudiod-devel</Dependency>
             <Dependency>gdk-pixbuf-devel</Dependency>
             <Dependency>libadwaita-devel</Dependency>
             <Dependency>libgmobile-devel</Dependency>
             <Dependency>libmm-glib-devel</Dependency>
-            <Dependency>gnome-desktop-devel</Dependency>
-            <Dependency>NetworkManager-devel</Dependency>
-            <Dependency>wayland-client</Dependency>
-            <Dependency>gnome-bluetooth-devel</Dependency>
-            <Dependency>pulseaudio-libs-devel</Dependency>
-            <Dependency>wayland-devel</Dependency>
             <Dependency>python3-docutils</Dependency>
             <Dependency>python3-packaging</Dependency>
+            <Dependency>gnome-desktop-devel</Dependency>
+            <Dependency>NetworkManager-devel</Dependency>
+            <Dependency>gnome-bluetooth-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
             <Dependency>evolution-data-server-devel</Dependency>
-            <Dependency>gsettings-desktop-schemas-devel</Dependency>
+            <Dependency versionFrom="0.49.0">dconf-devel</Dependency>
+            <Dependency versionFrom="0.8.3">feedbackd-devel</Dependency>
+            <Dependency versionFrom="49.0">gsettings-desktop-schemas-devel</Dependency>
         </BuildDependencies>
         <!--
-        <Patches>
-            <Patch>phosh.patch</Patch>
-            <Patch level="1">phosh.patch</Patch>
-        </Patches>
-        -->
+                <Patches>
+                        <Patch>phosh.patch</Patch>
+                        <Patch level="1">phosh.patch</Patch>
+                </Patches>
+                -->
     </Source>
-
     <Package>
         <Name>phosh</Name>
         <RuntimeDependencies>
@@ -106,9 +105,9 @@
         <Name>phosh-devel</Name>
         <Summary>Development files for phosh</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">phosh</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
             <Dependency>gsettings-desktop-schemas-devel</Dependency>
+            <Dependency release="current">phosh</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -117,6 +116,13 @@
     </Package>
 
     <History>
+        <Update release="7">
+            <Date>2025-10-10</Date>
+            <Version>0.49.0</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="6">
             <Date>2025-07-16</Date>
             <Version>0.48.0</Version>
