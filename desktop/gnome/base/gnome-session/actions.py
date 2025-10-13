@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed 's@/bin/sh@/bin/sh -l@' -i gnome-session/gnome-session.in")
+    # shelltools.system("sed 's@/bin/sh@/bin/sh -l@' -i gnome-session/gnome-session.in")
     # shelltools.system("""sed -i "/  systemd_dep/,+3d;/if enable_systemd/a \    systemd_userunitdir = '/tmp\'" meson.build""")
 
     mesontools.configure("--buildtype=release \

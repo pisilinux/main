@@ -1,0 +1,82 @@
+From c9fd5a98c4063eb88dda8648f2bfd217a1231b62 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ball=C3=B3=20Gy=C3=B6rgy?= <ballogyor@gmail.com>
+Date: Tue, 23 Sep 2025 17:06:48 +0200
+Subject: [PATCH] Implement "new-window" command-line option
+
+This option is already defined but not handled by the application.
+Also specify the "new-window" action in the desktop file. This allows
+application launchers to provide direct access to this action.
+---
+ data/app.devsuite.Manuals.desktop.in.in |  5 +++++
+ src/main.c                              |  2 +-
+ src/manuals-application.c               | 21 +++++++++++++++++++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/data/app.devsuite.Manuals.desktop.in.in b/data/app.devsuite.Manuals.desktop.in.in
+index 769b219..b9d6db9 100644
+--- a/data/app.devsuite.Manuals.desktop.in.in
++++ b/data/app.devsuite.Manuals.desktop.in.in
+@@ -11,3 +11,8 @@ Type=Application
+ Categories=GTK;Development;
+ # Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+ Keywords=documentation;manuals;api;reference;docs;developer;
++Actions=new-window;
++
++[Desktop Action new-window]
++Exec=manuals --new-window
++Name=New Window
+diff --git a/src/main.c b/src/main.c
+index 30d0c0b..8ef98d3 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -42,7 +42,7 @@ main (int   argc,
+ 
+   panel_init ();
+ 
+-	app = manuals_application_new ("app.devsuite.Manuals", G_APPLICATION_DEFAULT_FLAGS);
++	app = manuals_application_new ("app.devsuite.Manuals", G_APPLICATION_HANDLES_COMMAND_LINE);
+ 	ret = g_application_run (G_APPLICATION (app), argc, argv);
+ 
+ 	return ret;
+diff --git a/src/manuals-application.c b/src/manuals-application.c
+index 75b8dac..5eb5252 100644
+--- a/src/manuals-application.c
++++ b/src/manuals-application.c
+@@ -105,6 +105,26 @@ manuals_application_activate (GApplication *app)
+                                          g_object_unref));
+ }
+ 
++static gint
++manuals_application_command_line (GApplication            *app,
++                                  GApplicationCommandLine *command_line)
++{
++  GVariantDict *options;
++  gboolean new_window = FALSE;
++
++  g_assert (G_IS_APPLICATION (app));
++  g_assert (G_IS_APPLICATION_COMMAND_LINE (command_line));
++
++  options = g_application_command_line_get_options_dict (command_line);
++
++  if (g_variant_dict_lookup (options, "new-window", "b", &new_window) && new_window)
++    g_action_group_activate_action (G_ACTION_GROUP (app), "new-window", NULL);
++  else
++    g_application_activate (app);
++
++  return EXIT_SUCCESS;
++}
++
+ static void
+ manuals_application_startup (GApplication *app)
+ {
+@@ -161,6 +181,7 @@ manuals_application_class_init (ManualsApplicationClass *klass)
+   object_class->get_property = manuals_application_get_property;
+ 
+   app_class->activate = manuals_application_activate;
++  app_class->command_line = manuals_application_command_line;
+   app_class->startup = manuals_application_startup;
+   app_class->shutdown = manuals_application_shutdown;
+ 
+-- 
+GitLab
+
