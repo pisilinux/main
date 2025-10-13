@@ -19,6 +19,8 @@ def setup():
     mesontools.configure("--prefix=/usr \
                           --localstatedir=/var \
                           --buildtype=release \
+                          -D initial-vt=7  \
+                          -D run-dir=/run/gdm  \
                           -Ddefault-pam-config=lfs \
                           -Dplymouth=disabled \
                           -Dpam-mod-dir=/lib/security \
@@ -28,7 +30,7 @@ def setup():
                           -Dsystemduserunitdir=no \
                           -Dlogind-provider=elogind \
                           -Dselinux=disabled \
-                          -Dscreenshot-dir=/var/lib/gdm/greeter")
+                          ")
 
 def build():
     mesontools.build()
