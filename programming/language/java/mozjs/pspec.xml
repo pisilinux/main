@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>mozjs</Name>
@@ -12,22 +12,24 @@
         <IsA>library</IsA>
         <Summary>Stand-alone JavaScript C Library</Summary>
         <Description>Spidermonkey is Mozilla's C implementation of JavaScript.</Description>
-        <Archive type="tarxz" sha1sum="5b31fe138a523dd1c257de9e98d5363444bffa42">https://ftp.mozilla.org/pub/firefox/releases/128.2.0esr/source/firefox-128.2.0esr.source.tar.xz</Archive>
+        <Archive type="tarxz" sha1sum="b8f2f54134133fc209640b2084dfc612f6e8d787">https://ftp.mozilla.org/pub/firefox/releases/140.3.1esr/source/firefox-140.3.1esr.source.tar.xz</Archive>
+        <AdditionalFiles>
+            <AdditionalFile target="mozconfig" permission="0644">mozconfig</AdditionalFile>
+        </AdditionalFiles>
         <BuildDependencies>
-            <Dependency>python3-devel</Dependency>
-            <Dependency>zlib-devel</Dependency>
-            <Dependency>nspr-devel</Dependency>
-            <Dependency>readline-devel</Dependency>
-            <Dependency>autoconf213</Dependency>
             <Dependency>rust</Dependency>
             <Dependency>llvm</Dependency>
             <Dependency>cbindgen</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>nspr-devel</Dependency>
+            <Dependency>autoconf213</Dependency>
+            <Dependency>python3-devel</Dependency>
+            <Dependency>readline-devel</Dependency>
         </BuildDependencies>
         <Patches>
-            <Patch level="1">mozjs128-fix-soname.patch</Patch>
+            <Patch level="1">0001-Bug-1973994-mozjs-140.pc-does-not-contain-DXP_UNIX-o.patch</Patch>
         </Patches>
     </Source>
-
     <Package>
         <Name>mozjs</Name>
         <RuntimeDependencies>
@@ -47,8 +49,8 @@
         <Name>mozjs-devel</Name>
         <Summary>Development files for spidermonkey</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">mozjs</Dependency>
             <Dependency>nspr-devel</Dependency>
+            <Dependency release="current">mozjs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -58,6 +60,13 @@
     </Package>
 
     <History>
+        <Update release="2">
+            <Date>2025-10-14</Date>
+            <Version>140.3.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="1">
             <Date>2024-09-11</Date>
             <Version>128.2.0</Version>
