@@ -69,6 +69,9 @@ def build():
         shelltools.system("patch -p1 < kernel-6.8.patch")
         shelltools.system("patch -p1 < kernel-6.10.patch")
         shelltools.system("patch -p1 < kernel-6.12.patch")
+
+        shelltools.system("patch -p1 < gcc-14.patch")
+        shelltools.system("patch -p1 < gcc-15.patch")
         
     shelltools.export("SYSSRC", "/lib/modules/%s/build" % KDIR)
     shelltools.cd("kernel")
