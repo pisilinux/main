@@ -46,6 +46,8 @@ def setup():
     shelltools.system("patch -p1 < kernel-6.5.patch")
     shelltools.system("patch -p1 < kernel-6.6.patch")
     shelltools.system("patch -p1 < kernel-6.8.patch")
+    shelltools.system("patch -p1 < 0017-gcc-14.patch")
+    shelltools.system("patch -p1 < 0018-gcc-15.patch")
     
 
     # Our libc is TLS enabled so use TLS library
