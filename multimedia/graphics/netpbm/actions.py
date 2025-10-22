@@ -18,6 +18,8 @@ def setup():
     shelltools.echo("config.mk", "JPEGLIB = libjpeg.so")
     shelltools.echo("config.mk", "PNGLIB = libpng.so")
     shelltools.echo("config.mk", "ZLIB = libz.so")
+    shelltools.echo("config.mk", "JBIGLIB = /usr/lib/libjbig.a")
+    pisitools.cflags.add("-std=c17")
 
 def build():
     autotools.make("CFLAGS+='%s'" % get.CFLAGS())
