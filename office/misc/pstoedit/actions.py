@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("configure.ac", "-pedantic ", "")
-    autotools.autoreconf("-fi")
+    autotools.autoreconf("-vi")
     autotools.configure("--disable-static \
                          --with-swf")
     
