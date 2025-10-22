@@ -2,46 +2,28 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
-import os
-
-
-def makedepends(d):
-    for root, dirs, files in os.walk(d):
-        for name in files:
-            if name == "Makefile":
-                shelltools.touch(os.path.join(root, "depend.mk"))
+from pisi.actionsapi import shelltools, autotools, pisitools, get
 
 def setup():
-    pisitools.dosed("config.mk", "^STRIPFLAG.*=.*", "STRIPFLAG = ")
+    shelltools.copy("config.mk.in", "config.mk")
 
-    # force external jasper usage
-    pisitools.echo("config.mk", "JASPERLIB = -ljasper")
-    pisitools.echo("config.mk", "JASPERHDR_DIR = /usr/include/jasper")
+    shelltools.system("sed -i 's|misc|share/netpbm|' common.mk")
+    shelltools.system("sed -e 's|/sharedlink|/lib|' -i lib/Makefile")
 
-    makedepends("./")
+    shelltools.echo("config.mk", "STATICLIB_TOO=N")
+    shelltools.echo("config.mk", "CFLAGS_SHLIB += -fPIC")
+    shelltools.echo("config.mk", "TIFFLIB = libtiff.so")
+    shelltools.echo("config.mk", "JPEGLIB = libjpeg.so")
+    shelltools.echo("config.mk", "PNGLIB = libpng.so")
+    shelltools.echo("config.mk", "ZLIB = libz.so")
 
 def build():
-    autotools.make('CFLAGS="%s -fPIC -O3 -ffast-math -pedantic -fno-common" LDFLAGS="%s" -j1' % (get.CFLAGS(), get.LDFLAGS()))
+    autotools.make("CFLAGS+='%s'" % get.CFLAGS())
 
 def install():
-    pisitools.dodir("/")
-    autotools.make('-j1 package pkgdir=%s/usr' % get.installDIR())
+    a = "install-run install-dev"
+    autotools.rawInstall("pkgdir=%s/usr %s" % (get.installDIR(), a))
 
-    pisitools.remove("/usr/bin/manweb")
-
-    for data in ["VERSION","pkginfo","README","config_template"]:
-        pisitools.remove("/usr/%s" % data)
-
-    pisitools.domove("/usr/man", "/usr/share")
-
-    # remove conflicts with jbigkit
-    for i in ["pbm", "pgm"]:
-        pisitools.remove("/usr/share/man/man5/%s.5" % i)
-
-    pisitools.dodoc("README", "doc/*LICENSE*")
+    pisitools.dodoc("doc/copyright_summary", "doc/GPL_LICENSE.txt")
