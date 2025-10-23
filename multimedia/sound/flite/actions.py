@@ -15,6 +15,7 @@ NoStrip = ["/usr/lib"]
 
    
 def setup():
+	autotools.autoreconf("-fiv")
 	#shelltools.system("sed '/^#VOXES.*$/d; s/+//g; s/cmu_indic_lex/&\nVOXES = cmu_us_kal16 cmu_us_slt/' config/android.lv >config/pisilinux.lv")
 	#shelltools.system("sed -i '/$(INSTALL) -m 755 $(BINDIR)\/flite_time $(DESTDIR)$(INSTALLBINDIR)/d' main/Makefile")
 	#shelltools.export("CC", "clang -fuse-ld=lld")
