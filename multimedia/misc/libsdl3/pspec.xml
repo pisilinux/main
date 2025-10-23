@@ -1,0 +1,134 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libsdl3</Name>
+        <Homepage>https://www.libsdl.org/</Homepage>
+        <Packager>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Packager>
+        <License>Zlib</License>
+        <IsA>library</IsA>
+        <Summary>Simple Direct Media Layer 2.0 series</Summary>
+        <Description>libsdl is a cross-platform multimedia library designed to provide low level access to audio, keyboard, mouse, joystick, 3D hardware via OpenGL, and 2D video framebuffer.</Description>
+        <Archive sha1sum="026aef239bdeeb629833f846d5dce35aabadaa6e" type="targz">https://github.com/libsdl-org/SDL/releases/download/release-3.2.24/SDL3-3.2.24.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>DirectFB-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>audiofile-devel</Dependency>
+            <Dependency>dbus-devel</Dependency>
+            <Dependency>ibus-devel</Dependency>
+            <Dependency>libXi-devel</Dependency>
+            <Dependency>vulkan-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libXinerama-devel</Dependency>
+            <Dependency>libXrandr-devel</Dependency>
+            <Dependency>libXrender-devel</Dependency>
+            <Dependency>libXt-devel</Dependency>
+            <Dependency>libXv-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>mesa-glu-devel</Dependency>
+            <Dependency>libXScrnSaver-devel</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
+            <Dependency>egl-wayland-devel</Dependency>
+            <Dependency>wayland-protocols-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <!-- <Patch level="1">fedora/SDL2-2.0.9-khrplatform.patch</Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>libsdl3</Name>
+        <Summary>libsdl3 reference documents</Summary>
+        <RuntimeDependencies>
+            <Dependency>DirectFB</Dependency>
+            <Dependency>alsa-lib</Dependency>
+            <Dependency>audiofile</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXScrnSaver</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libXinerama</Dependency>
+            <Dependency>libXrandr</Dependency>
+            <Dependency>libXrender</Dependency>
+            <Dependency>libXt</Dependency>
+            <Dependency>libglvnd</Dependency>
+            <Dependency>pulseaudio-libs</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="library">/usr/lib/libSDL3.so</Path>
+            <Path fileType="library">/usr/lib/libSDL3.a</Path>
+            <Path fileType="library">/usr/lib/libSDL3.so.0</Path>
+            <Path fileType="library">/usr/lib/libSDL3.so.0.2.24</Path>
+            <Path fileType="library">/usr/lib/libSDL3_test.a</Path>
+            <Path fileType="doc">/usr/share/licenses/SDL3/LICENSE.txt</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libsdl3-devel</Name>
+        <Summary>Development files for libsdl3</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">libsdl3</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="header">/usr/include/SDL3</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/aclocal</Path>
+            <Path fileType="library">/usr/lib/cmake/SDL3</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libsdl3-32bit</Name>
+        <Summary>32-bit shared libraries for libsdl3</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libXt-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>audiofile-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>libXrender-32bit</Dependency>
+            <Dependency>libXinerama-32bit</Dependency>
+            <Dependency>libXScrnSaver-32bit</Dependency>
+            <Dependency>pulseaudio-libs-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>libXt-32bit</Dependency>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libXext-32bit</Dependency>
+            <Dependency>alsa-lib-32bit</Dependency>
+            <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>audiofile-32bit</Dependency>
+            <Dependency>libXrandr-32bit</Dependency>
+            <Dependency>libXrender-32bit</Dependency>
+            <Dependency>libXinerama-32bit</Dependency>
+            <Dependency>libXScrnSaver-32bit</Dependency>
+            <Dependency>pulseaudio-libs-32bit</Dependency>
+            <Dependency release="current">libsdl3</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2025-10-23</Date>
+            <Version>3.2.24</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
