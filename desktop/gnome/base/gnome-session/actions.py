@@ -14,6 +14,7 @@ def setup():
     # shelltools.system("""sed -i "/  systemd_dep/,+3d;/if enable_systemd/a \    systemd_userunitdir = '/tmp\'" meson.build""")
 
     mesontools.configure("--buildtype=release \
+                          -Dx11=true \
                           -Dsystemduserunitdir=/tmp")
 
 def build():
