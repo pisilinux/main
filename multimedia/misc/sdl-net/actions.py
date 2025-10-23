@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "SDL_net-%s" % get.srcVERSION()
+# WorkDir = "SDL_net-%s" % get.srcVERSION()
 
 def setup():
     autotools.configure("--disable-static")
