@@ -14,6 +14,7 @@ def setup():
     mesontools.configure("-Degl_device=true \
                           -Dwayland_eglstream=true \
                           -Dudev=true \
+                          -Dx11=true \
                           -Dnative_backend=true \
                           -Dintrospection=true \
                           -Dinstalled_tests=false")
