@@ -17,16 +17,12 @@ def setup():
     #shelltools.system("rm -r Source/ThirdParty/gtest/")
     #pisitools.dosed("Source/cmake/OptionsGTK.cmake", "2.99.5", "2.72.0")
     cmaketools.configure("-DPORT=GTK \
+                          -DCMAKE_C_FLAGS='-g1' \
+                          -DCMAKE_CXX_FLAGS='-g1' \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_SKIP_RPATH=ON \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DLIB_INSTALL_DIR=/usr/lib \
-                          -DLIBEXEC_INSTALL_DIR=/usr/lib/webkit2gtk-4.0 \
-                          -DENABLE_CREDENTIAL_STORAGE=ON \
-                          -DENABLE_GEOLOCATION=ON \
-                          -DENABLE_VIDEO=ON \
-                          -DENABLE_WEB_AUDIO=ON \
-                          -DENABLE_WEBGL=ON \
                           -DUSE_LIBHYPHEN=OFF \
                           -DUSE_SOUP2=ON \
                           -DUSE_WOFF2=OFF \
@@ -35,8 +31,6 @@ def setup():
                           -DUSE_LIBBACKTRACE=OFF \
                           -DPYTHON_EXECUTABLE=/usr/bin/python3 \
                           -DJPEG_INCLUDE_DIR=/usr/include/openjpeg-2.5 \
-                          -DSHOULD_INSTALL_JS_SHELL=ON \
-                          -DUSE_WPE_RENDERER=OFF \
                           -DENABLE_SPEECH_SYNTHESIS=OFF \
                           -DUSE_FLITE=OFF \
                           -DENABLE_MINIBROWSER=ON")

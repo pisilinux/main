@@ -19,6 +19,8 @@ def setup():
     shelltools.system("mkdir build")
     shelltools.cd("build")
     cmaketools.configure("-DPORT=GTK \
+                          -DCMAKE_C_FLAGS='-g1' \
+                          -DCMAKE_CXX_FLAGS='-g1' \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_SKIP_RPATH=ON \
                           -DCMAKE_INSTALL_PREFIX=/usr \
