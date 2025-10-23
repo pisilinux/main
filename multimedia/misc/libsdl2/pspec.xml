@@ -12,8 +12,10 @@
         <IsA>library</IsA>
         <Summary>Simple Direct Media Layer 2.0 series</Summary>
         <Description>libsdl is a cross-platform multimedia library designed to provide low level access to audio, keyboard, mouse, joystick, 3D hardware via OpenGL, and 2D video framebuffer.</Description>
-        <Archive sha1sum="f740f229130bcf2982cd25ca78b91c2d4744d988" type="targz">https://github.com/libsdl-org/SDL/releases/download/release-2.30.8/SDL2-2.30.8.tar.gz</Archive>
+        <Archive sha1sum="bfe8f9b631e1e0acc10fd4f22bca3d99114004ac" type="targz">https://github.com/libsdl-org/sdl2-compat/releases/download/release-2.32.56/sdl2-compat-2.32.56.tar.gz</Archive>
         <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
             <Dependency>DirectFB-devel</Dependency>
             <Dependency>alsa-lib-devel</Dependency>
             <Dependency>audiofile-devel</Dependency>
@@ -35,6 +37,7 @@
             <Dependency>egl-wayland-devel</Dependency>
             <Dependency>wayland-protocols-devel</Dependency>
             <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>libsdl3-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <!-- <Patch level="1">fedora/SDL2-2.0.9-khrplatform.patch</Patch> -->
@@ -56,16 +59,18 @@
             <Dependency>libXrender</Dependency>
             <Dependency>libXt</Dependency>
             <Dependency>libglvnd</Dependency>
+            <Dependency>libsdl3</Dependency>
             <Dependency>pulseaudio-libs</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="doc">/usr/share/doc</Path>
             <Path fileType="library">/usr/lib/libSDL2.so</Path>
+            <Path fileType="library">/usr/lib/libSDL2-2.0.so</Path>
             <Path fileType="library">/usr/lib/libSDL2.a</Path>
             <Path fileType="library">/usr/lib/libSDL2main.a</Path>
             <Path fileType="library">/usr/lib/libSDL2-2.0.so.0*</Path>
             <Path fileType="library">/usr/lib/libSDL2_test.a</Path>
-
+            <Path fileType="doc">/usr/share/licenses/sdl2-compat/LICENSE.txt</Path>
         </Files>
     </Package>
 
@@ -74,6 +79,7 @@
         <Summary>Development files for libsdl2</Summary>
         <RuntimeDependencies>
             <Dependency release="current">libsdl2</Dependency>
+            <Dependency>libsdl3-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -93,6 +99,7 @@
             <Dependency>libX11-32bit</Dependency>
             <Dependency>libXext-32bit</Dependency>
             <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>libsdl3-32bit</Dependency>
             <Dependency>alsa-lib-32bit</Dependency>
             <Dependency>audiofile-32bit</Dependency>
             <Dependency>libXrandr-32bit</Dependency>
@@ -107,6 +114,7 @@
             <Dependency>libXext-32bit</Dependency>
             <Dependency>alsa-lib-32bit</Dependency>
             <Dependency>libglvnd-32bit</Dependency>
+            <Dependency>libsdl3-32bit</Dependency>
             <Dependency>audiofile-32bit</Dependency>
             <Dependency>libXrandr-32bit</Dependency>
             <Dependency>libXrender-32bit</Dependency>
@@ -121,6 +129,20 @@
     </Package>
 
     <History>
+        <Update release="20">
+            <Date>2025-10-23</Date>
+            <Version>2.32.56</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+        <Update release="19">
+            <Date>2025-10-23</Date>
+            <Version>2.32.10</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="18">
             <Date>2024-10-04</Date>
             <Version>2.30.8</Version>

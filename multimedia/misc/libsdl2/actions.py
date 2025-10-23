@@ -8,9 +8,10 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import libtools
+from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
-WorkDir = "SDL2-%s" % get.srcVERSION()
+# WorkDir = "SDL2-%s" % get.srcVERSION()
 docdir = "%s/%s" % (get.docDIR(), get.srcNAME())
 
 def setup():
@@ -19,42 +20,39 @@ def setup():
 
     # for libtool version matching
     #shelltools.copy("/usr/share/aclocal/ltversion.m4", "acinclude/")
-    shelltools.system("./autogen.sh")
+    # shelltools.system("./autogen.sh")
 
     #libtools.libtoolize("--force --copy")
 
-    options = "--enable-sdl-dlopen \
-               --disable-arts \
-               --disable-esd \
-               --disable-nas \
-               --enable-pulseaudio-shared \
-               --enable-alsa \
-               --disable-rpath"
+    options = "-B build -G Ninja \
+              "
 
     if get.buildTYPE() == "emul32":
-        options += " --libdir=/usr/lib32 \
-                     --disable-ibus \
-                     --bindir=/emul32/bin \
-                     --mandir=/emul32/man \
-                     "
+        options += " -DCMAKE_INSTALL_PREFIX=/emul32 -DCMAKE_INSTALL_LIBDIR=/usr/lib32 \
+                   "
 
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
         shelltools.export("CFLAGS", "%s -fPIC -O3 -m32" % get.CFLAGS())
         shelltools.export("CXXFLAGS", "%s -fPIC -O3 -m32" % get.CXXFLAGS())
         shelltools.export("LDFLAGS", "%s -m32" % get.LDFLAGS())
+    else:
+        options += " -DCMAKE_INSTALL_PREFIX=/usr"
 
-    autotools.configure(options)
+    cmaketools.configure(options)
 
 def build():
-    autotools.make()
+    shelltools.system("ninja -C build")
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.cd("build")
+    shelltools.system("DESTDIR=%s ninja install " % get.installDIR())
     libtools.preplib()
 
     if get.buildTYPE() == "emul32":
         pisitools.dosed("%s/usr/lib32/cmake/SDL2/*.cmake" % get.installDIR(), "emul32", "usr")
+        pisitools.dosed("%s/usr/lib32/pkgconfig/*.pc" % get.installDIR(), "emul32", "usr")
+        pisitools.removeDir("/emul32")
         return
 
-
-    pisitools.dodoc("BUGS.txt", "CREDITS.txt", "README*", "README-SDL.txt", "TODO.txt", "WhatsNew.txt")
+    shelltools.cd("..")
+    pisitools.dodoc("BUGS.*", "README*", "LICENSE.txt")
