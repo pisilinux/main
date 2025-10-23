@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 import os
 
-WorkDir = "fgdata"
+WorkDir = "fgdata_2024_1"
 NoStrip = "/"
 
 def fixperms(d):
