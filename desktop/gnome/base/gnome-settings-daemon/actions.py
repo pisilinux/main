@@ -16,7 +16,10 @@ def setup():
     # shelltools.system("sed -e 's/(backlight->logind_proxy)/(0)/' \
                            # -i plugins/power/gsd-backlight.c")
 
-    mesontools.configure("-Dsystemd=false")
+    mesontools.configure("-Dsystemd=false \
+                          -Delogind=true \
+                          -Dudev_dir=/lib/udev \
+                          -Dx11=true")
 
 def build():
     mesontools.build
