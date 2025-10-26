@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Fri, 13 Jun 2025 03:03:19 +0200
+Subject: [PATCH] tests: Support PyGObject 3.52
+
+---
+ tests/integration-test.py | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/tests/integration-test.py b/tests/integration-test.py
+index 673579e8ece5..3f1fb1e12ff7 100755
+--- a/tests/integration-test.py
++++ b/tests/integration-test.py
+@@ -32,11 +32,16 @@ except ImportError as e:
+     sys.stderr.write('Skipping tests, PyGobject not available for Python 3, or missing GI typelibs: %s\n' % str(e))
+     sys.exit(77)
+ 
+-gi.require_version('GIRepository', '2.0')
+-from gi.repository import GIRepository
++if gi.version_info >= (3, 52, 0):
++    girepo = gi.Repository.get_default()
++else:
++    gi.require_version('GIRepository', '2.0')
++    from gi.repository import GIRepository
++    girepo = GIRepository.Repository
++
+ builddir = os.getenv('top_builddir', '.')
+-GIRepository.Repository.prepend_library_path(builddir + '/lib/')
+-GIRepository.Repository.prepend_search_path(builddir + '/lib/')
++girepo.prepend_library_path(builddir + '/lib/')
++girepo.prepend_search_path(builddir + '/lib/')
+ 
+ GNOME_BLUETOOTH_PRIV_UNAVAILABLE = False
+ try:
