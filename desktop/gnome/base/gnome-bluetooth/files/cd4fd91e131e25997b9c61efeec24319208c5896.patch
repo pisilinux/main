@@ -1,0 +1,44 @@
+From cd4fd91e131e25997b9c61efeec24319208c5896 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Luk=C3=A1=C5=A1=20Tyrychtr?= <ltyrycht@redhat.com>
+Date: Tue, 26 Aug 2025 10:45:33 +0200
+Subject: [PATCH] keyboard-shortcut-group: Do not allow tabbing through list
+ items
+
+Using the arrow keys is more in line with what the visually impaired users
+expect.
+
+Co-authored-by: Felipe Borges <felipeborges@gnome.org>
+
+Fixes #3523.
+---
+ panels/keyboard/cc-keyboard-shortcut-dialog.blp | 1 +
+ panels/keyboard/cc-keyboard-shortcut-group.blp  | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/panels/keyboard/cc-keyboard-shortcut-dialog.blp b/panels/keyboard/cc-keyboard-shortcut-dialog.blp
+index 0acd0e6b87..3cda15168c 100644
+--- a/panels/keyboard/cc-keyboard-shortcut-dialog.blp
++++ b/panels/keyboard/cc-keyboard-shortcut-dialog.blp
+@@ -51,6 +51,7 @@ template $CcKeyboardShortcutDialog: Adw.Dialog {
+             Adw.PreferencesGroup {
+               ListBox section_list_box {
+                 selection-mode: none;
++                tab-behavior: item;
+                 row-activated => $shortcut_section_row_activated_cb(template);
+ 
+                 styles [
+diff --git a/panels/keyboard/cc-keyboard-shortcut-group.blp b/panels/keyboard/cc-keyboard-shortcut-group.blp
+index fad8d4eee0..aa2b2dc6cb 100644
+--- a/panels/keyboard/cc-keyboard-shortcut-group.blp
++++ b/panels/keyboard/cc-keyboard-shortcut-group.blp
+@@ -5,6 +5,7 @@ template $CcKeyboardShortcutGroup: Adw.PreferencesGroup {
+ 
+   ListBox shortcut_list_box {
+     selection-mode: none;
++    tab-behavior: item;
+     row-activated => $shortcut_group_row_activated_cb(template);
+     keynav-failed => $cc_util_keynav_propagate_vertical();
+ 
+-- 
+GitLab
+

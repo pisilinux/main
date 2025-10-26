@@ -1,0 +1,49 @@
+From 86cff8bcd709677669f1b4243187e04934bb82ed Mon Sep 17 00:00:00 2001
+From: Sebastian Keller <skeller@gnome.org>
+Date: Fri, 17 Oct 2025 11:49:24 +0200
+Subject: [PATCH] keyboard: Update for new default activities overview shortcut
+
+Mutter in 48 gained support for using both Super keys as overlay keys
+and the default value of the overlay-key setting got changed to "Super"
+accordingly. Because the keyboard shortcuts dialog was comparing the
+overlay-key value to the old value of "Super_L" it was wrongly
+considering the overview shortcut to be disabled.
+
+Fix this by comparing to "Super" now, but also check for "Super_L" in
+case somebody has toggled the setting before and as a result does not
+have the new default value.
+
+Related: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4050
+Closes: https://gitlab.gnome.org/GNOME/gnome-control-center/-/issues/3586
+---
+ panels/keyboard/cc-keyboard-shortcut-dialog.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/panels/keyboard/cc-keyboard-shortcut-dialog.c b/panels/keyboard/cc-keyboard-shortcut-dialog.c
+index 56aeef40c0..a9201446dc 100644
+--- a/panels/keyboard/cc-keyboard-shortcut-dialog.c
++++ b/panels/keyboard/cc-keyboard-shortcut-dialog.c
+@@ -40,7 +40,8 @@
+ #include "cc-util.h"
+ #include "keyboard-shortcuts.h"
+ 
+-#define DEFAULT_ACTIVITIES_OVERVIEW_SHORTCUT "Super_L"
++#define OLD_ACTIVITIES_OVERVIEW_SHORTCUT "Super_L"
++#define DEFAULT_ACTIVITIES_OVERVIEW_SHORTCUT "Super"
+ 
+ struct _CcKeyboardShortcutDialog
+ {
+@@ -467,7 +468,9 @@ get_overview_shortcut_setting (GValue   *value,
+                                GVariant *variant,
+                                gpointer  user_data)
+ {
+-  gboolean enabled = g_strcmp0 (g_variant_get_string (variant, NULL), DEFAULT_ACTIVITIES_OVERVIEW_SHORTCUT) == 0;
++  const char *overlay_key = g_variant_get_string (variant, NULL);
++  gboolean enabled = g_strcmp0 (overlay_key, DEFAULT_ACTIVITIES_OVERVIEW_SHORTCUT) == 0 ||
++                     g_strcmp0 (overlay_key, OLD_ACTIVITIES_OVERVIEW_SHORTCUT) == 0;
+   g_value_set_boolean (value, enabled);
+ 
+   return TRUE;
+-- 
+GitLab
+

@@ -1,0 +1,207 @@
+From ef111c9c11623be8e84526abec7c15198f5c0604 Mon Sep 17 00:00:00 2001
+From: Mart Raudsepp <leio@gentoo.org>
+Date: Sun, 12 Jul 2020 12:21:07 +0300
+Subject: [PATCH 1/5] build: Restore options for bluetooth, NetworkManager and
+ Wacom
+
+---
+ meson.build                   | 33 ++++++++++++++++++++-------------
+ meson_options.txt             |  3 +++
+ panels/meson.build            | 16 ++++++++++------
+ panels/power/cc-power-panel.c |  4 ++++
+ panels/power/meson.build      |  4 ++--
+ shell/meson.build             |  2 +-
+ tests/meson.build             |  2 +-
+ 7 files changed, 41 insertions(+), 23 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 900216962..4470376db 100644
+--- a/meson.build
++++ b/meson.build
+@@ -216,7 +216,8 @@ endif
+ config_h.set('HAVE_MALCONTENT', enable_malcontent,
+              description: 'Define to 1 if malcontent support is enabled')
+ 
+-if host_is_linux
++enable_network_manager = get_option('network_manager')
++if enable_network_manager
+   # network manager
+   network_manager_deps = [
+     dependency('libnm', version: '>= 1.24.0'),
+@@ -224,15 +225,20 @@ if host_is_linux
+     dependency('mm-glib', version: '>= 0.7')
+   ]
+ endif
+-config_h.set('BUILD_NETWORK', host_is_linux,
++config_h.set('BUILD_NETWORK', enable_network_manager,
+              description: 'Define to 1 to build the Network panel')
+-config_h.set('HAVE_NETWORK_MANAGER', host_is_linux,
++config_h.set('HAVE_NETWORK_MANAGER', enable_network_manager,
+              description: 'Define to 1 if NetworkManager is available')
+ 
+-if host_is_linux_not_s390
++enable_bluetooth = get_option('bluetooth')
++if enable_bluetooth
+   # gnome-bluetooth
+   gnome_bluetooth_dep = dependency('gnome-bluetooth-1.0', version: '>= 3.18.2')
++endif
+ 
++enable_wacom = get_option('wacom')
++if enable_wacom
++  # Wacom
+   libwacom_dep = dependency('libwacom', version: '>= 0.7')
+ 
+   wacom_deps = [
+@@ -240,17 +246,18 @@ if host_is_linux_not_s390
+   ]
+   config_h.set('HAVE_WACOM_3D_STYLUS', libwacom_dep.version().version_compare('>= 0.27'),
+                description: 'Define to 1 if libwacom provides definition for 3D styli')
+-else
+-  message('Bluetooth and Wacom panels will not be built (no USB support on this platform)')
++endif
++
++if not host_is_linux_not_s390
+   message('Thunderbolt panel will not be built (not supported on this platform)')
+ endif
+-config_h.set('BUILD_BLUETOOTH', host_is_linux_not_s390,
++config_h.set('BUILD_BLUETOOTH', enable_bluetooth,
+              description: 'Define to 1 to build the Bluetooth panel')
+-config_h.set('HAVE_BLUETOOTH', host_is_linux_not_s390,
++config_h.set('HAVE_BLUETOOTH', enable_bluetooth,
+              description: 'Define to 1 if bluetooth support is available')
+-config_h.set('BUILD_WACOM', host_is_linux_not_s390,
++config_h.set('BUILD_WACOM', enable_wacom,
+              description: 'Define to 1 to build the Wacom panel')
+-config_h.set('HAVE_WACOM', host_is_linux_not_s390,
++config_h.set('HAVE_WACOM', enable_wacom,
+              description: 'Define to 1 if Wacom is supportted')
+ config_h.set('BUILD_THUNDERBOLT', host_is_linux_not_s390,
+              description: 'Define to 1 to build the Thunderbolt panel')
+@@ -301,9 +308,9 @@ summary({
+ })
+ 
+ summary({
+-  'GNOME Bluetooth': host_is_linux_not_s390,
+-  'NetworkManager': host_is_linux,
+-  'Wacom': host_is_linux_not_s390,
++  'GNOME Bluetooth': enable_bluetooth,
++  'NetworkManager': enable_network_manager,
++  'Wacom': enable_wacom,
+ }, section: 'Dependencies')
+ 
+ summary({
+diff --git a/meson_options.txt b/meson_options.txt
+index 1b7b54810..2b3da02c0 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,10 +1,13 @@
++option('bluetooth', type: 'boolean', value: true, description: 'build with Bluetooth support')
+ option('cheese', type: 'boolean', value: true, description: 'build with cheese webcam support')
+ option('documentation', type: 'boolean', value: false, description: 'build documentation')
+ option('ibus', type: 'boolean', value: true, description: 'build with IBus support')
++option('network_manager', type: 'boolean', value: true, description: 'build with NetworkManager support')
+ option('privileged_group', type: 'string', value: 'wheel', description: 'name of group that has elevated permissions')
+ option('snap', type: 'boolean', value: false, description: 'build with Snap support')
+ option('tests', type: 'boolean', value: true, description: 'build tests')
+ option('tracing', type: 'boolean', value: false, description: 'add extra debugging information')
++option('wacom', type: 'boolean', value: true, description: 'build with Wacom support')
+ option('wayland', type: 'boolean', value: true, description: 'build with Wayland support')
+ option('profile', type: 'combo', choices: ['default','development'], value: 'default')
+ option('malcontent', type: 'boolean', value: false, description: 'build with malcontent support')
+diff --git a/panels/meson.build b/panels/meson.build
+index 2f4fdc5e3..6798f6997 100644
+--- a/panels/meson.build
++++ b/panels/meson.build
+@@ -29,16 +29,20 @@ panels = [
+   'user-accounts'
+ ]
+ 
+-if host_is_linux
++if enable_network_manager
+   panels += ['network']
+ endif
+ 
++if enable_bluetooth
++  panels += ['bluetooth']
++endif
++
++if enable_wacom
++  panels += ['wacom']
++endif
++
+ if host_is_linux_not_s390
+-  panels += [
+-    'bluetooth',
+-    'thunderbolt',
+-    'wacom'
+-  ]
++  panels += ['thunderbolt']
+ endif
+ 
+ panels_list = []
+diff --git a/panels/power/cc-power-panel.c b/panels/power/cc-power-panel.c
+index c9c4705da..b4a3a3323 100644
+--- a/panels/power/cc-power-panel.c
++++ b/panels/power/cc-power-panel.c
+@@ -1745,11 +1745,15 @@ cc_power_panel_class_init (CcPowerPanelClass *klass)
+   gtk_widget_class_bind_template_callback (widget_class, has_kbd_brightness_cb);
+   gtk_widget_class_bind_template_callback (widget_class, idle_delay_combo_changed_cb);
+   gtk_widget_class_bind_template_callback (widget_class, keynav_failed_cb);
++#ifdef HAVE_NETWORK_MANAGER
+   gtk_widget_class_bind_template_callback (widget_class, mobile_switch_changed_cb);
++#endif
+   gtk_widget_class_bind_template_callback (widget_class, power_button_combo_changed_cb);
+   gtk_widget_class_bind_template_callback (widget_class, power_profiles_row_activated_cb);
+   gtk_widget_class_bind_template_callback (widget_class, power_saving_listbox_row_activated_cb);
++#ifdef HAVE_NETWORK_MANAGER
+   gtk_widget_class_bind_template_callback (widget_class, wifi_switch_changed_cb);
++#endif
+ }
+ 
+ static void
+diff --git a/panels/power/meson.build b/panels/power/meson.build
+index 625059dd2..e3b8c4233 100644
+--- a/panels/power/meson.build
++++ b/panels/power/meson.build
+@@ -46,11 +46,11 @@ deps = common_deps + [
+   upower_glib_dep
+ ]
+ 
+-if host_is_linux
++if enable_network_manager
+   deps += network_manager_deps
+ endif
+ 
+-if host_is_linux_not_s390
++if enable_bluetooth
+   deps += gnome_bluetooth_dep
+ endif
+ 
+diff --git a/shell/meson.build b/shell/meson.build
+index 89b96590e..93e1f8994 100644
+--- a/shell/meson.build
++++ b/shell/meson.build
+@@ -119,7 +119,7 @@ if enable_cheese
+   shell_deps += cheese_deps
+ endif
+ 
+-if host_is_linux_not_s390
++if enable_wacom
+   shell_deps += wacom_deps
+ endif
+ 
+diff --git a/tests/meson.build b/tests/meson.build
+index d4fe361ef..8410c636d 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -1,6 +1,6 @@
+ subdir('common')
+ #subdir('datetime')
+-if host_is_linux
++if enable_network_manager
+   subdir('network')
+ endif
+ 
+-- 
+2.26.3
+
