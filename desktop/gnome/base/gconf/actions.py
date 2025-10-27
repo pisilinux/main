@@ -14,6 +14,8 @@ def setup():
     #autotools.autoreconf("-fiv")
     #shelltools.system("sed -i '1s|#!/usr/bin/env python$|&2|' gsettings/gsettings-schema-convert")
     shelltools.system("sed -i '1s|#!/usr/bin/env python$|#!/usr/bin/python|' gsettings/gsettings-schema-convert")
+
+    shelltools.system("NOCONFIGURE=1 sh autogen.sh")
     autotools.configure("--prefix=/usr \
                          --libexecdir=/usr/lib/GConf \
                          --sysconfdir=/etc \
