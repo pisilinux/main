@@ -12,8 +12,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.export("TRACKER_LIBS","-ltracker-sparql-3.0")
-    shelltools.export("TRACKER_CFLAGS","-I/usr/include/tracker-3.0")
+    # shelltools.export("TRACKER_LIBS","-ltracker-sparql-3.0")
+    # shelltools.export("TRACKER_CFLAGS","-I/usr/include/libtracker-3.0")
 
     autotools.autoreconf("-fi")
     autotools.configure("--disable-silent-rules \
