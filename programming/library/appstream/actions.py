@@ -19,7 +19,6 @@ def setup():
     mesontools.configure("--libexecdir=lib \
                                         -Dstemming=false \
                                         -Dqt=true \
-                                        -Dqt-versions=5,6 \
                                         -Dapidocs=false \
                                         -Dvapi=true")
     
