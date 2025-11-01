@@ -10,10 +10,8 @@ from pisi.actionsapi import pisitools
 
 def setup():
     kde5.configure("-DBUILD_TESTING=OFF \
-                    -DBUILD_UNMAINTAINED=ON \
                     -DBUILD_KRITA_QT_DESIGNER_PLUGINS=ON \
                     -DKDE_INSTALL_LIBDIR=lib \
-                    -DCMAKE_BUILD_TYPE=Release \
                     -DCMAKE_INSTALL_PREFIX=/usr")
 
 def build():
