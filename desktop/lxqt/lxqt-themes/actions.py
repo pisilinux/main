@@ -22,12 +22,12 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
    
    #fixed menu icon for Pisi
-    light_themes=("Clearlooks","KDE-Plasma", "light", "system")
+    light_themes=("KDE-Plasma", "light", "system")
     for i in light_themes:
         pisitools.remove("/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
         pisitools.dosym("/usr/share/icons/hicolor/scalable/places/start-here-light.svg", "/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
 
-    dark_themes=("ambiance", "Arch-Colors", "dark", "frost", "Leech", "silver", "Valendas")
+    dark_themes=("ambiance", "Arch-Colors", "dark", "frost", "silver", "Valendas")
     for i in dark_themes:
         pisitools.remove("/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
         pisitools.dosym("/usr/share/icons/hicolor/scalable/places/start-here-dark.svg", "/usr/share/lxqt/themes/%s/mainmenu.svg" % i)
