@@ -7,24 +7,24 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure("--prefix=/usr \
-                         --enable-wayland \
-                         --disable-debug \
-                         --disable-dependency-tracking")
+    # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    mesontools.configure("-Dwayland=enabled \
+                          -Dxfixes=enabled \
+                          -Dx11=enabled")
 
 
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    # pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     pisitools.insinto("/usr/share/pixmaps/", "icons/scalable/org.xfce.screenshooter.svg")
 
