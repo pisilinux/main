@@ -7,7 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    mesontools.configure("-Dexiv2=enabled -Dgdk-pixbuf=enabled -Ddocs=false")
+    mesontools.configure("-Dgexiv2=enabled -Dgdk-pixbuf=enabled -Ddocs=false")
 
 def build():
     mesontools.build()
