@@ -1,0 +1,311 @@
+From 22b4d5685d828b85d9fc80bfa3d8c5e97b289224 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Thu, 21 Nov 2024 16:27:10 +0100
+Subject: [PATCH 8/8] rtl8812au: add suggested braces around empty body in an
+ else statement
+
+---
+ .../rtl8812au/hal/phydm/halrf/halphyrf_ce.c    |  3 ++-
+ .../staging/rtl8812au/hal/phydm/halrf/halrf.c  |  3 ++-
+ .../rtl8812au/hal/phydm/halrf/halrf_kfree.c    | 18 ++++++++++++------
+ .../hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c  |  3 ++-
+ .../rtl8812au/hal/phydm/phydm_beamforming.c    |  6 ++++--
+ .../rtl8812au/hal/phydm/phydm_cfotracking.c    |  6 ++++--
+ .../staging/rtl8812au/hal/phydm/phydm_psd.c    |  3 ++-
+ .../staging/rtl8812au/hal/phydm/phydm_rainfo.c |  6 ++++--
+ .../rtl8812au/hal/phydm/txbf/halcomtxbf.c      | 15 ++++++++++-----
+ .../rtl8812au/hal/phydm/txbf/haltxbfjaguar.c   |  3 ++-
+ 10 files changed, 44 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/halphyrf_ce.c b/drivers/staging/rtl8812au/hal/phydm/halrf/halphyrf_ce.c
+index 4443c7289..3b05d87c8 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/halphyrf_ce.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/halphyrf_ce.c
+@@ -478,9 +478,10 @@ void odm_txpowertracking_callback_thermal_meter(void *adapter)
+ 
+ 	/*@4 3. Initialize ThermalValues of rf_calibrate_info*/
+ 
+-	if (cali_info->is_reloadtxpowerindex)
++	if (cali_info->is_reloadtxpowerindex) {
+ 		RF_DBG(dm, DBG_RF_TX_PWR_TRACK,
+ 		       "reload ofdm index for band switch\n");
++	}
+ 
+ 	/*@4 4. Calculate average thermal meter*/
+ 
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/halrf.c b/drivers/staging/rtl8812au/hal/phydm/halrf/halrf.c
+index 09ab5bae9..609333db8 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/halrf.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/halrf.c
+@@ -2270,8 +2270,9 @@ boolean halrf_compare(void *dm_void, u32 value)
+ 	else if (value < 0x200 && value > 0x64)
+ 		fail = true;
+ 
+-	if (fail)
++	if (fail) {
+ 		RF_DBG(dm, DBG_RF_DACK, "[DACK]overflow!!!!!!!!!!!!!!!");
++	}
+ 	return fail;
+ }
+ 
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c b/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c
+index 773364310..a4e3504a3 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c
+@@ -148,9 +148,10 @@ void phydm_get_thermal_trim_offset_8821c(void *dm_void)
+ 	RF_DBG(dm, DBG_RF_MP, "[kfree] 8821c thermal trim flag:0x%02x\n",
+ 	       power_trim_info->flag);
+ 
+-	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON)
++	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON) {
+ 		RF_DBG(dm, DBG_RF_MP, "[kfree] 8821c thermal:%d\n",
+ 		       power_trim_info->thermal);
++	}
+ }
+ 
+ void phydm_get_power_trim_offset_8821c(void *dm_void);
+@@ -281,9 +282,10 @@ void phydm_get_thermal_trim_offset_8822b(void *dm_void)
+ 	RF_DBG(dm, DBG_RF_MP, "[kfree] 8822b thermal trim flag:0x%02x\n",
+ 	       power_trim_info->flag);
+ 
+-	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON)
++	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON) {
+ 		RF_DBG(dm, DBG_RF_MP, "[kfree] 8822b thermal:%d\n",
+ 		       power_trim_info->thermal);
++	}
+ }
+ 
+ void phydm_get_power_trim_offset_8822b(void *dm_void);
+@@ -532,9 +534,10 @@ void phydm_get_thermal_trim_offset_8710b(void *dm_void)
+ 	RF_DBG(dm, DBG_RF_MP, "[kfree] 8710b thermal trim flag:0x%02x\n",
+ 	       power_trim_info->flag);
+ 
+-	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON)
++	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON) {
+ 		RF_DBG(dm, DBG_RF_MP, "[kfree] 8710b thermal:%d\n",
+ 		       power_trim_info->thermal);
++	}
+ }
+ 
+ void phydm_get_power_trim_offset_8710b(void *dm_void);
+@@ -559,10 +562,11 @@ void phydm_get_power_trim_offset_8710b(void *dm_void)
+ 	RF_DBG(dm, DBG_RF_MP, "[kfree] 8710b power trim flag:0x%02x\n",
+ 	       power_trim_info->flag);
+ 
+-	if (power_trim_info->flag & KFREE_FLAG_ON)
++	if (power_trim_info->flag & KFREE_FLAG_ON) {
+ 		RF_DBG(dm, DBG_RF_MP,
+ 		       "[kfree] 8710b power_trim_data->bb_gain[0][0]=0x%X\n",
+ 		       power_trim_info->bb_gain[0][0]);
++	}
+ }
+ 
+ void phydm_set_kfree_to_rf_8710b(void *dm_void, u8 e_rf_path, u8 data);
+@@ -620,9 +624,10 @@ void phydm_get_thermal_trim_offset_8192f(void *dm_void)
+ 	RF_DBG(dm, DBG_RF_MP, "[kfree] 8192f thermal trim flag:0x%02x\n",
+ 	       power_trim_info->flag);
+ 
+-	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON)
++	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON) {
+ 		RF_DBG(dm, DBG_RF_MP, "[kfree] 8192f thermal:%d\n",
+ 		       power_trim_info->thermal);
++	}
+ }
+ 
+ void phydm_get_power_trim_offset_8192f(void *dm_void);
+@@ -799,8 +804,9 @@ void phydm_get_thermal_trim_offset_8198f(void *dm_void)
+ 		pg_therm = pg_therm & 0x1f;
+ 		if ((pg_therm & BIT(0)) == 0)
+ 			power_trim_info->thermal = (-1 * (pg_therm >> 1));
+-		else
++		else {
+ 			power_trim_info->thermal = (pg_therm >> 1);
++		}
+ 
+ 		power_trim_info->flag |= KFREE_FLAG_THERMAL_K_ON;
+ 	}
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
+index e2113e37a..a006d7e74 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
+@@ -1323,8 +1323,9 @@ void phy_iq_calibrate_8812a(void *dm_void, boolean is_recovery)
+ 		if (dm->rf_calibrate_info.is_iqk_in_progress)
+ 			RF_DBG(dm, DBG_RF_IQK,
+ 			       "== FW IQK TIMEOUT (Still in progress after 500ms) ==\n");
+-	} else
++	} else {
+ 		_phy_iq_calibrate_8812a(dm, *dm->channel);
++	}
+ }
+ 
+ void phy_lc_calibrate_8812a(void *dm_void)
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c b/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c
+index 4a770aa72..952b5600b 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c
+@@ -1337,10 +1337,11 @@ beamforming_init_entry(void *dm_void, u16 sta_idx, u8 *bfer_bfee_idx,
+ 
+ 		if (beamformer_entry == NULL) {
+ 			beamformer_entry = beamforming_add_bfer_entry(dm, sta, beamform_cap, num_of_sounding_dim, &bfer_idx);
+-			if (beamformer_entry == NULL)
++			if (beamformer_entry == NULL) {
+ 				PHYDM_DBG(dm, DBG_TXBF,
+ 					  "[%s]Not enough BFer entry!!!!!\n",
+ 					  __func__);
++			}
+ 		}
+ 	}
+ 
+@@ -1781,10 +1782,11 @@ void beamforming_timer_callback(
+ #endif
+ 	if (ret)
+ 		ret = beamforming_start_sw(dm, sound_info->sound_idx, sound_info->sound_mode, sound_info->sound_bw);
+-	else
++	else {
+ 		PHYDM_DBG(dm, DBG_TXBF,
+ 			  "%s, Error value return from BeamformingStart_V2\n",
+ 			  __func__);
++	}
+ 
+ 	if (beam_info->beamformee_su_cnt != 0 || beam_info->beamformee_mu_cnt > 1) {
+ 		if (sound_info->sound_mode == SOUNDING_SW_VHT_TIMER || sound_info->sound_mode == SOUNDING_SW_HT_TIMER)
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_cfotracking.c b/drivers/staging/rtl8812au/hal/phydm/phydm_cfotracking.c
+index 8aac6b094..d88d7a6c0 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_cfotracking.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_cfotracking.c
+@@ -213,11 +213,13 @@ void phydm_set_crystal_cap(void *dm_void, u8 crystal_cap)
+ 	if (cfo_track->crystal_cap == crystal_cap)
+ 		return;
+ 
+-	if (phydm_set_crystal_cap_reg(dm, crystal_cap))
++	if (phydm_set_crystal_cap_reg(dm, crystal_cap)) {
+ 		PHYDM_DBG(dm, DBG_CFO_TRK, "Set crystal_cap = 0x%x\n",
+ 			  cfo_track->crystal_cap);
+-	else
++	}
++	else {
+ 		PHYDM_DBG(dm, DBG_CFO_TRK, "Set fail\n");
++	}
+ }
+ 
+ boolean
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_psd.c b/drivers/staging/rtl8812au/hal/phydm/phydm_psd.c
+index 458677b59..33f715bcc 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_psd.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_psd.c
+@@ -199,9 +199,10 @@ u8 phydm_psd(void *dm_void, u32 igi, u16 start_point, u16 stop_point)
+ 	if (dm->support_ic_type & ODM_IC_JGR3_SERIES)
+ 		PHYDM_DBG(dm, ODM_COMP_API, "0x1d70=((0x%x))\n",
+ 			  odm_get_bb_reg(dm, R_0x1d70, MASKDWORD));
+-	else
++	else {
+ 		PHYDM_DBG(dm, ODM_COMP_API, "0xc50=((0x%x))\n",
+ 			  odm_get_bb_reg(dm, R_0xc50, MASKDWORD));
++	}
+ 
+ 	PHYDM_DBG(dm, ODM_COMP_API, "RF0x18=((0x%x))\n",
+ 		  odm_get_rf_reg(dm, RF_PATH_A, RF_0x18, RFREG_MASK));
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_rainfo.c b/drivers/staging/rtl8812au/hal/phydm/phydm_rainfo.c
+index 2c24b9be9..ca341c827 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_rainfo.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_rainfo.c
+@@ -443,8 +443,9 @@ void phydm_c2h_ra_report_handler(void *dm_void, u8 *cmd_buf, u8 cmd_len)
+ 			PHYDM_DBG(dm, DBG_RA, "Rate Back\n");
+ 		else if (cmd_buf[3] == 4)
+ 			PHYDM_DBG(dm, DBG_RA, "Start rate by RSSI\n");
+-		else if (cmd_buf[3] == 5)
++		else if (cmd_buf[3] == 5) {
+ 			PHYDM_DBG(dm, DBG_RA, "Try rate\n");
++		}
+ 	}
+ 	phydm_print_rate_2_buff(dm, rate, dbg_buf, PHYDM_SNPRINT_SIZE);
+ 	PHYDM_DBG(dm, DBG_RA, "Tx Rate=%s (%d)", dbg_buf, rate);
+@@ -829,8 +830,9 @@ u8 phydm_get_tx_stream_num(void *dm_void, enum rf_type type)
+ 		tx_num = 3;
+ 	else if (type == RF_4T4R)
+ 		tx_num = 4;
+-	else
++	else {
+ 		PHYDM_DBG(dm, DBG_RA, "[Warrning] no mimo_type is found\n");
++	}
+ 
+ 	return tx_num;
+ }
+diff --git a/drivers/staging/rtl8812au/hal/phydm/txbf/halcomtxbf.c b/drivers/staging/rtl8812au/hal/phydm/txbf/halcomtxbf.c
+index 4329dcaee..286105ec0 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/txbf/halcomtxbf.c
++++ b/drivers/staging/rtl8812au/hal/phydm/txbf/halcomtxbf.c
+@@ -43,8 +43,9 @@ void hal_com_txbf_config_gtab(
+ {
+ 	struct dm_struct *dm = (struct dm_struct *)dm_void;
+ 
+-	if (dm->support_ic_type & ODM_RTL8822B)
++	if (dm->support_ic_type & ODM_RTL8822B) {
+ 		hal_txbf_8822b_config_gtab(dm);
++	}
+ }
+ 
+ void phydm_beamform_set_sounding_enter(
+@@ -206,8 +207,9 @@ void hal_com_txbf_enter_work_item_callback(
+ 		hal_txbf_8192e_enter(dm, idx);
+ 	else if (dm->support_ic_type & ODM_RTL8814A)
+ 		hal_txbf_8814a_enter(dm, idx);
+-	else if (dm->support_ic_type & ODM_RTL8822B)
++	else if (dm->support_ic_type & ODM_RTL8822B) {
+ 		hal_txbf_8822b_enter(dm, idx);
++	}
+ }
+ 
+ void hal_com_txbf_leave_work_item_callback(
+@@ -236,8 +238,9 @@ void hal_com_txbf_leave_work_item_callback(
+ 		hal_txbf_8192e_leave(dm, idx);
+ 	else if (dm->support_ic_type & ODM_RTL8814A)
+ 		hal_txbf_8814a_leave(dm, idx);
+-	else if (dm->support_ic_type & ODM_RTL8822B)
++	else if (dm->support_ic_type & ODM_RTL8822B) {
+ 		hal_txbf_8822b_leave(dm, idx);
++	}
+ }
+ 
+ void hal_com_txbf_fw_ndpa_work_item_callback(
+@@ -265,8 +268,9 @@ void hal_com_txbf_fw_ndpa_work_item_callback(
+ 		hal_txbf_8192e_fw_tx_bf(dm, idx);
+ 	else if (dm->support_ic_type & ODM_RTL8814A)
+ 		hal_txbf_8814a_fw_txbf(dm, idx);
+-	else if (dm->support_ic_type & ODM_RTL8822B)
++	else if (dm->support_ic_type & ODM_RTL8822B) {
+ 		hal_txbf_8822b_fw_txbf(dm, idx);
++	}
+ }
+ 
+ void hal_com_txbf_clk_work_item_callback(
+@@ -363,8 +367,9 @@ void hal_com_txbf_status_work_item_callback(
+ 		hal_txbf_8192e_status(dm, idx);
+ 	else if (dm->support_ic_type & ODM_RTL8814A)
+ 		hal_txbf_8814a_status(dm, idx);
+-	else if (dm->support_ic_type & ODM_RTL8822B)
++	else if (dm->support_ic_type & ODM_RTL8822B) {
+ 		hal_txbf_8822b_status(dm, idx);
++	}
+ }
+ 
+ void hal_com_txbf_reset_tx_path_work_item_callback(
+diff --git a/drivers/staging/rtl8812au/hal/phydm/txbf/haltxbfjaguar.c b/drivers/staging/rtl8812au/hal/phydm/txbf/haltxbfjaguar.c
+index c42fa53a6..78bb399d9 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/txbf/haltxbfjaguar.c
++++ b/drivers/staging/rtl8812au/hal/phydm/txbf/haltxbfjaguar.c
+@@ -145,9 +145,10 @@ void hal_txbf_jaguar_download_ndpa(
+ 		dl_bcn_count++;
+ 	} while (!(bcn_valid_reg & BIT(0)) && dl_bcn_count < 5);
+ 
+-	if (!(bcn_valid_reg & BIT(0)))
++	if (!(bcn_valid_reg & BIT(0))) {
+ 		PHYDM_DBG(dm, DBG_TXBF, "%s Download RSVD page failed!\n",
+ 			  __func__);
++	}
+ 
+ 	/*TDECTRL[15:8] 0x209[7:0] = 0xF6	Beacon Head for TXDMA*/
+ 	odm_write_1byte(dm, REG_TDECTRL_8812A + 1, tx_page_bndy);
+-- 
+2.41.1
+

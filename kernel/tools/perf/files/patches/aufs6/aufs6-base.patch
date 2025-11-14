@@ -1,0 +1,220 @@
+SPDX-License-Identifier: GPL-2.0
+aufs6.12 base patch
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b878ddc99f94e..8489754030b99 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3666,6 +3666,19 @@ F:	kernel/audit*
+ F:	lib/*audit.c
+ K:	\baudit_[a-z_0-9]\+\b
+ 
++AUFS (advanced multi layered unification filesystem) FILESYSTEM
++M:	"J. R. Okajima" <hooanon05g@gmail.com>
++L:	aufs-users@lists.sourceforge.net (members only)
++L:	linux-unionfs@vger.kernel.org
++S:	Supported
++W:	http://aufs.sourceforge.net
++T:	git://github.com/sfjro/aufs4-linux.git
++F:	Documentation/ABI/testing/debugfs-aufs
++F:	Documentation/ABI/testing/sysfs-aufs
++F:	Documentation/filesystems/aufs/
++F:	fs/aufs/
++F:	include/uapi/linux/aufs_type.h
++
+ AUXILIARY BUS DRIVER
+ M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ R:	Dave Ertman <david.m.ertman@intel.com>
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 78a7bb28defe4..479480f25a6c0 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -661,6 +661,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 	goto done;
+ }
+ 
++/*
++ * for AUFS
++ * no get/put for file.
++ */
++/* Just to make the compiler silence, declare it */
++struct file *loop_backing_file(struct super_block *sb);
++struct file *loop_backing_file(struct super_block *sb)
++{
++	struct file *ret;
++	struct loop_device *l;
++
++	ret = NULL;
++	if (MAJOR(sb->s_dev) == LOOP_MAJOR) {
++		l = sb->s_bdev->bd_disk->private_data;
++		ret = l->lo_backing_file;
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(loop_backing_file);
++
+ /* loop sysfs attributes */
+ 
+ static ssize_t loop_attr_show(struct device *dev, char *page,
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 0f6b16ba30d08..1ab11cad60e8c 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1223,6 +1223,9 @@ enum d_walk_ret {
+ 	D_WALK_SKIP,
+ };
+ 
++/* AUFS calls d_walk(). Just to make the compiler silence, declare it */
++void d_walk(struct dentry *parent, void *data,
++		   enum d_walk_ret (*enter)(void *, struct dentry *));
+ /**
+  * d_walk - walk the dentry tree
+  * @parent:	start of walk
+@@ -1231,7 +1234,7 @@ enum d_walk_ret {
+  *
+  * The @enter() callbacks are called with d_lock held.
+  */
+-static void d_walk(struct dentry *parent, void *data,
++void d_walk(struct dentry *parent, void *data,
+ 		   enum d_walk_ret (*enter)(void *, struct dentry *))
+ {
+ 	struct dentry *this_parent, *dentry;
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 22dd9dcce7ecc..460791727fd9c 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -37,7 +37,7 @@
+ 
+ #define SETFL_MASK (O_APPEND | O_NONBLOCK | O_NDELAY | O_DIRECT | O_NOATIME)
+ 
+-static int setfl(int fd, struct file * filp, unsigned int arg)
++int setfl(int fd, struct file * filp, unsigned int arg)
+ {
+ 	struct inode * inode = file_inode(filp);
+ 	int error = 0;
+@@ -67,6 +67,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
+ 
+ 	if (filp->f_op->check_flags)
+ 		error = filp->f_op->check_flags(arg);
++	if (!error && filp->f_op->setfl)
++		error = filp->f_op->setfl(filp, arg);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/namespace.c b/fs/namespace.c
+index d26f5e6d2ca35..85739e2d64c00 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
+ 	return mnt->mnt_ns == current->nsproxy->mnt_ns;
+ }
+ 
++/* for aufs, CONFIG_AUFS_BR_FUSE */
++int is_current_mnt_ns(struct vfsmount *mnt)
++{
++	return check_mnt(real_mount(mnt));
++}
++
+ /*
+  * vfsmount lock must be held for write
+  */
+diff --git a/fs/splice.c b/fs/splice.c
+index 06232d7e505f6..b15fd6073b6d3 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -933,7 +933,7 @@ static int warn_unsupported(struct file *file, const char *op)
+ /*
+  * Attempt to initiate a splice from pipe to file.
+  */
+-static ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
++ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			      loff_t *ppos, size_t len, unsigned int flags)
+ {
+ 	if (unlikely(!out->f_op->splice_write))
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3559446279c15..51b64b2ad82c4 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1160,6 +1160,7 @@ extern void fasync_free(struct fasync_struct *);
+ /* can be called from interrupts */
+ extern void kill_fasync(struct fasync_struct **, int, int);
+ 
++extern int setfl(int fd, struct file *filp, unsigned int arg);
+ extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
+ extern int f_setown(struct file *filp, int who, int force);
+ extern void f_delown(struct file *filp);
+@@ -2082,6 +2083,7 @@ struct file_operations {
+ 	int (*lock) (struct file *, int, struct file_lock *);
+ 	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+ 	int (*check_flags)(int);
++	int (*setfl)(struct file *, unsigned long);
+ 	int (*flock) (struct file *, int, struct file_lock *);
+ 	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
+ 	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 217f7abf2cbfa..0e17b8c23f105 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
+ 	return lock->key == key;
+ }
+ 
++struct lock_class *lockdep_hlock_class(struct held_lock *hlock);
++
+ /*
+  * Acquire a lock.
+  *
+diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
+index 70b366b648160..08cfdabb2721f 100644
+--- a/include/linux/mnt_namespace.h
++++ b/include/linux/mnt_namespace.h
+@@ -10,6 +10,7 @@ struct mnt_namespace;
+ struct fs_struct;
+ struct user_namespace;
+ struct ns_common;
++struct vfsmount;
+ 
+ extern struct mnt_namespace *copy_mnt_ns(unsigned long, struct mnt_namespace *,
+ 		struct user_namespace *, struct fs_struct *);
+@@ -17,6 +18,8 @@ extern void put_mnt_ns(struct mnt_namespace *ns);
+ DEFINE_FREE(put_mnt_ns, struct mnt_namespace *, if (!IS_ERR_OR_NULL(_T)) put_mnt_ns(_T))
+ extern struct ns_common *from_mnt_ns(struct mnt_namespace *);
+ 
++extern int is_current_mnt_ns(struct vfsmount *mnt);
++
+ extern const struct file_operations proc_mounts_operations;
+ extern const struct file_operations proc_mountinfo_operations;
+ extern const struct file_operations proc_mountstats_operations;
+diff --git a/include/linux/splice.h b/include/linux/splice.h
+index 9dec4861d09f6..14583d8468640 100644
+--- a/include/linux/splice.h
++++ b/include/linux/splice.h
+@@ -108,4 +108,7 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
+ 
+ extern const struct pipe_buf_operations page_cache_pipe_buf_ops;
+ extern const struct pipe_buf_operations default_pipe_buf_ops;
++
++extern ssize_t do_splice_from(struct pipe_inode_info *pipe, struct file *out,
++			      loff_t *ppos, size_t len, unsigned int flags);
+ #endif
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 536bd471557f5..34b378cf7a95f 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
+ struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
+ DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
+ 
+-static inline struct lock_class *hlock_class(struct held_lock *hlock)
++inline struct lock_class *lockdep_hlock_class(struct held_lock *hlock)
+ {
+ 	unsigned int class_idx = hlock->class_idx;
+ 
+@@ -239,6 +239,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+ 	 */
+ 	return lock_classes + class_idx;
+ }
++#define hlock_class(hlock) lockdep_hlock_class(hlock)
+ 
+ #ifdef CONFIG_LOCK_STAT
+ static DEFINE_PER_CPU(struct lock_class_stats[MAX_LOCKDEP_KEYS], cpu_lock_stats);

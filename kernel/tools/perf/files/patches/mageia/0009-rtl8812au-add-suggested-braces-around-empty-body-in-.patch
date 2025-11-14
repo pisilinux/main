@@ -1,0 +1,96 @@
+From f9a18119d2a8f5bd4c35197c89c60305d58d3abd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Thu, 21 Nov 2024 17:03:25 +0100
+Subject: [PATCH 09/10] rtl8812au: add suggested braces around empty body in an
+ else statement
+
+---
+ drivers/staging/rtl8812au/core/rtw_recv.c                      | 3 ++-
+ drivers/staging/rtl8812au/core/rtw_xmit.c                      | 3 ++-
+ drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c        | 3 ++-
+ .../rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c        | 3 ++-
+ drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c        | 3 ++-
+ 5 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/core/rtw_recv.c b/drivers/staging/rtl8812au/core/rtw_recv.c
+index ed2bf605c..bdbc146ca 100644
+--- a/drivers/staging/rtl8812au/core/rtw_recv.c
++++ b/drivers/staging/rtl8812au/core/rtw_recv.c
+@@ -2404,8 +2404,9 @@ sint validate_recv_frame(_adapter *adapter, union recv_frame *precv_frame)
+ 					dump_rx_packet(ptr);
+ 			}
+ 			#endif
+-		} else
++		} else {
+ 			DBG_COUNTER(adapter->rx_logs.core_rx_pre_data_handled);
++		}
+ 		break;
+ 	default:
+ 		DBG_COUNTER(adapter->rx_logs.core_rx_pre_unknown);
+diff --git a/drivers/staging/rtl8812au/core/rtw_xmit.c b/drivers/staging/rtl8812au/core/rtw_xmit.c
+index e40c0aecc..12a2d5d79 100644
+--- a/drivers/staging/rtl8812au/core/rtw_xmit.c
++++ b/drivers/staging/rtl8812au/core/rtw_xmit.c
+@@ -1374,8 +1374,9 @@ static s32 update_attrib(_adapter *padapter, _pkt *pkt, struct pkt_attrib *pattr
+ 		_rtw_memcpy(pattrib->ra, pattrib->dst, ETH_ALEN);
+ 		_rtw_memcpy(pattrib->ta, get_bssid(pmlmepriv), ETH_ALEN);
+ 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_ap);
+-	} else
++	} else {
+ 		DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_unknown);
++	}
+ 
+ get_sta_info:
+ 	bmcast = IS_MCAST(pattrib->ra);
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c b/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c
+index a4e3504a3..c31566d70 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/halrf_kfree.c
+@@ -814,9 +814,10 @@ void phydm_get_thermal_trim_offset_8198f(void *dm_void)
+ 	RF_DBG(dm, DBG_RF_MP, "[kfree] 8198f thermal trim flag:0x%02x\n",
+ 	       power_trim_info->flag);
+ 
+-	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON)
++	if (power_trim_info->flag & KFREE_FLAG_THERMAL_K_ON) {
+ 		RF_DBG(dm, DBG_RF_MP, "[kfree] 8198f thermal:%d\n",
+ 		       power_trim_info->thermal);
++	}
+ }
+ 
+ void phydm_get_power_trim_offset_8198f(void *dm_void);
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
+index a006d7e74..4f11b8223 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
+@@ -1320,9 +1320,10 @@ void phy_iq_calibrate_8812a(void *dm_void, boolean is_recovery)
+ 	if (dm->fw_offload_ability & PHYDM_RF_IQK_OFFLOAD) {
+ 		_phy_iq_calibrate_by_fw_8812a(dm);
+ 		phydm_iqk_wait(dm, 500);
+-		if (dm->rf_calibrate_info.is_iqk_in_progress)
++		if (dm->rf_calibrate_info.is_iqk_in_progress) {
+ 			RF_DBG(dm, DBG_RF_IQK,
+ 			       "== FW IQK TIMEOUT (Still in progress after 500ms) ==\n");
++		}
+ 	} else {
+ 		_phy_iq_calibrate_8812a(dm, *dm->channel);
+ 	}
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c b/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c
+index 952b5600b..28ab2dd54 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_beamforming.c
+@@ -1196,10 +1196,11 @@ void phydm_beamforming_notify(
+ 			/*@if (sound_info->sound_mode == SOUNDING_SW_VHT_TIMER || sound_info->sound_mode == SOUNDING_SW_HT_TIMER)
+ 				odm_set_timer(dm, &beam_info->beamforming_timer, sound_info->sound_period);*/
+ 			odm_set_timer(dm, &beam_info->beamforming_timer, 1000); /*@Do MU sounding every 1sec*/
+-		} else
++		} else {
+ 			PHYDM_DBG(dm, DBG_TXBF,
+ 				  "%s: Less or larger than 2 MU STAs, not to set timer\n",
+ 				  __func__);
++		}
+ 		break;
+ 
+ 	case BEAMFORMEE_NOTIFY_DELETE_MU:
+-- 
+2.41.1
+

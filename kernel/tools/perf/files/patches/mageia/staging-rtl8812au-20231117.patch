@@ -1,0 +1,1720 @@
+From 8bb11a9489a5af4f23949f0109bf40d65d787095 Mon Sep 17 00:00:00 2001
+From: kimocoder <christian@aircrack-ng.org>
+Date: Tue, 6 Jun 2023 17:50:45 +0200
+Subject: [PATCH 01/13] Revert "Some cleanup of unused chips"
+
+This reverts commit b3227c731ec957b706f8eb2ebcf42ba1c2f0d610.
+---
+ drivers/staging/rtl8812au/hal/hal_com.c       | 280 ++++++++++++++++++
+ drivers/staging/rtl8812au/hal/hal_intf.c      |  18 ++
+ drivers/staging/rtl8812au/hal/hal_mp.c        |  27 ++
+ .../hal/phydm/halrf/rtl8814a/halrf_8814a_ap.c |  18 +-
+ .../hal/phydm/rtl8814a/halphyrf_8814a_ap.c    |  28 +-
+ .../rtl8812au/hal/rtl8814a/usb/usb_halinit.c  |  30 +-
+ .../staging/rtl8812au/include/gspi_osintf.h   |   7 +
+ .../staging/rtl8812au/include/rtl8812a_recv.h |   4 +
+ .../staging/rtl8812au/include/rtl8814a_recv.h |   4 +
+ drivers/staging/rtl8812au/include/rtw_cmd.h   |   9 +-
+ drivers/staging/rtl8812au/include/rtw_debug.h |   4 +
+ drivers/staging/rtl8812au/include/rtw_recv.h  |  36 ++-
+ drivers/staging/rtl8812au/include/rtw_xmit.h  |   5 +
+ .../staging/rtl8812au/include/sdio_osintf.h   |   7 +
+ .../staging/rtl8812au/os_dep/osdep_service.c  |  31 ++
+ 15 files changed, 478 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/hal/hal_com.c b/drivers/staging/rtl8812au/hal/hal_com.c
+index 3b7d7dc52..b3b1e16c8 100644
+--- a/drivers/staging/rtl8812au/hal/hal_com.c
++++ b/drivers/staging/rtl8812au/hal/hal_com.c
+@@ -4330,6 +4330,28 @@ s32 rtw_hal_set_FwMediaStatusRpt_cmd(_adapter *adapter, bool opmode, bool miraca
+ 	if (ret != _SUCCESS)
+ 		goto exit;
+ 
++#if defined(CONFIG_RTL8188E)
++	if (rtw_get_chip_type(adapter) == RTL8188E) {
++		HAL_DATA_TYPE *hal_data = GET_HAL_DATA(adapter);
++
++		/* 8188E FW doesn't set macid no link, driver does it by self */
++		if (opmode)
++			rtw_hal_set_hwreg(adapter, HW_VAR_MACID_LINK, &macid);
++		else
++			rtw_hal_set_hwreg(adapter, HW_VAR_MACID_NOLINK, &macid);
++
++		/* for 8188E RA */
++#if (RATE_ADAPTIVE_SUPPORT == 1)
++		if (hal_data->fw_ractrl == _FALSE) {
++			u8 max_macid;
++
++			max_macid = rtw_search_max_mac_id(adapter);
++			rtw_hal_set_hwreg(adapter, HW_VAR_TX_RPT_MAX_MACID, &max_macid);
++		}
++#endif
++	}
++#endif
++
+ #if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A)
+ 	/* TODO: this should move to IOT issue area */
+ 	if (rtw_get_chip_type(adapter) == RTL8812
+@@ -4734,6 +4756,21 @@ static void rtw_hal_force_enable_rxdma(_adapter *adapter)
+ 	rtw_write32(adapter, REG_RXPKT_NUM,
+ 		    (rtw_read32(adapter, REG_RXPKT_NUM) & (~RW_RELEASE_EN)));
+ }
++#if defined(CONFIG_RTL8188E)
++static void rtw_hal_disable_tx_report(_adapter *adapter)
++{
++	rtw_write8(adapter, REG_TX_RPT_CTRL,
++		   ((rtw_read8(adapter, REG_TX_RPT_CTRL) & ~BIT(1))) & ~BIT(5));
++	RTW_INFO("disable TXRPT:0x%02x\n", rtw_read8(adapter, REG_TX_RPT_CTRL));
++}
++
++static void rtw_hal_enable_tx_report(_adapter *adapter)
++{
++	rtw_write8(adapter, REG_TX_RPT_CTRL,
++		   ((rtw_read8(adapter, REG_TX_RPT_CTRL) | BIT(1))) | BIT(5));
++	RTW_INFO("enable TX_RPT:0x%02x\n", rtw_read8(adapter, REG_TX_RPT_CTRL));
++}
++#endif
+ static void rtw_hal_release_rx_dma(_adapter *adapter)
+ {
+ 	u32 val32 = 0;
+@@ -5819,6 +5856,10 @@ static void rtw_hal_ap_wow_enable(_adapter *padapter)
+ 	issue_beacon(padapter, 0);
+ 
+ 	rtw_msleep_os(2);
++	#if defined(CONFIG_RTL8188E)
++	if (IS_HARDWARE_TYPE_8188E(padapter))
++		rtw_hal_disable_tx_report(padapter);
++	#endif
+ 	/* RX DMA stop */
+ 	res = rtw_hal_pause_rx_dma(padapter);
+ 	if (res == _FAIL)
+@@ -5879,6 +5920,11 @@ static void rtw_hal_ap_wow_disable(_adapter *padapter)
+ 	}
+ #endif /*DBG_CHECK_FW_PS_STATE*/
+ 
++	#if defined(CONFIG_RTL8188E)
++	if (IS_HARDWARE_TYPE_8188E(padapter))
++		rtw_hal_enable_tx_report(padapter);
++	#endif
++
+ 	rtw_hal_force_enable_rxdma(padapter);
+ 
+ 	rtw_hal_fw_dl(padapter, _FALSE);
+@@ -9558,6 +9604,10 @@ static void rtw_hal_wow_enable(_adapter *adapter)
+ 			  (u8 *)&media_status_rpt);
+ 
+ 	/* RX DMA stop */
++	#if defined(CONFIG_RTL8188E)
++	if (IS_HARDWARE_TYPE_8188E(adapter))
++		rtw_hal_disable_tx_report(adapter);
++	#endif
+ 
+ 	res = rtw_hal_pause_rx_dma(adapter);
+ 	if (res == _FAIL)
+@@ -9746,6 +9796,11 @@ static void rtw_hal_wow_disable(_adapter *adapter)
+ 	#endif
+ 	rtw_hal_release_rx_dma(adapter);
+ 
++	#if defined(CONFIG_RTL8188E)
++	if (IS_HARDWARE_TYPE_8188E(adapter))
++		rtw_hal_enable_tx_report(adapter);
++	#endif
++
+ 	if ((pwrctl->wowlan_wake_reason != RX_DISASSOC) &&
+ 		(pwrctl->wowlan_wake_reason != RX_DEAUTH) &&
+ 		(pwrctl->wowlan_wake_reason != FW_DECISION_DISCONNECT)) {
+@@ -12549,6 +12604,61 @@ int hal_efuse_macaddr_offset(_adapter *adapter)
+ 	interface_type = rtw_get_intf_type(adapter);
+ 
+ 	switch (rtw_get_chip_type(adapter)) {
++#ifdef CONFIG_RTL8723B
++	case RTL8723B:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8723BU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8723BS;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_8723BE;
++		break;
++#endif
++#ifdef CONFIG_RTL8703B
++	case RTL8703B:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8703BU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8703BS;
++		break;
++#endif
++#ifdef CONFIG_RTL8723D
++	case RTL8723D:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8723DU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8723DS;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_8723DE;
++		break;
++#endif
++
++#ifdef CONFIG_RTL8188E
++	case RTL8188E:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_88EU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_88ES;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_88EE;
++		break;
++#endif
++#ifdef CONFIG_RTL8188F
++	case RTL8188F:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8188FU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8188FS;
++		break;
++#endif
++#ifdef CONFIG_RTL8188GTV
++	case RTL8188GTV:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8188GTVU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8188GTVS;
++		break;
++#endif
+ #ifdef CONFIG_RTL8812A
+ 	case RTL8812:
+ 		if (interface_type == RTW_USB)
+@@ -12567,6 +12677,16 @@ int hal_efuse_macaddr_offset(_adapter *adapter)
+ 			addr_offset = EEPROM_MAC_ADDR_8821AE;
+ 		break;
+ #endif
++#ifdef CONFIG_RTL8192E
++	case RTL8192E:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8192EU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8192ES;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_8192EE;
++		break;
++#endif
+ #ifdef CONFIG_RTL8814A
+ 	case RTL8814A:
+ 		if (interface_type == RTW_USB)
+@@ -12576,6 +12696,46 @@ int hal_efuse_macaddr_offset(_adapter *adapter)
+ 		break;
+ #endif
+ 
++#ifdef CONFIG_RTL8822B
++	case RTL8822B:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8822BU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8822BS;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_8822BE;
++		break;
++#endif /* CONFIG_RTL8822B */
++
++#ifdef CONFIG_RTL8821C
++	case RTL8821C:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8821CU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8821CS;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_8821CE;
++		break;
++#endif /* CONFIG_RTL8821C */
++
++#ifdef CONFIG_RTL8710B
++	case RTL8710B:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8710B;
++		break;
++#endif
++
++#ifdef CONFIG_RTL8192F
++	case RTL8192F:
++		if (interface_type == RTW_USB)
++			addr_offset = EEPROM_MAC_ADDR_8192FU;
++		else if (interface_type == RTW_SDIO)
++			addr_offset = EEPROM_MAC_ADDR_8192FS;
++		else if (interface_type == RTW_PCIE)
++			addr_offset = EEPROM_MAC_ADDR_8192FE;
++		break;
++#endif /* CONFIG_RTL8192F */
++
+ 	}
+ 
+ 	if (addr_offset == -1) {
+@@ -12793,6 +12953,32 @@ void rtw_bb_rf_gain_offset(_adapter *padapter)
+ 	} else
+ 		RTW_INFO("Using the default RF gain.\n");
+ 
++#elif defined(CONFIG_RTL8188E)
++	if (value & BIT4 && (registry_par->RegPwrTrimEnable == 1)) {
++		RTW_INFO("8188ES Offset RF Gain.\n");
++		RTW_INFO("8188ES Offset RF Gain. EEPROMRFGainVal=0x%x\n",
++			 pHalData->EEPROMRFGainVal);
++
++		if (pHalData->EEPROMRFGainVal != 0xff) {
++			res = rtw_hal_read_rfreg(padapter, RF_PATH_A,
++					 REG_RF_BB_GAIN_OFFSET, 0xffffffff);
++
++			RTW_INFO("Offset RF Gain. reg 0x55=0x%x\n", res);
++			res &= 0xfff87fff;
++
++			res |= (pHalData->EEPROMRFGainVal & 0x0f) << 15;
++			RTW_INFO("Offset RF Gain. res=0x%x\n", res);
++
++			rtw_hal_write_rfreg(padapter, RF_PATH_A,
++					    REG_RF_BB_GAIN_OFFSET,
++					    RF_GAIN_OFFSET_MASK, res);
++		} else {
++			RTW_INFO("Offset RF Gain. EEPROMRFGainVal=0x%x == 0xff, didn't run Kfree\n",
++				 pHalData->EEPROMRFGainVal);
++		}
++	} else
++		RTW_INFO("Using the default RF gain.\n");
++#else
+ 	/* TODO: call this when channel switch */
+ 	if (kfree_data->flag & KFREE_FLAG_ON)
+ 		rtw_rf_apply_tx_gain_offset(padapter, 6); /* input ch6 to select BB_GAIN_2G */
+@@ -13524,8 +13710,14 @@ u8 rtw_get_current_tx_sgi(_adapter *padapter, struct sta_info *psta)
+ 		return curr_tx_sgi;
+ 
+ 	if (padapter->fix_rate == 0xff) {
++#if defined(CONFIG_RTL8188E)
++#if (RATE_ADAPTIVE_SUPPORT == 1)
++		curr_tx_sgi = hal_data->odmpriv.ra_info[psta->cmn.mac_id].rate_sgi;
++#endif /* (RATE_ADAPTIVE_SUPPORT == 1)*/
++#else
+ 		ra_info = &psta->cmn.ra_info;
+ 		curr_tx_sgi = ((ra_info->curr_tx_rate) & 0x80) >> 7;
++#endif
+ 	} else {
+ 		curr_tx_sgi = ((padapter->fix_rate) & 0x80) >> 7;
+ 	}
+@@ -13543,8 +13735,14 @@ u8 rtw_get_current_tx_rate(_adapter *padapter, struct sta_info *psta)
+ 		return rate_id;
+ 
+ 	if (padapter->fix_rate == 0xff) {
++#if defined(CONFIG_RTL8188E)
++#if (RATE_ADAPTIVE_SUPPORT == 1)
++		rate_id = hal_data->odmpriv.ra_info[psta->cmn.mac_id].decision_rate;
++#endif /* (RATE_ADAPTIVE_SUPPORT == 1)*/
++#else
+ 		ra_info = &psta->cmn.ra_info;
+ 		rate_id = ra_info->curr_tx_rate & 0x7f;
++#endif
+ 	} else {
+ 		rate_id = padapter->fix_rate & 0x7f;
+ 	}
+@@ -13628,6 +13826,14 @@ void hal_set_crystal_cap(_adapter *adapter, u8 crystal_cap)
+ 	crystal_cap = crystal_cap & 0x3F;
+ 
+ 	switch (rtw_get_chip_type(adapter)) {
++#if defined(CONFIG_RTL8188E) || defined(CONFIG_RTL8188F) || defined(CONFIG_RTL8188GTV)
++	case RTL8188E:
++	case RTL8188F:
++	case RTL8188GTV:
++		/* write 0x24[16:11] = 0x24[22:17] = CrystalCap */
++		phy_set_bb_reg(adapter, REG_AFE_XTAL_CTRL, 0x007FF800, (crystal_cap | (crystal_cap << 6)));
++		break;
++#endif
+ #if defined(CONFIG_RTL8812A)
+ 	case RTL8812:
+ 		/* write 0x2C[30:25] = 0x2C[24:19] = CrystalCap */
+@@ -13651,6 +13857,25 @@ void hal_set_crystal_cap(_adapter *adapter, u8 crystal_cap)
+ 		/* write 0x2C[26:21] = 0x2C[20:15] = CrystalCap*/
+ 		phy_set_bb_reg(adapter, REG_MAC_PHY_CTRL, 0x07FF8000, (crystal_cap | (crystal_cap << 6)));
+ 		break;
++#endif
++#if defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C) || defined(CONFIG_RTL8192F)
++
++	case RTL8822B:
++	case RTL8821C:
++	case RTL8192F:	
++		/* write 0x28[6:1] = 0x24[30:25] = CrystalCap */
++		crystal_cap = crystal_cap & 0x3F;
++		phy_set_bb_reg(adapter, REG_AFE_XTAL_CTRL, 0x7E000000, crystal_cap);
++		phy_set_bb_reg(adapter, REG_AFE_PLL_CTRL, 0x7E, crystal_cap);
++		break;
++#endif
++#if defined(CONFIG_RTL8710B)
++	case RTL8710B:
++		/*Change by ylb 20160728, Becase 0x2C[23:12] is removed to syson 0x60[29:18] */
++		/* 0x2C[23:18] = 0x2C[29:24] = CrystalCap //Xo:[29:24], Xi:[23:18]*/
++		crystal_cap = crystal_cap & 0x3F;
++		hal_set_syson_reg(adapter, REG_SYS_XTAL_CTRL0, 0x3FFC0000, (crystal_cap | (crystal_cap << 6)));
++		break;
+ #endif
+ 	default:
+ 		rtw_warn_on(1);
+@@ -13665,6 +13890,36 @@ int hal_spec_init(_adapter *adapter)
+ 	interface_type = rtw_get_intf_type(adapter);
+ 
+ 	switch (rtw_get_chip_type(adapter)) {
++#ifdef CONFIG_RTL8723B
++	case RTL8723B:
++		init_hal_spec_8723b(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8703B
++	case RTL8703B:
++		init_hal_spec_8703b(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8723D
++	case RTL8723D:
++		init_hal_spec_8723d(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8188E
++	case RTL8188E:
++		init_hal_spec_8188e(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8188F
++	case RTL8188F:
++		init_hal_spec_8188f(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8188GTV
++	case RTL8188GTV:
++		init_hal_spec_8188gtv(adapter);
++		break;
++#endif
+ #ifdef CONFIG_RTL8812A
+ 	case RTL8812:
+ 		init_hal_spec_8812a(adapter);
+@@ -13675,11 +13930,36 @@ int hal_spec_init(_adapter *adapter)
+ 		init_hal_spec_8821a(adapter);
+ 		break;
+ #endif
++#ifdef CONFIG_RTL8192E
++	case RTL8192E:
++		init_hal_spec_8192e(adapter);
++		break;
++#endif
+ #ifdef CONFIG_RTL8814A
+ 	case RTL8814A:
+ 		init_hal_spec_8814a(adapter);
+ 		break;
+ #endif
++#ifdef CONFIG_RTL8822B
++	case RTL8822B:
++		rtl8822b_init_hal_spec(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8821C
++	case RTL8821C:
++		init_hal_spec_rtl8821c(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8710B
++	case RTL8710B:
++		init_hal_spec_8710b(adapter);
++		break;
++#endif
++#ifdef CONFIG_RTL8192F
++	case RTL8192F:
++		init_hal_spec_8192f(adapter);
++		break;
++#endif
+ 
+ 	default:
+ 		RTW_ERR("%s: unknown chip_type:%u\n"
+diff --git a/drivers/staging/rtl8812au/hal/hal_intf.c b/drivers/staging/rtl8812au/hal/hal_intf.c
+index b20ef6322..66a2954c5 100644
+--- a/drivers/staging/rtl8812au/hal/hal_intf.c
++++ b/drivers/staging/rtl8812au/hal/hal_intf.c
+@@ -20,9 +20,20 @@
+ 
+ const u32 _chip_type_to_odm_ic_type[] = {
+ 	0,
++	ODM_RTL8188E,
++	ODM_RTL8192E,
+ 	ODM_RTL8812,
+ 	ODM_RTL8821,
++	ODM_RTL8723B,
+ 	ODM_RTL8814A,
++	ODM_RTL8703B,
++	ODM_RTL8188F,
++	ODM_RTL8188F,
++	ODM_RTL8822B,
++	ODM_RTL8723D,
++	ODM_RTL8821C,
++	ODM_RTL8710B,
++	ODM_RTL8192F,
+ 	0,
+ };
+ 
+@@ -1402,6 +1413,7 @@ bool rtw_hal_rfkill_poll(_adapter *adapter, u8 *valid)
+ u8 rtw_hal_ops_check(_adapter *padapter)
+ {
+ 	u8 ret = _SUCCESS;
++#if 1
+ 	/*** initialize section ***/
+ 	if (NULL == padapter->hal_func.read_chip_version) {
+ 		rtw_hal_error_msg("read_chip_version");
+@@ -1591,6 +1603,12 @@ u8 rtw_hal_ops_check(_adapter *padapter)
+ 		rtw_hal_error_msg("hal_mac_c2h_handler");
+ 		ret = _FAIL;
+ 	}
++#elif !defined(CONFIG_RTL8188E)
++	if (NULL == padapter->hal_func.c2h_handler) {
++		rtw_hal_error_msg("c2h_handler");
++		ret = _FAIL;
++	}
++#endif
+ 
+ #if defined(CONFIG_LPS) || defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
+ 	if (NULL == padapter->hal_func.fill_fake_txdesc) {
+diff --git a/drivers/staging/rtl8812au/hal/hal_mp.c b/drivers/staging/rtl8812au/hal/hal_mp.c
+index 5dfaf91fe..7960556f2 100644
+--- a/drivers/staging/rtl8812au/hal/hal_mp.c
++++ b/drivers/staging/rtl8812au/hal/hal_mp.c
+@@ -21,12 +21,39 @@
+ #ifdef RTW_HALMAC
+ 	#include <hal_data.h>		/* struct HAL_DATA_TYPE, RF register definition and etc. */
+ #else /* !RTW_HALMAC */
++	#ifdef CONFIG_RTL8188E
++		#include <rtl8188e_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8723B
++		#include <rtl8723b_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8192E
++		#include <rtl8192e_hal.h>
++	#endif
+ 	#if defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8812A)
+ 		#include <rtl8814a_hal.h>
+ 	#endif
+ 	#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A)
+ 		#include <rtl8812a_hal.h>
+ 	#endif
++	#ifdef CONFIG_RTL8703B
++		#include <rtl8703b_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8723D
++		#include <rtl8723d_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8710B
++		#include <rtl8710b_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8188F
++		#include <rtl8188f_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8188GTV
++		#include <rtl8188gtv_hal.h>
++	#endif
++	#ifdef CONFIG_RTL8192F
++		#include <rtl8192f_hal.h>
++	#endif
+ #endif /* !RTW_HALMAC */
+ 
+ 
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ap.c b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ap.c
+index 5bfb27041..6c93e5f6f 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ap.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ap.c
+@@ -1202,6 +1202,16 @@ VOID
+ 			IN	BOOLEAN		is2T
+ 			)
+ {
++#if (RT_PLATFORM == PLATFORM_WINDOWS)
++#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
++	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
++#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
++	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
++#endif
++#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
++	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
++#endif
++#endif
+ 
+ 	u4Byte			tmpReg, tmpReg2, index,  i;
+ 	u1Byte			path, pathbound = PATH_NUM;
+@@ -1216,12 +1226,12 @@ VOID
+ 		rRx_TO_Rx, 		rStandby,
+ 		rSleep, 			rPMPD_ANAEN };
+ 
+-	u4Byte			BB_backup[DP_BB_REG_NUM];
++	u4Byte			BB_backup[DP_BB_REG_NUM];	
+ 	u4Byte			BB_REG[DP_BB_REG_NUM] = {
+-		rOFDM0_TRxPathEnable, rFPGA0_RFMOD,
++		rOFDM0_TRxPathEnable, rFPGA0_RFMOD, 
+ 		rOFDM0_TRMuxPar, 	rFPGA0_XCD_RFInterfaceSW,
+-		rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE,
+-		rFPGA0_XB_RFInterfaceOE};
++		rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE, 
++		rFPGA0_XB_RFInterfaceOE};						
+ 	u4Byte			BB_settings[DP_BB_REG_NUM] = {
+ 		0x00a05430, 0x02040000, 0x000800e4, 0x22208000, 
+ 		0x0, 0x0, 0x0};	
+diff --git a/drivers/staging/rtl8812au/hal/phydm/rtl8814a/halphyrf_8814a_ap.c b/drivers/staging/rtl8812au/hal/phydm/rtl8814a/halphyrf_8814a_ap.c
+index 81ea9a614..adf2cd9c6 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/rtl8814a/halphyrf_8814a_ap.c
++++ b/drivers/staging/rtl8812au/hal/phydm/rtl8814a/halphyrf_8814a_ap.c
+@@ -1201,29 +1201,39 @@ VOID
+ 			IN	BOOLEAN		is2T
+ 			)
+ {
++#if (RT_PLATFORM == PLATFORM_WINDOWS)
++#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
++	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
++#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
++	PDM_ODM_T		pDM_Odm = &pHalData->odmpriv;
++#endif
++#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
++	PDM_ODM_T		pDM_Odm = &pHalData->DM_OutSrc;
++#endif
++#endif
+ 
+ 	u32			tmpReg, tmpReg2, index,  i;
+ 	u8			path, pathbound = PATH_NUM;
+ 	u32			AFE_backup[IQK_ADDA_REG_NUM];
+-	u32			AFE_REG[IQK_ADDA_REG_NUM] = {
+-		rFPGA0_XCD_SwitchControl, 	rBlue_Tooth,
++	u32			AFE_REG[IQK_ADDA_REG_NUM] = {	
++		rFPGA0_XCD_SwitchControl, 	rBlue_Tooth, 	
+ 		rRx_Wait_CCA, 		rTx_CCK_RFON,
+-		rTx_CCK_BBON, 	rTx_OFDM_RFON,
++		rTx_CCK_BBON, 	rTx_OFDM_RFON, 	
+ 		rTx_OFDM_BBON, 	rTx_To_Rx,
+-		rTx_To_Tx, 		rRx_CCK,
++		rTx_To_Tx, 		rRx_CCK, 	
+ 		rRx_OFDM, 		rRx_Wait_RIFS,
+-		rRx_TO_Rx, 		rStandby,
++		rRx_TO_Rx, 		rStandby, 	
+ 		rSleep, 			rPMPD_ANAEN };
+ 
+-	u32			BB_backup[DP_BB_REG_NUM];
++	u32			BB_backup[DP_BB_REG_NUM];	
+ 	u32			BB_REG[DP_BB_REG_NUM] = {
+-		rOFDM0_TRxPathEnable, rFPGA0_RFMOD,
++		rOFDM0_TRxPathEnable, rFPGA0_RFMOD, 
+ 		rOFDM0_TRMuxPar, 	rFPGA0_XCD_RFInterfaceSW,
+ 		rFPGA0_XAB_RFInterfaceSW, rFPGA0_XA_RFInterfaceOE, 
+-		rFPGA0_XB_RFInterfaceOE};
++		rFPGA0_XB_RFInterfaceOE};						
+ 	u32			BB_settings[DP_BB_REG_NUM] = {
+ 		0x00a05430, 0x02040000, 0x000800e4, 0x22208000, 
+-		0x0, 0x0, 0x0};
++		0x0, 0x0, 0x0};	
+ 
+ 	u32			RF_backup[DP_PATH_NUM][DP_RF_REG_NUM];
+ 	u32			RF_REG[DP_RF_REG_NUM] = {
+diff --git a/drivers/staging/rtl8812au/hal/rtl8814a/usb/usb_halinit.c b/drivers/staging/rtl8812au/hal/rtl8814a/usb/usb_halinit.c
+index b2427fe25..5c0bf0d03 100644
+--- a/drivers/staging/rtl8812au/hal/rtl8814a/usb/usb_halinit.c
++++ b/drivers/staging/rtl8812au/hal/rtl8814a/usb/usb_halinit.c
+@@ -1585,9 +1585,9 @@ HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_INIT_HAL_DM);
+ 	// Reset USB mode switch setting
+ 	rtw_write8(Adapter, REG_SDIO_CTRL_8814A, 0x0);
+ 	rtw_write8(Adapter, REG_ACLK_MON, 0x0);
+-
++	
+ 	//RT_TRACE(COMP_INIT, DBG_TRACE, ("InitializeAdapter8188EUsb() <====\n"));
+-
++	
+ HAL_INIT_PROFILE_TAG(HAL_INIT_STAGES_IQK);
+ 	// 2010/08/26 MH Merge from 8192CE.
+ 	if(pwrctrlpriv->rf_pwrstate == rf_on)
+@@ -2048,19 +2048,19 @@ InitAdapterVariablesByPROM_8814AU(
+ 	hal_ReadTxPowerInfo8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 	hal_ReadBoardType8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 	hal_Read_TRX_antenna_8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+-
++	
+ 	//
+ 	// Read Bluetooth co-exist and initialize
+ 	//
+ 	hal_EfuseParseBTCoexistInfo8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+-
++	
+ 	hal_ReadChannelPlan8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 	hal_EfuseParseXtal_8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);	
+ 	hal_ReadThermalMeter_8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 	hal_ReadRemoteWakeup_8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 	hal_ReadAntennaDiversity8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 	hal_ReadRFEType_8814A(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+-
++	
+ 	ReadLEDSetting_8814AU(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+ 
+ 	hal_ReadUsbModeSwitch_8814AU(Adapter, pHalData->efuse_eeprom_data, pHalData->bautoload_fail_flag);
+@@ -2074,7 +2074,7 @@ InitAdapterVariablesByPROM_8814AU(
+ static void hal_ReadPROMContent_8814A(
+ 	IN PADAPTER 		Adapter
+ 	)
+-{
++{	
+ 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(Adapter);
+ 	u8			eeValue;
+ 
+@@ -2097,7 +2097,7 @@ ReadAdapterInfo8814AU(
+ 	)
+ {
+ 	Hal_InitEfuseVars_8814A(Adapter);
+-
++	
+ 	/* Read all content in Efuse/EEPROM. */
+ 	hal_ReadPROMContent_8814A(Adapter);
+ 
+@@ -2118,17 +2118,17 @@ void UpdateInterruptMask8814AU(PADAPTER padapter,u8 bHIMR0 ,u32 AddMSR, u32 Remo
+ 		himr = &(pHalData->IntrMask[0]);
+ 	else
+ 		himr = &(pHalData->IntrMask[1]);
+-
++	
+ 	if (AddMSR)
+ 		*himr |= AddMSR;
+ 
+ 	if (RemoveMSR)
+ 		*himr &= (~RemoveMSR);
+ 
+-	if(bHIMR0)
++	if(bHIMR0)	
+ 		rtw_write32(padapter, REG_HIMR0_8814A, *himr);
+ 	else
+-		rtw_write32(padapter, REG_HIMR1_8814A, *himr);
++		rtw_write32(padapter, REG_HIMR1_8814A, *himr);	
+ 
+ }
+ 
+@@ -2223,7 +2223,7 @@ u8 SetHwReg8814AU(PADAPTER Adapter, u8 variable, u8* val)
+ 
+ void GetHwReg8814AU(PADAPTER Adapter, u8 variable, u8* val)
+ {
+-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
++	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);	
+ 
+ 	switch(variable)
+ 	{
+@@ -2340,7 +2340,7 @@ static void rtl8814au_init_default_value(_adapter * padapter)
+ }
+ 
+ static u8 rtl8814au_ps_func(PADAPTER Adapter,HAL_INTF_PS_FUNC efunc_id, u8 *val)
+-{
++{	
+ 	u8 bResult = _TRUE;
+ 	switch(efunc_id){
+ 
+@@ -2365,7 +2365,7 @@ void rtl8814au_set_hal_ops(_adapter * padapter)
+ 
+ 	pHalFunc->hal_power_on = _InitPowerOn_8814AU;
+ 	pHalFunc->hal_power_off = hal_carddisable_8814;
+-
++	
+ 	pHalFunc->hal_init = &rtl8814au_hal_init;
+ 	pHalFunc->hal_deinit = &rtl8814au_hal_deinit;
+ 
+@@ -2384,11 +2384,11 @@ void rtl8814au_set_hal_ops(_adapter * padapter)
+ //	pHalFunc->InitSwLeds = NULL;
+ //	pHalFunc->DeInitSwLeds = NULL;
+ #endif//CONFIG_RTW_LED
+-
++	
+ 	pHalFunc->init_default_value = &rtl8814au_init_default_value;
+ 	pHalFunc->intf_chip_configure = &rtl8814au_interface_configure;
+ 	pHalFunc->read_adapter_info = &ReadAdapterInfo8814AU;
+-
++ 
+ 	pHalFunc->set_hw_reg_handler = &SetHwReg8814AU;
+ 	pHalFunc->GetHwRegHandler = &GetHwReg8814AU;
+   	pHalFunc->get_hal_def_var_handler = &GetHalDefVar8814AUsb;
+diff --git a/drivers/staging/rtl8812au/include/gspi_osintf.h b/drivers/staging/rtl8812au/include/gspi_osintf.h
+index 2bff22ffd..6393f779d 100644
+--- a/drivers/staging/rtl8812au/include/gspi_osintf.h
++++ b/drivers/staging/rtl8812au/include/gspi_osintf.h
+@@ -15,4 +15,11 @@
+ #ifndef __SDIO_OSINTF_H__
+ #define __SDIO_OSINTF_H__
+ 
++
++#ifdef PLATFORM_OS_CE
++	extern NDIS_STATUS ce_sd_get_dev_hdl(PADAPTER padapter);
++	SD_API_STATUS ce_sd_int_callback(SD_DEVICE_HANDLE hDevice, PADAPTER padapter);
++	extern void sd_setup_irs(PADAPTER padapter);
++#endif
++
+ #endif
+diff --git a/drivers/staging/rtl8812au/include/rtl8812a_recv.h b/drivers/staging/rtl8812au/include/rtl8812a_recv.h
+index 07b824550..bf1d4b651 100644
+--- a/drivers/staging/rtl8812au/include/rtl8812a_recv.h
++++ b/drivers/staging/rtl8812au/include/rtl8812a_recv.h
+@@ -18,6 +18,9 @@
+ #if defined(CONFIG_USB_HCI)
+ 
+ 	#ifndef MAX_RECVBUF_SZ
++		#ifdef PLATFORM_OS_CE
++			#define MAX_RECVBUF_SZ (8192+1024) /* 8K+1k */
++		#else
+ 			#ifndef CONFIG_MINIMAL_MEMORY_USAGE
+ 				#ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
+ 					#define MAX_RECVBUF_SZ (rtw_rtkm_get_buff_size()) /*depend rtkm*/
+@@ -36,6 +39,7 @@
+ 			#else
+ 				#define MAX_RECVBUF_SZ (4000) /* about 4K */
+ 			#endif
++		#endif
+ 	#endif /* !MAX_RECVBUF_SZ */
+ 
+ #elif defined(CONFIG_PCI_HCI)
+diff --git a/drivers/staging/rtl8812au/include/rtl8814a_recv.h b/drivers/staging/rtl8812au/include/rtl8814a_recv.h
+index f723c0a10..c6792d8a5 100644
+--- a/drivers/staging/rtl8812au/include/rtl8814a_recv.h
++++ b/drivers/staging/rtl8812au/include/rtl8814a_recv.h
+@@ -18,6 +18,9 @@
+ #if defined(CONFIG_USB_HCI)
+ 
+ 	#ifndef MAX_RECVBUF_SZ
++		#ifdef PLATFORM_OS_CE
++			#define MAX_RECVBUF_SZ (8192+1024) /* 8K+1k */
++		#else
+ 			#ifndef CONFIG_MINIMAL_MEMORY_USAGE
+ 				#ifdef CONFIG_PLATFORM_MSTAR
+ 					#define MAX_RECVBUF_SZ (8192) /* 8K */
+@@ -32,6 +35,7 @@
+ 			#else
+ 				#define MAX_RECVBUF_SZ (4000) /* about 4K */
+ 			#endif
++		#endif
+ 	#endif /* !MAX_RECVBUF_SZ */
+ 
+ #elif defined(CONFIG_PCI_HCI)
+diff --git a/drivers/staging/rtl8812au/include/rtw_cmd.h b/drivers/staging/rtl8812au/include/rtw_cmd.h
+index 0f549a65a..4df67602f 100644
+--- a/drivers/staging/rtl8812au/include/rtw_cmd.h
++++ b/drivers/staging/rtl8812au/include/rtw_cmd.h
+@@ -26,7 +26,11 @@
+ #define MAX_RSPSZ	512
+ #define MAX_EVTSZ	1024
+ 
+-#define CMDBUFF_ALIGN_SZ 512
++#ifdef PLATFORM_OS_CE
++	#define CMDBUFF_ALIGN_SZ 4
++#else
++	#define CMDBUFF_ALIGN_SZ 512
++#endif
+ 
+ struct cmd_obj {
+ 	_adapter *padapter;
+@@ -110,6 +114,9 @@ struct	evt_priv {
+ #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+ 	u8	*c2h_mem;
+ 	u8	*allocated_c2h_mem;
++#ifdef PLATFORM_OS_XP
++	PMDL	pc2h_mdl;
++#endif
+ #endif
+ 
+ };
+diff --git a/drivers/staging/rtl8812au/include/rtw_debug.h b/drivers/staging/rtl8812au/include/rtw_debug.h
+index 93f9e6e3c..e3562ca4a 100644
+--- a/drivers/staging/rtl8812au/include/rtw_debug.h
++++ b/drivers/staging/rtl8812au/include/rtw_debug.h
+@@ -28,6 +28,10 @@ enum {
+ 
+ #define DRIVER_PREFIX "RTW: "
+ 
++#ifdef PLATFORM_OS_CE
++extern void rtl871x_cedbg(const char *fmt, ...);
++#endif
++
+ #define RTW_PRINT(x, ...) do {} while (0)
+ #define RTW_ERR(x, ...) do {} while (0)
+ #define RTW_WARN(x,...) do {} while (0)
+diff --git a/drivers/staging/rtl8812au/include/rtw_recv.h b/drivers/staging/rtl8812au/include/rtw_recv.h
+index ee0ec77cb..d6422a1d2 100644
+--- a/drivers/staging/rtl8812au/include/rtw_recv.h
++++ b/drivers/staging/rtl8812au/include/rtw_recv.h
+@@ -19,6 +19,19 @@
+ #define RTW_RX_MSDU_ACT_INDICATE	BIT0
+ #define RTW_RX_MSDU_ACT_FORWARD		BIT1
+ 
++#ifdef PLATFORM_OS_XP
++	#ifdef CONFIG_SDIO_HCI
++		#define NR_RECVBUFF 1024/* 512 */ /* 128 */
++	#else
++		#define NR_RECVBUFF (16)
++	#endif
++#elif defined(PLATFORM_OS_CE)
++	#ifdef CONFIG_SDIO_HCI
++		#define NR_RECVBUFF (128)
++	#else
++		#define NR_RECVBUFF (4)
++	#endif
++#else /* PLATFORM_LINUX /PLATFORM_BSD */
+ 
+ #include <linux/interrupt.h>
+ 
+@@ -42,6 +55,7 @@
+ 	#ifdef CONFIG_RTW_NAPI
+ 		#define RTL_NAPI_WEIGHT (32)
+ 	#endif
++#endif
+ 
+ #if defined(CONFIG_RTL8821C) && defined(CONFIG_SDIO_HCI) && defined(CONFIG_RECV_THREAD_MODE)
+ 	#ifdef NR_RECVBUFF
+@@ -340,6 +354,17 @@ struct recv_priv {
+ 
+ 	_adapter	*adapter;
+ 
++#ifdef PLATFORM_WINDOWS
++	_nic_hdl  RxPktPoolHdl;
++	_nic_hdl  RxBufPoolHdl;
++
++#ifdef PLATFORM_OS_XP
++	PMDL	pbytecnt_mdl;
++#endif
++	uint	counter; /* record the number that up-layer will return to drv; only when counter==0 can we  release recv_priv */
++	NDIS_EVENT	recv_resource_evt ;
++#endif
++
+ 
+ 	u32 is_any_non_be_pkts;
+ 
+@@ -508,11 +533,20 @@ struct recv_buf {
+ 
+ #ifdef CONFIG_USB_HCI
+ 
+-#if defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD)
++#if defined(PLATFORM_OS_XP) || defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD)
+ 	PURB	purb;
+ 	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
+ 	u32 alloc_sz;
+ #endif
++
++#ifdef PLATFORM_OS_XP
++	PIRP		pirp;
++#endif
++
++#ifdef PLATFORM_OS_CE
++	USB_TRANSFER	usb_transfer_read_port;
++#endif
++
+ 	u8  irp_pending;
+ 	int  transfer_len;
+ 
+diff --git a/drivers/staging/rtl8812au/include/rtw_xmit.h b/drivers/staging/rtl8812au/include/rtw_xmit.h
+index 69ec205f4..660a29ae2 100644
+--- a/drivers/staging/rtl8812au/include/rtw_xmit.h
++++ b/drivers/staging/rtl8812au/include/rtw_xmit.h
+@@ -60,6 +60,10 @@
+ #endif
+ 	#define NR_XMITBUFF	(128)
+ #endif
++
++#ifdef PLATFORM_OS_CE
++	#define XMITBUF_ALIGN_SZ 4
++#else
+ 	#ifdef CONFIG_PCI_HCI
+ 		#define XMITBUF_ALIGN_SZ 4
+ 	#else
+@@ -68,6 +72,7 @@
+ 		#else
+ 			#define XMITBUF_ALIGN_SZ 512
+ 		#endif
++	#endif
+ #endif
+ 
+ /* xmit extension buff defination */
+diff --git a/drivers/staging/rtl8812au/include/sdio_osintf.h b/drivers/staging/rtl8812au/include/sdio_osintf.h
+index 2bff22ffd..7c2abd14d 100644
+--- a/drivers/staging/rtl8812au/include/sdio_osintf.h
++++ b/drivers/staging/rtl8812au/include/sdio_osintf.h
+@@ -15,4 +15,11 @@
+ #ifndef __SDIO_OSINTF_H__
+ #define __SDIO_OSINTF_H__
+ 
++
++#ifdef PLATFORM_OS_CE
++extern NDIS_STATUS ce_sd_get_dev_hdl(PADAPTER padapter);
++SD_API_STATUS ce_sd_int_callback(SD_DEVICE_HANDLE hDevice, PADAPTER padapter);
++extern void sd_setup_irs(PADAPTER padapter);
++#endif
++
+ #endif
+diff --git a/drivers/staging/rtl8812au/os_dep/osdep_service.c b/drivers/staging/rtl8812au/os_dep/osdep_service.c
+index 7d10c0ce5..7553f2c98 100644
+--- a/drivers/staging/rtl8812au/os_dep/osdep_service.c
++++ b/drivers/staging/rtl8812au/os_dep/osdep_service.c
+@@ -1135,6 +1135,11 @@ void _rtw_init_sema(_sema	*sema, int init_val)
+ 	sema_init(sema, init_val, "rtw_drv");
+ #endif
+ 
++#ifdef PLATFORM_OS_CE
++	if (*sema == NULL)
++		*sema = CreateSemaphore(NULL, init_val, SEMA_UPBND, NULL);
++#endif
++
+ }
+ 
+ void _rtw_free_sema(_sema	*sema)
+@@ -1142,6 +1147,9 @@ void _rtw_free_sema(_sema	*sema)
+ #ifdef PLATFORM_FREEBSD
+ 	sema_destroy(sema);
+ #endif
++#ifdef PLATFORM_OS_CE
++	CloseHandle(*sema);
++#endif
+ 
+ }
+ 
+@@ -1156,6 +1164,10 @@ void _rtw_up_sema(_sema	*sema)
+ #ifdef PLATFORM_FREEBSD
+ 	sema_post(sema);
+ #endif
++
++#ifdef PLATFORM_OS_CE
++	ReleaseSemaphore(*sema,  1,  NULL);
++#endif
+ }
+ 
+ u32 _rtw_down_sema(_sema *sema)
+@@ -1173,6 +1185,13 @@ u32 _rtw_down_sema(_sema *sema)
+ 	sema_wait(sema);
+ 	return  _SUCCESS;
+ #endif
++
++#ifdef PLATFORM_OS_CE
++	if (WAIT_OBJECT_0 == WaitForSingleObject(*sema, INFINITE))
++		return _SUCCESS;
++	else
++		return _FAIL;
++#endif
+ }
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0)
+@@ -1192,6 +1211,10 @@ inline void kthread_thread_exit(_completion *comp)
+ #ifdef PLATFORM_FREEBSD
+ 	printf("%s", "RTKTHREAD_exit");
+ #endif
++
++#ifdef PLATFORM_OS_CE
++	ExitThread(STATUS_SUCCESS);
++#endif
+ }
+ 
+ inline void _rtw_init_completion(_completion *comp)
+@@ -1227,6 +1250,10 @@ void	_rtw_mutex_init(_mutex *pmutex)
+ #ifdef PLATFORM_FREEBSD
+ 	mtx_init(pmutex, "", NULL, MTX_DEF | MTX_RECURSE);
+ #endif
++
++#ifdef PLATFORM_OS_CE
++	*pmutex =  CreateMutex(NULL, _FALSE, NULL);
++#endif
+ }
+ 
+ void	_rtw_mutex_free(_mutex *pmutex);
+@@ -1243,6 +1270,10 @@ void	_rtw_mutex_free(_mutex *pmutex)
+ 	sema_destroy(pmutex);
+ #endif
+ 
++#endif
++
++#ifdef PLATFORM_OS_CE
++
+ #endif
+ }
+ 
+-- 
+2.41.0
+
+
+From aae6908f32010c261877371d891c8163a1482572 Mon Sep 17 00:00:00 2001
+From: kimocoder <christian@aircrack-ng.org>
+Date: Sun, 2 Jul 2023 02:50:24 +0200
+Subject: [PATCH 02/13] Address warning in createbss_hdl()
+
+---
+ drivers/staging/rtl8812au/core/rtw_mlme_ext.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/core/rtw_mlme_ext.c b/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
+index 01136fb37..57e7536c0 100644
+--- a/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
+@@ -13941,14 +13941,14 @@ u8 createbss_hdl(_adapter *padapter, u8 *pbuf)
+ 		flush_all_cam_entry(padapter);
+ 
+ 		pdev_network->Length = get_WLAN_BSSID_EX_sz(pdev_network);
+-		_rtw_memcpy(pnetwork, pdev_network, FIELD_OFFSET(WLAN_BSSID_EX, IELength));
+-		pnetwork->IELength = pdev_network->IELength;
+-
+-		if (pnetwork->IELength > MAX_IE_SZ) {
++		if (FIELD_OFFSET(WLAN_BSSID_EX, IELength) > MAX_IE_SZ) {
+ 			ret = H2C_PARAMETERS_ERROR;
+ 			goto ibss_post_hdl;
+ 		}
+ 
++		memcpy(pnetwork, pdev_network, FIELD_OFFSET(WLAN_BSSID_EX, IELength));
++		pnetwork->IELength = pdev_network->IELength;
++
+ 		_rtw_memcpy(pnetwork->IEs, pdev_network->IEs, pnetwork->IELength);
+ 		start_create_ibss(padapter);
+ 	} else {
+-- 
+2.41.0
+
+
+From c80d9acb9ea350300cfe0e06065818640d989583 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Carlos=20Garc=C3=A9s?= <CGarces@users.noreply.github.com>
+Date: Sun, 2 Jul 2023 12:11:29 +0000
+Subject: [PATCH 03/13] Use eth_hw_addr_set instead of dev_addr_set
+
+---
+ drivers/staging/rtl8812au/include/drv_types_linux.h  | 6 +++++-
+ drivers/staging/rtl8812au/os_dep/linux/ioctl_linux.c | 2 +-
+ drivers/staging/rtl8812au/os_dep/linux/mlme_linux.c  | 2 +-
+ drivers/staging/rtl8812au/os_dep/linux/os_intfs.c    | 4 ++--
+ drivers/staging/rtl8812au/os_dep/osdep_service.c     | 2 +-
+ 5 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/include/drv_types_linux.h b/drivers/staging/rtl8812au/include/drv_types_linux.h
+index 3d428d4d0..97c8576a2 100644
+--- a/drivers/staging/rtl8812au/include/drv_types_linux.h
++++ b/drivers/staging/rtl8812au/include/drv_types_linux.h
+@@ -16,7 +16,11 @@
+ #define __DRV_TYPES_LINUX_H__
+ 
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+-#define dev_addr_set(netdev, ethdata) _rtw_memcpy(netdev->dev_addr, ethdata, ETH_ALEN) 
++/* Porting from linux kernel v5.15 48eab831ae8b9f7002a533fa4235eed63ea1f1a3 3f6cffb8604b537e3d7ea040d7f4368689638eaf*/
++static inline void eth_hw_addr_set(struct net_device *dev, const u8 *addr)
++{
++    memcpy(dev->dev_addr, addr, ETH_ALEN)
++}
+ #endif
+ 
+ #endif
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_linux.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_linux.c
+index b2a7560d9..c5776117f 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_linux.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_linux.c
+@@ -9725,7 +9725,7 @@ static int rtw_mp_efuse_set(struct net_device *dev,
+ 		rtw_hal_read_chip_info(padapter);
+ 		/* set mac addr*/
+ 		rtw_macaddr_cfg(adapter_mac_addr(padapter), get_hal_mac_addr(padapter));
+-		dev_addr_set(padapter->pnetdev, get_hal_mac_addr(padapter)); /* set mac addr to net_device */
++		eth_hw_addr_set(padapter->pnetdev, get_hal_mac_addr(padapter)); /* set mac addr to net_device */
+ 
+ #ifdef CONFIG_P2P
+ 		rtw_init_wifidirect_addrs(padapter, adapter_mac_addr(padapter), adapter_mac_addr(padapter));
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/mlme_linux.c b/drivers/staging/rtl8812au/os_dep/linux/mlme_linux.c
+index 771c6272e..74f098277 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/mlme_linux.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/mlme_linux.c
+@@ -404,7 +404,7 @@ int hostapd_mode_init(_adapter *padapter)
+ 	mac[4] = 0x11;
+ 	mac[5] = 0x12;
+ 
+-	dev_addr_set(pnetdev, mac);
++	eth_hw_addr_set(pnetdev, mac);
+ 
+ 
+ 	rtw_netif_carrier_off(pnetdev);
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c b/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c
+index 6d2801357..2dadae098 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c
+@@ -1285,7 +1285,7 @@ static int rtw_net_set_mac_address(struct net_device *pnetdev, void *addr)
+ 	}
+ 
+ 	_rtw_memcpy(adapter_mac_addr(padapter), sa->sa_data, ETH_ALEN); /* set mac addr to adapter */
+-	dev_addr_set(pnetdev, sa->sa_data); /* set mac addr to net_device */
++	eth_hw_addr_set(pnetdev, sa->sa_data); /* set mac addr to net_device */
+ 
+ #if 0
+ 	if (rtw_is_hw_init_completed(padapter)) {
+@@ -1754,7 +1754,7 @@ int rtw_os_ndev_register(_adapter *adapter, const char *name)
+ 	/* alloc netdev name */
+ 	rtw_init_netdev_name(ndev, name);
+ 
+-	dev_addr_set(ndev, adapter_mac_addr(adapter));
++	eth_hw_addr_set(ndev, adapter_mac_addr(adapter));
+ #if defined(CONFIG_NET_NS)
+     dev_net_set(ndev, wiphy_net(adapter_to_wiphy(adapter)));
+ #endif //defined(CONFIG_NET_NS)
+diff --git a/drivers/staging/rtl8812au/os_dep/osdep_service.c b/drivers/staging/rtl8812au/os_dep/osdep_service.c
+index 7553f2c98..d24b3e1f0 100644
+--- a/drivers/staging/rtl8812au/os_dep/osdep_service.c
++++ b/drivers/staging/rtl8812au/os_dep/osdep_service.c
+@@ -2299,7 +2299,7 @@ int rtw_change_ifname(_adapter *padapter, const char *ifname)
+ 
+ 	rtw_init_netdev_name(pnetdev, ifname);
+ 
+-	dev_addr_set(pnetdev, adapter_mac_addr(padapter));
++	eth_hw_addr_set(pnetdev, adapter_mac_addr(padapter));
+ 
+ 	if (rtnl_lock_needed)
+ 		ret = register_netdev(pnetdev);
+-- 
+2.41.0
+
+
+From 8084e3fe2acd66f315c221184acea9576039fd35 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Carlos=20Garc=C3=A9s?= <CGarces@users.noreply.github.com>
+Date: Mon, 3 Jul 2023 18:19:34 +0200
+Subject: [PATCH 04/13] Fix compilation error on kernels < 5.15
+
+---
+ drivers/staging/rtl8812au/include/drv_types_linux.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/include/drv_types_linux.h b/drivers/staging/rtl8812au/include/drv_types_linux.h
+index 97c8576a2..6264a4d30 100644
+--- a/drivers/staging/rtl8812au/include/drv_types_linux.h
++++ b/drivers/staging/rtl8812au/include/drv_types_linux.h
+@@ -19,7 +19,7 @@
+ /* Porting from linux kernel v5.15 48eab831ae8b9f7002a533fa4235eed63ea1f1a3 3f6cffb8604b537e3d7ea040d7f4368689638eaf*/
+ static inline void eth_hw_addr_set(struct net_device *dev, const u8 *addr)
+ {
+-    memcpy(dev->dev_addr, addr, ETH_ALEN)
++    memcpy(dev->dev_addr, addr, ETH_ALEN);
+ }
+ #endif
+ 
+-- 
+2.41.0
+
+
+From b042f942026520d86350983bee7419267ba35e6c Mon Sep 17 00:00:00 2001
+From: Christian Stewart <christian@aperture.us>
+Date: Mon, 3 Jul 2023 13:54:27 -0700
+Subject: [PATCH 05/13] ioctl_cfg80211: fix build against kernels < 4.10.x
+
+Kernel 4.10.x adjusted cfg80211_connect_bss to accept a timeout as the last
+argument. Add a conditional statement which removes this extra parameter if the
+kernel is less than version 4.10.x to fix build errors against version 4.9.x.
+
+Note that the Jetson TX2 kernel is still version 4.9.x even though this version
+is technically deprecated upstream.
+
+Signed-off-by: Christian Stewart <christian@aperture.us>
+---
+ .../staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c    | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index 0d2a01326..6cf89b24c 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -1193,12 +1193,22 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
+                         struct cfg80211_bss *bss;
+                         bss = cfg80211_get_bss(pwdev->wiphy, NULL, cur_network->network.MacAddress, NULL, 0,
+                                 IEEE80211_BSS_TYPE_ANY, IEEE80211_PRIVACY_ANY);
++		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
+                         cfg80211_connect_bss(wdev_to_ndev(pwdev), cur_network->network.MacAddress, bss
+                                 , pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2
+                                 , pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2
+                                 , pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6
+                                 , pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6
+                                 , WLAN_STATUS_SUCCESS, GFP_ATOMIC, NL80211_TIMEOUT_UNSPECIFIED);
++		#else // (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0))
++                        // Linux < 4.10.x does not accept the last argument (timeout).
++                        cfg80211_connect_bss(wdev_to_ndev(pwdev), cur_network->network.MacAddress, bss
++                                , pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2
++                                , pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2
++                                , pmlmepriv->assoc_rsp + sizeof(struct rtw_ieee80211_hdr_3addr) + 6
++                                , pmlmepriv->assoc_rsp_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 6
++                                , WLAN_STATUS_SUCCESS, GFP_ATOMIC);
++		#endif
+                 }
+ 		#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 11, 0) || defined(COMPAT_KERNEL_RELEASE)
+ 		RTW_INFO("pwdev->sme_state(a)=%d\n", pwdev->sme_state);
+-- 
+2.41.0
+
+
+From 1d7babf42e6f7bd41f772ff9b78f1c242cc9a9c4 Mon Sep 17 00:00:00 2001
+From: seppzer0 <s3ppzer0@gmail.com>
+Date: Wed, 19 Jul 2023 00:12:47 +0200
+Subject: [PATCH 06/13] Add an extra definition for cfg80211_connect_bss()
+ usage
+
+---
+ drivers/staging/rtl8812au/Makefile                      | 2 ++
+ drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/Makefile b/drivers/staging/rtl8812au/Makefile
+index aa3cd789c..127850786 100644
+--- a/drivers/staging/rtl8812au/Makefile
++++ b/drivers/staging/rtl8812au/Makefile
+@@ -851,6 +851,8 @@ EXTRA_CFLAGS += -DRTW_ENABLE_WIFI_CONTROL_FUNC -DCONFIG_RADIO_WORK
+ #EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+ EXTRA_CFLAGS += -DCONFIG_P2P_IPS
++# A special rule for cfg80211_connect_bss() to receive all 10 arguments in an Android build
++EXTRA_CFLAGS += -DCONFIG_CFG80211_CONNECT_BSS_ANDROID
+ endif
+ 
+ ifeq ($(CONFIG_PLATFORM_ANDROID_X86), y)
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index 6cf89b24c..24cd0c540 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -1193,7 +1193,7 @@ void rtw_cfg80211_indicate_connect(_adapter *padapter)
+                         struct cfg80211_bss *bss;
+                         bss = cfg80211_get_bss(pwdev->wiphy, NULL, cur_network->network.MacAddress, NULL, 0,
+                                 IEEE80211_BSS_TYPE_ANY, IEEE80211_PRIVACY_ANY);
+-		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
++		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0) || defined(CONFIG_CFG80211_CONNECT_BSS_ANDROID))
+                         cfg80211_connect_bss(wdev_to_ndev(pwdev), cur_network->network.MacAddress, bss
+                                 , pmlmepriv->assoc_req + sizeof(struct rtw_ieee80211_hdr_3addr) + 2
+                                 , pmlmepriv->assoc_req_len - sizeof(struct rtw_ieee80211_hdr_3addr) - 2
+-- 
+2.41.0
+
+
+From 123f15677922b20434acdd63cfc96de4772dd08b Mon Sep 17 00:00:00 2001
+From: kimocoder <christian@aircrack-ng.org>
+Date: Sun, 29 Oct 2023 15:15:50 +0100
+Subject: [PATCH 07/13] Fix the VFS internal message
+
+---
+ drivers/staging/rtl8812au/os_dep/linux/usb_intf.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+index b319e58c5..2ef96b386 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+@@ -1640,6 +1640,8 @@ static void __exit rtw_drv_halt(void)
+ 	rtw_mstat_dump(RTW_DBGDUMP);
+ }
+ 
++MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
++
+ module_init(rtw_drv_entry);
+ module_exit(rtw_drv_halt);
+ 
+-- 
+2.41.0
+
+
+From 7e786378cc760e2e37d38669ba18488a1be5b139 Mon Sep 17 00:00:00 2001
+From: kimocoder <christian@aircrack-ng.org>
+Date: Sun, 29 Oct 2023 16:29:30 +0100
+Subject: [PATCH 08/13] Add kernel v6.6 support
+
+---
+ drivers/staging/rtl8812au/Makefile            |  2 ++
+ .../rtl8812au/os_dep/linux/ioctl_cfg80211.c   | 19 ++++++++++++-------
+ .../rtl8812au/os_dep/linux/wifi_regd.c        |  4 ++++
+ 3 files changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/Makefile b/drivers/staging/rtl8812au/Makefile
+index 127850786..ed3126ec3 100644
+--- a/drivers/staging/rtl8812au/Makefile
++++ b/drivers/staging/rtl8812au/Makefile
+@@ -9,6 +9,8 @@ EXTRA_CFLAGS += -Wno-implicit-fallthrough
+ EXTRA_CFLAGS += -Wno-cast-function-type
+ #EXTRA_CFLAGS += -Wno-error=cast-function-type
+ #EXTRA_CFLAGS += -Wno-parentheses-equality
++EXTRA_CFLAGS += -Wno-error=incompatible-pointer-types
++EXTRA_CFLAGS += -Wno-stringop-overread
+ #EXTRA_CFLAGS += -Wno-pointer-bool-conversion
+ EXTRA_CFLAGS += -Wno-unknown-pragmas
+ #EXTRA_CFLAGS += -Wno-unused
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index 24cd0c540..af77f4c5d 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -478,7 +478,7 @@ u8 rtw_cfg80211_ch_switch_notify(_adapter *adapter, u8 ch, u8 bw, u8 offset,
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0))
+ 	cfg80211_ch_switch_notify(adapter->pnetdev, &chdef, 0, 0);
+-#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5,19, 2))
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 2))
+ 	cfg80211_ch_switch_notify(adapter->pnetdev, &chdef, 0);
+ #else
+ 	cfg80211_ch_switch_notify(adapter->pnetdev, &chdef);
+@@ -5267,10 +5267,10 @@ static int cfg80211_rtw_change_beacon(struct wiphy *wiphy, struct net_device *nd
+ 	return ret;
+ }
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 2))
+-static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev, unsigned int link_id)
+-#else
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 19, 2))
+ static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev)
++#else
++static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev, unsigned int link_id)
+ #endif
+ {
+ 	_adapter *adapter = (_adapter *)rtw_netdev_priv(ndev);
+@@ -7813,6 +7813,9 @@ static int cfg80211_rtw_tdls_mgmt(struct wiphy *wiphy,
+ 	const u8 *peer,
+ #else
+ 	u8 *peer,
++#endif
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 5, 0))
++	int link_id,
+ #endif
+ 	u8 action_code,
+ 	u8 dialog_token,
+@@ -10155,12 +10158,12 @@ static struct cfg80211_ops rtw_cfg80211_ops = {
+ 	.del_pmksa = cfg80211_rtw_del_pmksa,
+ 	.flush_pmksa = cfg80211_rtw_flush_pmksa,
+ 
+-#ifdef CONFIG_AP_MODE
+ #ifdef RTW_VIRTUAL_INT
+ 	.add_virtual_intf = cfg80211_rtw_add_virtual_intf,
+ 	.del_virtual_intf = cfg80211_rtw_del_virtual_intf,
+ #endif
+ 
++#ifdef CONFIG_AP_MODE
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 4, 0)) && !defined(COMPAT_KERNEL_RELEASE)
+ 	.add_beacon = cfg80211_rtw_add_beacon,
+ 	.set_beacon = cfg80211_rtw_set_beacon,
+@@ -10432,7 +10435,7 @@ void rtw_wdev_unregister(struct wireless_dev *wdev)
+ 	rtw_cfg80211_indicate_scan_done(adapter, _TRUE);
+ 
+ 	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)) || defined(COMPAT_KERNEL_RELEASE)
+-	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 0, 0))
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 2))
+ 	if (wdev->links[0].client.current_bss) {
+ 	#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 2))
+ 	if (wdev->connected) {
+@@ -10473,9 +10476,10 @@ int rtw_cfg80211_ndev_res_alloc(_adapter *adapter)
+ 		rtw_wiphy_free(wiphy);
+ 		adapter->wiphy = NULL;
+ 	}
+-#endif
+ 
+ exit:
++#endif
++
+ 	return ret;
+ }
+ 
+@@ -10489,6 +10493,7 @@ void rtw_cfg80211_ndev_res_free(_adapter *adapter)
+ #endif
+ }
+ 
++
+ int rtw_cfg80211_ndev_res_register(_adapter *adapter)
+ {
+ 	int ret = _FAIL;
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c b/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
+index 5f2f90506..a36b7dcd0 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
+@@ -396,6 +396,10 @@ static void _rtw_regd_init_wiphy(struct rtw_regulatory *reg, struct wiphy *wiphy
+ 	wiphy->regulatory_flags &= ~REGULATORY_DISABLE_BEACON_HINTS;
+ #endif
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 5, 0))
++	wiphy->regulatory_flags |= REGULATORY_IGNORE_STALE_KICKOFF;
++#endif
++
+ 	regd = _rtw_regdomain_select(reg);
+ 	wiphy_apply_custom_regulatory(wiphy, regd);
+ 
+-- 
+2.41.0
+
+
+From 5e3274cbffe62f0baf4bd39a36af7edd3d359e37 Mon Sep 17 00:00:00 2001
+From: Christian Sarre <christian@sarre.eu>
+Date: Tue, 31 Oct 2023 21:04:54 +0200
+Subject: [PATCH 09/13] Fix build on 6.x kernels.
+
+It was broken due to kernel changes backported from 6.5 (torvalds/linux@e8c2af6).
+Changes have been tested on the following configurations and observed to build:
+ - Debian Bullseye, kernel 6.1.38-4 (bullseye-backports)
+ - Debian Bookworm, kernel 6.1.52-1
+ - Ubuntu 23.04 Lunar, kernel 6.2.0-36
+
+There are also other kernel versions which are affected up to some point in their history,
+but there were a few reasons I ended up not including them:
+ - Kernel 6.2: Not in use on Debian, likely skipped in favor of 6.4+. Ubuntu though has backported the change to 6.2 on Lunar.
+ - Kernel 6.3: Not in use on Debian/Ubuntu, seems to have been skipped in favor of 6.4/6.5+.
+ - Kernel 6.4: Not in use on Ubuntu. Debian Bookworm has this available in backports, but they now also offer 6.5 which does not have the issue.
+
+In case someone tries to build this module running kernel 6.2 on something other than Ubuntu, this fix is most likely necessary.
+---
+ drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c b/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
+index a36b7dcd0..2f642f4c4 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
+@@ -396,7 +396,7 @@ static void _rtw_regd_init_wiphy(struct rtw_regulatory *reg, struct wiphy *wiphy
+ 	wiphy->regulatory_flags &= ~REGULATORY_DISABLE_BEACON_HINTS;
+ #endif
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 5, 0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 39))
+ 	wiphy->regulatory_flags |= REGULATORY_IGNORE_STALE_KICKOFF;
+ #endif
+ 
+-- 
+2.41.0
+
+
+From 517a6f38648501a02c97cac3ddc3be8e61843cd4 Mon Sep 17 00:00:00 2001
+From: Christian Sarre <christian@sarre.eu>
+Date: Wed, 1 Nov 2023 09:49:57 +0200
+Subject: [PATCH 10/13] Fix build on Ubuntu 23.04 (kernel 6.2).
+
+This is done by specifying the ranges for 6.3 and 6.4 versions which need the fix.
+Kernel 6.2, to my knowledge, is not used in other popular distros than Ubuntu.
+
+Ubuntu had backported the change from kernel 6.5 to 6.2, which is why this is needed.
+
+Added a comment instructing what to do if one wants to build the module
+running kernel 6.2 on something else than Ubuntu.
+---
+ drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c b/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
+index 2f642f4c4..45c5bd1a9 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/wifi_regd.c
+@@ -396,7 +396,15 @@ static void _rtw_regd_init_wiphy(struct rtw_regulatory *reg, struct wiphy *wiphy
+ 	wiphy->regulatory_flags &= ~REGULATORY_DISABLE_BEACON_HINTS;
+ #endif
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 39))
++/*
++ * Ubuntu backported a specific upstream change to kernel 6.2 while others skipped 6.2 altogether.
++ * If build fails on kernel 6.2.x and you're not using Ubuntu,
++ * try changing the version "(6, 3, 0)" below to "(6, 2, 0)".
++ */
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 1, 39)) \
++	|| (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 3, 13)) \
++	|| (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 4, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 4, 4))
+ 	wiphy->regulatory_flags |= REGULATORY_IGNORE_STALE_KICKOFF;
+ #endif
+ 
+-- 
+2.41.0
+
+
+From e6da86ee01805bb64cf2db498767984b90d79877 Mon Sep 17 00:00:00 2001
+From: Ben Hutchings <ben.hutchings@mind.be>
+Date: Thu, 2 Nov 2023 20:36:13 +0100
+Subject: [PATCH 11/13] ioctl_cfg80211: Add support for standard RSSI
+ notifications
+
+Currently background scanning with wpa_supplicant does not work very
+well because rtl8812au does not notify it about changes to RSSI.  To
+fix this:
+
+* Implement the cfg80211_ops::set_cqm_rssi_config operation to set the
+  parameters for RSSI notifications.
+* Add a rtw_cfg80211_cqm_rssi_update() function that calls
+  cfg80211_cqm_rssi_notify() if the RSSI has changed significantly
+  (based on those parameters).
+* When connected in infrastructure mode, call
+  rtw_cfg80211_cqm_rssi_update() after processing a beacon and
+  updating the RSSI.
+
+Signed-off-by: Ben Hutchings <ben.hutchings@mind.be>
+---
+ drivers/staging/rtl8812au/core/rtw_mlme_ext.c |  6 +++
+ .../rtl8812au/os_dep/linux/ioctl_cfg80211.c   | 42 +++++++++++++++++++
+ .../rtl8812au/os_dep/linux/ioctl_cfg80211.h   |  7 ++++
+ 3 files changed, 55 insertions(+)
+
+diff --git a/drivers/staging/rtl8812au/core/rtw_mlme_ext.c b/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
+index 57e7536c0..527e06dd5 100644
+--- a/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
+@@ -1971,6 +1971,12 @@ unsigned int OnBeacon(_adapter *padapter, union recv_frame *precv_frame)
+ #if 0 /* move to validate_recv_mgnt_frame */
+ 				psta->sta_stats.rx_mgnt_pkts++;
+ #endif
++
++#if defined(CONFIG_IOCTL_CFG80211)
++				rtw_cfg80211_cqm_rssi_update(
++					padapter,
++					pmlmepriv->cur_network_scanned->network.Rssi);
++#endif
+ 			}
+ 
+ 		} else if ((pmlmeinfo->state & 0x03) == WIFI_FW_ADHOC_STATE) {
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index af77f4c5d..8dd6ea924 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -4476,6 +4476,47 @@ static int cfg80211_rtw_flush_pmksa(struct wiphy *wiphy,
+ 	return 0;
+ }
+ 
++static int cfg80211_rtw_set_cqm_rssi_config(struct wiphy *wiphy,
++					    struct net_device *ndev,
++					    s32 rssi_thold, u32 rssi_hyst)
++{
++	_adapter *padapter = (_adapter *)rtw_netdev_priv(ndev);
++	struct rtw_wdev_priv *priv = adapter_wdev_data(padapter);
++
++	priv->cqm_rssi_thold = rssi_thold;
++	priv->cqm_rssi_hyst = rssi_hyst;
++	priv->cqm_rssi_last = 0;
++
++	return 0;
++}
++
++void rtw_cfg80211_cqm_rssi_update(_adapter *padapter, s32 rssi)
++{
++	struct rtw_wdev_priv *priv = adapter_wdev_data(padapter);
++	enum nl80211_cqm_rssi_threshold_event event;
++
++	if (priv->cqm_rssi_thold == 0)
++		return;
++
++	if (rssi < priv->cqm_rssi_thold &&
++	    (priv->cqm_rssi_last == 0 ||
++	     rssi < priv->cqm_rssi_last - priv->cqm_rssi_hyst))
++                event = NL80211_CQM_RSSI_THRESHOLD_EVENT_LOW;
++        else if (rssi > priv->cqm_rssi_thold &&
++		 (priv->cqm_rssi_last == 0 ||
++		  rssi > priv->cqm_rssi_last + priv->cqm_rssi_hyst))
++                event = NL80211_CQM_RSSI_THRESHOLD_EVENT_HIGH;
++        else
++                return;
++
++        priv->cqm_rssi_last = rssi;
++        cfg80211_cqm_rssi_notify(padapter->pnetdev, event,
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
++				 rssi,
++#endif
++				 GFP_ATOMIC);
++}
++
+ #ifdef CONFIG_AP_MODE
+ void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint frame_len)
+ {
+@@ -10157,6 +10198,7 @@ static struct cfg80211_ops rtw_cfg80211_ops = {
+ 	.set_pmksa = cfg80211_rtw_set_pmksa,
+ 	.del_pmksa = cfg80211_rtw_del_pmksa,
+ 	.flush_pmksa = cfg80211_rtw_flush_pmksa,
++	.set_cqm_rssi_config = cfg80211_rtw_set_cqm_rssi_config,
+ 
+ #ifdef RTW_VIRTUAL_INT
+ 	.add_virtual_intf = cfg80211_rtw_add_virtual_intf,
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.h b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.h
+index e7dd8050e..d40a36e64 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.h
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.h
+@@ -185,6 +185,11 @@ struct rtw_wdev_priv {
+ 	u16 pno_scan_seq_num;
+ #endif
+ 
++	/* Standard RSSI notification parameters */
++	s32 cqm_rssi_thold;
++	u32 cqm_rssi_hyst;
++	s32 cqm_rssi_last;
++
+ #ifdef CONFIG_RTW_CFGVEDNOR_RSSIMONITOR
+         s8 rssi_monitor_max;
+         s8 rssi_monitor_min;
+@@ -351,6 +356,8 @@ void rtw_cfg80211_init_rfkill(struct wiphy *wiphy);
+ void rtw_cfg80211_deinit_rfkill(struct wiphy *wiphy);
+ #endif
+ 
++void rtw_cfg80211_cqm_rssi_update(_adapter *padapter, s32 rssi);
++
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 4, 0))  && !defined(COMPAT_KERNEL_RELEASE)
+ #define rtw_cfg80211_rx_mgmt(wdev, freq, sig_dbm, buf, len, gfp) cfg80211_rx_mgmt(wdev_to_ndev(wdev), freq, buf, len, gfp)
+ #elif (LINUX_VERSION_CODE < KERNEL_VERSION(3, 6, 0))
+-- 
+2.41.0
+
+
+From 18ed5cbdfc47c7021a42277f4c2c89eefd8886c2 Mon Sep 17 00:00:00 2001
+From: Ben Hutchings <ben.hutchings@mind.be>
+Date: Tue, 7 Nov 2023 17:09:16 +0100
+Subject: [PATCH 12/13] Make use of MODULE_IMPORT_NS conditional
+
+Commit 8954f2b8d8a06db44bef9a1318f6e1cdb001b98d added an unconditional:
+
+    MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
+
+For compatibility with old kernel versions, guard this declaration
+with #ifdef MODULE_IMPORT_NS.
+
+This specific symbol namespace is also Android-specific, so the
+declaration should also be conditional on building for Android, but
+there doesn't seem to be a single preprocessor symbol that indicates
+that.
+
+Signed-off-by: Ben Hutchings <ben.hutchings@mind.be>
+---
+ drivers/staging/rtl8812au/os_dep/linux/usb_intf.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+index 2ef96b386..be0f654f0 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+@@ -1640,7 +1640,9 @@ static void __exit rtw_drv_halt(void)
+ 	rtw_mstat_dump(RTW_DBGDUMP);
+ }
+ 
++#ifdef MODULE_IMPORT_NS
+ MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
++#endif
+ 
+ module_init(rtw_drv_entry);
+ module_exit(rtw_drv_halt);
+-- 
+2.41.0
+
+
+From cc61eb8dd2bf753e5c70ea91414c299a6acdf665 Mon Sep 17 00:00:00 2001
+From: Ben Hutchings <ben.hutchings@mind.be>
+Date: Tue, 7 Nov 2023 18:12:18 +0100
+Subject: [PATCH 13/13] Fix eth_hw_addr_set() definition for compatibility with
+ stable branches
+
+eth_hw_addr_set() was added in Linux 5.15 but has now been backported
+to 4.19.291, 5.4.251, and 5.10.188.  This currently results in build
+failure for these stable branches.
+
+There's no simple way to test for the addition of this function since
+LINUX_VERSION_CODE limits version components to 255.
+
+Work around this by defining an inline function rtw_eth_hw_addr_set()
+and a macro eth_hw_addr_set().  This effectively shadows any
+backported definition of the eth_hw_addr_set() function without any
+conflict.
+
+Signed-off-by: Ben Hutchings <ben.hutchings@mind.be>
+---
+ drivers/staging/rtl8812au/include/drv_types_linux.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/include/drv_types_linux.h b/drivers/staging/rtl8812au/include/drv_types_linux.h
+index 6264a4d30..56435c855 100644
+--- a/drivers/staging/rtl8812au/include/drv_types_linux.h
++++ b/drivers/staging/rtl8812au/include/drv_types_linux.h
+@@ -17,10 +17,11 @@
+ 
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ /* Porting from linux kernel v5.15 48eab831ae8b9f7002a533fa4235eed63ea1f1a3 3f6cffb8604b537e3d7ea040d7f4368689638eaf*/
+-static inline void eth_hw_addr_set(struct net_device *dev, const u8 *addr)
++static inline void rtw_eth_hw_addr_set(struct net_device *dev, const u8 *addr)
+ {
+     memcpy(dev->dev_addr, addr, ETH_ALEN);
+ }
++#define eth_hw_addr_set rtw_eth_hw_addr_set
+ #endif
+ 
+ #endif
+-- 
+2.41.0
+

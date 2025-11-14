@@ -1,0 +1,45 @@
+From e7f5d03d8bde8f104ed06ad0946e2e40eaf51094 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Thu, 21 Nov 2024 16:06:25 +0100
+Subject: [PATCH 7/8] rtl8812au: add suggested braces around empty body in an
+ else statement
+
+---
+ drivers/staging/rtl8812au/hal/phydm/phydm_debug.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_debug.c b/drivers/staging/rtl8812au/hal/phydm/phydm_debug.c
+index bab92632e..a3e8bc48e 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_debug.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_debug.c
+@@ -2222,10 +2222,12 @@ void phydm_basic_dbg_message(void *dm_void)
+ 	PHYDM_DBG(dm, DBG_CMN, "[%s] System up time: ((%d sec))---->\n",
+ 		  __func__, dm->phydm_sys_up_time);
+ 
+-	if (dm->is_linked)
++	if (dm->is_linked) {
+ 		phydm_basic_dbg_msg_linked(dm);
+-	else
++	}
++	else {
+ 		PHYDM_DBG(dm, DBG_CMN, "No Link !!!\n");
++	}
+ 
+ 	PHYDM_DBG(dm, DBG_CMN, "[CCA Cnt] {CCK, OFDM, Total} = {%d, %d, %d}\n",
+ 		  fa_t->cnt_cck_cca, fa_t->cnt_ofdm_cca, fa_t->cnt_cca_all);
+@@ -4491,10 +4493,11 @@ void phydm_fw_trace_handler_code(void *dm_void, u8 *buffer, u8 cmd_len)
+ 	u16 content_3 = (((u16)buffer[9]) << 8) | ((u16)buffer[8]);
+ 	u16 content_4 = (((u16)buffer[11]) << 8) | ((u16)buffer[10]);
+ 
+-	if (cmd_len > 12)
++	if (cmd_len > 12) {
+ 		PHYDM_DBG(dm, DBG_FW_TRACE,
+ 			  "[FW Msg] Invalid cmd length (( %d )) >12\n",
+ 			  cmd_len);
++	}
+ /*@--------------------------------------------*/
+ #ifdef CONFIG_RA_FW_DBG_CODE
+ 	if (function == RATE_DECISION) {
+-- 
+2.41.1
+

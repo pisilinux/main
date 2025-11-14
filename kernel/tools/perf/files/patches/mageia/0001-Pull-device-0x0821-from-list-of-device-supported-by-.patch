@@ -1,0 +1,28 @@
+From cfa62868adc134623104a759902a95bc71790614 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Sat, 16 Dec 2023 19:50:53 +0100
+Subject: [PATCH] Pull device 0x0821 from list of device supported by rtl8812au
+ drivers
+
+The Realtek device with ID 0x0821 seems better supported by upstream rtl8821ae
+kernel module (see bug https://bugs.mageia.org/show_bug.cgi?id=31965).
+
+---
+ drivers/staging/rtl8812au/os_dep/linux/usb_intf.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+index be0f654f0..c019fa82b 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+@@ -185,7 +185,6 @@ static struct usb_device_id rtw_usb_id_tbl[] = {
+ #ifdef CONFIG_RTL8821A
+ 	/*=== Realtek demoboard ===*/
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0x0811), .driver_info = RTL8821}, /* Default ID */
+-	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0x0821), .driver_info = RTL8821}, /* Default ID */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8822), .driver_info = RTL8821}, /* Default ID */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xA811) , .driver_info = RTL8821},/* Default ID */
+ 	{USB_DEVICE_AND_INTERFACE_INFO(USB_VENDER_ID_REALTEK, 0x0820, 0xff, 0xff, 0xff), .driver_info = RTL8821}, /* 8821AU */
+-- 
+2.41.0
+
