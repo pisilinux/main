@@ -1,0 +1,22 @@
+diff -up linux-6.12/drivers/staging/rtl8812au/core/rtw_mlme_ext.c.fixwarning linux-6.12/drivers/staging/rtl8812au/core/rtw_mlme_ext.c
+--- linux-6.12/drivers/staging/rtl8812au/core/rtw_mlme_ext.c.fixwarning	2024-11-20 22:55:13.263847617 +0100
++++ linux-6.12/drivers/staging/rtl8812au/core/rtw_mlme_ext.c	2024-11-20 22:56:20.104794574 +0100
+@@ -2152,13 +2152,15 @@ unsigned int OnAuth(_adapter *padapter,
+ 			if (rtw_is_list_empty(&pstat->asoc_list) == _FALSE) {
+ 				rtw_list_delete(&pstat->asoc_list);
+ 				pstapriv->asoc_list_cnt--;
+-				if (pstat->expire_to > 0)
+-					;/* TODO: STA re_auth within expire_to */
++				if (pstat->expire_to > 0) {
++					; /* TODO: STA re_auth within expire_to */
++				}
+ 			}
+ 			_exit_critical_bh(&pstapriv->asoc_list_lock, &irqL);
+ 
+-			if (seq == 1)
++			if (seq == 1) {
+ 				; /* TODO: STA re_auth and auth timeout */
++			}
+ 
+ 		}
+ 	}

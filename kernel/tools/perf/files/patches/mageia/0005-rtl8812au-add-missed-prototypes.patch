@@ -1,0 +1,188 @@
+From 61116d468dd551124c1ae2c01fff5da99d787fad Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Thu, 21 Nov 2024 15:47:58 +0100
+Subject: [PATCH] rtl8812au: add missed prototypes
+
+---
+ drivers/staging/rtl8812au/core/rtw_br_ext.c   |  2 ++
+ drivers/staging/rtl8812au/core/rtw_p2p.c      |  1 +
+ drivers/staging/rtl8812au/core/rtw_xmit.c     |  1 +
+ .../hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c |  7 +++++++
+ .../hal/phydm/halrf/rtl8814a/halrf_8814a_ce.c | 21 ++++++++++++++++++-
+ .../staging/rtl8812au/hal/phydm/phydm_ccx.c   |  1 +
+ .../rtl8812au/os_dep/linux/ioctl_cfg80211.c   | 12 +++++++++++
+ .../staging/rtl8812au/os_dep/linux/rtw_proc.c |  1 +
+ .../staging/rtl8812au/os_dep/linux/usb_intf.c |  2 ++
+ 9 files changed, 47 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8812au/core/rtw_br_ext.c b/drivers/staging/rtl8812au/core/rtw_br_ext.c
+index 955a50912..283676d36 100644
+--- a/drivers/staging/rtl8812au/core/rtw_br_ext.c
++++ b/drivers/staging/rtl8812au/core/rtw_br_ext.c
+@@ -1369,6 +1369,8 @@ void dhcp_flag_bcast(_adapter *priv, struct sk_buff *skb)
+ }
+ 
+ 
++void *scdb_findEntry(_adapter *priv, unsigned char *macAddr,
++		     unsigned char *ipAddr);
+ void *scdb_findEntry(_adapter *priv, unsigned char *macAddr,
+ 		     unsigned char *ipAddr)
+ {
+diff --git a/drivers/staging/rtl8812au/core/rtw_p2p.c b/drivers/staging/rtl8812au/core/rtw_p2p.c
+index 167dd067f..c560d1712 100644
+--- a/drivers/staging/rtl8812au/core/rtw_p2p.c
++++ b/drivers/staging/rtl8812au/core/rtw_p2p.c
+@@ -3898,6 +3898,7 @@ void rtw_xframe_chk_wfd_ie(struct xmit_frame *xframe)
+ #endif
+ }
+ 
++u8 *dump_p2p_attr_ch_list(u8 *p2p_ie, uint p2p_ielen, u8 *buf, u32 buf_len);
+ u8 *dump_p2p_attr_ch_list(u8 *p2p_ie, uint p2p_ielen, u8 *buf, u32 buf_len)
+ {
+ 	uint attr_contentlen = 0;
+diff --git a/drivers/staging/rtl8812au/core/rtw_xmit.c b/drivers/staging/rtl8812au/core/rtw_xmit.c
+index 0b97e5099..e40c0aecc 100644
+--- a/drivers/staging/rtl8812au/core/rtw_xmit.c
++++ b/drivers/staging/rtl8812au/core/rtw_xmit.c
+@@ -3766,6 +3766,7 @@ static struct xmit_frame *get_one_xmitframe(struct xmit_priv *pxmitpriv, struct
+ 	return pxmitframe;
+ }
+ 
++struct xmit_frame *rtw_get_xframe(struct xmit_priv *pxmitpriv, int *num_frame);
+ struct xmit_frame *rtw_get_xframe(struct xmit_priv *pxmitpriv, int *num_frame)
+ {
+ 	_irqL irqL0;
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
+index a66721465..e2113e37a 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c
+@@ -1334,6 +1334,13 @@ void phy_lc_calibrate_8812a(void *dm_void)
+ 	_phy_lc_calibrate_8812a(dm, true);
+ }
+ 
++void _phy_set_rf_path_switch_8812a(
++#if ((DM_ODM_SUPPORT_TYPE & ODM_AP) || (DM_ODM_SUPPORT_TYPE == ODM_CE))
++				   struct dm_struct *dm,
++#else
++				   void *adapter,
++#endif
++				   boolean is_main, boolean is2T);
+ void _phy_set_rf_path_switch_8812a(
+ #if ((DM_ODM_SUPPORT_TYPE & ODM_AP) || (DM_ODM_SUPPORT_TYPE == ODM_CE))
+ 				   struct dm_struct *dm,
+diff --git a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ce.c b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ce.c
+index 41ce0a6dd..ae060a648 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ce.c
++++ b/drivers/staging/rtl8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ce.c
+@@ -450,7 +450,17 @@ _phy_lc_calibrate_8814a(
+ 
+ 
+ VOID	
+-phy_APCalibrate_8814A(
++                           phy_APCalibrate_8814A(
++#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
++	IN struct dm_struct	*		pDM_Odm,
++#else
++	IN	PADAPTER	pAdapter,
++#endif
++	IN	s1Byte 		delta,
++	IN	BOOLEAN		is2T
++	);
++VOID	
++                           phy_APCalibrate_8814A(
+ #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
+ 	IN struct dm_struct	*		pDM_Odm,
+ #else
+@@ -545,6 +555,15 @@ BOOLEAN PHY_QueryRFPathSwitch_8814A(
+ }
+ 
+ 
++VOID _phy_SetRFPathSwitch_8814A(
++#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
++	IN struct dm_struct	*		pDM_Odm,
++#else
++	IN	PADAPTER	pAdapter,
++#endif
++	IN	BOOLEAN		bMain,
++	IN	BOOLEAN		is2T
++	);
+ VOID _phy_SetRFPathSwitch_8814A(
+ #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
+ 	IN struct dm_struct	*		pDM_Odm,
+diff --git a/drivers/staging/rtl8812au/hal/phydm/phydm_ccx.c b/drivers/staging/rtl8812au/hal/phydm/phydm_ccx.c
+index e0f42c0be..fe69c19b2 100644
+--- a/drivers/staging/rtl8812au/hal/phydm/phydm_ccx.c
++++ b/drivers/staging/rtl8812au/hal/phydm/phydm_ccx.c
+@@ -26,6 +26,7 @@
+ #include "mp_precomp.h"
+ #include "phydm_precomp.h"
+ 
++void phydm_ccx_hw_restart(void *dm_void);
+ void phydm_ccx_hw_restart(void *dm_void)
+ 			  /*@Will Restart NHM/CLM/FAHM simultaneously*/
+ {
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index ae4202ad4..c0f563430 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -534,6 +534,7 @@ void rtw_5g_rates_init(struct ieee80211_rate *rates)
+ 	);
+ }
+ 
++struct ieee80211_supported_band *rtw_spt_band_alloc(BAND_TYPE band);
+ struct ieee80211_supported_band *rtw_spt_band_alloc(BAND_TYPE band)
+ {
+ 	struct ieee80211_supported_band *spt_band = NULL;
+@@ -2083,6 +2084,16 @@ static int cfg80211_rtw_del_key(struct wiphy *wiphy, struct net_device *ndev,
+ 	return 0;
+ }
+ 
++static int cfg80211_rtw_set_default_key(struct wiphy *wiphy,
++	struct net_device *ndev,
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0))
++	int link_id,
++#endif
++	u8 key_index
++	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)) || defined(COMPAT_KERNEL_RELEASE)
++	, bool unicast, bool multicast
++	#endif
++);
+ static int cfg80211_rtw_set_default_key(struct wiphy *wiphy,
+ 	struct net_device *ndev,
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0))
+@@ -5956,6 +5967,7 @@ static int	cfg80211_rtw_change_station(struct wiphy *wiphy, struct net_device *n
+ 	return ret;
+ }
+ 
++struct sta_info *rtw_sta_info_get_by_idx(struct sta_priv *pstapriv, const int idx, u8 *asoc_list_num);
+ struct sta_info *rtw_sta_info_get_by_idx(struct sta_priv *pstapriv, const int idx, u8 *asoc_list_num)
+ {
+ 	_list	*phead, *plist;
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/rtw_proc.c b/drivers/staging/rtl8812au/os_dep/linux/rtw_proc.c
+index db1177c3a..3b9246bc9 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/rtw_proc.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/rtw_proc.c
+@@ -4446,6 +4446,7 @@ static const struct file_operations rtw_odm_proc_sseq_ops = {
+ };
+ #endif
+ 
++struct proc_dir_entry *rtw_odm_proc_init(struct net_device *dev);
+ struct proc_dir_entry *rtw_odm_proc_init(struct net_device *dev)
+ {
+ 	struct proc_dir_entry *dir_odm = NULL;
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+index 915ef6476..ae2a5a0b9 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/usb_intf.c
+@@ -1206,6 +1206,8 @@ extern void rtd2885_wlan_netlink_sendMsg(char *action_string, char *name);
+ 
+ _adapter  *rtw_sw_export = NULL;
+ 
++_adapter *rtw_usb_primary_adapter_init(struct dvobj_priv *dvobj,
++	struct usb_interface *pusb_intf);
+ _adapter *rtw_usb_primary_adapter_init(struct dvobj_priv *dvobj,
+ 	struct usb_interface *pusb_intf)
+ {
+-- 
+2.41.1
+

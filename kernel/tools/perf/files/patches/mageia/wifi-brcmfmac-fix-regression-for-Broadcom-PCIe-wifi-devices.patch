@@ -1,0 +1,34 @@
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH V2] wifi: brcmfmac: fix regression for Broadcom PCIe wifi devices
+Date: Wed, 11 Jan 2023 12:24:19 +0100
+
+A sanity check was introduced considering maximum flowrings above
+256 as insane and effectively aborting the device probe. This
+resulted in regression for number of users as the value turns out
+to be sane after all.
+
+Fixes: 2aca4f3734bd ("brcmfmac: return error when getting invalid max_flowrings from dongle")
+Reported-by: chainofflowers <chainofflowers-VwIFZPTo/vqsTnJN9+BGXg@public.gmane.org>
+Link: https://lore.kernel.org/all/4781984.GXAFRqVoOG@luna/
+Reported-by: Christian Marillat <marillat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216894
+Signed-off-by: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+index ae57a9a3ab05..b67f6d0810b6 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+@@ -1228,7 +1228,7 @@ static int brcmf_pcie_init_ringbuffers(struct brcmf_pciedev_info *devinfo)
+ 				BRCMF_NROF_H2D_COMMON_MSGRINGS;
+ 		max_completionrings = BRCMF_NROF_D2H_COMMON_MSGRINGS;
+ 	}
+-	if (max_flowrings > 256) {
++	if (max_flowrings > 512) {
+ 		brcmf_err(bus, "invalid max_flowrings(%d)\n", max_flowrings);
+ 		return -EIO;
+ 	}
+-- 
+2.32.0

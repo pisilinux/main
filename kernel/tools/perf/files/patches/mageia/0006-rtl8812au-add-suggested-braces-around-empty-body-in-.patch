@@ -1,0 +1,33 @@
+From a9d9038b7a15077395013f1954665656959c81b8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+From: Your Name <you@example.com>
+Date: Thu, 21 Nov 2024 15:53:01 +0100
+Subject: [PATCH 6/8] rtl8812au: add suggested braces around empty body in an
+ else statement
+
+---
+ drivers/staging/rtl8812au/os_dep/linux/recv_linux.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/recv_linux.c b/drivers/staging/rtl8812au/os_dep/linux/recv_linux.c
+index 5637e9970..051abba70 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/recv_linux.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/recv_linux.c
+@@ -531,10 +531,12 @@ void rtw_os_recv_indicate_pkt(_adapter *padapter, _pkt *pkt, union recv_frame *r
+ #endif /* CONFIG_RTW_NAPI */
+ 
+ 		ret = rtw_netif_rx(padapter->pnetdev, pkt);
+-		if (ret == NET_RX_SUCCESS)
++		if (ret == NET_RX_SUCCESS) {
+ 			DBG_COUNTER(padapter->rx_logs.os_netif_ok);
+-		else
++		}
++		else {
+ 			DBG_COUNTER(padapter->rx_logs.os_netif_err);
++		}
+ 	}
+ }
+ 
+-- 
+2.41.1
+

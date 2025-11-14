@@ -1,0 +1,35 @@
+From 860ccf31655e160ec921190e443f0b532d8d3308 Mon Sep 17 00:00:00 2001
+From: alium <info@aloisnespor.info>
+Date: Sat, 30 Mar 2024 09:50:44 +0100
+Subject: [PATCH 128/132] Update ioctl_cfg80211.c -  support for kernel 6.9
+
+ support for kernel 6.9
+---
+ drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index a135804..c1f20e9 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -460,7 +460,7 @@ u8 rtw_cfg80211_ch_switch_notify(_adapter *adapter, u8 ch, u8 bw, u8 offset,
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0))
+ 	if (started) {
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 9, 0))
+ 		cfg80211_ch_switch_started_notify(adapter->pnetdev, &chdef, 0, 0, false, 0);
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0))
+ 		cfg80211_ch_switch_started_notify(adapter->pnetdev, &chdef, 0, 0, false);
+@@ -476,7 +476,7 @@ u8 rtw_cfg80211_ch_switch_notify(_adapter *adapter, u8 ch, u8 bw, u8 offset,
+ 	if (!rtw_cfg80211_allow_ch_switch_notify(adapter))
+ 		goto exit;
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 3, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(6, 9, 0))
+ 	cfg80211_ch_switch_notify(adapter->pnetdev, &chdef, 0, 0);
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 2))
+ 	cfg80211_ch_switch_notify(adapter->pnetdev, &chdef, 0);
+-- 
+2.41.1
+

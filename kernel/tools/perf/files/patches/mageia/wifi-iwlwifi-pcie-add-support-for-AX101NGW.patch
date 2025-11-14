@@ -1,0 +1,33 @@
+From: Aiden Leong <aiden.leong-PRyJKUU44DAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] wifi: iwlwifi: pcie: add support for AX101NGW
+Date: Fri,  6 Jan 2023 13:05:48 +0800
+
+Fix a bug introduced by: 
+commit 32ed101aa140 ("iwlwifi: convert all Qu with Jf devices to the new
+ config table"), so now we pick the FIRST matching config.
+
+Signed-off-by: Aiden Leong <aiden.leong-PRyJKUU44DAAvxtiuMwx3w@public.gmane.org>
+---
+
+I split patchset v1 to two standalone patches, since there are not that
+strongly related to each other.
+
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index a46df1320372..5d74adbd49cf 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -1461,7 +1461,7 @@ iwl_pci_find_dev_info(u16 device, u16 subsystem_device,
+ 	if (!num_devices)
+ 		return NULL;
+ 
+-	for (i = num_devices - 1; i >= 0; i--) {
++	for (i = 0; i < num_devices; i++) {
+ 		const struct iwl_dev_info *dev_info = &iwl_dev_info_table[i];
+ 
+ 		if (dev_info->device != (u16)IWL_CFG_ANY &&
+-- 
+2.39.0

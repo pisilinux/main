@@ -1,0 +1,42 @@
+From 18bb3090b6c0876842813ac10d1822412f51e97e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Thu, 21 Nov 2024 17:07:41 +0100
+Subject: [PATCH 10/10] rtl8812au: add missed prototypes
+
+---
+ drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c | 7 +++++++
+ drivers/staging/rtl8812au/os_dep/linux/usb_ops_linux.c  | 1 +
+ 2 files changed, 8 insertions(+)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+index c0f563430..72538365a 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/ioctl_cfg80211.c
+@@ -2151,6 +2151,12 @@
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0))
+ 	int link_id,
+ #endif
++	u8 key_index);
++int cfg80211_rtw_set_default_mgmt_key(struct wiphy *wiphy,
++	struct net_device *ndev,
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0))
++	int link_id,
++#endif
+ 	u8 key_index)
+ {
+ #define SET_DEF_KEY_PARAM_FMT " key_index=%d"
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/usb_ops_linux.c b/drivers/staging/rtl8812au/os_dep/linux/usb_ops_linux.c
+index c7eb7ea40..9ced824fe 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/usb_ops_linux.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/usb_ops_linux.c
+@@ -898,6 +898,7 @@ void usb_recv_tasklet(unsigned long priv)
+ 	}
+ }
+ 
++void usb_read_port_complete(struct urb *purb, struct pt_regs *regs);
+ void usb_read_port_complete(struct urb *purb, struct pt_regs *regs)
+ {
+ 	struct recv_buf	*precvbuf = (struct recv_buf *)purb->context;
+-- 
+2.41.1
+

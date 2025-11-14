@@ -1,0 +1,27 @@
+From d3feb6ae9398834d7778c0e43ebd1fa757eaecd8 Mon Sep 17 00:00:00 2001
+From: alium <info@aloisnespor.info>
+Date: Tue, 12 Mar 2024 07:11:35 +0100
+Subject: [PATCH 123/132] Update os_intfs.c for kernel 6.8
+
+---
+ os_dep/linux/os_intfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c b/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c
+index 2dadae0..f4f2ef9 100644
+--- a/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c
++++ b/drivers/staging/rtl8812au/os_dep/linux/os_intfs.c
+@@ -17,6 +17,10 @@
+ #include <drv_types.h>
+ #include <hal_data.h>
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0))
++#define strlcpy strscpy
++#endif
++
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Realtek Wireless Lan Driver");
+ MODULE_AUTHOR("Realtek Semiconductor Corp.");
+-- 
+2.41.1
+
