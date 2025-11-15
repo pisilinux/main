@@ -15,6 +15,8 @@ def setup():
    shelltools.system("cargo fetch --locked --target x86_64-unknown-linux-gnu")
 
 def build():
+    shelltools.system("export CARGO_PROFILE_RELEASE_DEBUG=2 CARGO_PROFILE_RELEASE_STRIP=false")
+    shelltools.system("export CARGO_PROFILE_RELEASE_LTO=true CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1")
     shelltools.system("cargo build --release --frozen --all-targets")
     
 def check():
