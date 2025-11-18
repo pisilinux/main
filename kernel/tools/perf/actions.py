@@ -25,5 +25,5 @@ def install():
     pisitools.removeDir("/usr/etc")
 
     #pisitools.domove("/usr/lib64/libperf-gtk.so", "/usr/lib/")
-    pisitools.domove("/usr/lib64/traceevent", "/usr/lib/")
-    pisitools.removeDir("/usr/lib64")
+    # pisitools.domove("/usr/lib64/traceevent", "/usr/lib/")
+    # pisitools.removeDir("/usr/lib64")
