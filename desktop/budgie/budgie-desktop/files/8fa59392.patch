@@ -1,0 +1,43 @@
+From 8fa59392a1817f9d15a47f3254cc69f7cb76d771 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ball=C3=B3=20Gy=C3=B6rgy?= <ballogyor@gmail.com>
+Date: Mon, 3 Nov 2025 14:02:59 +0100
+Subject: [PATCH] Don't read settings after bind
+
+This is actually not needed, bind() already ensures that the right item is
+selected in the combobox.
+
+Setting active_id explicitly on load causes that the value is saved back
+immediately even if it's not changed by the user, which makes the
+session-dependent default value apply also for other sessions.
+---
+ src/panel/settings/settings_style.vala | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/panel/settings/settings_style.vala b/src/panel/settings/settings_style.vala
+index de73706f7..84db6dd7f 100644
+--- a/src/panel/settings/settings_style.vala
++++ b/src/panel/settings/settings_style.vala
+@@ -154,7 +154,6 @@ namespace Budgie {
+ 					if (hit) {
+ 						combobox_gtk.sensitive = true;
+ 						ui_settings.bind("gtk-theme", combobox_gtk, "active-id", SettingsBindFlags.DEFAULT);
+-						combobox_gtk.active_id = ui_settings.get_string("gtk-theme");
+ 					}
+ 				}
+ 				/* Icon themes */ {
+@@ -172,7 +171,6 @@ namespace Budgie {
+ 					if (hit) {
+ 						combobox_icon.sensitive = true;
+ 						ui_settings.bind("icon-theme", combobox_icon, "active-id", SettingsBindFlags.DEFAULT);
+-						combobox_icon.active_id = ui_settings.get_string("icon-theme");
+ 					}
+ 				}
+ 
+@@ -191,7 +189,6 @@ namespace Budgie {
+ 					if (hit) {
+ 						combobox_cursor.sensitive = true;
+ 						ui_settings.bind("cursor-theme", combobox_cursor, "active-id", SettingsBindFlags.DEFAULT);
+-						combobox_cursor.active_id = ui_settings.get_string("cursor-theme");
+ 					}
+ 				}
+ 				queue_resize();

@@ -1,0 +1,34 @@
+From 9fec5049cc7056e609451762770c400db0f726fc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ball=C3=B3=20Gy=C3=B6rgy?= <ballogyor@gmail.com>
+Date: Wed, 5 Nov 2025 11:59:41 +0100
+Subject: [PATCH] Reset values of caffeine mode only if needed
+
+If caffeine mode is not enabled, it's not needed to reset the unmodified
+values. Calling reset_values() unconditionally causes that the default
+values are saved as user settings on logout even if caffeine mode was not
+used.
+---
+ src/daemon/settings.vala | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/daemon/settings.vala b/src/daemon/settings.vala
+index fb9711325..a681e76e1 100644
+--- a/src/daemon/settings.vala
++++ b/src/daemon/settings.vala
+@@ -213,10 +213,12 @@ namespace Budgie {
+ 		* do_disable_quietly will quietly disable Caffeine Mode
+ 		*/
+ 		public void do_disable_quietly() {
+-			temporary_notification_disabled = true;
+-			wm_settings.set_boolean("caffeine-mode", false);
+-			Settings.sync();
+-			reset_values(); // Immediately reset values
++			if (get_caffeine_mode()) {
++				temporary_notification_disabled = true;
++				wm_settings.set_boolean("caffeine-mode", false);
++				Settings.sync();
++				reset_values(); // Immediately reset values
++			}
+ 		}
+ 
+ 		/**
