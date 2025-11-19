@@ -1,0 +1,45 @@
+From c2a95e0f1e8fce170d90ff8d556f14612c6eacd3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ball=C3=B3=20Gy=C3=B6rgy?= <ballogyor@gmail.com>
+Date: Fri, 31 Oct 2025 15:27:54 +0100
+Subject: [PATCH] Add GNOME Console to supported terminals (#35)
+
+GNOME Console (kgx) is the default terminal in GNOME since version 42.
+---
+ src/budgie_desktop_view.vala | 1 +
+ src/file_item.vala           | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/budgie_desktop_view.vala b/src/budgie_desktop_view.vala
+index c207a41..da19057 100644
+--- a/src/budgie_desktop_view.vala
++++ b/src/budgie_desktop_view.vala
+@@ -37,6 +37,7 @@ public const int ITEM_MARGIN = 10;
+ public const string[] SUPPORTED_TERMINALS = {
+ 	"alacritty",
+ 	"gnome-terminal",
++	"kgx",
+ 	"kitty",
+ 	"konsole",
+ 	"mate-terminal",
+diff --git a/src/file_item.vala b/src/file_item.vala
+index e09f59d..1debdcb 100644
+--- a/src/file_item.vala
++++ b/src/file_item.vala
+@@ -234,12 +234,16 @@ public class FileItem : DesktopItem {
+ 			if (
+ 				(preferred_terminal != "alacritty") && // Not Alacritty, no tab CLI flag
+ 				(preferred_terminal != "gnome-terminal") && // Not GNOME Terminal which uses --tab instead of --new-tab
++				(preferred_terminal != "kgx") && // Not GNOME Console which uses --tab instead of --new-tab
+ 				(preferred_terminal != "mate-terminal") && // Not Mate Terminal which uses --tab instead of --new-tab
+ 				(preferred_terminal != "tilix") && // No new tab CLI flag (that I saw anyways)
+ 				(preferred_terminal != "kitty") // No new tab CLI flag for Kitty, either
+ 			) {
+ 				args += "--new-tab"; // Add --new-tab
+-			} else if ((preferred_terminal == "gnome-terminal" || preferred_terminal == "mate-terminal") && (_type == "file")) {
++			} else if (
++			    (preferred_terminal == "gnome-terminal" || preferred_terminal == "kgx" || preferred_terminal == "mate-terminal") &&
++			    (_type == "file")
++			) {
+ 				args += "--tab"; // Create a new tab in an existing window or creates a new window
+ 			}
+ 

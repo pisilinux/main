@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #shelltools.system("sed -i -e 's:T1_initLib:T1_InitLib:' meson.build || die")
+    shelltools.system("find . -name meson.build -exec sed -i -e 's/budgie-1.0/budgie-2.0/' -e 's/libpeas-1.0/libpeas-2/' -e '/libpeas-gtk-1.0/d' {} +")
     mesontools.configure("-D b_pie=false")
 
 def build():

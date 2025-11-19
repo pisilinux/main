@@ -1,0 +1,51 @@
+From 05a9822a465a023968efb28c620e9448c82634db Mon Sep 17 00:00:00 2001
+From: Joshua Strobl <me@joshuastrobl.com>
+Date: Mon, 29 Jul 2024 21:58:22 +0300
+Subject: [PATCH] fix: compilation under newer meson and gcc
+
+Resolves #28
+---
+ meson.build | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 4344b23..0220a9a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -4,11 +4,7 @@ project(
+ 	version: '1.3',
+ 	license: [ 'Apache-2.0' ],
+ 	default_options: [
+-		'b_lto=false',
+ 		'c_std=c11',
+-		'buildtype=release',
+-		'optimization=3',
+-		'werror=true',
+ 		'warning_level=3',
+ 	],
+ )
+@@ -17,17 +13,16 @@ gnome = import('gnome')
+ 
+ intltool = find_program('intltool-merge')
+ 
++# Vala generates bad C code and missing these on gcc 14 will cause FTBFS
++# Additionally, Meson 1.4 unhides warnings from valac-generated C code,
++# which causes unreadable logspam. Reenables prior behavior.
+ am_cflags = [
+-	'-Wconversion',
+-	'-Wformat',
+-	'-Wformat-security',
+-	'-Wstack-protector',
+-	'-Wundef',
+-	'-Wuninitialized',
+-	'-fstack-protector',
++	'-w',
++	'-Wno-incompatible-pointer-types',
++	'-Wno-implicit-function-declaration',
+ ]
+-
+ add_global_arguments(am_cflags, language: 'c')
++
+ meson.add_install_script('scripts/mesonPostInstall.sh')
+ 
+ glib_dep = '>= 2.64.0'

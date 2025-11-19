@@ -1,0 +1,54 @@
+From 14a62f08fae7855118769a27dd27a92896dbce66 Mon Sep 17 00:00:00 2001
+From: David Mohammed <fossfreedom@users.noreply.github.com>
+Date: Sun, 8 Dec 2024 15:42:24 +0000
+Subject: [PATCH] Support mate-terminal to open files (#2)
+
+* Support mate-terminal to open files
+
+* Address review
+
+---------
+
+Co-authored-by: Campbell Jones <git@serebit.com>
+---
+ src/file_item.vala | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/src/file_item.vala b/src/file_item.vala
+index e4bd101..e09f59d 100644
+--- a/src/file_item.vala
++++ b/src/file_item.vala
+@@ -234,11 +234,12 @@ public class FileItem : DesktopItem {
+ 			if (
+ 				(preferred_terminal != "alacritty") && // Not Alacritty, no tab CLI flag
+ 				(preferred_terminal != "gnome-terminal") && // Not GNOME Terminal which uses --tab instead of --new-tab
++				(preferred_terminal != "mate-terminal") && // Not Mate Terminal which uses --tab instead of --new-tab
+ 				(preferred_terminal != "tilix") && // No new tab CLI flag (that I saw anyways)
+ 				(preferred_terminal != "kitty") // No new tab CLI flag for Kitty, either
+ 			) {
+ 				args += "--new-tab"; // Add --new-tab
+-			} else if ((preferred_terminal == "gnome-terminal") && (_type == "file")) { // GNOME Terminal, self explanatory really
++			} else if ((preferred_terminal == "gnome-terminal" || preferred_terminal == "mate-terminal") && (_type == "file")) {
+ 				args += "--tab"; // Create a new tab in an existing window or creates a new window
+ 			}
+ 
+@@ -267,11 +268,17 @@ public class FileItem : DesktopItem {
+ 					editor = "nano";
+ 				}
+ 
+-				if (preferred_terminal == "gnome-terminal") { // gnome-terminal will not work with -e
++				if (preferred_terminal == "gnome-terminal") {
++					// gnome-terminal will not work with -e
+ 					args += "--";
+ 					args += editor;
+ 					args += path;
+-				} else {
++				} else if (preferred_terminal == "mate-terminal") {
++					// mate-terminal does not pass params with -e
++					args += "-x";
++					args += editor;
++					args += path;
++				} else  {
+ 					args += "-e";
+ 					args += editor;
+ 					args += path;
