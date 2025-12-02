@@ -15,6 +15,7 @@ def setup():
                           -Dwayland_eglstream=true \
                           -Dudev=true \
                           -Dx11=true \
+                          -Dudev_dir=/lib/udev \
                           -Dnative_backend=true \
                           -Dintrospection=true \
                           -Dinstalled_tests=false")
