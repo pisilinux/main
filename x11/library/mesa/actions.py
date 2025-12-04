@@ -16,7 +16,6 @@ def setup():
                -Db_ndebug=true \
                -Dplatforms=x11,wayland \
                -Dgallium-extra-hud=true \
-               -Dgallium-vdpau=enabled \
                -Dgallium-va=enabled \
                -Dvideo-codecs=all \
                -Dgles1=enabled \
@@ -36,7 +35,7 @@ def setup():
     if get.buildTYPE() == "emul32":
         # shelltools.export("LDFLAGS", "%s -L/usr/lib32"  % get.LDFLAGS())
         # shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
-        options += " -Dlmsensors=disabled --native-file crossfile.ini -Dzstd=disabled \
+        options += " -Dlmsensors=disabled -Ddisplay-info=disabled --native-file crossfile.ini -Dzstd=disabled \
                      -Dvulkan-drivers=amd,intel,intel_hasvk,swrast,virtio -D sysprof=false -D intel-rt=disabled \
                      -Dvulkan-layers=device-select,intel-nullhw,overlay \
                      -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink \
@@ -59,8 +58,8 @@ def setup():
                              -Drust_std=2021 \
                              -D sysprof=false \
                              -D intel-rt=enabled \
-                             -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
-                             -Dvulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental,asahi,freedreno \
+                             -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,anti-lag,vram-report-limit \
+                             -Dvulkan-drivers=amd,freedreno,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental,asahi \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
     
     #pisitools.ldflags.add("-fuse-ld=lld")
