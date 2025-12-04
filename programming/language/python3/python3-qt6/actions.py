@@ -11,7 +11,8 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 
-def setup():   
+def setup():
+    shelltools.export("CXXFLAGS", "%s -std=c++17" % get.CXXFLAGS())
     shelltools.system("sip-build \
                         --confirm-license \
                         --no-make \
