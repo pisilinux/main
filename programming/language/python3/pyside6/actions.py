@@ -15,7 +15,7 @@ def setup():
     shelltools.cd("sources/pyside6")
     pisitools.dosed("libpyside/CMakeLists.txt", 'LIBRARY DESTINATION "PySide6"', 'LIBRARY DESTINATION "${LIB_INSTALL_DIR}"')
     pisitools.dosed("libpysideqml/CMakeLists.txt", 'LIBRARY DESTINATION "PySide6"', 'LIBRARY DESTINATION "${LIB_INSTALL_DIR}"')
-    pisitools.dosed("CMakeLists.txt", '/wheels/cmake/PySide6', '/cmake/PySide6')
+    # pisitools.dosed("CMakeLists.txt", '/wheels/cmake/PySide6', '/cmake/PySide6')
     cmaketools.configure("-B build -DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_TESTS=OFF \
@@ -32,3 +32,6 @@ def install():
     shelltools.cd("sources/pyside6/build")
     # shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.dosed("%s/usr/lib/cmake/PySide6/PySide6Config.abi3.cmake" % get.installDIR(), "/typesystems", "/share/PySide6/typesystems")
+    pisitools.dosed("%s/usr/lib/cmake/PySide6/PySide6Config.abi3.cmake" % get.installDIR(), "/glue", "/share/PySide6/glue")
