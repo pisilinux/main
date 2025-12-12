@@ -1,0 +1,80 @@
+diff --git a/src/core/session_consolekit.cpp b/src/core/session_consolekit.cpp
+index 0200407e63d7cefffb6ab8f34a4c6f26846ac00a..c0e8449f8a2a47e3e54475fccb50f573346e0ede 100644
+--- a/src/core/session_consolekit.cpp
++++ b/src/core/session_consolekit.cpp
+@@ -239,7 +239,7 @@ FileDescriptor ConsoleKitSession::delaySleep(const QString &reason)
+         return FileDescriptor{};
+     }
+     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
+-    return FileDescriptor{descriptor.fileDescriptor()};
++    return FileDescriptor{fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0)};
+ }
+ 
+ ConsoleKitSession::ConsoleKitSession(const QString &sessionPath)
+diff --git a/src/core/session_logind.cpp b/src/core/session_logind.cpp
+index 978c410cfeae8b91336f035b99ae11764faec498..5f6541c289b5fa263a3534821ec9c3b33490005b 100644
+--- a/src/core/session_logind.cpp
++++ b/src/core/session_logind.cpp
+@@ -237,7 +237,7 @@ FileDescriptor LogindSession::delaySleep(const QString &reason)
+         return FileDescriptor{};
+     }
+     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
+-    return FileDescriptor{descriptor.fileDescriptor()};
++    return FileDescriptor(fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0));
+ }
+ 
+ LogindSession::LogindSession(const QString &sessionPath)
+diff --git a/src/utils/filedescriptor.cpp b/src/utils/filedescriptor.cpp
+index d60c429e446c041a46d8c91adca20eba316fa71c..f76f07aad1ac227a96ef307c4cdab783414648fe 100644
+--- a/src/utils/filedescriptor.cpp
++++ b/src/utils/filedescriptor.cpp
+@@ -7,6 +7,7 @@
+     SPDX-License-Identifier: GPL-2.0-or-later
+ */
+ #include "filedescriptor.h"
++#include "common.h"
+ 
+ #include <fcntl.h>
+ #include <sys/poll.h>
+@@ -29,7 +30,12 @@ FileDescriptor::FileDescriptor(FileDescriptor &&other)
+ FileDescriptor &FileDescriptor::operator=(FileDescriptor &&other)
+ {
+     if (m_fd != -1) {
+-        ::close(m_fd);
++        const int err = ::close(m_fd);
++        if (Q_UNLIKELY(err != 0)) {
++            // If this failed, we've either closed the fd somewhere else, or we end up
++            // leaking this fd here. Either way, there's some significant bug!
++            qCCritical(KWIN_CORE, "::close() failed: %s", strerror(errno));
++        }
+     }
+     m_fd = std::exchange(other.m_fd, -1);
+     return *this;
+@@ -38,7 +44,12 @@ FileDescriptor &FileDescriptor::operator=(FileDescriptor &&other)
+ FileDescriptor::~FileDescriptor()
+ {
+     if (m_fd != -1) {
+-        ::close(m_fd);
++        const int err = ::close(m_fd);
++        if (Q_UNLIKELY(err != 0)) {
++            // If this failed, we've either closed the fd somewhere else, or we end up
++            // leaking this fd here. Either way, there's some significant bug!
++            qCCritical(KWIN_CORE, "::close() failed: %s", strerror(errno));
++        }
+     }
+ }
+ 
+@@ -60,7 +71,12 @@ int FileDescriptor::take()
+ void FileDescriptor::reset()
+ {
+     if (m_fd != -1) {
+-        ::close(m_fd);
++        const int err = ::close(m_fd);
++        if (Q_UNLIKELY(err != 0)) {
++            // If this failed, we've either closed the fd somewhere else, or we end up
++            // leaking this fd here. Either way, there's some significant bug!
++            qCCritical(KWIN_CORE, "::close() failed: %s", strerror(errno));
++        }
+         m_fd = -1;
+     }
+ }
