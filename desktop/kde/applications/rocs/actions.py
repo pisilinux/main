@@ -6,11 +6,11 @@
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import kde6
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 
 def setup():
     # kde6.configure()
-    kde5.configure()
+    kde6.configure()
 
 def build():
     kde6.make()
