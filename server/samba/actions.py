@@ -14,6 +14,7 @@ from pisi.actionsapi import shelltools
 shelltools.export("JOBS", get.makeJOBS().replace("-j", ""))
 
 def setup():
+    pisitools.cflags.add("-std=gnu17")
     shelltools.system("sed -r 's/nss_(setpw|endpw|setgr|endgr)ent/my_&/' \
                        -i nsswitch/nsstest.c")
 
