@@ -15,11 +15,10 @@ from pisi.actionsapi import mesontools
 
 def setup():
     mesontools.configure("-Dlibmpv=true \
-                                        -Dcdda=enabled \
-                                        -Ddvdnav=enabled \
-                                        -Dsdl2=enabled \
-                                        -Ddvbin=enabled \
-                                        -Dlibarchive=enabled")
+                          -Dcdda=enabled \
+                          -Ddvdnav=enabled \
+                          -Ddvbin=enabled \
+                          -Dlibarchive=enabled")
 
 def build():
     mesontools.build()
