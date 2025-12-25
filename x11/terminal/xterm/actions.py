@@ -11,6 +11,8 @@ def setup():
     autotools.configure(" \
              --disable-full-tgetent \
              --with-app-defaults=/usr/share/X11/app-defaults \
+             --with-icondir=/usr/share/icons \
+             --with-icon-theme=hicolor \
              --disable-desktop \
              --with-utempter \
              --with-tty-group=tty \
