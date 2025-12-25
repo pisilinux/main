@@ -10,7 +10,9 @@ def setup():
     mesontools.configure("--prefix=/usr \
                           --sysconfdir=/etc \
                           --libexecdir=/usr/lib/muffin \
-                          --localstatedir=/var")
+                          --localstatedir=/var \
+                          -Degl_device=true \
+                          -Dwayland_eglstream=true")
 
 def build():
     mesontools.build()
