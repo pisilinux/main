@@ -19,13 +19,13 @@ def setup():
                           -DKICAD_SKIP_BOOST=ON         \
                           -DKICAD_SCRIPTING=ON          \
                           -DKICAD_SCRIPTING_MODULES=ON  \
-                          -DKICAD_USE_OCE=ON \
+                          -DKICAD_USE_OCE=OFF \
                           -DKICAD_USE_OCC=ON \
                           -DKICAD_USE_EGL=1 \
                           -DKICAD_SCRIPTING_WXPYTHON=OFF \
                           -DKICAD_BUILD_QA_TESTS=OFF \
                           -DKICAD_I18N_UNIX_STRICT_PATH=ON \
-                          -DBUILD_GITHUB_PLUGIN=ON", sourceDir="..")
+                          -DBUILD_GITHUB_PLUGIN=OFF", sourceDir="..")
     
     #shelltools.cd("..")
     #shelltools.cd("kicad-i18n-5.1.5")
