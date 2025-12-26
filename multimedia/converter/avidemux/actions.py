@@ -9,6 +9,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+
+shelltools.export("CMAKE_POLICY_VERSION_MINIMUM", "3.5")
+
 def build():
     pisitools.dosed("avidemux_plugins/ADM_videoFilters6/ass/CMakeLists.txt", "0.19", "1.0")
     shelltools.system("bash ./bootStrap.bash")
