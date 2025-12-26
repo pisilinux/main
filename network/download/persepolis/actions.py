@@ -7,11 +7,16 @@
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
+
+
+
+def setup():
+    mesontools.configure()
 
 
 def build():
-    pythonmodules.compile(pyVer="3")
-    shelltools.system("python3 setup.py build")
+    mesontools.build()
 
 def check():
     pass
@@ -20,6 +25,6 @@ def check():
     #pythonmodules.run("test/run_examples_test.py",pyVer="3")
 
 def install():
-    pythonmodules.install(pyVer="3")
+    mesontools.install()
 
     pisitools.dodoc("LICENSE", "README*")
