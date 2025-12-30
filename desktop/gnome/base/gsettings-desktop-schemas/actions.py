@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import mesontools
 
 def setup():
-    shelltools.system("sed -i -r 's:"(/system):"/org/gnome\1:g' schemas/*.in")
+    shelltools.system("""sed -i -r 's:"(/system):"/org/gnome\1:g' schemas/*.in""")
     mesontools.configure()
 
 def build():
@@ -20,4 +20,5 @@ def build():
 def install():
     mesontools.install()
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README", "MAINTAINERS")
+
 
