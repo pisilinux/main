@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 
-_rubyver="3.2.0"
+_rubyver="3.4.0"
 
 def build():
     shelltools.system("gem build asciidoctor.gemspec")
