@@ -12,7 +12,8 @@ i = ''.join([
     ' -DCMAKE_INSTALL_PREFIX=/usr',
     ' -DCMAKE_INSTALL_LIBDIR=lib',
     ' -DBUILD_SHARED_LIBS=ON',
-    ' -DGLM_TEST_ENABLE=ON -L '
+    ' -DGLM_TEST_ENABLE=ON -L ',
+    ' -DCMAKE_INSTALL_DATAROOTDIR=/usr/lib/cmake '
     ])
 
 def setup():
