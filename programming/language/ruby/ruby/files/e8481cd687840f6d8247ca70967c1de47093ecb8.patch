@@ -1,0 +1,38 @@
+From e8481cd687840f6d8247ca70967c1de47093ecb8 Mon Sep 17 00:00:00 2001
+From: Kazuki Yamaguchi <k@rhe.jp>
+Date: Sun, 5 Oct 2025 19:38:47 +0900
+Subject: [PATCH] ssl: remove OpenSSL::X509::V_FLAG_CRL_CHECK_ALL from the
+ default store
+
+With OpenSSL 3.6.0, it causes nearly every certificate verification to
+fail with the message "certificate verify failed (unable to get
+certificate CRL)" because the CRLs are typically unavailable in the
+default store used by OpenSSL::SSL::SSLContext#set_params.
+
+OpenSSL::X509::V_FLAG_CRL_CHECK_ALL is a flag that extends the CRL
+checking to all certificates in the chain. In OpenSSL < 3.6.0, the flag
+alone has no effect, and OpenSSL::X509::V_FLAG_CRL_CHECK must also be
+set to enable CRL checking.
+
+In OpenSSL 3.6.0, OpenSSL::X509::V_FLAG_CRL_CHECK_ALL now implies
+OpenSSL::X509::V_FLAG_CRL_CHECK. This is inconsistent with the man page
+and may be fixed in a future OpenSSL 3.6.x release, but this flag is not
+needed and should not be set by default.
+
+Fixes https://github.com/ruby/openssl/issues/949
+---
+ lib/openssl/ssl.rb | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/ext/lib/openssl/ssl.rb b/ext/lib/openssl/ssl.rb
+index ea8bb2a18..40740a029 100644
+--- a/ext/lib/openssl/ssl.rb
++++ b/ext/lib/openssl/ssl.rb
+@@ -92,7 +92,6 @@ class SSLContext
+ 
+       DEFAULT_CERT_STORE = OpenSSL::X509::Store.new # :nodoc:
+       DEFAULT_CERT_STORE.set_default_paths
+-      DEFAULT_CERT_STORE.flags = OpenSSL::X509::V_FLAG_CRL_CHECK_ALL
+ 
+       # A callback invoked when DH parameters are required for ephemeral DH key
+       # exchange.
