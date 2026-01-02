@@ -15,6 +15,7 @@ def setup():
                             -DCMAKE_INSTALL_PREFIX=/usr \
                             -DWITH_DAV1D=ON \
                             -DWITH_RAV1E=ON \
+                                -DWITH_OpenJPEG_DECODER=ON \
                             -DWITH_SvtEnc=ON")
 
 def build():
