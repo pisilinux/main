@@ -7,6 +7,8 @@
 from pisi.actionsapi import autotools, get, pisitools, shelltools
 
 def setup():
+    pisitools.dosed("configure.ac", "gpg gpg2", "gpg1 gpg2")
+    pisitools.dosed("configure.ac", "min_gpgme_version=1.0.0", "min_gpgme_version=2.0.0")
     #shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.autoreconf("-fi")
     autotools.configure("--prefix=/usr \
