@@ -27,6 +27,7 @@ def build():
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    pisitools.dobin("src/gpgme-config")
     
     # pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfig.cmake")
     # pisitools.insinto("/usr/lib/cmake/Qgpgme", "lang/qt/src/QGpgmeConfigVersion.cmake")
