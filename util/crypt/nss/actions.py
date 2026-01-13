@@ -9,7 +9,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-WorkDir="%s-%s" % (get.srcNAME(), get.srcVERSION())
+# WorkDir="%s-%s" % (get.srcNAME(), get.srcVERSION())
 pisitools.cflags.add("-fno-strict-aliasing")
 
 def setup():
