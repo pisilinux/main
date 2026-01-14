@@ -1,98 +1,92 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>packagekit</Name>
-        <Homepage>https://www.freedesktop.org/software/PackageKit/</Homepage>
+        <Name>packagekit-qt6</Name>
+        <Homepage>https://github.com/PackageKit/PackageKit-Qt</Homepage>
         <Packager>
-            <Name>Pisi Linux Admins</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Packager>
-        <License>GPLv2</License>
-        <Summary>A system designed to make installation and updates of packages easier.</Summary>
-        <Description>PackageKit is a system designed to make installing and updating software on your computer easier. The primary design goal is to unify all the software graphical tools used in different distributions, and use some of the latest technology like PolicyKit.</Description>
-	    <Archive sha1sum="846670fdb24895f557b455dc8056a6dd0ae1b77e" type="tarxz">http://www.freedesktop.org/software/PackageKit/releases/PackageKit-1.3.3.tar.xz</Archive>
-	      <BuildDependencies>
-	          <Dependency>meson</Dependency>
-	          <Dependency>bash-completion</Dependency>
-	          <Dependency>glib2-devel</Dependency>
-	          <Dependency>gobject-introspection-devel</Dependency>
-	          <Dependency>intltool</Dependency>
-	          <Dependency>polkit-devel</Dependency>
-	          <Dependency>python-setuptools</Dependency>
-	          <Dependency>sqlite-devel</Dependency>
-            <Dependency>vala-devel</Dependency>
-            <Dependency>libxslt-devel</Dependency>
+        <License>LGPLv3</License>
+        <IsA>library</IsA>
+        <Summary>Qt6 bindings for PackageKit</Summary>
+        <Description>PackageKit için Qt6 bağlamaları</Description>
+        <Archive sha1sum="4f5b4e8fdfaaab412bd136e56fab0b9c13a546fe" type="targz">https://github.com/PackageKit/PackageKit-Qt/archive/refs/tags/v1.1.4.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>packagekit-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
         </BuildDependencies>
+        <!--
         <Patches>
-            <Patch level="1">0001-backends-pisi-Drop-system-update-function.patch</Patch>
-            <Patch level="1">0002-backends-pisi-Bring-in-configuration-data.patch</Patch>
+            <Patch>packagekit-qt6.patch</Patch>
+            <Patch level="1">packagekit-qt6.patch</Patch>
         </Patches>
+        -->
     </Source>
 
-	<Package>
-        <Name>packagekit</Name>
+    <Package>
+        <Name>packagekit-qt6</Name>
         <RuntimeDependencies>
-            <Dependency>pisi</Dependency>
-            <Dependency>polkit</Dependency>
-            <Dependency>sqlite</Dependency>
+            <Dependency>qt6-base</Dependency>
+            <Dependency>packagekit</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/var</Path>
-            <Path fileType="data">/etc</Path>
-            <Path fileType="executable">/usr/bin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="executable">/usr/libexec</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
             <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="doc">/usr/share/gtk-doc</Path>
-            <Path fileType="data">/usr/share/bash-completion</Path>
-            <Path fileType="data">/usr/share/dbus-1</Path>
-            <Path fileType="data">/usr/share/PackageKit</Path>
-            <Path fileType="data">/usr/share/polkit-1</Path>
-            <Path fileType="data">/usr/share/vala</Path>
         </Files>
     </Package>
 
     <Package>
-        <Name>packagekit-devel</Name>
-        <Summary>Development files for packagekit</Summary>
+        <Name>packagekit-qt6-devel</Name>
+        <Summary>Development files for packagekit-qt6</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">packagekit</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency>sqlite-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency release="current">packagekit-qt6</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/lib/pkgconfig</Path>
-            <Path fileType="data">/usr/share/gir-1.0</Path>
-            <Path fileType="data">/usr/share/metainfo/org.freedesktop.packagekit.metainfo.xml</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <!--Path fileType="data">/usr/share/vala</Path-->
+            <Path fileType="data">/usr/lib/cmake</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="5">
+            <Date>2026-01-14</Date>
+            <Version>1.1.4</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+        <Update release="4">
+            <Date>2024-12-14</Date>
+            <Version>1.1.2</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="3">
-            <Date>2026-01-13</Date>
-            <Version>1.3.3</Version>
-            <Comment>Version bump and adapt to the new build system</Comment>
-            <Name>Bedirhan KURT</Name>
-            <Email>bedirhan.kurt@outlook.com</Email>
+            <Date>2024-09-17</Date>
+            <Version>1.1.1</Version>
+            <Comment>Rebuild</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="2">
-            <Date>2023-11-06</Date>
-            <Version>1.1.13</Version>
-            <Comment>Version bump.</Comment>
+            <Date>2023-11-18</Date>
+            <Version>1.1.1</Version>
+            <Comment>Rebuild</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
         <Update release="1">
-            <Date>2021-06-05</Date>
-            <Version>1.1.5</Version>
-            <Comment>First release for Pisi Linux</Comment>
-            <Name>Berk Çakar</Name>
-            <Email>berk2238@hotmail.com</Email>
+            <Date>2023-03-31</Date>
+            <Version>1.1.1</Version>
+            <Comment>First release</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
         </Update>
     </History>
 </PISI>
