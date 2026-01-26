@@ -5,11 +5,16 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
     autotools.autoreconf("-vif")
     autotools.configure("--disable-static")
+
+
+    if get.buildTYPE() == "emul32":
+        shelltools.system("sed -i 's/-Werror=/-Wno-error=/g' configure")
     
 def build():
     autotools.make()
