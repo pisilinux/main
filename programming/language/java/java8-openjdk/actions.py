@@ -41,7 +41,7 @@ def setup():
     # shelltools.system("patch -p1 < openjdk-8.402_p06-0004-Fix-misc.-warnings.patch")
 
     autotools.rawConfigure("\
-                            ----disable-tests \
+                            --disable-tests \
                             --disable-Werror \
                             --with-parallel-jobs='%s' \
                             --enable-nss \
