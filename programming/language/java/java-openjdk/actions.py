@@ -45,7 +45,8 @@ def setup():
         --with-boot-jdk="%s" \
         --enable-unlimited-crypto \
         --disable-warnings-as-errors \
-        --with-num-cores="%s"' % (update, cflags, cxxflags, ldflags, jvm_dir, jobs)
+        --with-num-cores="%s" \
+        --with-vendor-name="PisiLinux"' % (update, cflags, cxxflags, ldflags, jvm_dir, jobs)
     )
 
 
@@ -87,7 +88,7 @@ def install():
         pisitools.domove(
             '/usr/share/man/man1/%s' % man_file,
             '/usr/share/man/man1',
-            '%s-openjdk24.0' % man_file.replace('.1', '')
+            '%s-openjdk25.0' % man_file.replace('.1', '')
         )
 
     # Documentations
