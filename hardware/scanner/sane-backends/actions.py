@@ -15,7 +15,7 @@ def setup():
     shelltools.export("SANEI_JPEG", "sanei_jpeg.o")
     shelltools.export("SANEI_JPEG_LO", "sanei_jpeg.lo")
     
-    pisitools.cflags.add("-fPIC -fno-strict-aliasing")
+    pisitools.cflags.add("-std=gnu17 -fPIC -fno-strict-aliasing")
     pisitools.ldflags.add("-pie")
     
     shelltools.echo(".tarball-version", get.srcVERSION())
