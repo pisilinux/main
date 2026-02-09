@@ -43,9 +43,9 @@ def install():
     for cfg in disabled_configs:
         pisitools.remove("/usr/share/fontconfig/conf.avail/%s" % cfg)
 
-    for i in ["fc-cat", "fc-list", "fc-match", "fc-cache"]:
-        pisitools.doman("%s/*.1" % i)
+    # for i in ["fc-cat", "fc-list", "fc-match", "fc-cache"]:
+        # pisitools.doman("%s/*.1" % i)
 
-    pisitools.doman("doc/*.3")
+    # pisitools.doman("doc/*.3")
 
-    pisitools.dodoc("AUTHORS", "COPYING", "README*", "doc/*.txt")
+    pisitools.dodoc("AUTHORS", "COPYING", "README*")
