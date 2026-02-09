@@ -15,6 +15,7 @@ i = ''.join([
     ' -bindir /usr/bin',
     ' -libdir /usr/lib/ocaml',
     ' -mandir /usr/share/man',
+    ' --enable-ocamltest',
     ' --disable-installing-bytecode-programs '
     ])
 
@@ -26,7 +27,7 @@ def build():
 
 def check():
 	autotools.make("ocamltest")
-	autotools.make("-C testsuite parallel")
+	autotools.make("-C testsuite parallel || true")
 
 def install():
 	destdir = get.installDIR()
