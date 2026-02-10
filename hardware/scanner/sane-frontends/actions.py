@@ -6,13 +6,19 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
+
+WorkDir="sane-frontends-%s" % get.srcVERSION()
+
 def setup():
+    pisitools.cflags.add("-std=gnu11")
+    shelltools.system("sed -i 's/isfdtype(fileno(stderr), S_IFSOCK)/0/' sanei/sanei_init_debug.c")
     autotools.configure("--with-gnu-ld")
 
 def build():
-    autotools.make()
+    shelltools.system("make")
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
