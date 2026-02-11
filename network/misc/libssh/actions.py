@@ -13,8 +13,8 @@ from pisi.actionsapi import get
 
 def setup():
     # fix unittest error
-    pisitools.dosed("tests/unittests/torture_misc.c", "cmocka_unit_test\(torture_path_expand_tilde_unix\),", "")
-    pisitools.dosed("tests/unittests/CMakeLists.txt", "torture_config", "")
+    # pisitools.dosed("tests/unittests/torture_misc.c", "cmocka_unit_test\(torture_path_expand_tilde_unix\),", "")
+    # pisitools.dosed("tests/unittests/CMakeLists.txt", "torture_config", "")
 
     shelltools.makedirs("build")
     shelltools.cd("build")
