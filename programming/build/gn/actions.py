@@ -11,10 +11,10 @@ from pisi.actionsapi import get
 
 
 def build():
-    shelltools.cd("build")
-    shelltools.system("python ./gen.py")
+    # shelltools.cd("build")
+    shelltools.system("python3 ./build/gen.py")
     
-    shelltools.cd("..")
+    # shelltools.cd("..")
     shelltools.system("ninja -C out gn")
 
 def install():
