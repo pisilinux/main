@@ -27,7 +27,7 @@ def install():
     shelltools.system("./waf --destdir=%s install" % get.installDIR())
 
     # be compatible with the former jackaudio
-    pisitools.rename("/usr/bin/jack_rec", "jackrec")
+    # pisitools.rename("/usr/bin/jack_rec", "jackrec")
 
     shelltools.chmod("%s/usr/lib/jack/*.so*" % get.installDIR(), 0755)
 
