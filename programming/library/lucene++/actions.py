@@ -14,10 +14,16 @@ i = "-DCMAKE_BUILD_TYPE=Release \
      -DLIB_DESTINATION=/usr/lib \
      -DBUILD_SHARED_LIBS=ON \
      -DENABLE_TEST=OFF \
+	 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+	 -DCMAKE_CXX_FLAGS='-std=c++20 -DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT' \
      -DENABLE_DEMO=OFF \
     "
 
 def setup():
+	shelltools.system("""sed -i \
+    -e 's#SET(LUCENE++_VERSION_REVISION.*#SET(LUCENE++_VERSION_REVISION "5")#' \
+    -e 's#SET(LUCENE++_VERSION_PATCH.*#SET(LUCENE++_VERSION_PATCH "0")#' \
+    CMakeLists.txt""")
 	shelltools.export("CXXFLAGS", "-DBOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
 	shelltools.export("CXXFLAGS", "-lpthread")
 	shelltools.makedirs("build")
@@ -26,7 +32,7 @@ def setup():
 
 def build():
 	shelltools.cd("build")
-	cmaketools.make()
+	cmaketools.make("CMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def install():
 	shelltools.cd("build")
