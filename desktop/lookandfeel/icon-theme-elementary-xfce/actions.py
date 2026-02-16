@@ -9,13 +9,12 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-	autotools.rawConfigure("--prefix=/usr")
+    autotools.rawConfigure("--prefix=/usr")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "LICENSE")
-
+    pisitools.dodoc("AUTHORS", "CONTRIBUTORS", "LICENSE")

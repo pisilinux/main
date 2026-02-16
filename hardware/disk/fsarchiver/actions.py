@@ -7,7 +7,7 @@
 from pisi.actionsapi import pisitools, autotools, get
 
 def setup():
-    autotools.configure()
+    autotools.configure("--prefix=/usr")
 
 def build():
     autotools.make()
@@ -15,4 +15,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("ChangeLog", "THANKS")
+    pisitools.dodoc("COPYING", "THANKS")
