@@ -18,6 +18,9 @@ def setup():
                --disable-silent-rules"
                
     if get.buildTYPE() == "_emul32":
+
+        shelltools.system("patch -p1 < icu-77.1-invalid-malloc.patch")
+
         shelltools.export("CC", "%s -m32" % get.CC())
         shelltools.export("CXX", "%s -m32" % get.CXX())
         
