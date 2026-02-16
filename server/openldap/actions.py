@@ -110,7 +110,7 @@ def install():
     pisitools.dodir("/run/openldap")
     pisitools.dodir("/etc/openldap/ssl")
 
-    pisitools.dodoc("ANNOUNCEMENT", "CHANGES", "COPYRIGHT", "README", "LICENSE")
+    pisitools.dodoc("ANNOUNCEMENT", "CHANGES", "COPYRIGHT", "LICENSE")
 
     pisitools.remove("/usr/lib/*.la")
     pisitools.remove("/usr/lib/openldap/*.la")
