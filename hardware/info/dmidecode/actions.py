@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
@@ -12,6 +12,6 @@ def build():
     autotools.make("CC=%s CFLAGS='%s'" % (get.CC(), get.CFLAGS()))
 
 def install():
-    autotools.rawInstall("DESTDIR=%s prefix=/%s install-bin install-man" % (get.installDIR(), get.defaultprefixDIR()))
+    autotools.rawInstall("DESTDIR=%s prefix=/%s" % (get.installDIR(), get.defaultprefixDIR()))
 
-    pisitools.dodoc("AUTHORS", "LICENSE", "README")
+    pisitools.dodoc("AUTHORS", "LICENSE", "NEWS")
