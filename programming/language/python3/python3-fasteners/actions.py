@@ -4,10 +4,12 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import python3modules
+from pisi.actionsapi import python3modules, pisitools
 
 def build():
-	python3modules.compile()
+    python3modules.compile()
 
 def install():
-	python3modules.install()
+    python3modules.install()
+
+    pisitools.dodoc("LICENSE")
