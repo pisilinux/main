@@ -9,7 +9,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr -G Ninja -L")
+    cmaketools.configure("-B_build -DCMAKE_INSTALL_PREFIX=/usr -G Ninja -L")
 
 def build():
     mesontools.build()
