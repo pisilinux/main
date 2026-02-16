@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import pythonmodules, pisitools
 
@@ -12,4 +12,4 @@ def build():
 def install():
     pythonmodules.install(pyVer="3")
 
-    pisitools.dodoc("AUTHORS.txt", "NEWS.md")
+    pisitools.dodoc("AUTHORS.txt", "COPYING.txt")
