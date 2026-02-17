@@ -33,6 +33,7 @@ def setup():
 
     # Disable jumbo build https://bugreports.qt.io/browse/QTBUG-88657 gcc10
     shelltools.system("sed -i 's|use_jumbo_build=true|use_jumbo_build=false|' -i src/buildtools/config/common.pri")
+    shelltools.system("sed -i '1i#include <stdint.h>' src/3rdparty/chromium/base/trace_event/trace_arguments.h")
 
     #shelltools.system("sh ./qtwebengine-release.sh")
     #shelltools.system("git submodule init")
