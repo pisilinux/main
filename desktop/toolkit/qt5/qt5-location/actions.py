@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     #shelltools.system("patch  -R -p1 < 3eaed3d6.diff")
+    pisitools.dosed(".qmake.conf", "5.15.18", "5.15.16")
     qt5.configure()
 
 def build():
