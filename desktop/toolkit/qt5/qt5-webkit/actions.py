@@ -12,6 +12,7 @@ from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("sed -i '16i#include <cstdint>' Source/ThirdParty/woff2/include/woff2/output.h")
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
