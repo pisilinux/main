@@ -40,7 +40,6 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
     shelltools.system("qmake .. -- -proprietary-codecs \
-                   -system-ffmpeg \
                    -system-webp \
                    -system-opus \
                    -spellchecker \
