@@ -9,10 +9,20 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import qt5
 from pisi.actionsapi import get
+import os
 
 def setup():
     #shelltools.system("patch  -R -p1 < 3eaed3d6.diff")
     pisitools.dosed(".qmake.conf", "5.15.18", "5.15.16")
+
+    if not os.path.exists(".git"):
+        shelltools.system("git init")
+        shelltools.system("git add .")
+
+    shelltools.system("git submodule init")
+    shelltools.system('git submodule set-url src/3rdparty/mapbox-gl-native "%s/qtlocation-mapboxgl"' % get.workDIR())
+    shelltools.system("git -c protocol.file.allow=always submodule update")
+
     qt5.configure()
 
 def build():
