@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>sdl3-ttf</Name>
+        <Homepage>https://github.com/libsdl-org/SDL_ttf</Homepage>
+        <Packager>
+            <Name>Mathias Freire</Name>
+            <Email>mathiasfreire45@gmail.com</Email>
+        </Packager>
+        <License>Zlib</License>
+        <IsA>library</IsA>
+        <Summary>TrueType font support for SDL2</Summary>
+        <Description>SDL2_ttf is a TrueType font rendering library that is used with the SDL library, and almost as portable.</Description>
+        <Archive sha1sum="ec84ba35a781253d35f57f73e894868d418f3934" type="targz">https://github.com/libsdl-org/SDL_ttf/releases/download/release-3.2.2/SDL3_ttf-3.2.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libsdl3-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>sdl3-ttf</Name>
+        <RuntimeDependencies>
+            <Dependency>libsdl3</Dependency>
+            <Dependency>harfbuzz</Dependency>
+            <Dependency>freetype</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="doc">/usr/share/licenses/SDL3_ttf</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>sdl3-ttf-devel</Name>
+        <Summary>Development files for sdl3-ttf</Summary>
+        <RuntimeDependencies>
+            <Dependency>libsdl3-devel</Dependency>
+            <Dependency release="current">sdl3-ttf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib32/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>sdl3-ttf-32bit</Name>
+        <PartOf>emul32</PartOf>
+        <Summary>32-bit shared libraries for sdl3-ttf</Summary>
+        <BuildType>emul32</BuildType>
+        <BuildDependencies>
+            <Dependency>libX11-32bit</Dependency>
+            <Dependency>libsdl3-32bit</Dependency>
+            <Dependency>freetype-32bit</Dependency>
+        </BuildDependencies>
+        <RuntimeDependencies>
+            <Dependency>libpng-32bit</Dependency>
+            <Dependency>libsdl3-32bit</Dependency>
+            <Dependency>harfbuzz-32bit</Dependency>
+            <Dependency>freetype-32bit</Dependency>
+            <Dependency release="current">sdl3-ttf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib32/</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-02-18</Date>
+            <Version>3.2.2</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
