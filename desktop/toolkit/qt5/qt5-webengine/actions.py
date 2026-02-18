@@ -36,6 +36,9 @@ def setup():
     shelltools.system("sed -i '1i#include <stdint.h>' src/3rdparty/chromium/base/trace_event/trace_arguments.h")
     shelltools.system("sed -i '1s/^/#include <stdint.h>\n/' src/3rdparty/chromium/cc/input/main_thread_scrolling_reason.h")
 
+    shelltools.system("sed -i '1s/^/#include <stdint.h>\n/' src/3rdparty/chromium/cc/metrics/dropped_frame_counter.h")
+    shelltools.system("sed -i '1s/^/#include <stdint.h>\n/' src/3rdparty/chromium/cc/input/snap_selection_strategy.h")
+
     #shelltools.system("sh ./qtwebengine-release.sh")
     #shelltools.system("git submodule init")
     #shelltools.system("git submodule update")
