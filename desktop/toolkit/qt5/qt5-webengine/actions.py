@@ -10,47 +10,35 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import qt5
 from pisi.actionsapi import get
 
+
 def setup():
+    shelltools.cd("%s" % get.workDIR())
+    shelltools.move("qtwebengine-5*", "qt5-webengine-%s" % get.srcVERSION())
+
+    shelltools.cd("qt5-webengine-%s" % get.srcVERSION())
+
+    shelltools.move("../qtwebengine-chromium-87-based/ninja", "%s/qt5-webengine-5.15.16/src/3rdparty" % get.workDIR())
+    shelltools.move("../qtwebengine-chromium-87-based/gn", "%s/qt5-webengine-5.15.16/src/3rdparty" % get.workDIR())
+    shelltools.move("../qtwebengine-chromium-87-based/chromium", "%s/qt5-webengine-5.15.16/src/3rdparty" % get.workDIR())
+
     shelltools.system("mkdir .git")
     pisitools.dosed(".qmake.conf", "5.15.19", "5.15.16")
 
-    #shelltools.unlinkDir("src/3rdparty")
-    #shelltools.move("../qtwebengine-chromium-*", "src/3rdparty")
-    #shelltools.system("mkdir src/3rdparty/chromium/.git")
-    #shelltools.system("patch -p1 < qtwebengine-5.15.7-build_fixes-1.patch")
     # shelltools.system("patch -p1 < qtwebengine-everywhere-src-5.15.5-TRUE.patch")
 
     shelltools.system("sed -i 's/NINJAJOBS/NINJA_JOBS/' src/core/gn_run.pro")
 
-    #shelltools.copy("qtwebengine-release.sh", "%s/qtwebengine-release.sh" % get.workDIR())
-    #shelltools.cd("%s" % get.workDIR())
-
-    #shelltools.system("sh ./qtwebengine-release.sh")
-
-    #shelltools.cd("qtwebengine-everywhere-opensource-src-%s" % get.srcVERSION())
-
-
 
     # Disable jumbo build https://bugreports.qt.io/browse/QTBUG-88657 gcc10
     shelltools.system("sed -i 's|use_jumbo_build=true|use_jumbo_build=false|' -i src/buildtools/config/common.pri")
+
     shelltools.system("sed -i '1i#include <stdint.h>' src/3rdparty/chromium/base/trace_event/trace_arguments.h")
-    shelltools.system("sed -i '1s/^/#include <stdint.h>\n/' src/3rdparty/chromium/cc/input/main_thread_scrolling_reason.h")
+    shelltools.system("sed -i '1i#include <stdint.h>' src/3rdparty/chromium/cc/input/main_thread_scrolling_reason.h")
+    shelltools.system("sed -i '1i#include <stdint.h>' src/3rdparty/chromium/cc/metrics/dropped_frame_counter.h")
+    shelltools.system("sed -i '1i#include <stdint.h>' src/3rdparty/chromium/cc/input/snap_selection_strategy.h")
 
-    shelltools.system("sed -i '1s/^/#include <stdint.h>\n/' src/3rdparty/chromium/cc/metrics/dropped_frame_counter.h")
-    shelltools.system("sed -i '1s/^/#include <stdint.h>\n/' src/3rdparty/chromium/cc/input/snap_selection_strategy.h")
-
-    #shelltools.system("sh ./qtwebengine-release.sh")
-    #shelltools.system("git submodule init")
-    #shelltools.system("git submodule update")
-    
     shelltools.makedirs("build")
     shelltools.cd("build")
-    #shelltools.export("QT5LINK", "/usr/lib/qt5/bin")
-    #shelltools.export("QT5DIR", "/usr/lib/qt5")
-    #shelltools.export("CFLAGS", "%s -I/usr/lib/sqlite3.16.2" % get.CFLAGS())
-    #shelltools.system("qmake WEBENGINE_CONFIG+=use_proprietary_codecs WEBENGINE_CONFIG+=use_system_icu WEBENGINE_CONFIG+=use_system_protobuf WEBENGINE_CONFIG+=use_system_ffmpeg qtwebengine.pro")
-    #pisitools.ldflags.add("-Wl,--no-keep-memory ")
-    #shelltools.export("NINJAJOBS", "-j 4")
     shelltools.system("qmake .. -- -proprietary-codecs \
                    -system-ffmpeg \
                    -system-webp \
