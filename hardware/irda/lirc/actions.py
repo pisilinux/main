@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 def setup():
     autotools.autoreconf("-fi")
-    autotools.configure("--localstatedir=/run \
+    autotools.configure("--localstatedir=/var \
                          --with-systemdsystemunitdir=no \
                          --enable-shared \
                          --disable-static \
@@ -41,6 +41,6 @@ def install():
     pisitools.insinto("/%s/lirc/contrib" % get.docDIR(), "contrib/*")
     pisitools.insinto("/lib/udev/rules.d", "contrib/*.rules", "60-lirc.rules")
     
-    pisitools.domove("/run/lib/lirc/*", "/var/lib/lirc")
-    pisitools.removeDir("/run/lib")
+    # pisitools.domove("/run/lib/lirc/*", "/var/lib/lirc")
+    # pisitools.removeDir("/run/lib")
 
