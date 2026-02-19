@@ -17,6 +17,7 @@ def setup():
         -DCMAKE_INSTALL_PREFIX='/usr' \
         -DCMAKE_INSTALL_LIBDIR='lib' \
         -DBUILD_SHARED_LIBS=ON \
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc/dcmtk \
         -DBUILD_STATIC_LIBS=OFF", sourceDir="..")
 
 def build():
@@ -26,8 +27,8 @@ def install():
     shelltools.cd("build")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.domove("/usr/etc/dcmtk/", "/etc")
-    pisitools.removeDir("/usr/etc")
+    # pisitools.domove("/usr/etc/dcmtk/", "/etc")
+    # pisitools.removeDir("/usr/etc")
 
     # pisitools.dodoc("Copyright", "README")
 
