@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                           -DWITH_GTK=3")
 def build():
     cmaketools.make()
