@@ -13,10 +13,20 @@ from pisi.actionsapi import texlivemodules
 
 import os
 
-WorkDir = "."
-buildDir = 'texlive-20240312-source/build'
+# WorkDir = "."
+# buildDir = 'texlive-20250308-source/build'
+
+buildDir = 'build'
 
 def setup():
+    shelltools.export("CFLAGS", " -std=gnu17")
+    shelltools.system("sed -i '/AC_SEARCH_LIBS/a KPSE_KPATHSEA_FLAGS' texk/bibtex-x/configure.ac")
+    shelltools.system("sed -i s/SELFAUTOPARENT/TEXMFROOT/ texk/tex4htk/t4ht.c")
+
+    shelltools.cd("texk/bibtex-x")
+    shelltools.system("autoreconf")
+    shelltools.cd("../..")
+
     shelltools.makedirs(buildDir)
     shelltools.cd(buildDir)
     shelltools.sym("../configure", "configure")
@@ -58,7 +68,7 @@ def install():
     autotools.rawInstall("prefix=/usr DESTDIR=%s" % get.installDIR())
     shelltools.system("pwd")
     #install biber
-    pisitools.dobin("../../biber-2.20/bin/biber")
+    pisitools.dobin("../../biber-2.21/bin/biber")
 
     #pisitools.dodir("/usr/share/tlpkg/TeXLive")
     #shelltools.move("%s/source/utils/biber/TeXLive/*.pm" % get.workDIR(), "%s/usr/share/tlpkg/TeXLive" % get.installDIR())
