@@ -52,6 +52,9 @@ def install():
         pisitools.dosed("%s/usr/lib32/cmake/SDL2/*.cmake" % get.installDIR(), "emul32", "usr")
         pisitools.dosed("%s/usr/lib32/pkgconfig/*.pc" % get.installDIR(), "emul32", "usr")
         pisitools.removeDir("/emul32")
+
+        pisitools.dosym("/usr/lib/pkgconfig/sdl2-compat.pc", "/usr/lib/pkgconfig/sdl2.pc")
+        pisitools.dosym("/usr/lib32/pkgconfig/sdl2-compat.pc", "/usr/lib32/pkgconfig/sdl2.pc")
         return
 
     shelltools.cd("..")
