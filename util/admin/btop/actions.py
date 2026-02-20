@@ -7,6 +7,7 @@
 from pisi.actionsapi import autotools, get
 
 j = ''.join([
+    ' BUILD_TYPE=RelWithDebInfo',
     ' VERBOSE=true',
     ' QUIET=true',
     ' STRIP=true',
