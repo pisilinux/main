@@ -16,6 +16,7 @@ def setup():
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
                           -DBUILD_SHARED_LIBS=ON \
                           -DBUILD_STATIC_LIBS=OFF \
+                          -DUSE_BOOST=OFF \
                           -DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
 
 def build():
