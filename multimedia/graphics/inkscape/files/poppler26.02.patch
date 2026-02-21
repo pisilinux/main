@@ -1,0 +1,138 @@
+diff -up inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/pdf-parser.cpp.omv~ inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/pdf-parser.cpp
+--- inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/pdf-parser.cpp.omv~	2026-02-07 15:27:45.476486393 +0100
++++ inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/pdf-parser.cpp	2026-02-07 15:53:11.245328003 +0100
+@@ -653,7 +653,7 @@ void PdfParser::opSetFlat(Object args[],
+ void PdfParser::opSetLineJoin(Object args[], int /*numArgs*/)
+ {
+   builder->beforeStateChange(state);
+-  state->setLineJoin(args[0].getInt());
++  state->setLineJoin((GfxState::LineJoinStyle)args[0].getInt());
+   builder->updateStyle(state);
+ }
+ 
+@@ -661,7 +661,7 @@ void PdfParser::opSetLineJoin(Object arg
+ void PdfParser::opSetLineCap(Object args[], int /*numArgs*/)
+ {
+   builder->beforeStateChange(state);
+-  state->setLineCap(args[0].getInt());
++  state->setLineCap((GfxState::LineCapStyle)args[0].getInt());
+   builder->updateStyle(state);
+ }
+ 
+@@ -1565,7 +1565,9 @@ void PdfParser::doShadingPatternFillFall
+ 
+   // restore graphics state
+   restoreState();
+-  state->setPath(savedPath);
++  state->clearPath();
++  GfxPath *currPath = const_cast<GfxPath*>(state->getPath());
++  currPath->append(savedPath);
+ }
+ 
+ // TODO not good that numArgs is ignored but args[] is used:
+@@ -1626,7 +1628,9 @@ void PdfParser::opShFill(Object args[],
+   // restore graphics state
+   if (savedState) {
+     restoreState();
+-    state->setPath(savedPath);
++    state->clearPath();
++    GfxPath *currPath = const_cast<GfxPath*>(state->getPath());
++    currPath->append(savedPath);
+   }
+ }
+ 
+@@ -2213,7 +2217,7 @@ void PdfParser::opShowSpaceText(Object a
+ {
+   Array *a = nullptr;
+   Object obj;
+-  int wMode = 0; // Writing mode (horizontal/vertical).
++  GfxFont::WritingMode wMode = GfxFont::WritingMode::Horizontal; // Writing mode (horizontal/vertical).
+ 
+   if (!state->getFont()) {
+     error(errSyntaxError, getPos(), "No font in show/space");
+@@ -2227,7 +2231,7 @@ void PdfParser::opShowSpaceText(Object a
+     if (obj.isNum()) {
+       // this uses the absolute value of the font size to match
+       // Acrobat's behavior
+-      if (wMode) {
++      if (wMode != GfxFont::WritingMode::Horizontal) {
+ 	state->textShift(0, -obj.getNum() * 0.001 *
+ 			    fabs(state->getFontSize()));
+       } else {
+@@ -2254,7 +2258,7 @@ void PdfParser::doShowText(const GooStri
+ void PdfParser::doShowText(GooString *s) {
+ #endif
+     auto font = state->getFont();
+-    int wMode = font->getWMode(); // Vertical/Horizontal/Invalid
++    GfxFont::WritingMode wMode = font->getWMode(); // Vertical/Horizontal/Invalid
+ 
+     builder->beginString(state, get_goostring_length(*s));
+ 
+@@ -2289,7 +2293,7 @@ void PdfParser::doShowText(GooString *s)
+         auto ax = dx;
+         auto ay = dy;
+ 
+-        if (wMode != 0) {
++        if (wMode != GfxFont::WritingMode::Horizontal) {
+             // Vertical text (or invalid value).
+             dy += state->getCharSpace();
+             if (n == 1 && *p == ' ') {
+@@ -2964,7 +2968,7 @@ Stream *PdfParser::buildImageStream() {
+   // make stream
+ #if defined(POPPLER_NEW_OBJECT_API)
+   str = new EmbedStream(parser->getStream(), dict.copy(), gFalse, 0);
+-  str = str->addFilters(dict.getDict());
++  str = str->addFilters(std::unique_ptr<Stream>(str), dict.getDict()).release();
+ #else
+   str = new EmbedStream(parser->getStream(), &dict, gFalse, 0);
+   str = str->addFilters(&dict);
+@@ -3138,7 +3142,7 @@ void PdfParser::loadOptionalContentLayer
+             // Normally we'd use poppler optContentIsVisible, but these dict
+             // objects don't retain their references so can't be used directly.
+             for (auto &[ref, ocg] : ocgs->getOCGs()) {
+-                if (ocg->getName()->cmp(label) == 0)
++                if (ocg->getName()->toStr() == label)
+                     visible = ocg->getState() == OptionalContentGroup::On;
+             }
+             builder->addOptionalGroup(dict->getKey(j), label, visible);
+diff -up inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/svg-builder.cpp.omv~ inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/svg-builder.cpp
+--- inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/svg-builder.cpp.omv~	2026-02-07 15:23:57.471761629 +0100
++++ inkscape-1.4.3_2025-12-25_0d15f75042/src/extension/internal/pdfinput/svg-builder.cpp	2026-02-07 15:26:41.717103687 +0100
+@@ -1386,7 +1386,7 @@ void SvgBuilder::updateFont(GfxState *st
+     sp_repr_css_set_property(_css_font, "font-variant", "normal");
+ 
+     // Writing mode
+-    if ( font->getWMode() == 0 ) {
++    if ( font->getWMode() == GfxFont::WritingMode::Horizontal ) {
+         sp_repr_css_set_property(_css_font, "writing-mode", "lr");
+     } else {
+         sp_repr_css_set_property(_css_font, "writing-mode", "tb");
+@@ -1398,7 +1398,7 @@ void SvgBuilder::updateFont(GfxState *st
+  */
+ void SvgBuilder::updateTextShift(GfxState *state, double shift) {
+     double shift_value = -shift * 0.001 * fabs(state->getFontSize());
+-    if (state->getFont()->getWMode()) {
++    if (state->getFont()->getWMode() != GfxFont::WritingMode::Horizontal) {
+         _text_position[1] += shift_value;
+     } else {
+         _text_position[0] += shift_value;
+@@ -1452,7 +1452,7 @@ Inkscape::XML::Node* SvgBuilder::_flushT
+ 
+     // Text direction is a property of the <text> element.
+     auto font = state->getFont();
+-    if (font->getWMode() == 1) {
++    if (font->getWMode() == GfxFont::WritingMode::Vertical) {
+         // Only set if vertical.
+         auto css_text = sp_repr_css_attr_new();
+         sp_repr_css_set_property(css_text, "writing-mode", "tb");
+@@ -1546,8 +1546,8 @@ Inkscape::XML::Node* SvgBuilder::_flushT
+         bool output_tspan =
+             next_it == _glyphs.end() ||
+             next_it->style_changed   ||
+-            (writing_mode == 0 && std::abs(glyph.text_position[1] - next_it->text_position[1]) > 0.1) ||
+-            (writing_mode == 1 && std::abs(glyph.text_position[0] - next_it->text_position[0]) > 0.1);
++            (writing_mode == GfxFont::WritingMode::Horizontal && std::abs(glyph.text_position[1] - next_it->text_position[1]) > 0.1) ||
++            (writing_mode == GfxFont::WritingMode::Vertical && std::abs(glyph.text_position[0] - next_it->text_position[0]) > 0.1);
+ 
+         if (output_tspan) {
+ 
