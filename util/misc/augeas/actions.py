@@ -11,14 +11,14 @@ from pisi.actionsapi import get
 
 j = ''.join([
     ' --prefix=/usr',
-    ' --with-pdfdocs=no',
+    ' --without-pdfdoc',
     ' --with-threads=posix',
     ' --without-selinux',
     ' --disable-static '
     ])
 
 def setup():
-    shelltools.system("sh ./autogen.sh")
+    # shelltools.system("sh ./autogen.sh")
     autotools.configure(j)
 
 def build():
