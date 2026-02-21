@@ -1,0 +1,48 @@
+diff --git a/src/extension/internal/pdfinput/pdf-input.cpp b/src/extension/internal/pdfinput/pdf-input.cpp
+index 89d90ff0fef0c32b4f242c548fdfc57b872b911b..bba8633e180bfb382f965aa95a2330a3c6f06100 100644
+--- a/src/extension/internal/pdfinput/pdf-input.cpp
++++ b/src/extension/internal/pdfinput/pdf-input.cpp
+@@ -32,6 +32,7 @@
+ #include <poppler/glib/poppler.h>
+ #include <poppler/glib/poppler-document.h>
+ #include <poppler/glib/poppler-page.h>
++#include <poppler/goo/gmem.h>
+ #endif
+ 
+ #include <gdkmm/general.h>
+diff --git a/src/extension/internal/pdfinput/svg-builder.cpp b/src/extension/internal/pdfinput/svg-builder.cpp
+index 1b15b425b1b2d0dcd39b319277067c12fed4816b..e1de2661111cc8e9dcf16181261315465c35e262 100644
+--- a/src/extension/internal/pdfinput/svg-builder.cpp
++++ b/src/extension/internal/pdfinput/svg-builder.cpp
+@@ -29,6 +29,7 @@
+ #include <poppler/GfxState.h>
+ #include <poppler/Page.h>
+ #include <poppler/Stream.h>
++#include <poppler/goo/gmem.h>
+ 
+ #ifdef _WIN32
+ #undef near
+@@ -2145,7 +2146,11 @@ Inkscape::XML::Node *SvgBuilder::_createImage(Stream *str, int width, int height
+         } else {
+             image_stream = new ImageStream(str, width, 1, 1);
+         }
++#if POPPLER_CHECK_VERSION(26, 0, 0)
++        image_stream->rewind();
++#else
+         image_stream->reset();
++#endif
+ 
+         // Convert grayscale values
+         unsigned char *buffer = new unsigned char[width];
+@@ -2171,7 +2176,11 @@ Inkscape::XML::Node *SvgBuilder::_createImage(Stream *str, int width, int height
+         image_stream = new ImageStream(str, width,
+                                        color_map->getNumPixelComps(),
+                                        color_map->getBits());
++#if POPPLER_CHECK_VERSION(26, 0, 0)
++        image_stream->rewind();
++#else
+         image_stream->reset();
++#endif
+ 
+         // Convert RGB values
+         unsigned int *buffer = new unsigned int[width];
