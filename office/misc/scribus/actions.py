@@ -30,6 +30,8 @@ def build():
 def install():
     shelltools.cd("build")
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+
+    pisitools.domove("/usr/license", "/usr/share/doc/scribus")
     
     shelltools.cd("..")
     pisitools.insinto("/usr/share/applications", "scribus.desktop")
