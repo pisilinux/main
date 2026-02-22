@@ -15,6 +15,7 @@ def setup():
     
     cmaketools.configure("-B build -DWITH_PODOFO=ON \
                           -DWANT_HUNSPELL=ON \
+                          -DWANT_HEADERINSTALL=OFF \
                           -DWANT_DISTROBUILD=YES \
                           -DWANT_GRAPHICSMAGICK=ON \
                           -DWANT_CPP17=ON \
