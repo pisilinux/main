@@ -74,6 +74,7 @@ def setup():
                         --with-system-gpgmepp             \
                         --without-system-dicts            \
                         --without-fonts                   \
+                        --without-system-afdko            \
                         --without-system-altlinuxhyph     \
                         --without-system-beanshell        \
                         --without-system-box2d            \
