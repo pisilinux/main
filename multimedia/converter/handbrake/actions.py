@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 J = ''.join([
     ' --prefix=/usr',
     ' --disable-rpath',
-    ' --disable-gtk4',
+    ' --enable-gtk4',
     ' --disable-silent-rules',
     ' --disable-update-checks',
     ' --enable-x265',
@@ -25,7 +25,7 @@ def setup():
 	shelltools.export("CXXFLAGS", get.CXXFLAGS())
 	shelltools.export("CFLAGS", get.CFLAGS())
 	shelltools.cd("gtk")
-	autotools.autoreconf("-fiv")
+	# autotools.autoreconf("-fiv")
 	shelltools.cd("..")
 	autotools.rawConfigure("--force %s" % J)
 
