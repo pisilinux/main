@@ -66,7 +66,6 @@ def install():
                 "monitor-bluetooth",
                 "opp-client",
                 "pbap-client",
-                "sap_client.py",
                 "simple-agent",
                 "simple-endpoint",
                 "simple-player",
@@ -74,15 +73,18 @@ def install():
                 "test-device",
                 "test-discovery",
                 "test-gatt-profile",
-                "test-health",
-                "test-health-sink",
                 "test-hfp",
                 "test-manager",
                 "test-nap",
                 "test-network",
                 "test-profile",
-                "test-sap-server"]:
+                ]:
         pisitools.dobin("test/%s" % i)
+                # "test-sap-server"
+                # "test-health-sink",
+                # "test-health",
+                # "sap_client.py",
+
    # for i in 
       #  pisitools.dodoc("doc/%s" % i)
     # Install documents
