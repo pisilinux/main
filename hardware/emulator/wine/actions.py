@@ -44,12 +44,14 @@ def setup():
 
     if get.buildTYPE() == "emul32":
         shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig") 
+        shelltools.export("CC", "gcc -m32")
+        shelltools.export("CXX", "g++ -m32")
         options += " --with-wine64=%s/work/wine-%s/build-wine \
-                     --libdir=/usr/lib32 \
+                     --libdir=/usr/lib \
                    " % (get.pkgDIR(), get.srcVERSION())
                    
-        shelltools.system("mkdir build-wine")
-        shelltools.cd("build-wine")
+        shelltools.system("mkdir build-wine-32")
+        shelltools.cd("build-wine-32")
         shelltools.system(". ../configure %s" %options)
         
     elif get.ARCH() == "x86_64":
@@ -63,18 +65,27 @@ def setup():
 
 
 def build():
-    shelltools.cd("build-wine")
-    autotools.make()
+    if not get.buildTYPE() == "emul32":
+        shelltools.cd("build-wine")
+        autotools.make()
+
+    if get.buildTYPE() == "emul32":
+        shelltools.cd("build-wine-32")
+        autotools.make()
 
 def install():
     # We need especially specify libdir and dlldir prefixes. Otherwise the
     # 32bit parts overwrite the 64bit files under /usr/lib
     
-    shelltools.cd("build-wine")
+    # shelltools.cd("build-wine")
 
     if get.buildTYPE() == "emul32":
-        autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib32 dlldir=%s/usr/lib32/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
+        shelltools.cd("build-wine-32")
+        # autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib32 dlldir=%s/usr/lib32/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
+        autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
+
     else:
+        shelltools.cd("build-wine")
         autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
         
     shelltools.cd("..")
