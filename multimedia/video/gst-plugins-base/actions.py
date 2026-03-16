@@ -43,6 +43,8 @@ def install():
     
     if get.buildTYPE() == "emul32":
         pisitools.removeDir("/usr/bin32")
+        pisitools.remove("/usr/include/GL/glext.h")
+        pisitools.remove("/usr/include/KHR/khrplatform.h")
         return
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "README*")
+    pisitools.dodoc("ChangeLog", "COPYING", "README*")
