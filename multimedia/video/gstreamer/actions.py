@@ -41,4 +41,4 @@ def install():
         pisitools.removeDir("/usr/libexec32")
         return
 
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING*", "NEWS", "README*")
+    pisitools.dodoc("ChangeLog", "COPYING*", "README*")
