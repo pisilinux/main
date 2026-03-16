@@ -15,15 +15,27 @@ def setup():
     mesontools.configure("-Dman=disabled \
                           -Dgstreamer=enabled \
                           -Ddocs=enabled \
-                          -Dsystemd=disabled \
+                          -Dlibsystemd=disabled \
                           -Dbluez5=enabled \
                           -Dpipewire-alsa=enabled \
-                          -D compress-offload=disabled \
+                          -Dcompress-offload=disabled \
                           -Djack=disabled \
                           -Dudevrulesdir=/lib/udev/rules.d \
                           -Dsystemd-user-service=disabled \
                           -Dsession-managers=enabled \
-                          -Dlibcamera=disabled")
+                          -Dlibcamera=disabled \
+                          -Dbluez5-codec-ldac-dec=disabled \
+                          -Dbluez5-plc-spandsp=disabled \
+                          -Donnxruntime=disabled \
+                          -Dbluez5-plc-spandsp=disabled \
+                          -Dsdl2=disabled \
+                          -Dbluez5-codec-lc3plus=disabled \
+                          -Dbluez5-codec-lc3=disabled \
+                          -Dbluez5-codec-ldac=disabled \
+                          -Dsnap=disabled \
+                          -Dlogind=enabled \
+                          -Dlogind-provider=libelogind \
+                          ")
 
 def build():
     mesontools.build()
