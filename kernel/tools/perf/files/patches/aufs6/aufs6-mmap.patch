@@ -2,22 +2,25 @@ SPDX-License-Identifier: GPL-2.0
 aufs6.12 mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index b2539712b80d0..8260694bb133a 100644
+index b2539712b80d0..4ba97a539035c 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
-@@ -16,6 +16,9 @@ obj-y :=	open.o read_write.o file_table.o super.o \
- 		stack.o fs_struct.o statfs.o fs_pin.o nsfs.o \
+@@ -17,6 +17,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
  		fs_types.o fs_context.o fs_parser.o fsopen.o init.o \
  		kernel_read_file.o mnt_idmapping.o remap_range.o pidfs.o
+ 
++# don't move au_mf.o to the bottom of this file, otherwise it will
++# conflict with aufs-kbuild.patch.
 +ifeq (${CONFIG_AUFS_FS},m)
 +obj-y += au_mf.o
 +endif
- 
++
  obj-$(CONFIG_BUFFER_HEAD)	+= buffer.o mpage.o
  obj-$(CONFIG_PROC_FS)		+= proc_namespace.o
+ obj-$(CONFIG_LEGACY_DIRECT_IO)	+= direct-io.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 0000000000000..ee1ff03778b98
+index 0000000000000..aaf6a1f91f719
 --- /dev/null
 +++ b/fs/au_mf.c
 @@ -0,0 +1,60 @@
@@ -32,10 +35,10 @@ index 0000000000000..ee1ff03778b98
 +#if IS_MODULE(CONFIG_AUFS_FS)
 +/*
 + * This au_mf.c (aufs mmapped files) is for external AUFS module only,
-+ * and statically linked to kernel.
++ * and au_mf.o is statically linked to kernel.
 + * See also $srctree/fs/Makefile.
-+ * This linking may seem to be tricky. It is due to support the case when AUFS
-+ * is configured as an external module, eg. VFS calls a function defined in the
++ * This linking may seem tricky. It is due to support the case when AUFS is
++ * configured as an external module, eg. VFS calls a function defined in the
 + * dynamic module.
 + */
 +#else

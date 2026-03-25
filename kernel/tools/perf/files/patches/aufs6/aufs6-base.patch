@@ -101,23 +101,6 @@ index 22dd9dcce7ecc..460791727fd9c 100644
  	if (error)
  		return error;
  
-diff --git a/fs/namespace.c b/fs/namespace.c
-index d26f5e6d2ca35..85739e2d64c00 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -966,6 +966,12 @@ static inline int check_mnt(struct mount *mnt)
- 	return mnt->mnt_ns == current->nsproxy->mnt_ns;
- }
- 
-+/* for aufs, CONFIG_AUFS_BR_FUSE */
-+int is_current_mnt_ns(struct vfsmount *mnt)
-+{
-+	return check_mnt(real_mount(mnt));
-+}
-+
- /*
-  * vfsmount lock must be held for write
-  */
 diff --git a/fs/splice.c b/fs/splice.c
 index 06232d7e505f6..b15fd6073b6d3 100644
 --- a/fs/splice.c
@@ -165,7 +148,7 @@ index 217f7abf2cbfa..0e17b8c23f105 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 70b366b648160..08cfdabb2721f 100644
+index 70b366b648160..05bc01c0f38af 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -10,6 +10,7 @@ struct mnt_namespace;
@@ -176,15 +159,6 @@ index 70b366b648160..08cfdabb2721f 100644
  
  extern struct mnt_namespace *copy_mnt_ns(unsigned long, struct mnt_namespace *,
  		struct user_namespace *, struct fs_struct *);
-@@ -17,6 +18,8 @@ extern void put_mnt_ns(struct mnt_namespace *ns);
- DEFINE_FREE(put_mnt_ns, struct mnt_namespace *, if (!IS_ERR_OR_NULL(_T)) put_mnt_ns(_T))
- extern struct ns_common *from_mnt_ns(struct mnt_namespace *);
- 
-+extern int is_current_mnt_ns(struct vfsmount *mnt);
-+
- extern const struct file_operations proc_mounts_operations;
- extern const struct file_operations proc_mountinfo_operations;
- extern const struct file_operations proc_mountstats_operations;
 diff --git a/include/linux/splice.h b/include/linux/splice.h
 index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
