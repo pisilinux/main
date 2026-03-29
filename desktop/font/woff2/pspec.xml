@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>woff2</Name>
+        <Homepage>https://github.com/google/woff2</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>MIT</License>
+        <Icon>woff2</Icon>
+        <Summary>Encode/decode WOFF2 font format</Summary>
+        <Description>Web Open Font Format 2 reference implementation</Description>
+        <Archive sha1sum="bab4838b248026c968e171a5467b5176caf4e2e5" type="targz">https://github.com/google/woff2/archive/refs/tags/v1.0.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>git</Dependency>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>brotli-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>0001-HACK-Install-binaries.patch</Patch>
+            <Patch>0002-include-woff2-output.h-add-missing-stdint.h-include.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>woff2</Name>
+        <RuntimeDependencies>
+            <Dependency>brotli</Dependency>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/libwoff2dec*</Path>
+            <Path fileType="library">/usr/lib/libwoff2common.so*</Path>
+            <Path fileType="library">/usr/lib/libwoff2enc.so*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>woff2-devel</Name>
+        <Summary>Development files for woff2</Summary>
+        <RuntimeDependencies>
+            <Dependency>brotli-devel</Dependency>
+            <Dependency release="current">woff2</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-03-29</Date>
+            <Version>1.0.2</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
