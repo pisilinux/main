@@ -10,16 +10,16 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 shelltools.export("DISABLE_WARN_OUTSIDE_CONTAINER", "1")
-shelltools.export("AUTO_GOPATH", "1")
-shelltools.export("DOCKER_GITCOMMIT","89c5e8f")
+# shelltools.export("AUTO_GOPATH", "1")
+shelltools.export("DOCKER_GITCOMMIT","f78c987")
 shelltools.export("IAMSTATIC", "false")
-shelltools.export("VERSION", "28.5.2")
+shelltools.export("VERSION", "29.3.1")
 shelltools.export("GOROOT","/usr/lib/go")
 shelltools.export("GO111MODULE","off")
 
 # shelltools.export("GOPATH", "%s/cli-%s" % (get.workDIR(), get.srcVERSION()))
 
-shelltools.export("GOPATH", "%s" % get.workDIR())
+# shelltools.export("GOPATH", "%s" % get.workDIR())
 shelltools.export("CGO_CFLAGS", "-I/usr/include")
 shelltools.export("CGO_LDFLAGS", "-L/usr/lib")
 shelltools.export("DOCKER_BUILDTAGS","seccomp")
@@ -30,7 +30,7 @@ def setup():
     shelltools.cd("%s" % get.workDIR())
     shelltools.move("cli-*", "cli")
     shelltools.cd("%s" % get.workDIR())
-    shelltools.move("moby-*", "engine")
+    shelltools.move("moby-docker-*", "moby-docker")
     shelltools.cd("%s" % get.workDIR())
     shelltools.move("docker-ce-packaging-19.03.13", "packaging")
 
@@ -39,10 +39,36 @@ def setup():
     shelltools.cd("cli/src/github.com/docker")
     shelltools.system("ln -s ../../../../cli . ")
 
+    # shelltools.cd("%s" % get.workDIR())
+    # shelltools.makedirs("moby/github.com/moby/moby")
+    # shelltools.cd("moby/src/github.com/moby")
+    # shelltools.system("ln -s ../../../../../moby . ")
+
 def build():
+    # build
+    # shelltools.cd("%s" % get.workDIR())
+    # shelltools.cd("cli")
+    # shelltools.system("LDFLAGS='' GOPATH=%s/cli ./scripts/build/binary" % get.workDIR())
+    # gopath = "%s/go" % get.workDIR()
+    # shelltools.cd("%s/go" % get.workDIR())
+
+    # shelltools.cd("%s" % get.workDIR())
+    # shelltools.makedirs("%s/src/github.com/docker" % gopath)
+    # shelltools.makedirs("moby/src/github.com/moby")
+    # shelltools.cd("%s/src/github.com/docker" % gopath)
+    # shelltools.system("ln -sf %s/moby docker" % get.workDIR())
+    # shelltools.cd("moby/src/github.com/moby")
+    # shelltools.system("ln -s ../../../../moby . ")
+    # shelltools.cd("moby")
+
     shelltools.cd("%s" % get.workDIR())
-    shelltools.cd("engine")
-    # shelltools.makedirs("github.com/docker/docker")
+
+    shelltools.cd("moby-docker")
+    shelltools.system("mkdir -p .gopath/src/github.com/moby/moby")
+    shelltools.system("ln -sf $(pwd) .gopath/src/github.com/moby/moby/v2")
+
+    shelltools.export("GOPATH", "%s/moby-docker/.gopath" % get.workDIR())
+    # shelltools.makedirs("bundles/github.com/moby/moby/v2/cmd/dockerd")
     # shelltools.system("make VERSION=%s dynbinary-daemon" % get.srcVERSION())
     shelltools.system("hack/make.sh dynbinary")
     # shelltools.system("make.sh dynbinary-daemon")
@@ -58,15 +84,15 @@ def install():
     pisitools.dobin("build/docker*")
 
     shelltools.cd("%s" % get.workDIR())
-    pisitools.dobin("engine/bundles/dynbinary-daemon/*")
+    pisitools.dobin("moby-docker/bundles/dynbinary-daemon/*")
        
     # insert udev rules
-    pisitools.insinto("/lib/udev/rules.d", "engine/contrib/udev/*.rules")
+    # pisitools.insinto("/lib/udev/rules.d", "moby-docker/contrib/udev/*.rules")
 
     #insert contrib in docs
     pisitools.insinto("/usr/share/doc/docker", "cli/contrib")
     
-    pisitools.dobin("engine/contrib/check-config.sh")
+    pisitools.dobin("moby-docker/contrib/check-config.sh")
 
     shelltools.cd("%s/cli" % get.workDIR())
     pisitools.dodoc("VERSION", "README.md","CONTRIBUTING.md")
