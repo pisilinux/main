@@ -1,0 +1,21 @@
+diff -Nuar a/gonullu/docker.py b/gonullu/docker.py
+--- a/gonullu/docker.py	2026-01-18 16:12:23.259038740 +0300
++++ b/gonullu/docker.py	2026-01-18 20:12:38.234980982 +0300
+@@ -29,7 +29,7 @@
+         # containerımızı parametreleri ile çalıştıracağımız fonksiyonumuz.
+         if not self.my_client:
+             # my_client'de çalışan docker process'ini yakalıyorum.
+-            self.my_client = APIClient(base_url='unix://var/run/docker.sock', version='1.35')
++            self.my_client = APIClient(base_url='unix://var/run/docker.sock', version='1.44')
+ 
+         # container'ımızın host configlerini yapalım.
+         self.host_config = self.my_client.create_host_config(mem_limit='%sM' % self.memory_limit, binds=self.binds, security_opt=['seccomp:unconfined'])
+@@ -44,7 +44,7 @@
+                 if self.tmp_status is False:
+                     self.log.information(message=message)
+                     self.tmp_status = True
+-                print('  %s' % line['progress'], end='\r')
++                print('  %s' % line['progressDetail'], end='\r')
+ 
+         if self.tmp_status is True:
+             print('')
