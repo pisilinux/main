@@ -25,16 +25,16 @@ def setup():
     #
     # More info can be obtained here: http://wiki.winehq.org/Wine64
     #shelltools.export("CPPFLAGS", "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0")
-    #shelltools.system("make -C ./wine-staging-%s/patches DESTDIR=$(pwd) install" %get.srcVERSION())    
+    #shelltools.system("make -C ./wine-staging-%s/patches DESTDIR=$(pwd) install" %get.srcVERSION())
     #pisitools.flags.add("-fno-omit-frame-pointer")
     #shelltools.system("sed -i 's|OpenCL/opencl.h|CL/opencl.h|g'  configure*")
-    
+
     autotools.autoreconf("-vif")
     options = "--without-capi \
                --without-oss \
                --without-opencl \
-               --without-gstreamer \
-               --without-hal \
+               --disable-hal \
+               --disable-tests \
                --with-dbus \
                --with-opengl \
                --with-alsa \
@@ -43,17 +43,17 @@ def setup():
                "
 
     if get.buildTYPE() == "emul32":
-        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig") 
-        shelltools.export("CC", "gcc -m32")
-        shelltools.export("CXX", "g++ -m32")
+        shelltools.export("PKG_CONFIG_PATH", "/usr/lib32/pkgconfig")
+        shelltools.export("CC", "gcc")
+        shelltools.export("CXX", "g++")
         options += " --with-wine64=%s/work/wine-%s/build-wine \
                      --libdir=/usr/lib \
                    " % (get.pkgDIR(), get.srcVERSION())
-                   
+
         shelltools.system("mkdir build-wine-32")
         shelltools.cd("build-wine-32")
         shelltools.system(". ../configure %s" %options)
-        
+
     elif get.ARCH() == "x86_64":
         options += " --enable-win64 \
                      --libdir=/usr/lib \
@@ -76,7 +76,7 @@ def build():
 def install():
     # We need especially specify libdir and dlldir prefixes. Otherwise the
     # 32bit parts overwrite the 64bit files under /usr/lib
-    
+
     # shelltools.cd("build-wine")
 
     if get.buildTYPE() == "emul32":
@@ -87,7 +87,7 @@ def install():
     else:
         shelltools.cd("build-wine")
         autotools.install("LDCONFIG=/bin/true UPDATE_DESKTOP_DATABASE=/bin/true prefix=%s/usr libdir=%s/usr/lib dlldir=%s/usr/lib/wine" % (get.installDIR(), get.installDIR(), get.installDIR()))
-        
+
     shelltools.cd("..")
 
     pisitools.dodoc("ANNOUNCE*", "AUTHORS", "COPYING.LIB", "LICENSE*", "README*", "documentation/README-*")

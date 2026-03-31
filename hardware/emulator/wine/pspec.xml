@@ -13,7 +13,7 @@
         <Icon>wine</Icon>
         <Summary>WINE Is Not An Emulator, which lets you run Microsoft Windows applications</Summary>
         <Description>Wine allows running Windows 3.*, Windows 95/98 and Windows NT programs on a i386 (or compatible) machine running X11. It is still alpha level code; don't expect everything to work.</Description>
-        <Archive sha1sum="0141d7e654a0e6f7de3b59dc21dafc6f909dadac" type="tarxz">https://dl.winehq.org/wine/source/10.x/wine-10.20.tar.xz</Archive>
+        <Archive sha1sum="8b4786a787ddb36b64bf2ec069f24d9ba0c9c973" type="tarxz">https://dl.winehq.org/wine/source/11.x/wine-11.5.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>git</Dependency>
             <Dependency>mit-kerberos-devel</Dependency>
@@ -88,16 +88,24 @@
             <Dependency>compiler-rt</Dependency>
             <Dependency>lldb-devel</Dependency>
             <Dependency>lld-devel</Dependency>
+            <Dependency>libXpm-devel</Dependency>
+            <Dependency>flex</Dependency>
+            <Dependency>autoconf</Dependency>
+            <Dependency>perl</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
         </BuildDependencies>
-        
+
         <Patches>
+<!--             <Patch>0001-ntdll-Support-x86_64-syscall-emulation.patch</Patch> -->
+            <Patch>rpath.patch</Patch>
             <!--  patches -->
 <!--             <Patch level="1">wine-1.9.3-gcc-5_3_0-disable-force-alignment.patch</Patch> -->
 <!--             <Patch level="1">gcc_erorr.patch</Patch> -->
-            <Patch level="1">0001-programs-winhlp32-Use-noyywrap-for-macro.lex.l-and-p.patch</Patch>
+<!--             <Patch level="1">0001-programs-winhlp32-Use-noyywrap-for-macro.lex.l-and-p.patch</Patch> -->
             <!-- Use XDG_DOCUMENTS_DIR for "My Documents" -->
         </Patches>
-        
+
     </Source>
 
     <Package>
@@ -107,6 +115,7 @@
             <Dependency version="current">wine-32bit</Dependency>
             <Dependency version="current">winetricks</Dependency>
             <Dependency>lcms2</Dependency>
+            <Dependency>dosbox</Dependency>
             <Dependency>libX11</Dependency>
             <Dependency>libSM</Dependency>
             <Dependency>vkd3d</Dependency>
@@ -149,6 +158,7 @@
             <Dependency>wayland-client</Dependency>
             <Dependency>pcsc-lite</Dependency>
             <Dependency>libxkbcommon</Dependency>
+            <Dependency>glib2</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="data">/etc/xdg</Path>
@@ -235,6 +245,7 @@
         <Summary>32-bit shared libraries for wine</Summary>
         <BuildType>emul32</BuildType>
         <BuildDependencies>
+            <Dependency>gcc</Dependency>
             <Dependency>gsm-32bit</Dependency>
             <Dependency>zlib-32bit</Dependency>
             <Dependency>glib2-32bit</Dependency>
@@ -292,6 +303,7 @@
             <Dependency>mesa-glu-32bit</Dependency>
             <Dependency>openldap-32bit</Dependency>
             <Dependency>gsm-32bit</Dependency>
+            <Dependency>glib2-32bit</Dependency>
             <Dependency>eudev-32bit</Dependency>
             <Dependency>libusb-32bit</Dependency>
             <Dependency>cups-32bit</Dependency>
@@ -317,6 +329,7 @@
             <Dependency>libXcomposite-32bit</Dependency>
             <Dependency>libjpeg-turbo-32bit</Dependency>
             <Dependency>pulseaudio-libs-32bit</Dependency>
+            <Dependency>gst-plugins-base-32bit</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib32/libwine.so*</Path>
@@ -332,7 +345,7 @@
     <History>
         <Update release="26">
             <Date>2026-03-07</Date>
-            <Version>10.20</Version>
+            <Version>11.5</Version>
             <Comment>Version bump.</Comment>
             <Name>Pisi Linux Community</Name>
             <Email>admin@pisilinux.org</Email>
