@@ -20,6 +20,6 @@ def build():
 
 def install():
     autotools.install()
-    pisitools.dodoc("AUTHORS", "COPY*", "NEWS", "README")
+    pisitools.dodoc("COPY*", "README")
     pisitools.dodoc("doc/*")
     pisitools.remove("/usr/share/doc/libisofs/doxygen.conf*")
