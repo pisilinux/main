@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libnvme</Name>
@@ -13,25 +13,25 @@
         <Summary>C Library for NVM Express on Linux</Summary>
         <Icon>libnvme</Icon>
         <Description>This is the libnvme development C library. libnvme provides type definitions for NVMe specification structures, enumerations, and bit fields, helper functions to construct, dispatch, and decode commands and payloads, and utilities to connect, scan, and manage nvme devices on a Linux system.</Description>
-        <Archive sha1sum="1e059f0a46264b2989ba510e1cb32e2585fd2c72" type="targz">https://github.com/linux-nvme/libnvme/archive/refs/tags/v1.15.tar.gz</Archive>
+        <Archive sha1sum="f900568699e4653686fc66666d3c00243df358ff" type="targz">https://github.com/linux-nvme/libnvme/archive/refs/tags/v1.16.1.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>meson</Dependency>
             <Dependency>swig</Dependency>
+            <Dependency>meson</Dependency>
             <Dependency>asciidoc</Dependency>
             <Dependency>keyutils</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>json-c-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>python3-devel</Dependency>
+            <Dependency>liburing-devel</Dependency>
         </BuildDependencies>
         <!--
-        <Patches>
-            <Patch>libnvme.patch</Patch>
-            <Patch level="1">libnvme.patch</Patch>
-        </Patches>
-        -->
+                <Patches>
+                        <Patch>libnvme.patch</Patch>
+                        <Patch level="1">libnvme.patch</Patch>
+                </Patches>
+                -->
     </Source>
-
     <Package>
         <Name>libnvme</Name>
         <RuntimeDependencies>
@@ -39,9 +39,11 @@
             <Dependency>json-c</Dependency>
             <Dependency>openssl</Dependency>
             <Dependency>keyutils</Dependency>
+            <Dependency>liburing</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libnvme*</Path>
+            <Path fileType="library">/usr/lib/python3.11/site-packages/libnvme*</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
@@ -50,11 +52,12 @@
         <Name>libnvme-devel</Name>
         <Summary>Development files for libnvme</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">libnvme</Dependency>
             <Dependency>keyutils</Dependency>
             <Dependency>dbus-devel</Dependency>
             <Dependency>json-c-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
+            <Dependency>liburing-devel</Dependency>
+            <Dependency release="current">libnvme</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -63,6 +66,13 @@
     </Package>
 
     <History>
+        <Update release="8">
+            <Date>2026-04-05</Date>
+            <Version>1.16.1</Version>
+            <Comment>Version bump</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="7">
             <Date>2025-07-26</Date>
             <Version>1.15</Version>

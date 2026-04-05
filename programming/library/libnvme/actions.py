@@ -11,7 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dpython=enabled -Dlibdbus=enabled")
+    mesontools.configure("-Dpython=enabled -Dlibdbus=enabled -Dliburing=enabled")
 
 def build():
     mesontools.build()
