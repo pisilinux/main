@@ -7,13 +7,13 @@
 from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
-	autotools.rawConfigure("--mandir=/usr/share/man")
+    autotools.rawConfigure("--mandir=/usr/share/man")
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("README")
+    pisitools.dodoc("README")
 
