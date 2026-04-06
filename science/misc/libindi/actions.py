@@ -14,7 +14,7 @@ WorkDir = "indi-%s" % get.srcVERSION()
 def setup():
     #shelltools.cd("libindi")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                          -DINDI_BUILD_QT5_CLIENT=ON \
+                          -DINDI_BUILD_QT_CLIENT=ON \
                           -DBUILD_ROOT=%s" % get.installDIR())
 
 def build():
