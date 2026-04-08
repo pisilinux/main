@@ -7,7 +7,7 @@
 from pisi.actionsapi import perlmodules
 
 def setup():
-	perlmodules.configure()
+	perlmodules.configure('OPTIMIZE="${CFLAGS} -std=gnu17"')
 
 def build():
 	perlmodules.make()
