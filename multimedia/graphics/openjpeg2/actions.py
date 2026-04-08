@@ -48,9 +48,10 @@ def install():
         pisitools.dosed("%s/usr/lib32/pkgconfig/libopenjp2.pc" % get.installDIR(), "emul32", "bin")
         pisitools.dosed("%s/usr/lib32/cmake/openjpeg-2.5/OpenJPEGTargets-release.cmake" % get.installDIR(), "emul32", "bin")
         pisitools.removeDir("/usr/emul32")
+        pisitools.dosym("/usr/include/openjpeg-2.5/openjpeg.h", "/usr/include/openjpeg.h")
         return
         
-        pisitools.dosym("openjpeg-2.5/openjpeg.h", "/usr/include/openjpeg.h")
+
         
         shelltools.cd("..")
         pisitools.dodoc("AUTHORS*", "CHANGELOG*", "NEWS*", "README*")
