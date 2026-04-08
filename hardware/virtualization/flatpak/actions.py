@@ -14,6 +14,7 @@ from pisi.actionsapi import get
 def setup():
     mesontools.configure("-Dselinux_module=disabled \
                           -Dtests=false \
+                          -Dsystem_bubblewrap=bwrap \
                           -Dsystem_dbus_proxy=xdg-dbus-proxy \
                           -Dsystemd=disabled")
 
