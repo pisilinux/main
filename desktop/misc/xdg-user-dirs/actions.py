@@ -7,18 +7,19 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac")
-    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
-    autotools.configure("--prefix=/usr --sysconfdir=/etc")
+    # shelltools.system("sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac")
+    # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
+    mesontools.configure("--prefix=/usr --sysconfdir=/etc")
 
 def build():
-    autotools.make("-C po update-gmo")
-    autotools.make()
+    # mesontools.build("-C po update-gmo")
+    mesontools.build()
 
 def install():
-    autotools.install()
+    mesontools.install()
 
     pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS")
