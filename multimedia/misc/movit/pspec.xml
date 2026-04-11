@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>movit</Name>
+        <Homepage>https://www.movit.org</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvarice@gmail.com</Email>
+        </Packager>
+        <License>GPL-2.0-or-later</License>
+        <Icon>movit</Icon>
+        <Summary>The modern video toolkit</Summary>
+        <Description>High-performance, high-quality video filters for the GPU
+</Description>
+        <Archive type="targz" sha1sum="82db2086d85931dda4d1ce363e61818e9945209f">https://movit.sesse.net/movit-1.7.2.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>eigen3</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>glibc-devel</Dependency>
+            <Dependency>gtest-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>libsdl2-devel</Dependency>
+            <Dependency>libepoxy-devel</Dependency>
+            <Dependency>sdl2-image-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+            <Patch>movit-use-system-gtest.patch</Patch>
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>movit</Name>
+        <RuntimeDependencies>
+            <Dependency>fftw3</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libsdl2</Dependency>
+            <Dependency>libepoxy</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/libmovit*</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>movit-devel</Name>
+        <RuntimeDependencies>
+            <Dependency>eigen3</Dependency>
+            <Dependency>fftw3-devel</Dependency>
+            <Dependency>libepoxy-devel</Dependency>
+            <Dependency release="current">movit</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="header">/usr/include</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-04-11</Date>
+            <Version>1.7.2</Version>
+            <Comment>First Release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvarice@gmail.com</Email>
+        </Update>
+    </History>
+</PISI>
