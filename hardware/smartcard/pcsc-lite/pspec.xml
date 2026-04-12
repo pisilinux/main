@@ -1,23 +1,23 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>pcsc-lite</Name>
-        <Homepage>https://pcsclite.apdu.fr</Homepage>
+        <Homepage>https://pcsclite.apdu.fr/</Homepage>
         <Packager>
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>as-is</License>
+        <License>3BSD</License>
         <IsA>app:console</IsA>
         <Summary>PC/SC drivers for smart card readers</Summary>
         <Description>pcsc-lite is middleware to access a smart card using SCard API (PC/SC).</Description>
-        <Archive sha1sum="9106f64a2bcb69397d0328ab6283ccfa673f075d" type="tarbz2">https://pcsclite.apdu.fr/files/pcsc-lite-2.0.0.tar.bz2</Archive>
+        <Archive sha1sum="64f3bb84c5e5a12c07a79cdcd6f1faba62cb473a" type="tarxz">https://pcsclite.apdu.fr/files/pcsc-lite-2.4.1.tar.xz</Archive>
         <BuildDependencies>
+            <Dependency>meson</Dependency>
             <Dependency>doxygen</Dependency>
             <Dependency>eudev-devel</Dependency>
-            <Dependency>gettext-devel</Dependency>
-            <Dependency>autoconf-archive</Dependency>
+            <Dependency>polkit-devel</Dependency>
             <Dependency>python3-devel</Dependency>
         </BuildDependencies>
     </Source>
@@ -26,15 +26,14 @@
         <Name>pcsc-lite</Name>
         <RuntimeDependencies>
             <Dependency>eudev</Dependency>
+            <Dependency>polkit</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="config">/etc/reader.conf.d</Path>
-            <Path fileType="executable">/usr/sbin</Path>
+            <Path fileType="config">/etc</Path>
             <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="executable">/usr/sbin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="library">/usr/lib/pcsc/drivers</Path>
+            <Path fileType="data">/usr/share</Path>
         </Files>
         <Provides>
             <COMAR script="service.py">System.Service</COMAR>
@@ -45,16 +44,24 @@
         <Name>pcsc-lite-devel</Name>
         <Summary>Development files for pcsc-lite</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">pcsc-lite</Dependency>
             <Dependency>eudev-devel</Dependency>
+            <Dependency>polkit-devel</Dependency>
+            <Dependency release="current">pcsc-lite</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="8">
+            <Date>2026-04-12</Date>
+            <Version>2.4.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="7">
             <Date>2023-06-11</Date>
             <Version>2.0.0</Version>

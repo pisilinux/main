@@ -2,30 +2,24 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import mesontools, pisitools
+
+i = ''.join([
+    ' --prefix=/usr',
+    ' -Dclass=true',
+    ' -Dserial=true',
+    ' -Denable-extras=true '
+    ])
 
 def setup():
-    autotools.configure("--enable-twinserial \
-                         --enable-serialconfdir=/etc/reader.conf.d \
-                         --sysconfdir=/etc \
-                         --disable-static \
-                         --disable-dependency-tracking")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    mesontools.configure(i)
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
-    
-    pisitools.insinto("/etc/", "src/Info.plist", "libccid_Info.plist")
+    mesontools.install()
 
-    pisitools.insinto("/etc/udev/rules.d/", "src/92_pcscd_ccid.rules", "92-pcsc-ccid.rules")
-    pisitools.dosed("%s/etc/udev/rules.d/92-pcsc-ccid.rules" % get.installDIR(), "Kobil_mIDentity_switch", deleteLine = True)
-
-    pisitools.dodoc("AUTHORS", "ChangeLog", "COPYING", "NEWS", "README*")
+    pisitools.dodoc("AUTHORS", "COPYING")

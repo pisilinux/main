@@ -18,6 +18,8 @@ def start():
         pass
 
     startService(command="/usr/sbin/pcscd",
+                 args="--foreground",
+                 detach=True,
                  donotify=True)
 
 @synchronized
