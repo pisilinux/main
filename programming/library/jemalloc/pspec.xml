@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>jemalloc</Name>
@@ -8,17 +8,17 @@
             <Name>PisiLinux Community</Name>
             <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>BSD</License>
+        <License>BSD2</License>
         <IsA>library</IsA>
-        <Summary>General-purpose scalable concurrent malloc implementation</Summary>
-        <Description>Genel amaçlı ölçeklenebilir eşzamanlı malloc uygulaması</Description>
-        <Archive sha1sum="3e4781e0c8c0033a0da5f93a204c172337c3353b" type="targz">https://github.com/jemalloc/jemalloc/archive/refs/tags/5.3.0.tar.gz</Archive>
-        <!--
+        <Summary>General-purpose scalable concurrent malloc implementation.</Summary>
+        <Description>jemalloc is a general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.</Description>
+        <BuildDependencies>
+            <Dependency>libxslt-devel</Dependency>
+        </BuildDependencies>
+        <Archive sha1sum="d8324d1bb4b3e1a227f0c6691b0dc9fb08002e9d" type="tarbz2">https://github.com/jemalloc/jemalloc/releases/download/5.3.1/jemalloc-5.3.1.tar.bz2</Archive>
         <Patches>
-            <Patch>jemalloc.patch</Patch>
-            <Patch level="1">jemalloc.patch</Patch>
+            <!-- <Patch level="1"></Patch> -->
         </Patches>
-        -->
     </Source>
 
     <Package>
@@ -31,7 +31,6 @@
             <Path fileType="library">/usr/lib</Path>
             <Path fileType="data">/usr/share</Path>
             <Path fileType="man">/usr/share/man</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
 
@@ -42,12 +41,20 @@
             <Dependency release="current">jemalloc</Dependency>
         </RuntimeDependencies>
         <Files>
+            <Path fileType="executable">/usr/bin/jemalloc-config</Path>
             <Path fileType="header">/usr/include</Path>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2026-06-14</Date>
+            <Version>5.3.1</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Mustafa Cinasal</Name>
+            <Email>muscnsl@gmail.com</Email>
+        </Update>
         <Update release="2">
             <Date>2022-11-26</Date>
             <Version>5.3.0</Version>
