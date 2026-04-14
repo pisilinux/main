@@ -13,4 +13,4 @@ def build():
 def install():
     pythonmodules.install(pyVer = "3")
 
-    pisitools.dodoc("AUTHORS.md", "NEWS.md")
+    pisitools.dodoc("AUTHORS.md", "COPYING")
