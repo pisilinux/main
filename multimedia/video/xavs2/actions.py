@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
-WorkDir = "build/linux"
+WorkDir = "xavs2-1.4/build/linux/"
 
 y = ''.join([
     ' --prefix=/usr',
