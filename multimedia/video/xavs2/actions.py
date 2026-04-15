@@ -2,38 +2,37 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt 
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import autotools
-from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
-NoStrip=["/usr/lib"]
+WorkDir = "build/linux"
+
+y = ''.join([
+    ' --prefix=/usr',
+    ' --extra-ldflags="-Wl,-z,noexecstack"',
+    ' --extra-cflags="-Wno-incompatible-pointer-types -Wno-implicit-function-declaration"',
+    ' --chroma-format="all"',
+    ' --enable-pic',
+    ' --enable-shared',
+#    ' --disable-asm',
+    ' --disable-avs',
+    ' --disable-swscale',
+    ' --disable-lavf',
+    ' --disable-ffms',
+    ' --disable-gpac',
+    ' --disable-lsmash '
+    ])
 
 def setup():
-	shelltools.cd("build/linux")
-	autotools.rawConfigure("--prefix=/usr \
-		                    --extra-ldflags='-Wl,-z,noexecstack' \
-						    --chroma-format='all' \
-							--enable-shared \
-						    --enable-lto \
-						    --enable-pic \
-						    --disable-swscale \
-						    --disable-lavf \
-						    --disable-ffms \
-						    --disable-gpac \
-		                    ")
+    autotools.rawConfigure(y)
 
 def build():
-	shelltools.cd("build/linux")
-	autotools.make()
+    autotools.make()
 
 def install():
-	shelltools.cd("build/linux")
-	autotools.rawInstall("DESTDIR=%s" %get.installDIR())
-	pisitools.remove("/usr/lib/libxavs2.a")
-	shelltools.cd("../..")
-	pisitools.dodoc("COPYING", "README.md")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR(), argument = 'install-{cli,lib-shared}')
 
+    pisitools.dodoc("../../COPYING")
