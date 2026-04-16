@@ -23,4 +23,4 @@ def install():
     cmaketools.install()
 
     pisitools.insinto("/etc/conf.d", "fluidsynth.conf", "fluidsynth")
-    pisitools.dodoc("AUTHORS", "ChangeLog", "README*", "THANKS", "TODO")
+    pisitools.dodoc("AUTHORS", "README*", "THANKS", "TODO")
