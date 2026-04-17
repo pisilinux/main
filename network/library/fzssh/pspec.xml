@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>fzssh</Name>
+        <Homepage>https://filezilla-project.org</Homepage>
+        <Packager>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv3</License>
+        <IsA>library</IsA>
+        <Summary>SSH/SFTP library based on libfilezilla</Summary>
+        <Description>libfilezilla tabanlı SSH/SFTP kütüphanesi</Description>
+        <Archive sha1sum="6d6c628d06d8b463ed9fb96847e0335841858054" type="tarxz">https://dl1.cdn.filezilla-project.org/fzssh/fzssh-1.2.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>gmp-devel</Dependency>
+            <Dependency>argon2-devel</Dependency>
+            <Dependency>nettle-devel</Dependency>
+            <Dependency versionFrom="0.55.3">libfilezilla-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>fzssh.patch</Patch>
+            <Patch level="1">fzssh.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>fzssh</Name>
+        <RuntimeDependencies>
+            <Dependency>gmp</Dependency>
+            <Dependency>argon2</Dependency>
+            <Dependency>nettle</Dependency>
+            <Dependency>libfilezilla</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>fzssh-devel</Name>
+        <Summary>Development files for fzssh</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">fzssh</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-04-17</Date>
+            <Version>1.2.0</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
