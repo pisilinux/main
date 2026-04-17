@@ -10,8 +10,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("""sed -i 's|Fancy GNU/Linux 2020.2 LTS "Turgid Tuba"|Pisi GNU/Linux 2.3.4 LTS "Pisi Linux"|g' src/branding/default/branding.desc""")
-    shelltools.system("sed -i 's|2020.2|2.3.4|g' src/branding/default/branding.desc")
+    shelltools.system("""sed -i 's|Fancy GNU/Linux 2020.2 LTS "Turgid Tuba"|Pisi GNU/Linux 2.4.3 LTS "Pisi Linux"|g' src/branding/default/branding.desc""")
+    shelltools.system("sed -i 's|2020.2|2.4.3|g' src/branding/default/branding.desc")
     shelltools.system("sed -i 's|FancyGL|Pisilinux|g' src/branding/default/branding.desc")
 
     shelltools.makedirs("build")
@@ -43,6 +43,8 @@ def install():
     #dbus configuration for pisi
     pisitools.dosed("%s/usr/share/calamares/modules/machineid.conf" % get.installDIR(), "systemd: true", "systemd: false")
     pisitools.dosed("%s/usr/share/calamares/modules/machineid.conf" % get.installDIR(), "symlink: true", "symlink: false")
+
+    pisitools.dosym("/usr/share/icons/hicolor/scalable/apps/calamares.svg", "/usr/share/pixmaps/calamares.svg")
     
     
     
