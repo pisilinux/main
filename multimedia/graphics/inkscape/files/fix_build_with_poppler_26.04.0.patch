@@ -23,24 +23,6 @@ diff --git a/src/extension/internal/pdfinput/pdf-parser.cpp b/src/extension/inte
 index 62f1db2bd6..03f47a0f90 100644
 --- a/src/extension/internal/pdfinput/pdf-parser.cpp
 +++ b/src/extension/internal/pdfinput/pdf-parser.cpp
-@@ -2268,15 +2268,11 @@ void PdfParser::opShowSpaceText(Object args[], int /*numArgs*/)
-  * This adds a string from a PDF file that is contained in one command ('Tj', ''', '"')
-  * or is one string in ShowSpacetext ('TJ').
-  */
--#if POPPLER_CHECK_VERSION(0,64,0)
--void PdfParser::doShowText(const GooString *s) {
--#else
--void PdfParser::doShowText(GooString *s) {
--#endif
-+void PdfParser::doShowText(const std::string &s) {
-     auto font = state->getFont();
-     _POPPLER_WMODE wMode = font->getWMode(); // Vertical/Horizontal/Invalid
-
--    builder->beginString(state, get_goostring_length(*s));
-+    builder->beginString(state, s.size());
-
-     // handle a Type 3 char
-     if (font->getType() == fontType3) {
 @@ -2286,8 +2282,8 @@ void PdfParser::doShowText(GooString *s) {
      double riseX, riseY;
      state->textTransformDelta(0, state->getRise(), &riseX, &riseY);
