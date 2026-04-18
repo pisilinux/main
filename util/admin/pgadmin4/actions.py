@@ -7,6 +7,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.export("CYTHON", "/usr/bin/cython3")
     installdir = get.installDIR()
     shelltools.system("pip3 install --no-build-isolation --ignore-installed "
                       "--prefix=/usr --root='%s' "
