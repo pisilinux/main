@@ -13,48 +13,48 @@
         <Icon>poppler</Icon>
         <Summary>PDF rendering library</Summary>
         <Description>poppler is a PDF rendering library based on xpdf.</Description>
-        <Archive sha1sum="bdf1543966f6e2ef7fb4796d4f77c181f949b20e" type="tarxz">https://poppler.freedesktop.org/poppler-26.02.0.tar.xz</Archive>
+        <Archive sha1sum="2303ad7045becc80edcfc8ba8ba7d2f92e424b8d" type="tarxz">https://poppler.freedesktop.org/poppler-26.04.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>cmake</Dependency>
             <Dependency>python3</Dependency>
-            <Dependency>boost-devel</Dependency>
-            <Dependency>lcms2-devel</Dependency>
-            <Dependency>curl-devel</Dependency>
             <Dependency>nss-devel</Dependency>
-            <Dependency versionFrom="1.17.8">cairo-devel</Dependency>
-            <Dependency>gobject-introspection-devel</Dependency>
-            <Dependency>libjpeg-turbo-devel</Dependency>
-            <Dependency>freetype-devel</Dependency>
-            <Dependency>libpng-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
             <Dependency>tiff-devel</Dependency>
             <Dependency>zlib-devel</Dependency>
-            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>boost-devel</Dependency>
+            <Dependency>lcms2-devel</Dependency>
+            <Dependency>gpgme-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>gpgmepp-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
             <Dependency>openjpeg2-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+            <Dependency versionFrom="1.17.8">cairo-devel</Dependency>
             <Dependency versionFrom="5.13.0">qt5-base-devel</Dependency>
             <Dependency versionFrom="6.5.3">qt6-base-devel</Dependency>
-            <Dependency>gpgmepp-devel</Dependency>
-            <Dependency>gpgme-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>poppler</Name>
         <RuntimeDependencies>
+            <Dependency>nss</Dependency>
             <Dependency>zlib</Dependency>
-            <Dependency>lcms2</Dependency>
             <Dependency>curl</Dependency>
             <Dependency>nspr</Dependency>
-            <Dependency>nss</Dependency>
-            <Dependency>freetype</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>libjpeg-turbo</Dependency>
-            <Dependency>libpng</Dependency>
             <Dependency>tiff</Dependency>
+            <Dependency>lcms2</Dependency>
+            <Dependency>gpgme</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>gpgmepp</Dependency>
+            <Dependency>freetype</Dependency>
             <Dependency>openjpeg2</Dependency>
             <Dependency>fontconfig</Dependency>
             <Dependency>poppler-data</Dependency>
-            <Dependency>gpgme</Dependency>
-            <Dependency>gpgmepp</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="library">/usr/lib</Path>
@@ -67,11 +67,11 @@
         <Name>poppler-utils</Name>
         <Summary>Command line utilities for converting PDF files</Summary>
         <RuntimeDependencies>
-            <Dependency release="current">poppler</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>lcms2</Dependency>
-            <Dependency>freetype</Dependency>
             <Dependency>libgcc</Dependency>
+            <Dependency>freetype</Dependency>
+            <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -83,9 +83,9 @@
         <Name>poppler-qt5</Name>
         <Summary>Qt wrapper for poppler</Summary>
         <RuntimeDependencies>
-            <Dependency>qt5-base</Dependency>
-            <Dependency>libgcc</Dependency>
             <Dependency>lcms2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>qt5-base</Dependency>
             <Dependency>freetype</Dependency>
             <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
@@ -98,23 +98,23 @@
         <Name>poppler-qt5-devel</Name>
         <Summary>Development files for poppler-qt</Summary>
         <RuntimeDependencies>
+            <Dependency>freetype-devel</Dependency>
             <Dependency release="current">poppler-qt5</Dependency>
             <Dependency release="current">poppler-devel</Dependency>
-            <Dependency>freetype-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/poppler/qt5</Path>
             <Path fileType="data">/usr/lib/pkgconfig/poppler-qt5.pc</Path>
         </Files>
-     </Package>
+    </Package>
 
-     <Package>
+    <Package>
         <Name>poppler-qt6</Name>
         <Summary>Qt wrapper for poppler</Summary>
         <RuntimeDependencies>
-            <Dependency>qt6-base</Dependency>
-            <Dependency>libgcc</Dependency>
             <Dependency>lcms2</Dependency>
+            <Dependency>libgcc</Dependency>
+            <Dependency>qt6-base</Dependency>
             <Dependency>freetype</Dependency>
             <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
@@ -134,7 +134,7 @@
             <Path fileType="header">/usr/include/poppler/qt6</Path>
             <Path fileType="data">/usr/lib/pkgconfig/poppler-qt6.pc</Path>
         </Files>
-     </Package>
+    </Package>
 
     <Package>
         <Name>poppler-cpp</Name>
@@ -165,9 +165,9 @@
         <Name>poppler-glib</Name>
         <Summary>Glib wrapper for poppler</Summary>
         <RuntimeDependencies>
-            <Dependency>libgcc</Dependency>
             <Dependency>cairo</Dependency>
             <Dependency>glib2</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>freetype</Dependency>
             <Dependency release="current">poppler</Dependency>
         </RuntimeDependencies>
@@ -219,67 +219,71 @@
             <Path fileType="data">/usr/lib32/pkgconfig/poppler.pc</Path>
         </Files>
     </Package>
-
     <!--Package>
-        <Name>poppler-32bit</Name>
-        <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for poppler</Summary>
-        <BuildType>emul32</BuildType>
-        <BuildDependencies>
-            <Dependency>zlib-32bit</Dependency>
-            <Dependency>openjpeg2-32bit</Dependency>
-            <Dependency>lcms2-32bit</Dependency>
-            <Dependency>libjpeg-turbo-32bit</Dependency>
-            <Dependency>libpng-32bit</Dependency>
-            <Dependency>tiff-32bit</Dependency>
-            <Dependency>freetype-32bit</Dependency>
-            <Dependency>fontconfig-32bit</Dependency>
-        </BuildDependencies>
-        <RuntimeDependencies>
-            <Dependency release="current">poppler</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>zlib-32bit</Dependency>
-            <Dependency>lcms2-32bit</Dependency>
-            <Dependency>libjpeg-turbo-32bit</Dependency>
-            <Dependency>libpng-32bit</Dependency>
-            <Dependency>openjpeg2-32bit</Dependency>
-            <Dependency>tiff-32bit</Dependency>
-            <Dependency>freetype-32bit</Dependency>
-            <Dependency>fontconfig-32bit</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib32/libpoppler.so*</Path>
-            <Path fileType="library">/usr/lib32/libpoppler-cpp.so.0.11.0</Path>
-            <Path fileType="library">/usr/lib32/libpoppler-cpp.so</Path>
-            <Path fileType="library">/usr/lib32/libpoppler-cpp.so.0</Path>
-            <Path fileType="library">/usr/lib32/girepository-1.0/Poppler-0.18.typelib</Path>
-            <Path fileType="library">/usr/lib32/pkgconfig</Path>
-        </Files>
-    </Package-->
-
+                <Name>poppler-32bit</Name>
+                <PartOf>emul32</PartOf>
+                <Summary>32-bit shared libraries for poppler</Summary>
+                <BuildType>emul32</BuildType>
+                <BuildDependencies>
+                        <Dependency>zlib-32bit</Dependency>
+                        <Dependency>openjpeg2-32bit</Dependency>
+                        <Dependency>lcms2-32bit</Dependency>
+                        <Dependency>libjpeg-turbo-32bit</Dependency>
+                        <Dependency>libpng-32bit</Dependency>
+                        <Dependency>tiff-32bit</Dependency>
+                        <Dependency>freetype-32bit</Dependency>
+                        <Dependency>fontconfig-32bit</Dependency>
+                </BuildDependencies>
+                <RuntimeDependencies>
+                        <Dependency release="current">poppler</Dependency>
+                        <Dependency>libgcc</Dependency>
+                        <Dependency>zlib-32bit</Dependency>
+                        <Dependency>lcms2-32bit</Dependency>
+                        <Dependency>libjpeg-turbo-32bit</Dependency>
+                        <Dependency>libpng-32bit</Dependency>
+                        <Dependency>openjpeg2-32bit</Dependency>
+                        <Dependency>tiff-32bit</Dependency>
+                        <Dependency>freetype-32bit</Dependency>
+                        <Dependency>fontconfig-32bit</Dependency>
+                </RuntimeDependencies>
+                <Files>
+                        <Path fileType="library">/usr/lib32/libpoppler.so*</Path>
+                        <Path fileType="library">/usr/lib32/libpoppler-cpp.so.0.11.0</Path>
+                        <Path fileType="library">/usr/lib32/libpoppler-cpp.so</Path>
+                        <Path fileType="library">/usr/lib32/libpoppler-cpp.so.0</Path>
+                        <Path fileType="library">/usr/lib32/girepository-1.0/Poppler-0.18.typelib</Path>
+                        <Path fileType="library">/usr/lib32/pkgconfig</Path>
+                </Files>
+        </Package-->
     <!--Package>
-        <Name>poppler-glib-32bit</Name>
-        <PartOf>emul32</PartOf>
-        <Summary>32-bit shared libraries for poppler-glib</Summary>
-        <BuildType>emul32</BuildType>
-        <BuildDependencies>
-            <Dependency>glib2-32bit</Dependency>
-            <Dependency>cairo-32bit</Dependency>
-            <Dependency>freetype-32bit</Dependency>
-        </BuildDependencies>
-        <RuntimeDependencies>
-            <Dependency release="current">poppler-32bit</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>glib2-32bit</Dependency>
-            <Dependency>cairo-32bit</Dependency>
-            <Dependency>freetype-32bit</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="library">/usr/lib32/libpoppler-glib.so*</Path>
-        </Files>
-    </Package-->
-
+                <Name>poppler-glib-32bit</Name>
+                <PartOf>emul32</PartOf>
+                <Summary>32-bit shared libraries for poppler-glib</Summary>
+                <BuildType>emul32</BuildType>
+                <BuildDependencies>
+                        <Dependency>glib2-32bit</Dependency>
+                        <Dependency>cairo-32bit</Dependency>
+                        <Dependency>freetype-32bit</Dependency>
+                </BuildDependencies>
+                <RuntimeDependencies>
+                        <Dependency release="current">poppler-32bit</Dependency>
+                        <Dependency>libgcc</Dependency>
+                        <Dependency>glib2-32bit</Dependency>
+                        <Dependency>cairo-32bit</Dependency>
+                        <Dependency>freetype-32bit</Dependency>
+                </RuntimeDependencies>
+                <Files>
+                        <Path fileType="library">/usr/lib32/libpoppler-glib.so*</Path>
+                </Files>
+        </Package-->
     <History>
+        <Update release="21">
+            <Date>2026-04-18</Date>
+            <Version>26.04.0</Version>
+            <Comment>Version bump</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="20">
             <Date>2026-02-21</Date>
             <Version>26.02.0</Version>
