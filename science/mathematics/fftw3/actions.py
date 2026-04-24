@@ -65,6 +65,7 @@ def setup():
                                         -D ENABLE_FLOAT=ON \
                                         -D ENABLE_LONG_DOUBLE=ON \
                                         -D ENABLE_QUAD_PRECISION=ON \
+                                        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                                      ")
                                             # -D ENABLE_AVX2=ON \
                                             # -D ENABLE_AVX=ON \
