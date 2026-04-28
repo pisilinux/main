@@ -15,7 +15,7 @@ def build():
 
     
 def install():
-	shelltools.system("cargo install --path . --root='%s'/usr" % get.installDIR())
-	pisitools.remove("/usr/.crates.toml")
-	pisitools.remove("/usr/.crates2.json")
-	pisitools.dodoc("LICENSE", "README.md","TODO.md*")
+    shelltools.system("cargo install --path . --root='%s'/usr" % get.installDIR())
+    pisitools.remove("/usr/.crates.toml")
+    pisitools.remove("/usr/.crates2.json")
+    pisitools.dodoc("LICENSE", "README.md","TODO.md*")
