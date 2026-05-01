@@ -15,7 +15,7 @@ def setup():
     autotools.configure("--enable-reentrant")
 
 def build():
-    autotools.make("shared")
+    autotools.make()
 
     for t in ("fpack", "funpack", "imcopy", "fitscopy"):
         autotools.make(t)
@@ -37,4 +37,4 @@ def install():
     pisitools.dosym("libcfitsio.so.0.0", "/usr/lib/libcfitsio.so.0")
     pisitools.dosym("libcfitsio.so.0.0", "/usr/lib/libcfitsio.so")
 
-    pisitools.dodoc("*.txt", "README")
+    pisitools.dodoc("*.txt", "README*")
