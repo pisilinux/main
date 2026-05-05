@@ -10,9 +10,8 @@ from pisi.actionsapi import pisitools
 
 i = ''.join([
     ' -DCMAKE_INSTALL_PREFIX=/usr',
-    ' -DREGEX_BACKEND=pcre2',
-    ' -DUSE_{HTTPS,SSH}=ON',
-    ' -DUSE_HTTP_PARSER=llhttp',
+    ' -DLLHTTP_BUILD_SHARED_LIBS=ON',
+    ' -DLLHTTP_BUILD_STATIC_LIBS=OFF',
     ' -Bbuild -G Ninja -L '
     ])
 
@@ -25,4 +24,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING")
+    pisitools.dodoc("LICENSE")
