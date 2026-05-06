@@ -1,0 +1,39 @@
+--- Makefile_old	2026-05-07 00:40:03.031214600 +0300
++++ Makefile	2026-05-07 00:40:56.917374600 +0300
+@@ -2,7 +2,7 @@
+ BINDIR = $(PREFIX)/bin
+ DATADIR = $(PREFIX)/share
+ APPDIR = $(DATADIR)/applications
+-ICONDIR = $(DATADIR)/pixmaps
++ICONDIR = $(DATADIR)/icons/hicolor
+ MIMEDIR = $(DATADIR)/mime/packages
+ 
+ all: build
+@@ -21,9 +21,11 @@
+ 	install -Dm644 assets/pisi-software-center.png $(DESTDIR)$(ICONDIR)/pisi-software-center.png
+ 	# Mime tipini kopyala
+ 	install -Dm644 assets/pisi-mime.xml $(DESTDIR)$(MIMEDIR)/pisi-software-center.xml
+-	# Veritabanlarını güncelle (Hata olsa da devam et)
+-	-update-desktop-database -q $(DESTDIR)$(APPDIR)
+-	-update-mime-database $(DESTDIR)$(DATADIR)/mime
++	# Veritabanlarını sadece doğrudan sisteme kuruluyorsa güncelle
++ifeq ($(DESTDIR),)
++	-update-desktop-database -q $(APPDIR)
++	-update-mime-database $(DATADIR)/mime
++endif
+ 
+ uninstall:
+ 	rm -f $(DESTDIR)$(BINDIR)/pisi-software-center
+@@ -32,8 +34,10 @@
+ 	rm -f $(DESTDIR)$(APPDIR)/pisi-installer.desktop
+ 	rm -f $(DESTDIR)$(ICONDIR)/pisi-software-center.png
+ 	rm -f $(DESTDIR)$(MIMEDIR)/pisi-software-center.xml
+-	-update-desktop-database -q $(DESTDIR)$(APPDIR)
+-	-update-mime-database $(DESTDIR)$(DATADIR)/mime
++ifeq ($(DESTDIR),)
++	-update-desktop-database -q $(APPDIR)
++	-update-mime-database $(DATADIR)/mime
++endif
+ 
+ clean:
+ 	cargo clean
