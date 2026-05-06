@@ -10,6 +10,9 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 
+def setup():
+    pisitools.dosed("Makefile", "package-manager.png", "pisi-software-center.png")
+
 def build():
     shelltools.system("cargo build --release ")
 
