@@ -1,29 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2015 TUBITAK/UEKAE
-# Licensed under the GNU General Public License, version 2.
-# See the file http://www.gnu.org/copyleft/gpl.txt.
+# Licensed under the GNU General Public License, version 3.
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools
-from pisi.actionsapi import pisitools
 from pisi.actionsapi import cmaketools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
 
+i = ''.join([
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' -DREGEX_BACKEND=pcre2',
+    ' -DUSE_{HTTPS,SSH}=ON',
+    ' -DUSE_HTTP_PARSER=llhttp',
+    ' -Bbuild -G Ninja -L '
+    ])
 
 def setup():
-    cmaketools.configure("-DTHREADSAFE:BOOL=ON \
-                          -DREGEX_BACKEND=pcre2 \
-                          -DUSE_SSH:BOOL=ON \
-                          -DUSE_HTTP_PARSER=system")
+    cmaketools.configure(i)
 
 def build():
-    cmaketools.make()
+    mesontools.build()
 
 def install():
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    # pisitools.dosym("/usr/lib/libgit2.so.1.1", "/usr/lib/libgit2.so.1.0")
-
-    pisitools.dodoc("AUTHORS", "README*", "COPYING")
+    pisitools.dodoc("AUTHORS", "COPYING")

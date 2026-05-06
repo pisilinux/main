@@ -1,26 +1,28 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libgit2</Name>
-        <Homepage>https://libgit2.github.com</Homepage>
+        <Homepage>https://libgit2.org/</Homepage>
         <Packager>
             <Name>Ertuğrul Erata</Name>
             <Email>ertugrulerata@gmail.com</Email>
         </Packager>
         <License>GPLv2</License>
         <Icon>libgit2</Icon>
-        <Summary>A linkable library for Git</Summary>
-        <Description>A plain C library to interface with the git version control system</Description>
-        <Archive sha1sum="f665cca83411efaf9d074455b65101b499e896c4" type="targz">https://github.com/libgit2/libgit2/archive/v1.8.4.tar.gz</Archive>
+        <PartOf>programming.scm</PartOf>
+        <Summary>A linkable library for Git.</Summary>
+        <Description>A plain C library to interface with the git version control system.</Description>
+        <Archive sha1sum="95a0e11b81c2cfc77fb2bcd0672a2cb6709f1acb" type="targz">https://github.com/libgit2/libgit2/archive/refs/tags/v1.9.3.tar.gz</Archive>
         <BuildDependencies>
+            <Dependency>cmake</Dependency>
+            <Dependency>ninja</Dependency>
             <Dependency>zlib-devel</Dependency>
-            <Dependency>libpcre2-devel</Dependency>
+            <Dependency>llhttp-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
-            <Dependency>http-parser</Dependency>
             <Dependency>libssh2-devel</Dependency>
             <Dependency>python3-devel</Dependency>
-            <Dependency>cmake</Dependency>
+            <Dependency>libpcre2-devel</Dependency>
         </BuildDependencies>
     </Source>
 
@@ -28,10 +30,10 @@
         <Name>libgit2</Name>
         <RuntimeDependencies>
             <Dependency>zlib</Dependency>
+            <Dependency>llhttp</Dependency>
             <Dependency>openssl</Dependency>
-            <Dependency>libpcre2</Dependency>
             <Dependency>libssh2</Dependency>
-            <Dependency>http-parser</Dependency>
+            <Dependency>libpcre2</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
@@ -43,18 +45,25 @@
     <Package>
         <Name>libgit2-devel</Name>
         <RuntimeDependencies>
-            <Dependency release="current">libgit2</Dependency>
             <Dependency>zlib-devel</Dependency>
             <Dependency>openssl-devel</Dependency>
             <Dependency>libpcre2-devel</Dependency>
+            <Dependency release="current">libgit2</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/pkgconfig</Path>
-	    <Path fileType="header">/usr/include</Path>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
         </Files>
     </Package>
 
     <History>
+        <Update release="19">
+            <Date>2026-05-05</Date>
+            <Version>1.9.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="18">
             <Date>2024-12-18</Date>
             <Version>1.8.4</Version>
@@ -132,7 +141,7 @@
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
         </Update>
-		<Update release="7">
+        <Update release="7">
             <Date>2020-01-15</Date>
             <Version>0.28.4</Version>
             <Comment>Version bump.</Comment>

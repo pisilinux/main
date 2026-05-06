@@ -8,8 +8,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dintrospection=true \
-                          -Dvapi=true")
+    mesontools.configure("--prefix=/usr")
 
 def build():
     mesontools.build()
@@ -17,4 +16,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING", "ChangeLog", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS")
