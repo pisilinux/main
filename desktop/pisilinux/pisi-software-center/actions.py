@@ -8,21 +8,16 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
+import os
 
 
 def setup():
-    pisitools.dosed("Makefile", "package-manager.png", "pisi-software-center.png")
+	shelltools.export("CARGO_HOME", os.path.join(get.workDIR(), ".cargo"))
 
 def build():
-    shelltools.system("cargo build --release ")
+	shelltools.system("make")
 
     
 def install():
-	shelltools.system("cargo install --path . --root='%s'/usr" % get.installDIR())
-	pisitools.insinto("/usr/share/applications/", "assets/pisi-software-center.desktop")
-	pisitools.insinto("/usr/share/applications/pisi/", "assets/pisi-installer.desktop")
-	pisitools.insinto("/usr/share/mime/packages/", "assets/pisi-mime.xml")
-	pisitools.insinto("/usr/share/icons/", "assets/pisi-software-center.png")
-	pisitools.remove("/usr/.crates.toml")
-	pisitools.remove("/usr/.crates2.json")
+	shelltools.system("make DESTDIR=%s install" % get.installDIR())
 	pisitools.dodoc("LICENSE", "README.md","TODO.md*")
