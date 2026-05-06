@@ -19,6 +19,10 @@ def build():
     
 def install():
 	shelltools.system("cargo install --path . --root='%s'/usr" % get.installDIR())
+	pisitools.insinto("/usr/share/applications/", "assets/pisi-software-center.desktop")
+	pisitools.insinto("/usr/share/applications/pisi/", "assets/pisi-installer.desktop")
+	pisitools.insinto("/usr/share/mime/packages/", "assets/pisi-mime.xml")
+	pisitools.insinto("/usr/share/icons/", "assets/pisi-software-center.png")
 	pisitools.remove("/usr/.crates.toml")
 	pisitools.remove("/usr/.crates2.json")
 	pisitools.dodoc("LICENSE", "README.md","TODO.md*")
