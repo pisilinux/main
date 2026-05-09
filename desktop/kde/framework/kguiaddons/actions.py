@@ -10,7 +10,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    kde6.configure("-DBUILD_GEO_SCHEME_HANDLER=OFF")
+    kde6.configure("-DBUILD_GEO_SCHEME_HANDLER=OFF \
+                    -DBUILD_PYTHON_BINDINGS=OFF")
 
 def build():
     kde6.make()
