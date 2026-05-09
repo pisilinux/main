@@ -9,7 +9,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     pisitools.ldflags.add("-Wl,-rpath,/usr/lib")
-    kde6.configure()
+    kde6.configure("-DBUILD_PYTHON_BINDINGS=OFF")
 
 def build():
     kde6.make()

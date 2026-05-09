@@ -8,7 +8,7 @@ from pisi.actionsapi import kde6
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde6.configure()
+    kde6.configure("-DBUILD_PYTHON_BINDINGS=OFF")
 
 def build():
     kde6.make()
