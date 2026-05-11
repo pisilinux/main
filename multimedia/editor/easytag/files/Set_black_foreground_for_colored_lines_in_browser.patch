@@ -1,0 +1,87 @@
+From 8cbf56c6a32a8aaa5fad0e1444918f33c138a3ac Mon Sep 17 00:00:00 2001
+From: Anton Karmanov <bergertroll@insiberia.net>
+Date: Fri, 3 Apr 2020 17:31:04 +0500
+Subject: [PATCH] Set black foreground for colored lines in browser
+
+---
+ src/browser.c | 13 ++++++++-----
+ src/et_core.c |  2 ++
+ src/et_core.h |  2 +-
+ 3 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/src/browser.c b/src/browser.c
+index 6a6daf1..ddaa96f 100644
+--- a/src/browser.c
++++ b/src/browser.c
+@@ -1722,8 +1722,7 @@ Browser_List_Set_Row_Appearance (EtBrowser *self, GtkTreeIter *iter)
+     EtBrowserPrivate *priv;
+     ET_File *rowETFile = NULL;
+     gboolean otherdir = FALSE;
+-    const GdkRGBA LIGHT_BLUE = { 0.866, 0.933, 1.0, 1.0 };
+-    const GdkRGBA *background;
++    const GdkRGBA *background, *foreground;
+     //gchar *temp = NULL;
+ 
+     priv = et_browser_get_instance_private (self);
+@@ -1740,9 +1739,13 @@ Browser_List_Set_Row_Appearance (EtBrowser *self, GtkTreeIter *iter)
+ 
+     // Must change background color?
+     if (otherdir)
++    {
+         background = &LIGHT_BLUE;
+-    else
++        foreground = &BLACK;
++    } else {
+         background = NULL;
++        foreground = NULL;
++    }
+ 
+     // Set text to bold/red if 'filename' or 'tag' changed
+     if (!et_file_check_saved (rowETFile))
+@@ -1752,7 +1755,7 @@ Browser_List_Set_Row_Appearance (EtBrowser *self, GtkTreeIter *iter)
+             gtk_list_store_set(priv->file_model, iter,
+                                LIST_FONT_WEIGHT,    PANGO_WEIGHT_BOLD,
+                                LIST_ROW_BACKGROUND, background,
+-                               LIST_ROW_FOREGROUND, NULL, -1);
++                               LIST_ROW_FOREGROUND, foreground, -1);
+         } else
+         {
+             gtk_list_store_set(priv->file_model, iter,
+@@ -1765,7 +1768,7 @@ Browser_List_Set_Row_Appearance (EtBrowser *self, GtkTreeIter *iter)
+         gtk_list_store_set(priv->file_model, iter,
+                            LIST_FONT_WEIGHT,    PANGO_WEIGHT_NORMAL,
+                            LIST_ROW_BACKGROUND, background,
+-                           LIST_ROW_FOREGROUND, NULL ,-1);
++                           LIST_ROW_FOREGROUND, foreground,-1);
+     }
+ 
+     // Update text fields
+diff --git a/src/et_core.c b/src/et_core.c
+index ef363b8..ee1d398 100644
+--- a/src/et_core.c
++++ b/src/et_core.c
+@@ -27,6 +27,8 @@ ET_Core *ETCore = NULL;
+ /*
+  * Colors Used
+  */
++GdkRGBA BLACK = {0.0, 0.0, 0.0, 1.0 };
++GdkRGBA LIGHT_BLUE = { 0.866, 0.933, 1.0, 1.0 };
+ GdkRGBA RED = {1.0, 0.0, 0.0, 1.0 };
+ 
+ void
+diff --git a/src/et_core.h b/src/et_core.h
+index 9775d5a..2a1060a 100644
+--- a/src/et_core.h
++++ b/src/et_core.h
+@@ -31,7 +31,7 @@ G_BEGIN_DECLS
+ /*
+  * Colors Used (see declaration into et_core.c)
+  */
+-extern GdkRGBA RED;
++extern GdkRGBA BLACK, LIGHT_BLUE, RED;
+ 
+ /*
+  * Description of all variables, lists needed by EasyTAG
+-- 
+GitLab
+
