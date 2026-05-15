@@ -13,6 +13,8 @@ i = ''.join([
     ])
 
 def setup():
+    pisitools.cflags.add("-std=c99")
+    pisitools.cxxflags.add("-std=c++11")
     shelltools.system("NOCONFIGURE=1 sh autogen.sh")
     autotools.configure(i)
 
