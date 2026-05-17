@@ -108,7 +108,8 @@ def install():
     ###  Libraries
     # OpenGl library
     pisitools.dolib("libGL.so.%s" % version, nvlibdir)
-#    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
+    # panda libgl
+    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.7.0" % nvlibdir)
 
     # OpenCL
     #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
