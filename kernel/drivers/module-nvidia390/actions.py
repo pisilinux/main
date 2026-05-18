@@ -116,8 +116,9 @@ def install():
     ###  Libraries
     # OpenGl library
     pisitools.dolib("libGL.so.%s" % version, nvlibdir)
-#    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
     pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.7.0" % nvlibdir)
+    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1" % nvlibdir)
+    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so" % nvlibdir)
     #pisitools.dolib("libGL.so.%s" % version, libdir)
     
     pisitools.dolib("libEGL.so.1.1.0", nvlibdir)
@@ -174,9 +175,9 @@ def install():
 
     # X modules
     pisitools.dolib("nvidia_drv.so", "%s/modules/drivers" % xorglibdir)
-    pisitools.dolib("libglx.so.%s" % version, "%s" % nvlibdir)
-    pisitools.dosym("libglx.so.%s" % version, "%s/libglx.so.1" % nvlibdir)
-    pisitools.dosym("libglx.so.%s" % version, "%s/libglx.so" % nvlibdir)
+    pisitools.dolib("libglx.so.%s" % version, "%s/xorg" % nvlibdir)
+    pisitools.dosym("libglx.so.%s" % version, "%s/xorg/libglx.so.1" % nvlibdir)
+    pisitools.dosym("libglx.so.%s" % version, "%s/xorg/libglx.so" % nvlibdir)
     pisitools.dolib("libglx.so.%s" % version, "%s/modules/extensions" % xorglibdir)
     pisitools.dosym("libglx.so.%s" % version, "%s/modules/extensions/libglx.so.1" % xorglibdir)
     
