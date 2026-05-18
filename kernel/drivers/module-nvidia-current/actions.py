@@ -228,9 +228,11 @@ def install():
         # data for NVIDIA GPUs, as well as limited managment capabilities
         pisitools.dolib("libnvidia-ml.so.%s" % version, libdir)
         pisitools.dosym("libnvidia-ml.so.%s" % version, "%s/libnvidia-ml.so.1" % libdir)
+        pisitools.dosym("libnvidia-ml.so.%s" % version, "%s/libnvidia-ml.so" % libdir)
 
         pisitools.dolib("libnvidia-cfg.so.%s" % version, libdir)
         pisitools.dosym("libnvidia-cfg.so.%s" % version, "%s/libnvidia-cfg.so.1" % libdir)
+        pisitools.dosym("libnvidia-cfg.so.%s" % version, "%s/libnvidia-cfg.so" % libdir)
 
         pisitools.dolib("libnvoptix.so.%s" % version, libdir)
         pisitools.dosym("libnvoptix.so.%s" % version, "%s/libnvoptix.so.1" % libdir)
@@ -239,6 +241,10 @@ def install():
         pisitools.dolib("libnvidia-nvvm.so.%s" % version, libdir)
         pisitools.dosym("libnvidia-nvvm.so.%s" % version, "%s/libnvidia-nvvm.so.1" % libdir)
         pisitools.dosym("libnvidia-nvvm.so.%s" % version, "%s/libnvidia-nvvm.so" % libdir)
+
+        pisitools.dolib("libnvidia-nvvm70.so.4")
+        pisitools.dosym("libnvidia-nvvm70.so.4", "%s/libnvidia-nvvm70.so.1" % libdir)
+        pisitools.dosym("libnvidia-nvvm70.so.4", "%s/libnvidia-nvvm70.so.%s" % (libdir, version))
 
         pisitools.dolib("libnvidia-egl-wayland.so.1.1.20", libdir)
         pisitools.dosym("libnvidia-egl-wayland.so.1.1.20", "%s/libnvidia-egl-wayland.so.1" % libdir)
@@ -256,7 +262,7 @@ def install():
 
         # OpenGL core library and others
         for lib in ("allocator", "eglcore", "encode", "ngx", "fbc", "glcore", "glsi", \
-                     "glvkspirv", "opticalflow", "ptxjitcompiler", "rtcore", "tls" ):
+                     "glvkspirv", "opticalflow", "ptxjitcompiler", "rtcore", "tls", "sandboxutils", "tileiras", "vksc-core" ):
             pisitools.dolib("libnvidia-%s.so.%s" % (lib, version), libdir)
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so.1" %(libdir, lib))
             pisitools.dosym("libnvidia-%s.so.%s" % (lib, version), "%s/libnvidia-%s.so" %(libdir, lib))
@@ -267,9 +273,10 @@ def install():
 
         # X modules
         pisitools.dolib("nvidia_drv.so", "%s/modules/drivers" % xorglibdir)
-        pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions" % nvlibdir)
+        # pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions" % nvlibdir)
         # pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions/libglx.so.1" % nvlibdir)
         # pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/xorg/extensions/libglx.so" % nvlibdir)
+        pisitools.dolib("libglxserver_nvidia.so.%s" % version, "%s/xorg" % nvlibdir)
         pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/xorg/libglx.so.1" % nvlibdir)
         pisitools.dosym("libglxserver_nvidia.so.%s" % version, "%s/xorg/libglx.so" % nvlibdir)
 
@@ -298,6 +305,9 @@ def install():
 
         pisitools.dolib("libnvidia-gtk2.so.%s" % version, libdir)
         pisitools.dolib("libnvidia-gtk3.so.%s" % version, libdir)
+
+        pisitools.dolib("_nvngx.dll", "%s/wine" % libdir)
+        pisitools.dolib("nvngx*", "%s/wine" % libdir)
 
     # Exit time for emul32 build
     #if get.buildTYPE() == 'emul32':
