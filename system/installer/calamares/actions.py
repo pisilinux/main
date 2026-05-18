@@ -10,9 +10,12 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.system("""sed -i 's|Fancy GNU/Linux 2020.2 LTS "Turgid Tuba"|Pisi GNU/Linux 2.4.3 LTS "Pisi Linux"|g' src/branding/default/branding.desc""")
-    shelltools.system("sed -i 's|2020.2|2.4.3|g' src/branding/default/branding.desc")
+    shelltools.system("""sed -i 's|Fancy GNU/Linux 2023.3 LTS "Venomous Vole"|Pisi GNU/Linux 2.4.3 LTS "Pisi Linux"|g' src/branding/default/branding.desc""")
+    shelltools.system("sed -i 's|2023.3|2.4.3|g' src/branding/default/branding.desc")
     shelltools.system("sed -i 's|FancyGL|Pisilinux|g' src/branding/default/branding.desc")
+
+    shelltools.system("sed -i 's|backend: dummy|backend: pisi|g' src/modules/packages/packages.conf")
+    shelltools.system("sed -i 's|systemctl -i reboot|shutdown -r now|g' src/modules/finished/finished.conf")
 
     shelltools.makedirs("build")
     shelltools.cd("build")
@@ -27,7 +30,8 @@ def setup():
                           -DWITH_KF5DBus=OFF \
                           -DWITH_CRASHREPORTER=ON", \
                           sourceDir=".." )
-    
+                          # -DSKIP_MODULES='bootldr bootloader license mnt notesqml oemid preservefiles partitionq' \
+
 def build():
     shelltools.cd("build")
     
@@ -43,6 +47,8 @@ def install():
     #dbus configuration for pisi
     pisitools.dosed("%s/usr/share/calamares/modules/machineid.conf" % get.installDIR(), "systemd: true", "systemd: false")
     pisitools.dosed("%s/usr/share/calamares/modules/machineid.conf" % get.installDIR(), "symlink: true", "symlink: false")
+
+    pisitools.dosed("%s/usr/share/calamares/modules/removeuser.conf" % get.installDIR(), "username: live", "username: pisi")
 
     pisitools.dosym("/usr/share/icons/hicolor/scalable/apps/calamares.svg", "/usr/share/pixmaps/calamares.svg")
     
