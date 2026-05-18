@@ -246,9 +246,10 @@ def install():
         pisitools.dosym("libnvidia-nvvm70.so.4", "%s/libnvidia-nvvm70.so.1" % libdir)
         pisitools.dosym("libnvidia-nvvm70.so.4", "%s/libnvidia-nvvm70.so.%s" % (libdir, version))
 
-        pisitools.dolib("libnvidia-egl-wayland.so.1.1.20", libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.20", "%s/libnvidia-egl-wayland.so.1" % libdir)
-        pisitools.dosym("libnvidia-egl-wayland.so.1.1.20", "%s/libnvidia-egl-wayland.so" % libdir)
+        # egl-wayland çakışma
+        # pisitools.dolib("libnvidia-egl-wayland.so.1.1.20", libdir)
+        # pisitools.dosym("libnvidia-egl-wayland.so.1.1.20", "%s/libnvidia-egl-wayland.so.1" % libdir)
+        # pisitools.dosym("libnvidia-egl-wayland.so.1.1.20", "%s/libnvidia-egl-wayland.so" % libdir)
         
         pisitools.dolib("libnvidia-egl-gbm.so.1.1.3", libdir)
         pisitools.dosym("libnvidia-egl-gbm.so.1.1.3", "%s/libnvidia-egl-gbm.so.1" % libdir)
