@@ -108,8 +108,14 @@ def install():
     ###  Libraries
     # OpenGl library
     pisitools.dolib("libGL.so.%s" % version, nvlibdir)
-    # panda libgl
     pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.7.0" % nvlibdir)
+    pisitools.dosym("libGL.so.1.7.0", "%s/libGL.so.1.7" % nvlibdir)
+    pisitools.dosym("libGL.so.1.7", "%s/libGL.so.1" % nvlibdir)
+    pisitools.dosym("libGL.so.1", "%s/libGL.so" % nvlibdir)
+
+
+
+#    pisitools.dosym("libGL.so.%s" % version, "%s/libGL.so.1.2.0" % nvlibdir)
 
     # OpenCL
     #pisitools.dolib("libOpenCL.so.1.0.0", libdir)
@@ -151,10 +157,14 @@ def install():
     pisitools.dosym("../nvidia340/vdpau/libvdpau_nvidia.so.%s" % version, "%s/vdpau/libvdpau_nvidia.so.1" % nvlibdir.strip(driver_dir_name))
 
     # X modules
-    pisitools.dolib("nvidia_drv.so", "%s/modules/drivers" % nvlibdir)
-    pisitools.dosym("%s/modules/drivers/nvidia_drv.so" % nvlibdir, "%s/modules/drivers/nvidia_drv.so" % xorglibdir)
-    pisitools.dolib("libglx.so.%s" % version, "%s/modules/extensions" % nvlibdir)
-    pisitools.dosym("libglx.so.%s" % version, "%s/modules/extensions/libglx.so" % nvlibdir)
+    pisitools.dolib("nvidia_drv.so", "%s/xorg/modules/drivers" % libdir)
+    # pisitools.dolib("nvidia_drv.so", "%s/xorg/modules/drivers" % nvlibdir)
+    # pisitools.dosym("%s/xorg/modules/drivers/nvidia_drv.so" % nvlibdir, "%s/modules/drivers/nvidia_drv.so" % xorglibdir)
+
+    # BURASI DEĞİŞTİ CONFA GÖRE
+    pisitools.dolib("libglx.so.%s" % version, "%s/xorg/modules" % nvlibdir)
+    pisitools.dosym("libglx.so.%s" % version, "%s/xorg/modules/libglx.so" % nvlibdir)
+    pisitools.dosym("libglx.so.%s" % version, "%s/xorg/modules/libglx.so.1" % nvlibdir)
 
     # Exit time for emul32 build
     if get.buildTYPE() == 'emul32':
