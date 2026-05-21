@@ -12,7 +12,6 @@ j = ''.join([
     ' -DUSE_LIBSECRET=ON',
     ' -DBUILD_USERMANUAL=1',
     ' -DENABLE_RAWSPEED=ON',
-    ' -DRAWSPEED_ENABLE_LTO=ON',
     ' -DBINARY_PACKAGE_BUILD=1',
     ' -DCMAKE_BUILD_TYPE=Release',
     ' -DCMAKE_INSTALL_PREFIX=/usr',
@@ -20,6 +19,8 @@ j = ''.join([
     ' -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib',
     ' -B_build -G Ninja -L '
     ])
+
+    # ' -DRAWSPEED_ENABLE_LTO=ON',
 
 def setup():
     pisitools.ldflags.add("-lgs")
