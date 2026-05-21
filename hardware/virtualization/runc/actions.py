@@ -12,7 +12,7 @@ from pisi.actionsapi import get
 
 #shelltools.export("GOPATH", "%s" % get.curDIR())
 shelltools.export("DOCKER_BUILDTAGS","seccomp")
-shelltools.export("COMMIT"," 860f061")
+shelltools.export("COMMIT","c241c0b")
 shelltools.export("BINDIR","/usr/bin")
 
 def setup():
@@ -35,7 +35,7 @@ def build():
     # shelltools.cd("%s" % get.workDIR())
     shelltools.cd("%s/src/github.com/opencontainers/runc" % get.workDIR())
 
-    build_runc = "make GOPATH=/runc COMMIT=860f061"
+    build_runc = "make GOPATH=/runc COMMIT=c241c0b"
 
     shelltools.system(build_runc)
 
