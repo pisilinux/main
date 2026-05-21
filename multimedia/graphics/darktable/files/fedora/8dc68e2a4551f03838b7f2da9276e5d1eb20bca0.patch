@@ -1,0 +1,53 @@
+From 8dc68e2a4551f03838b7f2da9276e5d1eb20bca0 Mon Sep 17 00:00:00 2001
+From: Alex Tutubalin <lexa@lexa.ru>
+Date: Sun, 25 Jan 2026 19:56:24 +0300
+Subject: [PATCH] Use LIBRAW_EXCEPTION instead of own internal in
+ losslessjpeg.h
+
+---
+ internal/losslessjpeg.h | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/internal/losslessjpeg.h b/internal/losslessjpeg.h
+index 7964822d..eced82b3 100644
+--- a/src/external/LibRaw/internal/losslessjpeg.h
++++ b/src/external/LibRaw/internal/losslessjpeg.h
+@@ -20,6 +20,7 @@ it under the terms of the one of two licenses as you choose:
+ #pragma  once
+ #include <stdint.h>
+ #include <vector>
++#include "libraw_cxx_defs.h"
+ 
+ struct BitPump // generic bit source
+ {
+@@ -37,12 +38,6 @@ struct BitPump // generic bit source
+ 
+ struct ByteStreamBE // Jpeg is always big endian
+ {
+-  enum Exceptions
+-  {
+-    OK = 0,
+-    EndOfBuffer = 1
+-  };
+-
+   uint8_t *buffer;
+   unsigned size, pos;
+   ByteStreamBE(uint8_t *b, unsigned s) : buffer(b), size(s), pos(0) {}
+@@ -52,7 +47,7 @@ struct ByteStreamBE // Jpeg is always big endian
+   uint8_t get_u8()
+   {
+     if (pos >= size)
+-      throw EndOfBuffer;
++      throw LIBRAW_EXCEPTION_IO_CORRUPT;
+     uint8_t ret = buffer[pos];
+     pos++;
+     return ret;
+@@ -60,7 +55,7 @@ struct ByteStreamBE // Jpeg is always big endian
+   uint16_t get_u16()
+   {
+     if (pos + 2 > size)
+-      throw EndOfBuffer;
++      throw LIBRAW_EXCEPTION_IO_CORRUPT;
+     uint8_t r1 = buffer[pos];
+     uint8_t r2 = buffer[pos + 1];
+     pos += 2;
