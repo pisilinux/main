@@ -35,7 +35,7 @@ def install():
         pisitools.removeDir("/usr/bin32")
         for f in shelltools.ls("%s/usr/lib32/pkgconfig" % get.installDIR()):
             pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), "bin32", "bin")
-            pisitools.insinto("/usr/share/pixmaps/icons", "doc/publican/sources/images/wayland.png")
+            pisitools.insinto("/usr/share/pixmaps/icons", "doc/book/src/images/wayland.png")
         return
 
     pisitools.dodoc("COPYING", "CONTRIBUTING*", "README*")
