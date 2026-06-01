@@ -1,0 +1,28 @@
+name: GitLab'a Yedekle
+
+on:
+  push:
+    branches:
+      - '*' # Tüm dallardaki (branch) değişiklikleri tetikler
+  delete:
+    branches:
+      - '*'
+
+jobs:
+  mirror_to_gitlab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Tüm geçmişi ve dalları çekmek için gerekli
+
+      - name: GitLab'a Aynala
+        run: |
+          # GitLab uzak sunucusunu güvenli şekilde HTTPS ve token ile tanımlıyoruz
+          # GitHub kullanıcı adınızı ve GitLab depo yolunuzu kendinize göre düzenleyin
+          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@https://gitlab.com/PisiLinux/main.git
+          
+          # Tüm dalları ve etiketleri (tags) zorla GitLab'a gönder
+          git push gitlab --prune --all
+          git push gitlab --prune --tags
