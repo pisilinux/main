@@ -3,10 +3,14 @@ name: GitLab'a Yedekle
 on:
   push:
     branches:
-      - '*' # Tüm dallardaki (branch) değişiklikleri tetikler
+      - '*'
   delete:
     branches:
       - '*'
+
+# GitHub'ın istediği Node 24 zorlamasını çevre değişkeni olarak ekliyoruz
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   mirror_to_gitlab:
@@ -15,14 +19,17 @@ jobs:
       - name: Kodu Çek
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Tüm geçmişi ve dalları çekmek için gerekli
+          fetch-depth: 0
 
       - name: GitLab'a Aynala
         run: |
-          # GitLab uzak sunucusunu güvenli şekilde HTTPS ve token ile tanımlıyoruz
-          # GitHub kullanıcı adınızı ve GitLab depo yolunuzu kendinize göre düzenleyin
-          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@https://gitlab.com/PisiLinux/main.git
+          # Git kimlik bilgilerini geçici olarak ayarla (Olası push hatalarını engellemek için)
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+          # GitLab uzak sunucusunu tanımla
+          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/gitlab_kullanici_adi/gitlab_repo_adi.git
           
-          # Tüm dalları ve etiketleri (tags) zorla GitLab'a gönder
+          # Aynalama işlemini gerçekleştir
           git push gitlab --prune --all
           git push gitlab --prune --tags
