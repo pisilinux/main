@@ -1,5 +1,6 @@
                         
 [![Telegram](https://img.shields.io/badge/Telegram-Pisi%20GNU%2FLinux-blue)](https://t.me/joinchat/DnOmFNS_KOjzEpnn)
+[![Forum](https://img.shields.io/badge/bugs-Pisi%20GNU%2FLinux-orange)](https://pisilinux.org/bugs)
 [![Forum](https://img.shields.io/badge/Forum-Pisi%20GNU%2FLinux-orange)](https://pisilinux.org/forum)
 [![Website](https://img.shields.io/badge/Website-Pisi%20GNU%2FLinux-green)](https://pisilinux.org/)
 # DİKKAT: Geliştiriciler içindir, sisteminize zarar verebilir.
