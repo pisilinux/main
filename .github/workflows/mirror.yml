@@ -23,13 +23,15 @@ jobs:
 
       - name: GitLab'a Aynala
         run: |
-          # Git kimlik bilgilerini geçici olarak ayarla (Olası push hatalarını engellemek için)
+          # Git kimlik bilgilerini geçici olarak ayarla
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
           # GitLab uzak sunucusunu tanımla
           git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/PisiLinux/main.git
           
-          # Aynalama işlemini gerçekleştir
+          # Dalları senkronize et ve silinenleri temizle
           git push gitlab --prune --all
-          git push gitlab --prune --tags
+          
+          # Etiketleri (Tags) ZORLA (-f) senkronize et
+          git push gitlab --prune --tags -f
