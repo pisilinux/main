@@ -19,16 +19,7 @@ def setup():
     shelltools.export("LC_ALL", "C")
     #shelltools.export("JAVA_CMD", "/usr/bin/java_8")
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
-    shelltools.system("mkdir -p third_party/rust-toolchain/bin")
-    shelltools.system("mkdir -p third_party/jdk/current/bin")
-
-    # shelltools.system('echo "1.95.0" > third_party/rust-toolchain/VERSION')
-
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
-    shelltools.system("ln -s /usr/bin/java third_party/jdk/current/bin/")
-
-    shelltools.system("rm -f third_party/gperf/cipd/bin/gperf")
-    shelltools.system("ln -s /usr/bin/gperf third_party/gperf/cipd/bin/")
     
     shelltools.system("sed -i 's/OFFICIAL_BUILD/GOOGLE_CHROME_BUILD/' tools/generate_shim_headers/generate_shim_headers.py")
 
@@ -46,19 +37,24 @@ def setup():
     opt = 'custom_toolchain="//build/toolchain/linux/unbundle:default" \
            host_toolchain="//build/toolchain/linux/unbundle:default" \
            use_sysroot=false \
+           enable_nacl=false \
+           enable_nacl_nonsfi=false \
            rtc_use_pipewire=true \
            use_custom_libcxx=true \
            clang_use_chrome_plugins=true \
            is_official_build=true \
-           disable_fieldtrial_testing_config=true \
-           blink_enable_generated_code_formatting=false \
+           fieldtrial_testing_like_official_build=true \
            fatal_linker_warnings=false \
            treat_warnings_as_errors=false \
+           use_gnome_keyring=false\
+           use_gold=false \
            enable_hangout_services_extension=true \
            enable_widevine=true \
+           linux_use_bundled_binutils=false \
            is_debug=false \
            ffmpeg_branding="Chrome" \
            google_api_key="AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM" \
+           remove_webcore_debug_symbols=true \
            proprietary_codecs=true \
            link_pulseaudio=true \
            enable_swiftshader=false \
@@ -66,20 +62,21 @@ def setup():
            closure_compile=false \
            symbol_level=0 \
            use_lld=true \
-           is_cfi=false \
-           use_thin_lto=false \
-           chrome_pgo_phase=0 \
-           use_clang_modules=false \
-           use_system_libffi=true \
+           thin_lto_enable_optimizations = true \
+           chrome_pgo_phase=2 \
+           enable_mse_mpeg2ts_stream_parser=true \
+           enable_platform_dolby_vision=true \
+           enable_platform_mpeg_h_audio=true \
+           enable_platform_ac3_eac3_audio=true \
+           enable_platform_hevc=true \
+           use_aura=true \
+           use_ozone=true \
            use_dbus=true'
-            # remove_webcore_debug_symbols=true \
-            # use_clang_modules=false \
-            # fieldtrial_testing_like_official_build=true \
 
            
-    shelltools.system("/usr/bin/python3 tools/rust/update_rust.py")
+    
     shelltools.system("/usr/bin/python3 tools/clang/scripts/update.py")    
-    clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin" %(get.workDIR(), get.srcVERSION())
+    clangpath = "%s/chromium-%s/third_party/llvm-build/Release+Asserts/bin/" %(get.workDIR(), get.srcVERSION())
     #clangpath = "/usr/bin"
 
     shelltools.export("CC", "%s/clang" %clangpath)
@@ -97,12 +94,6 @@ def setup():
     shelltools.system("/usr/bin/python3 tools/update_pgo_profiles.py --target=linux update --gs-url-base=chromium-optimization-profiles/pgo_profiles")
     shelltools.system("/usr/bin/python3 tools/gn/bootstrap/bootstrap.py --gn-gen-args '%s'"% opt)
     shelltools.system("out/Release/gn gen out/Release --args='%s'"% opt)
-
-
-    # import os
-    # os.makedirs("out/Release/gen/third_party/devtools-frontend/src/front_end/ui/components/code_highlighter/", exist_ok=True)
-    # # with open("out/Release/gen/third_party/devtools-frontend/src/front_end/ui/components/code_highlighter/css_files-tsconfig.json", "w") as f:
-        # f.write('{"extends": "../../../../../../tsconfig.json"}')
 
 
 def build():
@@ -129,8 +120,8 @@ def install():
                       -e '/<update_contact>/d' \
                       -e '/<p>/N;/<p>\n.*\(We invite\|Chromium supports Vorbis\)/,/<\/p>/d' \
                       -e '/^<?xml/,$p' \
-                      '../../chrome/installer/linux/common/appdata.xml.template'")
-    pisitools.insinto("/usr/share/metainfo", "../../chrome/installer/linux/common/appdata.xml.template", "chromium-browser.appdata.xml")
+                      '../../chrome/installer/linux/common/chromium-browser/chromium-browser.appdata.xml'")
+    pisitools.insinto("/usr/share/metainfo", "../../chrome/installer/linux/common/chromium-browser/chromium-browser.appdata.xml")
     pisitools.insinto("/usr/share/man/man1", "../../chrome/app/resources/manpage.1.in", "chromium-browser.1")
 
     #pisitools.newman("chrome.1", "chromium-browser.1")
