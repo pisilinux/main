@@ -23,7 +23,7 @@ shelltools.export("LC_ALL", "C")
 
 def setup():
     # 3.8.0 yama vurmak için openjdk yerine openjdk- dosyasına alındı geçici
-    shelltools.system("sed -i 's|OPENJDK_CHANGESET) openjdk|OPENJDK_CHANGESET) openjdk-|g' Makefile.in")
+    # shelltools.system("sed -i 's|OPENJDK_CHANGESET) openjdk|OPENJDK_CHANGESET) openjdk-|g' Makefile.in")
 
     shelltools.export("CFLAGS", "%s -std=gnu17 -fPIC -O3" % get.CFLAGS())
     shelltools.export("CXXFLAGS", "%s -std=gnu++14 -fPIC -O3" % get.CXXFLAGS())
@@ -34,10 +34,10 @@ def setup():
                                #patches/openjdk7_nonreparenting-wm.diff"')
                                #patches/giflib_5.1.diff
 
-    shelltools.move("icedtea8-4f0a262e7d6", "openjdk")
-    shelltools.system("patch -p0 < openjdk-8-insantiate-arrayallocator.patch")
-    shelltools.system("patch -p1 < openjdk-8.402_p06-0001-Fix-Wint-conversion.patch")
-    shelltools.system("patch -p1 < openjdk-8.402_p06-0002-Fix-Wincompatible-pointer-types.patch")
+    # shelltools.move("icedtea8-*", "openjdk")
+    # shelltools.system("patch -p0 < openjdk-8-insantiate-arrayallocator.patch")
+    # shelltools.system("patch -p1 < openjdk-8.402_p06-0001-Fix-Wint-conversion.patch")
+    # shelltools.system("patch -p1 < openjdk-8.402_p06-0002-Fix-Wincompatible-pointer-types.patch")
     # shelltools.system("patch -p1 < openjdk-8.402_p06-0004-Fix-misc.-warnings.patch")
 
     autotools.rawConfigure("\
@@ -52,7 +52,7 @@ def setup():
                             --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
                             --with-vendor-name='PisiLinux' \
-                            --with-pkgversion='PisiLinux build 8u.482_3.38.0' \
+                            --with-pkgversion='PisiLinux build 8u.492_3.39.0' \
                            " % jobs.replace("-j", ""))
 
 def build():
