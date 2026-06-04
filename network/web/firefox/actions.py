@@ -70,11 +70,12 @@ def build():
     shelltools.system("./mach package")
     shelltools.system("LLVM_PROFDATA=llvm-profdata \
                        JARLOG_FILE='%s/jarlog' \
+                       dbus-run-session \
                        xvfb-run -s '-screen 0 1920x1080x24 -nolisten local' \
                        ./mach python3 build/pgo/profileserver.py" %get.curDIR())
     
     shelltools.system("echo 'Removing instrumented browser...'")    
-    shelltools.system("./mach clobber")
+    shelltools.system("./mach clobber objdir")
     
     shelltools.system("echo 'Building optimized browser...'")  
     shelltools.system("rm .mozconfig")
