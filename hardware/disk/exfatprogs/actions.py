@@ -8,6 +8,7 @@ from pisi.actionsapi import autotools, pisitools, get
 
 def setup():
 	autotools.configure("--sbindir=/usr/bin \
+						 --libexecdir=/usr/lib \
                          --disable-static")
 
 def build():
