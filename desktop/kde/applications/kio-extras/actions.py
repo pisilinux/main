@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 
 def setup():
     # shelltools.system("sed -e 's|KF6ActivitiesStats ${KF_MIN_VERSION}|KF6ActivitiesStats|' -i CMakeLists.txt")
-    kde6.configure()
+    kde6.configure("-DBUILD_PYTHON_BINDINGS=OFF")
 
 def build():
     kde6.make()
