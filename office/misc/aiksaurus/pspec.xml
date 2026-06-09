@@ -1,0 +1,99 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>aiksaurus</Name>
+        <Homepage>http://sourceforge.net/projects/aiksaurus</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <Summary>An English thesaurus library</Summary>
+        <Description>Aiksaurus is an English-language thesaurus library that can be embedded in word processors, email composers, and other authoring software to provide thesaurus capabilities.</Description>
+        <Archive sha1sum="b9e98650bc5257673d5b1507f3e0edbc0cb6a0b5" type="targz">mirrors://sourceforge/aiksaurus/aiksaurus-1.2.1.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>atk-devel</Dependency>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>fontconfig-devel</Dependency>
+        </BuildDependencies>
+        <Patches>
+<!--             <Patch level="1"></Patch> -->
+        </Patches>
+    </Source>
+
+    <Package>
+        <Name>aiksaurus</Name>
+        <IsA>app:console</IsA>
+        <IsA>library</IsA>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share/aiksaurus</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>aiksaurus-gtk</Name>
+        <IsA>app:gui</IsA>
+        <IsA>library</IsA>
+        <Summary>GTK+ frontend for Aiksaurus, an English thesaurus</Summary>
+        <RuntimeDependencies>
+            <Dependency>gtk2</Dependency>
+            <Dependency>glib2</Dependency>
+            <Dependency>aiksaurus</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin/gaiksaurus</Path>
+            <Path fileType="library">/usr/lib/libAiksaurusGTK*</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/pixmaps</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/applications/aiksaurus.desktop">aiksaurus.desktop</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/share/pixmaps/aiksaurus.png">aiksaurus.png</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <Package>
+        <Name>aiksaurus-devel</Name>
+        <Summary>Development files for aiksaurus</Summary>
+        <RuntimeDependencies>
+            <Dependency release="current">aiksaurus</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>aiksaurus-gtk-devel</Name>
+        <Summary>Development files for aiksaurus-gtk</Summary>
+        <RuntimeDependencies>
+            <Dependency>gtk2-devel</Dependency>
+            <Dependency>aiksaurus-devel</Dependency>
+            <Dependency release="current">aiksaurus-gtk</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include/Aiksaurus/AiksaurusGTK*</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/gaiksaurus*</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-06-08</Date>
+            <Version>1.2.1</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+  </PISI>
