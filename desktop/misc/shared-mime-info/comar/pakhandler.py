@@ -5,37 +5,51 @@ import os
 import re
 import subprocess
 
-def is_root_on_hdd():
-    """Returns True if the root partition (/) is located on an HDD."""
-    try:
-        # 1. Get the source device for the mount point /
-        result = subprocess.run(
-            ["findmnt", "-n", "-o", "SOURCE", "/"],
-            capture_output=True, text=True, check=True
-        )
-        source = result.stdout.strip()
-        if not source:
-            return False
+ROOT_MOUNT_SOURCE_COMMAND = ["findmnt", "-n", "-o", "SOURCE", "/"]
+PARTITION_SUFFIX_PATTERN = r"p?\d+$"
+ROTATIONAL_FLAG_PATH_TEMPLATE = "/sys/block/{disk_name}/queue/rotational"
 
-        # 2. Strip the partition number (for /dev/sda1 -> /dev/sda, for /dev/nvme0n1p1 -> /dev/nvme0n1)
-        disk = re.sub(r'p?\d+$', '', source)   # remove trailing digits and optional 'p'
-        disk_name = os.path.basename(disk)
 
-        # 3. Check the contents of the rotational file
-        rotational_path = f"/sys/block/{disk_name}/queue/rotational"
-        if not os.path.exists(rotational_path):
-            return False
+def _get_root_mount_source():
+    result = subprocess.run(
+        ROOT_MOUNT_SOURCE_COMMAND,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return result.stdout.strip()
 
-        with open(rotational_path, 'r') as f:
-            rotational = int(f.read().strip())
 
-        return rotational == 1
+def _strip_partition_suffix(device_path):
+    return re.sub(PARTITION_SUFFIX_PATTERN, "", device_path)
 
-    except Exception:
-        # On any error, assume it's not an HDD (variable won't be set)
+
+def _is_rotational_disk(disk_name):
+    rotational_flag_path = ROTATIONAL_FLAG_PATH_TEMPLATE.format(disk_name=disk_name)
+
+    if not os.path.exists(rotational_flag_path):
         return False
 
-def run_update_mime_database(path, use_fsync_opt):
+    with open(rotational_flag_path, "r", encoding="utf-8") as rotational_file:
+        return int(rotational_file.read().strip()) == 1
+
+
+def _is_root_on_hdd():
+    """Return True if the root partition (/) is located on an HDD."""
+    try:
+        root_mount_source = _get_root_mount_source()
+        if not root_mount_source:
+            return False
+
+        root_disk_path = _strip_partition_suffix(root_mount_source)
+        root_disk_name = os.path.basename(root_disk_path)
+
+        return _is_rotational_disk(root_disk_name)
+
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        return False
+
+def _run_update_mime_database(path, use_fsync_opt):
     """Runs /usr/bin/update-mime-database for the given path.
        If use_fsync_opt is True, sets PKGSYSTEM_ENABLE_FSYNC=0."""
     cmd = ["/usr/bin/update-mime-database", path]
@@ -52,9 +66,9 @@ def updateMimeTypes(filepath):
         if "/share/mime/packages/" in path and path.endswith(".xml"):
             paths.add("/%s" % path.partition("packages/")[0])
 
-    hdd = is_root_on_hdd()
+    hdd = _is_root_on_hdd()
     for p in paths:
-        run_update_mime_database(p, hdd)
+        _run_update_mime_database(p, hdd)
 
 def setupPackage(metapath, filepath):
     updateMimeTypes(filepath)
