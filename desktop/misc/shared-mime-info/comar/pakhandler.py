@@ -3,21 +3,21 @@
 import piksemel
 import os
 import re
-import subprocess
+import tempfile
 
-ROOT_MOUNT_SOURCE_COMMAND = ["findmnt", "-n", "-o", "SOURCE", "/"]
+ROOT_MOUNT_SOURCE_COMMAND = "findmnt -n -o SOURCE /"
 PARTITION_SUFFIX_PATTERN = r"p?\d+$"
 ROTATIONAL_FLAG_PATH_TEMPLATE = "/sys/block/{disk_name}/queue/rotational"
 
 
 def _get_root_mount_source():
-    result = subprocess.run(
-        ROOT_MOUNT_SOURCE_COMMAND,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return result.stdout.strip()
+    with tempfile.NamedTemporaryFile(mode="r") as output_file:
+        result = os.system("%s > %s" % (ROOT_MOUNT_SOURCE_COMMAND, output_file.name))
+        if result != 0:
+            raise OSError("Failed to get root mount source")
+
+        output_file.seek(0)
+        return output_file.read().strip()
 
 
 def _strip_partition_suffix(device_path):
@@ -30,7 +30,7 @@ def _is_rotational_disk(disk_name):
     if not os.path.exists(rotational_flag_path):
         return False
 
-    with open(rotational_flag_path, "r", encoding="utf-8") as rotational_file:
+    with open(rotational_flag_path, "r") as rotational_file:
         return int(rotational_file.read().strip()) == 1
 
 
@@ -46,17 +46,13 @@ def _is_root_on_hdd():
 
         return _is_rotational_disk(root_disk_name)
 
-    except (OSError, subprocess.CalledProcessError, ValueError):
+    except (OSError, ValueError):
         return False
 
 def _run_update_mime_database(path, use_fsync_opt):
     """Runs /usr/bin/update-mime-database for the given path.
        If use_fsync_opt is True, sets PKGSYSTEM_ENABLE_FSYNC=0."""
-    cmd = ["/usr/bin/update-mime-database", path]
-    env = os.environ.copy()
-    if use_fsync_opt:
-        env["PKGSYSTEM_ENABLE_FSYNC"] = "0"
-    subprocess.run(cmd, env=env, check=False)
+    os.system("%s/usr/bin/update-mime-database %s" % ("/usr/PKGSYSTEM_ENABLE_FSYNC=0 " if use_fsync_opt else "", path))
 
 def updateMimeTypes(filepath):
     parse = piksemel.parse(filepath)
