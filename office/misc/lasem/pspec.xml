@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>lasem</Name>
+        <Homepage>http://lasemware.sourceforge.net/</Homepage>
+        <Packager>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Packager>
+        <License>LGPL-2.1-or-later</License>
+        <Icon>lasem</Icon>
+        <Summary>SVG and MathML rendering library</Summary>
+        <Description>Lasem is a C/Gobject based SVG/Mathml renderer. It uses cairo and pango as it's rendering abstraction layer, and then support numerous output formats: xlib, PNG, SVG, PDF, PS, EPS... The API tries to follow the SVG and MathML DOM.</Description>
+        <Archive sha1sum="be755f7f7d576a115837961cf92f35cc8d3b6ab6" type="tarxz">https://github.com/LasemProject/lasem/releases/download/0.6.0/lasem-0.6.0.tar.xz</Archive>
+        <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>gi-docgen</Dependency>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>librsvg-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency>gobject-introspection-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>lasem</Name>
+        <RuntimeDependencies>
+            <Dependency>glib2</Dependency>
+            <Dependency>cairo</Dependency>
+            <Dependency>pango</Dependency>
+            <Dependency>libxml2</Dependency>
+            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>gobject-introspection</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib/liblasem*</Path>
+            <Path fileType="library">/usr/lib/girepository-1.0</Path>
+            <Path fileType="doc">/usr/share/doc/lasem</Path>
+<!--             <Path fileType="man">/usr/share/man</Path> -->
+<!--             <Path fileType="data">/usr/share/lasem</Path> -->
+            <Path fileType="localedata">/usr/share/locale</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>lasem-devel</Name>
+        <Summary>Development files for lasem</Summary>
+        <RuntimeDependencies>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>glib2-devel</Dependency>
+            <Dependency>libxml2-devel</Dependency>
+            <Dependency>gdk-pixbuf-devel</Dependency>
+            <Dependency release="current">lasem</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/lib/pkgconfig</Path>
+            <Path fileType="data">/usr/share/gir-1.0</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-06-12</Date>
+            <Version>0.6.0</Version>
+            <Comment>First release</Comment>
+            <Name>Kamil Atlı</Name>
+            <Email>suvari@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
