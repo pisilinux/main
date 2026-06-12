@@ -13,6 +13,8 @@ def setup():
     #shelltools.system("./autogen.sh")
     autotools.configure("--disable-static --enable-introspection")
 
+    pisitools.dosed("libtool"," -shared ", " -Wl,--as-needed -shared ")
+
 def build():
     autotools.make()
 
