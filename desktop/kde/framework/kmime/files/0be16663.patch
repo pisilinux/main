@@ -1,0 +1,88 @@
+From 0be1666328b01754f2ee37b1387b498210490a82 Mon Sep 17 00:00:00 2001
+From: Volker Krause <vkrause@kde.org>
+Date: Wed, 20 May 2026 17:14:46 +0200
+Subject: [PATCH] Remove pre-KF backward compatibility target
+
+All consumers have switched to the KF targets meanwhile and we don't want
+to have this in a KF release.
+---
+ CMakeLists.txt                  |  4 ----
+ compat/CMakeLists.txt           | 38 ---------------------------------
+ compat/KPim6MimeConfig.cmake.in |  5 -----
+ 3 files changed, 47 deletions(-)
+ delete mode 100644 compat/CMakeLists.txt
+ delete mode 100644 compat/KPim6MimeConfig.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3b81461..8e82783 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,10 +48,6 @@ add_definitions(-DQT_NO_CONTEXTLESS_CONNECT)
+ ecm_set_disabled_deprecation_versions(QT 6.11.0  KF 6.26.0)
+ 
+ add_subdirectory(src)
+-# TODO remove once the Gear master repos are ported and before the first KF release!
+-if (KF_DEP_VERSION VERSION_LESS 6.27)
+-    add_subdirectory(compat)
+-endif()
+ if(BUILD_TESTING)
+     add_subdirectory(autotests)
+     add_subdirectory(tests)
+diff --git a/compat/CMakeLists.txt b/compat/CMakeLists.txt
+deleted file mode 100644
+index 2bf85f8..0000000
+--- a/compat/CMakeLists.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-# TODO temporary until Gear consumers in master are ported to link to KF6::Mime instead
+-add_library(KPim6Mime)
+-add_library(KPim6::Mime ALIAS KPim6Mime)
+-
+-set_target_properties(KPim6Mime PROPERTIES
+-    VERSION ${KMIME_VERSION}
+-    SOVERSION ${KMIME_SOVERSION}
+-    EXPORT_NAME Mime
+-)
+-target_link_libraries(KPim6Mime PUBLIC KF6Mime)
+-
+-install(TARGETS KPim6Mime EXPORT KPim6MimeTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+-
+-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KPim6Mime")
+-
+-ecm_setup_version(PROJECT VARIABLE_PREFIX KMIME
+-                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KPim6MimeConfigVersion.cmake"
+-                  SOVERSION 6
+-)
+-
+-configure_package_config_file(
+-    "${CMAKE_CURRENT_SOURCE_DIR}/KPim6MimeConfig.cmake.in"
+-    "${CMAKE_CURRENT_BINARY_DIR}/KPim6MimeConfig.cmake"
+-    INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+-)
+-
+-install(FILES
+-    "${CMAKE_CURRENT_BINARY_DIR}/KPim6MimeConfig.cmake"
+-    "${CMAKE_CURRENT_BINARY_DIR}/KPim6MimeConfigVersion.cmake"
+-    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+-    COMPONENT Devel
+-)
+-
+-install(EXPORT KPim6MimeTargets
+-    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+-    FILE KPim6MimeTargets.cmake
+-    NAMESPACE KPim6::
+-)
+diff --git a/compat/KPim6MimeConfig.cmake.in b/compat/KPim6MimeConfig.cmake.in
+deleted file mode 100644
+index 7641296..0000000
+--- a/compat/KPim6MimeConfig.cmake.in
++++ /dev/null
+@@ -1,5 +0,0 @@
+-@PACKAGE_INIT@
+-
+-include(CMakeFindDependencyMacro)
+-find_dependency(KF6Mime)
+-include("${CMAKE_CURRENT_LIST_DIR}/KPim6MimeTargets.cmake")
+-- 
+GitLab
+
