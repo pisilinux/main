@@ -1,28 +1,18 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import cmaketools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
+from pisi.actionsapi import get, pisitools, shelltools
 
-def setup():
-    shelltools.system("sed -i 's|Exec=.*|Exec=fgfs --fg-root=/usr/share/flightgear/data|' package/org.flightgear.FlightGear.desktop.in")
+NoStrip = ["/opt", "/usr"]
+IgnoreAutodep = True
+Version = get.srcVERSION()
 
-    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
-                         -DCMAKE_INSTALL_LIBDIR=lib    \
-                         -DCMAKE_INSTALL_DATADIR=/usr/share \
-                         -DFG_DATA_DIR=/usr/share/flightgear")
 
-def build():
-    cmaketools.make()
-    
 def install():
-    cmaketools.install()
-
-    shelltools.copy("%s/usr/appdir/usr/share/*" % get.installDIR(), "%s/usr/share/" % get.installDIR())
-    pisitools.removeDir("/usr/appdir")
-    pisitools.dodoc("README*", "ChangeLog", "AUTHORS", "NEWS", "Thanks")
+    pisitools.dodir ("/opt/flightgear")
+    pisitools.doexe("flightgear-%s-linux-amd64.AppImage" % Version, "/opt/flightgear")
+    pisitools.dosym("/opt/flightgear/flightgear-%s-linux-amd64.AppImage" % Version, "/usr/bin/fgfs")
+ 
