@@ -9,8 +9,8 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import kde6
 
 def setup():
-    shelltools.system("sed -e 's|KF_DEP_VERSION VERSION_LESS 6.27|TRUE|' -i CMakeLists.txt")
-    shelltools.system("patch -Rp1 < 0be16663.patch")
+    # shelltools.system("sed -e 's|KF_DEP_VERSION VERSION_LESS 6.27|TRUE|' -i CMakeLists.txt")
+    # shelltools.system("patch -Rp1 < 0be16663.patch")
     kde6.configure()
 
 def build():
