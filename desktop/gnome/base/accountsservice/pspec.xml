@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>accountsservice</Name>
@@ -12,7 +12,7 @@
         <IsA>library</IsA>
         <Summary>D-Bus Service to Manipulate User Account Information</Summary>
         <Description>accountsservice server provides a set of D-Bus interfaces for querying and manipulating user account information.</Description>
-        <Archive sha1sum="81ae2cbda5cc08a86393d88edc8a370185251617" type="tarbz2">https://gitlab.freedesktop.org/accountsservice/accountsservice/-/archive/26.12.8/accountsservice-26.12.8.tar.bz2</Archive>
+        <Archive sha1sum="78419e5fa8fbb485f6b939e180fe26f2efc3c103" type="tarxz">https://www.freedesktop.org/software/accountsservice/accountsservice-23.13.9.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>meson</Dependency>
             <Dependency>xmlto</Dependency>
@@ -25,21 +25,19 @@
             <Dependency>polkit-devel</Dependency>
             <Dependency>docbook-xsl</Dependency>
             <Dependency>libxslt-devel</Dependency>
-            <Dependency>json-c-devel</Dependency>
             <Dependency>elogind-devel</Dependency>
             <Dependency>gettext-devel</Dependency>
-            <Dependency>libxcrypt-devel</Dependency>
             <Dependency>gobject-introspection-devel</Dependency>
         </BuildDependencies>
         <Patches>
             <Patch>0001-tests-Drop-check-format-test.patch</Patch>
-<!--             <Patch>fedora/0001-mocklibc-Fix-compiler-warning.patch</Patch> -->
-<!--             <Patch>fedora/0002-user-manager-Fix-another-compiler-warning.patch</Patch> -->
+            <Patch>fedora/0001-mocklibc-Fix-compiler-warning.patch</Patch>
+            <Patch>fedora/0002-user-manager-Fix-another-compiler-warning.patch</Patch>
 <!--             <Patch>fedora/0003-act-user-Use-the-reentrant-interfaces-of-crypt-_gens.patch</Patch> -->
 <!--             <Patch>0001-tests-Drop-check-format-test.patch</Patch> -->
-<!--             <Patch>accountsservice-23.13.9-test-fix.patch</Patch> -->
-<!--             <Patch>accountsservice-23.13.9-generate-version.patch</Patch> -->
-<!--             <Patch>accountsservice-23.13.9-musl-fixes.patch</Patch> -->
+            <Patch>accountsservice-23.13.9-test-fix.patch</Patch>
+            <Patch>accountsservice-23.13.9-generate-version.patch</Patch>
+            <Patch>accountsservice-23.13.9-musl-fixes.patch</Patch>
 <!--             <Patch>accountsservice-23.13.9-c99-fixes.patch</Patch> -->
         </Patches>
     </Source>
@@ -50,9 +48,6 @@
             <Dependency>polkit</Dependency>
             <Dependency>shadow</Dependency>
             <Dependency>glib2</Dependency>
-            <Dependency>json-c</Dependency>
-            <Dependency>elogind</Dependency>
-            <Dependency>libxcrypt</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/libexec</Path>
@@ -85,8 +80,6 @@
         <Summary>accountsservice için geliştirme dosyaları</Summary>        
         <RuntimeDependencies>
             <Dependency release="current">accountsservice</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency>polkit-devel</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include</Path>
@@ -95,6 +88,13 @@
     </Package>
 
     <History>
+        <Update release="13">
+            <Date>2026-06-26</Date>
+            <Version>23.13.9</Version>
+            <Comment>revert kde kullanıcı ekleme hatası.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="12">
             <Date>2026-04-04</Date>
             <Version>26.12.8</Version>
