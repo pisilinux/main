@@ -10,6 +10,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import get, shelltools
     
 def setup():
+    shelltools.system("patch -p1 < poppler.patch || true")
     shelltools.chmod("scribus/pageitem_latexframe.h")
     pisitools.dosed("CMakeLists.txt", "\"share\/doc\/\$\{MAIN_DIR_NAME\}.*", "\"share/doc/${MAIN_DIR_NAME}/\")")
     
