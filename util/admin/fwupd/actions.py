@@ -14,10 +14,10 @@ from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("--localstatedir=/var \
-                                -Dsystemd=disabled \
-                                -Ddocs=disabled \
-                                -Dpassim=disabled \
-                                -Dman=false")
+                          -Dsystemd=disabled \
+                          -Ddocs=disabled \
+                          -Dpassim=disabled \
+                          -Dman=false")
 
 def build():
     mesontools.build()
