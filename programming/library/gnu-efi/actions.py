@@ -17,6 +17,8 @@ def build():
     pisitools.ldflags.remove("-Wl,--sort-common")
     shelltools.system("sed -e 's/-Werror//g' -i Make.defaults")
 
+    shelltools.export("CFLAGS", "-fno-stack-protector")
+
     options="PREFIX='/usr' lib gnuefi inc apps"
     autotools.make(options)
 
