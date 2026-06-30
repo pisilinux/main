@@ -7,19 +7,20 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
     #shelltools.system("sed -i 's|$(datadir)/pkgconfig|$(libdir)/pkgconfig|g' Makefile.in")
     #shelltools.system("sed -i 's|$(datadir)/pkgconfig|$(libdir)/pkgconfig|g' Makefile.am")
-    autotools.configure("--prefix=/usr")
+    mesontools.configure()
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s pkgconfigdir=/usr/lib/pkgconfig" %get.installDIR())
-    #pisitools.domove("/usr/share/pkgconfig/iso-codes.pc","/usr/lib/pkgconfig")
-    #pisitools.removeDir("/usr/share/pkgconfig")
+    mesontools.install()
+    pisitools.domove("/usr/share/pkgconfig/iso-codes.pc","/usr/lib/pkgconfig")
+    pisitools.removeDir("/usr/share/pkgconfig")
 
-    pisitools.dodoc("COPYING","TODO","README.md")
+    pisitools.dodoc("TODO*","README.md")
