@@ -1,10 +1,11 @@
---- cmake/modules/DispatchCompilerWarnings.cmake.orig	2020-05-12 13:13:59.619689872 +0300
-+++ cmake/modules/DispatchCompilerWarnings.cmake	2020-05-12 13:13:35.216171428 +0300
-@@ -2,7 +2,6 @@
- if("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC")
-   # TODO: someone needs to provide the msvc equivalent warning flags
+diff --git a/cmake/modules/DispatchCompilerWarnings.cmake b/cmake/modules/DispatchCompilerWarnings.cmake
+index b106444..bdb3f28 100644
+--- a/cmake/modules/DispatchCompilerWarnings.cmake
++++ b/cmake/modules/DispatchCompilerWarnings.cmake
+@@ -6,7 +6,6 @@ elseif(WIN32)
+   # so that we can use __popcnt64
+   add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:-fms-extensions>)
  else()
--  add_compile_options($<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-Werror>)
-   add_compile_options($<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-Wall>)
-   add_compile_options($<$<OR:$<COMPILE_LANGUAGE:C>,$<COMPILE_LANGUAGE:CXX>>:-Wextra>)
-
+-  add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:-Werror>)
+   add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:-Wall>)
+   add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:-Wextra>)
