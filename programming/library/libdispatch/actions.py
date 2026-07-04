@@ -32,5 +32,5 @@ def install():
 	shelltools.cd("build")
 	cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("../CONTRIBUTING.md", "../INSTALL.md", "../README.md", "../TESTING.md")
+	pisitools.dodoc("../INSTALL.md", "../README.md", "../TESTING.md")
 
