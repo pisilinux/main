@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>libcec</Name>
@@ -8,14 +8,14 @@
             <Name>Pisi Linux Admins</Name>
             <Email>admin@pisilinux.org</Email>
         </Packager>
-        <License>GPLv3</License>
+        <License>GPLv2</License>
         <IsA>library</IsA>
-        <Summary>This library provides support for Pulse-Eight's USB-CEC adapter and other CEC capable hardware, like the Raspberry Pi.</Summary>
-        <Description>Bu kitaplık, Pulse-Eight'ın USB-CEC adaptörü ve Raspberry Pi gibi diğer CEC özellikli donanımlar için destek sağlar.</Description>
-        <Archive sha1sum="3991875a67fbbcb0a4421a6133b79a4a16194ddd" type="targz">https://github.com/Pulse-Eight/libcec/archive/refs/tags/libcec-6.0.2.tar.gz</Archive>
+        <Summary>USB CEC Adapter communication Library</Summary>
+        <Description>This library provides support for Pulse-Eight's USB-CEC adapter and other CEC capable hardware, like the Raspberry Pi.</Description>
+        <Archive sha1sum="9a2221385f3150e64c0e6799e5209e5d99f0a7ea" type="targz">https://github.com/Pulse-Eight/libcec/archive/refs/tags/libcec-7.1.1.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>cmake</Dependency>
             <Dependency>swig</Dependency>
+            <Dependency>cmake</Dependency>
             <Dependency>eudev-devel</Dependency>
             <Dependency>libX11-devel</Dependency>
             <Dependency>ncurses-devel</Dependency>
@@ -36,6 +36,7 @@
         <RuntimeDependencies>
             <Dependency>eudev</Dependency>
             <Dependency>libX11</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>ncurses</Dependency>
             <Dependency>python3</Dependency>
             <Dependency>libXrandr</Dependency>
@@ -43,7 +44,8 @@
         </RuntimeDependencies>
         <Files>
             <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="library">/usr/lib/libcec*</Path>
+            <Path fileType="library">/usr/lib/python3.11/site-packages</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
@@ -62,6 +64,13 @@
     </Package>
 
     <History>
+        <Update release="3">
+            <Date>2026-07-06</Date>
+            <Version>7.1.1</Version>
+            <Comment>Version bump</Comment>
+            <Name>Pisi Linux Admins</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="2">
             <Date>2023-11-04</Date>
             <Version>6.0.2</Version>
