@@ -12,11 +12,12 @@ from pisi.actionsapi import get
 shelltools.export("CYTHON", "/usr/bin/cython3")
 
 def setup():
-   shelltools.system("cargo fetch --locked --target x86_64-unknown-linux-gnu")
+   # shelltools.system("cargo fetch --locked --target x86_64-unknown-linux-gnu")
+   shelltools.system("cargo fetch --locked --target host-tuple")
 
 def build():
-    shelltools.system("export CARGO_PROFILE_RELEASE_DEBUG=2 CARGO_PROFILE_RELEASE_STRIP=false")
-    shelltools.system("export CARGO_PROFILE_RELEASE_LTO=true CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1")
+    # shelltools.system("export CARGO_PROFILE_RELEASE_DEBUG=2 CARGO_PROFILE_RELEASE_STRIP=false")
+    # shelltools.system("export CARGO_PROFILE_RELEASE_LTO=true CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1")
     shelltools.system("cargo build --release --frozen --all-targets")
     
 def check():
