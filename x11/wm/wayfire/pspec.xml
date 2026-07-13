@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>wayfire</Name>
@@ -13,8 +13,12 @@
         <Summary>3D wayland compositor</Summary>
         <Description>3D wayland compositor</Description>
         <Archive sha1sum="7df81d5ee4ea67067921f9b4fcffcf2890f8fc6d" type="tarxz">https://github.com/WayfireWM/wayfire/releases/download/v0.10.1/wayfire-0.10.1.tar.xz</Archive>
+        <Archive sha1sum="a79b589b7bdec570c96538d4eaef31621c41feda" type="binary" target="wayfire-0.10.1">https://github.com/WayfireWM/wf-config/archive/refs/tags/v0.10.0.tar.gz</Archive>
+        <Archive sha1sum="ab986a363648cae563252358de7d5810b85cc23c" type="binary" target="wayfire-0.10.1">https://github.com/WayfireWM/wf-utils/archive/refs/heads/master.zip</Archive>
+        <!--				 <Archive sha1sum="dfa8c2dd4df29016a2b05d10001e88e67f728cce" type="binary" target="wayfire-0.10.1">https://github.com/WayfireWM/wf-touch/archive/refs/heads/master.zip</Archive> -->
         <BuildDependencies>
             <Dependency>git</Dependency>
+            <Dependency>glm</Dependency>
             <Dependency>meson</Dependency>
             <Dependency>cmake</Dependency>
             <Dependency>libgomp</Dependency>
@@ -24,22 +28,25 @@
             <Dependency>pango-devel</Dependency>
             <Dependency>libpng-devel</Dependency>
             <Dependency>pixman-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
+            <Dependency>vulkan-devel</Dependency>
             <Dependency>wayland-devel</Dependency>
-            <Dependency>wlroots-devel</Dependency>
+            <Dependency>nlohmann-json</Dependency>
             <Dependency>libevdev-devel</Dependency>
             <Dependency>libglvnd-devel</Dependency>
             <Dependency>wayland-server</Dependency>
             <Dependency>wayland-client</Dependency>
-            <Dependency>nlohmann-json</Dependency>
-            <Dependency>wf-config-devel</Dependency>
             <Dependency>libinput-devel</Dependency>
+            <Dependency>vulkan-headers</Dependency>
+            <Dependency>wf-config-devel</Dependency>
+            <Dependency>wlroots0.19-devel</Dependency>
             <Dependency>libxkbcommon-devel</Dependency>
             <Dependency>libjpeg-turbo-devel</Dependency>
             <Dependency>xorg-xwayland-devel</Dependency>
             <Dependency>wayland-protocols-devel</Dependency>
         </BuildDependencies>
         <Patches>
-<!--             <Patch level="1">wayland.patch</Patch> -->
+            <!--						 <Patch level="1">wayland.patch</Patch> -->
         </Patches>
     </Source>
 
@@ -52,18 +59,19 @@
             <Dependency>pango</Dependency>
             <Dependency>libpng</Dependency>
             <Dependency>pixman</Dependency>
+            <Dependency>libgcc</Dependency>
             <Dependency>libgomp</Dependency>
             <Dependency>wayland</Dependency>
-            <Dependency>wlroots</Dependency>
             <Dependency>libevdev</Dependency>
             <Dependency>libglvnd</Dependency>
-            <Dependency>wf-config</Dependency>
             <Dependency>libinput</Dependency>
+            <Dependency>wf-config</Dependency>
+            <Dependency>wlroots0.19</Dependency>
             <Dependency>libxkbcommon</Dependency>
             <Dependency>libjpeg-turbo</Dependency>
             <Dependency>xorg-xwayland</Dependency>
-            <Dependency>wayland-server</Dependency>
             <Dependency>nlohmann-json</Dependency>
+            <Dependency>wayland-server</Dependency>
             <Dependency>wayland-client</Dependency>
             <Dependency>wayland-protocols</Dependency>
         </RuntimeDependencies>
@@ -81,6 +89,14 @@
         <Name>wayfire-devel</Name>
         <Summary>Development files for wayfire</Summary>
         <RuntimeDependencies>
+            <Dependency>cairo-devel</Dependency>
+            <Dependency>pango-devel</Dependency>
+            <Dependency>pixman-devel</Dependency>
+            <Dependency>vulkan-devel</Dependency>
+            <Dependency>wayland-devel</Dependency>
+            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>wf-config-devel</Dependency>
+            <Dependency>wlroots0.19-devel</Dependency>
             <Dependency release="current">wayfire</Dependency>
         </RuntimeDependencies>
         <Files>
@@ -92,7 +108,7 @@
 
     <History>
         <Update release="2">
-            <Date>2026-07-08</Date>
+            <Date>2026-07-13</Date>
             <Version>0.10.1</Version>
             <Comment>Rebuild</Comment>
             <Name>Pisi Linux Community</Name>

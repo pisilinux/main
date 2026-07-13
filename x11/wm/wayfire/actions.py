@@ -11,10 +11,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Duse_system_wfconfig=enabled \
-                          -Duse_system_wlroots=enabled \
-                          -Dxwayland=enabled \
-                          --auto-features=disabled")
+    mesontools.configure()
 
 def build():
     mesontools.build()
