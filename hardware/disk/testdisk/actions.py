@@ -8,7 +8,7 @@ from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 
 def setup():
-    autotools.autoreconf("-vif")
+    # autotools.autoreconf("-vif")
     autotools.configure("--prefix=/usr \
                          --without-ewf \
                          --enable-sudo")
