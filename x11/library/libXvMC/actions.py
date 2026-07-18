@@ -14,7 +14,7 @@ def setup():
     options = "--disable-static \
               "
     
-    if get.buildTYPE() == "_emul32":
+    if get.buildTYPE() == "emul32":
         options += "  --libdir=/usr/lib32 \
                    "
     
@@ -28,7 +28,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     
-    if get.buildTYPE() != "_emul32":
+    if get.buildTYPE() == "emul32":
         return
 
     pisitools.dodoc("ChangeLog", "COPYING", "README*")
