@@ -9,11 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    autotools.configure("--disable-silent-rules \
-                         --disable-static \
-                         --disable-werror")
-
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    autotools.configure("--prefix=/usr --disable-{werror,static}")
 
 def build():
     autotools.make()
@@ -24,4 +20,4 @@ def check():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "COPYING*", "NEWS", "README")
+    pisitools.dodoc("AUTHORS", "COPYING.MPL", "COPYING.LGPL", "NEWS")

@@ -7,7 +7,7 @@
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
 
-shelltools.export("FAKEROOTKEY", "1") # ?any, see setup.py 445:
+shelltools.export("FAKEROOTKEY", "1") # ?any, see setup.py 442, 443, 467:
 
 def build():
     pythonmodules.compile(pyVer = '3')
