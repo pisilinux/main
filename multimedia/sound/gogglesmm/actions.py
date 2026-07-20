@@ -11,6 +11,7 @@ j = ''.join([
     ' -DWITH_ALSA=ON',
     ' -DWITH_CFOX=OFF',
     ' -DWITH_NATIVE=OFF',
+    ' -DCMAKE_POLICY_VERSION_MINIMUM=3.5',
     ' -B_build -L '
     ])
 
