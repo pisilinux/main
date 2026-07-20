@@ -10,12 +10,11 @@ from pisi.actionsapi import get
 
 i = ''.join([
     ' -DBUILD_SHARED_LIBS=ON',
-    ' -DWITH_ZLIB=ON -L ' ,
-    ' -DCMAKE_CXX_FLAGS="%s -DNDEBUG"'
+    ' -DCMAKE_INSTALL_PREFIX=/usr'
     ])
 
 def setup():
-    cmaketools.configure(i % get.CXXFLAGS())
+    cmaketools.configure(i)
 
 def build():
     cmaketools.make()
@@ -23,4 +22,4 @@ def build():
 def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "NEWS")
+    pisitools.dodoc("AUTHORS", "README*")
