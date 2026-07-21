@@ -14,6 +14,7 @@ from pisi.actionsapi import cmaketools
 
 def setup():
     shelltools.export("CFLAGS", " -std=gnu17")
+    shelltools.export("CXXFLAGS", " -fpermissive")
     #autotools.autoreconf("-vfi")
     #shelltools.cd("lib-src/portmixer")
     #shelltools.cd("../..")
