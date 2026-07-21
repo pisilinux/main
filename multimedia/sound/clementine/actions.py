@@ -13,6 +13,7 @@ j = ''.join([
     ' -DUSE_SYSTEM_PROJECTM=ON',
     ' -DCMAKE_CXX_FLAGS="-fpermissive"',
     ' -DCMAKE_CXX_STANDARD=17',
+    ' -DFORCE_GIT_REVISION:STRING=1.4.1-80-g9dd40f24e',
     ' -B_build -G Ninja -L '
     ])
 
