@@ -13,6 +13,7 @@ from pisi.actionsapi import cmaketools
 #WorkDir = "audacity-minsrc-%s" % get.srcVERSION()
 
 def setup():
+    shelltools.export("CFLAGS", " -std=gnu17")
     #autotools.autoreconf("-vfi")
     #shelltools.cd("lib-src/portmixer")
     #shelltools.cd("../..")
