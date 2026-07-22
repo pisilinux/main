@@ -20,6 +20,7 @@ def setup():
                                         -Dstemming=false \
                                         -Dqt=true \
                                         -Dapidocs=false \
+                                        -Dman=false \
                                         -Dvapi=true")
     
     # shelltools.cd("../AppStream-qt6")
