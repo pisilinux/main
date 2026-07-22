@@ -2,26 +2,14 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import pythonmodules
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import pisitools
-from pisi.actionsapi import get
-
-WorkDir="httptools-%s" % get.srcVERSION()
-
-def setup():
-    # install process needs some header files from
-    # http-parser github repo. so we add that repo
-    # and copy the header files to the corresponding path
-    for files in ["../http-parser-2.9.4/*"]:
-        shelltools.copy("%s" % files,"vendor/http-parser")
+from pisi.actionsapi import python3modules
 
 def build():
     # fix unused direct dependency analysis
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install()
