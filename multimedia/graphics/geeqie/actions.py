@@ -8,7 +8,6 @@ from pisi.actionsapi import mesontools, pisitools
 
 y = ''.join([
     ' --prefix=/usr',
-    ' --buildtype=debugoptimized',
     ' -Dpdf=disabled',
     ' -Ddjvu=disabled',
     ' -Ddoxygen=disabled',
