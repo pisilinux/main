@@ -41,6 +41,6 @@ def install():
 
     # These fonts included in gnu-gs-fonts-std package.
     pisitools.remove("/usr/share/libwmf/fonts/*afm")
-    pisitools.remove("/usr/share/libwmf/fonts/*pfb")
+    # pisitools.remove("/usr/share/libwmf/fonts/*pfb")
 
     pisitools.dodoc("CREDITS", "COPYING", "README")
