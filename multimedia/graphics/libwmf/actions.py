@@ -10,7 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.unlink("configure.ac")
+    # shelltools.unlink("configure.ac")
     shelltools.sym("patches/acconfig.h", "acconfig.h")
 
     autotools.autoreconf("-vfi")
