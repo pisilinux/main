@@ -1662,7 +1662,7 @@
             <Summary xml:lang="tr">Berkeley İnternet İsim Alanı (BIND) DNS (Alan Adı Sistemi) sunucusu</Summary>
             <Description xml:lang="en">bind is an implementation of the DNS protocols, bind includes a DNS server (named), a resolver library and tools for verifying that the DNS server is operating properly.</Description>
             <Description xml:lang="tr">bind, DNS protokollerinin gerçeklenimidir. DNS sunucu (named) ve bu sunucunun düzgün çalışması ve doğrulamasını yapılması için gerekli çözümleyici kitaplık ve araçları içerir.</Description>
-            <Archive type="tarxz" sha1sum="7331e36171bba93e30d6874b8f70f097b0a3ba1d" name="bind-9.18.18.tar.xz">ftp://ftp.isc.org/isc/bind9/9.18.18/bind-9.18.18.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="9d323db5f1d6f3c4485ba916c746c58a56a7b002" name="bind-9.20.26.tar.xz">ftp://ftp.isc.org/isc/bind9/9.20.26/bind-9.20.26.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>openssl-devel</Dependency>
                 <Dependency>libxml2-devel</Dependency>
@@ -1678,6 +1678,7 @@
                 <Dependency>json-c-devel</Dependency>
                 <Dependency>libedit-devel</Dependency>
                 <Dependency>jemalloc-devel</Dependency>
+                <Dependency>liburcu-devel</Dependency>
                 <Dependency>libnghttp2-devel</Dependency>
                 <Dependency>libmaxminddb-devel</Dependency>
                 <Dependency>mit-kerberos-devel</Dependency>
@@ -1685,7 +1686,6 @@
             <Patches>
                 <Patch level="1">nslookup-pisilinux.patch</Patch>
                 <Patch level="1">fedora/bind-9.5-PIE.patch</Patch>
-                <Patch level="1">fedora/bind-9.18-unittest-netmgr-unstable.patch</Patch>
             </Patches>
             <SourceURI>server/bind/pspec.xml</SourceURI>
         </Source>
@@ -1701,7 +1701,9 @@
                 <Dependency>mit-kerberos</Dependency>
                 <Dependency>lmdb</Dependency>
                 <Dependency>libuv</Dependency>
+                <Dependency>zlib</Dependency>
                 <Dependency>json-c</Dependency>
+                <Dependency>liburcu</Dependency>
                 <Dependency>jemalloc</Dependency>
                 <Dependency>libnghttp2</Dependency>
                 <Dependency>libmaxminddb</Dependency>
@@ -1717,7 +1719,7 @@
             <IsA>library</IsA>
             <PartOf>server.library</PartOf>
             <RuntimeDependencies>
-                <Dependency release="10">bind-libs</Dependency>
+                <Dependency release="11">bind-libs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -1733,7 +1735,11 @@
             <IsA>app:console</IsA>
             <PartOf>network.analyzer</PartOf>
             <RuntimeDependencies>
-                <Dependency release="10">bind-libs</Dependency>
+                <Dependency release="11">bind-libs</Dependency>
+                <Dependency>lmdb</Dependency>
+                <Dependency>liburcu</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>jemalloc</Dependency>
                 <Dependency>readline</Dependency>
                 <Dependency>mit-kerberos</Dependency>
                 <Dependency>python3</Dependency>
@@ -1751,7 +1757,7 @@
             <Summary xml:lang="tr">bind sunucusunu chroot içinde çalıştırmak için gerekli dizin ve dosyalar</Summary>
             <IsA>service</IsA>
             <RuntimeDependencies>
-                <Dependency release="10">bind</Dependency>
+                <Dependency release="11">bind</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc/rsyslog.d/bind_chroot.conf</Path>
@@ -1770,7 +1776,7 @@
             <Name>bind</Name>
             <IsA>service</IsA>
             <RuntimeDependencies>
-                <Dependency release="10">bind-libs</Dependency>
+                <Dependency release="11">bind-libs</Dependency>
                 <Dependency>libcap</Dependency>
                 <Dependency>libxml2</Dependency>
                 <Dependency>openssl</Dependency>
@@ -1800,6 +1806,13 @@
             </AdditionalFiles>
         </Package>
         <History>
+            <Update release="11">
+                <Date>2026-07-22</Date>
+                <Version>9.20.26</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
             <Update release="10">
                 <Date>2024-12-18</Date>
                 <Version>9.18.18</Version>
@@ -18515,7 +18528,7 @@
             <Summary xml:lang="en">Wayland Compositor Infrastructure</Summary>
             <Description xml:lang="en">Wayland is a protocol for a compositor to talk to its clients as well as a C library implementation of that protocol.</Description>
             <Icon>wayland</Icon>
-            <Archive type="tarxz" sha1sum="55722deaaa9123cb6a1ce189fa977fa73171e1e4" name="wayland-1.25.0.tar.xz">https://gitlab.freedesktop.org/wayland/wayland/-/releases/1.25.0/downloads/wayland-1.25.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="bad683e7d38c1c3d2daf1f2f2ad62c27d99b98af" name="wayland-1.26.0.tar.xz">https://gitlab.freedesktop.org/wayland/wayland/-/releases/1.26.0/downloads/wayland-1.26.0.tar.xz</Archive>
             <BuildDependencies>
                 <Dependency>xmlto</Dependency>
                 <Dependency>meson</Dependency>
@@ -18548,7 +18561,7 @@
             <Summary xml:lang="en">Wayland client library</Summary>
             <RuntimeDependencies>
                 <Dependency>libffi</Dependency>
-                <Dependency release="19">wayland</Dependency>
+                <Dependency release="20">wayland</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/libwayland-client*</Path>
@@ -18558,7 +18571,7 @@
             <Name>wayland-cursor</Name>
             <Summary xml:lang="en">Wayland cursor library</Summary>
             <RuntimeDependencies>
-                <Dependency release="19">wayland</Dependency>
+                <Dependency release="20">wayland</Dependency>
                 <Dependency>wayland-client</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -18570,7 +18583,7 @@
             <Summary xml:lang="en">Wayland server library</Summary>
             <RuntimeDependencies>
                 <Dependency>libffi</Dependency>
-                <Dependency release="19">wayland</Dependency>
+                <Dependency release="20">wayland</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/libwayland-server*</Path>
@@ -18582,7 +18595,7 @@
             <RuntimeDependencies>
                 <Dependency>expat-devel</Dependency>
                 <Dependency>libffi-devel</Dependency>
-                <Dependency release="19">wayland</Dependency>
+                <Dependency release="20">wayland</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -18603,7 +18616,7 @@
                 <Dependency>libxml2-32bit</Dependency>
             </BuildDependencies>
             <RuntimeDependencies>
-                <Dependency release="19">wayland</Dependency>
+                <Dependency release="20">wayland</Dependency>
                 <Dependency>expat-32bit</Dependency>
                 <Dependency>libffi-32bit</Dependency>
                 <Dependency>libxslt-32bit</Dependency>
@@ -18614,6 +18627,13 @@
             </Files>
         </Package>
         <History>
+            <Update release="20">
+                <Date>2026-07-17</Date>
+                <Version>1.26.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
             <Update release="19">
                 <Date>2026-05-31</Date>
                 <Version>1.25.0</Version>
@@ -35045,7 +35065,7 @@ Gnome session.</Summary>
             <Summary xml:lang="tr">Wayland tools to display information about current compositor</Summary>
             <Description xml:lang="en">Wayland tools to display information about current compositor</Description>
             <Description xml:lang="tr">Wayland tools to display information about current compositor</Description>
-            <Archive type="tarbz2" sha1sum="3d02914d56493f9a789916d478604c904112f0da" name="wayland-utils-1.2.0.tar.bz2">https://gitlab.freedesktop.org/wayland/wayland-utils/-/archive/1.2.0/wayland-utils-1.2.0.tar.bz2</Archive>
+            <Archive type="tarbz2" sha1sum="db5556ae8d07c7f863bb4da97b31754f2ca01d9c" name="wayland-utils-1.3.0.tar.bz2">https://gitlab.freedesktop.org/wayland/wayland-utils/-/archive/1.3.0/wayland-utils-1.3.0.tar.bz2</Archive>
             <BuildDependencies>
                 <Dependency>meson</Dependency>
                 <Dependency>wayland-devel</Dependency>
@@ -35071,6 +35091,13 @@ Gnome session.</Summary>
             </Files>
         </Package>
         <History>
+            <Update release="4">
+                <Date>2026-07-23</Date>
+                <Version>1.3.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
             <Update release="3">
                 <Date>2023-07-04</Date>
                 <Version>1.2.0</Version>
@@ -189180,6 +189207,102 @@ components such as the Settings and gnome-shell.</Description>
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>motif</Name>
+            <Homepage>https://github.com/thentenaar/motif</Homepage>
+            <Packager>
+                <Name>Kamil Atlı</Name>
+                <Email>suvari@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <PartOf>desktop.toolkit.motif</PartOf>
+            <Summary xml:lang="en">Motif User Interface Toolkit.</Summary>
+            <Description xml:lang="en">Motif is a freely available source code distribution for the Motif user interface component toolkit.</Description>
+            <Archive type="targz" sha1sum="2b7270941650cd3f66a92acfef3ed5a37396267e" name="motif-v2.5.2.tar.gz">https://github.com/thentenaar/motif/archive/v2.5.2/motif-v2.5.2.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>xbitmaps</Dependency>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>libXt-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libXpm-devel</Dependency>
+                <Dependency>libXmu-devel</Dependency>
+                <Dependency>libXft-devel</Dependency>
+                <Dependency>libpng-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libglvnd-devel</Dependency>
+                <Dependency>libXrandr-devel</Dependency>
+                <Dependency>libXrender-devel</Dependency>
+                <Dependency>libXcursor-devel</Dependency>
+                <Dependency>libXinerama-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>desktop/toolkit/motif/motif/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>motif</Name>
+            <RuntimeDependencies>
+                <Dependency>mesa</Dependency>
+                <Dependency>libXt</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>libXpm</Dependency>
+                <Dependency>libXmu</Dependency>
+                <Dependency>libXft</Dependency>
+                <Dependency>libXext</Dependency>
+                <Dependency>libglvnd</Dependency>
+                <Dependency>libXrandr</Dependency>
+                <Dependency>libXrender</Dependency>
+                <Dependency>libXcursor</Dependency>
+                <Dependency>libXinerama</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="config">/etc</Path>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share</Path>
+            </Files>
+            <Conflicts>
+                <Package>openmotif</Package>
+            </Conflicts>
+            <Replaces>
+                <Package>openmotif</Package>
+            </Replaces>
+        </Package>
+        <Package>
+            <Name>motif-devel</Name>
+            <RuntimeDependencies>
+                <Dependency>mesa-devel</Dependency>
+                <Dependency>libXt-devel</Dependency>
+                <Dependency>libX11-devel</Dependency>
+                <Dependency>libXpm-devel</Dependency>
+                <Dependency>libXmu-devel</Dependency>
+                <Dependency>libXft-devel</Dependency>
+                <Dependency>libXext-devel</Dependency>
+                <Dependency>libglvnd-devel</Dependency>
+                <Dependency release="1">motif</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/lib/pkgconfig</Path>
+            </Files>
+            <Conflicts>
+                <Package>openmotif-devel</Package>
+            </Conflicts>
+            <Replaces>
+                <Package>openmotif-devel</Package>
+            </Replaces>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2026-07-24</Date>
+                <Version>2.5.2</Version>
+                <Comment>First release.</Comment>
+                <Name>Kamil Atlı</Name>
+                <Email>suvari@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>openmotif</Name>
             <Homepage>http://www.motifzone.org/</Homepage>
             <Packager>
@@ -189342,100 +189465,6 @@ components such as the Settings and gnome-shell.</Description>
                 <Comment>First release</Comment>
                 <Name>Osman Erkan</Name>
                 <Email>osman.erkan@pisilinux.org</Email>
-            </Update>
-        </History>
-    </SpecFile>
-    <SpecFile>
-        <Source>
-            <Name>motif-thentenaar</Name>
-            <Homepage>https://github.com/thentenaar/motif</Homepage>
-            <Packager>
-                <Name>Kamil Atlı</Name>
-                <Email>suvari@pisilinux.org</Email>
-            </Packager>
-            <License>LGPLv2.1</License>
-            <PartOf>desktop.toolkit.motif</PartOf>
-            <Summary xml:lang="en">Motif User Interface Toolkit.</Summary>
-            <Description xml:lang="en">Motif is a freely available source code distribution for the Motif user interface component toolkit.</Description>
-            <Archive type="targz" sha1sum="2b7270941650cd3f66a92acfef3ed5a37396267e" name="motif-v2.5.2.tar.gz">https://github.com/thentenaar/motif/archive/v2.5.2/motif-v2.5.2.tar.gz</Archive>
-            <BuildDependencies>
-                <Dependency>xbitmaps</Dependency>
-                <Dependency>mesa-devel</Dependency>
-                <Dependency>libXt-devel</Dependency>
-                <Dependency>libX11-devel</Dependency>
-                <Dependency>libXpm-devel</Dependency>
-                <Dependency>libXmu-devel</Dependency>
-                <Dependency>libXft-devel</Dependency>
-                <Dependency>libpng-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency>libglvnd-devel</Dependency>
-                <Dependency>libXrandr-devel</Dependency>
-                <Dependency>libXrender-devel</Dependency>
-                <Dependency>libXcursor-devel</Dependency>
-                <Dependency>libXinerama-devel</Dependency>
-                <Dependency>libjpeg-turbo-devel</Dependency>
-            </BuildDependencies>
-            <SourceURI>desktop/toolkit/motif/motif-thentenaar/pspec.xml</SourceURI>
-        </Source>
-        <Package>
-            <Name>motif</Name>
-            <RuntimeDependencies>
-                <Dependency>mesa</Dependency>
-                <Dependency>libXt</Dependency>
-                <Dependency>libX11</Dependency>
-                <Dependency>libXpm</Dependency>
-                <Dependency>libXmu</Dependency>
-                <Dependency>libXft</Dependency>
-                <Dependency>libXext</Dependency>
-                <Dependency>libglvnd</Dependency>
-                <Dependency>libXrandr</Dependency>
-                <Dependency>libXrender</Dependency>
-                <Dependency>libXcursor</Dependency>
-                <Dependency>libXinerama</Dependency>
-                <Dependency>libjpeg-turbo</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="config">/etc</Path>
-                <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="library">/usr/lib</Path>
-                <Path fileType="data">/usr/share</Path>
-            </Files>
-            <Conflicts>
-                <Package>openmotif</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>openmotif</Package>
-            </Replaces>
-        </Package>
-        <Package>
-            <Name>motif-devel</Name>
-            <RuntimeDependencies>
-                <Dependency>libXt-devel</Dependency>
-                <Dependency>libX11-devel</Dependency>
-                <Dependency>libXpm-devel</Dependency>
-                <Dependency>libXmu-devel</Dependency>
-                <Dependency>libXft-devel</Dependency>
-                <Dependency>libXext-devel</Dependency>
-                <Dependency release="1">motif</Dependency>
-            </RuntimeDependencies>
-            <Files>
-                <Path fileType="header">/usr/include</Path>
-                <Path fileType="data">/usr/lib/pkgconfig</Path>
-            </Files>
-            <Conflicts>
-                <Package>openmotif-devel</Package>
-            </Conflicts>
-            <Replaces>
-                <Package>openmotif-devel</Package>
-            </Replaces>
-        </Package>
-        <History>
-            <Update release="1">
-                <Date>2026-07-24</Date>
-                <Version>2.5.2</Version>
-                <Comment>First release.</Comment>
-                <Name>Kamil Atlı</Name>
-                <Email>suvari@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -379579,7 +379608,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     <SpecFile>
         <Source>
             <Name>GraphicsMagick</Name>
-            <Homepage>http://www.graphicsmagick.org</Homepage>
+            <Homepage>http://www.graphicsmagick.org/</Homepage>
             <Packager>
                 <Name>PisiLinux Community</Name>
                 <Email>admins@pisilinux.org</Email>
@@ -379587,57 +379616,61 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <License>MIT</License>
             <IsA>library</IsA>
             <PartOf>multimedia.graphics</PartOf>
-            <Summary xml:lang="en">GraphicsMagick Image Processing System</Summary>
+            <Summary xml:lang="en">GraphicsMagick Image Processing System.</Summary>
             <Summary xml:lang="tr">GraphicsMagick Resim İşleme Sistemi</Summary>
-            <Description xml:lang="en">GraphicsMagick is a comprehensive image processing package which is initially based on ImageMagick 5.5.2, but which has undergone significant re-work by the GraphicsMagick Group to significantly improve the quality and performance of the software.</Description>
+            <Description xml:lang="en">GraphicsMagick provides a set of CLI tools and APIs for manipulating, editing, and converting raster and vector images. GraphicsMagick is originally derived from ImageMagick 5.5.2 as of November 2002.</Description>
             <Description xml:lang="tr">GraphicsMagick, başlangıçta ImageMagick 5.5.2 sürümünü temel almış kapsamlı bir resim işleme paketidir. Yazılımın kalitesini ve performansını önemli derecede artırmak için bu pakette büyük bir değişiklik yapılmıştır.</Description>
-            <Archive type="tarxz" sha1sum="94e0103f7d2286d1ba46c633d68ab0e1bfa2b2d3" name="GraphicsMagick-1.3.37.tar.xz">https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.37/GraphicsMagick-1.3.37.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="cd71364d1736838811f399326b998d6653630b5f" name="GraphicsMagick-1.3.48.tar.xz">mirrors://sourceforge/graphicsmagick/GraphicsMagick-1.3.48.tar.xz</Archive>
             <BuildDependencies>
+                <Dependency>xz-devel</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>zstd-devel</Dependency>
                 <Dependency>tiff-devel</Dependency>
                 <Dependency>webp-devel</Dependency>
                 <Dependency>lcms2-devel</Dependency>
                 <Dependency>libSM-devel</Dependency>
-                <Dependency>libwmf-devel</Dependency>
+                <Dependency versionFrom="0.2.15">libwmf-devel</Dependency>
+                <Dependency>libzip-devel</Dependency>
+                <Dependency>libjxl-devel</Dependency>
                 <Dependency>libICE-devel</Dependency>
                 <Dependency>jasper-devel</Dependency>
+                <Dependency>libheif-devel</Dependency>
+                <Dependency>libxml2-devel</Dependency>
                 <Dependency>jbigkit-devel</Dependency>
                 <Dependency>libXext-devel</Dependency>
-                <Dependency>libjpeg-turbo-devel</Dependency>
-                <Dependency>ghostscript-devel</Dependency>
-                <Dependency>zlib-devel</Dependency>
-                <Dependency>libxml2-devel</Dependency>
                 <Dependency>freetype-devel</Dependency>
-                <Dependency>xz-devel</Dependency>
-                <Dependency>zstd-devel</Dependency>
+                <Dependency>gperftools-devel</Dependency>
+                <Dependency>ghostscript-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
             </BuildDependencies>
-            <Patches>
-                <Patch level="1">GraphicsMagick-1.3.16-multilib.patch</Patch>
-            </Patches>
             <SourceURI>multimedia/graphics/GraphicsMagick/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>GraphicsMagick</Name>
-            <IsA>app:console</IsA>
             <RuntimeDependencies>
+                <Dependency>zlib</Dependency>
+                <Dependency>zstd</Dependency>
                 <Dependency>tiff</Dependency>
                 <Dependency>webp</Dependency>
-                <Dependency>zstd</Dependency>
-                <Dependency>zlib</Dependency>
                 <Dependency>bzip2</Dependency>
-                <Dependency>libgcc</Dependency>
-                <Dependency>freetype</Dependency>
-                <Dependency>libX11</Dependency>
-                <Dependency>libxml2</Dependency>
-                <Dependency>libpng</Dependency>
                 <Dependency>lcms2</Dependency>
-                <Dependency>libwmf</Dependency>
+                <Dependency>libgcc</Dependency>
+                <Dependency>libX11</Dependency>
+                <Dependency>libpng</Dependency>
+                <Dependency versionFrom="0.2.15">libwmf</Dependency>
+                <Dependency>libzip</Dependency>
+                <Dependency>libjxl</Dependency>
                 <Dependency>jasper</Dependency>
+                <Dependency>libheif</Dependency>
                 <Dependency>libXext</Dependency>
                 <Dependency>jbigkit</Dependency>
                 <Dependency>libgomp</Dependency>
+                <Dependency>libxml2</Dependency>
+                <Dependency>freetype</Dependency>
+                <Dependency>gperftools</Dependency>
                 <Dependency>ghostscript</Dependency>
-                <Dependency>libjpeg-turbo</Dependency>
                 <Dependency>libtool-ltdl</Dependency>
+                <Dependency>libjpeg-turbo</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc</Path>
@@ -379653,7 +379686,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>GraphicsMagick-devel</Name>
             <Summary xml:lang="en">Development files for GraphicsMagick</Summary>
             <RuntimeDependencies>
-                <Dependency release="8">GraphicsMagick</Dependency>
+                <Dependency release="9">GraphicsMagick</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin/*-config</Path>
@@ -379667,7 +379700,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>PerlMagick</Name>
             <Summary xml:lang="en">GraphicsMagick perl bindings</Summary>
             <RuntimeDependencies>
-                <Dependency release="8">GraphicsMagick</Dependency>
+                <Dependency release="9">GraphicsMagick</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/perl5</Path>
@@ -379675,6 +379708,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="9">
+                <Date>2026-07-24</Date>
+                <Version>1.3.48</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Mustafa Cinasal</Name>
+                <Email>muscnsl@gmail.com</Email>
+            </Update>
             <Update release="8">
                 <Date>2021-12-14</Date>
                 <Version>1.3.37</Version>
@@ -381319,7 +381359,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
     <SpecFile>
         <Source>
             <Name>libwmf</Name>
-            <Homepage>http://wvware.sourceforge.net/libwmf.html</Homepage>
+            <Homepage>https://github.com/caolanm/libwmf</Homepage>
             <Packager>
                 <Name>PisiLinux Community</Name>
                 <Email>admins@pisilinux.org</Email>
@@ -381327,20 +381367,20 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <License>GPLv2</License>
             <IsA>library</IsA>
             <PartOf>multimedia.graphics</PartOf>
-            <Summary xml:lang="en">Library for reading and converting WMF files</Summary>
+            <Summary xml:lang="en">Library for reading and converting WMF files.</Summary>
             <Summary xml:lang="tr">WMF (Windows metafile) okuma ve dönüştürme kitaplığı</Summary>
             <Description xml:lang="fr">Librairie pour convertir les fichiers WMF.</Description>
             <Description xml:lang="en">A library for reading and converting Windows MetaFile vector graphics (WMF).</Description>
             <Description xml:lang="tr">Microsoft Word gibi uygulamaların kullandığı WMF (Windows metafile) dosyalarını standart formatlara (PNG, JPEG, PS, EPS, SVG gibi) dönüştürebilmek ve gösterebilmek için gereken kütüphanedir.</Description>
-            <Archive type="targz" sha1sum="822ab3bd0f5e8f39ad732f2774a8e9f18fc91e89" name="libwmf-0.2.8.4.tar.gz">mirrors://sourceforge/wvware/libwmf-0.2.8.4.tar.gz</Archive>
+            <Archive type="targz" sha1sum="00ea962aae6d0806d43194c25f98f7359c9f9384" name="libwmf-0.2.15.tar.gz">https://github.com/caolanm/libwmf/releases/download/v0.2.15/libwmf-0.2.15.tar.gz</Archive>
             <BuildDependencies>
-                <Dependency>libjpeg-turbo-devel</Dependency>
-                <Dependency>harfbuzz-devel</Dependency>
-                <Dependency>freetype-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
                 <Dependency>libxml2-devel</Dependency>
                 <Dependency>gettext-devel</Dependency>
+                <Dependency>freetype-devel</Dependency>
+                <Dependency>harfbuzz-devel</Dependency>
                 <Dependency>gdk-pixbuf-devel</Dependency>
+                <Dependency>libjpeg-turbo-devel</Dependency>
             </BuildDependencies>
             <SourceURI>multimedia/graphics/libwmf/pspec.xml</SourceURI>
         </Source>
@@ -381357,8 +381397,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="library">/usr/lib</Path>
-                <Path fileType="doc">/usr/share/doc</Path>
-                <Path fileType="data">/usr/share/libwmf</Path>
+                <Path fileType="data">/usr/share</Path>
             </Files>
         </Package>
         <Package>
@@ -381366,7 +381405,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="en">Development files for libwmf</Summary>
             <Summary xml:lang="tr">libwmf için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="5">libwmf</Dependency>
+                <Dependency release="6">libwmf</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin/libwmf-config</Path>
@@ -381375,6 +381414,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="6">
+                <Date>2026-07-24</Date>
+                <Version>0.2.15</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Mustafa Cinasal</Name>
+                <Email>muscnsl@gmail.com</Email>
+            </Update>
             <Update release="5">
                 <Date>2020-02-12</Date>
                 <Version>0.2.8.4</Version>
