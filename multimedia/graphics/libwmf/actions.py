@@ -10,7 +10,6 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
-    # shelltools.unlink("configure.ac")
     shelltools.sym("patches/acconfig.h", "acconfig.h")
 
     autotools.autoreconf("-vfi")
@@ -19,28 +18,14 @@ def setup():
                          --with-libxml2 \
                          --with-jpeg \
                          --with-x \
-                         --with-gsfontdir=/usr/share/fonts/default/ghostscript \
                          --with-fontdir=/usr/share/libwmf/fonts \
-                         --with-docdir=/usr/share/doc/%s \
-                         --disable-static" % get.srcNAME() )
+                         --disable-static")
 def build():
     autotools.make("LIBTOOL=/usr/bin/libtool")
 
 def install():
-    pisitools.dosed("fonts/fontmap", "libwmf/fonts", "fonts/default/ghostscript")
-
     autotools.rawInstall("DESTDIR=%s \
-                          fontdir=/usr/share/libwmf/fonts \
-                          wmfonedocdir=/usr/share/doc/%s/caolan \
-                          wmfdocdir=/usr/share/doc/%s" %
-                          ( get.installDIR(), get.srcNAME(), get.srcNAME() ) )
-
-    if shelltools.isDirectory("%s/usr/lib/gtk-2.0" % get.installDIR()):
-        # seems "/usr/lib/gtk-2.0" no longer exists, so need check
-        pisitools.removeDir("/usr/lib/gtk-2.0")
-
-    # These fonts included in gnu-gs-fonts-std package.
-    pisitools.remove("/usr/share/libwmf/fonts/*afm")
-    # pisitools.remove("/usr/share/libwmf/fonts/*pfb")
+                          fontdir=/usr/share/libwmf/fonts" % get.installDIR())
 
     pisitools.dodoc("CREDITS", "COPYING", "README")
+    pisitools.remove("/usr/lib/*.a")
