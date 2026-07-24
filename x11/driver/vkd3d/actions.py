@@ -42,4 +42,4 @@ def install():
             pisitools.dosed("%s/usr/lib32/pkgconfig/%s" % (get.installDIR(), f), "_usr", "usr")
         return
 
-    pisitools.dodoc("AUTHORS", "LICENSE", "COPYING", "README")
+    pisitools.dodoc("AUTHORS", "LICENSE", "COPYING", "README*")
