@@ -46,7 +46,8 @@ def build():
 def install():
     autotools.rawInstall("install-libLTLIBRARIES install-binPROGRAMS install-cupsPROGRAMS install-exec install-pkglibexecPROGRAMS install-pkgincludeHEADERS install-pluginLTLIBRARIES install-udevPROGRAMS install-dbussessionbusDATA install-dbussystembusDATA install-dbusDATA install-man8 DESTDIR=%s" % get.installDIR())
 
-    pisitools.dobin("tools/btpclient")
+    pisitools.dobin("client/btpclient/btpclient")
+    pisitools.dobin("client/btpclient/btpclientctl")
 
     
     # Install conf files
