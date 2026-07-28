@@ -9,7 +9,6 @@ from pisi.actionsapi import mesontools
 
 def setup():
     mesontools.configure("--prefix=/usr \
-                          -Dstemmer=false \
                           -Drpm=false \
                           -Dpisi=true")
     
