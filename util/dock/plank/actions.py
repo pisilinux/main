@@ -23,4 +23,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "COPYING", "COPYRIGHT")
+    pisitools.dodoc("AUTHORS", "COPYING", "COPYING.LGPL2.1", "COPYRIGHT")
