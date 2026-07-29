@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_INSTALL_SYSCONFDIR=/etc \
-                          -DCMAKE_BUILD_TYPE=None")
+                          -DCMAKE_BUILD_TYPE=RelWithDebInfo")
 
 def build():
     cmaketools.make()
@@ -20,5 +20,4 @@ def install():
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     pisitools.dodoc("COPYING", "README*")
-
-   
+    
