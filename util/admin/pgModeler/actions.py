@@ -22,7 +22,7 @@ def install():
 
     pisitools.domove("/usr/lib/pgmodeler/lib*", "/usr/lib")
 
-    pisitools.insinto("usr/share/icons/hicolor/64x64/apps", "assets/conf/pgmodeler_logo.png", "pgmodeler.png")
+    pisitools.insinto("/usr/share/icons/hicolor/64x64/apps", "assets/conf/pgmodeler_logo.png")
     pisitools.dosym("/usr/share/pgmodeler/schemas", "/etc/pgmodeler/schemas")
 
     pisitools.dodir("/usr/lib/pgmodeler/plugins")
