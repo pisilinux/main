@@ -7,25 +7,20 @@
 from pisi.actionsapi import autotools, pisitools, get
 
 j = ''.join([
-    ' --disable-native',
-    ' --enable-jp2',
-    ' --enable-cups',
+    ' --prefix=/usr',
     ' --enable-release',
-    ' --with-opengl=yes',
-    ' --with-xft',
+    ' --disable-native',
+    ' --disable-cups',
     ' --disable-static '
     ])
 
 def setup():
-	pisitools.dosed("configure.ac", "-fno-stack-protector", "-fstack-protector-strong")
-	pisitools.dosed("lib/FXRex.cpp", "#define\ TOPIC_REXDUMP", "// #define TOPIC_REXDUMP")
-	autotools.autoreconf("-fiv")
-	autotools.configure(j)
+    autotools.configure(j)
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "LICENSE_ADDENDUM", "README")
+    pisitools.dodoc("AUTHORS", "LICENSE", "LICENSE_ADDENDUM")
