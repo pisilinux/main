@@ -36,4 +36,8 @@ def build():
 def install():
     shelltools.system("meson install -C build --destdir %s" % get.installDIR())
 
+    # QEMU localstatedir nedeniyle bos /var/run dizini olusturur; bu dizin
+    # paketlenirse hedef sistemdeki /var/run -> /run symlink'ini ezer.
+    shelltools.system("rmdir %s/var/run %s/var 2>/dev/null || true" % (get.installDIR(), get.installDIR()))
+
     pisitools.dodoc("LICENSE", "README.rst")
