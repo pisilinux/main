@@ -1,22 +1,25 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-·
+# -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/copyleft/gpl.txt.
+# See the file http://www.gnu.org/copyleft/gpl.txt
 
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
 def setup():
-    pythonmodules.configure("--default-graphics=spice --default-hvs qemu,xen,lxc", pyVer="3")
-    pythonmodules.compile(pyVer="3")
+    shelltools.system("meson setup build \
+        --prefix=/usr \
+        -Ddefault-hvs=qemu,xen,lxc \
+        -Dupdate-icon-cache=false \
+        -Dcompile-schemas=false \
+        -Dtests=disabled")
+
+def build():
+    shelltools.system("meson compile -C build")
 
 def install():
-    shelltools.system("""touch --no-create %s/usr/share/icons/hicolor >/dev/null 2>&1 || :
-                                /usr/bin/update-desktop-database > /dev/null 2>&1 || :""" % get.installDIR())
+    shelltools.system("meson install -C build --destdir %s" % get.installDIR())
 
-    shelltools.system("python3 setup.py --no-update-icon-cache --no-compile-schemas install --root=%s --no-compile -O0" % get.installDIR())
-    #pythonmodules.install(pyVer="3")
-    #pisitools.dodoc("COPYING", "NEWS", "README*", "PKG-INFO")
+    pisitools.dodoc("COPYING", "NEWS.md", "README.md")
