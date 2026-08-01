@@ -76,7 +76,6 @@ def setup():
                             --enable-libzmq \
                             --enable-libzimg \
                             --enable-pic \
-                            --enable-postproc \
                             --enable-librav1e \
                             --enable-runtime-cpudetect \
                             --enable-shared \
