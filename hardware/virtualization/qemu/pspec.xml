@@ -1,150 +1,148 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>qemu</Name>
-        <Homepage>http://bellard.org/qemu</Homepage>
+        <Homepage>https://www.qemu.org/</Homepage>
         <Packager>
-            <Name>PisiLinux Community</Name>
-            <Email>admins@pisilinux.org</Email>
+            <Name>Erkan IŞIK</Name>
+            <Email>erkanisik@pisilinux.org</Email>
         </Packager>
         <License>GPLv2</License>
         <IsA>app:console</IsA>
         <Summary>Userspace virtual machine and processor emulator</Summary>
-        <Description>QEMU emulates a full system (for example a PC), including a processor and various peripherials. It can be used to launch different operating systems without rebooting the PC or to debug system code. In user-mode emulation mode, QEMU can launch Linux processes compiled for one CPU on another CPU.</Description>
-        <Archive sha1sum="0652ee1086fcbbc5dec6e7bfe67ad977a5d09db2" type="tarbz2">http://wiki.qemu-project.org/download/qemu-4.2.0.tar.bz2</Archive>
-        <!--
+        <Description>QEMU is a generic and open source machine emulator and virtualizer. It emulates a full system (for example a PC), including a processor and various peripherals, and can be used to launch different operating systems without rebooting the PC or to debug system code. In user-mode emulation mode, QEMU can launch Linux processes compiled for one CPU on another CPU.</Description>
+        <Archive sha1sum="89426b115708a48c6381e1f29fa5925d03413350" type="tarxz">https://download.qemu.org/qemu-11.0.3.tar.xz</Archive>
         <AdditionalFiles>
-            <AdditionalFile target="kernel/include/linux/kvm.h">kvm-2.6.32-16.h</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/sound/asound.h">sound/asound.h</AdditionalFile>
         </AdditionalFiles>
-        -->
         <BuildDependencies>
-            <Dependency>aalib-devel</Dependency>
-            <Dependency>vte-devel</Dependency>
-            <Dependency>gtk3-devel</Dependency>
-            <Dependency>libXext-devel</Dependency>
-            <Dependency>nss-devel</Dependency>
-            <Dependency>alsa-lib-devel</Dependency>
-            <Dependency>bluez-libs-devel</Dependency>
-            <Dependency>cyrus-sasl-devel</Dependency>
-            <Dependency>libsdl-devel</Dependency>
-            <Dependency>pulseaudio-libs-devel</Dependency>
-            <Dependency>python-devel</Dependency>
+            <Dependency>meson</Dependency>
+            <Dependency>ninja</Dependency>
+            <Dependency>pkgconfig</Dependency>
+            <Dependency>python3</Dependency>
             <Dependency>glib2-devel</Dependency>
-            
+            <Dependency>pixman-devel</Dependency>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>zstd-devel</Dependency>
+            <Dependency>libpng-devel</Dependency>
+            <Dependency>libjpeg-turbo-devel</Dependency>
+            <Dependency>lzo-devel</Dependency>
+            <Dependency>snappy-devel</Dependency>
+            <Dependency>ncurses-devel</Dependency>
+            <Dependency>libcap-devel</Dependency>
+            <Dependency>libcap-ng-devel</Dependency>
+            <Dependency>libseccomp-devel</Dependency>
+            <Dependency>attr-devel</Dependency>
+            <Dependency>acl-devel</Dependency>
+            <Dependency>gnutls-devel</Dependency>
+            <Dependency>nettle-devel</Dependency>
+            <Dependency>libgcrypt-devel</Dependency>
+            <Dependency>libnfs-devel</Dependency>
+            <Dependency>libssh-devel</Dependency>
+            <Dependency>curl-devel</Dependency>
+            <Dependency>libiscsi-devel</Dependency>
+            <Dependency>libaio-devel</Dependency>
+            <Dependency>liburing-devel</Dependency>
+            <Dependency>numactl-devel</Dependency>
             <Dependency>libsdl2-devel</Dependency>
+            <Dependency>gtk3-devel</Dependency>
+            <Dependency>vte-devel</Dependency>
+            <Dependency>libepoxy-devel</Dependency>
+            <Dependency>spice-devel</Dependency>
+            <Dependency>usbredir-devel</Dependency>
+            <Dependency>libusb-devel</Dependency>
+            <Dependency>alsa-lib-devel</Dependency>
+            <Dependency>pulseaudio-libs-devel</Dependency>
+            <Dependency>pipewire-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>libXext-devel</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
+            <Dependency>pciutils-devel</Dependency>
+            <Dependency>libslirp-devel</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
         <Name>qemu</Name>
         <RuntimeDependencies>
-            <Dependency>atk</Dependency>
-            <Dependency>nss</Dependency>
-            <Dependency>vte</Dependency>
-            <Dependency>gtk2</Dependency>
-            <Dependency>mesa</Dependency>
-            <Dependency>nspr</Dependency>
-            <Dependency>zlib</Dependency>
-            <Dependency>bzip2</Dependency>
-            <Dependency>cairo</Dependency>
             <Dependency>glib2</Dependency>
-            <Dependency>pango</Dependency>
-            <Dependency>libX11</Dependency>
-            <Dependency>libgcc</Dependency>
-            <Dependency>libpng</Dependency>
-            <Dependency>libsdl</Dependency>
-            <Dependency>libusb</Dependency>
             <Dependency>pixman</Dependency>
-            <Dependency>libXext</Dependency>
-            <Dependency>alsa-lib</Dependency>
-            <Dependency>freetype</Dependency>
+            <Dependency>zlib</Dependency>
+            <Dependency>zstd</Dependency>
+            <Dependency>libpng</Dependency>
+            <Dependency>libjpeg-turbo</Dependency>
+            <Dependency>ncurses</Dependency>
+            <Dependency>libcap</Dependency>
+            <Dependency>libcap-ng</Dependency>
+            <Dependency>libseccomp</Dependency>
+            <Dependency>attr</Dependency>
+            <Dependency>acl</Dependency>
+            <Dependency>gnutls</Dependency>
+            <Dependency>nettle</Dependency>
+            <Dependency>libgcrypt</Dependency>
+            <Dependency>libnfs</Dependency>
+            <Dependency>libssh</Dependency>
+            <Dependency>curl</Dependency>
+            <Dependency>libiscsi</Dependency>
+            <Dependency>libaio</Dependency>
+            <Dependency>liburing</Dependency>
+            <Dependency>numactl</Dependency>
+            <Dependency>libsdl2</Dependency>
+            <Dependency>gtk3</Dependency>
+            <Dependency>vte</Dependency>
             <Dependency>libepoxy</Dependency>
-            <Dependency>bluez-libs</Dependency>
-            <Dependency>cyrus-sasl</Dependency>
-            <Dependency>fontconfig</Dependency>
-            <Dependency>gdk-pixbuf</Dependency>
+            <Dependency>spice</Dependency>
+            <Dependency>usbredir</Dependency>
+            <Dependency>libusb</Dependency>
+            <Dependency>alsa-lib</Dependency>
             <Dependency>pulseaudio-libs</Dependency>
-            <Dependency>libdrm</Dependency>
+            <Dependency>pipewire</Dependency>
+            <Dependency>libX11</Dependency>
+            <Dependency>libXext</Dependency>
+            <Dependency>libxkbcommon</Dependency>
+            <Dependency>pciutils</Dependency>
+            <Dependency>libslirp</Dependency>
+            <Dependency>lzo</Dependency>
+            <Dependency>snappy</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="config">/etc</Path>
-            <Path fileType="config">/run</Path>
-            <Path fileType="library">/lib</Path>
             <Path fileType="executable">/usr/bin</Path>
             <Path fileType="executable">/usr/sbin</Path>
             <Path fileType="library">/usr/lib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="man">/usr/share/man</Path>
             <Path fileType="data">/usr/share/qemu</Path>
-            <Path fileType="data">/usr/share</Path>
-            <Path fileType="icon">/usr/share/icons/hicolor</Path>
-            <Path fileType="localedata">/usr/share/locale/</Path>
-            <Path fileType="header">/usr/include</Path>
+            <Path fileType="data">/usr/share/qemu-firmware</Path>
+            <Path fileType="data">/usr/share/applications</Path>
+            <Path fileType="data">/usr/share/icons</Path>
+            <Path fileType="localedata">/usr/share/locale</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+            <Path fileType="data">/usr/include</Path>
+            <Path fileType="data">/lib/udev/rules.d</Path>
+            <Path fileType="data">/var/run</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0755" target="/usr/bin/qemu-ifup">qemu-ifup</AdditionalFile>
             <AdditionalFile owner="root" permission="0755" target="/usr/bin/qemu-ifdown">qemu-ifdown</AdditionalFile>
-            <AdditionalFile owner="root" permission="0755" target="/usr/sbin/ksmtuned">fedora/ksmtuned</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/etc/conf.d/ksm">fedora/ksm.sysconfig</AdditionalFile>
-            <AdditionalFile owner="root" permission="0644" target="/etc/ksmtuned.conf">fedora/ksmtuned.conf</AdditionalFile>
-            <AdditionalFile owner="root" permission="0755" target="/lib/udev/rules.d/65-kvm.rules">65-kvm.rules</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/lib/udev/rules.d/65-kvm.rules">65-kvm.rules</AdditionalFile>
         </AdditionalFiles>
-        <Provides>
-            <COMAR script="ksm-service.py" name="ksm">System.Service</COMAR>
-            <COMAR script="ksmtuned-service.py" name="ksmtuned">System.Service</COMAR>
-        </Provides>
     </Package>
 
-    <!--<Package>
-        <Name>qemu-devel</Name>
-        <Summary>Development files for qemu</Summary>
-        <RuntimeDependencies>
-            <Dependency>nss-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency release="current">qemu</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/lib/pkgconfig/libcacard.pc</Path>
-        </Files>
-    </Package>-->
-
     <History>
+        <Update release="6">
+            <Date>2026-08-01</Date>
+            <Version>11.0.3</Version>
+            <Comment>Major version bump: 4.2.0 to 11.0.3. Rebuilt with meson build system and KVM support enabled.</Comment>
+            <Name>Erkan IŞIK</Name>
+            <Email>erkanisik@pisilinux.org</Email>
+        </Update>
         <Update release="5">
             <Date>2020-03-13</Date>
             <Version>4.2.0</Version>
             <Comment>Version bump.</Comment>
             <Name>Mustafa Cinasal</Name>
             <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="4">
-            <Date>2018-08-31</Date>
-            <Version>2.11.1</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@gmail.com</Email>
-        </Update>
-        <Update release="3">
-            <Date>2017-01-29</Date>
-            <Version>2.8.0</Version>
-            <Comment>Version bump.</Comment>
-            <Name>Stefan Gronewold</Name>
-            <Email>groni@pisilinux.org</Email>
-        </Update>
-        <Update release="2">
-            <Date>2016-06-09</Date>
-            <Version>2.4.1</Version>
-            <Comment>Release Bump</Comment>
-            <Name>Pisi Linux Community</Name>
-            <Email>admin@pisilinux.org</Email>
-        </Update>
-        <Update release="1">
-            <Date>2015-12-31</Date>
-            <Version>2.4.1</Version>
-            <Comment>First release</Comment>
-            <Name>Ayhan Yalçınsoy  </Name>
-            <Email>ayhanyalcinsoy@pisilinux.org</Email>
         </Update>
     </History>
 </PISI>
