@@ -27223,11 +27223,12 @@
             <Description xml:lang="en">The name comes from Yet Another Kuake (thus YaKuake). Its behaviour is similar to the console of the Quake game.</Description>
             <Description xml:lang="tr">İsmi Bir Başka Kuake (Yet Another Kuake - YaKuake) sözcüklerinden gelmektedir. Quake oyunundaki konsola benzer.</Description>
             <Icon>yakuake</Icon>
-            <Archive type="tarxz" sha1sum="02ece37ebfe588c182550a8cf454534bef50b682" name="yakuake-25.04.0.tar.xz">https://download.kde.org/stable/release-service/25.04.0/src/yakuake-25.04.0.tar.xz</Archive>
+            <Archive type="tarxz" sha1sum="d8f4c9f8408eca18eaff43f1a3b88b37f1c49b90" name="yakuake-26.04.3.tar.xz">https://download.kde.org/stable/release-service/26.04.3/src/yakuake-26.04.3.tar.xz</Archive>
             <BuildDependencies>
-                <Dependency versionFrom="5.7.1">qt6-base-devel</Dependency>
-                <Dependency versionFrom="5.7.1">qt6-svg-devel</Dependency>
+                <Dependency>qt6-base-devel</Dependency>
+                <Dependency>qt6-svg-devel</Dependency>
                 <Dependency>libX11-devel</Dependency>
+                <Dependency>libxkbcommon-devel</Dependency>
                 <Dependency>knewstuff-devel</Dependency>
                 <Dependency>kio-devel</Dependency>
                 <Dependency>kparts-devel</Dependency>
@@ -27240,9 +27241,7 @@
                 <Dependency>kglobalaccel-devel</Dependency>
                 <Dependency>ki18n-devel</Dependency>
                 <Dependency>kiconthemes-devel</Dependency>
-                <Dependency>knewstuff-devel</Dependency>
                 <Dependency>knotifications-devel</Dependency>
-                <Dependency>kparts-devel</Dependency>
                 <Dependency>kwidgetsaddons-devel</Dependency>
                 <Dependency>kwindowsystem-devel</Dependency>
                 <Dependency>gettext-devel</Dependency>
@@ -27250,13 +27249,18 @@
                 <Dependency>kwayland-devel</Dependency>
                 <Dependency>kcolorscheme-devel</Dependency>
                 <Dependency>kstatusnotifieritem-devel</Dependency>
+                <Dependency>wayland-devel</Dependency>
+                <Dependency>wayland-client</Dependency>
+                <Dependency>wayland-server</Dependency>
+                <Dependency>wayland-cursor</Dependency>
+                <Dependency>plasma-wayland-protocols</Dependency>
             </BuildDependencies>
             <SourceURI>x11/terminal/yakuake/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>yakuake</Name>
             <RuntimeDependencies>
-                <Dependency versionFrom="5.7.1">qt6-base</Dependency>
+                <Dependency>qt6-base</Dependency>
                 <Dependency>kio</Dependency>
                 <Dependency>kcrash</Dependency>
                 <Dependency>ki18n</Dependency>
@@ -27285,16 +27289,20 @@
                 <Path fileType="config">/etc/xdg</Path>
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="library">/usr/lib</Path>
-                <Path fileType="library">/usr/lib/qt5</Path>
+                <Path fileType="library">/usr/lib/qt6</Path>
                 <Path fileType="data">/usr/share</Path>
                 <Path fileType="localedata">/usr/share/locale</Path>
                 <Path fileType="doc">/usr/share/doc</Path>
             </Files>
-            <AdditionalFiles>
-                <AdditionalFile target="/usr/share/kde4/apps/yakuake/yakuake.notifyrc" permission="0644" owner="root">yakuake.notifyrc</AdditionalFile>
-            </AdditionalFiles>
         </Package>
         <History>
+            <Update release="10">
+                <Date>2025-08-02</Date>
+                <Version>26.04.3</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emie Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="9">
                 <Date>2025-05-03</Date>
                 <Version>25.04.0</Version>
@@ -64893,7 +64901,7 @@ complete albums that you have purchased from Amazon.</Description>
             <Description xml:lang="tr">BleachBit,bilgisayarınızın gizliliğini korumak için çerezler,geçici dosyalar ve önbelleği temizleyerek internette güvenli gezinme sağlar.</Description>
             <Description xml:lang="de">BleachBit BleachBit befreit den PC von überflüssigen Dateien, die Speicherplatz belegen aber nicht mehr gebraucht werden. Zudem sorgt BleachBit durch das Entfernen privater Surfspuren für den Schutz Ihrer Privatsphäre. Neben dem Aufspüren von Log- und temporären Dateien kennt BleachBit rund 70 verschiedene Anwendungen und kann etwa deren Verlauf (History), Cookies oder Cache per Mausklick löschen.</Description>
             <Description xml:lang="en">BleachBit frees the PC from unnecessary files, but do not occupy more space is needed. BleachBit also provides private surf by removing traces to protect your privacy. In addition to the detection of log and temporary files BleachBit knows about 70 different applications and can be about their history (History), cookies or cache delete mouse.</Description>
-            <Archive type="targz" sha1sum="ae6528220396c898b21af2f8ef43c1c1d2cd6b49" name="v5.1.0.tar.gz">https://github.com/bleachbit/bleachbit/archive/refs/tags/v5.1.0.tar.gz</Archive>
+            <Archive type="tarlzma" sha1sum="a0d9a22141e7dd68db0ad04e0a9fdbf2c841c1ea" name="bleachbit-6.0.2.tar.lzma">https://github.com/bleachbit/bleachbit/releases/download/v6.0.2/bleachbit-6.0.2.tar.lzma</Archive>
             <BuildDependencies>
                 <Dependency>gtk3-devel</Dependency>
                 <Dependency>python3-setuptools</Dependency>
@@ -64905,7 +64913,11 @@ complete albums that you have purchased from Amazon.</Description>
             <Name>bleachbit</Name>
             <RuntimeDependencies>
                 <Dependency>gtk3</Dependency>
+                <Dependency>python3</Dependency>
                 <Dependency>python3-pygobject3</Dependency>
+                <Dependency>python3-requests</Dependency>
+                <Dependency>python3-psutil</Dependency>
+                <Dependency>python3-chardet</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
@@ -64913,6 +64925,13 @@ complete albums that you have purchased from Amazon.</Description>
             </Files>
         </Package>
         <History>
+            <Update release="8">
+                <Date>2026-08-02</Date>
+                <Version>6.0.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="7">
                 <Date>2026-02-19</Date>
                 <Version>5.1.0</Version>
@@ -90718,7 +90737,7 @@ provide integrated access to the cloud providers services.</Description>
             <Summary xml:lang="tr">A C++ library to see how fast we can parse JSON with complete validation</Summary>
             <Description xml:lang="en">JSON&apos;u tam doğrulama ile ne kadar hızlı ayrıştırabileceğimizi görmek için kullanılan bir C++ kütüphanesi.</Description>
             <Description xml:lang="tr">JSON&apos;u tam doğrulama ile ne kadar hızlı ayrıştırabileceğimizi görmek için kullanılan bir C++ kütüphanesi.</Description>
-            <Archive type="targz" sha1sum="99addd519e052b13757f2dcde90ba7cd3c988608" name="v4.6.4.tar.gz">https://github.com/simdjson/simdjson/archive/refs/tags/v4.6.4.tar.gz</Archive>
+            <Archive type="targz" sha1sum="9d3bab71cbf1ea53d0ecd65b387399a2d4c998be" name="v4.6.6.tar.gz">https://github.com/simdjson/simdjson/archive/refs/tags/v4.6.6.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>cmake</Dependency>
             </BuildDependencies>
@@ -90734,6 +90753,13 @@ provide integrated access to the cloud providers services.</Description>
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2026-08-02</Date>
+                <Version>4.6.6</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="1">
                 <Date>2026-05-22</Date>
                 <Version>4.6.4</Version>
@@ -117037,6 +117063,51 @@ contacts, tasks, and calendar information.</Summary>
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>yt-dlp-ejs</Name>
+            <Homepage>https://github.com/yt-dlp/ejs</Homepage>
+            <Packager>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Packager>
+            <License>Unlicense</License>
+            <License>ISC</License>
+            <License>MIT</License>
+            <IsA>library</IsA>
+            <PartOf>programming.language.python3</PartOf>
+            <Summary xml:lang="en">External JavaScript for yt-dlp supporting many runtimes.</Summary>
+            <Summary xml:lang="tr">Birçok çalışma zamanını destekleyen yt-dlp için harici JavaScript betikleri.</Summary>
+            <Description xml:lang="en">Provides the external JavaScript challenge solver scripts used by yt-dlp for websites such as YouTube. Requires a supported JavaScript runtime such as Deno, Node.js or QuickJS.</Description>
+            <Description xml:lang="tr">YouTube gibi web sitelerinde kullanılan yt-dlp harici JavaScript doğrulama betiklerini sağlar. Çalışması için Deno, Node.js veya QuickJS gibi desteklenen bir JavaScript çalışma zamanı gerektirir.</Description>
+            <Archive type="targz" sha1sum="7157cb71bb4ddb4f3031aa3da1b5757014b9515b" name="yt_dlp_ejs-0.8.0.tar.gz">https://github.com/yt-dlp/ejs/releases/download/0.8.0/yt_dlp_ejs-0.8.0.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>python3-build</Dependency>
+                <Dependency>python3-devel</Dependency>
+                <Dependency>python3-hatchling</Dependency>
+                <Dependency>python3-hatch-vcs</Dependency>
+                <Dependency>nodejs</Dependency>
+            </BuildDependencies>
+            <SourceURI>programming/language/python3/yt-dlp-ejs/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>yt-dlp-ejs</Name>
+            <Summary xml:lang="en">External JavaScript for yt-dlp supporting many runtimes.</Summary>
+            <Files>
+                <Path fileType="library">/usr/lib/python3*/site-packages</Path>
+                <Path fileType="doc">/usr/share/doc/yt-dlp-ejs</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2026.08.02</Date>
+                <Version>0.8.0</Version>
+                <Comment>First release.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>python3-youtube_dl</Name>
             <Homepage>https://ytdl-org.github.io/youtube-dl/index.html</Homepage>
             <Packager>
@@ -128667,20 +128738,11 @@ contacts, tasks, and calendar information.</Summary>
             <Summary xml:lang="tr">Ek özelliklere ve düzeltmelere sahip bir youtube-dl çatalı</Summary>
             <Description xml:lang="en">A youtube-dl fork with additional features and fixes</Description>
             <Description xml:lang="tr">Ek özelliklere ve düzeltmelere sahip bir youtube-dl çatalı</Description>
-            <Archive type="targz" sha1sum="46f12dc5767f3a37977f3730b32aabcf37684386" name="2024.11.04.tar.gz">https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2024.11.04.tar.gz</Archive>
+            <Archive type="targz" sha1sum="03c916bcffdbb760bda3e9b80dbc2cc3295b9310" name="yt-dlp.tar.gz">https://github.com/yt-dlp/yt-dlp/releases/download/2026.07.04/yt-dlp.tar.gz</Archive>
             <BuildDependencies>
-                <Dependency>git</Dependency>
-                <Dependency>pandoc-bin</Dependency>
-                <Dependency>aria2-devel</Dependency>
-                <Dependency>ffmpeg-devel</Dependency>
+                <Dependency>python3-hatchling</Dependency>
                 <Dependency>python3-build</Dependency>
                 <Dependency>python3-devel</Dependency>
-                <Dependency>python3-mutagen</Dependency>
-                <Dependency>python3-certifi</Dependency>
-                <Dependency>python3-hatchling</Dependency>
-                <Dependency>python3-setuptools</Dependency>
-                <Dependency>python3-pycryptodomex</Dependency>
-                <Dependency>python3-importlib_metadata</Dependency>
             </BuildDependencies>
             <SourceURI>programming/language/python3/yt-dlp/pspec.xml</SourceURI>
         </Source>
@@ -128691,26 +128753,26 @@ contacts, tasks, and calendar information.</Summary>
                 <Dependency>aria2</Dependency>
                 <Dependency>ffmpeg</Dependency>
                 <Dependency>python3</Dependency>
-                <Dependency>cython3</Dependency>
-                <Dependency>python3-brotli</Dependency>
-                <Dependency>python3-certifi</Dependency>
-                <Dependency>python3-hatchling</Dependency>
-                <Dependency>python3-mutagen</Dependency>
-                <Dependency>python3-websockets</Dependency>
-                <Dependency>python3-pycryptodomex</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
-                <Path fileType="man">/usr/share/man/man1</Path>
-                <Path fileType="data">/usr/share/bash-completion/completions</Path>
-                <Path fileType="data">/usr/share/zsh/site-functions</Path>
+                <Path fileType="library">/usr/lib/python3*/site-packages</Path>
+                <Path fileType="man">/usr/share/man/man1/yt-dlp.1</Path>
+                <Path fileType="data">/usr/share/bash-completion/completions/yt-dlp</Path>
+                <Path fileType="data">/usr/share/zsh/site-functions/_yt-dlp</Path>
+                <Path fileType="data">/usr/share/fish/vendor_completions.d/yt-dlp.fish</Path>
                 <Path fileType="doc">/usr/share/doc/yt-dlp</Path>
-                <Path fileType="library">/usr/lib/python3*/site-packages/yt_dlp</Path>
-                <Path fileType="library">/usr/lib/python3*/site-packages/yt_dlp-*.egg-info</Path>
-                <Path fileType="library">/usr/lib/python3*/site-packages/yt_dlp-*.dist-info</Path>
+                <Path fileType="doc">/usr/share/doc/yt_dlp</Path>
             </Files>
         </Package>
         <History>
+            <Update release="10">
+                <Date>2026.08.02</Date>
+                <Version>2026.07.04</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="9">
                 <Date>2024-11-04</Date>
                 <Version>2024.11.04</Version>
@@ -273879,7 +273941,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Name>kio-extras-devel</Name>
             <Summary xml:lang="en">Development files for kio-extras</Summary>
             <RuntimeDependencies>
-                <Dependency release="81">kio-extras</Dependency>
+                <Dependency release="82">kio-extras</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -273890,10 +273952,10 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Replaces>
         </Package>
         <History>
-            <Update release="81">
-                <Date>2026-07-20</Date>
+            <Update release="82">
+                <Date>2026-08-02</Date>
                 <Version>26.04.3</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -334022,7 +334084,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <RuntimeDependencies>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>polkit-devel</Dependency>
-                <Dependency release="22">upower</Dependency>
+                <Dependency release="23">upower</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/libexec/upower</Path>
@@ -334033,6 +334095,13 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Files>
         </Package>
         <History>
+            <Update release="23">
+                <Date>2026-08-02</Date>
+                <Version>1.91.3</Version>
+                <Comment>Rebuild.</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
             <Update release="22">
                 <Date>2026-07-03</Date>
                 <Version>1.91.3</Version>
@@ -334297,7 +334366,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Summary xml:lang="tr">ACPI sistemlerde pil ve sıcaklık bilgilerini tutar</Summary>
             <Description xml:lang="en">acpi is a small command-line tools that reports battery and thermal information.</Description>
             <Description xml:lang="tr">Eski apm komutlarını ACPI sistemlerde verir, pil ve sıcaklık bilgilerini tutar.</Description>
-            <Archive type="targz" sha1sum="7c21939da5be4004fbb8f055ce02d928919a9fb7" name="acpi-1.7.tar.gz">mirrors://sourceforge/acpiclient/acpiclient/1.7/acpi-1.7.tar.gz</Archive>
+            <Archive type="targz" sha1sum="6db1c5dc87b56f58ee74286663e8356c0edd3cee" name="acpi-1.8.tar.gz">mirrors://sourceforge/acpiclient/acpiclient/1.8/acpi-1.8.tar.gz</Archive>
             <SourceURI>hardware/powermanagement/acpi/pspec.xml</SourceURI>
         </Source>
         <Package>
@@ -334309,6 +334378,13 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Files>
         </Package>
         <History>
+            <Update release="4">
+                <Date>2026-08-02</Date>
+                <Version>1.8</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="4">
                 <Date>2020-03-02</Date>
                 <Version>1.7</Version>
@@ -341817,6 +341893,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <AdditionalFile target="/sound/asound.h" permission="0644" owner="root">sound/asound.h</AdditionalFile>
             </AdditionalFiles>
             <BuildDependencies>
+                <Dependency>git</Dependency>
                 <Dependency>meson</Dependency>
                 <Dependency>ninja</Dependency>
                 <Dependency>pkgconfig</Dependency>
@@ -341860,6 +341937,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Dependency>libxkbcommon-devel</Dependency>
                 <Dependency>pciutils-devel</Dependency>
                 <Dependency>libslirp-devel</Dependency>
+                <Dependency>xkeyboard-config</Dependency>
             </BuildDependencies>
             <SourceURI>hardware/virtualization/qemu/pspec.xml</SourceURI>
         </Source>
@@ -391337,7 +391415,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Description xml:lang="en">Flowblade is a multitrack non-linear video editor released under GPL3 license. From beginners to masters, Flowblade helps make your vision a reality of image and sound.</Description>
             <Description xml:lang="tr">Flowblade, GPL3 lisansı altında yayınlanan çok kanallı, doğrusal olmayan bir video düzenleyicidir. Yeni başlayanlardan ustalara kadar Flowblade, vizyonunuzu görüntü ve sesin gerçeğe dönüştürmesine yardımcı olur.</Description>
             <Icon>flowblade</Icon>
-            <Archive type="targz" sha1sum="a1d332655352c0eb829e6e49338473bc2ba55600" name="v2.24.tar.gz">https://github.com/jliljebl/flowblade/archive/refs/tags/v2.24.tar.gz</Archive>
+            <Archive type="targz" sha1sum="552b98eb3a8f3a222e9e090b23a0e33d5b3bb47b" name="v2.24.2.tar.gz">https://github.com/jliljebl/flowblade/archive/refs/tags/v2.24.2.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>mlt-devel</Dependency>
                 <Dependency>gmic-devel</Dependency>
@@ -391384,6 +391462,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="10">
+                <Date>2026-08-02</Date>
+                <Version>2.24.2</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="9">
                 <Date>2026-02-22</Date>
                 <Version>2.24</Version>
