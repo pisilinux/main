@@ -12,7 +12,7 @@
         <IsA>app:console</IsA>
         <Summary>Library providing a simple API to several virtualization systems</Summary>
         <Description>libvirt is a toolkit to interact with the virtualization capabilities of recent versions of Linux (and other OSes). libvirt supports Xen hypervisor, QEMU emulator, KVM hypervisor, LXC Linux container system, OpenVZ Linux container system, User Mode Linux paravirtualized kernel and VirtualBox hypervisor together with remote management possibilities.</Description>
-        <Archive sha1sum="16e6436acd0bbc461d4aabc0bd4980714cb2f03b" type="tarxz">https://libvirt.org/sources/libvirt-11.7.0.tar.xz</Archive>
+        <Archive sha1sum="0cddff8dca6bcb32b53eccc5a4773846b44c0f20" type="tarxz">https://libvirt.org/sources/libvirt-12.5.0.tar.xz</Archive>
         <BuildDependencies>
             <Dependency>qemu</Dependency>
             <Dependency>meson</Dependency>
@@ -66,6 +66,7 @@
     <Package>
         <Name>libvirt</Name>
         <RuntimeDependencies>
+            <Dependency>dnsmasq</Dependency>
             <Dependency>acl</Dependency>
             <Dependency>qemu</Dependency>
             <Dependency>curl</Dependency>
@@ -145,6 +146,27 @@
     </Package>
 
     <History>
+        <Update release="13">
+            <Date>2026-08-02</Date>
+            <Version>12.5.0</Version>
+            <Comment>Run all modular daemons including virtlogd, virtnwfilterd, virtsecretd and virtinterfaced. The comar status() check now requires every daemon to be running so startService does not skip starting the remaining daemons (virtlogd was skipped once virtqemud.pid appeared, breaking VM creation with "Failed to connect socket to virtlogd-sock"). Add libvirt-qemu to the kvm group so QEMU processes can open /dev/kvm.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="12">
+            <Date>2026-08-02</Date>
+            <Version>12.5.0</Version>
+            <Comment>Version bump to 12.5.0.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
+        <Update release="11">
+            <Date>2026-08-01</Date>
+            <Version>11.7.0</Version>
+            <Comment>Switch the comar service to the modular daemons (virtqemud, virtnetworkd, virtnodedevd, virtstoraged) instead of the monolithic libvirtd. virt-manager 5.x connects to qemu:///system through /run/libvirt/virtqemud-sock, which only exists when the modular daemons run. Add dnsmasq runtime dependency for the default NAT network.</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
         <Update release="10">
             <Date>2025-09-07</Date>
             <Version>11.7.0</Version>

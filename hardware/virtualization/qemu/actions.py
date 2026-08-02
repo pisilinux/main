@@ -2,123 +2,42 @@
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
-# See the file http://www.gnu.org/licenses/gpl.txt
+# See the file http://www.gnu.org/copyleft/gpl.txt
 
-from pisi.actionsapi import autotools
+from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
-NoStrip = ["/usr/share/qemu"]
+targets = "x86_64-softmmu,i386-softmmu,aarch64-softmmu,arm-softmmu,riscv64-softmmu,x86_64-linux-user,aarch64-linux-user"
 
-shelltools.export("LC_ALL", "C")
-
-# disable debug to prevent memory exhaustion by linker
-# cflags = get.CFLAGS().replace("-fpie", "").replace("-fstack-protector", "").replace("-ggdb3 -funwind-tables -fasynchronous-unwind-tables", "")
-cflags = get.CFLAGS().replace("-fpie", "").replace("-fstack-protector", "")
-
-#extraldflags="-Wl,--build-id"
-#buildldflags="VL_LDFLAGS=-Wl,--build-id"
-extraldflags=""
-buildldflags=""
-
-soundDrivers = "pa,sdl,alsa"
-builddirkvmtest = "kvm/test"
-
-#targetKvmList = "i386-softmmu x86_64-softmmu i386-linux-user x86_64-linux-user"
-targetListKvm = "x86_64-softmmu"
-targetList = "i386-softmmu x86_64-softmmu arm-softmmu cris-softmmu m68k-softmmu \
-              mips-softmmu mipsel-softmmu mips64-softmmu mips64el-softmmu ppc-softmmu \
-              ppc64-softmmu sh4-softmmu sh4eb-softmmu sparc-softmmu \
-              i386-linux-user x86_64-linux-user alpha-linux-user arm-linux-user \
-              armeb-linux-user cris-linux-user m68k-linux-user mips-linux-user \
-              mipsel-linux-user ppc-linux-user ppc64-linux-user ppc64abi32-linux-user \
-              sh4-linux-user sh4eb-linux-user sparc-linux-user sparc64-linux-user \
-              sparc32plus-linux-user"
-
-
-cfgParamsCommon = '--prefix=/usr \
-                   --sysconfdir=/etc \
-                   --mandir=/usr/share/man \
-                   --cc="%s" \
-                   --host-cc="%s" \
-                   --extra-cflags="%s" \
-                   --extra-ldflags="%s" \
-                   --audio-drv-list="%s" \
-                   --libexecdir=/usr/lib/qemu \
-                   --disable-xen \
-                   --disable-werror \
-                   --localstatedir=/ \
-                   --disable-strip' % (get.CC(), get.CC(), cflags, extraldflags, soundDrivers)
-
-
-def printfancy(msg):
-    print
-    print "===== %s =====" % msg
-    print
+cfgparams = " ".join([
+    "--prefix=/usr",
+    "--sysconfdir=/etc",
+    "--libexecdir=/usr/lib/qemu",
+    "--target-list=%s" % targets,
+    "--disable-werror",
+    "--disable-docs",
+])
 
 def setup():
-    #shelltools.system("sed -i 's/ memfd_create/ qemu_memfd_create/' util/memfd.c")
-    
-    # disable fdt until dtc is in repo
-    # pisitools.dosed("configure", 'fdt="yes"', 'fdt="no"')
-
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("LDFLAGS", extraldflags)
-
-    # different build dir setups are not supported yet, so we build kvm by hand for now
-    printfancy("configuring kvm")
-    autotools.rawConfigure('%s \
-                            --target-list="%s" \
-                            ' % (cfgParamsCommon, targetListKvm))
-
-    printfancy("building kvm")
-    autotools.make("V=1 -j1 config-host.h %s" % buildldflags)
-    autotools.make("V=1 %s" % buildldflags)
-    shelltools.copy("x86_64-softmmu/qemu-system-x86_64", "qemu-kvm")
-    autotools.make("clean")
-
-
-    # kvmtest stuff is not in upstream tarball anymore, but they may put it back, be ready
-    #printfancy("configuring kvmtest")
-    #shelltools.cd(builddirkvmtest)
-    #autotools.rawConfigure("--prefix=/usr \
-    #                        --kerneldir=../../kernel")
-    #shelltools.cd("../..")
-
-
-    printfancy("configuring qemu")
-    autotools.rawConfigure('%s \
-                            --target-list="%s" \
-                            --disable-kvm \
-                            ' % (cfgParamsCommon, targetList))
-                            #--interp-prefix=%{_prefix}/qemu-%%M \
-
-                            #--enable-system \
-                            #--enable-linux-user \
+    # pisi kernel-headers paketi kernel UAPI sound/asound.h icermez; linux-user
+    # hedefi icin gerekli. Kaynak paketteki files/sound/asound.h Source
+    # AdditionalFile ile kopyalanir; pisi os.path.join quirk'u yuzunden dosya
+    # /sound/asound.h konumuna duser. Kernel-spesifik sparse makrolari build
+    # basarili olsun diye temizlenir.
+    shelltools.makedirs("linux-headers/sound")
+    shelltools.copy("/sound/asound.h", "linux-headers/sound/")
+    shelltools.system("sed -i 's/__user//g; s/__force//g; s/__packed/__attribute__((packed))/g' linux-headers/sound/asound.h")
+    shelltools.system("./configure %s" % cfgparams)
 
 def build():
-    shelltools.export("CFLAGS", cflags)
-    shelltools.export("LDFLAGS", extraldflags)
-
-    printfancy("building qemu")
-    autotools.make("V=1 -j1 config-host.h %s" % buildldflags)
-    autotools.make("V=1 %s" % buildldflags)
-
-    #printfancy("building kvmtest")
-    #autotools.make("-C %s V=1 kvmtrace" % builddirkvmtest)
+    shelltools.system("ninja -C build")
 
 def install():
-    autotools.rawInstall('DESTDIR="%s"' % get.installDIR())
+    shelltools.system("meson install -C build --destdir %s" % get.installDIR())
 
-    # Install kvm-tools
-    #pisitools.dobin("kvm/test/kvmtrace")
-    #pisitools.dobin("kvm/test/kvmtrace_format")
-    #pisitools.dobin("kvm/kvm_stat")
-    pisitools.dobin("qemu-kvm")
-    shelltools.system("chmod u+s %s/usr/lib/qemu/qemu-bridge-helper" % get.installDIR())
-    pisitools.insinto("/etc/sasl2/", "qemu.sasl", "qemu.conf")
+    # QEMU localstatedir nedeniyle bos /var/run dizini olusturur; bu dizin
+    # paketlenirse hedef sistemdeki /var/run -> /run symlink'ini ezer.
+    shelltools.system("rmdir %s/var/run %s/var 2>/dev/null || true" % (get.installDIR(), get.installDIR()))
 
-    for i in ["pc-bios/README", "LICENSE", "README*", "COPYING*"]:
-        pisitools.dodoc(i)
-
+    pisitools.dodoc("LICENSE", "README.rst")

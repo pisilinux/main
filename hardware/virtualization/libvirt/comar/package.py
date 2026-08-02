@@ -40,3 +40,5 @@ def postInstall(fromVersion, fromRelease, toVersion, toRelease):
     #os.system("usermod -G libvirt %s" % os.getusername())
     os.system("usermod -G libvirt %s" % getpass.getuser())
     os.system("useradd -MG libvirt libvirt-qemu")
+    os.system("groupadd -f kvm")
+    os.system("usermod -a -G kvm libvirt-qemu")

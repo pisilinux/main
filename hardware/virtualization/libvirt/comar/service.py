@@ -7,37 +7,54 @@ serviceDesc = _({"en": "libvirt virtualization API daemon",
                  "tr": "libvirt sanallaştırma hizmeti"})
 serviceDefault = "on"
 
-PIDFILE         = "/run/libvirt/libvirtd.pid"
-KRB5_KTNAME     = "/etc/libvirt/krb5.tab"
-LIBVIRTD_CONFIG = "/etc/libvirt/libvirtd.conf"
+DAEMONS = [
+    ("/usr/sbin/virtqemud",     "/run/libvirt/virtqemud.pid"),
+    ("/usr/sbin/virtnetworkd",  "/run/libvirt/virtnetworkd.pid"),
+    ("/usr/sbin/virtnodedevd",  "/run/libvirt/virtnodedevd.pid"),
+    ("/usr/sbin/virtstoraged",  "/run/libvirt/virtstoraged.pid"),
+    ("/usr/sbin/virtlogd",      "/run/libvirt/virtlogd.pid"),
+    ("/usr/sbin/virtnwfilterd", "/run/libvirt/virtnwfilterd.pid"),
+    ("/usr/sbin/virtsecretd",   "/run/libvirt/virtsecretd.pid"),
+    ("/usr/sbin/virtinterfaced","/run/libvirt/virtinterfaced.pid"),
+]
 
 @synchronized
 def start():
-    os.environ["KRB5_KTNAME"] = config.get("KRB5_KTNAME", KRB5_KTNAME)
     os.environ["PATH"] = "/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/local/bin"
-
-    if os.path.exists(PIDFILE):
-        os.unlink(PIDFILE)
-
-    startService(command="/usr/sbin/libvirtd",
-                 args="--daemon --config %s %s --pid-file %s" % (
-                     config.get("LIBVIRTD_ARGS", ""),
-                     config.get("LIBVIRTD_CONFIG", LIBVIRTD_CONFIG),
-                     PIDFILE,
-                     ),
-                 donotify=True)
+    if not os.path.isdir("/run/libvirt"):
+        os.makedirs("/run/libvirt", 0755)
+    else:
+        os.chmod("/run/libvirt", 0755)
+    for daemon, pidfile in DAEMONS:
+        if isServiceRunning(pidfile=pidfile, command=daemon):
+            continue
+        if os.path.exists(pidfile):
+            os.unlink(pidfile)
+        startService(command=daemon,
+                     args="--timeout 0 --pid-file %s" % pidfile,
+                     detach=True,
+                     donotify=True)
 
 @synchronized
 def stop():
-    stopService(pidfile="/run/libvirt/libvirtd.pid",
-                donotify=True)
-    if os.path.exists(PIDFILE):
-        os.unlink(PIDFILE)
+    for daemon, pidfile in DAEMONS:
+        stopService(pidfile=pidfile,
+                    command=daemon,
+                    donotify=True)
+        if os.path.exists(pidfile):
+            os.unlink(pidfile)
 
 @synchronized
 def reload():
-    if os.path.exists(PIDFILE):
-        os.kill(int(open(PIDFILE, "r").read().strip()), 1)
+    for daemon, pidfile in DAEMONS:
+        if os.path.exists(pidfile):
+            try:
+                os.kill(int(open(pidfile, "r").read().strip()), 1)
+            except (IOError, OSError, ValueError):
+                pass
 
 def status():
-    return isServiceRunning(pidfile=PIDFILE)
+    for daemon, pidfile in DAEMONS:
+        if not isServiceRunning(pidfile=pidfile, command=daemon):
+            return False
+    return True

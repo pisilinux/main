@@ -5,10 +5,13 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import autotools
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def build():
-    autotools.make()
+    autotools.make("LDFLAGS=%s" % get.LDFLAGS())
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("PREFIX=/usr DESTDIR=%s" % get.installDIR())
+
+    pisitools.dodoc("CHANGELOG", "CHANGELOG.archive", "FAQ", "COPYING", "COPYING-v3", "doc.html")
