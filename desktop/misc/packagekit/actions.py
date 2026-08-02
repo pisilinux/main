@@ -1,30 +1,31 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import get
-from pisi.actionsapi import autotools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
 
 def setup():
-    #shelltools.system("sed -i 's@self.filesdb@# self.filesdb@g' backends/pisi/pisiBackend.py")
-
-    autotools.configure("--enable-pisi \
-               --with-default-backend=pisi \
-               --disable-dummy \
-               --disable-bash-completion \
-               --disable-man-pages \
-               --disable-static \
-               --disable-systemd \
-               --disable-offline-update")
+    mesontools.configure("-Dpackaging_backend=pisi \
+                          -Ddaemon_tests=false \
+                          -Dbash_completion=false \
+                          -Dman_pages=false \
+                          -Dsystemd=false \
+                          -Delogind=false \
+                          -Doffline_update=false \
+                          -Dlegacy_tools=true \
+                          -Dgstreamer_plugin=false \
+                          -Dgtk_module=false \
+                          -Dbash_command_not_found=false \
+                          -Dcron=false")
 
 def build():
-    autotools.make()
+    mesontools.build()
 
 def install():
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
-    pisitools.dodoc("AUTHORS", "MAINTAINERS", "COPYING", "README", "NEWS")
+    pisitools.dodoc("AUTHORS", "COPYING", "NEWS")

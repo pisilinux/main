@@ -1,31 +1,6 @@
-diff --git a/backends/pisi/pk-backend-pisi.c b/backends/pisi/pk-backend-pisi.c
---- a/backends/pisi/pk-backend-pisi.c
-+++ b/backends/pisi/pk-backend-pisi.c
-@@ -342,6 +342,21 @@
- }
- 
- void
-+pk_backend_get_categories (PkBackend *backend, PkBackendJob *job)
-+{
-+    pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "get-categories", NULL);
-+}
-+
-+void
-+pk_backend_get_packages (PkBackend *backend, PkBackendJob *job, PkBitfield filters)
-+{
-+    gchar *filters_text;
-+    filters_text = pk_filter_bitfield_to_string (filters);
-+    pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "get-packages", filters_text, NULL);
-+    g_free (filters_text);
-+}
-+
-+void
- pk_backend_get_repo_list (PkBackend *backend, PkBackendJob *job, PkBitfield filters)
- {
- 	gchar *filters_text;
-diff --git a/backends/pisi/pisiBackend.py b/backends/pisi/pisiBackend.py
---- a/backends/pisi/pisiBackend.py
-+++ b/backends/pisi/pisiBackend.py
+diff -uN pristine/PackageKit-1.3.6/backends/pisi/pisiBackend.py /var/pisi/packagekit-1.3.6-3/work/PackageKit-1.3.6/backends/pisi/pisiBackend.py
+--- a/backends/pisi/pisiBackend.py	2026-06-16 22:52:19.000000000 +0300
++++ b/backends/pisi/pisiBackend.py	2026-08-02 11:59:28.171129832 +0300
 @@ -42,6 +42,26 @@
  import piksemel
  import re
@@ -82,3 +57,45 @@ diff --git a/backends/pisi/pisiBackend.py b/backends/pisi/pisiBackend.py
      def get_files(self, package_ids):
          """ Prints a file list for a given package """
          self.allow_cancel(True)
+diff -uN pristine/PackageKit-1.3.6/backends/pisi/pk-backend-pisi.c /var/pisi/packagekit-1.3.6-3/work/PackageKit-1.3.6/backends/pisi/pk-backend-pisi.c
+--- a/backends/pisi/pk-backend-pisi.c	2026-06-16 22:52:19.000000000 +0300
++++ b/backends/pisi/pk-backend-pisi.c	2026-08-02 11:59:54.760133088 +0300
+@@ -318,16 +318,6 @@
+     g_free (transaction_flags_temp);
+ }
+ 
+-void
+-pk_backend_update_system (PkBackend *backend, PkBackendJob *job, PkBitfield transaction_flags)
+-{
+-    gchar *transaction_flags_temp;
+-    transaction_flags_temp = pk_transaction_flag_bitfield_to_string (transaction_flags);
+-
+-	pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "update-system", transaction_flags_temp, NULL);
+-
+-    g_free (transaction_flags_temp);
+-}
+ 
+ void
+ pk_backend_resolve (PkBackend *backend, PkBackendJob *job, PkBitfield filters, gchar **package_ids)
+@@ -342,6 +332,21 @@
+ }
+ 
+ void
++pk_backend_get_categories (PkBackend *backend, PkBackendJob *job)
++{
++    pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "get-categories", NULL);
++}
++
++void
++pk_backend_get_packages (PkBackend *backend, PkBackendJob *job, PkBitfield filters)
++{
++    gchar *filters_text;
++    filters_text = pk_filter_bitfield_to_string (filters);
++    pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "get-packages", filters_text, NULL);
++    g_free (filters_text);
++}
++
++void
+ pk_backend_get_repo_list (PkBackend *backend, PkBackendJob *job, PkBitfield filters)
+ {
+ 	gchar *filters_text;
