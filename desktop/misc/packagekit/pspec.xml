@@ -11,9 +11,10 @@
         <License>GPLv2</License>
         <Summary>A system designed to make installation and updates of packages easier.</Summary>
         <Description>PackageKit is a system designed to make installing and updating software on your computer easier. The primary design goal is to unify all the software graphical tools used in different distributions, and use some of the latest technology like PolicyKit.</Description>
-	    <Archive sha1sum="3f9bcd774680cd61f09ad59fbab88127a57e4833" type="tarxz">http://www.freedesktop.org/software/PackageKit/releases/PackageKit-1.1.13.tar.xz</Archive>
+	    <Archive sha1sum="c0f13d642d36c344d18c82a05c279750f1cacd1a" type="tarxz">https://freedesktop.org/software/PackageKit/releases/PackageKit-1.3.6.tar.xz</Archive>
 	    <BuildDependencies>
             <Dependency>sqlite-devel</Dependency>
+            <Dependency>jansson-devel</Dependency>
             <Dependency>gtk3-devel</Dependency>
             <Dependency>gtk2-devel</Dependency>
             <Dependency>intltool</Dependency>
@@ -53,12 +54,20 @@
             <Path fileType="doc">/usr/share/gtk-doc</Path>
             <Path fileType="data">/usr/share/bash-completion</Path>
             <Path fileType="data">/usr/share/dbus-1</Path>
+            <Path fileType="data">/usr/share/metainfo</Path>
             <Path fileType="data">/usr/share/PackageKit</Path>
             <Path fileType="data">/usr/share/polkit-1</Path>
             <Path fileType="data">/usr/share/vala</Path>
         </Files>
         <AdditionalFiles>
             <AdditionalFile owner="root" permission="0644" target="/etc/PackageKit/pisi.conf">pisi.conf</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/__init__.py">packagekit-py2/__init__.py</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/backend.py">packagekit-py2/backend.py</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/enums.py">packagekit-py2/enums.py</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/filter.py">packagekit-py2/filter.py</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/misc.py">packagekit-py2/misc.py</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/package.py">packagekit-py2/package.py</AdditionalFile>
+            <AdditionalFile owner="root" permission="0644" target="/usr/lib/python2.7/site-packages/packagekit/progress.py">packagekit-py2/progress.py</AdditionalFile>
         </AdditionalFiles>
     </Package>
 
@@ -81,8 +90,8 @@
     <History>
         <Update release="3">
             <Date>2026-08-02</Date>
-            <Version>1.1.13</Version>
-            <Comment>Implement get_categories and get_packages in MiSi backend so KDE Discover populates categories and package list.</Comment>
+            <Version>1.3.6</Version>
+            <Comment>Version bump to 1.3.6 (Meson build). Keep get_categories/get_packages patch (0002) for KDE Discover; drop unused 0001 PiSi-support patch. 0002 also drops the orphan pk_backend_update_system (role removed in 1.3.6, breaks -Werror=missing-prototypes). Ship the Python 2 packagekit helper module (packagekit-py2) because the pisi backend still runs under Python 2 (pisi itself is Python 2 only on this distro) while 1.3.6 installs its own helper only for Python 3.</Comment>
             <Name>Erkan Işık</Name>
             <Email>erkan@gmail.com</Email>
         </Update>
