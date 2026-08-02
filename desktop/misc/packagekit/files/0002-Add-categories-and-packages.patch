@@ -1,0 +1,84 @@
+diff --git a/backends/pisi/pk-backend-pisi.c b/backends/pisi/pk-backend-pisi.c
+--- a/backends/pisi/pk-backend-pisi.c
++++ b/backends/pisi/pk-backend-pisi.c
+@@ -342,6 +342,21 @@
+ }
+ 
+ void
++pk_backend_get_categories (PkBackend *backend, PkBackendJob *job)
++{
++    pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "get-categories", NULL);
++}
++
++void
++pk_backend_get_packages (PkBackend *backend, PkBackendJob *job, PkBitfield filters)
++{
++    gchar *filters_text;
++    filters_text = pk_filter_bitfield_to_string (filters);
++    pk_backend_spawn_helper (spawn, job, "pisiBackend.py", "get-packages", filters_text, NULL);
++    g_free (filters_text);
++}
++
++void
+ pk_backend_get_repo_list (PkBackend *backend, PkBackendJob *job, PkBitfield filters)
+ {
+ 	gchar *filters_text;
+diff --git a/backends/pisi/pisiBackend.py b/backends/pisi/pisiBackend.py
+--- a/backends/pisi/pisiBackend.py
++++ b/backends/pisi/pisiBackend.py
+@@ -42,6 +42,26 @@
+ import piksemel
+ import re
+ 
++CATEGORY_NAMES = {
++    "system": "System",
++    "security": "Security",
++    "network": "Network",
++    "internet": "Internet",
++    "programming": "Programming",
++    "desktop-gnome": "GNOME Desktop",
++    "desktop-xfce": "Xfce Desktop",
++    "desktop-other": "Desktop",
++    "desktop": "Desktop",
++    "admin-tools": "Administrative Tools",
++    "fonts": "Fonts",
++    "unknown": "Other",
++    "multimedia": "Multimedia",
++    "games": "Games",
++    "office": "Office",
++    "development": "Development",
++}
++
++
+ class SimplePisiHandler(pisi.ui.UI):
+ 
+     def __init(self):
+@@ -175,6 +195,28 @@
+         else:
+             self.error(ERROR_PACKAGE_NOT_FOUND, "Package was not found")
+ 
++    def get_categories(self):
++        """ Emits the list of categories the distribution supports """
++        self.allow_cancel(True)
++        self.percentage()
++
++        seen = set(self.groups.values()) if self.groups else set()
++        seen |= set(CATEGORY_NAMES.keys())
++        for category in sorted(seen):
++            name = CATEGORY_NAMES.get(category,
++                                      category.replace("-", " ").title())
++            self.category(category, category, name, category, None)
++
++    def get_packages(self, filters):
++        """ Emits all packages in the repository database """
++        self.allow_cancel(True)
++        self.percentage()
++        self.status(STATUS_INFO)
++
++        for repo in pisi.api.list_repos():
++            for package in self.packagedb.list_packages(repo):
++                self.__get_package(package, filters)
++
+     def get_files(self, package_ids):
+         """ Prints a file list for a given package """
+         self.allow_cancel(True)
