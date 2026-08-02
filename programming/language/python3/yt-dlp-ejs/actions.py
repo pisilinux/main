@@ -1,4 +1,4 @@
-from pisi.actionsapi import python3modules, pisitools
+from pisi.actionsapi import python3modules
 
 def build():
     python3modules.compile(pyVer="3")
