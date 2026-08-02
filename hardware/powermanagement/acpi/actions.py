@@ -17,5 +17,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.doman("acpi.1")
-    pisitools.dodoc("AUTHORS", "ChangeLog", "README")
+    pisitools.dodoc("AUTHORS", "COPYING", "README")
