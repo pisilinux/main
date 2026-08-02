@@ -156149,6 +156149,44 @@ contacts, tasks, and calendar information.</Summary>
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>opencode</Name>
+            <Homepage>https://opencode.ai</Homepage>
+            <Packager>
+                <Name>Erkan Işık</Name>
+                <Email>erkanisik@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <PartOf>programming.tool</PartOf>
+            <Summary xml:lang="en">An open source AI coding agent built for the terminal</Summary>
+            <Description xml:lang="en">OpenCode is an open source AI coding agent that runs in the terminal. It can answer questions, edit and create code files, run commands and tests, and more, directly from your terminal, IDE, or desktop.</Description>
+            <Icon>opencode</Icon>
+            <Archive type="targz" sha1sum="3953e98a9bdc7b78eb05a959ecaf6c952ce02d86" name="opencode-linux-x64-baseline.tar.gz">https://github.com/anomalyco/opencode/releases/download/v1.18.11/opencode-linux-x64-baseline.tar.gz</Archive>
+            <SourceURI>programming/tool/opencode/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>opencode</Name>
+            <RuntimeDependencies>
+                <Dependency>glibc</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/bin</Path>
+                <Path fileType="data">/usr/share/bash-completion/completions/opencode</Path>
+                <Path fileType="data">/usr/share/zsh/site-functions/_opencode</Path>
+                <Path fileType="doc">/usr/share/licenses/opencode</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2026-08-02</Date>
+                <Version>1.18.11</Version>
+                <Comment>First Release</Comment>
+                <Name>Erkan Işık</Name>
+                <Email>erkanisik@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>cmocka</Name>
             <Homepage>https://cmocka.org/</Homepage>
             <Packager>
@@ -159937,6 +159975,7 @@ contacts, tasks, and calendar information.</Summary>
             <Description xml:lang="en">PackageKit is a system designed to make installing and updating software on your computer easier. The primary design goal is to unify all the software graphical tools used in different distributions, and use some of the latest technology like PolicyKit.</Description>
             <Archive type="tarxz" sha1sum="c0f13d642d36c344d18c82a05c279750f1cacd1a" name="PackageKit-1.3.6.tar.xz">https://freedesktop.org/software/PackageKit/releases/PackageKit-1.3.6.tar.xz</Archive>
             <BuildDependencies>
+                <Dependency>meson</Dependency>
                 <Dependency>sqlite-devel</Dependency>
                 <Dependency>jansson-devel</Dependency>
                 <Dependency>gtk3-devel</Dependency>
@@ -159945,6 +159984,7 @@ contacts, tasks, and calendar information.</Summary>
                 <Dependency>polkit-devel</Dependency>
                 <Dependency>python3-devel</Dependency>
                 <Dependency>elogind-devel</Dependency>
+                <Dependency>vala-devel</Dependency>
                 <Dependency>gobject-introspection-devel</Dependency>
             </BuildDependencies>
             <Patches>
@@ -160014,7 +160054,7 @@ contacts, tasks, and calendar information.</Summary>
                 <Version>1.3.6</Version>
                 <Comment>Version bump to 1.3.6 (Meson build). Keep get_categories/get_packages patch (0002) for KDE Discover; drop unused 0001 PiSi-support patch. 0002 also drops the orphan pk_backend_update_system (role removed in 1.3.6, breaks -Werror=missing-prototypes). Ship the Python 2 packagekit helper module (packagekit-py2) because the pisi backend still runs under Python 2 (pisi itself is Python 2 only on this distro) while 1.3.6 installs its own helper only for Python 3.</Comment>
                 <Name>Erkan Işık</Name>
-                <Email>erkan@gmail.com</Email>
+                <Email>erkanisik@pisilinux.org</Email>
             </Update>
             <Update release="2">
                 <Date>2023-11-06</Date>
@@ -179002,7 +179042,7 @@ settings shared by various components of a desktop.</Summary>
                 <Dependency>polkit</Dependency>
                 <Dependency>libplist</Dependency>
                 <Dependency>gnome-online-accounts</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
                 <Dependency versionFrom="1.1.5">libimobiledevice</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -179019,7 +179059,7 @@ settings shared by various components of a desktop.</Summary>
             <RuntimeDependencies>
                 <Dependency>libsecret</Dependency>
                 <Dependency>libgcrypt</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="library">/usr/lib/gvfs/gvfsd-afp</Path>
@@ -179035,7 +179075,7 @@ settings shared by various components of a desktop.</Summary>
             <Summary xml:lang="tr">GVFS sıkıştırma arkaucu</Summary>
             <RuntimeDependencies>
                 <Dependency>libarchive</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/libexec/gvfsd-archive</Path>
@@ -179049,7 +179089,7 @@ settings shared by various components of a desktop.</Summary>
             <Summary xml:lang="tr">GVFS dijital kamera arkaucu</Summary>
             <RuntimeDependencies>
                 <Dependency>libgphoto2</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/libexec/gvfs-gphoto2-volume-monitor</Path>
@@ -179065,7 +179105,7 @@ settings shared by various components of a desktop.</Summary>
             <Summary xml:lang="tr">GVFS FUSE arkaucu</Summary>
             <RuntimeDependencies>
                 <Dependency>fuse3</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/libexec/gvfsd-fuse</Path>
@@ -179076,7 +179116,7 @@ settings shared by various components of a desktop.</Summary>
             <Summary xml:lang="en">Samba backend for GVFS</Summary>
             <Summary xml:lang="tr">GVFS Samba arkaucu</Summary>
             <RuntimeDependencies>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
                 <Dependency versionFrom="4.0.7">samba</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -179094,7 +179134,7 @@ settings shared by various components of a desktop.</Summary>
             <RuntimeDependencies>
                 <Dependency>libmtp</Dependency>
                 <Dependency>libusb</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/libexec/gvfsd-mtp</Path>
@@ -179109,7 +179149,7 @@ settings shared by various components of a desktop.</Summary>
             <Name>gvfs-goa</Name>
             <Summary xml:lang="en">gvfs-goa - GNOME Online Accounts support for gvfs</Summary>
             <RuntimeDependencies>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/lib/gvfs-goa-volume-monitor</Path>
@@ -179122,7 +179162,7 @@ settings shared by various components of a desktop.</Summary>
             <Summary xml:lang="en">Samba backend for GVFS</Summary>
             <RuntimeDependencies>
                 <Dependency>libgdata</Dependency>
-                <Dependency release="32">gvfs</Dependency>
+                <Dependency release="33">gvfs</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/libexec/gvfsd-google</Path>
@@ -179244,10 +179284,10 @@ settings shared by various components of a desktop.</Summary>
             </Files>
         </Package>
         <History>
-            <Update release="32">
-                <Date>2026-03-13</Date>
+            <Update release="33">
+                <Date>2026-08-02</Date>
                 <Version>1.58.4</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -243277,7 +243317,7 @@ components such as the Settings and gnome-shell.</Description>
             <Name>kglobalacceld-devel</Name>
             <Summary xml:lang="en">Development files for kglobalacceld</Summary>
             <RuntimeDependencies>
-                <Dependency release="44">kglobalacceld</Dependency>
+                <Dependency release="45">kglobalacceld</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -243289,10 +243329,10 @@ components such as the Settings and gnome-shell.</Description>
             </Replaces>
         </Package>
         <History>
-            <Update release="44">
-                <Date>2026-07-14</Date>
+            <Update release="45">
+                <Date>2026-08-02</Date>
                 <Version>6.7.3</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -245186,7 +245226,7 @@ components such as the Settings and gnome-shell.</Description>
             <Name>libplasma-devel</Name>
             <Summary xml:lang="en">Development files for libplasma</Summary>
             <RuntimeDependencies>
-                <Dependency release="26">libplasma</Dependency>
+                <Dependency release="27">libplasma</Dependency>
                 <Dependency>wayland-protocols-devel</Dependency>
                 <Dependency versionFrom="5.245.0">kpackage-devel</Dependency>
                 <Dependency versionFrom="5.245.0">kservice-devel</Dependency>
@@ -245203,10 +245243,10 @@ components such as the Settings and gnome-shell.</Description>
             </Replaces>
         </Package>
         <History>
-            <Update release="26">
-                <Date>2026-07-14</Date>
+            <Update release="27">
+                <Date>2026-08-02</Date>
                 <Version>6.7.3</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -299669,7 +299709,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Name>solid-devel</Name>
             <Summary xml:lang="en">Development files for solid</Summary>
             <RuntimeDependencies>
-                <Dependency release="89">solid</Dependency>
+                <Dependency release="90">solid</Dependency>
                 <Dependency versionFrom="6.10.1">qt6-base-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -299682,6 +299722,13 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Replaces>
         </Package>
         <History>
+            <Update release="90">
+                <Date>2026-08-02</Date>
+                <Version>6.28.0</Version>
+                <Comment>Rebuild against libplist 2.7.0 and libimobiledevice 1.4.0 (SONAME bump libplist-2.0.so.3 -&gt; .so.4)</Comment>
+                <Name>Erkan Işık</Name>
+                <Email>erkanisik@pisilinux.org</Email>
+            </Update>
             <Update release="89">
                 <Date>2026-07-10</Date>
                 <Version>6.28.0</Version>
@@ -299879,7 +299926,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Name>knotifyconfig-devel</Name>
             <Summary xml:lang="en">Development files for knotifyconfig</Summary>
             <RuntimeDependencies>
-                <Dependency release="88">knotifyconfig</Dependency>
+                <Dependency release="89">knotifyconfig</Dependency>
                 <Dependency versionFrom="6.10.1">qt6-base-devel</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -299892,10 +299939,10 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Replaces>
         </Package>
         <History>
-            <Update release="88">
-                <Date>2026-07-10</Date>
+            <Update release="89">
+                <Date>2026-08-02</Date>
                 <Version>6.28.0</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -301716,7 +301763,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Name>ktexteditor-devel</Name>
             <Summary xml:lang="en">Development files for ktexteditor</Summary>
             <RuntimeDependencies>
-                <Dependency release="91">ktexteditor</Dependency>
+                <Dependency release="92">ktexteditor</Dependency>
                 <Dependency versionFrom="6.28.0">kparts-devel</Dependency>
                 <Dependency versionFrom="6.28.0">syntax-highlighting-devel</Dependency>
             </RuntimeDependencies>
@@ -301730,10 +301777,10 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Replaces>
         </Package>
         <History>
-            <Update release="91">
-                <Date>2026-07-10</Date>
+            <Update release="92">
+                <Date>2026-08-02</Date>
                 <Version>6.28.0</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -304532,7 +304579,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Name>kio-devel</Name>
             <Summary xml:lang="en">Development files for kio</Summary>
             <RuntimeDependencies>
-                <Dependency release="98">kio</Dependency>
+                <Dependency release="99">kio</Dependency>
                 <Dependency versionFrom="6.28.0">solid-devel</Dependency>
                 <Dependency versionFrom="6.28.0">kconfig-devel</Dependency>
                 <Dependency versionFrom="6.28.0">kcodecs-devel</Dependency>
@@ -304556,10 +304603,10 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Replaces>
         </Package>
         <History>
-            <Update release="98">
-                <Date>2026-07-10</Date>
+            <Update release="99">
+                <Date>2026-08-02</Date>
                 <Version>6.28.0</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Pisi Linux Community</Name>
                 <Email>admin@pisilinux.org</Email>
             </Update>
@@ -322021,24 +322068,23 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Dependency>gettext-devel</Dependency>
                 <Dependency>libusb-devel</Dependency>
                 <Dependency>sqlite-devel</Dependency>
-                <Dependency>python-devel</Dependency>
                 <Dependency>gtk-doc</Dependency>
                 <Dependency>gtk2-devel</Dependency>
                 <Dependency>docbook-xml</Dependency>
-                <Dependency>python-six</Dependency>
-                <Dependency>python-mutagen</Dependency>
                 <Dependency>libplist-devel</Dependency>
                 <Dependency>sg3_utils-devel</Dependency>
                 <Dependency>libimobiledevice-devel</Dependency>
-                <Dependency>python-pygobject-devel</Dependency>
-                <Dependency>swig</Dependency>
+                <Dependency>libxml2-devel</Dependency>
             </BuildDependencies>
             <Patches>
-                <Patch level="1">0001-323-Segmentation-fault-when-opening-ipod.patch</Patch>
-                <Patch level="1">libgpod-0.8.2-pkgconfig_overlinking.patch</Patch>
-                <Patch level="1">libgpod-fixswig.patch</Patch>
-                <Patch>libgpod-udev.patch</Patch>
+                <Patch level="1">gentoo/libgpod-0.8.3-comment.patch</Patch>
+                <Patch level="1">gentoo/libgpod-0.8.3-implicit-int.patch</Patch>
+                <Patch level="1">gentoo/libgpod-0.8.3-pixbuf.patch</Patch>
+                <Patch level="1">gentoo/libgpod-0.8.3-pkgconfig_overlinking.patch</Patch>
+                <Patch level="1">gentoo/libgpod-0.8.3-plist-2.3.patch</Patch>
+                <Patch level="1">gentoo/libgpod-0.8.3-segfault.patch</Patch>
                 <Patch level="1">0001-configure.ac-Add-support-for-libplist-2.2.patch</Patch>
+                <Patch>libgpod-udev.patch</Patch>
             </Patches>
             <SourceURI>hardware/misc/libgpod/pspec.xml</SourceURI>
         </Source>
@@ -322072,7 +322118,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Summary xml:lang="tr">libgpod için Python bağlayıcıları</Summary>
             <PartOf>programming.language.python</PartOf>
             <RuntimeDependencies>
-                <Dependency release="6">libgpod</Dependency>
+                <Dependency release="7">libgpod</Dependency>
                 <Dependency>libplist</Dependency>
                 <Dependency>gdk-pixbuf</Dependency>
                 <Dependency>python-mutagen</Dependency>
@@ -322086,7 +322132,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Summary xml:lang="en">Development files for libgpod</Summary>
             <Summary xml:lang="tr">libgpod için geliştirme dosyaları</Summary>
             <RuntimeDependencies>
-                <Dependency release="6">libgpod</Dependency>
+                <Dependency release="7">libgpod</Dependency>
                 <Dependency>gdk-pixbuf-devel</Dependency>
                 <Dependency>libimobiledevice-devel</Dependency>
             </RuntimeDependencies>
@@ -322096,8 +322142,8 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Files>
         </Package>
         <History>
-            <Update release="6">
-                <Date>2023-08-05</Date>
+            <Update release="7">
+                <Date>2026-08-02</Date>
                 <Version>0.8.3</Version>
                 <Comment>Rebuild</Comment>
                 <Name>Mustafa Cinasal</Name>
@@ -323761,7 +323807,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             <Summary xml:lang="tr">Hardware identification and configuration data</Summary>
             <Description xml:lang="en">Hardware identification and configuration data</Description>
             <Description xml:lang="tr">Hardware identification and configuration data</Description>
-            <Archive type="targz" sha1sum="fc60eaf629315783d2337daa74a7a7eb7403e1a9" name="v0.406.tar.gz">https://github.com/vcrhonek/hwdata/archive/refs/tags/v0.406.tar.gz</Archive>
+            <Archive type="targz" sha1sum="4c94cd64ea6a665114318408dda484673627697f" name="v0.410.tar.gz">https://github.com/vcrhonek/hwdata/archive/refs/tags/v0.410.tar.gz</Archive>
             <SourceURI>hardware/misc/hwdata/pspec.xml</SourceURI>
         </Source>
         <Package>
@@ -323774,6 +323820,13 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Files>
         </Package>
         <History>
+            <Update release="31">
+                <Date>2026-08-02</Date>
+                <Version>0.410</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Emir Bayram</Name>
+                <Email>rimru01@proton.me</Email>
+            </Update>
             <Update release="30">
                 <Date>2026-04-03</Date>
                 <Version>0.406</Version>
@@ -332177,7 +332230,8 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Dependency>libslirp-devel</Dependency>
                 <Dependency>cmake</Dependency>
                 <Dependency>ninja</Dependency>
-                <Dependency>pkgconfig</Dependency>
+                <Dependency>libXi-devel</Dependency>
+                <Dependency>libevdev-devel</Dependency>
             </BuildDependencies>
             <SourceURI>hardware/emulator/86box/pspec.xml</SourceURI>
         </Source>
@@ -335110,7 +335164,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Version>2.7.0</Version>
                 <Comment>Version bump to 2.7.0 (required by libimobiledevice 1.4.0 / libtatsu 1.0.5). Build without Cython bindings; drop obsolete libxml2/python deps.</Comment>
                 <Name>Erkan Işık</Name>
-                <Email>erkan@gmail.com</Email>
+                <Email>erkanisik@pisilinux.org</Email>
             </Update>
             <Update release="7">
                 <Date>2020-06-24</Date>
@@ -335213,7 +335267,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Version>1.3.2</Version>
                 <Comment>First release (required by libimobiledevice 1.4.0).</Comment>
                 <Name>Erkan Işık</Name>
-                <Email>erkan@gmail.com</Email>
+                <Email>erkanisik@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -335362,7 +335416,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Version>2.0.2</Version>
                 <Comment>Rebuild against libplist 2.7.0.</Comment>
                 <Name>Erkan Işık</Name>
-                <Email>erkan@gmail.com</Email>
+                <Email>erkanisik@pisilinux.org</Email>
             </Update>
             <Update release="4">
                 <Date>2020-06-24</Date>
@@ -335580,7 +335634,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Version>1.0.5</Version>
                 <Comment>First release (required by libimobiledevice 1.4.0).</Comment>
                 <Name>Erkan Işık</Name>
-                <Email>erkan@gmail.com</Email>
+                <Email>erkanisik@pisilinux.org</Email>
             </Update>
         </History>
     </SpecFile>
@@ -335716,7 +335770,7 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Version>1.4.0</Version>
                 <Comment>Version bump to 1.4.0. New deps: libimobiledevice-glue, libtatsu; libplist 2.7.0; switch TLS backend to OpenSSL (default).</Comment>
                 <Name>Erkan Işık</Name>
-                <Email>erkan@gmail.com</Email>
+                <Email>erkanisik@pisilinux.org</Email>
             </Update>
             <Update release="8">
                 <Date>2020-12-09</Date>
@@ -335800,6 +335854,9 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
                 <Dependency>libusb-devel</Dependency>
                 <Dependency>libimobiledevice-devel</Dependency>
             </BuildDependencies>
+            <Patches>
+                <Patch level="1">libplist-2.3.0.diff</Patch>
+            </Patches>
             <SourceURI>hardware/mobile/usbmuxd/pspec.xml</SourceURI>
         </Source>
         <Package>
@@ -335820,10 +335877,10 @@ It supports email, address books, calendars, tasks, news feeds and much more.</D
             </Files>
         </Package>
         <History>
-            <Update release="8">
-                <Date>2020-06-24</Date>
+            <Update release="9">
+                <Date>2026-08-02</Date>
                 <Version>1.1.1</Version>
-                <Comment>Version bump.</Comment>
+                <Comment>Rebuild.</Comment>
                 <Name>Mustafa Cinasal</Name>
                 <Email>muscnsl@gmail.com</Email>
             </Update>
