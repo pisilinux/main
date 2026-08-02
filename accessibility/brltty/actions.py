@@ -12,6 +12,8 @@ from pisi.actionsapi import shelltools
 pisitools.cxxflags.add("-std=gnu++11")
 
 def setup():
+    shelltools.system("sed -i 's/-ltinfo/-lncursesw/g' configure")
+
     pisitools.flags.add(" -lspeechd")
     shelltools.export("PYTHON","/usr/bin/python3")
     autotools.configure(" \
@@ -36,4 +38,3 @@ def install():
     #pisitools.removeDir("/run")
     pisitools.removeDir("/var")
     pisitools.dodoc("LICENSE*", "README")
-	
