@@ -9,19 +9,14 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 
 def setup():
-    #  do not link with installed old library
-    pisitools.dosed("cython/Makefile.*", "(plist_la_LDFLAGS\s=.*)(\s-L\$\(libdir\))(.*)", r"\1\3")
-    autotools.autoreconf("-fiv")
-
     autotools.configure("\
                          --disable-static \
                          --disable-silent-rules \
+                         --without-cython \
                         ")
 
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
-
 def build():
-    autotools.make("-j1")
+    autotools.make()
 
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
