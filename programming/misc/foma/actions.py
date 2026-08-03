@@ -6,7 +6,7 @@
 
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import mesontools
-from pisi.actionsapi import pisitools
+from pisi.actionsapi import pisitools, shelltools
 
 y = ''.join([
     ' -DCMAKE_INSTALL_PREFIX=/usr',
@@ -15,12 +15,16 @@ y = ''.join([
     ])
 
 def setup():
+    shelltools.makedirs("foma")
+    shelltools.cd("foma")
     cmaketools.configure(y)
 
 def build():
+    shelltools.cd("foma")
     mesontools.build()
 
 def install():
+    shelltools.cd("foma")
     mesontools.install()
 
-    pisitools.dodoc("foma/COPYING")
+    # pisitools.dodoc("foma/COPYING")
