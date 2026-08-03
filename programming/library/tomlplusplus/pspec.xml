@@ -15,6 +15,7 @@
         <Description>toml++ is a C++17 library for parsing and serializing TOML configuration files.</Description>
         <Archive sha1sum="24490d9ec7f637417ff6712dffb7206dc3032702" type="targz">https://github.com/marzer/tomlplusplus/archive/refs/tags/v3.4.0.tar.gz</Archive>
         <BuildDependencies>
+            <Dependency>cmake</Dependency>
             <Dependency>meson</Dependency>
             <Dependency>ninja</Dependency>
         </BuildDependencies>
@@ -23,8 +24,12 @@
     <Package>
         <Name>tomlplusplus</Name>
         <Summary>Shared library for tomlplusplus</Summary>
+        <RuntimeDependencies>
+            <Dependency>libgcc</Dependency>
+        </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/libtomlplusplus.so.3*</Path>
+            <Path fileType="doc">/usr/share/doc/tomlplusplus</Path>
+            <Path fileType="library">/usr/lib/libtomlplusplus.so*</Path>
         </Files>
     </Package>
 
@@ -32,14 +37,13 @@
         <Name>tomlplusplus-devel</Name>
         <Summary>Development files for tomlplusplus</Summary>
         <RuntimeDependencies>
-            <Dependency>tomlplusplus</Dependency>
+            <Dependency release="current">tomlplusplus</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/toml++</Path>
-            <Path fileType="library">/usr/lib/libtomlplusplus.so</Path>
             <Path fileType="library">/usr/lib/cmake/tomlplusplus</Path>
             <Path fileType="data">/usr/lib/pkgconfig/tomlplusplus.pc</Path>
-            <Path fileType="doc">/usr/share/doc/tomlplusplus</Path>
+
         </Files>
     </Package>
 
