@@ -4,27 +4,23 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools, pisitools
+from pisi.actionsapi import cmaketools
+from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
 
-j = ''.join([
-    ' -O3',
-    ' -Wall',
-    ' -D_GNU_SOURCE',
-    ' -std=c99',
-    ' -fvisibility=hidden',
-    ' -fPIC',
-    ' -fcommon '
+y = ''.join([
+    ' -DCMAKE_INSTALL_PREFIX=/usr',
+    ' foma/',
+    ' -Bbuild -G Ninja -L '
     ])
 
+def setup():
+    cmaketools.configure(y)
+
 def build():
-	autotools.make("prefix=/usr CFLAGS='%s'" % j)
+    mesontools.build()
 
 def install():
-	pisitools.dobin("foma")
-	pisitools.dobin("flookup")
-	pisitools.dobin("cgflookup")
-	pisitools.insinto("/usr/include", "fomalib.h")
-	pisitools.insinto("/usr/include", "fomalibconf.h")
-	pisitools.dolib_so("libfoma.so.0.9.18")
-	pisitools.dosym("libfoma.so.0.9.18", "/usr/lib/libfoma.so")
-	pisitools.dosym("libfoma.so.0.9.18", "/usr/lib/libfoma.so.0")
+    mesontools.install()
+
+    pisitools.dodoc("foma/COPYING")

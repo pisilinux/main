@@ -4,10 +4,13 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import autotools, get
+from pisi.actionsapi import autotools, pisitools, get
 
 def build():
-	autotools.make("vvfst")
+    autotools.make()
 
 def install():
-	autotools.make("DESTDIR=%s/usr/share/voikko vvfst-install" % get.installDIR())
+    destdir = "DESTDIR=%s/usr/share/voikko" % get.installDIR()
+    autotools.make(destdir, argument = "vvfst-install")
+
+    pisitools.dodoc("CONTRIBUTORS", "COPYING")
