@@ -11,6 +11,6 @@ def build():
 
 def install():
     destdir = "DESTDIR=%s/usr/share/voikko" % get.installDIR()
-    autotools.make(destdir, argument = "vvfst-install")
+    autotools.rawInstall(destdir, argument = "vvfst-install")
 
     pisitools.dodoc("CONTRIBUTORS", "COPYING")
