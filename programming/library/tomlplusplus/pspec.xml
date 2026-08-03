@@ -1,5 +1,5 @@
-<?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
         <Name>tomlplusplus</Name>
@@ -11,24 +11,34 @@
         <License>MIT</License>
         <IsA>library</IsA>
         <PartOf>programming.library</PartOf>
-        <Summary>A header-only TOML parser and serializer library for C++17</Summary>
+        <Summary>A TOML parser and serializer library for C++17</Summary>
         <Description>toml++ is a C++17 library for parsing and serializing TOML configuration files.</Description>
         <Archive sha1sum="24490d9ec7f637417ff6712dffb7206dc3032702" type="targz">https://github.com/marzer/tomlplusplus/archive/refs/tags/v3.4.0.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>cmake</Dependency>
+            <Dependency>meson</Dependency>
             <Dependency>ninja</Dependency>
         </BuildDependencies>
     </Source>
 
     <Package>
+        <Name>tomlplusplus</Name>
+        <Summary>Shared library for tomlplusplus</Summary>
+        <Files>
+            <Path fileType="library">/usr/lib/libtomlplusplus.so.3*</Path>
+        </Files>
+    </Package>
+
+    <Package>
         <Name>tomlplusplus-devel</Name>
         <Summary>Development files for tomlplusplus</Summary>
         <RuntimeDependencies>
-            <!-- Dependency></Dependency -->
+            <Dependency>tomlplusplus</Dependency>
         </RuntimeDependencies>
         <Files>
             <Path fileType="header">/usr/include/toml++</Path>
+            <Path fileType="library">/usr/lib/libtomlplusplus.so</Path>
             <Path fileType="library">/usr/lib/cmake/tomlplusplus</Path>
+            <Path fileType="data">/usr/lib/pkgconfig/tomlplusplus.pc</Path>
             <Path fileType="doc">/usr/share/doc/tomlplusplus</Path>
         </Files>
     </Package>
