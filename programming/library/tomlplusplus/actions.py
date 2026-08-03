@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-
-from pisi.actionsapi import cmaketools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
-
 def setup():
-    cmaketools.configure("-DTOMLPLUSPLUS_BUILD_MODULES=OFF")
+    mesontools.configure()
 
+def build():
+    mesontools.build()
 
 def install():
-    cmaketools.install()
-    
+    mesontools.install()
+
     pisitools.dodoc("LICENSE", "README.md")
-    
-    pisitools.remove("/usr/include/meson.build")
-    pisitools.removeDir("/usr/share/tomlplusplus")
