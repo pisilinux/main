@@ -20,10 +20,8 @@ def setup():
     shelltools.export("FC", "/usr/bin/gfortran")
     autotools.configure("--with-valgrind \
                          --without-slurm \
-                         --enable-mpi-cxx \
                          --with-hwloc=/usr \
                          --enable-memchecker \
-                         --with-libltdl=/usr \
                          --enable-builtin-atomics \
                          --enable-mpi-fortran=all \
                          --sysconfdir=/etc/openmpi \
