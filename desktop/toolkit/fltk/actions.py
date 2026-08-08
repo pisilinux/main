@@ -50,4 +50,4 @@ def install():
     if get.buildTYPE() == "emul32": return
     
     autotools.install("-C documentation")
-    pisitools.dodoc("ANNOUNCEMENT", "CHANGES", "COPYING", "CREDITS", "README")
+    pisitools.dodoc("ANNOUNCEMENT", "COPYING", "README*")
