@@ -32,6 +32,6 @@ def install():
     pisitools.dodoc("COPYING", "README*")
     
     #some packages search libraries direst under /usr/lib
-    pisitools.dosym("/usr/lib/octave/5.2.0/liboctave.so.7.0.1", "/usr/lib/liboctave.so")
-    pisitools.dosym("/usr/lib/octave/5.2.0/liboctinterp.so.7.0.1", "/usr/lib/liboctinterp.so")
-    pisitools.dosym("/usr/lib/octave/5.2.0/liboctinterp.so.7.0.1", "/usr/lib/liboctinterp.so.7")
+    pisitools.dosym("/usr/lib/octave/11.3.0/liboctave.so.13.0.2", "/usr/lib/liboctave.so")
+    pisitools.dosym("/usr/lib/octave/11.3.0/liboctinterp.so.15.0.1", "/usr/lib/liboctinterp.so")
+    pisitools.dosym("/usr/lib/octave/11.3.0/liboctinterp.so.15.0.1", "/usr/lib/liboctinterp.so.15")
