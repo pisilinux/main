@@ -21,6 +21,8 @@ def setup():
                           -DKLU_LIBRARY_DIR=/usr/lib \
                           -DCMAKE_INSTALL_PREFIX=/usr \
                           -DCMAKE_C_FLAGS='-fPIC -fcommon' \
+                          -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
+                          -DSUNDIALS_EXAMPLES_INSTALL_PATH=/usr/share/sundials/examples \
                           -DEXAMPLES_INSTALL_PATH=/usr/share/sundials/examples", sourceDir="..")
 
 def build():
