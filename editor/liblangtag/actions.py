@@ -7,7 +7,7 @@
 from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
-y = ''.joun([
+y = ''.join([
     ' --prefix=/usr',
     ' --enable-introspection',
     ' --disable-static '
