@@ -11,6 +11,7 @@ def setup():
     kde6.configure("-DCMAKE_BUILD_TYPE=Release \
                     -DINSTALL_QSQLITE_IN_QT_PREFIX=TRUE \
                     -DMYSQLD_EXECUTABLE:FILEPATH=/usr/bin/mysqld \
+                    -DBUILD_PYTHON_BINDINGS=OFF \
                     -DWITH_SOPRANO=OFF")
 
 def build():
