@@ -1,0 +1,15 @@
+diff --git a/src/io/source_avcodec.c b/src/io/source_avcodec.c
+index e0ae93b5e..1421bd9a8 100644
+--- a/src/io/source_avcodec.c
++++ b/src/io/source_avcodec.c
+@@ -68,6 +68,10 @@
+ #define AUBIO_AVCODEC_MAX_BUFFER_SIZE AV_INPUT_BUFFER_MIN_SIZE
+ #endif
+ 
++#if LIBAVCODEC_VERSION_MAJOR >= 59
++#define FF_API_LAVF_AVCTX 1
++#endif
++
+ struct _aubio_source_avcodec_t {
+   uint_t hop_size;
+   uint_t samplerate;
