@@ -14,6 +14,7 @@ def setup():
                          --with-included-zlib=no \
                          --with-included-popt=no \
                          --disable-xxhash \
+                         --enable-ipv6 \
                          --disable-debug")
 
 def build():
