@@ -23,8 +23,7 @@ def setup():
     #pisitools.dosed("src/core/nm-hostname-manager.c", "/etc/hostname", "/etc/env.d/01hostname")
     pisitools.cxxflags.add("-O2 -fPIC")
 
-    mesontools.configure("-Dmodify_system=true \
-                          -Difupdown=false \
+    mesontools.configure("-Difupdown=false \
                           -Dconfig_plugins_default=keyfile \
                           -Dhostname_persist=default \
                           -Dqt=false \
@@ -45,11 +44,11 @@ def setup():
                           -Dpppd=/usr/sbin/pppd \
                           -Dpppd_plugin_dir=/usr/lib/pppd/2.5.0 \
                           -Ddbus_conf_dir=/usr/share/dbus-1/system.d \
-                          -Ddhclient=enabled \
                           -D config_dns_rc_manager_default=symlink \
                           -Dudev_dir=/lib/udev \
                           -Diptables=/sbin/iptables \
                           -Ddnsmasq=/usr/sbin/dnsmasq \
+                          -Dsystemdsystemgeneratordir=no \
                           -Dsystemdsystemunitdir=no \
                           -Dsystemd_journal=false \
                           --localstatedir=/var \
