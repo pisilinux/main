@@ -40376,6 +40376,63 @@ Gnome session.</Summary>
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>libbpf</Name>
+            <Homepage>https://github.com/libbpf/libbpf/</Homepage>
+            <Packager>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Packager>
+            <License>LGPLv2.1</License>
+            <IsA>library</IsA>
+            <PartOf>network.library</PartOf>
+            <Summary xml:lang="en">Library for loading eBPF programs and reading and manipulating eBPF objects from user-space</Summary>
+            <Summary xml:lang="tr">Library for loading eBPF programs and reading and manipulating eBPF objects from user-space</Summary>
+            <Description xml:lang="en">Kullanıcı alanından eBPF programlarını yüklemek, eBPF nesnelerini okumak ve manipüle etmek için kullanılan kütüphane.</Description>
+            <Description xml:lang="tr">Kullanıcı alanından eBPF programlarını yüklemek, eBPF nesnelerini okumak ve manipüle etmek için kullanılan kütüphane.</Description>
+            <Archive type="targz" sha1sum="c1f38b51d09324a3386fb4fecaae0041ec15588c" name="v1.7.0.tar.gz">https://github.com/libbpf/libbpf/archive/refs/tags/v1.7.0.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>elfutils-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>network/library/libbpf/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>libbpf</Name>
+            <RuntimeDependencies>
+                <Dependency>zlib</Dependency>
+                <Dependency>elfutils</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="library">/usr/lib</Path>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+            </Files>
+        </Package>
+        <Package>
+            <Name>libbpf-devel</Name>
+            <Summary xml:lang="en">Development files for libbpf</Summary>
+            <RuntimeDependencies>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>elfutils-devel</Dependency>
+                <Dependency release="1">libbpf</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2026-08-22</Date>
+                <Version>1.7.0</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libtpms</Name>
             <Homepage>https://github.com/stefanberger/libtpms</Homepage>
             <Packager>
@@ -82400,6 +82457,57 @@ to create header files and sources from protocol files.</Description>
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>bpftool</Name>
+            <Homepage>https://github.com/libbpf/bpftool/</Homepage>
+            <Packager>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Packager>
+            <License>GPLv2</License>
+            <IsA>library</IsA>
+            <PartOf>programming.library</PartOf>
+            <Summary xml:lang="en">Inspection and simple manipulation of eBPF programs and maps</Summary>
+            <Summary xml:lang="tr">Inspection and simple manipulation of eBPF programs and maps</Summary>
+            <Description xml:lang="en">eBPF programlarının ve haritalarının incelenmesi ve basit manipülasyonu</Description>
+            <Description xml:lang="tr">eBPF programlarının ve haritalarının incelenmesi ve basit manipülasyonu</Description>
+            <Archive type="tarxz" sha1sum="3b01fdc3fd91d6502836c6cfed49d72c226756ab" name="linux-7.2.tar.xz">https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.2.tar.xz</Archive>
+            <BuildDependencies>
+                <Dependency>llvm</Dependency>
+                <Dependency>zlib-devel</Dependency>
+                <Dependency>libcap-devel</Dependency>
+                <Dependency>elfutils-devel</Dependency>
+                <Dependency>openssl-devel</Dependency>
+                <Dependency>python3-docutils</Dependency>
+                <Dependency>llvm-clang-devel</Dependency>
+            </BuildDependencies>
+            <SourceURI>programming/library/bpftool/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>bpftool</Name>
+            <RuntimeDependencies>
+                <Dependency>zlib</Dependency>
+                <Dependency>libcap</Dependency>
+                <Dependency>openssl</Dependency>
+                <Dependency>llvm-libs</Dependency>
+                <Dependency>llvm-clang</Dependency>
+            </RuntimeDependencies>
+            <Files>
+                <Path fileType="executable">/usr/sbin</Path>
+                <Path fileType="data">/usr/share</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2026-08-22</Date>
+                <Version>7.7.0</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libaccounts-glib</Name>
             <Homepage>https://code.google.com/p/accounts-sso</Homepage>
             <Packager>
@@ -84645,8 +84753,6 @@ yığın. Üç bölüm sağlar:</Description>
             <BuildDependencies>
                 <Dependency>cmake</Dependency>
                 <Dependency>qt6-base-devel</Dependency>
-                <Dependency>Dep3-devel</Dependency>
-                <Dependency>Dep4-devel</Dependency>
             </BuildDependencies>
             <SourceURI>programming/library/kdsingleapplication/pspec.xml</SourceURI>
         </Source>
@@ -158455,7 +158561,8 @@ contacts, tasks, and calendar information.</Summary>
             <Name>ktextaddons-devel</Name>
             <Summary xml:lang="en">Development files for ktextaddons</Summary>
             <RuntimeDependencies>
-                <Dependency release="20">ktextaddons</Dependency>
+                <Dependency release="21">ktextaddons</Dependency>
+                <Dependency>qt6-speech-devel</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include/KF6</Path>
@@ -158467,7 +158574,7 @@ contacts, tasks, and calendar information.</Summary>
             </Replaces>
         </Package>
         <History>
-            <Update release="20">
+            <Update release="21">
                 <Date>2026-08-04</Date>
                 <Version>2.1.2</Version>
                 <Comment>Version bump.</Comment>
@@ -261775,6 +261882,7 @@ talking to the kernel.</Description>
                 <Dependency>kjobwidgets-devel</Dependency>
                 <Dependency>kitemmodels-devel</Dependency>
                 <Dependency>ktextwidgets-devel</Dependency>
+                <Dependency>qt6-speech-devel</Dependency>
                 <Dependency>qt6-keychain-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>knotifyconfig-devel</Dependency>
@@ -261791,6 +261899,10 @@ talking to the kernel.</Description>
                 <Dependency>syntax-highlighting-devel</Dependency>
                 <Dependency versionFrom="26.08.0">kldap-devel</Dependency>
                 <Dependency>kmime-devel</Dependency>
+                <Dependency>qt6-sql-odbc</Dependency>
+                <Dependency>qt6-sql-sqlite</Dependency>
+                <Dependency>qt6-sql-mysql</Dependency>
+                <Dependency>qt6-sql-postgresql</Dependency>
                 <Dependency versionFrom="26.08.0">ktnef-devel</Dependency>
                 <Dependency versionFrom="26.08.0">kimap-devel</Dependency>
                 <Dependency versionFrom="26.08.0">akonadi-devel</Dependency>
@@ -267821,6 +267933,7 @@ talking to the kernel.</Description>
                 <Dependency>ktextwidgets-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>knotifications-devel</Dependency>
+                <Dependency>kdsingleapplication-devel</Dependency>
                 <Dependency>kstatusnotifieritem-devel</Dependency>
                 <Dependency>kidentitymanagement-devel</Dependency>
                 <Dependency versionFrom="5.39.0">ki18n-devel</Dependency>
@@ -267867,6 +267980,7 @@ talking to the kernel.</Description>
                 <Dependency>knotifications</Dependency>
                 <Dependency>kwidgetsaddons</Dependency>
                 <Dependency>mimetreeparser</Dependency>
+                <Dependency>kdsingleapplication</Dependency>
                 <Dependency versionFrom="6.10.1">qt6-base</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -268552,6 +268666,10 @@ talking to the kernel.</Description>
                 <Dependency>libXScrnSaver-devel</Dependency>
                 <Dependency>syntax-highlighting-devel</Dependency>
                 <Dependency>kmime-devel</Dependency>
+                <Dependency>qt6-sql-odbc</Dependency>
+                <Dependency>qt6-sql-sqlite</Dependency>
+                <Dependency>qt6-sql-mysql</Dependency>
+                <Dependency>qt6-sql-postgresql</Dependency>
                 <Dependency versionFrom="26.08.0">kimap-devel</Dependency>
                 <Dependency versionFrom="26.08.0">akonadi-devel</Dependency>
                 <Dependency versionFrom="26.08.0">pimcommon-devel</Dependency>
@@ -269042,6 +269160,7 @@ talking to the kernel.</Description>
                 <Dependency versionFrom="26.08.0">kpimtextedit-devel</Dependency>
                 <Dependency versionFrom="26.08.0">grantleetheme-devel</Dependency>
                 <Dependency versionFrom="26.08.0">akonadi-contacts-devel</Dependency>
+                <Dependency versionFrom="26.08.0">kidentitymanagement-devel</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/applications/grantlee-editor/pspec.xml</SourceURI>
         </Source>
@@ -269071,6 +269190,7 @@ talking to the kernel.</Description>
                 <Dependency>kwidgetsaddons</Dependency>
                 <Dependency>akonadi-contacts</Dependency>
                 <Dependency>syntax-highlighting</Dependency>
+                <Dependency>kidentitymanagement</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc/xdg</Path>
@@ -283499,6 +283619,7 @@ talking to the kernel.</Description>
                 <Dependency>kcalendarcore-devel</Dependency>
                 <Dependency>kunitconversion-devel</Dependency>
                 <Dependency>kmime-devel</Dependency>
+                <Dependency>kholidays-devel</Dependency>
                 <Dependency versionFrom="26.08.0">kldap-devel</Dependency>
                 <Dependency versionFrom="26.08.0">kimap-devel</Dependency>
                 <Dependency versionFrom="26.08.0">akonadi-devel</Dependency>
@@ -283534,6 +283655,7 @@ talking to the kernel.</Description>
                 <Dependency>kdiagram</Dependency>
                 <Dependency>kservice</Dependency>
                 <Dependency>kcalutils</Dependency>
+                <Dependency>kholidays</Dependency>
                 <Dependency>kcontacts</Dependency>
                 <Dependency>libkdepim</Dependency>
                 <Dependency>pimcommon</Dependency>
@@ -288014,6 +288136,7 @@ talking to the kernel.</Description>
                 <Dependency versionFrom="26.08.0">grantleetheme-devel</Dependency>
                 <Dependency versionFrom="26.08.0">kontactinterface-devel</Dependency>
                 <Dependency versionFrom="26.08.0">akonadi-contacts-devel</Dependency>
+                <Dependency versionFrom="26.08.0">kidentitymanagement-devel</Dependency>
             </BuildDependencies>
             <SourceURI>desktop/kde/applications/akregator/pspec.xml</SourceURI>
         </Source>
@@ -288050,6 +288173,7 @@ talking to the kernel.</Description>
                 <Dependency>kwidgetsaddons</Dependency>
                 <Dependency>kontactinterface</Dependency>
                 <Dependency>kstatusnotifieritem</Dependency>
+                <Dependency>kidentitymanagement</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="config">/etc/xdg</Path>
@@ -350867,6 +350991,7 @@ from a wide variety of machine architectures.</Description>
                 <Path fileType="data">/usr/share/knsrcfiles/skrooge_unit.knsrc</Path>
                 <Path fileType="data">/usr/share/metainfo/org.kde.skrooge.appdata.xml</Path>
                 <Path fileType="data">/usr/share/knsrcfiles/skrooge_monthly.knsrc</Path>
+                <Path fileType="data">/usr/share/metainfo/org.kde.skroogecompanion.appdata.xml</Path>
             </Files>
         </Package>
         <History>
