@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>libbpf</Name>
+        <Homepage>https://github.com/libbpf/libbpf/</Homepage>
+        <Packager>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Packager>
+        <License>LGPLv2.1</License>
+        <IsA>library</IsA>
+        <Summary>Library for loading eBPF programs and reading and manipulating eBPF objects from user-space</Summary>
+        <Description>Kullanıcı alanından eBPF programlarını yüklemek, eBPF nesnelerini okumak ve manipüle etmek için kullanılan kütüphane.</Description>
+        <Archive sha1sum="c1f38b51d09324a3386fb4fecaae0041ec15588c" type="targz">https://github.com/libbpf/libbpf/archive/refs/tags/v1.7.0.tar.gz</Archive>
+        <BuildDependencies>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>elfutils-devel</Dependency>
+        </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>libbpf.patch</Patch>
+            <Patch level="1">libbpf.patch</Patch>
+        </Patches>
+        -->
+    </Source>
+
+    <Package>
+        <Name>libbpf</Name>
+        <RuntimeDependencies>
+            <Dependency>zlib</Dependency>
+            <Dependency>elfutils</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="doc">/usr/share/doc</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>libbpf-devel</Name>
+        <Summary>Development files for libbpf</Summary>
+        <RuntimeDependencies>
+            <Dependency>zlib-devel</Dependency>
+            <Dependency>elfutils-devel</Dependency>
+            <Dependency release="current">libbpf</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="header">/usr/include</Path>
+            <Path fileType="library">/usr/lib/pkgconfig</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-08-22</Date>
+            <Version>1.7.0</Version>
+            <Comment>First release</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>
