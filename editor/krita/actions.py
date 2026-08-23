@@ -7,8 +7,11 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import kde6
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+
 
 def setup():
+    shelltools.system("sed -e 's|13.0|13.8|' -i cmake/modules/SIPMacros.cmake")
     kde6.configure("-DBUILD_TESTING=OFF \
                     -DBUILD_KRITA_QT_DESIGNER_PLUGINS=ON \
                     -DKDE_INSTALL_LIBDIR=lib \
