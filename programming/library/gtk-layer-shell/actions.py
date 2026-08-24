@@ -5,12 +5,15 @@
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import mesontools
+from pisi.actionsapi import pisitools
 
 def setup():
-	mesontools.configure()
+    mesontools.configure()
 
 def build():
-	mesontools.build()
+    mesontools.build()
 
 def install():
-	mesontools.install()
+    mesontools.install()
+
+    pisitools.dodoc("LICENSE_GPL.txt")
