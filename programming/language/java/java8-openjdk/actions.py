@@ -52,7 +52,7 @@ def setup():
                             --with-jdk-home=/usr/lib/jvm/java-8-openjdk \
                             --with-ecj-jar=/usr/share/java/ecj.jar \
                             --with-vendor-name='PisiLinux' \
-                            --with-pkgversion='PisiLinux build 8u.492_3.39.0' \
+                            --with-pkgversion='PisiLinux build 8u.502_3.40.0' \
                            " % jobs.replace("-j", ""))
 
 def build():
