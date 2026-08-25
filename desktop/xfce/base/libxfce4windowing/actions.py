@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 def setup():
     # shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     # autotools.autoreconf("-fiv")
-    mesontools.configure("--Dx11=enabled \
+    mesontools.configure("-Dx11=enabled \
                          -Dwayland=enabled \
                          -Dvala=enabled \
                          -Dgtk-doc=true")
