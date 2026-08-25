@@ -15,13 +15,12 @@ j = ''.join([
     ])
 
 def setup():
-	autotools.configure(j)
+    autotools.configure(j)
 
 def build():
-	autotools.make()
+    autotools.make()
 
 def install():
-	autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-	pisitools.dodoc("AUTHORS", "NEWS")
-
+    pisitools.dodoc("AUTHORS", "COPYING")

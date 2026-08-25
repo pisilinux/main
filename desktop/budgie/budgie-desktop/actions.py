@@ -1,13 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Licensed under the GNU General Public License, version 2
-# See the file http://www.gnu.org/copyleft/gpl.txt
+# Licensed under the GNU General Public License, version 3.
+# See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import shelltools
-from pisi.actionsapi import get
 
 def setup():
     mesontools.configure("--libexec=/usr/lib -Duse-old-zenity=true")
@@ -18,4 +16,4 @@ def build():
 def install():
     mesontools.install()
 
-    pisitools.dodoc("README.md", "LICENSE*")
+    pisitools.dodoc("LICENSE")
