@@ -8,7 +8,7 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("-Dbuild-recommended=true -Dfor-wayland=false")
+    mesontools.configure("-Dbuild-recommended=true -Dfor-wayland=true")
 
 def build():
     mesontools.build()
