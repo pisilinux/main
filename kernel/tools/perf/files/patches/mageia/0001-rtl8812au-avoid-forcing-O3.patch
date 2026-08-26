@@ -1,0 +1,32 @@
+From cef7a05ba5944f1109b190ff8853899b84712021 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Giuseppe=20Ghib=C3=B2?= <ghibo@mageia.org>
+Date: Thu, 18 Dec 2025 12:18:58 +0100
+Subject: [PATCH] rtl8812au: avoid forcing -O3
+
+---
+ drivers/staging/rtl8812au/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/rtl8812au/Makefile b/drivers/staging/rtl8812au/Makefile
+index c336d8b6b..8c909144f 100755
+--- a/drivers/staging/rtl8812au/Makefile
++++ b/drivers/staging/rtl8812au/Makefile
+@@ -1,5 +1,5 @@
+ ccflags-y += $(USER_EXTRA_CFLAGS) -fno-pie
+-ccflags-y += -O3
++ccflags-y += -O2
+ ccflags-y += -Wno-unused-variable
+ #ccflags-y += -Wno-unused-value
+ ccflags-y += -Wno-unused-label
+@@ -21,7 +21,7 @@ ccflags-y += -Wno-vla -g
+ 
+ ccflags-y += -I$(src)/include -I$(srctree)/$(src)/include
+ ccflags-y += -I$(src)/hal/phydm -I$(srctree)/$(src)/hal/phydm
+-ldflags-y += --strip-all -O3
++ldflags-y += --strip-all -O2
+ 
+ ########################## WIFI IC ############################
+ CONFIG_RTL8812A = y
+-- 
+2.41.3
+
