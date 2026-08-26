@@ -1,17 +1,17 @@
 SPDX-License-Identifier: GPL-2.0
-aufs6.12 mmap patch
+aufs6.18 mmap patch
 
 diff --git a/fs/Makefile b/fs/Makefile
-index b2539712b80d0..4ba97a539035c 100644
+index a74c216340333..6ca0890ca4c5e 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
-@@ -17,6 +17,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
- 		fs_types.o fs_context.o fs_parser.o fsopen.o init.o \
- 		kernel_read_file.o mnt_idmapping.o remap_range.o pidfs.o
+@@ -18,6 +18,12 @@ obj-y :=	open.o read_write.o file_table.o super.o \
+ 		kernel_read_file.o mnt_idmapping.o remap_range.o pidfs.o \
+ 		file_attr.o
  
 +# don't move au_mf.o to the bottom of this file, otherwise it will
 +# conflict with aufs-kbuild.patch.
-+ifeq (${CONFIG_AUFS_FS},m)
++ifeq ($(CONFIG_AUFS_FS),m)
 +obj-y += au_mf.o
 +endif
 +
@@ -20,10 +20,10 @@ index b2539712b80d0..4ba97a539035c 100644
  obj-$(CONFIG_LEGACY_DIRECT_IO)	+= direct-io.o
 diff --git a/fs/au_mf.c b/fs/au_mf.c
 new file mode 100644
-index 0000000000000..aaf6a1f91f719
+index 0000000000000..324d5ff90f57c
 --- /dev/null
 +++ b/fs/au_mf.c
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,59 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2025 Junjiro R. Okajima
@@ -45,11 +45,10 @@ index 0000000000000..aaf6a1f91f719
 +BUILD_BUG_ON_MSG(1, "CONFIG_AUFS_FS is disabled.");
 +#endif
 +
-+const struct path *au_file_user_path(struct file *f)
++const struct path *au_file_user_path(const struct file *f)
 +{
-+	const struct path *path,
-+		*(*func)(struct file *f),
-+		*au_do_file_user_path(struct file *f);
++	const struct path *path, *(*func)(const struct file *f);
++	const struct path *au_do_file_user_path(const struct file *f);
 +
 +	path = NULL;
 +	func = symbol_get(au_do_file_user_path);
@@ -65,11 +64,11 @@ index 0000000000000..aaf6a1f91f719
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_path);
 +
-+const struct inode *au_file_user_inode(struct file *f)
++const struct inode *au_file_user_inode(const struct file *f)
 +{
 +	const struct inode *inode,
-+		*(*func)(struct file *f),
-+		*au_do_file_user_inode(struct file *f);
++		*(*func)(const struct file *f),
++		*au_do_file_user_inode(const struct file *f);
 +
 +	inode = NULL;
 +	func = symbol_get(au_do_file_user_inode);
@@ -85,18 +84,20 @@ index 0000000000000..aaf6a1f91f719
 +}
 +EXPORT_SYMBOL_GPL(au_file_user_inode);
 diff --git a/fs/proc/base.c b/fs/proc/base.c
-index b31283d81c52e..d738243b88746 100644
+index 6299878e3d97e..c5af4fd3c575f 100644
 --- a/fs/proc/base.c
 +++ b/fs/proc/base.c
-@@ -1784,7 +1784,7 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
+@@ -1788,8 +1788,8 @@ static int proc_exe_link(struct dentry *dentry, struct path *exe_path)
  	exe_file = get_task_exe_file(task);
  	put_task_struct(task);
  	if (exe_file) {
 -		*exe_path = exe_file->f_path;
+-		path_get(&exe_file->f_path);
 +		*exe_path = *file_user_path(exe_file);
- 		path_get(&exe_file->f_path);
++		path_get(exe_path);
  		fput(exe_file);
  		return 0;
+ 	} else
 diff --git a/fs/proc/nommu.c b/fs/proc/nommu.c
 index c6e7ebc637562..12c340dcdec3d 100644
 --- a/fs/proc/nommu.c
@@ -111,7 +112,7 @@ index c6e7ebc637562..12c340dcdec3d 100644
  		ino = inode->i_ino;
  	}
 diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index bce6745330003..dac36cc7a3880 100644
+index d362919f4f688..79a2590d40f4d 100644
 --- a/fs/proc/task_nommu.c
 +++ b/fs/proc/task_nommu.c
 @@ -137,7 +137,7 @@ static int nommu_vma_show(struct seq_file *m, struct vm_area_struct *vma)
@@ -124,21 +125,21 @@ index bce6745330003..dac36cc7a3880 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 51b64b2ad82c4..0ecfff8ca9412 100644
+index 0549e96b8db82..3428592320353 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2734,6 +2734,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+@@ -2889,6 +2889,21 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
  			   const struct cred *cred);
- struct path *backing_file_user_path(struct file *f);
+ const struct path *backing_file_user_path(const struct file *f);
  
 +#if IS_MODULE(CONFIG_AUFS_FS)
 +/* fs/au_mf.c */
-+const struct path *au_file_user_path(struct file *f);
-+const struct inode *au_file_user_inode(struct file *f);
++const struct path *au_file_user_path(const struct file *f);
++const struct inode *au_file_user_inode(const struct file *f);
 +#elif IS_BUILTIN(CONFIG_AUFS_FS)
 +/* fs/aufs/mf.c */
-+const struct path *au_do_file_user_path(struct file *f);
-+const struct inode *au_do_file_user_inode(struct file *f);
++const struct path *au_do_file_user_path(const struct file *f);
++const struct inode *au_do_file_user_inode(const struct file *f);
 +#define au_file_user_path(f)	au_do_file_user_path(f)
 +#define au_file_user_inode(f)	au_do_file_user_inode(f)
 +#else
@@ -149,9 +150,9 @@ index 51b64b2ad82c4..0ecfff8ca9412 100644
  /*
   * When mmapping a file on a stackable filesystem (e.g., overlayfs), the file
   * stored in ->vm_file is a backing file whose f_inode is on the underlying
-@@ -2746,15 +2761,25 @@ struct path *backing_file_user_path(struct file *f);
+@@ -2901,15 +2916,25 @@ const struct path *backing_file_user_path(const struct file *f);
  /* Get the path to display in /proc/<pid>/maps */
- static inline const struct path *file_user_path(struct file *f)
+ static inline const struct path *file_user_path(const struct file *f)
  {
 +	const struct path *path;
 +
@@ -163,7 +164,7 @@ index 51b64b2ad82c4..0ecfff8ca9412 100644
  	return &f->f_path;
  }
  /* Get the inode whose inode number to display in /proc/<pid>/maps */
- static inline const struct inode *file_user_inode(struct file *f)
+ static inline const struct inode *file_user_inode(const struct file *f)
  {
 +	const struct inode *inode;
 +

@@ -1,13 +1,13 @@
 SPDX-License-Identifier: GPL-2.0
-aufs6.12 base patch
+aufs6.18 base patch
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b878ddc99f94e..8489754030b99 100644
+index e8f06145fb54c..632bc1a513e5d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3666,6 +3666,19 @@ F:	kernel/audit*
- F:	lib/*audit.c
- K:	\baudit_[a-z_0-9]\+\b
+@@ -4090,6 +4090,19 @@ S:	Supported
+ F:	Documentation/dev-tools/autofdo.rst
+ F:	scripts/Makefile.autofdo
  
 +AUFS (advanced multi layered unification filesystem) FILESYSTEM
 +M:	"J. R. Okajima" <hooanon05g@gmail.com>
@@ -26,16 +26,15 @@ index b878ddc99f94e..8489754030b99 100644
  M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  R:	Dave Ertman <david.m.ertman@intel.com>
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 78a7bb28defe4..479480f25a6c0 100644
+index 13ce229d450cd..94e6e26568c5e 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -661,6 +661,26 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+@@ -632,6 +632,31 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
  	goto done;
  }
  
 +/*
 + * for AUFS
-+ * no get/put for file.
 + */
 +/* Just to make the compiler silence, declare it */
 +struct file *loop_backing_file(struct super_block *sb);
@@ -43,11 +42,17 @@ index 78a7bb28defe4..479480f25a6c0 100644
 +{
 +	struct file *ret;
 +	struct loop_device *l;
++	unsigned long flags;
 +
 +	ret = NULL;
 +	if (MAJOR(sb->s_dev) == LOOP_MAJOR) {
 +		l = sb->s_bdev->bd_disk->private_data;
++		/* slow? but it's safe */
++		spin_lock_irqsave(&l->lo_lock, flags);
 +		ret = l->lo_backing_file;
++		if (ret)
++			get_file(ret);	/* callers have to call fput() */
++		spin_unlock_irqrestore(&l->lo_lock, flags);
 +	}
 +	return ret;
 +}
@@ -57,10 +62,10 @@ index 78a7bb28defe4..479480f25a6c0 100644
  
  static ssize_t loop_attr_show(struct device *dev, char *page,
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 0f6b16ba30d08..1ab11cad60e8c 100644
+index 035cccbc92765..93bfb29d0b991 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1223,6 +1223,9 @@ enum d_walk_ret {
+@@ -1277,6 +1277,9 @@ enum d_walk_ret {
  	D_WALK_SKIP,
  };
  
@@ -70,7 +75,7 @@ index 0f6b16ba30d08..1ab11cad60e8c 100644
  /**
   * d_walk - walk the dentry tree
   * @parent:	start of walk
-@@ -1231,7 +1234,7 @@ enum d_walk_ret {
+@@ -1285,7 +1288,7 @@ enum d_walk_ret {
   *
   * The @enter() callbacks are called with d_lock held.
   */
@@ -80,10 +85,10 @@ index 0f6b16ba30d08..1ab11cad60e8c 100644
  {
  	struct dentry *this_parent, *dentry;
 diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 22dd9dcce7ecc..460791727fd9c 100644
+index 72f8433d91098..d248048c75540 100644
 --- a/fs/fcntl.c
 +++ b/fs/fcntl.c
-@@ -37,7 +37,7 @@
+@@ -36,7 +36,7 @@
  
  #define SETFL_MASK (O_APPEND | O_NONBLOCK | O_NDELAY | O_DIRECT | O_NOATIME)
  
@@ -92,7 +97,7 @@ index 22dd9dcce7ecc..460791727fd9c 100644
  {
  	struct inode * inode = file_inode(filp);
  	int error = 0;
-@@ -67,6 +67,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
+@@ -66,6 +66,8 @@ static int setfl(int fd, struct file * filp, unsigned int arg)
  
  	if (filp->f_op->check_flags)
  		error = filp->f_op->check_flags(arg);
@@ -102,10 +107,10 @@ index 22dd9dcce7ecc..460791727fd9c 100644
  		return error;
  
 diff --git a/fs/splice.c b/fs/splice.c
-index 06232d7e505f6..b15fd6073b6d3 100644
+index f5094b6d00a09..19c0ba712acc1 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -933,7 +933,7 @@ static int warn_unsupported(struct file *file, const char *op)
+@@ -930,7 +930,7 @@ static int warn_unsupported(struct file *file, const char *op)
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -115,10 +120,10 @@ index 06232d7e505f6..b15fd6073b6d3 100644
  {
  	if (unlikely(!out->f_op->splice_write))
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 3559446279c15..51b64b2ad82c4 100644
+index dd3b57cfadeeb..0549e96b8db82 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -1160,6 +1160,7 @@ extern void fasync_free(struct fasync_struct *);
+@@ -1341,6 +1341,7 @@ extern void fasync_free(struct fasync_struct *);
  /* can be called from interrupts */
  extern void kill_fasync(struct fasync_struct **, int, int);
  
@@ -126,7 +131,7 @@ index 3559446279c15..51b64b2ad82c4 100644
  extern void __f_setown(struct file *filp, struct pid *, enum pid_type, int force);
  extern int f_setown(struct file *filp, int who, int force);
  extern void f_delown(struct file *filp);
-@@ -2082,6 +2083,7 @@ struct file_operations {
+@@ -2288,6 +2289,7 @@ struct file_operations {
  	int (*lock) (struct file *, int, struct file_lock *);
  	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
  	int (*check_flags)(int);
@@ -135,7 +140,7 @@ index 3559446279c15..51b64b2ad82c4 100644
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
  	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 217f7abf2cbfa..0e17b8c23f105 100644
+index 67964dc4db952..517ef3ea8c85f 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
 @@ -210,6 +210,8 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
@@ -148,7 +153,7 @@ index 217f7abf2cbfa..0e17b8c23f105 100644
   * Acquire a lock.
   *
 diff --git a/include/linux/mnt_namespace.h b/include/linux/mnt_namespace.h
-index 70b366b648160..05bc01c0f38af 100644
+index 0acd1089d149c..0cbc3ad54ffa7 100644
 --- a/include/linux/mnt_namespace.h
 +++ b/include/linux/mnt_namespace.h
 @@ -10,6 +10,7 @@ struct mnt_namespace;
@@ -157,8 +162,8 @@ index 70b366b648160..05bc01c0f38af 100644
  struct ns_common;
 +struct vfsmount;
  
- extern struct mnt_namespace *copy_mnt_ns(unsigned long, struct mnt_namespace *,
- 		struct user_namespace *, struct fs_struct *);
+ extern struct mnt_namespace init_mnt_ns;
+ 
 diff --git a/include/linux/splice.h b/include/linux/splice.h
 index 9dec4861d09f6..14583d8468640 100644
 --- a/include/linux/splice.h
@@ -172,10 +177,10 @@ index 9dec4861d09f6..14583d8468640 100644
 +			      loff_t *ppos, size_t len, unsigned int flags);
  #endif
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 536bd471557f5..34b378cf7a95f 100644
+index 2d4c5bab5af88..b720d966c7b92 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -218,7 +218,7 @@ unsigned long max_lock_class_idx;
+@@ -224,7 +224,7 @@ unsigned long max_lock_class_idx;
  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
  
@@ -184,7 +189,7 @@ index 536bd471557f5..34b378cf7a95f 100644
  {
  	unsigned int class_idx = hlock->class_idx;
  
-@@ -239,6 +239,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
+@@ -245,6 +245,7 @@ static inline struct lock_class *hlock_class(struct held_lock *hlock)
  	 */
  	return lock_classes + class_idx;
  }
