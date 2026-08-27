@@ -13,7 +13,6 @@ def setup():
     cmaketools.configure(
         "-G Ninja "
         "-DCMAKE_BUILD_TYPE=Release "
-        "-DCMAKE_INSTALL_PREFIX=/usr "
         "-DAUTOUPDATE=OFF "
         "-DPREFER_BUNDLED_LIBS=OFF"
     )
