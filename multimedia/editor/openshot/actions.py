@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 
 def setup():
     # prevent setup.py from trying to update MIME databases
+    shelltools.system("sed -i 's/from qt_api/from .qt_api/' src/launch.py")
     shelltools.system("sed -i 's/^ROOT =.*/ROOT = False/' setup.py || die")
 
     pythonmodules.compile(pyVer="3")
@@ -22,3 +23,6 @@ def install():
     pythonmodules.install(pyVer="3")
 
     pisitools.dodoc("COPYING", "README*")
+
+
+    # shelltools.system("sed -i 's/from qt_api/from .qt_api/' src/launch.py")
