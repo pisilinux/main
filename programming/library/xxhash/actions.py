@@ -10,19 +10,20 @@ from pisi.actionsapi import pisitools, shelltools, cmaketools
 
 
 def setup():
-    shelltools.system("cmake -B build -S cmake_unofficial \
+    shelltools.cd("build/cmake")
+    shelltools.system("cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib")
 
 def build():
-    shelltools.cd("build")
+    shelltools.cd("build/cmake")
     cmaketools.make()
 
 def install():
-    shelltools.cd("build")
+    shelltools.cd("build/cmake")
     cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
     # pisitools.remove('/usr/lib/libxxhash.a')
 
-    shelltools.cd("..")
+    shelltools.cd("../..")
     pisitools.dodoc("LICENSE", "doc/*")
