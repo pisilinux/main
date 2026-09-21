@@ -5,9 +5,15 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import python3modules
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import get
+
+
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
 
 def build():
-    python3modules.compile(pyVer="3")
+    shelltools.system("python3 -m build --wheel --skip-dependency-check")
+    # python3modules.compile()
 
 def install():
-    python3modules.install(pyVer="3")
+    python3modules.install()
