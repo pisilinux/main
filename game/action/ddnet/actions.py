@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
@@ -9,18 +8,18 @@ from pisi.actionsapi import get
 WorkDir = "DDNet-%s" % get.srcVERSION()
 
 def setup():
-
-    cmaketools.configure(
-        "-G Ninja "
+    shelltools.system(
+        "cmake -B build -G Ninja "
+        "-DCMAKE_INSTALL_PREFIX=/usr "
         "-DCMAKE_BUILD_TYPE=Release "
         "-DAUTOUPDATE=OFF "
         "-DPREFER_BUNDLED_LIBS=OFF"
     )
 
 def build():
-    shelltools.system("ninja")
+    shelltools.system("cmake --build build")
 
 def install():
-    shelltools.system("DESTDIR={} ninja install".format(get.installDIR()))
+    shelltools.system("DESTDIR=%s cmake --install build" % get.installDIR())
     
     pisitools.dodoc("license.txt", "README.md")
