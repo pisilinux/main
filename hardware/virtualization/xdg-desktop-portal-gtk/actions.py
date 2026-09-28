@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dwallpaper=disabled -Dsystemd-user-unit-dir=disabled")
+    mesontools.configure("-Dwallpaper=disabled")
 
 def build():
     mesontools.build()
@@ -26,5 +26,7 @@ def install():
     
     conf_content = "[preferred]\ndefault=gtk\n"
     shelltools.echo("%s/gtk-portals.conf" % portal_conf_dir, conf_content)
+
+    pisitools.removeDir("/usr/lib/systemd")
 
     pisitools.dodoc("COPYING", "NEWS")
