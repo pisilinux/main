@@ -1,79 +1,111 @@
-<?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
-<PISI>
-    <Source>
-        <Name>wireplumber</Name>
-        <Homepage>https://pipewire.pages.freedesktop.org/wireplumber/</Homepage>
-        <Packager>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
-        </Packager>
-        <License>MIT</License>
-        <Icon>wireplumber</Icon>
-        <Summary>Session / policy manager implementation for PipeWire</Summary>
-        <Description>Session / policy manager implementation for PipeWire</Description>
-        <Archive sha1sum="0e8c1018c6d07720ade50bde2a4dd02d595e3089" type="targz">https://gitlab.freedesktop.org/pipewire/wireplumber/-/archive/0.4.14/wireplumber-0.4.14.tar.gz</Archive>
-         <BuildDependencies>
-            <Dependency>meson</Dependency>
-            <Dependency>doxygen</Dependency>
-            <Dependency>valgrind-devel</Dependency>
-            <Dependency>python3-lxml</Dependency>
-            <Dependency>pipewire-devel</Dependency>
-            <Dependency>lua-devel</Dependency>
-            <Dependency>graphviz-devel</Dependency>
-            <Dependency>glib2-devel</Dependency>
-            <Dependency>gobject-introspection-devel</Dependency>
-        </BuildDependencies>
-        <Patches>
-<!--             <Patch></Patch> -->
-        </Patches>
-    </Source>
+  <?xml version="1.0" ?>
+  <!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+  <PISI>
+      <Source>
+          <Name>wireplumber</Name>
+          <Homepage>https://pipewire.pages.freedesktop.org/wireplumber/</Homepage>
+          <Packager>
+              <Name>Kamil Atlı</Name>
+              <Email>suvari@pisilinux.org</Email>
+          </Packager>
+          <License>MIT</License>
+          <Icon>wireplumber</Icon>
+          <Summary>Session / policy manager implementation for PipeWire</Summary>
+          <Description>Session / policy manager implementation for PipeWire</Description>
+          <Archive sha1sum="557dd2fb02f17caee68e1d5b2e57d44821fc8622" type="targz">https://gitlab.freedesktop.org/pipewire/wireplumber/-/archive/0.5.17/wireplumber-0.5.17.tar.gz</Archive>
+           <BuildDependencies>
+              <Dependency>meson</Dependency>
+              <Dependency>ninja</Dependency>
+              <Dependency>doxygen</Dependency>
+              <Dependency>glib2-devel</Dependency>
+              <Dependency>pipewire-devel</Dependency>
+              <Dependency>lua-devel</Dependency>
+              <Dependency>gobject-introspection-devel</Dependency>
+              <Dependency>graphviz-devel</Dependency>
+              <Dependency>python3-lxml</Dependency>
+              <Dependency>python3-breathe</Dependency>
+              <Dependency>python3-sphinx</Dependency>
+              <Dependency>python3-sphinx_rtd_theme</Dependency>
+              <Dependency>python3-sphinxcontrib-jquery</Dependency>
+          </BuildDependencies>
+          <Patches>
+  <!--             <Patch></Patch> -->
+          </Patches>
+      </Source>
 
-    <Package>
-        <Name>wireplumber</Name>
-        <RuntimeDependencies>
-            <Dependency>pipewire</Dependency>
-<!--             <Dependency>graphviz</Dependency> -->
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="executable">/usr/bin</Path>
-            <Path fileType="localedata">/usr/share/locale</Path>
-            <Path fileType="library">/usr/lib/libwireplumber*</Path>
-            <Path fileType="library">/usr/lib/wireplumber*</Path>
-            <Path fileType="library">/usr/lib/girepository-1.0/Wp-0.4.typelib</Path>
-            <Path fileType="doc">/usr/share/doc</Path>
-            <Path fileType="data">/usr/share/wireplumber</Path>
-        </Files>
-    </Package>
+      <Package>
+          <Name>wireplumber</Name>
+          <Summary>Session and policy manager implementation for PipeWire</Summary>
+          <RuntimeDependencies>
+              <Dependency>glib2</Dependency>
+              <Dependency>pipewire</Dependency>
+              <Dependency>lua</Dependency>
+          </RuntimeDependencies>
+          <Files>
+              <Path fileType="executable">/usr/bin</Path>
+              <Path fileType="library">/usr/lib/libwireplumber*.so*</Path>
+              <Path fileType="library">/usr/lib/wireplumber-0.5</Path>
+              <Path fileType="library">/usr/lib/girepository-1.0</Path>
+              <Path fileType="data">/usr/share/wireplumber</Path>
+              <Path fileType="data">/usr/share/gir-1.0</Path>
+              <Path fileType="data">/usr/share/locale</Path>
+              <Path fileType="data">/usr/share/zsh</Path>
+              <Path fileType="doc">/usr/share/doc/wireplumber/LICENSE</Path>
+              <Path fileType="doc">/usr/share/doc/wireplumber/README*</Path>
+              <Path fileType="doc">/usr/share/doc/wireplumber/NEWS*</Path>
+              <Path fileType="doc">/usr/share/doc/wireplumber/examples/wireplumber.conf.d/*.conf</Path>
+              <Path fileType="data">/usr/share/bash-completion/completions/wpctl</Path>
+          </Files>
+      </Package>
 
-    <Package>
-        <Name>wireplumber-devel</Name>
-        <Summary>Development files for wireplumber</Summary>
-        <RuntimeDependencies>
-            <Dependency release="current">wireplumber</Dependency>
-            <Dependency>pipewire-devel</Dependency>
-        </RuntimeDependencies>
-        <Files>
-            <Path fileType="header">/usr/include</Path>
-            <Path fileType="data">/usr/lib/pkgconfig</Path>
-            <Path fileType="data">/usr/share/gir-1.0/Wp-0.4.gir</Path>
-        </Files>
-    </Package>
+      <Package>
+          <Name>wireplumber-devel</Name>
+          <Summary>Development files for wireplumber</Summary>
+          <RuntimeDependencies>
+              <Dependency>glib2-devel</Dependency>
+              <Dependency>pipewire-devel</Dependency>
+              <Dependency release="current">wireplumber</Dependency>
+          </RuntimeDependencies>
+          <Files>
+              <Path fileType="header">/usr/include/wireplumber-0.5</Path>
+              <Path fileType="library">/usr/lib/pkgconfig/*.pc</Path>
+          </Files>
+      </Package>
 
-    <History>
-        <Update release="2">
-            <Date>2023-09-20</Date>
-            <Version>0.4.14</Version>
-            <Comment>Rebuild.</Comment>
-            <Name>Mustafa Cinasal</Name>
-            <Email>muscnsl@pisilinux.org</Email>
-        </Update>
-        <Update release="1">
-            <Date>2023-06-21</Date>
-            <Version>0.4.14</Version>
-            <Comment>First release</Comment>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
-        </Update>
-    </History>
-</PISI>
+      <Package>
+          <Name>wireplumber-docs</Name>
+          <Summary>Documentation for wireplumber</Summary>
+          <RuntimeDependencies>
+              <Dependency release="current">wireplumber</Dependency>
+          </RuntimeDependencies>
+          <Files>
+              <Path fileType="data">/usr/share/doc/wireplumber/html</Path>
+              <Path fileType="doc">/usr/share/doc</Path>
+              <Path fileType="man">/usr/share/man</Path>
+          </Files>
+      </Package>
+
+      <History>
+          <Update release="3">
+              <Date>2026-08-26</Date>
+              <Version>0.5.17</Version>
+              <Comment>Version bump.</Comment>
+              <Name>Emir Bayram</Name>
+              <Email>rimru01@proton.me</Email>
+          </Update>
+          <Update release="2">
+              <Date>2023-09-20</Date>
+              <Version>0.4.14</Version>
+              <Comment>Rebuild.</Comment>
+              <Name>Mustafa Cinasal</Name>
+              <Email>muscnsl@pisilinux.org</Email>
+          </Update>
+          <Update release="1">
+              <Date>2023-06-21</Date>
+              <Version>0.4.14</Version>
+              <Comment>First release</Comment>
+              <Name>Kamil Atlı</Name>
+              <Email>suvari@pisilinux.org</Email>
+          </Update>
+      </History>
+  </PISI>
