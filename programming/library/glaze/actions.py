@@ -5,7 +5,7 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-WorkDir = "glaze-8.0.0"
+WorkDir = "glaze-9.0.0"
 
 def setup():
     shelltools.makedirs("build")
