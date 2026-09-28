@@ -11,7 +11,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    mesontools.configure("-Dwallpaper=disabled -Dsystemduserunitdir=disabled")
+    mesontools.configure("-Dwallpaper=disabled -Dsystemd-user-unit-dir=disabled")
 
 def build():
     mesontools.build()
