@@ -10,11 +10,12 @@ from pisi.actionsapi import get
 
 
 # WorkDir="setuptools_scm-%s" % get.srcVERSION()
-shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
+# shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
 
 def build():
     shelltools.cd("setuptools-scm")
-    python3modules.compile(pyVer="3")
+    # python3modules.compile(pyVer="3")
+    shelltools.system("python3 -m build --wheel --skip-dependency-check --no-isolation")
     
     #python3modules.run("setup.py build_sphinx", pyVer="3")
     
