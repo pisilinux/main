@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                           -DCMAKE_INSTALL_LIBDIR=/usr/lib ")
 
 def build():
