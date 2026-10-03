@@ -13,6 +13,7 @@ from pisi.actionsapi import get
 # shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
 
 def build():
+    shelltools.cd("setuptools-scm")
     python3modules.compile(pyVer="3")
     
     #python3modules.run("setup.py build_sphinx", pyVer="3")
@@ -21,4 +22,5 @@ def build():
     # python3modules.compile("test", pyVer="3")
 
 def install():
+    shelltools.cd("setuptools-scm")
     python3modules.install(pyVer="3")
