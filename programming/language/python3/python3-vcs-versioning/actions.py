@@ -8,6 +8,7 @@ from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
 
 def build():
     shelltools.system("rm -f .git_archival.txt")
