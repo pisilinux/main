@@ -6,11 +6,16 @@
 
 from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
+
 
 def build():
+    shelltools.system("rm -f .git_archival.txt")
+    shelltools.cd("vcs-versioning")
     python3modules.compile()
 
 def install():
+    shelltools.cd("vcs-versioning")
     python3modules.install()
 
     pisitools.dodoc("README.md")
