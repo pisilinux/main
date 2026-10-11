@@ -52,7 +52,7 @@ def setup():
                         --with-lang="%s"                  \
                         --with-system-rhino               \
                         --disable-odk                     \
-                        --enable-qt5                      \
+                        --disable-qt5                      \
                         --enable-qt6                      \
                         --enable-gtk3                     \
                         --enable-gtk4                     \
