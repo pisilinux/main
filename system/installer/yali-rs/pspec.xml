@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>yali-rs</Name>
+        <Homepage>https://gitlab.com/ayhanyalcinsoy/yali-rs</Homepage>
+        <Packager>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Packager>
+        <License>GPLv2</License>
+        <IsA>app:gui</IsA>
+        <Summary>Yet Another Linux Installer</Summary>
+        <Description>The Yalı application, originally written in Python and Qt, has been rewritten using Rust and egui.</Description>
+        <Archive sha1sum="c5dff38f131c2702125159b52f56747cc051792f" type="targz">
+            https://gitlab.com/erkanisik/yali-rs/-/archive/v4.0.2/yali-rs-v4.0.2.tar.gz
+        </Archive>
+        <BuildDependencies>
+            <Dependency>rust</Dependency>
+            <Dependency>libedit-devel</Dependency>
+            <Dependency>lld-devel</Dependency>
+            <Dependency>llvm-libs</Dependency>
+            <Dependency>llvm-polly</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>yali-rs</Name>
+        <RuntimeDependencies>
+	    	<Dependency>efibootmgr</Dependency>
+            <Dependency>glibc-locales-nl</Dependency>
+            <Dependency>glibc-locales-de</Dependency>
+            <Dependency>glibc-locales-es</Dependency>
+            <Dependency>glibc-locales-pt</Dependency>
+            <Dependency>glibc-locales-sv</Dependency>
+            <Dependency>glibc-locales-fr</Dependency>
+            <Dependency>glibc-locales-it</Dependency>
+            <Dependency>glibc-locales-ca</Dependency>
+            <Dependency>glibc-locales-pl</Dependency>
+            <Dependency>glibc-locales-ru</Dependency>
+            <Dependency>glibc-locales-hu</Dependency>
+            <Dependency>glibc-locales-hr</Dependency>
+            <Dependency>exo-fonts-1</Dependency>
+            <Dependency>rsync</Dependency>
+        </RuntimeDependencies>
+        <Conflicts>
+           <Package>Calamares</Package>
+           <Package>calamares-theme-pisilinux</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="executable">/usr/bin</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
+            <Path fileType="data">/etc/yali</Path>
+            <Path fileType="data">/lib/udev/rules.d/70-yali.rules</Path>
+        </Files>
+        <AdditionalFiles>
+            <AdditionalFile permission="0644" owner="root" target="/usr/share/applications/yali.desktop">yali.desktop</AdditionalFile>
+            <AdditionalFile permission="0644" owner="root" target="/usr/share/polkit-1/rules.d/99-yali-rs.rules">99-yali-rs.rules</AdditionalFile>
+             <AdditionalFile permission="0644" owner="root" target="/usr/share/icons/yali.png">yali.png</AdditionalFile>
+        </AdditionalFiles>
+    </Package>
+
+    <History>
+        <Update release="4">
+            <Date>2026-10-12</Date>
+            <Version>4.0.2</Version>
+            <Comment>Version Bump</Comment>
+            <Name>Erkan IŞIK</Name>
+            <Email>erkanisik@pisilinux.org</Email>
+        </Update>
+        <Update release="3">
+            <Date>2026-06-01</Date>
+            <Version>4.0.1</Version>
+            <Comment>First release</Comment>
+            <Name>Ayhan Yalçınsoy</Name>
+            <Email>ayhanyalcinsoy@pisilinux.org</Email>
+        </Update>
+    </History>
+</PISI>

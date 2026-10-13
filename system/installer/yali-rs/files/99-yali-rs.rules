@@ -1,0 +1,7 @@
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.policykit.exec" &&
+        action.lookup("program") == "/usr/bin/yali-rs" &&
+        subject.isInGroup("wheel")) { // veya "live" grubu
+        return polkit.Result.YES;
+    }
+});
