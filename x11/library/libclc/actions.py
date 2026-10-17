@@ -10,6 +10,9 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import get
 
+
+
+WorkDir="llvm-project-%s.src/libclc" % get.srcVERSION()
 libdir = "/usr/lib32" if get.buildTYPE() == "emul32" else "/usr/lib" 
 
 def setup():
