@@ -4,7 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
-from pisi.actionsapi import mesontools, pisitools
+from pisi.actionsapi import mesontools, pisitools, get, shelltools
 
 def setup():
     mesontools.configure("--prefix=/usr -Dserial=true -Dlibsystemd=false")
@@ -23,5 +23,8 @@ def install():
     libs=["libpcsclite.so", "libpcsclite.so.1"]
     for l in libs:
         pisitools.dosym("/usr/lib/%s" % l, "/usr/lib/x86_64-linux-gnu/%s" % l)
+
+    shelltools.copytree("%s/usr/sysusers.d" % get.installDIR(), "%s/usr/lib/sysusers.d" % get.installDIR())
+    pisitools.removeDir("/usr/sysusers.d")
 
     pisitools.dodoc("AUTHORS", "COPYING")
