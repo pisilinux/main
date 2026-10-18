@@ -11,7 +11,7 @@ def setup():
         "-D systemd=disabled "
         "-D systemd-system-service=false "
         "-D systemd-user-service=false "
-        "-D elogind=disabled "
+        "-D elogind=enabled "
         "-D system-lua=true"
     )
 
