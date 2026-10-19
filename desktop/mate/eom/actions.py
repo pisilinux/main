@@ -15,7 +15,7 @@ def setup():
     autotools.configure("--prefix=/usr \
                          --sysconfdir=/etc \
                          --localstatedir=/var \
-                         --enable-introspection=yes \
+                         --enable-introspection=no \
                          --disable-schemas-compile")
 
     # for fix unused dependency
