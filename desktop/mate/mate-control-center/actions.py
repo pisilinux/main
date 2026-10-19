@@ -12,7 +12,7 @@ from pisi.actionsapi import shelltools
 
 
 def setup():
-    pisitools.dosed("configure.ac", "systemd", deleteLine=True)
+    #pisitools.dosed("configure.ac", "systemd", deleteLine=True)
     shelltools.system("NOCONFIGURE=1 ./autogen.sh")
     autotools.configure("--disable-static \
                          --libexecdir=/usr/bin/mate-control-center \
