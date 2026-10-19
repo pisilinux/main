@@ -9,8 +9,6 @@ from pisi.actionsapi import get, mesontools, pisitools
 def setup():
     pisitools.ldflags.add("-lX11 -lICE -lSM")
     mesontools.configure("--libexecdir=/usr/lib/%s \
-                          -Dmathjax-directory=/usr/share/mathjax2 \
-                          -Depub=true \
                           -Dcomics=true \
                           -Ddjvu=false \
                           -Ddvi=false \
