@@ -14,6 +14,7 @@ def setup():
     autotools.configure("--prefix=/usr \
                          pythondir=/usr/bin/python3 \
                          --libexecdir=/usr/lib/pluma \
+                         --enable-introspection=no \
                          --disable-schemas-compile \
                          --enable-gtk-doc=no \
                          --enable-gvfs-metadata")
