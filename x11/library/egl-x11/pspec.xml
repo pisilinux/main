@@ -1,58 +1,70 @@
 <?xml version="1.0" ?>
-<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<!DOCTYPE PISI SYSTEM "http://www.pisilinux.org/projeler/pisi/pisi-spec.dtd">
 <PISI>
     <Source>
-        <Name>egl-wayland2</Name>
-        <Homepage>https://github.com/NVIDIA/egl-wayland2</Homepage>
+        <Name>egl-x11</Name>
+        <Homepage>https://github.com/NVIDIA/egl-x11/</Homepage>
         <Packager>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
         </Packager>
-        <License>Apache-2.0</License>
-        <IsA>library</IsA>
-        <Summary>EGLStream-based Wayland external platform (2)</Summary>
-        <Description>This is a new implementation of the EGL External Platform Library for Wayland (EGL_KHR_platform_wayland), using the NVIDIA driver's new platform surface interface, which simplifies a lot of the library and improves window resizing.</Description>
-        <Archive sha1sum="247c2bcd9b37ee0150630a0e592a2e3ac41b8b0f" type="targz">https://github.com/NVIDIA/egl-wayland2/archive/refs/tags/v1.0.2.tar.gz</Archive>
+        <License>Apache</License>
+        <IsA>driver</IsA>
+        <Summary>NVIDIA XLib and XCB EGL Platform Library</Summary>
+        <Description>NVIDIA XLib ve XCB EGL Platform Kütüphanesi</Description>
+        <Archive sha1sum="b73a629a5dcbeac15eab253da75ad21b227b8edf" type="targz">https://github.com/NVIDIA/egl-x11/archive/refs/tags/v1.0.6.tar.gz</Archive>
         <BuildDependencies>
-            <Dependency>git</Dependency>
             <Dependency>meson</Dependency>
             <Dependency>mesa-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
             <Dependency>libdrm-devel</Dependency>
-            <Dependency>libglvnd-devel</Dependency>
+            <Dependency>libxcb-devel</Dependency>
             <Dependency>eglexternalplatform</Dependency>
-            <Dependency>wayland-protocols-devel</Dependency>
         </BuildDependencies>
+        <!--
+        <Patches>
+            <Patch>egl-x11.patch</Patch>
+            <Patch level="1">egl-x11.patch</Patch>
+        </Patches>
+        -->
     </Source>
 
     <Package>
-        <Name>egl-wayland2</Name>
+        <Name>egl-x11</Name>
         <RuntimeDependencies>
             <Dependency>mesa</Dependency>
+            <Dependency>libX11</Dependency>
             <Dependency>libdrm</Dependency>
-            <Dependency>wayland-client</Dependency>
-            <Dependency>eglexternalplatform</Dependency>
+            <Dependency>libxcb</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="data">/usr/lib/libnvidia-egl-wayland2*</Path>
-            <Path fileType="data">/usr/share/egl/egl_external_platform.d</Path>
+            <Path fileType="library">/usr/lib</Path>
+            <Path fileType="data">/usr/share</Path>
             <Path fileType="doc">/usr/share/doc</Path>
         </Files>
     </Package>
 
     <History>
-        <Update release="2">
+        <Update release="4">
             <Date>2026-10-21</Date>
-            <Version>1.0.2</Version>
+            <Version>1.0.6</Version>
             <Comment>Version bump.</Comment>
             <Name>Emir Bayram</Name>
             <Email>rimru01@proton.me</Email>
         </Update>
+        <Update release="2">
+            <Date>2025-11-02</Date>
+            <Version>1.0.3</Version>
+            <Comment>Version bump.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admin@pisilinux.org</Email>
+        </Update>
         <Update release="1">
-            <Date>2026-05-12</Date>
-            <Version>1.0.1</Version>
-            <Comment>First release.</Comment>
-            <Name>Kamil Atlı</Name>
-            <Email>suvari@pisilinux.org</Email>
+            <Date>2024-12-13</Date>
+            <Version>1.0.0</Version>
+            <Comment>First release</Comment>
+            <Name>PisiLinux Community</Name>
+            <Email>admins@pisilinux.org</Email>
         </Update>
     </History>
 </PISI>
