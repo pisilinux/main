@@ -27,12 +27,15 @@ def build():
         "workspace WordPressDesktop run build:main" % (YARN_FLAGS, YARN)
     )
 
-   shelltools.system(
-        "YARN_ENABLE_SCRIPTS=0 "
-        "XDG_CACHE_HOME=\"$PWD/.cache\" "
-        "ELECTRON_BUILDER_CACHE=\"$PWD/.cache/electron-builder\" "
-        "%s workspace WordPressDesktop exec electron-builder"
-        " --dir --publish never -c.npmRebuild=false" % YARN
+    shelltools.system(
+        (
+            "YARN_ENABLE_SCRIPTS=0 "
+            'XDG_CACHE_HOME="$PWD/.cache" '
+            'ELECTRON_BUILDER_CACHE="$PWD/.cache/electron-builder" '
+            "%s workspace WordPressDesktop exec electron-builder"
+            " --dir --publish never -c.npmRebuild=false"
+        )
+        % YARN
     )
 
 
