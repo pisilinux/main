@@ -16,7 +16,7 @@ def setup():
     if get.buildTYPE() == "emul32":
         options += " --disable-python \
                      --libdir=/usr/lib32"
-                     
+
         shelltools.export("CFLAGS", "%s -m32" % get.CFLAGS())
 
     autotools.autoreconf("-fiv")
@@ -35,8 +35,8 @@ def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
     if get.buildTYPE() == "emul32":
-        pisitools.insinto("/usr/share/alsa", "alsa-ucm-conf-1.2.15.3/ucm2")
-        pisitools.insinto("/usr/share/doc/alsa-ucm-conf", "alsa-ucm-conf-1.2.15.3/LICENSE")
+        pisitools.insinto("/usr/share/alsa", "alsa-ucm-conf-1.2.16.1/ucm2")
+        pisitools.insinto("/usr/share/doc/alsa-ucm-conf", "alsa-ucm-conf-1.2.16.1/LICENSE")
 
         pisitools.insinto("/usr/share/alsa", "alsa-topology-conf-1.2.5.1/topology")
         pisitools.insinto("/usr/share/doc/alsa-topology-conf", "alsa-topology-conf-1.2.5.1/LICENSE")
