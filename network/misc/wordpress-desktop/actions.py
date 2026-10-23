@@ -8,7 +8,6 @@ from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
-# Electron/Chromium ikilileri strip edilmemeli
 NoStrip = ["/"]
 
 YARN = "node .yarn/releases/yarn-4.0.2.cjs"
@@ -16,10 +15,6 @@ YARN_FLAGS = "YARN_ENABLE_GLOBAL_CACHE=0 YARN_CACHE_FOLDER=.yarn/cache"
 
 
 def setup():
-    # Yarn 4 kaynak ağacında geliyor (.yarn/releases). Sadece masaüstü
-    # uygulamasının bağımlılıklarını kur; husky/tsc gibi gereksiz
-    # lifecycle script'lerini çalıştırma. Önbellek, Pisi sandbox'ı dışına
-    # yazmamak için proje içinde tutuluyor.
     shelltools.system(
         "YARN_ENABLE_SCRIPTS=0 %s %s workspaces focus WordPressDesktop"
         % (YARN_FLAGS, YARN)
@@ -27,16 +22,12 @@ def setup():
 
 
 def build():
-    # Electron ana süreç paketini (dist/index.js) üret
     shelltools.system(
         "CONFIG_ENV=release NODE_ENV=production %s %s "
         "workspace WordPressDesktop run build:main" % (YARN_FLAGS, YARN)
     )
 
-    # deb/AppImage yerine sadece açılmış Linux dizinini üret.
-    # npmRebuild=false: yerel modüllerin yeniden derlenmesini atla;
-    # uygulamanın ihtiyaç duyduğu modüller saf JS.
-    shelltools.system(
+   shelltools.system(
         "YARN_ENABLE_SCRIPTS=0 "
         "XDG_CACHE_HOME=\"$PWD/.cache\" "
         "ELECTRON_BUILDER_CACHE=\"$PWD/.cache/electron-builder\" "
@@ -46,15 +37,9 @@ def build():
 
 
 def install():
-    # electron-builder çıktısı: desktop/release/linux-unpacked
     pisitools.insinto("/usr/share/wpcom/", "desktop/release/linux-unpacked/*")
     pisitools.dodoc("README.md")
     pisitools.newdoc("desktop/README.md", "README.desktop.md")
-
-    # electron-builder çıktısındaki izinleri normalize et. Özellikle
-    # chrome-sandbox setuid olmalı; aksi halde Electron sandbox'ı açılmaz.
-    # Not: /var/pisi gerçek bir Linux dosya sisteminde olmalı; FUSE/NTFS
-    # üzerinde chmod/chown etkisiz kalır ve paket 0777 olarak üretilir.
     install_dir = get.installDIR()
     app_dir = "%s/usr/share/wpcom" % install_dir
     shelltools.system("chown -R root:root %s" % app_dir)
