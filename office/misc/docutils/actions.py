@@ -23,6 +23,8 @@ WorkDir="docutils-%s" % get.srcVERSION()
     # shelltools.cd(WorkDir)
 
 def build():
+    # shelltools.system("sed -i '/^include =/,/]/d' pyproject.toml")
+    shelltools.system('sed -i "s/flit_core>=3.11,<4/flit_core>=3.11,<5/" pyproject.toml')
     # pythonmodules.compile()
     
     # shelltools.cd("../build_python/%s" % WorkDir)
