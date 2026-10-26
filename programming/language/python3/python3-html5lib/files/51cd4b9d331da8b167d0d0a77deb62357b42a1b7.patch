@@ -1,0 +1,36 @@
+From 51cd4b9d331da8b167d0d0a77deb62357b42a1b7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Mark=C3=A9ta?= <meggy.calabkova@gmail.com>
+Date: Thu, 27 Jul 2023 09:35:59 +0200
+Subject: [PATCH] adapt testsuite to changes in pytest 7.4
+
+---
+ html5lib/tests/tokenizer.py         | 2 +-
+ html5lib/tests/tree_construction.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/html5lib/tests/tokenizer.py b/html5lib/tests/tokenizer.py
+index cc9897a4..6bbf19b5 100644
+--- a/html5lib/tests/tokenizer.py
++++ b/html5lib/tests/tokenizer.py
+@@ -246,7 +246,7 @@ def runtest(self):
+     def repr_failure(self, excinfo):
+         traceback = excinfo.traceback
+         ntraceback = traceback.cut(path=__file__)
+-        excinfo.traceback = ntraceback.filter()
++        excinfo.traceback = ntraceback.filter(excinfo)
+ 
+         return excinfo.getrepr(funcargs=True,
+                                showlocals=False,
+diff --git a/html5lib/tests/tree_construction.py b/html5lib/tests/tree_construction.py
+index fb0657bf..ff1ce967 100644
+--- a/html5lib/tests/tree_construction.py
++++ b/html5lib/tests/tree_construction.py
+@@ -135,7 +135,7 @@ def runtest(self):
+     def repr_failure(self, excinfo):
+         traceback = excinfo.traceback
+         ntraceback = traceback.cut(path=__file__)
+-        excinfo.traceback = ntraceback.filter()
++        excinfo.traceback = ntraceback.filter(excinfo)
+ 
+         return excinfo.getrepr(funcargs=True,
+                                showlocals=False,

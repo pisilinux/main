@@ -7,6 +7,11 @@
 from pisi.actionsapi import pythonmodules
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import get
+
+
+
+shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","%s" % get.srcVERSION())
 
 def build():
     # suppress compiler warnings

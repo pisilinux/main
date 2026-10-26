@@ -18,7 +18,7 @@ def setup():
                         --no-make \
                         --qt-shared \
                         --qmake=/usr/bin/qmake6-qt6 \
-                        --api-dir /usr/share/qt6/qsci/api/python3.11 \
+                        --api-dir /usr/share/qt6/qsci/api/python3.14 \
                         --pep484-pyi")
     shelltools.system("find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'")
 
