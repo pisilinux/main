@@ -12,6 +12,7 @@ from pisi.actionsapi import shelltools
 shelltools.export("SETUPTOOLS_SCM_PRETEND_VERSION","6.0.1")
 
 def build():
+    shelltools.system("sed -i '/coherent.licensed/d' pyproject.toml")
     python3modules.compile()
 
 def install():

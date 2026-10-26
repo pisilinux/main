@@ -19,6 +19,6 @@ def build():
 def install():
     shelltools.system("python3 -m installer --destdir=%s dist/*.whl" % get.installDIR())
     # python3modules.install()
-    pisitools.insinto("/usr/lib/python3.11/site-packages/jaraco/text", "jaraco/text/Lorem ipsum.txt")
+    pisitools.insinto("/usr/lib/python3.14/site-packages/jaraco/text", "jaraco/text/Lorem ipsum.txt")
 
     # pisitools.dodoc("AUTHORS", "BUGS", "ChangeLog", "COPYING", "NEWS", "README")
