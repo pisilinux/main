@@ -22,4 +22,4 @@ def check():
 def install():
     pythonmodules.install(pyVer="3")
 
-    pisitools.dodoc("COPYING", "README*")
+    pisitools.dodoc("README*")
