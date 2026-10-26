@@ -8,7 +8,7 @@ from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
 
 def build():
-    python3modules.compile()
+    python3modules.compile("--skip-dependency-check")
 
 def install():
     python3modules.install()

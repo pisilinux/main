@@ -7,18 +7,18 @@
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 
 shelltools.export("PYTHONDONTWRITEBYTECODE", "1")
 
-WorkDir = "Mako-%s" % get.srcVERSION()
+WorkDir = "mako-%s" % get.srcVERSION()
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
 
 def install():
-    shelltools.system('sed -i "s:mako-render:&3:g" setup.py')
-    pythonmodules.install(pyVer="3")
+    # shelltools.system('sed -i "s:mako-render:&3:g" setup.py')
+    python3modules.install()
 
     #pisitools.dodoc("doc/*.txt")
     pisitools.dohtml("doc/*.html")

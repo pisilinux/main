@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("CMakeLists.txt","--prefix=\$\{CMAKE_INSTALL_PREFIX\}","--prefix=DESTDIR=%s" % get.installDIR())
-    cmaketools.configure()
+    cmaketools.configure("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
     cmaketools.make()
