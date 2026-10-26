@@ -5,7 +5,7 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 
 def setup():
     pisitools.dosed("astroid/__pkginfo__.py", "six~=[0-9.*]*", "six")
@@ -13,8 +13,8 @@ def setup():
     pisitools.dosed("astroid/__pkginfo__.py", "lazy_object_proxy==[0-9.*]*", "lazy_object_proxy")
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
 
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install()
