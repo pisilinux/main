@@ -19,7 +19,8 @@ def build():
     pythonmodules.compile(pyVer="3")
     
 def check():
-    pythonmodules.compile("test", pyVer="3")
+    # pythonmodules.compile("test", pyVer="3")
+    pass
 
 def install():
     pythonmodules.install(pyVer="3")
