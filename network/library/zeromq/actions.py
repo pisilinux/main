@@ -14,7 +14,7 @@ def setup():
     shelltools.system("""sed -i 's/libzmq_werror="yes"/libzmq_werror="no"/' configure""")
     shelltools.system("sed -i 's/openpgm-5.1/openpgm-5.2/' configure configure.ac")
 
-    autotools.configure("--with-pgm --with-libsodium --disable-static")
+    autotools.configure("--with-pgm --with-libsodium --disable-static -disable-Werror")
     # fix unused dependency analysis
     pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
