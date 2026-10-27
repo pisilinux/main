@@ -7,7 +7,8 @@
 from pisi.actionsapi import cmaketools
 
 def setup():
-    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib")
+    cmaketools.configure("-DCMAKE_INSTALL_LIBDIR=lib \
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
     cmaketools.make()

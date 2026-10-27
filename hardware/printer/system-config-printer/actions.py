@@ -21,7 +21,7 @@ def setup():
     pisitools.dosed("Makefile.am", "xmlto man", "xmlto --skip-validation man")
     for i in ["README", "ChangeLog"]:
         shelltools.touch(i)
-    #autotools.autoreconf("-fi")
+    # autotools.autoreconf("-fi")
     shelltools.system("./bootstrap")
     autotools.configure("--with-udev-rules \
                          --with-systemdsystemunitdir=no \
@@ -33,7 +33,7 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s udevrulesdir=/lib/udev/rules.d udevhelperdir=/lib/udev" % get.installDIR())
 
-    pisitools.insinto("/usr/lib/python3.11/site-packages/cupshelpers", "build/lib/cupshelpers/*.py")
+    pisitools.insinto("/usr/lib/python3.14/site-packages/cupshelpers", "build/lib/cupshelpers/*.py")
 
     pisitools.dodir("/run/udev-configure-printer")
 
