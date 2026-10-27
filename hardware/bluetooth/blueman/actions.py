@@ -11,6 +11,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("data/configs/*.service.in", "SystemdService", deleteLine=True)
+    autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
                          --sysconfdir=/etc \
                          --disable-schemas-compile \
