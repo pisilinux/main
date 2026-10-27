@@ -7,26 +7,17 @@
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import mesontools
 from pisi.actionsapi import get
 
 def setup():
-    shelltools.makedirs("build-python3")
-    autotools.autoreconf("-fi")
-
-    shelltools.cd("build-python3")
     shelltools.export("LDFLAGS", "-lpthread")
-    shelltools.system("PYTHON=python3 ../configure --prefix=/usr \
-                       --localstatedir=/var \
-                       --disable-api-docs \
-                       --disable-html-docs \
-                       --disable-static \
-                       PYTHON_VERSION=3")
+    mesontools.configure("-Ddoc=disabled")
     
-    pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    # pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
 
 def build():
-    shelltools.cd("build-python3")
-    autotools.make()
+    mesontools.build()
 
 
 def check():
@@ -34,8 +25,7 @@ def check():
     pass
 
 def install():
-    shelltools.cd("build-python3")
-    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    mesontools.install()
 
     # remove dbus-python-common files in py3 package
     pisitools.removeDir("/usr/include/")
