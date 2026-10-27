@@ -16,7 +16,8 @@ def build():
     
 def install(): 
     python3modules.install()
-    pisitools.rename("/usr/bin/pip", "pip3")
+    # pisitools.rename("/usr/bin/pip", "pip3")
+    # pisitools.dosym("/usr/bin/pip", "/usr/bin/pip3")
     pisitools.dodoc("LICENSE*")
     
     # 2020-05-16 Blue DeviL Note:

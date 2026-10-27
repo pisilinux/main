@@ -11,11 +11,11 @@ from pisi.actionsapi import shelltools
 def setup():
     pisitools.flags.add("-fwrapv")
 
-    pisitools.dosed("Lib/cgi.py","^#.* /usr/local/bin/python","#!/usr/bin/python")
+    # pisitools.dosed("Lib/cgi.py","^#.* /usr/local/bin/python","#!/usr/bin/python")
 
     shelltools.unlinkDir("Modules/expat")
-    shelltools.unlinkDir("Modules/_ctypes/darwin")
-    shelltools.unlinkDir("Modules/_ctypes/libffi_osx")
+    # shelltools.unlinkDir("Modules/_ctypes/darwin")
+    # shelltools.unlinkDir("Modules/_ctypes/libffi_osx")
 
     autotools.rawConfigure("\
                             --prefix=/temp \
@@ -39,10 +39,10 @@ def install():
     shelltools.makedirs("%s/usr" % get.installDIR())
     folders = ("tkinter", "turtledemo", "idlelib")
     for i in folders:
-    	pisitools.domove("/temp/lib/python3.11/%s" % i, "/usr/lib/python3.11")
-    pisitools.domove("/temp/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.so", "/usr/lib/python3.11/lib-dynload")
+    	pisitools.domove("/temp/lib/python3.14/%s" % i, "/usr/lib/python3.14")
+    pisitools.domove("/temp/lib/python3.14/lib-dynload/_tkinter.cpython-314-x86_64-linux-gnu.so", "/usr/lib/python3.14/lib-dynload")
     pisitools.domove("/temp/bin/idle3*", "/usr/bin/")
     
-    shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.11" % get.installDIR())
+    shelltools.system("sed -i 's/temp/usr/g' %s/usr/bin/idle3.14" % get.installDIR())
     
     pisitools.removeDir("/temp")

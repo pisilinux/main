@@ -11,7 +11,7 @@ from pisi.actionsapi import get
 WorkDir="blinker-%s" % get.srcVERSION()
 
 def build():
-    python3modules.compile()
+    python3modules.compile("--skip-dependency-check")
     
 # def check():
     # shelltools.system("nosetests3")

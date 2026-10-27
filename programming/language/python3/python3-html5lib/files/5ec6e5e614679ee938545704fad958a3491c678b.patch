@@ -1,0 +1,41 @@
+From 5ec6e5e614679ee938545704fad958a3491c678b Mon Sep 17 00:00:00 2001
+From: Eli Schwartz <eschwartz93@gmail.com>
+Date: Tue, 17 Oct 2023 18:07:52 -0400
+Subject: [PATCH] tests: drop dependency on external mock module for newer
+ python
+
+Starting python 3.3, this is in the stdlib.
+
+Fixes #541
+---
+ html5lib/tests/test_meta.py | 5 ++++-
+ requirements-test.txt       | 3 +--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/html5lib/tests/test_meta.py b/html5lib/tests/test_meta.py
+index dd02dd7f..400fb802 100644
+--- a/html5lib/tests/test_meta.py
++++ b/html5lib/tests/test_meta.py
+@@ -1,7 +1,10 @@
+ from __future__ import absolute_import, division, unicode_literals
+ 
+ import six
+-from mock import Mock
++try:
++    from unittest.mock import Mock
++except:
++    from mock import Mock
+ 
+ from . import support
+ 
+diff --git a/requirements-test.txt b/requirements-test.txt
+index 27866e59..9626ca1d 100644
+--- a/requirements-test.txt
++++ b/requirements-test.txt
+@@ -6,5 +6,4 @@ pytest>=4.6.10,<5 ; python_version < '3'
+ pytest>=5.4.2,<7 ; python_version >= '3'
+ coverage>=5.1,<6
+ pytest-expect>=1.1.0,<2
+-mock>=3.0.5,<4 ; python_version < '3.6'
+-mock>=4.0.2,<5 ; python_version >= '3.6'
++mock>=3.0.5,<4 ; python_version < '3.3'

@@ -8,7 +8,7 @@ from pisi.actionsapi import get
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 
 #WorkDir="Imaging-%s" % get.srcVERSION()
 
@@ -17,16 +17,16 @@ def build():
     pisitools.cflags.add("-Wno-sign-compare -Wno-pointer-sign")
     # fix unused direct dependency analysis
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile(pyVer="3")
     
     # build documentation
     shelltools.export("PYTHONPATH", "%s/Pillow-%s/build/lib.linux-x86_64-cpython-311" % (get.workDIR(), get.srcVERSION()))
     autotools.make("-C docs html")
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install(pyVer="3")
     # install header files
-    pisitools.insinto("/usr/include/python3.11/Imaging/", "src/libImaging/*.h")
+    pisitools.insinto("/usr/include/python3.14/Imaging/", "src/libImaging/*.h")
     # install documentation
     pisitools.dohtml("docs/_build/html/*")
     

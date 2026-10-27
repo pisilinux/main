@@ -10,6 +10,7 @@ from pisi.actionsapi import libtools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.move("openpgm/pgm/openpgm-5.2.pc.in", "openpgm/pgm/openpgm-5.3.pc.in")
     shelltools.cd("openpgm/pgm/")
     shelltools.system("pwd")
     libtools.libtoolize("-fc")

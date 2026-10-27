@@ -9,7 +9,7 @@ from pisi.actionsapi import python3modules, shelltools
 def build():
     # fix unused direct dependency analysis
     shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread")
-    python3modules.compile()
+    python3modules.compile("--skip-dependency-check")
 
 def install():
     python3modules.install()

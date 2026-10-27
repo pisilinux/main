@@ -4,13 +4,13 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    python3modules.compile()
     
 #def check():
-#    pythonmodules.compile("test", pyVer="3")
+#    python3modules.compile("test", )
     
 def install():
-    pythonmodules.install("-O1", pyVer="3")
+    python3modules.install()

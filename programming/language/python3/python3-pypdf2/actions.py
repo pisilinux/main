@@ -6,16 +6,18 @@
 
 from pisi.actionsapi import get
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import shelltools
+from pisi.actionsapi import python3modules
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    shelltools.system("sed -i 's/,<4//' pyproject.toml")
+    python3modules.compile()
     
 #def check():
-#    pythonmodules.run("-m unittest Tests.tests", pyVer="3")
+#    python3modules.run("-m unittest Tests.tests", )
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install()
 
-    for dirs in ["PDF_Samples", "Sample_Code"]:
-        pisitools.insinto("%s/%s" % (get.docDIR(), get.srcNAME()), dirs)
+    # for dirs in ["PDF_Samples", "Sample_Code"]:
+        # pisitools.insinto("%s/%s" % (get.docDIR(), get.srcNAME()), dirs)
