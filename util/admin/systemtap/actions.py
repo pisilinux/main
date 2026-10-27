@@ -50,7 +50,7 @@ def install():
 
     pisitools.insinto("/etc/logrotate.d", "initscript/logrotate.stap-server", "stap-server")
     pisitools.insinto("/etc/conf.d", "initscript/config.stap-server", "stap-server")
-    pisitools.insinto("/etc/systemtap", "initscript/config.systemtap", "config")
+    # pisitools.insinto("/etc/systemtap", "initscript/config.systemtap", "config")
 
     # Clean uprobes directory
     #autotools.make("-C %s/usr/share/systemtap/runtime/uprobes clean" % get.installDIR())
