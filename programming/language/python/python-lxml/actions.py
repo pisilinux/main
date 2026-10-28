@@ -9,6 +9,10 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 from pisi.actionsapi import pythonmodules
 
+import os
+os.environ['CFLAGS'] = os.environ.get('CFLAGS', '') + ' -Wno-error=incompatible-pointer-types'
+
+
 #WorkDir = "lxml-%s" % get.srcVERSION()
 
 def setup():
