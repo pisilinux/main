@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def build():
+    shelltools.system("sed -i 's|#include \"longintrepr.h\"|#include <cpython/longintrepr.h>|' keyutils/_keyutils.c")
     shelltools.system("sed -i '/pytest-runner/d' setup.py")
     python3modules.compile(pyVer="3")
     # shelltools.system("python3 setup.py build")
