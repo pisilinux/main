@@ -13,7 +13,7 @@ from pisi.actionsapi import get
 def setup():
     # pisitools.dosed("meson.build", "gcr-base-3", "gcr-4")
     # pisitools.dosed("gdata/gdata-service.c", "gcr-base.h", "gcr.h")
-    mesontools.configure()
+    mesontools.configure("-Dalways_build_tests=false")
 
 def build():
     mesontools.build()
