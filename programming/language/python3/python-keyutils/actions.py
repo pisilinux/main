@@ -4,15 +4,15 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def build():
     shelltools.system("sed -i '/pytest-runner/d' setup.py")
-    pythonmodules.compile(pyVer="3")
-    shelltools.system("python3 setup.py build")
+    python3modules.compile(pyVer="3")
+    # shelltools.system("python3 setup.py build")
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install(pyVer="3")
     pisitools.dodoc("LICENSE*", "README*")
