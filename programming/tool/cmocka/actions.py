@@ -29,4 +29,4 @@ def install():
     mesontools.install()
 
     pisitools.dohtml("doc/html/*")
-    pisitools.dodoc("AUTHORS", "COPYING")
+    pisitools.dodoc("AUTHORS", "README*")

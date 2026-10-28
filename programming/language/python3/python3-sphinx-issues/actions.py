@@ -4,10 +4,12 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import pythonmodules
+from pisi.actionsapi import python3modules
+from pisi.actionsapi import pisitools
 
 def build():
-    pythonmodules.compile(pyVer="3")
+    pisitools.dosed("pyproject.toml", "flit_core<4", "flit_core<5")
+    python3modules.compile(pyVer="3")
 
 def install():
-    pythonmodules.install(pyVer="3")
+    python3modules.install(pyVer="3")

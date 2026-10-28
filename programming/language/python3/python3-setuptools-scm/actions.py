@@ -15,7 +15,7 @@ from pisi.actionsapi import get
 def build():
     shelltools.cd("setuptools-scm")
     # python3modules.compile(pyVer="3")
-    shelltools.system("python3 -m build --wheel --skip-dependency-check --no-isolation")
+    shelltools.system("python3 -m build --wheel --no-isolation")
     
     #python3modules.run("setup.py build_sphinx", pyVer="3")
     

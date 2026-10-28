@@ -5,8 +5,11 @@
 # See the file https://www.gnu.org/licenses/gpl-3.0.txt
 
 from pisi.actionsapi import python3modules
+from pisi.actionsapi import shelltools
+
 
 def build():
+	shelltools.system('sed -i "s/flit_core<4,>=3.11/flit_core<5,>=3.11/" pyproject.toml')
 	python3modules.compile(pyVer = '3')
 
 def install():
