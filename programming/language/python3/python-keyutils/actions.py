@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
 
 def build():
+    shelltools.system("sed -i '/pytest-runner/d' setup.py")
     pythonmodules.compile(pyVer="3")
     shelltools.system("python3 setup.py build")
 
