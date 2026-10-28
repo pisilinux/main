@@ -1,0 +1,72 @@
+From f01847c671e014aa5812da33d26e3506e46a617d Mon Sep 17 00:00:00 2001
+From: Christoph Reiter <reiter.christoph@gmail.com>
+Date: Sun, 26 Jul 2026 16:03:37 +0200
+Subject: [PATCH] a bit of python 3.14 compat
+
+---
+ pgi/overrides/Gtk.py      |  6 +++---
+ pgi/overrides/__init__.py | 11 ++++-------
+ 2 files changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/pgi/overrides/Gtk.py b/pgi/overrides/Gtk.py
+index 7d51bac..0ccf8b2 100644
+--- a/pgi/overrides/Gtk.py
++++ b/pgi/overrides/Gtk.py
+@@ -19,7 +19,7 @@
+ # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+ # USA
+ 
+-import collections
++from collections.abc import Mapping, Sequence
+ import sys
+ import warnings
+ 
+@@ -74,7 +74,7 @@ def _construct_target_list(targets):
+ 
+ def _extract_handler_and_args(obj_or_map, handler_name):
+     handler = None
+-    if isinstance(obj_or_map, collections.Mapping):
++    if isinstance(obj_or_map, Mapping):
+         handler = obj_or_map.get(handler_name, None)
+     else:
+         handler = getattr(obj_or_map, handler_name, None)
+@@ -83,7 +83,7 @@ def _extract_handler_and_args(obj_or_map, handler_name):
+         raise AttributeError('Handler %s not found' % handler_name)
+ 
+     args = ()
+-    if isinstance(handler, collections.Sequence):
++    if isinstance(handler, Sequence):
+         if len(handler) == 0:
+             raise TypeError("Handler %s tuple can not be empty" % handler)
+         args = handler[1:]
+diff --git a/pgi/overrides/__init__.py b/pgi/overrides/__init__.py
+index 97451d9..979d5f9 100644
+--- a/pgi/overrides/__init__.py
++++ b/pgi/overrides/__init__.py
+@@ -8,9 +8,9 @@
+ import types
+ import sys
+ import importlib
++import importlib.util
+ import warnings
+ from functools import wraps
+-from pkgutil import get_loader
+ 
+ from pgi import const
+ from pgi.util import PyGIDeprecationWarning
+@@ -106,12 +106,9 @@ def load_overrides(introspection_module):
+     try:
+         override_package_name = 'pgi.overrides.' + namespace
+ 
+-        # http://bugs.python.org/issue14710
+-        try:
+-            override_loader = get_loader(override_package_name)
+-
+-        except AttributeError:
+-            override_loader = None
++        # Avoid importing the override just to test whether it exists.
++        spec = importlib.util.find_spec(override_package_name)
++        override_loader = spec.loader if spec is not None else None
+ 
+         # Avoid checking for an ImportError, an override might
+         # depend on a missing module thus causing an ImportError
