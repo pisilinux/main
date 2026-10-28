@@ -10,6 +10,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.export("CYTHON", "/usr/bin/cython3")
     pisitools.dosed("data/configs/*.service.in", "SystemdService", deleteLine=True)
     autotools.autoreconf("-fiv")
     autotools.configure("--disable-static \
