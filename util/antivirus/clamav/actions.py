@@ -23,7 +23,7 @@ def build():
 
 def check():
     mesontools.build("test")
-    # pass
+    pass
 
 def install():
     mesontools.install()
