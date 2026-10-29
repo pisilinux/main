@@ -19,6 +19,7 @@ def setup():
 
     #libtools.libtoolize("--force --copy")
     autotools.autoreconf("-vfi")
+    pisitools.cflags.add("-std=gnu17")
     autotools.configure(" \
                       --prefix=/usr \
                       --mandir=/usr/share/man \
