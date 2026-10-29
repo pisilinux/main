@@ -7,7 +7,7 @@
 from pisi.actionsapi import cmaketools, mesontools, pisitools
 
 def setup():
-    cmaketools.configure("-Bbuild -G Ninja -L")
+    cmaketools.configure("-Bbuild -G Ninja -L -DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
     mesontools.build()
