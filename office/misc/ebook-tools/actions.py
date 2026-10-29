@@ -13,7 +13,7 @@ def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
 
-    cmaketools.configure(sourceDir="..")
+    cmaketools.configure("-DCMAKE_POLICY_VERSION_MINIMUM=3.5", sourceDir="..")
 
 def build():
     cmaketools.make("-C build")
