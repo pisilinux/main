@@ -9,6 +9,7 @@ from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.cflags.add("-std=gnu17")
     autotools.configure("--with-xml-prefix=/usr \
                          --disable-xmltest \
                          --disable-static")
