@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 y = ''.join([
     ' --prefix=/usr',
-    ' --enable-introspection',
+    ' --disable-introspection',
     ' --disable-static '
     ])
 
