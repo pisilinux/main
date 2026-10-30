@@ -12,8 +12,7 @@ from pisi.actionsapi import get
 def setup():
     mesontools.configure("-Dwith_xnvctrl=disabled \
         -Dmangoapp=true \
-        -Dmangohudctl=true \
-        -Dmangoapp_layer=true")
+        -Dmangohudctl=true")
 
 def build():
     mesontools.build()
