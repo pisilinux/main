@@ -14,9 +14,9 @@ docs = ["AUTHORS", "COPYING.LIB", \
         "LICENSE-LGPL-2", "LICENSE-LGPL-2.1", "LICENSE"]
 
 def setup():
-    shelltools.system("mkdir build")
-    shelltools.cd("build")
-    cmaketools.configure("-DPORT=GTK \
+    # shelltools.system("mkdir build")
+    # shelltools.cd("build")
+    cmaketools.configure("-Bbuild -G Ninja -DPORT=GTK \
                           -DCMAKE_C_FLAGS='-g1' \
                           -DCMAKE_CXX_FLAGS='-g1' \
                           -DUSE_GTK4=ON \
@@ -41,15 +41,17 @@ def setup():
                           -DUSE_WPE_RENDERER=OFF \
                           -DENABLE_SPEECH_SYNTHESIS=OFF \
                           -DUSE_FLITE=OFF \
-                          -DENABLE_MINIBROWSER=ON", sourceDir="..")
+                          -DENABLE_MINIBROWSER=ON")
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make()
+    # shelltools.cd("build")
+    # cmaketools.make()
+    shelltools.system("ninja -C build")
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # shelltools.cd("build")
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
 
     pisitools.remove("/usr/bin/WebKitWebDriver")
 
