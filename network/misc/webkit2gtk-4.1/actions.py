@@ -16,9 +16,9 @@ docs = ["AUTHORS", "COPYING.LIB", \
 def setup():
     #shelltools.system("rm -r Source/ThirdParty/gtest/")
     #pisitools.dosed("Source/cmake/OptionsGTK.cmake", "2.99.5", "2.72.0")
-    shelltools.system("mkdir build")
-    shelltools.cd("build")
-    cmaketools.configure("-DPORT=GTK \
+    # shelltools.system("mkdir build")
+    # shelltools.cd("build")
+    cmaketools.configure("-Bbuild -G Ninja  -DPORT=GTK \
                           -DCMAKE_C_FLAGS='-g1' \
                           -DCMAKE_CXX_FLAGS='-g1' \
                           -DCMAKE_BUILD_TYPE=Release \
@@ -43,15 +43,17 @@ def setup():
                           -DUSE_WPE_RENDERER=OFF \
                           -DENABLE_SPEECH_SYNTHESIS=OFF \
                           -DUSE_FLITE=OFF \
-                          -DENABLE_MINIBROWSER=ON", sourceDir="..")
+                          -DENABLE_MINIBROWSER=ON")
 
 def build():
-    shelltools.cd("build")
-    cmaketools.make()
+    # shelltools.cd("build")
+    # cmaketools.make()
+    shelltools.system("ninja -C build")
 
 def install():
-    shelltools.cd("build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # shelltools.cd("build")
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
 
     pisitools.remove("/usr/bin/WebKitWebDriver")
 
