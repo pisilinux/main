@@ -55,7 +55,7 @@ def install():
 
     pisitools.remove("/usr/bin/WebKitWebDriver")
 
-    pisitools.dodoc("../NEWS")
+    # pisitools.dodoc("../NEWS")
     shelltools.cd("../Source")
     for path in paths:
         for doc in docs:
