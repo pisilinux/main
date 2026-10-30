@@ -1,55 +1,76 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2011 TUBITAK/BILGEM
-# Licensed under the GNU General Public License, version 2.
-# See the file http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+# Licensed under the GNU General Public License, version 3.
+# See the file http://www.gnu.org/licenses/gpl.txt
 
-from pisi.actionsapi import get, pisitools
-from pisi.actionsapi import cmaketools
+from pisi.actionsapi import get
+from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
-
-
-# WorkDir="pyside-setup-everywhere-src-%s/sources" % get.srcVERSION()
+from pisi.actionsapi import cmaketools
+import os
+import subprocess
 
 def setup():
-    shelltools.cd("sources/shiboken6")
-    pisitools.dosed("libshiboken/CMakeLists.txt", 'LIBRARY DESTINATION "shiboken6"', 'LIBRARY DESTINATION "${LIB_INSTALL_DIR}"')
-    pisitools.dosed("libshiboken/CMakeLists.txt", 'wheels/cmake/Shiboken6', '/cmake/Shiboken6')
-    cmaketools.configure("-B build -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_BUILD_TYPE=Release \
-                          -DBUILD_TESTS=OFF \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-                          -DSHIBOKEN_PYTHON_LIBRARIES=`pkgconf python3-embed --libs` \
-                          -DUSE_PYTHON_VERSION=3")
+    # Kaynak dizinine gir
+    # if shelltools.can_access_file("pyside-setup"):
+        # shelltools.cd("pyside-setup")
+    # elif shelltools.can_access_file("pyside-setup-6.11.3"):
+        # shelltools.cd("pyside-setup-6.11.3")
 
-    shelltools.cd("../shiboken6_generator")
-    # pisitools.dosed("generator/CMakeLists.txt", 'EXPORT "${package_name}Targets"', 'EXPORT "/usr/bin/Targets"')
-    pisitools.dosed("generator/CMakeLists.txt", 'wheels/cmake', '/cmake')
-    cmaketools.configure("-B build -DCMAKE_INSTALL_PREFIX=/usr \
-                          -DCMAKE_BUILD_TYPE=Release \
-                          -DBUILD_TESTS=OFF \
-                          -DCMAKE_BIN_INSTALL_DIR:PATH=/usr/bin \
-                          -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-                          -DSHIBOKEN_PYTHON_LIBRARIES=`pkgconf python3-embed --libs` \
-                          -DUSE_PYTHON_VERSION=3")
+    # pkg-config çıktısını al
+    try:
+        pkgconf_libs = subprocess.check_output(["pkg-config", "python3-embed", "--libs"]).decode('utf-8').strip()
+    except Exception:
+        pkgconf_libs = os.popen("pkg-config python3-embed --libs").read().strip()
+
+    if not pkgconf_libs:
+        pkgconf_libs = "-lpython3.14"
+
+    # NumPy include dizinini al
+    try:
+        numpy_inc = subprocess.check_output(["numpy-config", "--cflags"]).decode('utf-8').replace("-I", "").strip()
+    except Exception:
+        numpy_inc = ""
+
+    # CMake'i ayrı bir build dizini ile çalıştır
+    shelltools.system("cmake -B build -S . -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=None \
+        -DSHIBOKEN_PYTHON_LIBRARIES='%s' \
+        -DBUILD_TESTS=OFF \
+        -DFORCE_LIMITED_API=no \
+        -DNO_QT_TOOLS=yes \
+        -DNUMPY_INCLUDE_DIR='%s'" % (pkgconf_libs, numpy_inc))
 
 
 def build():
-    shelltools.cd("sources/shiboken6/build")
-    cmaketools.make()
+    # Ninja ile derle
+    shelltools.system("PYTHONPATH=\"$PWD/build/sources\" ninja -C build")
 
-    shelltools.cd("../../shiboken6_generator/build")
-    cmaketools.make()
 
 def install():
-    shelltools.cd("sources/shiboken6/build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    # pisitools.removeDir("/usr/shiboken6")
+    # Mevcut çalışma dizinini kaydet
+    # (Pisi genellikle work/ dizinindedir)
 
-    shelltools.cd("../../shiboken6_generator/build")
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
-    pisitools.removeDir("/usr/shiboken6_generator")
+    # 1. shiboken6 kütüphanesini kur (zaten başarılı)
+    shelltools.system("DESTDIR=%s cmake --install build/sources/shiboken6" % get.installDIR())
 
-    pisitools.dosed("%s/usr/lib/cmake/Shiboken6Tools/Shiboken6ToolsTargets-release.cmake" % get.installDIR(), "shiboken6_generator", "bin")
+    # shiboken6 egg-info (Eğer gerekliyse, dizin yolunu kontrol edin)
+    # shelltools.cd("pyside-setup-everywhere-src-6.11.2")  # Doğru dizin adı bu olabilir
+    # shelltools.system("PATH=/usr/lib/qt6/bin:$PATH python3 setup.py egg_info --build-type=shiboken6")
+    # pythonpath = os.popen("python3 -c \"from sysconfig import get_path; print(get_path('platlib'))\"").read().strip()
+    # shelltools.system("cp -r shiboken6.egg-info %s%s" % (get.installDIR(), pythonpath))
 
-    # pisitools.dosed("%s/usr/lib/cmake/Shiboken6/Shiboken6Targets-release.cmake" % get.installDIR(), "/shiboken6/", "/lib/")
+    # 2. shiboken6_generator'ı kur
+    shelltools.system("DESTDIR=%s cmake --install build/sources/shiboken6_generator" % get.installDIR())
+
+    # 3. pyside6'yı kur
+    shelltools.system("DESTDIR=%s cmake --install build/sources/pyside6" % get.installDIR())
+
+    # 4. pyside6-tools'u kur
+    shelltools.system("DESTDIR=%s cmake --install build/sources/pyside-tools" % get.installDIR())
+
+    # Lisans ve dokümantasyon
+    # shelltools.cd("..")
+    pisitools.dodoc("LICENSES/*", "README*")
