@@ -16,7 +16,7 @@ docs = ["AUTHORS", "COPYING.LIB", \
 def setup():
     #shelltools.system("rm -r Source/ThirdParty/gtest/")
     #pisitools.dosed("Source/cmake/OptionsGTK.cmake", "2.99.5", "2.72.0")
-    cmaketools.configure("-DPORT=GTK \
+    cmaketools.configure("-Bbuild -G Ninja -DPORT=GTK \
                           -DCMAKE_C_FLAGS='-g1' \
                           -DCMAKE_CXX_FLAGS='-g1' \
                           -DCMAKE_BUILD_TYPE=Release \
@@ -36,10 +36,12 @@ def setup():
                           -DENABLE_MINIBROWSER=ON")
 
 def build():
-    cmaketools.make()
+    # cmaketools.make()
+    shelltools.system("ninja -C build")
 
 def install():
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
 
     pisitools.dodoc("NEWS")
     shelltools.cd("Source")
