@@ -10,7 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     shelltools.system("./autogen.sh")
-    autotools.configure("--without-docs --enable-static=no --prefix=/usr")
+    autotools.configure("--without-docs --enable-static=no --disable-werror --prefix=/usr")
     
 def build():
     autotools.make()
