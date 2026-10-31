@@ -1,0 +1,79 @@
+From: Boyuan Yang <byang@debian.org>
+Date: Sat, 26 Oct 2024 12:36:21 -0400
+Subject: Workaround on type mismatch with time_t (not 2038-safe)
+
+Temporarily patch usage of time_t in struct timeval to cast
+the GTimeVal type variables to time_t to avoid FTBFS due to
+type mismatch.
+
+This does not fundamentally fix the 2038 problem, but the usage
+of 2038-unsafe GTimeVal is too common in telepathy-logger to
+completely patch out.
+
+Bug-Debian: https://bugs.debian.org/1086079
+---
+ src/telepathy-logger.c                 | 4 +++-
+ tests/dbus/test-log-manager.c          | 4 +++-
+ tests/dbus/test-tpl-log-store-pidgin.c | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/telepathy-logger.c b/src/telepathy-logger.c
+index 9f63bdf..50112ea 100644
+--- a/src/telepathy-logger.c
++++ b/src/telepathy-logger.c
+@@ -62,12 +62,14 @@ log_handler (const gchar *log_domain,
+   if (stamp_logs)
+     {
+       GTimeVal now;
++      time_t now_time_t;  // quick workaround, not 2038-safe
+       gchar now_str[32];
+       gchar *tmp;
+       struct tm tm;
+ 
+       g_get_current_time (&now);
+-      localtime_r (&(now.tv_sec), &tm);
++      now_time_t = (time_t) now.tv_sec;  // quick workaround, not 2038-safe
++      localtime_r (&now_time_t, &tm);
+       strftime (now_str, 32, "%Y-%m-%d %H:%M:%S", &tm);
+       tmp = g_strdup_printf ("%s.%06ld: %s",
+         now_str, now.tv_usec, message);
+diff --git a/tests/dbus/test-log-manager.c b/tests/dbus/test-log-manager.c
+index f4f5d29..b54cea7 100644
+--- a/tests/dbus/test-log-manager.c
++++ b/tests/dbus/test-log-manager.c
+@@ -65,12 +65,14 @@ log_handler (const gchar *log_domain,
+   if (stamp_logs)
+     {
+       GTimeVal now;
++      time_t now_time_t;  // quick workaround; not 2038-safe
+       gchar now_str[32];
+       gchar *tmp;
+       struct tm tm;
+ 
+       g_get_current_time (&now);
+-      localtime_r (&(now.tv_sec), &tm);
++      now_time_t = (time_t) now.tv_sec;  // quick workaround; not 2038-safe
++      localtime_r (&now_time_t, &tm);
+       strftime (now_str, 32, "%Y-%m-%d %H:%M:%S", &tm);
+       tmp = g_strdup_printf ("%s.%06ld: %s",
+           now_str, now.tv_usec, message);
+diff --git a/tests/dbus/test-tpl-log-store-pidgin.c b/tests/dbus/test-tpl-log-store-pidgin.c
+index a15a87d..4fae133 100644
+--- a/tests/dbus/test-tpl-log-store-pidgin.c
++++ b/tests/dbus/test-tpl-log-store-pidgin.c
+@@ -71,12 +71,14 @@ log_handler (const gchar *log_domain,
+   if (stamp_logs)
+     {
+       GTimeVal now;
++      time_t now_time_t;  // quick workaround; not 2038-safe
+       gchar now_str[32];
+       gchar *tmp;
+       struct tm tm;
+ 
+       g_get_current_time (&now);
+-      localtime_r (&(now.tv_sec), &tm);
++      now_time_t = now.tv_sec;  // quick workaround; not 2038-safe
++      localtime_r (&now_time_t, &tm);
+       strftime (now_str, 32, "%Y-%m-%d %H:%M:%S", &tm);
+       tmp = g_strdup_printf ("%s.%06ld: %s",
+         now_str, now.tv_usec, message);
