@@ -10,7 +10,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
-    #autotools.autoreconf("-vfi")
+    autotools.autoreconf("-fi")
     autotools.configure("--prefix=/usr \
                          --libexecdir=/usr/lib/telepathy \
                          --disable-static")
