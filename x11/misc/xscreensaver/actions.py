@@ -18,7 +18,6 @@ j = ''.join([
     ' --with-xft',
     ' --with-jpeg',
     ' --with-login-manager ',
-    ' --enable-pam-check-account-type',
     ' --without-systemd '
     ])
 
