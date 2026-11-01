@@ -28,8 +28,8 @@ def setup():
 	shelltools.cd("../OpenCL-CLHPP-2026.05.29")
 	cmaketools.configure("-DBUILD_EXAMPLES=OFF \
 										-DCMAKE_INSTALL_DATADIR=%s \
-										-DOpenCLHeaders_DIR=%s/ocl-icd-2.3.5/OpenCL-Headers-2026.05.29/OpenCLHeaders \
-										-DBUILD_TESTING=OFF" % (Libdir, get.workDIR()))
+										-DOpenCLHeaders_DIR=%s/ocl-icd-%s/OpenCL-Headers-2026.05.29/OpenCLHeaders \
+										-DBUILD_TESTING=OFF" % (Libdir, get.workDIR(), get.srcVERSION()))
 
 def build():
 	autotools.make()
