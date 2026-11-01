@@ -24,6 +24,7 @@ j = ''.join([
 def setup():
 	pisitools.dosed("driver/Makefile.in", "UPDATE_ICON_CACHE", deleteLine = True)
 	# shelltools.system("sed -i 's/-lsystemd/-lelogind/' driver/Makefile.in")
+	shelltools.system("sed -i '/AM_GNU_GETTEXT/s/^/#/' configure")
 	autotools.configure(j)
 
 
@@ -31,5 +32,6 @@ def build():
 	autotools.make()
 
 def install():
-	autotools.rawInstall("install_prefix=%s" % get.installDIR())
-	pisitools.insinto("/etc/pam.d", "driver/xscreensaver.pam", "xscreensaver")
+    autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    # autotools.rawInstall("install_prefix=%s" % get.installDIR())
+    pisitools.insinto("/etc/pam.d", "driver/xscreensaver.pam", "xscreensaver")
