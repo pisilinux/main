@@ -12,6 +12,7 @@ from pisi.actionsapi import pisitools
 def setup():
     #shelltools.export("MOC5", "moc-qt5")
     shelltools.system("sed -i s/systemd/elogind/ data/pam/*")
+    shelltools.system("NOCONFIGURE=1 ./autogen.sh")
 
     autotools.configure("--prefix=/usr \
                          --localstatedir=/var \
@@ -21,6 +22,7 @@ def setup():
                          --disable-static \
                          --disable-tests \
                          --enable-liblightdm-qt5 \
+                         --enable-liblightdm-qt6 \
                          --with-greeter-user=lightdm \
                          --with-greeter-session=pisi-lightdm-greeter")
 
