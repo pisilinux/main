@@ -10,6 +10,7 @@ from pisi.actionsapi import get
 
 def setup():
     pisitools.dosed("doc/org.gnu.pspp.desktop.in", "Math;", "")
+    autotools.autoreconf("-fiv")
     autotools.configure("--disable-rpath \
                          --disable-static")
 
