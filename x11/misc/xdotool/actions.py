@@ -18,7 +18,7 @@ mandir = "/usr/share/man"
 
 def build():
     pisitools.dosed("Makefile", "/usr/local", "/usr")
-    pisitools.dosed("libxdo.pc", "local/", "")
+    # pisitools.dosed("libxdo.pc", "local/", "")
 
     autotools.make("WITHOUT_RPATH_FIX=1")
 

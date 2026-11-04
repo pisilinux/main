@@ -21,6 +21,8 @@ def setup():
                             --shared-openssl \
                             --shared-nghttp2 \
                             --shared-zlib \
+                            --shared-nghttp3 \
+                            --shared-ngtcp2 \
                             --shared-simdjson \
                             --with-intl=system-icu \
                             ")
