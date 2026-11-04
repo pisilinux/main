@@ -29,8 +29,8 @@ def install():
     shelltools.system("DESTDIR=%s ninja -C build install" % get.installDIR())
 
     #"ws_diag_control.h","ws_symbol_export.h"
-    # shelltools.cd("..")
-    for f in ["epan/register.h", "build/config.h","file.h", "cfile.h"]:
+    # shelltools.cd("build")
+    for f in ["epan/register.h", "build/config.h","file.h", "epan/cfile.h"]:
         pisitools.insinto("/usr/include/wireshark/", f)
 
     pisitools.insinto("/usr/include/wireshark/epan/", "epan/*.h")
