@@ -7,7 +7,7 @@
 from pisi.actionsapi import mesontools, pisitools
 
 def setup():
-    pisitools.dosed("data/nemo.desktop.in", "Name=Files", "Name=Nemo")
+    # pisitools.dosed("data/nemo.desktop.in", "Name=Files", "Name=Nemo")
     mesontools.configure("--prefix=/usr \
                           --libexecdir=/usr/lib/nemo \
                           --buildtype=plain")
