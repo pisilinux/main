@@ -12,8 +12,12 @@ class BuildModuleError(Exception):
     pass
 
 def generate_initrd(kver):
-    subprocess.call(["/usr/bin/mkinitcpio","-k","%s"% kver ,"-g","/boot/initramfs-%s-fallback.img"% kver,"-S","autodetect"])
-    subprocess.call(["/usr/bin/mkinitcpio","-k","%s"% kver ,"-c","/etc/mkinitcpio.conf","-g","/boot/initramfs-%s.img"% kver])
+    if os.path.exists("/sbin/mkinitramfs"):
+        subprocess.call(["/sbin/mkinitramfs", "-o", "/boot/initramfs-%s.img" % kver, kver])
+
+    if os.path.exists("/usr/bin/mkinitcpio"):
+        subprocess.call(["/usr/bin/mkinitcpio","-k","%s"% kver ,"-g","/boot/initramfs-%s-fallback.img"% kver,"-S","autodetect"])
+        subprocess.call(["/usr/bin/mkinitcpio","-k","%s"% kver ,"-c","/etc/mkinitcpio.conf","-g","/boot/initramfs-%s.img"% kver])
 
 def get_kver():
     with open("/etc/kernel/kernel") as f:
