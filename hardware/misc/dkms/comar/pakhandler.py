@@ -13,7 +13,9 @@ class BuildModuleError(Exception):
 
 def generate_initrd(kver):
     if os.path.exists("/sbin/mkinitramfs"):
-        subprocess.call(["/sbin/mkinitramfs", "-o", "/boot/initramfs-%s.img" % kver, kver])
+        subprocess.call(["/sbin/mkinitramfs", "-d", kver])
+    elif os.path.exists("/usr/sbin/mkinitramfs"):
+        subprocess.call(["/usr/sbin/mkinitramfs", "-d", kver])
 
     if os.path.exists("/usr/bin/mkinitcpio"):
         subprocess.call(["/usr/bin/mkinitcpio","-k","%s"% kver ,"-g","/boot/initramfs-%s-fallback.img"% kver,"-S","autodetect"])
