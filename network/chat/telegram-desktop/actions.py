@@ -41,11 +41,13 @@ def setup():
     pisitools.cxxflags.add("-Wno-deprecated-declarations -Wno-error=deprecated-declarations -Wno-switch -Wp,-U_GLIBCXX_ASSERTIONS")
     # shelltools.system("rm -rf Telegram/ThirdParty/libtgvoip/webrtc_dsp/absl")
 
+	pisitools.cxxflags.add("-g1")
+
     params = ' '.join([
         '-B build',
         '-G Ninja',
         '-Ddisable_autoupdate=1',
-        '-DCMAKE_BUILD_TYPE=Release',
+        '-DCMAKE_BUILD_TYPE=None',
         '-DCMAKE_INSTALL_PREFIX="/usr"',
         '-DTDESKTOP_API_TEST=ON',
         '-DDESKTOP_APP_QT6=ON',
