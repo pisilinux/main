@@ -40,8 +40,7 @@ def setup():
     shelltools.system('echo "target_link_libraries(external_webrtc INTERFACE jpeg Xcomposite Xdamage Xext Xfixes Xrandr Xrender Xtst X11)" | tee -a cmake/external/webrtc/CMakeLists.txt')
     pisitools.cxxflags.add("-Wno-deprecated-declarations -Wno-error=deprecated-declarations -Wno-switch -Wp,-U_GLIBCXX_ASSERTIONS")
     # shelltools.system("rm -rf Telegram/ThirdParty/libtgvoip/webrtc_dsp/absl")
-	pisitools.cxxflags.add("-g1")
-
+	
     params = ' '.join([
         '-B build',
         '-G Ninja',
@@ -61,6 +60,7 @@ def setup():
         '-DTDESKTOP_LAUNCHER_BASENAME="telegramdesktop"'
     ]) % (wallet_engine_ver)
 
+	pisitools.cxxflags.add("-g1")
     cmaketools.configure(params)
 
 
