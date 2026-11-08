@@ -47,7 +47,7 @@ def setup():
         '-B build',
         '-G Ninja',
         '-Ddisable_autoupdate=1',
-        '-DCMAKE_BUILD_TYPE=None',
+        '-DCMAKE_BUILD_TYPE=Release',
         '-DCMAKE_INSTALL_PREFIX="/usr"',
         '-DTDESKTOP_API_TEST=ON',
         '-DDESKTOP_APP_QT6=ON',
