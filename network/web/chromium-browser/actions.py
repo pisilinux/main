@@ -21,11 +21,13 @@ def setup():
     shelltools.system("mkdir -p third_party/node/linux/node-linux-x64/bin")
     shelltools.system("mkdir -p third_party/rust-toolchain/bin")
     shelltools.system("mkdir -p third_party/jdk/current/bin")
+    shelltools.system("mkdir -p tthird_party/rust-toolchain/bin")
 
     # shelltools.system('echo "1.95.0" > third_party/rust-toolchain/VERSION')
 
     shelltools.system("ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/")
     shelltools.system("ln -s /usr/bin/java third_party/jdk/current/bin/")
+    shelltools.system("ln -s usr/bin/rustc third_party/rust-toolchain/bin/")
 
     shelltools.system("rm -f third_party/gperf/cipd/bin/gperf")
     shelltools.system("ln -s /usr/bin/gperf third_party/gperf/cipd/bin/")
