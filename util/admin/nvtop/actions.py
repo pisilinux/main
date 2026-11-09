@@ -7,9 +7,11 @@
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 
-def setup(): cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
--DNVIDIA_SUPPORT=ON \
--DAMDGPU_SUPPORT=ON")
+def setup():
+    cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
+                          -DNVIDIA_SUPPORT=ON \
+                          -DAMDGPU_SUPPORT=ON \
+                          -DINTEL_SUPPORT=ON")
 
 def build():
     cmaketools.make()

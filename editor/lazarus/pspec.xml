@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PISI SYSTEM "https://pisilinux.org/projeler/pisi/pisi-spec.dtd">
+<PISI>
+    <Source>
+        <Name>lazarus</Name>
+        <Homepage>https://www.lazarus-ide.org/</Homepage>
+        <Packager>
+            <Name>Emir Bayram</Name>
+            <Email>rimru01@proton.me</Email>
+        </Packager>
+        <License>GPL-2.0-or-later</License>
+        <License>LGPL-2.1-or-later</License>
+        <License>MPL-1.1</License>
+        <PartOf>editor</PartOf>
+        <Summary>IDE for Free Pascal</Summary>
+        <Description>Lazarus is a Delphi-like integrated development environment for Free Pascal, providing visual application development and cross-platform GUI support.</Description>
+        <Archive sha1sum="08eb77264997ac80aa718248fde302168a8a1560" type="tarbz2">https://gitlab.com/freepascal.org/lazarus/lazarus/-/archive/lazarus_4_8/lazarus-lazarus_4_8.tar.bz2</Archive>
+        <BuildDependencies>
+            <Dependency>fpc</Dependency>
+            <Dependency>fpc-src</Dependency>
+            <Dependency>qt5pas-devel</Dependency>
+            <Dependency>qt6pas-devel</Dependency>
+            <Dependency>libX11-devel</Dependency>
+            <Dependency>qt5-x11extras-devel</Dependency>
+            <Dependency>qt5-base-devel</Dependency>
+            <Dependency>qt6-base-devel</Dependency>
+            <Dependency>rsync</Dependency>
+        </BuildDependencies>
+    </Source>
+
+    <Package>
+        <Name>lazarus</Name>
+        <Summary>Common files for Lazarus IDE</Summary>
+        <RuntimeDependencies>
+            <Dependency>fpc</Dependency>
+            <Dependency>fpc-src</Dependency>
+        </RuntimeDependencies>
+        <Files>
+            <Path fileType="data">/usr/lib/lazarus</Path>
+            <Path fileType="executable">/usr/bin/lazbuild</Path>
+            <Path fileType="man">/usr/share/man</Path>
+            <Path fileType="doc">/usr/share/doc/lazarus</Path>
+            <Path fileType="doc">/usr/share/licenses/lazarus</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>lazarus-qt5</Name>
+        <Summary>Qt5 version of Lazarus IDE</Summary>
+        <RuntimeDependencies>
+            <Dependency>lazarus</Dependency>
+            <Dependency>qt5pas</Dependency>
+            <Dependency>gdb</Dependency>
+        </RuntimeDependencies>
+        <Conflicts>
+            <Package>lazarus-qt6</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="executable">/usr/bin/lazarus-qt5</Path>
+            <Path fileType="executable">/usr/bin/startlazarus-qt5</Path>
+            <Path fileType="data">/usr/lib/lazarus-qt5</Path>
+            <Path fileType="data">/usr/share/applications/lazarus-qt5.desktop</Path>
+            <Path fileType="data">/usr/share/pixmaps/lazarus-qt5.png</Path>
+        </Files>
+    </Package>
+
+    <Package>
+        <Name>lazarus-qt6</Name>
+        <Summary>Qt6 version of Lazarus IDE</Summary>
+        <RuntimeDependencies>
+            <Dependency>lazarus</Dependency>
+            <Dependency>qt6pas</Dependency>
+            <Dependency>gdb</Dependency>
+        </RuntimeDependencies>
+        <Conflicts>
+            <Package>lazarus-qt5</Package>
+        </Conflicts>
+        <Files>
+            <Path fileType="executable">/usr/bin/lazarus</Path>
+            <Path fileType="executable">/usr/bin/lazarus-qt6</Path>
+            <Path fileType="executable">/usr/bin/startlazarus</Path>
+            <Path fileType="executable">/usr/bin/startlazarus-qt6</Path>
+            <Path fileType="data">/usr/lib/lazarus-qt6</Path>
+            <Path fileType="data">/usr/share/applications/lazarus.desktop</Path>
+            <Path fileType="data">/usr/share/pixmaps/lazarus.png</Path>
+        </Files>
+    </Package>
+
+    <History>
+        <Update release="1">
+            <Date>2026-11-07</Date>
+            <Version>4.8</Version>
+            <Comment>First release.</Comment>
+            <Name>Emir Bayram</Name>
+            <Email>rimru01@proton.me</Email>
+        </Update>
+    </History>
+</PISI>

@@ -18,9 +18,11 @@ def setup():
                           -DUSE_ELOGIND=ON \
                           -DBUILD_WITH_QT6=ON \
                           -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/sddm \
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                           -DBUILD_MAN_PAGES=ON")
 
-    cmaketools.configure("-B build5 -DCMAKE_INSTALL_PREFIX=/usr")
+    cmaketools.configure("-B build5 -DCMAKE_INSTALL_PREFIX=/usr \
+                            -DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
     cmaketools.make("-C build")
