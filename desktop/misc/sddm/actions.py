@@ -18,9 +18,11 @@ def setup():
                           -DUSE_ELOGIND=ON \
                           -DBUILD_WITH_QT6=ON \
                           -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/sddm \
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                           -DBUILD_MAN_PAGES=ON")
 
-    cmaketools.configure("-B build5 -DCMAKE_INSTALL_PREFIX=/usr")
+    cmaketools.configure("-B build5 -DCMAKE_INSTALL_PREFIX=/usr \
+                            -DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
     cmaketools.make("-C build")
@@ -37,7 +39,7 @@ def install():
     shelltools.system('sed -i "s@system-local-login@system-login@" ' + get.installDIR() + "/etc/pam.d/sddm-autologin")
 
     # pisitools.insinto("/usr/share/sddm/themes/Sweet-Cat", "../Sweet-Cat-0.1/*")
-    pisitools.insinto("/usr/share/sddm/themes/pisilinux24", "sddm-pisilinux24-1.2/*")
+    pisitools.insinto("/usr/share/sddm/themes/pisilinux24", "sddm-pisilinux24-1.3/*")
     # pisitools.dosym("/usr/bin/sddm-greeter-qt6", "/usr/bin/sddm-greeter")
 
     pisitools.dodoc("LICENSE")
