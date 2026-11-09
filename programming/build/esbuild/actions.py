@@ -49,7 +49,7 @@ def install():
     # npm/esbuild dizinini oluştur
     pisitools.insinto(npm_dir + "/lib", "npm/esbuild/lib/main.d.ts")
     pisitools.insinto(npm_dir + "/lib", "npm/esbuild/lib/main.js")
-    pisitools.insinto(npm_dir + "/lib", "npm/esbuild/package.json")
+    pisitools.insinto(npm_dir", "npm/esbuild/package.json")
 
     # @esbuild/platform modülünü kur
     esbuild_platform_dir = "%s/@esbuild/%s/bin" % (node_dir, node_platform)
