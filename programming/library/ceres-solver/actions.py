@@ -12,6 +12,7 @@ from pisi.actionsapi import get
 def setup():
     shelltools.system("""sed -i "s|Eigen3 3.3|Eigen3|g" CMakeLists.txt""")
     shelltools.system("""sed -i "s|Eigen3 \${CERES_EIGEN_VERSION}|Eigen3|g" cmake/CeresConfig.cmake.in""")
+    shelltools.export("LDSHARED", "x86_64-pc-linux-gnu-gcc -Wl,-O1,--as-needed -shared -lpthread -Wl,-O1 -Wl,-z,relro -Wl,--hash-style=gnu -Wl,--as-needed -Wl,--sort-common")
     cmaketools.configure("-Bbuild \
                             -GNinja \
                             -DCMAKE_INSTALL_PREFIX=/usr \
