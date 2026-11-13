@@ -1,19 +1,16 @@
 diff -Nuar a/gtweak/utils.py b/gtweak/utils.py
 --- a/gtweak/utils.py	2022-03-05 09:35:46.000000000 +0300
 +++ b/gtweak/utils.py	2022-07-17 16:57:23.917185664 +0300
-@@ -12,7 +12,10 @@
+@@ -12,7 +12,8 @@
  import logging
  
  import gi
 -gi.require_version("Notify", "0.7")
-+try:
-+    gi.require_version("Notify", "0.7")
-+except ValueError:
-+    gi.require_version("Notify", "0.8")
++gi.require_version("Notify", "0.8")
  from gi.repository import GObject
  from gi.repository import GLib
  from gi.repository import Gio
-@@ -331,7 +334,7 @@
+@@ -331,7 +332,7 @@
              )
              self.notification.set_hint(
                                  "desktop-entry",
@@ -22,7 +19,7 @@ diff -Nuar a/gtweak/utils.py b/gtweak/utils.py
              self.notification.show()
          else:
              raise Exception("Not Supported")
-@@ -351,7 +354,7 @@
+@@ -351,7 +352,7 @@
                                  self._logout, None, None)
              self.notification.set_hint(
                                  "desktop-entry",
