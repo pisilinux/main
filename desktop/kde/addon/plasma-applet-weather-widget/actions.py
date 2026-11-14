@@ -3,17 +3,17 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/copyleft/gpl.txt
 
-from pisi.actionsapi import kde5
+from pisi.actionsapi import kde6
 from pisi.actionsapi import pisitools
 
 def setup():
-    kde5.configure()
+    kde6.configure("-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
 
 def build():
-    kde5.make()
+    kde6.make()
 
 def install():
-    kde5.install()
+    kde6.install()
 
 
     pisitools.dodoc("LICENSE", "README.md")
