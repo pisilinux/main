@@ -5,15 +5,15 @@
 # See the file http://www.gnu.org/licenses/gpl.txt
 
 from pisi.actionsapi import pisitools
-from pisi.actionsapi import qt5
+from pisi.actionsapi import qt6
 
 def setup():
-    qt5.configure()
+    qt6.configure()
 
 def build():
-    qt5.make()
+    qt6.make()
 
 def install():
-    qt5.install()
+    qt6.install()
 
     pisitools.dodoc("LICENSE", "README.md")
