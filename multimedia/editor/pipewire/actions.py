@@ -22,7 +22,7 @@ def setup():
                           -Djack=disabled \
                           -Dudevrulesdir=/lib/udev/rules.d \
                           -Dsystemd-user-service=disabled \
-                          -Dsession-managers=enabled \
+                          -Dsession-managers=[] \
                           -Dlibcamera=disabled \
                           -Dbluez5-codec-ldac-dec=disabled \
                           -Dbluez5-plc-spandsp=disabled \
