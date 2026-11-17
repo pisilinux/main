@@ -8,12 +8,17 @@ from pisi.actionsapi import mesontools
 from pisi.actionsapi import pisitools
 
 def setup():
-    mesontools.configure("--libexec=/usr/lib -Duse-old-zenity=true")
+    mesontools.configure(
+        "--libexecdir=/usr/lib "
+        "-Dbudgie-session-libexecdir=/usr/lib/budgie-session "
+        "-Dgsd-libexecdir=/usr/lib/gnome-settings-daemon "
+        "-Dxdp-libexecdir=/usr/lib/xdg-desktop-portal "
+        "-Dwith-runtime-dependencies=false"
+    )
 
 def build():
     mesontools.build()
 
 def install():
     mesontools.install()
-
     pisitools.dodoc("LICENSE")
