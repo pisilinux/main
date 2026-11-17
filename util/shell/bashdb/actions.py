@@ -6,9 +6,12 @@
 
 from pisi.actionsapi import autotools
 from pisi.actionsapi import pisitools
+from pisi.actionsapi import shelltools
 from pisi.actionsapi import get
 
 def setup():
+    pisitools.dosed("configure.ac", "OK_BASH_VERS, 5.2", "OK_BASH_VERS, 5.3")
+    shelltools.system("NOCONFIGURE=1 sh autogen.sh")
     autotools.configure()
 
 def build():
@@ -17,4 +20,4 @@ def build():
 def install():
     autotools.rawInstall("DESTDIR=%s" % get.installDIR())
 
-    pisitools.dodoc("AUTHORS", "ChangeLog*", "COPYING", "NEWS*", "README*", "THANKS", "TODO")
+    pisitools.dodoc("AUTHORS", "ChangeLog*", "COPYING", "NEWS*", "README*", "TODO")
