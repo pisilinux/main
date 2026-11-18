@@ -13,12 +13,14 @@
         <IsA>library</IsA>
         <Summary>Graphical Boot Animation and Logger</Summary>
         <Description>plymouth provides an attractive graphical boot animation in place of the text messages that normally get shown. Text messages are instead redirected to a log file for viewing after boot.</Description>
-        <Archive sha1sum="2a68a69b674b643cd50c48685669bb0523aeb68b" type="tarxz">http://freedesktop.org/software/plymouth/releases/plymouth-22.02.122.tar.xz</Archive>
-        <Archive sha1sum="f12d053f015708646d0871332b4b9465e7b11cef" type="tarxz" target="plymouth-22.02.122/themes">https://sourceforge.net/projects/pisilinux/files/source/plymouth-theme-pisilinux-0.4.tar.xz</Archive>
+        <Archive sha1sum="b8822d599c5fb1c1632d0d32290b651a8fe002c2" type="tarxz">https://freedesktop.org/software/plymouth/releases/plymouth-26.134.222.tar.xz</Archive>
+        <Archive sha1sum="f12d053f015708646d0871332b4b9465e7b11cef" type="tarxz" target="plymouth-26.134.222/themes">https://sourceforge.net/projects/pisilinux/files/source/plymouth-theme-pisilinux-0.4.tar.xz</Archive>
         <AdditionalFiles>
             <AdditionalFile permission="0755" target="generate-flist">pisilinux/generate-flist.py</AdditionalFile>
         </AdditionalFiles>
         <BuildDependencies>
+            <Dependency>meson</Dependency>
+            <Dependency>ninja</Dependency>
             <Dependency>docbook-xsl</Dependency>
             <Dependency>kernel-headers</Dependency>
             <Dependency>libdrm-devel</Dependency>
@@ -32,6 +34,10 @@
             <Dependency>gtk3-devel</Dependency>
             <Dependency>eudev-devel</Dependency>
             <Dependency>libxslt-devel</Dependency>
+            <Dependency>libevdev-devel</Dependency>
+            <Dependency>freetype-devel</Dependency>
+            <Dependency>libxkbcommon-devel</Dependency>
+            <Dependency>xkeyboard-config</Dependency>
         </BuildDependencies>
         <Patches>
             <!-- Pisi Linux patches-->
@@ -47,7 +53,8 @@
 <!--             <Patch level="1">fedora/fix-crash.patch</Patch> -->
 <!--             <Patch level="1">mageia/1001-device_manager-ignore-drm-devices-when-kernel-modese.patch</Patch> -->
             <Patch level="1">mageia/1002-main-allow-the-device-timeout-to-be-overridden-on-th.patch</Patch>
-            <Patch level="1">pisilinux/pisilinux.patch</Patch>
+            <Patch level="1">pisilinux/pisilinux-meson.patch</Patch>
+            <Patch level="1">pisilinux/0002-vmwgfx-skip-drm-renderer.patch</Patch>
         </Patches>
     </Source>
 
@@ -176,7 +183,8 @@
             <Dependency release="current">plymouth-graphics-libs</Dependency>
         </RuntimeDependencies>
         <Files>
-            <Path fileType="library">/usr/lib/plymouth/label.so</Path>
+            <Path fileType="library">/usr/lib/plymouth/label-freetype.so</Path>
+            <Path fileType="library">/usr/lib/plymouth/label-pango.so</Path>
         </Files>
     </Package>
 
@@ -332,6 +340,13 @@
     </Package>
 
     <History>
+        <Update release="16">
+            <Date>2026-11-18</Date>
+            <Version>26.134.222</Version>
+            <Comment>Version bump; meson build; skip broken vmwgfx/vboxvideo DRM renderer.</Comment>
+            <Name>Pisi Linux Community</Name>
+            <Email>admins@pisilinux.org</Email>
+        </Update>
         <Update release="15">
             <Date>2024-07-20</Date>
             <Version>22.02.122</Version>
