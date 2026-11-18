@@ -1,0 +1,19 @@
+diff -Nuar a/src/libply-splash-core/ply-device-manager.c b/src/libply-splash-core/ply-device-manager.c
+--- a/src/libply-splash-core/ply-device-manager.c
++++ b/src/libply-splash-core/ply-device-manager.c
+@@ -380,6 +380,15 @@
+                 ply_trace ("device subsystem is %s", subsystem);
+ 
+                 if (strcmp (subsystem, SUBSYSTEM_DRM) == 0) {
++                        const char *driver = udev_device_get_driver (device);
++
++                        if (driver != NULL &&
++                            (strcmp (driver, "vmwgfx") == 0 ||
++                             strcmp (driver, "vboxvideo") == 0)) {
++                                ply_trace ("ignoring DRM device %s (driver %s): broken scan out",
++                                           device_path, driver);
++                                return false;
++                        }
+                         if (!manager->device_timeout_elapsed &&
+                             !verify_drm_device (manager, device)) {
+                                 ply_trace ("ignoring since we only handle SimpleDRM devices after timeout");
