@@ -8,7 +8,7 @@ from pisi.actionsapi import pisitools
 
 
 def setup():
-    kde5.configure()
+    kde5.configure("-DBUILD_WITH_QT5=ON")
 
 def build():
     kde5.make()

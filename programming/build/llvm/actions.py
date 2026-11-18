@@ -79,7 +79,7 @@ def setup():
     
     
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-                          -G 'Unix Makefiles' \
+                          -G 'Ninja' \
                           %s \
                           -DLLVM_ENABLE_PROJECTS='%s' \
                           -DLLVM_LIBDIR_SUFFIX=%s \
@@ -97,13 +97,13 @@ def setup():
 
 def build():
     shelltools.cd("build")
-    #shelltools.system("ninja")
-    cmaketools.make(jobs)
+    shelltools.system("ninja")
+    # cmaketools.make(jobs)
 
 def install():
     shelltools.cd("build")
-    #shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
-    cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
+    shelltools.system("DESTDIR=%s ninja install" % get.installDIR())
+    # cmaketools.rawInstall("DESTDIR=%s" % get.installDIR())
         
     if get.buildTYPE() == "emul32":
         pisitools.domove("/emul32/lib32/", "/usr/")
