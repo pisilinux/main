@@ -71,6 +71,8 @@ def setup():
         pisitools.cflags.add("-m32 ")
         pisitools.cxxflags.add("-m32")
         shelltools.export("PKG_CONFIG_PATH","/usr/lib32/pkgconfig")
+        shelltools.export("CFLAGS", get.CFLAGS().replace("-g", "-g1"))
+        shelltools.export("CXXFLAGS", get.CXXFLAGS().replace("-g", "-g1"))
         options = "  -DCMAKE_INSTALL_PREFIX=/emul32 \
                      -DLLVM_TARGET_ARCH:STRING=i686  \
                      -DLLVM_ENABLE_ZSTD:STRING=OFF \
