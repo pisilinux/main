@@ -8,7 +8,7 @@ from pisi.actionsapi import shelltools
 from pisi.actionsapi import cmaketools
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import get
-
+zzz
 def setup():
     shelltools.makedirs("build")
     shelltools.cd("build")
