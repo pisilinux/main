@@ -19,6 +19,8 @@ def setup():
                           --libexecdir=/usr/lib \
                           -Dudevrulesdir=/lib/udev/rules.d \
                           -D b_lto=true -D b_pie=true \
+                          -Dkmip=disabled \
+                          -Dmdns=disabled \
                           --localstatedir=/var")
 
 def build():
