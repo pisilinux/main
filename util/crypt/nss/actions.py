@@ -41,11 +41,11 @@ def build():
     shelltools.export("PKG_CONFIG_ALLOW_SYSTEM_LIBS", "1")
     shelltools.export("PKG_CONFIG_ALLOW_SYSTEM_CFLAGS", "1")
 
-    # autotools.make("-C nss/coreconf -j2")
-    # autotools.make("-C nss/lib/util -j2")
-    # autotools.make("-C nss/lib/dbm")
-    # autotools.make("-C  nss/lib/sysinit -j2")
-    # autotools.make("-C nss all -j2")
+    autotools.make("-C nss/coreconf -j2")
+    autotools.make("-C nss/lib/util -j2")
+    autotools.make("-C nss/lib/dbm")
+    autotools.make("-C  nss/lib/sysinit -j2")
+    autotools.make("-C nss all -j2")
 
 def install():
     for binary in ["*util", "shlibsign", "signver", "ssltap"]:
