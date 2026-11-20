@@ -19,7 +19,6 @@ def setup():
                           --libexecdir=/usr/lib \
                           -Dudevrulesdir=/lib/udev/rules.d \
                           -D b_lto=true -D b_pie=true \
-                          -D docs=man -D docs-build=true \
                           --localstatedir=/var")
 
 def build():
