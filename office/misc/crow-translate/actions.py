@@ -9,11 +9,12 @@ from pisi.actionsapi import cmaketools
 from pisi.actionsapi import get
 
 def setup():
+    shelltools.system("rm -r src/qgittag")
     shelltools.makedirs("build")
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_BUILD_TYPE=Release \
-        -DWITH_KWAYLAND=OFF \
-        -DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
+                          -DWITH_PIPER_TTS:BOOL=OFF \
+                         -DCMAKE_INSTALL_PREFIX=/usr", sourceDir="..")
 
 def build():
     shelltools.cd("build")
