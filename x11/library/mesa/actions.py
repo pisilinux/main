@@ -59,7 +59,7 @@ def setup():
                              -Dsysprof=false \
                              -Dintel-rt=enabled \
                              -Dintel-virtio-experimental=true \
-                             -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,anti-lag,vram-report-limit \
+                             -Dvulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit \
                              -Dvulkan-drivers=amd,freedreno,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental,asahi \
                              -Dgallium-drivers=r300,r600,nouveau,radeonsi,svga,iris,llvmpipe,softpipe,virgl,crocus,i915,zink,d3d12"
     
