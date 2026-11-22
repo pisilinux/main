@@ -80949,6 +80949,51 @@ Right now it supports launching games from the Epic Games Store using Legendary,
     </SpecFile>
     <SpecFile>
         <Source>
+            <Name>venus-protocol</Name>
+            <Homepage>https://gitlab.freedesktop.org/virgl/venus-protocol/</Homepage>
+            <Packager>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Packager>
+            <License>MIT</License>
+            <IsA>library</IsA>
+            <PartOf>programming.library</PartOf>
+            <Summary xml:lang="en">Vulkan protocol for Virtio-GPU (Venus)</Summary>
+            <Summary xml:lang="tr">Vulkan protocol for Virtio-GPU (Venus)</Summary>
+            <Description xml:lang="en">Virtio-GPU için Vulkan protokolü (Venus)</Description>
+            <Description xml:lang="tr">Virtio-GPU için Vulkan protokolü (Venus)</Description>
+            <Archive type="tarbz2" sha1sum="90faf78c87390937f61bbd66e19ea2c64f3e2fba" name="venus-protocol-v1.1.3.tar.bz2">https://gitlab.freedesktop.org/virgl/venus-protocol/-/archive/v1.1.3/venus-protocol-v1.1.3.tar.bz2</Archive>
+            <BuildDependencies>
+                <Dependency>git</Dependency>
+                <Dependency>meson</Dependency>
+                <Dependency>python3-mako</Dependency>
+            </BuildDependencies>
+            <Patches>
+                <Patch level="1">0001-install-pkg-config-file-into-datadir.patch</Patch>
+            </Patches>
+            <SourceURI>programming/library/venus-protocol/pspec.xml</SourceURI>
+        </Source>
+        <Package>
+            <Name>venus-protocol</Name>
+            <Files>
+                <Path fileType="header">/usr/include</Path>
+                <Path fileType="data">/usr/share</Path>
+                <Path fileType="doc">/usr/share/doc</Path>
+                <Path fileType="library">/usr/lib/pkgconfig</Path>
+            </Files>
+        </Package>
+        <History>
+            <Update release="1">
+                <Date>2026-11-19</Date>
+                <Version>1.1.3</Version>
+                <Comment>First release</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
+        </History>
+    </SpecFile>
+    <SpecFile>
+        <Source>
             <Name>libqaccessibilityclient-qt6</Name>
             <Homepage>https://www.kde.org</Homepage>
             <Packager>
@@ -345273,6 +345318,10 @@ talking to the kernel.</Description>
                 <Dependency>xz-devel</Dependency>
                 <Dependency>zlib-devel</Dependency>
             </BuildDependencies>
+            <Patches>
+                <Patch level="1">squashfs-fix-fragment-read-race.patch</Patch>
+                <Patch level="1">squashfs-fix-spill-blocks-race.patch</Patch>
+            </Patches>
             <SourceURI>hardware/disk/squashfs-tools/pspec.xml</SourceURI>
         </Source>
         <Package>
@@ -345291,6 +345340,13 @@ talking to the kernel.</Description>
             </Files>
         </Package>
         <History>
+            <Update release="15">
+                <Date>2026-11-22</Date>
+                <Version>4.7.5</Version>
+                <Comment>Fix mksquashfs data races (upstream #361, #362).</Comment>
+                <Name>Lemi Sander</Name>
+                <Email>avfx@tuta.com</Email>
+            </Update>
             <Update release="14">
                 <Date>2026-03-02</Date>
                 <Version>4.7.5</Version>
@@ -368220,6 +368276,7 @@ from a wide variety of machine architectures.</Description>
                 <Dependency>dbus-devel</Dependency>
                 <Dependency>libxcb-devel</Dependency>
                 <Dependency>qt6-linguist</Dependency>
+                <Dependency>kwayland-devel</Dependency>
                 <Dependency>qt6-svg-devel</Dependency>
                 <Dependency>openssl-devel</Dependency>
                 <Dependency>qt6-scxml-devel</Dependency>
@@ -368228,6 +368285,7 @@ from a wide variety of machine architectures.</Description>
                 <Dependency>qt6-speech-devel</Dependency>
                 <Dependency>gst-plugins-good</Dependency>
                 <Dependency>icon-theme-hicolor</Dependency>
+                <Dependency>kiconthemes-devel</Dependency>
                 <Dependency>extra-cmake-modules</Dependency>
                 <Dependency>qt6-multimedia-devel</Dependency>
             </BuildDependencies>
@@ -368241,6 +368299,10 @@ from a wide variety of machine architectures.</Description>
                 <Dependency>libxcb</Dependency>
                 <Dependency>qt6-base</Dependency>
                 <Dependency>tesseract</Dependency>
+                <Dependency>kwayland</Dependency>
+                <Dependency>kiconthemes</Dependency>
+                <Dependency>qt6-scxml</Dependency>
+                <Dependency>qt6-speech</Dependency>
                 <Dependency>qt6-multimedia</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -416799,12 +416861,11 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">Konuşma sentezi ortak arayüzü</Summary>
             <Description xml:lang="en">Speech Dispatcher is a device independent layer for speech synthesis that provides a common easy to use interface for both client applications (programs that want to speak) and for software synthesizers (programs actually able to convert text to speech).</Description>
             <Description xml:lang="tr">Speech Dispatcher, seslendirme yapılmak istenen veya konuşma sentezi yapan uygulamalar için ortak ve kolay kullanımlı bir arayüz sunan, cihaz-bağımsız bir katmandır.</Description>
-            <Archive type="targz" sha1sum="614c6f31872c95afadd7a847a58598a8b3d43040" name="speech-dispatcher-0.11.5.tar.gz">https://github.com/brailcom/speechd/releases/download/0.11.5/speech-dispatcher-0.11.5.tar.gz</Archive>
+            <Archive type="targz" sha1sum="b7d189420f3d2324e500822eb17bbda4f1f9f33a" name="speech-dispatcher-0.12.1.tar.gz">https://github.com/brailcom/speechd/releases/download/0.12.1/speech-dispatcher-0.12.1.tar.gz</Archive>
             <BuildDependencies>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>libsndfile-devel</Dependency>
                 <Dependency>dotconf-devel</Dependency>
-                <Dependency>espeak-devel</Dependency>
                 <Dependency>python3-devel</Dependency>
                 <Dependency>python3-xdg</Dependency>
                 <Dependency>intltool</Dependency>
@@ -416825,7 +416886,6 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <RuntimeDependencies>
                 <Dependency>glib2</Dependency>
                 <Dependency>libao</Dependency>
-                <Dependency>espeak</Dependency>
                 <Dependency>dotconf</Dependency>
                 <Dependency>alsa-lib</Dependency>
                 <Dependency>espeak-ng</Dependency>
@@ -416848,7 +416908,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>python3-speech-dispatcher</Name>
             <Summary xml:lang="en">Python3 bindings for speech-dispatcher</Summary>
             <RuntimeDependencies>
-                <Dependency release="14">speech-dispatcher</Dependency>
+                <Dependency release="15">speech-dispatcher</Dependency>
                 <Dependency>python3</Dependency>
             </RuntimeDependencies>
             <Files>
@@ -416865,7 +416925,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <RuntimeDependencies>
                 <Dependency>glib2-devel</Dependency>
                 <Dependency>espeak-ng-devel</Dependency>
-                <Dependency release="14">speech-dispatcher</Dependency>
+                <Dependency release="15">speech-dispatcher</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -416873,6 +416933,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="15">
+                <Date>2026-11-21</Date>
+                <Version>0.12.1</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
             <Update release="14">
                 <Date>2023-10-18</Date>
                 <Version>0.11.5</Version>
@@ -422219,14 +422286,19 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Summary xml:lang="tr">Multi-lingual software speech synthesizer</Summary>
             <Description xml:lang="en">Multi-lingual software speech synthesizer</Description>
             <Description xml:lang="tr">Multi-lingual software speech synthesizer</Description>
-            <Archive type="targz" sha1sum="6989535ba70abef7fccdddc829891ed03ef8c801" name="1.50.tar.gz">https://github.com/espeak-ng/espeak-ng/archive/1.50.tar.gz</Archive>
-            <Patches>
-                <Patch level="1">espeak-ng-fix-699.patch</Patch>
-            </Patches>
+            <Archive type="targz" sha1sum="44b4fdfa5e563c964c3ed5afb689e2259d324732" name="1.52.0.tar.gz">https://github.com/espeak-ng/espeak-ng/archive/1.52.0.tar.gz</Archive>
+            <BuildDependencies>
+                <Dependency>cmake</Dependency>
+                <Dependency>libsonic</Dependency>
+                <Dependency>python3-devel</Dependency>
+            </BuildDependencies>
             <SourceURI>multimedia/sound/espeak-ng/pspec.xml</SourceURI>
         </Source>
         <Package>
             <Name>espeak-ng</Name>
+            <RuntimeDependencies>
+                <Dependency>libsonic</Dependency>
+            </RuntimeDependencies>
             <Files>
                 <Path fileType="executable">/usr/bin</Path>
                 <Path fileType="library">/usr/lib</Path>
@@ -422239,7 +422311,7 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             <Name>espeak-ng-devel</Name>
             <Summary xml:lang="en">Development files for espeak-ng</Summary>
             <RuntimeDependencies>
-                <Dependency release="1">espeak-ng</Dependency>
+                <Dependency release="2">espeak-ng</Dependency>
             </RuntimeDependencies>
             <Files>
                 <Path fileType="header">/usr/include</Path>
@@ -422247,6 +422319,13 @@ uses SIMD instructions (MMX, SSE2, etc.) to accelerate baseline JPEG compression
             </Files>
         </Package>
         <History>
+            <Update release="2">
+                <Date>2026-11-21</Date>
+                <Version>1.52.0</Version>
+                <Comment>Version bump.</Comment>
+                <Name>Pisi Linux Community</Name>
+                <Email>admin@pisilinux.org</Email>
+            </Update>
             <Update release="1">
                 <Date>2020-04-01</Date>
                 <Version>1.50</Version>
