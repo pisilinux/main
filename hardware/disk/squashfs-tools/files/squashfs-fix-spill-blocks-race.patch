@@ -1,0 +1,152 @@
+From 58f659e105c6f42343805b9204ecd6657c482dc2 Mon Sep 17 00:00:00 2001
+From: Phillip Lougher <phillip@squashfs.org.uk>
+Date: Sat, 18 Apr 2026 23:36:50 +0100
+Subject: [PATCH] mksquashfs: fix data race when spilling blocks to disk in dup
+ checking
+
+Commit e449f34 (mksquashfs: fix rare 17 year old bug) added last
+February, fixed a rare race condition that very occasionally meant a
+file was not correctly detected as a duplicate (5 out of 4.2 million
+files).
+
+Unfortunately, that commit relied on behaviour that got changed last
+year when sparse file (holes) support got optimised. Specifically the
+reader thread used to represent a sparse block as a zero size block,
+which was passed to the main control thread. So if you had a run of 100
+sparse blocks this would pass a 100 empty blocks to the main thread.
+This was optimised to only send one block representing a 100 sparse
+blocks.
+
+That change has added a data race condition into the file duplicate
+detection code, and specifically if a file is too big to fit into the
+buffer space available. When this happens Mksquashfs has to spill the
+excess blocks to disk and read the blocks back from disk when doing
+duplicate checking. Unfortunately due to the sparse file optimisation,
+if a file has sparse blocks, the code after spilling blocks to disk may
+attempt to access them before they have been stored on the disk. When
+this happens the code will fail because the virtual -> disk mapping
+doesn't exist.
+
+This commit re-adds the indexing of blocks that was removed in the
+previous commit e449f34 (mksquashfs: fix rare 17 year old bug), as this
+indexing is necessary to distinquish betweeen a block that is still in
+flight or has been stored on disk.  But, this indexing no longer
+produces duplicate indexes in the write buffer cache because of the
+adoption of virtual disk positions, which means as already
+implemented in commit a7ccf9f (mksquashfs: don't reset vpos if file is a
+duplicate), the virtual disk positions are never reused.
+
+Fixes issue https://github.com/plougher/squashfs-tools/issues/362
+
+igned-off-by: Phillip Lougher <phillip@squashfs.org.uk>
+---
+ squashfs-tools/mksquashfs.c | 58 ++++++++++++++++++++++---------------
+ 1 file changed, 34 insertions(+), 24 deletions(-)
+
+diff --git a/squashfs-tools/mksquashfs.c b/squashfs-tools/mksquashfs.c
+index d313d122..33c31464 100644
+--- a/squashfs-tools/mksquashfs.c
++++ b/squashfs-tools/mksquashfs.c
+@@ -1987,19 +1987,26 @@ static unsigned short get_checksum_buffers(long long start, long long l,
+ 		if(buffers[i])
+ 			chksum = get_checksum(buffers[i]->data, bytes, chksum);
+ 		else {
+-			void *data;
++			struct file_buffer *write_buffer = queue_cache_lookup(bwriter_buffer, start);
+ 
+-			if(dpos == -1)
+-				dpos = get_virt_disk(start);
++			if(write_buffer) {
++				chksum = get_checksum(write_buffer->data, bytes, chksum);
++				gen_cache_block_put(write_buffer);
++			} else {
++				void *data;
+ 
+-			data = read_from_disk(dpos, bytes, 0);
+-			if(data == NULL) {
+-				ERROR("Failed to checksum data from output"
+-					" filesystem\n");
+-				BAD_ERROR("Output filesystem corrupted?\n");
+-			}
++				if(dpos == -1)
++					dpos = get_virt_disk(start);
+ 
+-			chksum = get_checksum(data, bytes, chksum);
++				data = read_from_disk(dpos, bytes, 0);
++				if(data == NULL) {
++					ERROR("Failed to checksum data from output"
++						" filesystem\n");
++					BAD_ERROR("Output filesystem corrupted?\n");
++				}
++
++				chksum = get_checksum(data, bytes, chksum);
++			}
+ 		}
+ 
+ 		l -= bytes;
+@@ -2310,7 +2317,7 @@ static struct file_info *duplicate(int *dupf, int *block_dup,
+ 	unsigned short checksum = 0;
+ 	char checksum_flag = FALSE;
+ 	struct fragment *fragment;
+-	long long dupl_start, cached_target = -1;
++	long long dupl_start;
+ 
+ 	/* Look for a possible duplicate set of blocks */
+ 	for(dupl_ptr = dupl_block[bl_hash]; dupl_ptr;
+@@ -2351,7 +2358,7 @@ static struct file_info *duplicate(int *dupf, int *block_dup,
+ 			 */
+ 			for(block = 0; block < blocks; block ++) {
+ 				int size = SQUASHFS_COMPRESSED_SIZE_BLOCK(block_list[block]);
+-				struct file_buffer *dup_buffer = NULL;
++				struct file_buffer *dup_buffer = NULL, *target_buffer = NULL;
+ 				char *target_data, *dup_data;
+ 				int res;
+ 
+@@ -2368,17 +2375,19 @@ static struct file_info *duplicate(int *dupf, int *block_dup,
+ 				if(buffer_list[block])
+ 					target_data = buffer_list[block]->data;
+ 				else {
+-					if(dtarget_start == -1) {
+-						if(cached_target == -1)
+-							cached_target = get_virt_disk(target_start);
+-						dtarget_start = cached_target;
+-					}
+-					target_data = read_from_disk(dtarget_start, size, 0);
+-					if(target_data == NULL) {
+-						ERROR("Failed to read data from"
+-							" output filesystem\n");
+-						BAD_ERROR("Output filesystem"
+-							" corrupted?\n");
++					target_buffer = queue_cache_lookup(bwriter_buffer, target_start);
++					if(target_buffer)
++						target_data = target_buffer->data;
++					else {
++						if(dtarget_start == -1)
++							dtarget_start = get_virt_disk(target_start);
++						target_data = read_from_disk(dtarget_start, size, 0);
++						if(target_data == NULL) {
++							ERROR("Failed to read data from"
++								" output filesystem\n");
++							BAD_ERROR("Output filesystem"
++								" corrupted?\n");
++						}
+ 					}
+ 				}
+ 
+@@ -2404,6 +2413,7 @@ static struct file_info *duplicate(int *dupf, int *block_dup,
+ 				}
+ 
+ 				res = memcmp(target_data, dup_data, size);
++				gen_cache_block_put(target_buffer);
+ 				gen_cache_block_put(dup_buffer);
+ 				if(res != 0)
+ 					break;
+@@ -3001,7 +3011,7 @@ static struct file_info *write_file_blocks_dup(int *status, struct dir_ent *dir_
+ 				file_bytes += read_buffer->size;
+ 				if(block < thresh) {
+ 					buffer_list[block++] = NULL;
+-					put_write_buffer(read_buffer);
++					put_write_buffer_hash(read_buffer);
+ 				} else
+ 					buffer_list[block++] = read_buffer;
+ 				inc_progress_bar();

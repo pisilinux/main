@@ -1,0 +1,97 @@
+From c96f0ecd47aabedd489dc0f8241894c8d068ce4f Mon Sep 17 00:00:00 2001
+From: Phillip Lougher <phillip@squashfs.org.uk>
+Date: Thu, 16 Apr 2026 04:40:51 +0100
+Subject: [PATCH] mksquashfs: fix data race when reading fragments in duplicate
+ checking
+
+Commit https://github.com/plougher/squashfs-tools/commit/2d6956a9c66775f61c9f3b3a42ea79adf41109e
+
+Date: Thu Mar 20 23:38:11 2025 +0000
+Subject: mksquashfs: don't update fragment_table[] in frag_deflator thread
+
+Introduced a data race when reading fragments for duplicate checking.
+In particular the look-up code expects the size field of the fragment
+table to be filled in. Previously this was done in the fragment deflator
+thread before the uncompressed buffer was released, where the presence
+of the uncompressed buffer guards against access to the compressed
+buffer and fragment table before it is ready. The move to the orderer
+thread means the uncompressed buffer can deleted before the fragment
+table is updated, leaving the look-up code to access the fragment table
+before it has been updated.
+
+This commit fixes the issue because if the compressed buffer was
+successfully looked up, the size can be obtained from the buffer itself,
+and the fragment table does not need to be accessed.  If the compressed
+buffer has been deleted, it means the fragment table has been updated,
+and the contents are valid.
+
+Fixes https://github.com/plougher/squashfs-tools/issues/361
+
+Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
+---
+ squashfs-tools/mksquashfs.c        | 20 ++++++++++++--------
+ squashfs-tools/process_fragments.c | 20 ++++++++++++--------
+ 2 files changed, 24 insertions(+), 16 deletions(-)
+
+diff --git a/squashfs-tools/mksquashfs.c b/squashfs-tools/mksquashfs.c
+index d2a5370a..d313d122 100644
+--- a/squashfs-tools/mksquashfs.c
++++ b/squashfs-tools/mksquashfs.c
+@@ -1642,14 +1642,18 @@ static struct file_buffer *get_fragment(struct fragment *fragment)
+ 	pthread_mutex_unlock(&dup_mutex);
+ 
+ 	compressed_buffer = cache_lookup(fwriter_buffer, index);
+-
+-	pthread_cleanup_push((void *) pthread_mutex_unlock, &fragment_mutex);
+-	pthread_mutex_lock(&fragment_mutex);
+-	disk_fragment = &fragment_table[index];
+-	size = SQUASHFS_COMPRESSED_SIZE_BLOCK(disk_fragment->size);
+-	compressed = SQUASHFS_COMPRESSED_BLOCK(disk_fragment->size);
+-	start_block = disk_fragment->start_block;
+-	pthread_cleanup_pop(1);
++	if(compressed_buffer) {
++		size = SQUASHFS_COMPRESSED_SIZE_BLOCK(compressed_buffer->c_byte);
++		compressed = SQUASHFS_COMPRESSED_BLOCK(compressed_buffer->c_byte);
++	} else {
++		pthread_cleanup_push((void *) pthread_mutex_unlock, &fragment_mutex);
++		pthread_mutex_lock(&fragment_mutex);
++		disk_fragment = &fragment_table[index];
++		size = SQUASHFS_COMPRESSED_SIZE_BLOCK(disk_fragment->size);
++		compressed = SQUASHFS_COMPRESSED_BLOCK(disk_fragment->size);
++		start_block = disk_fragment->start_block;
++		pthread_cleanup_pop(1);
++	}
+ 
+ 	if(compressed) {
+ 		int error;
+diff --git a/squashfs-tools/process_fragments.c b/squashfs-tools/process_fragments.c
+index 2ff3b144..8a3f72fa 100644
+--- a/squashfs-tools/process_fragments.c
++++ b/squashfs-tools/process_fragments.c
+@@ -169,14 +169,18 @@ static struct file_buffer *get_fragment(struct fragment *fragment,
+ 	pthread_mutex_unlock(&dup_mutex);
+ 
+ 	compressed_buffer = cache_lookup(fwriter_buffer, index);
+-
+-	pthread_cleanup_push((void *) pthread_mutex_unlock, &fragment_mutex);
+-	pthread_mutex_lock(&fragment_mutex);
+-	disk_fragment = &fragment_table[index];
+-	size = SQUASHFS_COMPRESSED_SIZE_BLOCK(disk_fragment->size);
+-	compressed = SQUASHFS_COMPRESSED_BLOCK(disk_fragment->size);
+-	start_block = disk_fragment->start_block;
+-	pthread_cleanup_pop(1);
++	if(compressed_buffer) {
++		size = SQUASHFS_COMPRESSED_SIZE_BLOCK(compressed_buffer->c_byte);
++		compressed = SQUASHFS_COMPRESSED_BLOCK(compressed_buffer->c_byte);
++	} else {
++		pthread_cleanup_push((void *) pthread_mutex_unlock, &fragment_mutex);
++		pthread_mutex_lock(&fragment_mutex);
++		disk_fragment = &fragment_table[index];
++		size = SQUASHFS_COMPRESSED_SIZE_BLOCK(disk_fragment->size);
++		compressed = SQUASHFS_COMPRESSED_BLOCK(disk_fragment->size);
++		start_block = disk_fragment->start_block;
++		pthread_cleanup_pop(1);
++	}
+ 
+ 	if(compressed) {
+ 		int error;
