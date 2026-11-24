@@ -54,6 +54,10 @@ def setup():
                    # -webengine-icu \
                    # -webengine-kerberos \
                    # -webengine-webrtc-pipewire")
+    shelltools.system("rm -rf build src/3rdparty/chromium src/3rdparty/gn")
+    shelltools.copytree("qtwebengine-chromium-5c3c0d0eb9b81f1cfb82513c8fde9905fb2cf4fe/chromium", "src/3rdparty/chromium")
+    shelltools.copytree("qtwebengine-chromium-5c3c0d0eb9b81f1cfb82513c8fde9905fb2cf4fe/gn", "src/3rdparty/gn")
+
 
     qt6.configure(" -DCMAKE_TOOLCHAIN_FILE=/usr/lib/cmake/Qt6/qt.toolchain.cmake \
                     -DQT_FEATURE_webengine_system_ffmpeg=ON \
