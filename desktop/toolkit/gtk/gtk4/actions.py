@@ -12,29 +12,44 @@ from pisi.actionsapi import mesontools
 
 
 def setup():
-    # shelltools.system("sed -i -e '/gtk4-update-icon-cache/d' tools/meson.build || die")
-    # shelltools.system("sed -i -e 's/^ld =.*/ld = disabler()/g' gtk/meson.build demos/gtk-demo/meson.build demos/widget-factory/meson.build || die")
-    # shelltools.system("sed -i -e 's/^objcopy =.*/objcopy = disabler()/g' gtk/meson.build demos/gtk-demo/meson.build demos/widget-factory/meson.build || die")
-
-    mesontools.configure("-Dx11-backend=true \
-                          -Dwayland-backend=true \
-                          -Dbroadway-backend=true \
-                          -Dman-pages=true \
-                          -Dbuild-tests=false \
-                          -Dmedia-gstreamer=enabled \
-                          -Dintrospection=enabled \
-                          -Dcolord=enabled \
-                          -Dcloudproviders=enabled \
-                          -D vulkan=enabled \
-                          -Ddocumentation=true")
+    if get.buildTYPE()=="emul32":
+        pisitools.dosed("pango/modules.c", "(pango\.modules)", r"\1-32")
+    
+    # autotools.autoreconf("-fiv")
+    
+    #autotools.configure("--disable-static \
+                         #--sysconfdir=/etc \
+                         #--disable-gtk-doc \
+                         #--%sable-introspection" % ("dis" if get.buildTYPE()=="emul32" else "en"))
+    options = "--prefix=/usr -Dgtk_doc=false \
+              "
+              
+    if get.buildTYPE()=="emul32" :
+        options += "-Dintrospection=disabled \
+                    --bindir=/usr/bin32"
+    else:
+        options += "-Dintrospection=enabled -Dgtk_doc=true"
+        
+    #pisitools.dosed("libtool", " -shared ", " -Wl,-O1,--as-needed -shared ")
+    
+    mesontools.configure(options)
 
 def build():
     mesontools.build()
 
 def install():
+    #autotools.rawInstall("DESTDIR=%s" % get.installDIR())
     mesontools.install()
+    
+    #if get.buildTYPE()=="emul32":
+        ##shelltools.move("pango/.libs/pango-querymodules", "pango/.libs/pango-querymodules-32")
+        ##pisitools.dobin("pango/.libs/pango-querymodules-32")
+        #return
 
-    pisitools.insinto("/usr/share/pixmaps/", "docs/reference/gtk/images/gtk-logo.png", "gtk4-logo.png")
+    pisitools.dodir("/etc/pango")
+    shelltools.touch(get.installDIR() +"/etc/pango/pango.modules")
+    
+    if get.buildTYPE()=="emul32" :
+       pisitools.removeDir("/usr/bin32")
 
-    pisitools.rename("/usr/share/doc", "gtk-doc")
-    pisitools.dodoc("AUTHORS", "README*", "COPYING*", "NEWS")
+    pisitools.dodoc("README.md", "NEWS")
