@@ -24,5 +24,5 @@ def install():
 	pisitools.insinto("/usr/share/icons/Nitrux", "./index.theme")
 	pisitools.insinto("/usr/share/icons/Nitrux", "./CREDITS")
 	pisitools.insinto("/usr/share/icons/Nitrux", "./COPYING")
-	
+	pisitools.insinto("/usr/share/icons/Nitrux-KDE", "../Nitrux-KDE/*")
 
