@@ -4,7 +4,7 @@
 # Licensed under the GNU General Public License, version 3.
 # See the file http://www.gnu.org/licenses/gpl.txt
 
-WorkDir = "nitrux-icon-theme-kde-3.5.3/Nitrux"
+WorkDir = "nitrux-icon-theme-3.5.4/Nitrux"
 
 from pisi.actionsapi import pisitools
 from pisi.actionsapi import shelltools
