@@ -14,6 +14,7 @@ def setup():
     shelltools.cd("build")
     cmaketools.configure("-DCMAKE_INSTALL_PREFIX=/usr \
                           -DBUILD_TAB2SPACE=ON \
+                          -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
                           -DCMAKE_BUILD_TYPE=Release", sourceDir="..")
 
 def build():
